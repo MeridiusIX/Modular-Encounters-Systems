@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CubeBlocks>
+		
+		<Definition>
+			<Id>
+				<TypeId>Conveyor</TypeId>
+				<SubtypeId>ProprietaryLargeBlockConveyor</SubtypeId>
+			</Id>
+			<DisplayName>Proprietary Conveyor Junction</DisplayName>
+			<Icon>Textures\GUI\Icons\Cubes\conveyor.dds</Icon>
+			<Description>Description_ConveyorTube</Description>
+			<Public>false</Public>
+			<CubeSize>Large</CubeSize>
+			<BlockTopology>TriangleMesh</BlockTopology>
+			<Size x="1" y="1" z="1" />
+			<ModelOffset x="0" y="0" z="0" />
+			<Model>Models\Cubes\Large\conveyor.mwm</Model>
+			<Components>
+				<Component Subtype="InteriorPlate" Count="5" />
+				<Component Subtype="Construction" Count="10" />
+				<Component Subtype="SmallTube" Count="10" />
+				<Component Subtype="Motor" Count="3" />
+				<Component Subtype="ProprietaryTech" Count="1" >
+					<DeconstructId>
+						<TypeId>Ore</TypeId>
+						<SubtypeId>Scrap</SubtypeId>
+					</DeconstructId>
+				</Component>
+				<Component Subtype="Construction" Count="5" />
+				<Component Subtype="InteriorPlate" Count="5" />
+			</Components>
+			<CriticalComponent Subtype="ProprietaryTech" Index="0" />
+			<BuildProgressModels>
+				<Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ConveyorConstruction_1.mwm" />
+				<Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\ConveyorConstruction_2.mwm" />
+				<Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ConveyorConstruction_3.mwm" />
+			</BuildProgressModels>
+			<BlockPairName>ProprietaryConveyor</BlockPairName>
+			<MirroringY>Z</MirroringY>
+			<MirroringZ>Y</MirroringZ>
+			<EdgeType>Light</EdgeType>
+			<BuildTimeSeconds>20</BuildTimeSeconds>
+			<DamageEffectName>Damage_HeavyMech_Damaged</DamageEffectName>
+			<DamagedSound>ParticleHeavyMech</DamagedSound>
+			<EmissiveColorPreset>Default</EmissiveColorPreset>
+			<DestroyEffect>BlockDestroyed_Large</DestroyEffect>
+			<DestroySound>PoofExplosionCat3</DestroySound>
+			<PCU>10</PCU>
+			<IsAirTight>true</IsAirTight>      
+		</Definition>
+		
+		<Definition>
+			<Id>
+				<TypeId>ConveyorConnector</TypeId>
+				<SubtypeId>ProprietaryConveyorTube</SubtypeId>
+			</Id>
+			<DisplayName>Proprietary Conveyor Tube</DisplayName>
+			<Icon>Textures\GUI\Icons\Cubes\ConveyorTube.dds</Icon>
+			<Description>Description_ConveyorTube</Description>
+			<Public>false</Public>
+			<CubeSize>Large</CubeSize>
+			<BlockTopology>TriangleMesh</BlockTopology>
+			<Size x="1" y="1" z="1" />
+			<ModelOffset x="0" y="0" z="0" />
+			<Model>Models\Cubes\Large\ConveyorTube.mwm</Model>
+			<Components>
+				<Component Subtype="InteriorPlate" Count="5" />
+				<Component Subtype="Construction" Count="10" />
+				<Component Subtype="SmallTube" Count="6" />
+				<Component Subtype="Motor" Count="3" />
+				<Component Subtype="ProprietaryTech" Count="1" >
+					<DeconstructId>
+						<TypeId>Ore</TypeId>
+						<SubtypeId>Scrap</SubtypeId>
+					</DeconstructId>
+				</Component>
+				<Component Subtype="InteriorPlate" Count="2" />
+			</Components>
+			<CriticalComponent Subtype="ProprietaryTech" Index="0" />
+			<BuildProgressModels>
+				<Model BuildPercentUpperBound="0.50" File="Models\Cubes\Large\ConveyorTubeConstruction_1.mwm" />
+				<Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ConveyorTubeConstruction_2.mwm" />
+			</BuildProgressModels>
+			<BlockPairName>ProprietaryConveyorTube</BlockPairName>
+			<EdgeType>Light</EdgeType>
+			<BuildTimeSeconds>7</BuildTimeSeconds>
+			<MountPoints>
+				<MountPoint Side="Bottom" StartX="0.2" StartY="0.2" EndX="0.8" EndY="0.3" Default="true"/>
+				<MountPoint Side="Bottom" StartX="0.2" StartY="0.7" EndX="0.8" EndY="0.8" />
+				<MountPoint Side="Bottom" StartX="0.2" StartY="0.3" EndX="0.3" EndY="0.7" />
+				<MountPoint Side="Bottom" StartX="0.7" StartY="0.3" EndX="0.8" EndY="0.7" />
+				<MountPoint Side="Top" StartX="0.2" StartY="0.2" EndX="0.8" EndY="0.3" />
+				<MountPoint Side="Top" StartX="0.2" StartY="0.7" EndX="0.8" EndY="0.8" />
+				<MountPoint Side="Top" StartX="0.2" StartY="0.3" EndX="0.3" EndY="0.7" />
+				<MountPoint Side="Top" StartX="0.7" StartY="0.3" EndX="0.8" EndY="0.7" />
+			</MountPoints>
+			<AutorotateMode>OppositeDirections</AutorotateMode>
+			<EmissiveColorPreset>Default</EmissiveColorPreset>
+			<DestroyEffect>BlockDestroyed_Large</DestroyEffect>
+			<DestroySound>PoofExplosionCat3</DestroySound>
+			<PCU>10</PCU>
+			<IsAirTight>false</IsAirTight>      
+		</Definition>
+		
+		<Definition>
+			<Id>
+				<TypeId>ConveyorConnector</TypeId>
+				<SubtypeId>ProprietaryConveyorTubeCurved</SubtypeId>
+			</Id>
+			<DisplayName>Proprietary Conveyor Tube Corner</DisplayName>
+			<Icon>Textures\GUI\Icons\Cubes\ConveyorTubeCurved.dds</Icon>
+			<Description>Description_ConveyorTube</Description>
+			<Public>false</Public>
+			<CubeSize>Large</CubeSize>
+			<BlockTopology>TriangleMesh</BlockTopology>
+			<Size x="1" y="1" z="1" />
+			<ModelOffset x="0" y="0" z="0" />
+			<Model>Models\Cubes\Large\ConveyorTubeCurved.mwm</Model>
+			<Components>
+				<Component Subtype="InteriorPlate" Count="5" />
+				<Component Subtype="Construction" Count="10" />
+				<Component Subtype="SmallTube" Count="6" />
+				<Component Subtype="Motor" Count="3" />
+				<Component Subtype="ProprietaryTech" Count="1" >
+					<DeconstructId>
+						<TypeId>Ore</TypeId>
+						<SubtypeId>Scrap</SubtypeId>
+					</DeconstructId>
+				</Component>
+				<Component Subtype="InteriorPlate" Count="2" />
+			</Components>
+			<CriticalComponent Subtype="ProprietaryTech" Index="0" />
+			<BuildProgressModels>
+				<Model BuildPercentUpperBound="0.50" File="Models\Cubes\Large\ConveyorTubeCurvedConstruction_1.mwm" />
+				<Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ConveyorTubeCurvedConstruction_2.mwm" />
+			</BuildProgressModels>
+			<BlockPairName>ProprietaryConveyorTubeCurved</BlockPairName>
+			<EdgeType>Light</EdgeType>
+			<BuildTimeSeconds>7</BuildTimeSeconds>
+			<MountPoints>
+				<MountPoint Side="Bottom" StartX="0.2" StartY="0.2" EndX="0.8" EndY="0.3" />
+				<MountPoint Side="Bottom" StartX="0.2" StartY="0.7" EndX="0.8" EndY="0.8" />
+				<MountPoint Side="Bottom" StartX="0.2" StartY="0.3" EndX="0.3" EndY="0.7" />
+				<MountPoint Side="Bottom" StartX="0.7" StartY="0.3" EndX="0.8" EndY="0.7" />
+				<MountPoint Side="Right" StartX="0.2" StartY="0.2" EndX="0.8" EndY="0.3" />
+				<MountPoint Side="Right" StartX="0.2" StartY="0.7" EndX="0.8" EndY="0.8" />
+				<MountPoint Side="Right" StartX="0.2" StartY="0.3" EndX="0.3" EndY="0.7" />
+				<MountPoint Side="Right" StartX="0.7" StartY="0.3" EndX="0.8" EndY="0.7" />
+			</MountPoints>
+			<AutorotateMode>FirstDirection</AutorotateMode>
+			<MirroringX>Y</MirroringX>
+			<MirroringY>X</MirroringY>
+			<EmissiveColorPreset>Default</EmissiveColorPreset>
+			<DestroyEffect>BlockDestroyed_Large</DestroyEffect>
+			<DestroySound>PoofExplosionCat3</DestroySound>
+			<PCU>10</PCU>
+			<IsAirTight>false</IsAirTight>      
+		</Definition>
+		
+		<Definition xsi:type="MyObjectBuilder_ConveyorSorterDefinition">
+			<Id>
+				<TypeId>ConveyorSorter</TypeId>
+				<SubtypeId>ProprietaryLargeBlockConveyorSorter</SubtypeId>
+			</Id>
+			<DisplayName>Proprietary Conveyor Sorter</DisplayName>
+			<Public>false</Public>
+			<Icon>Textures\GUI\Icons\Cubes\ConveyorSorterLarge.dds</Icon>
+			<Description>Description_ConveyorSorter</Description>
+			<CubeSize>Large</CubeSize>
+			<BlockTopology>TriangleMesh</BlockTopology>
+			<Size x="1" y="1" z="1" />
+			<ModelOffset x="0" y="0" z="0" />
+			<Model>Models\Cubes\Large\ConveyorSorter.mwm</Model>
+			<Components>
+				<Component Subtype="InteriorPlate" Count="20" />
+				<Component Subtype="Construction" Count="50" />
+				<Component Subtype="SmallTube" Count="25" />
+				<Component Subtype="Computer" Count="10" />
+				<Component Subtype="ProprietaryTech" Count="1" >
+					<DeconstructId>
+						<TypeId>Ore</TypeId>
+						<SubtypeId>Scrap</SubtypeId>
+					</DeconstructId>
+				</Component>
+				<Component Subtype="Motor" Count="1" />
+				<Component Subtype="Construction" Count="10" />
+				<Component Subtype="InteriorPlate" Count="5" />
+			</Components>
+			<CriticalComponent Subtype="ProprietaryTech" Index="0" />
+			<BuildProgressModels>
+				<Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ConveyorSorterConstruction_1.mwm" />
+				<Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\ConveyorSorterConstruction_2.mwm" />
+				<Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ConveyorSorterConstruction_3.mwm" />
+			</BuildProgressModels>
+			<BlockPairName>ProprietaryConveyorSorter</BlockPairName>
+			<MirroringY>Z</MirroringY>
+			<MirroringZ>Y</MirroringZ>
+			<EdgeType>Light</EdgeType>
+			<BuildTimeSeconds>20</BuildTimeSeconds>
+			<DamageEffectName>Damage_HeavyMech_Damaged</DamageEffectName>
+			<DamagedSound>ParticleHeavyMech</DamagedSound>
+			<ResourceSinkGroup>Conveyors</ResourceSinkGroup>
+			<PowerInput>0.00025</PowerInput>
+			<InventorySize>
+				<X>1</X>
+				<Y>1</Y>
+				<Z>1</Z>
+			</InventorySize>
+			<EmissiveColorPreset>Default</EmissiveColorPreset>
+			<DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+			<DestroySound>WepSmallWarheadExpl</DestroySound>
+			<PCU>25</PCU>      
+			<IsAirTight>true</IsAirTight>
+		</Definition>
+		
+		
+    <Definition xsi:type="MyObjectBuilder_GyroDefinition">
+      <Id>
+        <TypeId>Gyro</TypeId>
+        <SubtypeId>ProprietaryLargeBlockGyro</SubtypeId>
+      </Id>
+      <DisplayName>Proprietary Gyroscope</DisplayName>
+	  <Public>false</Public>
+      <Icon>Textures\GUI\Icons\Cubes\gyro.dds</Icon>
+      <Description>Description_Gyroscope</Description>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Large\gyroscope.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="250" />
+        <Component Subtype="Construction" Count="20" />
+        <Component Subtype="LargeTube" Count="2" />
+        <Component Subtype="MetalGrid" Count="25" />
+        <Component Subtype="Motor" Count="2" />
+        <Component Subtype="Computer" Count="3" />
+		<Component Subtype="ProprietaryTech" Count="1" >
+			<DeconstructId>
+				<TypeId>Ore</TypeId>
+				<SubtypeId>Scrap</SubtypeId>
+			</DeconstructId>
+		</Component>
+        <Component Subtype="SteelPlate" Count="50" />
+      </Components>
+      <CriticalComponent Subtype="ProprietaryTech" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\GyroscopeConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\GyroscopeConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\GyroscopeConstruction_3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>ProprietaryGyroscope</BlockPairName>
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>40</BuildTimeSeconds>
+      <PrimarySound>BlockGyroscope</PrimarySound>
+
+      <ResourceSinkGroup>Gyro</ResourceSinkGroup>
+      <ForceMagnitude>3.36E+07</ForceMagnitude>
+      <RequiredPowerInput>0.01</RequiredPowerInput>
+
+      <DamageEffectName>Damage_HeavyMech_Damaged</DamageEffectName>
+      <DamagedSound>ParticleHeavyMech</DamagedSound>
+      <EmissiveColorPreset>Extended</EmissiveColorPreset>
+      <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>50</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+		
+		<!-- End Region Conveyor system -->
+	</CubeBlocks>
+</Definitions>

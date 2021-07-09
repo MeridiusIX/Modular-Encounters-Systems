@@ -1,0 +1,76 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Turret-GatlingToMissile</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_LargeGatlingTurret/(null)]
+        [NewBlock:MyObjectBuilder_LargeMissileTurret/(null)]
+
+        [OldBlock:MyObjectBuilder_LargeGatlingTurret/SmallGatlingTurret]
+        [NewBlock:MyObjectBuilder_LargeMissileTurret/SmallMissileTurret]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Turret-MissileToGatling</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_LargeMissileTurret/(null)]
+        [NewBlock:MyObjectBuilder_LargeGatlingTurret/(null)]
+
+        [OldBlock:MyObjectBuilder_LargeMissileTurret/SmallMissileTurret]
+        [NewBlock:MyObjectBuilder_LargeGatlingTurret/SmallGatlingTurret]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Gun-GatlingToMissile</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_SmallGatlingGun/(null)]
+        [NewBlock:MyObjectBuilder_SmallMissileLauncher/(null)]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Gun-MissileToGatling</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_SmallMissileLauncher/(null)]
+        [NewBlock:MyObjectBuilder_SmallGatlingGun/(null)]
+
+      </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

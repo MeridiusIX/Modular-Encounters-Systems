@@ -1,0 +1,410 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CubeBlocks>
+
+    <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
+      <Id>
+        <TypeId>Thrust</TypeId>
+        <SubtypeId>MES-NPC-Thrust-Ion-SmallGrid-Small</SubtypeId>
+      </Id>
+      <DisplayName>NPC Ion Thruster</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\thrust.dds</Icon>
+      <Description>Special thruster only usable by NPC Owned Identities</Description>
+      <CubeSize>Small</CubeSize>
+      <Public>false</Public>
+      <GuiVisible>false</GuiVisible>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="2" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Small\ThrustSmall.mwm</Model>
+      <ThrusterType>Ion</ThrusterType>
+      <SilenceableByShipSoundSystem>true</SilenceableByShipSoundSystem>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="LargeTube" Count="1" />
+        <Component Subtype="MESThrust" Count="1">
+          <DeconstructId>
+            <TypeId>Ore</TypeId>
+            <SubtypeId>Scrap</SubtypeId>
+          </DeconstructId>
+        </Component>
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="SteelPlate" Count="1" />
+      </Components>
+      <CriticalComponent Subtype="Thrust" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Bottom" StartX="0" StartY="1" EndX="1" EndY="2" />
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Left" StartX="1" StartY="0" EndX="2" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.50" File="Models\Cubes\Small\ThrustSmallConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Small\ThrustSmallConstruction_2.mwm" />
+      </BuildProgressModels>
+      <VoxelPlacement>
+        <!--Possible settings Both,InVoxel,OutsideVoxel,Volumetric. If volumetric set than MaxAllowed and MinAllowed will be used.-->
+        <StaticMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </StaticMode>
+        <DynamicMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </DynamicMode>
+      </VoxelPlacement>
+      <BlockPairName>NPC-IonThrust</BlockPairName>
+      <Center x="0" y="0" z="1" />
+      <MirroringZ>Y</MirroringZ>
+      <BuildTimeSeconds>10</BuildTimeSeconds>
+      <EdgeType>Light</EdgeType>
+
+      <ResourceSinkGroup>Thrust</ResourceSinkGroup>
+      <ForceMagnitude>14400</ForceMagnitude>
+      <MaxPowerConsumption>0.200</MaxPowerConsumption>
+      <MinPowerConsumption>0.000002</MinPowerConsumption>
+      <SlowdownFactor>1</SlowdownFactor>
+
+      <MinPlanetaryInfluence>0</MinPlanetaryInfluence>
+      <MaxPlanetaryInfluence>1</MaxPlanetaryInfluence>
+      <EffectivenessAtMinInfluence>1</EffectivenessAtMinInfluence>
+      <EffectivenessAtMaxInfluence>1</EffectivenessAtMaxInfluence>
+
+      <FlameDamageLengthScale>0.36</FlameDamageLengthScale>
+      <FlameDamage>0.1</FlameDamage>
+      <FlameLengthScale>1.4</FlameLengthScale>
+      <FlameIdleColor>
+        <X>0.2745098</X>
+        <Y>0.4090196</Y>
+        <Z>0.6505882</Z>
+        <W>0.75</W>
+      </FlameIdleColor>
+      <FlameFullColor>
+        <X>0.2745098</X>
+        <Y>0.4090196</Y>
+        <Z>0.6505882</Z>
+        <W>0.75</W>
+      </FlameFullColor>
+      <FlamePointMaterial>EngineThrustMiddle</FlamePointMaterial>
+      <FlameLengthMaterial>EngineThrustMiddle</FlameLengthMaterial>
+      <FlameFlare>SmallGridSmallThruster</FlameFlare>
+      <FlameVisibilityDistance>200</FlameVisibilityDistance>
+      <FlameGlareQuerySize>0.5</FlameGlareQuerySize>
+      <PrimarySound>SmShipSmJet</PrimarySound>
+      <DamageEffectName>Damage_WeapExpl_Damaged</DamageEffectName>
+      <DamagedSound>ParticleWeapExpl</DamagedSound>
+      <DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>15</PCU>      
+    </Definition>
+    
+    <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
+      <Id>
+        <TypeId>Thrust</TypeId>
+        <SubtypeId>MES-NPC-Thrust-Ion-SmallGrid-Large</SubtypeId>
+      </Id>
+      <DisplayName>NPC Large Ion Thruster</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\thrust_large.dds</Icon>
+      <Description>Special thruster only usable by NPC Owned Identities</Description>
+      <GuiVisible>false</GuiVisible>
+      <Public>false</Public>
+      <CubeSize>Small</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="3" y="2" z="4" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Small\ThrustLarge.mwm</Model>
+      <ThrusterType>Ion</ThrusterType>
+      <SilenceableByShipSoundSystem>true</SilenceableByShipSoundSystem>
+      <Components>
+        <Component Subtype="SteelPlate" Count="1" />
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="LargeTube" Count="5" />
+        <Component Subtype="MESThrust" Count="12">
+        <DeconstructId>
+          <TypeId>Ore</TypeId>
+          <SubtypeId>Scrap</SubtypeId>
+        </DeconstructId>
+        </Component>
+        <Component Subtype="Construction" Count="1" />
+        <Component Subtype="SteelPlate" Count="4" />
+      </Components>
+      <CriticalComponent Subtype="Thrust" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="3" EndY="2" Default="true" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="3" EndY="2" />
+        <MountPoint Side="Bottom" StartX="0" StartY="2" EndX="3" EndY="4" />
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="2" EndY="2" />
+        <MountPoint Side="Left" StartX="2" StartY="0" EndX="4" EndY="2" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.50" File="Models\Cubes\Small\ThrustLargeConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Small\ThrustLargeConstruction_2.mwm" />
+      </BuildProgressModels>
+      <VoxelPlacement>
+        <!--Possible settings Both,InVoxel,OutsideVoxel,Volumetric. If volumetric set than MaxAllowed and MinAllowed will be used.-->
+        <StaticMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </StaticMode>
+        <DynamicMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </DynamicMode>
+      </VoxelPlacement>
+      <BlockPairName>NPC-LargeIonThrust</BlockPairName>
+      <Center x="1" y="0" z="2" />
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <BuildTimeSeconds>20</BuildTimeSeconds>
+      <EdgeType>Light</EdgeType>
+
+      <ResourceSinkGroup>Thrust</ResourceSinkGroup>
+      <ForceMagnitude>172800</ForceMagnitude>
+      <MaxPowerConsumption>2.4</MaxPowerConsumption>
+      <MinPowerConsumption>0.000002</MinPowerConsumption>
+      <SlowdownFactor>1</SlowdownFactor>
+
+      <MinPlanetaryInfluence>0</MinPlanetaryInfluence>
+      <MaxPlanetaryInfluence>1</MaxPlanetaryInfluence>
+      <EffectivenessAtMinInfluence>1</EffectivenessAtMinInfluence>
+      <EffectivenessAtMaxInfluence>1</EffectivenessAtMaxInfluence>
+
+      <FlameDamageLengthScale>0.6</FlameDamageLengthScale>
+      <FlameDamage>0.2</FlameDamage>
+      <FlameLengthScale>1.15</FlameLengthScale>
+      <FlameIdleColor>
+        <X>0.2745098</X>
+        <Y>0.4090196</Y>
+        <Z>0.6505882</Z>
+        <W>0.75</W>
+      </FlameIdleColor>
+      <FlameFullColor>
+        <X>0.2745098</X>
+        <Y>0.4090196</Y>
+        <Z>0.6505882</Z>
+        <W>0.75</W>
+      </FlameFullColor>
+      <FlamePointMaterial>EngineThrustMiddle</FlamePointMaterial>
+      <FlameLengthMaterial>EngineThrustMiddle</FlameLengthMaterial>
+      <FlameFlare>SmallGridLargeThruster</FlameFlare>
+      <FlameVisibilityDistance>300</FlameVisibilityDistance>
+      <FlameGlareQuerySize>0.5</FlameGlareQuerySize>
+      <PrimarySound>SmShipLrgJet</PrimarySound>
+      <DamageEffectName>Damage_WeapExpl_Damaged</DamageEffectName>
+      <DamagedSound>ParticleWeapExpl</DamagedSound>
+      <DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>15</PCU>      
+    </Definition>
+    
+    <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
+      <Id>
+        <TypeId>Thrust</TypeId>
+        <SubtypeId>MES-NPC-Thrust-Ion-LargeGrid-Small</SubtypeId>
+      </Id>
+      <DisplayName>NPC Ion Thruster</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\thrust.dds</Icon>
+      <Description>Special thruster only usable by NPC Owned Identities</Description>
+      <CubeSize>Large</CubeSize>
+      <Public>false</Public>
+      <GuiVisible>false</GuiVisible>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="2" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Large\ThrustSmall.mwm</Model>
+      <ThrusterType>Ion</ThrusterType>
+      <SilenceableByShipSoundSystem>true</SilenceableByShipSoundSystem>
+      <Components>
+        <Component Subtype="SteelPlate" Count="15" />
+        <Component Subtype="Construction" Count="40" />
+        <Component Subtype="LargeTube" Count="8" />
+        <Component Subtype="MESThrust" Count="80">
+        <DeconstructId>
+          <TypeId>Ore</TypeId>
+          <SubtypeId>Scrap</SubtypeId>
+        </DeconstructId>
+        </Component>
+        <Component Subtype="Construction" Count="20" />
+        <Component Subtype="SteelPlate" Count="10" />
+      </Components>
+      <CriticalComponent Subtype="Thrust" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Bottom" StartX="0" StartY="1" EndX="1" EndY="2" />
+        <MountPoint Side="Left" StartX="1" StartY="0" EndX="2" EndY="1" />
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="1" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ThrustSmallConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\ThrustSmallConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ThrustSmallConstruction_3.mwm" />
+      </BuildProgressModels>
+      <VoxelPlacement>
+        <!--Possible settings Both,InVoxel,OutsideVoxel,Volumetric. If volumetric set than MaxAllowed and MinAllowed will be used.-->
+        <StaticMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </StaticMode>
+        <DynamicMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </DynamicMode>
+      </VoxelPlacement>
+      <BlockPairName>NPC-IonThrust</BlockPairName>
+      <Center x="0" y="0" z="1" />
+      <MirroringZ>Y</MirroringZ>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>40</BuildTimeSeconds>
+
+      <ResourceSinkGroup>Thrust</ResourceSinkGroup>
+      <ForceMagnitude>345600</ForceMagnitude>
+      <MaxPowerConsumption>3.36</MaxPowerConsumption>
+      <MinPowerConsumption>0.000002</MinPowerConsumption>
+      <SlowdownFactor>1</SlowdownFactor>
+
+      <MinPlanetaryInfluence>0</MinPlanetaryInfluence>
+      <MaxPlanetaryInfluence>1</MaxPlanetaryInfluence>
+      <EffectivenessAtMinInfluence>1</EffectivenessAtMinInfluence>
+      <EffectivenessAtMaxInfluence>1</EffectivenessAtMaxInfluence>
+
+      <FlameDamageLengthScale>0.61</FlameDamageLengthScale>
+      <FlameLengthScale>1.5</FlameLengthScale>
+      <FlameIdleColor>
+        <X>0.2745098</X>
+        <Y>0.4090196</Y>
+        <Z>0.6505882</Z>
+        <W>0.75</W>
+      </FlameIdleColor>
+      <FlameFullColor>
+        <X>0.2745098</X>
+        <Y>0.4090196</Y>
+        <Z>0.6505882</Z>
+        <W>0.75</W>
+      </FlameFullColor>
+      <FlamePointMaterial>EngineThrustMiddle</FlamePointMaterial>
+      <FlameLengthMaterial>EngineThrustMiddle</FlameLengthMaterial>
+      <FlameFlare>LargeGridSmallThruster</FlameFlare>
+      <FlameVisibilityDistance>500</FlameVisibilityDistance>
+      <FlameGlareQuerySize>1</FlameGlareQuerySize>
+      <PrimarySound>LrgShipSmJet</PrimarySound>
+      <DamageEffectName>Damage_WeapExpl_Damaged</DamageEffectName>
+      <DamagedSound>ParticleWeapExpl</DamagedSound>
+      <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>15</PCU>      
+    </Definition>
+    
+    <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
+      <Id>
+        <TypeId>Thrust</TypeId>
+        <SubtypeId>MES-NPC-Thrust-Ion-LargeGrid-Large</SubtypeId>
+      </Id>
+      <DisplayName>NPC Large Ion Thruster</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\thrust_large.dds</Icon>
+      <Description>Special thruster only usable by NPC Owned Identities</Description>
+      <CubeSize>Large</CubeSize>
+      <GuiVisible>false</GuiVisible>
+      <Public>false</Public>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="3" y="2" z="4" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Large\ThrustLarge.mwm</Model>
+      <ThrusterType>Ion</ThrusterType>
+      <SilenceableByShipSoundSystem>true</SilenceableByShipSoundSystem>
+      <Components>
+        <Component Subtype="SteelPlate" Count="100" />
+        <Component Subtype="Construction" Count="70" />
+        <Component Subtype="LargeTube" Count="40" />
+        <Component Subtype="MESThrust" Count="960">
+          <DeconstructId>
+            <TypeId>Ore</TypeId>
+            <SubtypeId>Scrap</SubtypeId>
+          </DeconstructId>
+        </Component>
+        <Component Subtype="Construction" Count="30" />
+        <Component Subtype="SteelPlate" Count="50" />
+      </Components>
+      <CriticalComponent Subtype="Thrust" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="3" EndY="2" Default="true" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="3" EndY="2" />
+        <MountPoint Side="Bottom" StartX="0" StartY="2" EndX="3" EndY="4" />
+        <MountPoint Side="Left" StartX="2" StartY="0" EndX="4" EndY="2" />
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="2" EndY="2" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.16" File="Models\Cubes\Large\ThrustLargeConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ThrustLargeConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="0.49" File="Models\Cubes\Large\ThrustLargeConstruction_3.mwm" />
+        <Model BuildPercentUpperBound="0.83" File="Models\Cubes\Large\ThrustLargeConstruction_4.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ThrustLargeConstruction_5.mwm" />
+      </BuildProgressModels>
+      <VoxelPlacement>
+        <!--Possible settings Both,InVoxel,OutsideVoxel,Volumetric. If volumetric set than MaxAllowed and MinAllowed will be used.-->
+        <StaticMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </StaticMode>
+        <DynamicMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </DynamicMode>
+      </VoxelPlacement>
+      <BlockPairName>NPC-LargeIonThrust</BlockPairName>
+      <Center x="1" y="0" z="2" />
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>90</BuildTimeSeconds>
+
+      <ResourceSinkGroup>Thrust</ResourceSinkGroup>
+      <ForceMagnitude>4320000</ForceMagnitude>
+      <MaxPowerConsumption>33.6</MaxPowerConsumption>
+      <MinPowerConsumption>0.000002</MinPowerConsumption>
+      <SlowdownFactor>1</SlowdownFactor>
+
+      <MinPlanetaryInfluence>0</MinPlanetaryInfluence>
+      <MaxPlanetaryInfluence>1</MaxPlanetaryInfluence>
+      <EffectivenessAtMinInfluence>1</EffectivenessAtMinInfluence>
+      <EffectivenessAtMaxInfluence>1</EffectivenessAtMaxInfluence>
+
+      <FlameDamageLengthScale>0.8</FlameDamageLengthScale>
+      <FlameLengthScale>1.15</FlameLengthScale>
+      <FlameIdleColor>
+        <X>0.2745098</X>
+        <Y>0.4090196</Y>
+        <Z>0.6505882</Z>
+        <W>0.75</W>
+      </FlameIdleColor>
+      <FlameFullColor>
+        <X>0.2745098</X>
+        <Y>0.4090196</Y>
+        <Z>0.6505882</Z>
+        <W>0.75</W>
+      </FlameFullColor>
+      <FlamePointMaterial>EngineThrustMiddle</FlamePointMaterial>
+      <FlameLengthMaterial>EngineThrustMiddle</FlameLengthMaterial>
+      <FlameFlare>LargeGridLargeThruster</FlameFlare>
+      <FlameVisibilityDistance>700</FlameVisibilityDistance>
+      <FlameGlareQuerySize>1.5</FlameGlareQuerySize>
+      <PrimarySound>LrgShipLrgJet</PrimarySound>
+      <DamageEffectName>Damage_WeapExpl_Damaged</DamageEffectName>
+      <DamagedSound>ParticleWeapExpl</DamagedSound>
+      <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>15</PCU>      
+    </Definition>
+
+  </CubeBlocks>
+</Definitions>

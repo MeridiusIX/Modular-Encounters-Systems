@@ -1,0 +1,47 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Autopilot-Sniper</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Autopilot]
+
+        [DisableInertiaDampeners:false]
+        [FlyLevelWithGravity:false]
+        [WaypointTolerance:50]
+        [IdealMinSpeed:50]
+        [IdealMaxSpeed:100]
+        [SlowDownOnWaypointApproach:true]
+        [ExtraSlowDownDistance:150]
+
+        [OffsetSpaceMinDistFromTarget:700]
+        [OffsetSpaceMaxDistFromTarget:800]
+
+        [OffsetPlanetMinDistFromTarget:200]
+        [OffsetPlanetMaxDistFromTarget:300]
+        [OffsetPlanetMinTargetAltitude:700]
+        [OffsetPlanetMaxTargetAltitude:701]
+
+        [WaypointWaitTimeTrigger:30]
+        [WaypointAbandonTimeTrigger:30]
+
+        [EngageDistanceSpace:500]
+        [EngageDistancePlanet:500]
+        [DisengageDistanceSpace:800]
+        [DisengageDistancePlanet:800]
+
+        [ReverseOffsetDistAltAboveHeight:true]
+        [ReverseOffsetHeight:1300]
+
+      </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

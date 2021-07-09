@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Blueprints>
+        <Blueprint>
+            <Id>
+                <TypeId>BlueprintDefinition</TypeId>
+                <SubtypeId>ProprietaryTech</SubtypeId>
+            </Id>
+            <DisplayName>DisplayName_Item_Datapad</DisplayName>
+            <Icon>Textures\GUI\Icons\Items\Datapad_Item.dds</Icon>
+            <Prerequisites>
+                <Item Amount="1" TypeId="Ingot" SubtypeId="Iron" />
+                <Item Amount="5" TypeId="Ingot" SubtypeId="Silicon" />
+                <Item Amount="1" TypeId="Ingot" SubtypeId="Stone" />
+            </Prerequisites>
+            <Results>
+                <Item Amount="1" TypeId="Component" SubtypeId="ProprietaryTech" />
+            </Results>
+            <BaseProductionTimeInSeconds>15</BaseProductionTimeInSeconds>
+        </Blueprint>
+    </Blueprints>
+</Definitions>

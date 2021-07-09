@@ -1,0 +1,92 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PhysicalItems>
+
+    <!-- ========================================================= -->
+    <!-- These Items Are Not Craftable In Assemblers Or Admin Menu -->
+    <!-- ========================================================= -->
+
+    <!-- ========================================================= -->
+    <!--          These Items Are Not Active In Code Yet           -->
+    <!-- ========================================================= -->
+
+    <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
+      <Id>
+        <TypeId>ConsumableItem</TypeId>
+        <SubtypeId>JetpackInhibitorBlocker</SubtypeId>
+      </Id>
+      <DisplayName>Jetpack Inhibitor Nullifier</DisplayName>
+      <Description>This module will temporarily negate the effects of Jetpack Inhibitor Blocks when activated. The effect lasts for 30 seconds and will drain 30 points of Suit Energy.</Description>
+      <Icon>Textures\GUI\Icons\Items\PowerKit.dds</Icon>
+      <IconSymbol>JN</IconSymbol>
+      <Size>
+        <X>0.14</X>
+        <Y>0.43</Y>
+        <Z>0.14</Z>
+      </Size>
+      <Mass>9</Mass>
+      <Volume>9</Volume>
+      <Model>Models\Items\PowerKit.mwm</Model>
+      <PhysicalMaterial>Metal</PhysicalMaterial>
+      <Stats>
+        <Stat Name="BatteryCharge" Value ="-0.01" Time="30"/>
+      </Stats>
+      <MinimalPricePerUnit>5000000</MinimalPricePerUnit>
+      <CanPlayerOrder>true</CanPlayerOrder>
+      <CanSpawnFromScreen>false</CanSpawnFromScreen>
+    </PhysicalItem>
+
+    <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
+      <Id>
+        <TypeId>ConsumableItem</TypeId>
+        <SubtypeId>DrillInhibitorBlocker</SubtypeId>
+      </Id>
+      <DisplayName>Drill Inhibitor Nullifier</DisplayName>
+      <Description>This module will temporarily negate the effects of Hand-Drill Inhibitor Blocks when activated. The effect lasts for 60 seconds and will drain 30 points of Suit Energy.</Description>
+      <Icon>Textures\GUI\Icons\Items\PowerKit.dds</Icon>
+      <IconSymbol>DN</IconSymbol>
+      <Size>
+        <X>0.14</X>
+        <Y>0.43</Y>
+        <Z>0.14</Z>
+      </Size>
+      <Mass>9</Mass>
+      <Volume>9</Volume>
+      <Model>Models\Items\PowerKit.mwm</Model>
+      <PhysicalMaterial>Metal</PhysicalMaterial>
+      <Stats>
+        <Stat Name="BatteryCharge" Value ="-0.005" Time="60"/>
+      </Stats>
+      <MinimalPricePerUnit>5000000</MinimalPricePerUnit>
+      <CanPlayerOrder>true</CanPlayerOrder>
+      <CanSpawnFromScreen>false</CanSpawnFromScreen>
+    </PhysicalItem>
+
+    <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
+      <Id>
+        <TypeId>ConsumableItem</TypeId>
+        <SubtypeId>PlayerInhibitorBlocker</SubtypeId>
+      </Id>
+      <DisplayName>Player Inhibitor Nullifier</DisplayName>
+      <Description>This module will temporarily negate the effects of Player Inhibitor Blocks when activated. The effect lasts for 30 seconds and will drain 30 points of Suit Energy.</Description>
+      <Icon>Textures\GUI\Icons\Items\PowerKit.dds</Icon>
+      <IconSymbol>PN</IconSymbol>
+      <Size>
+        <X>0.14</X>
+        <Y>0.43</Y>
+        <Z>0.14</Z>
+      </Size>
+      <Mass>9</Mass>
+      <Volume>9</Volume>
+      <Model>Models\Items\PowerKit.mwm</Model>
+      <PhysicalMaterial>Metal</PhysicalMaterial>
+      <Stats>
+        <Stat Name="BatteryCharge" Value ="-0.01" Time="30"/>
+      </Stats>
+      <MinimalPricePerUnit>5000000</MinimalPricePerUnit>
+      <CanPlayerOrder>true</CanPlayerOrder>
+      <CanSpawnFromScreen>false</CanSpawnFromScreen>
+    </PhysicalItem>
+    
+  </PhysicalItems>
+</Definitions>

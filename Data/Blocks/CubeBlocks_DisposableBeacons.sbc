@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CubeBlocks>
+
+		<Definition xsi:type="MyObjectBuilder_BeaconDefinition">
+			<Id>
+				<TypeId>Beacon</TypeId>
+				<SubtypeId>DisposableNpcBeaconLarge</SubtypeId>
+			</Id>
+			<DisplayName>Disposable Beacon</DisplayName>
+			<Public>false</Public>
+			<Icon>Textures\GUI\Icons\Cubes\beacon.dds</Icon>
+			<Description>Description_Beacon</Description>
+			<CubeSize>Large</CubeSize>
+			<BlockTopology>TriangleMesh</BlockTopology>
+			<Size x="1" y="2" z="1" />
+			<ModelOffset x="0" y="0" z="0" />
+			<Model>Models\Cubes\Large\beacon.mwm</Model>
+			<Components>
+				<Component Subtype="SteelPlate" Count="40" />
+				<Component Subtype="Construction" Count="30" />
+				<Component Subtype="LargeTube" Count="20" />
+				<Component Subtype="Computer" Count="10" />
+				<Component Subtype="RadioCommunication" Count="40" />
+				<Component Subtype="SteelPlate" Count="40" />
+			</Components>
+			<CriticalComponent Subtype="RadioCommunication" Index="0" />
+			<MountPoints>
+				<MountPoint Side="Bottom" StartX="0.1" StartY="0.1" EndX="0.9" EndY="0.9" Default="true" />
+				<MountPoint Side="Top" StartX="0.1" StartY="0.1" EndX="0.9" EndY="0.9" />
+				<MountPoint Side="Left" StartX="0.175" StartY="0.1" EndX="0.825" EndY="0.9" />
+				<MountPoint Side="Right" StartX="0.175" StartY="0.1" EndX="0.825" EndY="0.9" />
+				<MountPoint Side="Front" StartX="0.175" StartY="0.1" EndX="0.825" EndY="0.9" />
+				<MountPoint Side="Back" StartX="0.175" StartY="0.1" EndX="0.825" EndY="0.9" />
+			</MountPoints>
+			<BuildProgressModels>
+				<Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\BeaconConstruction_1.mwm" />
+				<Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\BeaconConstruction_2.mwm" />
+				<Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\BeaconConstruction_3.mwm" />
+			</BuildProgressModels>
+			<BlockPairName>DisposableBeacon</BlockPairName>
+			<EdgeType>Light</EdgeType>
+			<MirroringY>Z</MirroringY>
+			<BuildTimeSeconds>40</BuildTimeSeconds>
+			<DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+			<DamagedSound>ParticleElectrical</DamagedSound>
+
+			<!-- Beacon properties -->
+			<!-- Antenna info-->
+			<ResourceSinkGroup>Utility</ResourceSinkGroup>
+			<MaxBroadcastRadius>50000</MaxBroadcastRadius>
+			<Flare>BeaconLarge</Flare>
+			<MaxBroadcastPowerDrainkW>20</MaxBroadcastPowerDrainkW>      
+
+			<EmissiveColorPreset>Beacon</EmissiveColorPreset>
+			<DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+			<DestroySound>WepSmallWarheadExpl</DestroySound>
+			<PCU>50</PCU>
+			<IsAirTight>false</IsAirTight>      
+		</Definition>
+		
+		<Definition xsi:type="MyObjectBuilder_BeaconDefinition">
+			<Id>
+				<TypeId>Beacon</TypeId>
+				<SubtypeId>DisposableNpcBeaconSmall</SubtypeId>
+			</Id>
+			<DisplayName>Disposable Beacon</DisplayName>
+			<Public>false</Public>
+			<Icon>Textures\GUI\Icons\Cubes\beacon.dds</Icon>
+			<Description>Description_Beacon</Description>
+			<CubeSize>Small</CubeSize>
+			<BlockTopology>TriangleMesh</BlockTopology>
+			<Size x="1" y="1" z="2" />
+			<ModelOffset x="0" y="0" z="0" />
+			<Model>Models\Cubes\Small\beacon.mwm</Model>
+			<Components>
+				<Component Subtype="SteelPlate" Count="1" />
+				<Component Subtype="Construction" Count="1" />
+				<Component Subtype="SmallTube" Count="1" />
+				<Component Subtype="Computer" Count="1" />
+				<Component Subtype="RadioCommunication" Count="4" />
+				<Component Subtype="SteelPlate" Count="1" />
+			</Components>
+			<CriticalComponent Subtype="Computer" Index="0" />
+			<BuildProgressModels>
+				<Model BuildPercentUpperBound="0.50" File="Models\Cubes\Small\BeaconConstruction_1.mwm" />
+				<Model BuildPercentUpperBound="1.00" File="Models\Cubes\Small\BeaconConstruction_2.mwm" />
+			</BuildProgressModels>
+			<BlockPairName>DisposableBeacon</BlockPairName>
+			<MirroringY>Z</MirroringY>
+			<EdgeType>Light</EdgeType>
+			<BuildTimeSeconds>15</BuildTimeSeconds>
+			<DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+			<DamagedSound>ParticleElectrical</DamagedSound>
+			<!-- Beacon properties -->
+			<ResourceSinkGroup>Utility</ResourceSinkGroup>
+			<MaxBroadcastRadius>50000</MaxBroadcastRadius>
+			<Flare>BeaconSmall</Flare>
+			<MaxBroadcastPowerDrainkW>20</MaxBroadcastPowerDrainkW>
+			<!-- End Beacon Props-->
+			<EmissiveColorPreset>Beacon</EmissiveColorPreset>
+			<DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
+			<DestroySound>WepSmallWarheadExpl</DestroySound>
+			<PCU>50</PCU>
+			<IsAirTight>false</IsAirTight>
+		</Definition>
+		
+	</CubeBlocks>
+</Definitions>

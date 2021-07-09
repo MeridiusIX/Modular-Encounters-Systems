@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PhysicalItems>
+
+    <PhysicalItem>
+      <Id>
+        <TypeId>Ingot</TypeId>
+        <SubtypeId>UraniumB</SubtypeId>
+      </Id>
+      <DisplayName>Proprietary Uranium Fuel</DisplayName>
+      <Icon>Textures\GUI\Icons\ingot\uranium_ingot.dds</Icon>
+      <Size>
+        <X>0.037</X>
+        <Y>0.037</Y>
+        <Z>0.037</Z>
+      </Size>
+      <Mass>1</Mass>
+      <Volume>0.052</Volume>
+      <Model>Models\Ingots\uranium_ingot.mwm</Model>
+      <PhysicalMaterial>Metal</PhysicalMaterial>
+      <IconSymbol>IconSymbol_U</IconSymbol>
+      <MinimumOfferAmount>-1</MinimumOfferAmount>
+      <MaximumOfferAmount>-1</MaximumOfferAmount>
+      <MinimumOrderAmount>-1</MinimumOrderAmount>
+      <MaximumOrderAmount>-1</MaximumOrderAmount>
+      <CanPlayerOrder>false</CanPlayerOrder>
+      <CanSpawnFromScreen>false</CanSpawnFromScreen>
+      <MinimumAcquisitionAmount>-1</MinimumAcquisitionAmount>
+      <MaximumAcquisitionAmount>-1</MaximumAcquisitionAmount>
+    </PhysicalItem>
+
+  </PhysicalItems>
+
+</Definitions>

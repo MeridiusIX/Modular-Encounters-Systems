@@ -1,0 +1,38 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Autopilot-Fighter</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Autopilot]
+
+        [DisableInertiaDampeners:false]
+        [SlowDownOnWaypointApproach:true]
+        [ExtraSlowDownDistance:100]
+        [FlyLevelWithGravity:false]
+
+        [IdealMinSpeed:33]
+        [IdealMaxSpeed:100]
+
+        [EngageDistanceSpace:500]
+        [EngageDistancePlanet:600]
+        [DisengageDistanceSpace:800]
+        [DisengageDistancePlanet:800]
+
+        [AllowStrafing:true]
+        [StrafeMinDurationMs:1000]
+        [StrafeMaxDurationMs:1500]
+        [StrafeSpeedCutOff:45]
+
+      </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<EntityComponents>
+
+		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+			<Id>
+					<TypeId>Inventory</TypeId>
+					<SubtypeId>RAI-Generic-Behavior-Fighter</SubtypeId>
+			</Id>
+			<Description>
+
+			[RivalAI Behavior]
+			[BehaviorName:Fighter]
+
+			</Description>
+			
+		</EntityComponent>
+	
+	<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+			<Id>
+					<TypeId>Inventory</TypeId>
+					<SubtypeId>RAI-Generic-Behavior-Horsefly</SubtypeId>
+			</Id>
+			<Description>
+
+			[RivalAI Behavior]
+			[BehaviorName:Horsefly]
+
+			</Description>
+			
+		</EntityComponent>
+	
+	<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+			<Id>
+					<TypeId>Inventory</TypeId>
+					<SubtypeId>RAI-Generic-Behavior-HorseFighter</SubtypeId>
+			</Id>
+			<Description>
+
+			[RivalAI Behavior]
+			[BehaviorName:HorseFighter]
+
+			</Description>
+			
+		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+			<Id>
+				<TypeId>Inventory</TypeId>
+				<SubtypeId>RAI-Generic-Behavior-Nautical</SubtypeId>
+			</Id>
+			<Description>
+
+				[RivalAI Behavior]
+				[BehaviorName:Nautical]
+
+			</Description>
+
+		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+			<Id>
+				<TypeId>Inventory</TypeId>
+				<SubtypeId>RAI-Generic-Behavior-Sniper</SubtypeId>
+			</Id>
+			<Description>
+
+				[RivalAI Behavior]
+				[BehaviorName:Sniper]
+
+			</Description>
+
+		</EntityComponent>
+	
+		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+			<Id>
+					<TypeId>Inventory</TypeId>
+					<SubtypeId>RAI-Generic-Behavior-Strike</SubtypeId>
+			</Id>
+			<Description>
+
+			[RivalAI Behavior]
+			[BehaviorName:Strike]
+
+			</Description>
+			
+		</EntityComponent>
+
+	</EntityComponents>
+</Definitions>

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Autopilot-Hunter-A</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Autopilot]
+
+        [DisableInertiaDampeners:false]
+        [FlyLevelWithGravity:true]
+        [WaypointTolerance:25]
+        [IdealMinSpeed:10]
+        [IdealMaxSpeed:20]
+        [SlowDownOnWaypointApproach:true]
+        [ExtraSlowDownDistance:50]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Autopilot-Hunter-B</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Autopilot]
+
+        [DisableInertiaDampeners:false]
+        [FlyLevelWithGravity:false]
+        [WaypointTolerance:40]
+        [IdealMinSpeed:20]
+        [IdealMaxSpeed:100]
+        [SlowDownOnWaypointApproach:true]
+        [ExtraSlowDownDistance:50]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+    
+</Definitions>

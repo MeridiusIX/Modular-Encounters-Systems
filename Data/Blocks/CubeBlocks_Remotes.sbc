@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<CubeBlocks>
+
+		<Definition xsi:type="MyObjectBuilder_RemoteControlDefinition">
+			<Id>
+				<TypeId>RemoteControl</TypeId>
+				<SubtypeId>RivalAIRemoteControlLarge</SubtypeId>
+			</Id>
+			<DisplayName>AI Control Module</DisplayName>
+			<Public>false</Public>
+			<Icon>Textures\GUI\Icons\Cubes\RemoteControl.dds</Icon>
+			<Description>Description_RemoteControl</Description>
+			<CubeSize>Large</CubeSize>
+			<BlockTopology>TriangleMesh</BlockTopology>
+			<Size x="1" y="1" z="1" />
+			<ModelOffset x="0" y="0" z="0" />
+			<Model>Models\Cubes\Large\RemoteControl.mwm</Model>
+			<Components>
+				<Component Subtype="InteriorPlate" Count="5" />
+				<Component Subtype="Construction" Count="10" />
+				<Component Subtype="Motor" Count="1" />
+				<Component Subtype="Computer" Count="15" />
+				<Component Subtype="InteriorPlate" Count="5" />
+			</Components>
+			<CriticalComponent Subtype="Computer" Index="0" />
+			<MountPoints>
+				<MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+				<MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" />
+				<MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="0.7" />
+				<MountPoint Side="Left" StartX="0" StartY="0" EndX="0.3" EndY="0.7" />
+				<MountPoint Side="Left" StartX="0.3" StartY="0" EndX="1" EndY="1" />
+				<MountPoint Side="Right" StartX="0" StartY="0" EndX="0.7" EndY="1" />
+				<MountPoint Side="Right" StartX="0.7" StartY="0" EndX="1" EndY="0.7" />
+				<MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="0.7" />
+			</MountPoints>
+			<BuildProgressModels>
+				<Model BuildPercentUpperBound="0.50" File="Models\Cubes\Large\RemoteControlConstruction_1.mwm" />
+				<Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\RemoteControlConstruction_2.mwm" />
+			</BuildProgressModels>
+			<BlockPairName>RivalAIRemoteControl</BlockPairName>
+			<EdgeType>Light</EdgeType>
+			<BuildTimeSeconds>30</BuildTimeSeconds>
+			<MirroringY>Z</MirroringY>
+			<ResourceSinkGroup>Utility</ResourceSinkGroup>
+			<RequiredPowerInput>0.01</RequiredPowerInput>
+			<EnableFirstPerson>false</EnableFirstPerson>
+			<EnableShipControl>true</EnableShipControl>
+			<EnableBuilderCockpit>false</EnableBuilderCockpit>
+			<Public>true</Public>
+			<DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+			<DamagedSound>ParticleElectrical</DamagedSound>
+			<EmissiveColorPreset>RivalAIEmissive</EmissiveColorPreset>
+			<DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+			<DestroySound>WepSmallWarheadExpl</DestroySound>
+			<PCU>25</PCU>      
+		</Definition>
+		<Definition xsi:type="MyObjectBuilder_RemoteControlDefinition">
+			<Id>
+				<TypeId>RemoteControl</TypeId>
+				<SubtypeId>RivalAIRemoteControlSmall</SubtypeId>
+			</Id>
+			<DisplayName>AI Control Module</DisplayName>
+			<Public>false</Public>
+			<Icon>Textures\GUI\Icons\Cubes\RemoteControl.dds</Icon>
+			<Description>Description_RemoteControl</Description>
+			<CubeSize>Small</CubeSize>
+			<BlockTopology>TriangleMesh</BlockTopology>
+			<Size x="1" y="1" z="1" />
+			<ModelOffset x="0" y="0" z="0" />
+			<Model>Models\Cubes\Small\RemoteControl.mwm</Model>
+			<Components>
+				<Component Subtype="InteriorPlate" Count="1" />
+				<Component Subtype="Construction" Count="1" />
+				<Component Subtype="Motor" Count="1" />
+				<Component Subtype="Computer" Count="1" />
+				<Component Subtype="InteriorPlate" Count="1" />
+			</Components>
+			<CriticalComponent Subtype="Computer" Index="0" />
+			<MountPoints>
+				<MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+				<MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" />
+				<MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="1" />
+				<MountPoint Side="Left" StartX="0" StartY="0" EndX="1" EndY="1" />
+				<MountPoint Side="Right" StartX="0" StartY="0" EndX="1" EndY="1" />
+				<MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+			</MountPoints>
+			<BuildProgressModels>
+				<Model BuildPercentUpperBound="0.50" File="Models\Cubes\Small\RemoteControlConstruction_1.mwm" />
+				<Model BuildPercentUpperBound="1.00" File="Models\Cubes\Small\RemoteControlConstruction_2.mwm" />
+			</BuildProgressModels>
+			<BlockPairName>RivalAIRemoteControl</BlockPairName>
+			<MirroringY>Z</MirroringY>
+			<MirroringZ>Y</MirroringZ>
+			<EdgeType>Light</EdgeType>
+			<BuildTimeSeconds>14</BuildTimeSeconds>
+			<ResourceSinkGroup>Utility</ResourceSinkGroup>
+			<RequiredPowerInput>0.01</RequiredPowerInput>
+			<EnableFirstPerson>false</EnableFirstPerson>
+			<EnableShipControl>true</EnableShipControl>
+			<EnableBuilderCockpit>false</EnableBuilderCockpit>
+			<Public>true</Public>
+			<DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+			<DamagedSound>ParticleElectrical</DamagedSound>
+			<EmissiveColorPreset>RivalAIEmissive</EmissiveColorPreset>
+			<DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
+			<DestroySound>WepSmallWarheadExpl</DestroySound>
+			<PCU>25</PCU>
+			<IsAirTight>false</IsAirTight>      
+		</Definition>
+
+	</CubeBlocks>
+</Definitions>

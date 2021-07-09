@@ -1,0 +1,364 @@
+﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
+using Sandbox.ModAPI;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using VRage.Game;
+using VRage.ModAPI;
+using VRageMath;
+using static ModularEncountersSystems.API.WcApiDef;
+using static ModularEncountersSystems.API.WcApiDef.WeaponDefinition;
+
+namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
+	public class CoreWeapon : BaseWeapon, IWeapon{
+
+		internal int _weaponId;
+
+		internal Dictionary<string, MyDefinitionId> _ammoToMagazine = new Dictionary<string, MyDefinitionId>();
+		internal Dictionary<string, AmmoDef> _ammoToDefinition = new Dictionary<string, AmmoDef>();
+		internal bool _requiresPhysicalAmmo;
+		internal bool _beamAmmo;
+		internal bool _homingAmmo;
+		internal bool _flareAmmo;
+
+		internal WeaponDefinition _weaponDefinition;
+
+		public CoreWeapon(IMyTerminalBlock block, IMyRemoteControl remoteControl, IBehavior behavior, WeaponDefinition weaponDefinition, int weaponId) : base(block, remoteControl, behavior) {
+
+			if (BlockManager.AllWeaponCoreGuns.Contains(block.SlimBlock.BlockDefinition.Id)) {
+
+				BehaviorLogger.Write(block.CustomName + " Is WeaponCore Static Weapon", BehaviorDebugEnum.Weapon);
+				_isStatic = true;
+
+			} else {
+
+				BehaviorLogger.Write(block.CustomName + " Is WeaponCore Turret Weapon", BehaviorDebugEnum.Weapon);
+				_isTurret = true;
+
+			}
+
+			_weaponDefinition = weaponDefinition;
+			_weaponId = weaponId;
+
+			//Rate Of Fire
+			_rateOfFire = _weaponDefinition.HardPoint.Loading.RateOfFire;
+
+			//Get Ammo Stuff
+
+			BehaviorLogger.Write(_block.CustomName + " Available Ammo Check", BehaviorDebugEnum.Weapon);
+			if (_weaponDefinition.Ammos.Length > 0) {
+
+				foreach (var ammo in _weaponDefinition.Ammos) {
+
+					BehaviorLogger.Write(string.Format(" - {0} / {1}", ammo.AmmoMagazine, ammo.AmmoRound), BehaviorDebugEnum.Weapon);
+
+					if (!_ammoToMagazine.ContainsKey(ammo.AmmoRound))
+						_ammoToMagazine.Add(ammo.AmmoRound, new MyDefinitionId(typeof(MyObjectBuilder_AmmoMagazine), ammo.AmmoMagazine));
+
+					if (!_ammoToDefinition.ContainsKey(ammo.AmmoRound))
+						_ammoToDefinition.Add(ammo.AmmoRound, ammo);
+
+				}
+
+			} else {
+
+				BehaviorLogger.Write(_block.CustomName + " Has No WC Ammo Definitions", BehaviorDebugEnum.Weapon);
+				_isValid = false;
+			
+			}
+
+		}
+
+		private void StaticWeaponReadiness() {
+
+			var trajectory = _weaponSystem.MaxStaticWeaponRange > -1 ? MathHelper.Clamp(_ammoMaxTrajectory, 0, _weaponSystem.MaxStaticWeaponRange) : _ammoMaxTrajectory;
+
+			//Homing Weapon
+			if (_homingAmmo) {
+
+				if (_weaponSystem.AllowHomingWeaponMultiTargeting) {
+				
+					//TODO: Later Date
+				
+				} else {
+
+					if (_behavior.AutoPilot.Targeting.HasTarget()) {
+
+						bool threatMatch = false;
+
+						foreach (var threatType in _weaponDefinition.Targeting.Threats) {
+
+							if (threatType == TargetingDef.Threat.Characters && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Player) {
+
+								threatMatch = true;
+								break;
+
+							}
+
+							if (threatType == TargetingDef.Threat.Grids && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Grid) {
+
+								threatMatch = true;
+								break;
+
+							}
+
+						}
+
+						if (!threatMatch) {
+
+							//BehaviorLogger.Write(" - No Autopilot Target To assign For Homing Ammo", BehaviorDebugEnum.Weapon);
+							_readyToFire = false;
+							return;
+
+						}
+
+					} else {
+
+						_readyToFire = false;
+						return;
+
+					}
+
+					if (trajectory < _behavior.AutoPilot.Targeting.Target.Distance(_block.GetPosition())) {
+
+						//BehaviorLogger.Write(" - Target Out Of Range For Homing Ammo", BehaviorDebugEnum.Weapon);
+						_readyToFire = false;
+						return;
+
+					}
+				
+				}
+
+				return;
+
+			}
+
+			//Flare Weapon
+			if (_flareAmmo) {
+
+				if (!_weaponSystem.UseAntiSmartWeapons || !_weaponSystem.IncomingHomingProjectiles) {
+
+					//BehaviorLogger.Write(" - No Incoming Homing Weapons For Firing Flares", BehaviorDebugEnum.Weapon);
+					_readyToFire = false;
+					return;
+
+				}
+
+				return;
+			
+			}
+
+			//---------------------
+			//----Other Weapons----
+			//---------------------
+
+			_readyToFire = StaticWeaponAlignedToTarget(_beamAmmo);
+
+		}
+
+		public bool HasAmmo() {
+
+			bool gotAmmoDetails = false;
+			bool gotAmmoResult = false;
+
+			if (_currentAmmoMagazine == new MyDefinitionId()) {
+
+				gotAmmoDetails = true;
+				gotAmmoResult = GetAmmoDetails();
+
+			}
+
+			if (MyAPIGateway.Session.CreativeMode || !_requiresPhysicalAmmo)
+				return true;
+
+			if (_inventory.GetItemAmount(_currentAmmoMagazine) == 0) {
+
+				if (_weaponSystem.UseAmmoReplenish && _ammoRefills < _weaponSystem.MaxAmmoReplenishments) {
+
+					_pendingAmmoRefill = true;
+
+				} else {
+
+					return false;
+
+				}
+
+			}
+
+			if(!gotAmmoDetails)
+				gotAmmoResult = GetAmmoDetails();
+
+
+			return gotAmmoResult;
+		
+		}
+
+		private bool GetAmmoDetails() {
+
+			//BehaviorLogger.Write(string.Format(" - Getting Ammo Details For Core Weapon: {0}", _block.CustomName), BehaviorDebugEnum.Weapon);
+			var currentAmmo = APIs.WeaponCore.GetActiveAmmo(_block, _weaponId);
+			//BehaviorLogger.Write(string.Format(" - CurrentAmmo For Core Weapon {0}: {1}", _block.CustomName, currentAmmo ?? "N/A"), BehaviorDebugEnum.Weapon);
+
+			if (_ammoRound != currentAmmo) {
+
+				//BehaviorLogger.Write(" - Create New Ammo Def", BehaviorDebugEnum.Weapon);
+				var ammoDef = new AmmoDef();
+
+				if (currentAmmo != null) {
+
+					//BehaviorLogger.Write(" - Try Get From Ammo-To-Def", BehaviorDebugEnum.Weapon);
+					_ammoToDefinition.TryGetValue(currentAmmo, out ammoDef);
+					//BehaviorLogger.Write(" - Try Get From Ammo-To-Def", BehaviorDebugEnum.Weapon);
+
+				} else {
+
+					//BehaviorLogger.Write(" - Try Get From Index 0", BehaviorDebugEnum.Weapon);
+					ammoDef = _weaponDefinition.Ammos[0];
+
+				}
+
+				if (!string.IsNullOrWhiteSpace(ammoDef?.AmmoRound)) {
+
+					//BehaviorLogger.Write(" - Populate Ammo Data", BehaviorDebugEnum.Weapon);
+					_ammoRound = currentAmmo;
+					_currentAmmoMagazine = new MyDefinitionId(typeof(MyObjectBuilder_AmmoMagazine), ammoDef.AmmoMagazine);
+					_requiresPhysicalAmmo = _currentAmmoMagazine.SubtypeName != "Energy";
+					_beamAmmo = ammoDef.Beams.Enable;
+					_homingAmmo = ammoDef.Trajectory.Guidance == AmmoDef.TrajectoryDef.GuidanceType.Smart || ammoDef.Trajectory.Guidance == AmmoDef.TrajectoryDef.GuidanceType.TravelTo;
+					_flareAmmo = ammoDef.AreaEffect.AreaEffect == AmmoDef.AreaDamageDef.AreaEffectType.AntiSmart;
+					_ammoMaxTrajectory = ammoDef.Trajectory.MaxTrajectory;
+					_ammoMaxVelocity = _beamAmmo ? -1 : ammoDef.Trajectory.DesiredSpeed;
+					_ammoInitialVelocity = _beamAmmo ? -1 : ammoDef.Trajectory.DesiredSpeed;
+					_ammoAcceleration = _beamAmmo ? -1 : ammoDef.Trajectory.AccelPerSec;
+
+				} else {
+
+					//BehaviorLogger.Write(" - AmmoDef Was Null", BehaviorDebugEnum.Weapon);
+					return false;
+
+				}
+
+			}
+
+			return true;
+
+		}
+
+		public IMyEntity CurrentTarget() {
+
+			return !IsValid() ? null : APIs.WeaponCore.GetWeaponTarget(_block, _weaponId).Item4;
+
+		}
+
+		public void DetermineWeaponReadiness() {
+
+			//BehaviorLogger.Write(_block.CustomName + " WC Check Readiness", BehaviorDebugEnum.Weapon);
+
+			_readyToFire = true;
+
+			//Valid
+			if (!IsValid() || !IsActive()) {
+
+				//BehaviorLogger.Write(string.Format(" - Core Valid/Active Check Failed: {0} / {1}", IsValid(), IsActive()), BehaviorDebugEnum.Weapon);
+				_readyToFire = false;
+				return;
+
+			}
+
+			//Ammo
+			if (!HasAmmo()) {
+
+				//BehaviorLogger.Write(string.Format(" - AmmoRound: {0} /// AmmoMag: {1}", _ammoRound ?? "null", _currentAmmoMagazine.SubtypeName ?? "null"), BehaviorDebugEnum.Weapon);
+				_readyToFire = false;
+				return;
+
+			}
+
+			//WeaponCoreReadyFireCheck
+			if (_isStatic)
+				StaticWeaponReadiness();
+
+		}
+
+		public void FireOnce() {
+
+			if (_isTurret)
+				return;
+
+			if (_isValid && IsActive() && _readyToFire) {
+
+				BehaviorLogger.Write(_block.CustomName + " Fire Once", BehaviorDebugEnum.Weapon);
+				APIs.WeaponCore.FireWeaponOnce(_block, false, _weaponId);
+
+			}
+	
+		}
+
+		public override bool IsBarrageWeapon() {
+
+			if (!_checkBarrageWeapon) {
+
+				_checkBarrageWeapon = true;
+
+				if (_isStatic && _weaponSystem.UseBarrageFire) {
+
+					_isBarrageWeapon = _rateOfFire < _weaponSystem.MaxFireRateForBarrageWeapons;
+
+				}
+
+			}
+
+			return _isBarrageWeapon;
+
+		}
+
+		public void SetTarget(IMyEntity entity) {
+
+			if (!IsValid())
+				return;
+
+			APIs.WeaponCore.SetWeaponTarget(_block, entity, _weaponId);
+
+		}
+
+		public void ToggleFire() {
+
+			if (_isTurret)
+				return;
+
+			//BehaviorLogger.Write(_block.CustomName + " Valid:  " + _isValid, BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write(_block.CustomName + " Active: " + IsActive(), BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write(_block.CustomName + " Ready:  " + _readyToFire, BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write(_block.CustomName + " Barra:  " + _isBarrageWeapon, BehaviorDebugEnum.Weapon);
+
+
+			if (_isValid && IsActive() && _readyToFire && !_isBarrageWeapon) {
+
+				if (!_firing) {
+
+					BehaviorLogger.Write(_block.CustomName + " Start Fire", BehaviorDebugEnum.Weapon);
+					_firing = true;
+					APIs.WeaponCore.ToggleWeaponFire(_block, true, false, _weaponId);
+
+				}
+
+			} else {
+
+				if (_firing) {
+
+					BehaviorLogger.Write(_block.CustomName + " End Fire", BehaviorDebugEnum.Weapon);
+					_firing = false;
+					APIs.WeaponCore.ToggleWeaponFire(_block, false, false, _weaponId);
+
+				}
+
+			}
+
+		}
+
+	}
+}

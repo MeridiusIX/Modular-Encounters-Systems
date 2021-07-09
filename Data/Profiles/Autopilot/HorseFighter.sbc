@@ -1,0 +1,37 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Autopilot-HorseFighter</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Autopilot]
+
+        [DisableInertiaDampeners:false]
+        [SlowDownOnWaypointApproach:true]
+        [FlyLevelWithGravity:false]
+        [MinimumPlanetAltitude:200]
+        [IdealPlanetAltitude:300]
+        [WaypointTolerance:30]
+        [OffsetSpaceMinDistFromTarget:150]
+        [OffsetSpaceMaxDistFromTarget:300]
+        [OffsetPlanetMinDistFromTarget:150]
+        [OffsetPlanetMaxDistFromTarget:300]
+        [OffsetPlanetMinTargetAltitude:-200]
+        [OffsetPlanetMaxTargetAltitude:200]
+        [AllowStrafing:true]
+        [StrafeMinDurationMs:1000]
+        [StrafeMaxDurationMs:1500]
+        [StrafeSpeedCutOff:45]
+
+      </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

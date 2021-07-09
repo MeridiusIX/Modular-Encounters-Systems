@@ -1,0 +1,1184 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Prefabs>
+	
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-1" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+	
+	<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-2" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+	
+	<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-3" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+	
+	<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-4" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-5" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-6" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-7" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-8" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-9" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-10" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-11" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-12" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-13" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-14" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-15" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-16" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-17" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-18" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-19" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-20" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-21" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-22" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-23" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-24" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-25" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-26" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-27" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-28" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-29" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-Prefab-1-30" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+
+		<Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
+			<Id Type="MyObjectBuilder_PrefabDefinition" Subtype="MES-CreaturePrefabDummy" />
+			<CubeGrids>
+				<CubeGrid>
+					<SubtypeName />
+					<EntityId>79730343402269317</EntityId>
+					<PersistentFlags>CastShadows InScene</PersistentFlags>
+					<PositionAndOrientation>
+						<Position x="-26158.801077397446" y="100551.42175794105" z="392.18768626836754" />
+						<Forward x="-0" y="-0" z="-1" />
+						<Up x="0" y="1" z="0" />
+						<Orientation>
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+							<W>1</W>
+						</Orientation>
+					</PositionAndOrientation>
+					<LocalPositionAndOrientation xsi:nil="true" />
+					<GridSizeEnum>Large</GridSizeEnum>
+					<CubeBlocks>
+						<MyObjectBuilder_CubeBlock xsi:type="MyObjectBuilder_MotorRotor">
+							<SubtypeName>LargeRotor</SubtypeName>
+							<EntityId>93885501934646687</EntityId>
+							<ParentEntityId>0</ParentEntityId>
+							<YieldLastComponent>false</YieldLastComponent>
+						</MyObjectBuilder_CubeBlock>
+					</CubeBlocks>
+					<DisplayName>Large Grid 9317</DisplayName>
+					<DestructibleBlocks>true</DestructibleBlocks>
+					<IsRespawnGrid>false</IsRespawnGrid>
+					<LocalCoordSys>0</LocalCoordSys>
+					<TargetingTargets />
+				</CubeGrid>
+			</CubeGrids>
+			<EnvironmentType>None</EnvironmentType>
+		</Prefab>
+	
+	</Prefabs>
+</Definitions>

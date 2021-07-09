@@ -1,0 +1,39 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Autopilot-Strike</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Autopilot]
+
+        [DisableInertiaDampeners:false]
+        [FlyLevelWithGravity:false]
+        [CollisionEvasionWaypointCalculatedAwayFromEntity:true]
+        [WaypointTolerance:50]
+        [IdealMinSpeed:50]
+        [IdealMaxSpeed:100]
+        [SlowDownOnWaypointApproach:true]
+        [ExtraSlowDownDistance:50]
+
+        [OffsetSpaceMinDistFromTarget:900]
+        [OffsetSpaceMaxDistFromTarget:1000]
+        [OffsetPlanetMinDistFromTarget:100]
+        [OffsetPlanetMaxDistFromTarget:150]
+        [OffsetPlanetMinTargetAltitude:900]
+        [OffsetPlanetMaxTargetAltitude:1100]
+
+        [ReverseOffsetDistAltAboveHeight:true]
+        [ReverseOffsetHeight:1300]
+
+      </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

@@ -1,0 +1,105 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-NpcThrusters-Ion</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Ion-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Ion-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Ion-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Ion-LargeGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallThrustSciFi]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IonSciFi-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeThrustSciFi]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IonSciFi-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallThrustSciFi]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IonSciFi-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeThrustSciFi]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IonSciFi-LargeGrid-Large]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-NpcThrusters-Atmo</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallAtmosphericThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Atmo-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeAtmosphericThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Atmo-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallAtmosphericThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Atmo-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeAtmosphericThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Atmo-LargeGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallAtmosphericThrustSciFi]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoSciFi-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeAtmosphericThrustSciFi]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoSciFi-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallAtmosphericThrustSciFi]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoSciFi-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeAtmosphericThrustSciFi]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoSciFi-LargeGrid-Large]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-NpcThrusters-Hydro</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallHydrogenThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Hydro-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeHydrogenThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Hydro-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallHydrogenThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Hydro-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeHydrogenThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Hydro-LargeGrid-Large]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

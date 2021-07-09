@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CubeBlocks>
+    
+    <!--HydrogenThrusters-->
+    <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
+      <Id>
+        <TypeId>Thrust</TypeId>
+        <SubtypeId>MES-NPC-Thrust-Hydro-LargeGrid-Large</SubtypeId>
+      </Id>
+      <DisplayName>NPC Large Hydrogen Thruster</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\HydrogenThrusterLarge.dds</Icon>
+      <Description>Special thruster only usable by NPC Owned Identities</Description>
+      <CubeSize>Large</CubeSize>
+      <GuiVisible>false</GuiVisible>
+      <Public>false</Public>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="3" y="3" z="3" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Large\HydrogenThrusterLarge.mwm</Model>
+      <ThrusterType>Hydrogen</ThrusterType>
+      <SilenceableByShipSoundSystem>true</SilenceableByShipSoundSystem>
+      <Components>
+        <Component Subtype="SteelPlate" Count="100" />
+        <Component Subtype="Construction" Count="150" />
+        <Component Subtype="MetalGrid" Count="250" />
+        <Component Subtype="LargeTube" Count="40" />
+        <Component Subtype="Construction" Count="30" />
+        <Component Subtype="SteelPlate" Count="50" />
+      </Components>
+      <CriticalComponent Subtype="LargeTube" Index="0" />
+      <Center x="1" y="1" z="2" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0" StartY="1" EndX="3" EndY="2" Default="true"/>
+        <MountPoint Side="Back" StartX="1" StartY="0" EndX="2" EndY="1" Default="true"/>
+        <MountPoint Side="Back" StartX="1" StartY="2" EndX="2" EndY="3" Default="true"/>
+        <MountPoint Side="Right" StartX="0" StartY="1" EndX="1" EndY="2" />
+        <MountPoint Side="Bottom" StartX="1" StartY="2" EndX="2" EndY="3" />
+        <MountPoint Side="Left" StartX="2" StartY="1" EndX="3" EndY="2" />
+        <MountPoint Side="Top" StartX="1" StartY="0" EndX="2" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\HydrogenThrusterLarge_Construction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\HydrogenThrusterLarge_Construction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\HydrogenThrusterLarge_Construction_3.mwm" />
+      </BuildProgressModels>
+      <VoxelPlacement>
+        <!--Possible settings Both,InVoxel,OutsideVoxel,Volumetric. If volumetric set than MaxAllowed and MinAllowed will be used.-->
+        <StaticMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </StaticMode>
+        <DynamicMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </DynamicMode>
+      </VoxelPlacement>
+      <BlockPairName>NPC-LargeHydrogenThrust</BlockPairName>
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>90</BuildTimeSeconds>
+      <FuelConverter>
+        <FuelId>
+          <TypeId>GasProperties</TypeId>
+          <SubtypeId>Hydrogen</SubtypeId>
+        </FuelId>
+        <Efficiency>1</Efficiency>
+      </FuelConverter>
+      <MaxPowerConsumption>7.5</MaxPowerConsumption>
+      <MinPowerConsumption>0.000000001</MinPowerConsumption>
+      <ResourceSinkGroup>Thrust</ResourceSinkGroup>
+      <ForceMagnitude>7200000</ForceMagnitude>
+      <SlowdownFactor>1</SlowdownFactor>
+      <FlameDamageLengthScale>0.6</FlameDamageLengthScale>
+      <FlameLengthScale>1.15</FlameLengthScale>
+      <FlameIdleColor>
+        <X>1</X>
+        <Y>0.85</Y>
+        <Z>0.3</Z>
+        <W>0.75</W>
+      </FlameIdleColor>
+      <FlameFullColor>
+        <X>1</X>
+        <Y>0.75</Y>
+        <Z>0.2</Z>
+        <W>0.75</W>
+      </FlameFullColor>
+      <FlamePointMaterial>EngineThrustMiddle</FlamePointMaterial>
+      <FlameLengthMaterial>EngineThrustMiddle</FlameLengthMaterial>
+      <FlameFlare>LargeGridLargeThruster</FlameFlare>
+      <FlameVisibilityDistance>700</FlameVisibilityDistance>
+      <FlameGlareQuerySize>1.5</FlameGlareQuerySize>
+      <PrimarySound>LrgShipLrgJetHydrogen</PrimarySound>
+      <DamageEffectName>Damage_WeapExpl_Damaged</DamageEffectName>
+      <DamagedSound>ParticleWeapExpl</DamagedSound>
+      <Public>false</Public>
+      <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>15</PCU>      
+    </Definition>
+    
+    <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
+      <Id>
+        <TypeId>Thrust</TypeId>
+        <SubtypeId>MES-NPC-Thrust-Hydro-LargeGrid-Small</SubtypeId>
+      </Id>
+      <DisplayName>NPC Hydrogen Thruster</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\HydrogenThrusterSmall.dds</Icon>
+      <Description>Special thruster only usable by NPC Owned Identities</Description>
+      <CubeSize>Large</CubeSize>
+      <GuiVisible>false</GuiVisible>
+      <Public>false</Public>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Large\HydrogenThrusterSmall.mwm</Model>
+      <ThrusterType>Hydrogen</ThrusterType>
+      <SilenceableByShipSoundSystem>true</SilenceableByShipSoundSystem>
+      <Components>
+        <Component Subtype="SteelPlate" Count="15" />
+        <Component Subtype="Construction" Count="40" />
+        <Component Subtype="MetalGrid" Count="40" />
+        <Component Subtype="LargeTube" Count="8" />
+        <Component Subtype="Construction" Count="20" />
+        <Component Subtype="SteelPlate" Count="10" />
+      </Components>
+      <CriticalComponent Subtype="LargeTube" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Left" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="1" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\HydrogenThrusterSmall_Construction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\HydrogenThrusterSmall_Construction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\HydrogenThrusterSmall_Construction_3.mwm" />
+      </BuildProgressModels>
+      <VoxelPlacement>
+        <!--Possible settings Both,InVoxel,OutsideVoxel,Volumetric. If volumetric set than MaxAllowed and MinAllowed will be used.-->
+        <StaticMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </StaticMode>
+        <DynamicMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </DynamicMode>
+      </VoxelPlacement>
+      <BlockPairName>NPC-HydrogenThrust</BlockPairName>
+      <Center x="0" y="0" z="0" />
+      <MirroringZ>Y</MirroringZ>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>40</BuildTimeSeconds>
+      <ResourceSinkGroup>Thrust</ResourceSinkGroup>
+      <ForceMagnitude>1080000</ForceMagnitude>
+      <SlowdownFactor>1</SlowdownFactor>
+      <FuelConverter>
+        <FuelId>
+          <TypeId>GasProperties</TypeId>
+          <SubtypeId>Hydrogen</SubtypeId>
+        </FuelId>
+        <Efficiency>1</Efficiency>
+      </FuelConverter>
+      <MaxPowerConsumption>1.25</MaxPowerConsumption>
+      <MinPowerConsumption>0.000000001</MinPowerConsumption>
+      <FlameDamageLengthScale>0.6</FlameDamageLengthScale>
+      <FlameLengthScale>1.15</FlameLengthScale>
+      <FlameIdleColor>
+        <X>1</X>
+        <Y>0.85</Y>
+        <Z>0.3</Z>
+        <W>0.75</W>
+      </FlameIdleColor>
+      <FlameFullColor>
+        <X>1</X>
+        <Y>0.75</Y>
+        <Z>0.2</Z>
+        <W>0.75</W>
+      </FlameFullColor>
+      <FlamePointMaterial>EngineThrustMiddle</FlamePointMaterial>
+      <FlameLengthMaterial>EngineThrustMiddle</FlameLengthMaterial>
+      <FlameFlare>LargeGridSmallThruster</FlameFlare>
+      <FlameVisibilityDistance>500</FlameVisibilityDistance>
+      <FlameGlareQuerySize>1</FlameGlareQuerySize>
+      <PrimarySound>LrgShipSmJetHydrogen</PrimarySound>
+      <DamageEffectName>Damage_WeapExpl_Damaged</DamageEffectName>
+      <DamagedSound>ParticleWeapExpl</DamagedSound>
+      <Public>false</Public>
+      <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>15</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+    
+    <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
+      <Id>
+        <TypeId>Thrust</TypeId>
+        <SubtypeId>MES-NPC-Thrust-Hydro-SmallGrid-Large</SubtypeId>
+      </Id>
+      <DisplayName>NPC Large Hydrogen Thruster</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\HydrogenThrusterLarge.dds</Icon>
+      <Description>Special thruster only usable by NPC Owned Identities</Description>
+      <CubeSize>Small</CubeSize>
+      <GuiVisible>false</GuiVisible>
+      <Public>false</Public>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="3" y="3" z="3" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Small\HydrogenThrusterLarge.mwm</Model>
+      <ThrusterType>Hydrogen</ThrusterType>
+      <SilenceableByShipSoundSystem>true</SilenceableByShipSoundSystem>
+      <Components>
+        <Component Subtype="SteelPlate" Count="20" />
+        <Component Subtype="Construction" Count="20" />
+        <Component Subtype="MetalGrid" Count="22" />
+        <Component Subtype="LargeTube" Count="10" />
+        <Component Subtype="Construction" Count="10" />
+        <Component Subtype="SteelPlate" Count="10" />
+      </Components>
+      <CriticalComponent Subtype="LargeTube" Index="0" />
+      <Center x="1" y="1" z="2" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0" StartY="1" EndX="3" EndY="2" Default="true" />
+        <MountPoint Side="Back" StartX="1" StartY="0" EndX="2" EndY="1" Default="true"/>
+        <MountPoint Side="Back" StartX="1" StartY="2" EndX="2" EndY="3" Default="true"/>
+        <MountPoint Side="Right" StartX="0" StartY="1" EndX="1" EndY="2" />
+        <MountPoint Side="Bottom" StartX="1" StartY="2" EndX="2" EndY="3" />
+        <MountPoint Side="Left" StartX="2" StartY="1" EndX="3" EndY="2" />
+        <MountPoint Side="Top" StartX="1" StartY="0" EndX="2" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Small\HydrogenThrusterLarge_Construction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Small\HydrogenThrusterLarge_Construction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Small\HydrogenThrusterLarge_Construction_3.mwm" />
+      </BuildProgressModels>
+      <VoxelPlacement>
+        <!--Possible settings Both,InVoxel,OutsideVoxel,Volumetric. If volumetric set than MaxAllowed and MinAllowed will be used.-->
+        <StaticMode>
+          <PlacementMode>OutsideVoxel</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </StaticMode>
+        <DynamicMode>
+          <PlacementMode>OutsideVoxel</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </DynamicMode>
+      </VoxelPlacement>
+      <BlockPairName>NPC-LargeHydrogenThrust</BlockPairName>
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>20</BuildTimeSeconds>
+      <FuelConverter>
+        <FuelId>
+          <TypeId>GasProperties</TypeId>
+          <SubtypeId>Hydrogen</SubtypeId>
+        </FuelId>
+        <Efficiency>1</Efficiency>
+      </FuelConverter>
+      <MaxPowerConsumption>0.6</MaxPowerConsumption>
+      <MinPowerConsumption>0.000000001</MinPowerConsumption>
+      <ResourceSinkGroup>Thrust</ResourceSinkGroup>
+      <ForceMagnitude>480000</ForceMagnitude>
+      <SlowdownFactor>1</SlowdownFactor>
+      <FlameDamageLengthScale>0.6</FlameDamageLengthScale>
+      <FlameLengthScale>1.15</FlameLengthScale>
+      <FlameIdleColor>
+        <X>1</X>
+        <Y>0.85</Y>
+        <Z>0.3</Z>
+        <W>0.75</W>
+      </FlameIdleColor>
+      <FlameFullColor>
+        <X>1</X>
+        <Y>0.75</Y>
+        <Z>0.2</Z>
+        <W>0.75</W>
+      </FlameFullColor>
+      <FlamePointMaterial>EngineThrustMiddle</FlamePointMaterial>
+      <FlameLengthMaterial>EngineThrustMiddle</FlameLengthMaterial>
+      <FlameFlare>LargeGridLargeThruster</FlameFlare>
+      <FlameVisibilityDistance>700</FlameVisibilityDistance>
+      <FlameGlareQuerySize>1.5</FlameGlareQuerySize>
+      <PrimarySound>SmShipLrgJetHydrogen</PrimarySound>
+      <DamageEffectName>Damage_WeapExpl_Damaged</DamageEffectName>
+      <DamagedSound>ParticleWeapExpl</DamagedSound>
+      <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>15</PCU>      
+    </Definition>
+    
+    <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
+      <Id>
+        <TypeId>Thrust</TypeId>
+        <SubtypeId>MES-NPC-Thrust-Hydro-SmallGrid-Small</SubtypeId>
+      </Id>
+      <DisplayName>NPC Hydrogen Thruster</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\HydrogenThrusterSmall.dds</Icon>
+      <Description>Special thruster only usable by NPC Owned Identities</Description>
+      <CubeSize>Small</CubeSize>
+      <GuiVisible>false</GuiVisible>
+      <Public>false</Public>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Small\HydrogenThrusterSmall.mwm</Model>
+      <ThrusterType>Hydrogen</ThrusterType>
+      <SilenceableByShipSoundSystem>true</SilenceableByShipSoundSystem>
+      <Components>
+        <Component Subtype="SteelPlate" Count="2" />
+        <Component Subtype="Construction" Count="10" />
+        <Component Subtype="MetalGrid" Count="4" />
+        <Component Subtype="LargeTube" Count="2" />
+        <Component Subtype="Construction" Count="5" />
+        <Component Subtype="SteelPlate" Count="5" />
+      </Components>
+      <CriticalComponent Subtype="LargeTube" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" Default="true"/>
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Left" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="1" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Small\HydrogenThrusterSmall_Construction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Small\HydrogenThrusterSmall_Construction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Small\HydrogenThrusterSmall_Construction_3.mwm" />
+      </BuildProgressModels>
+      <VoxelPlacement>
+        <!--Possible settings Both,InVoxel,OutsideVoxel,Volumetric. If volumetric set than MaxAllowed and MinAllowed will be used.-->
+        <StaticMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </StaticMode>
+        <DynamicMode>
+          <PlacementMode>Volumetric</PlacementMode>
+          <MaxAllowed>0.2</MaxAllowed>
+          <MinAllowed>0</MinAllowed>
+        </DynamicMode>
+      </VoxelPlacement>
+      <BlockPairName>NPC-HydrogenThrust</BlockPairName>
+      <Center x="0" y="0" z="0" />
+      <MirroringZ>Y</MirroringZ>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>10</BuildTimeSeconds>
+      <ResourceSinkGroup>Thrust</ResourceSinkGroup>
+      <ForceMagnitude>98400</ForceMagnitude>
+      <FuelConverter>
+        <FuelId>
+          <TypeId>GasProperties</TypeId>
+          <SubtypeId>Hydrogen</SubtypeId>
+        </FuelId>
+        <Efficiency>1</Efficiency>
+      </FuelConverter>
+      <MaxPowerConsumption>0.125</MaxPowerConsumption>
+      <MinPowerConsumption>0.000000001</MinPowerConsumption>
+      <SlowdownFactor>1</SlowdownFactor>
+      <FlameDamageLengthScale>0.34</FlameDamageLengthScale>
+      <FlameLengthScale>1.5</FlameLengthScale>
+      <FlameIdleColor>
+        <X>1</X>
+        <Y>0.85</Y>
+        <Z>0.3</Z>
+        <W>0.75</W>
+      </FlameIdleColor>
+      <FlameFullColor>
+        <X>1</X>
+        <Y>0.75</Y>
+        <Z>0.2</Z>
+        <W>0.75</W>
+      </FlameFullColor>
+      <FlamePointMaterial>EngineThrustMiddle</FlamePointMaterial>
+      <FlameLengthMaterial>EngineThrustMiddle</FlameLengthMaterial>
+      <FlameFlare>LargeGridSmallThruster</FlameFlare>
+      <FlameVisibilityDistance>500</FlameVisibilityDistance>
+      <FlameGlareQuerySize>1</FlameGlareQuerySize>
+      <PrimarySound>SmShipSmJetHydrogen</PrimarySound>
+      <DamageEffectName>Damage_WeapExpl_Damaged</DamageEffectName>
+      <DamagedSound>ParticleWeapExpl</DamagedSound>
+      <Public>false</Public>
+      <DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>15</PCU>
+      <IsAirTight>false</IsAirTight>      
+    </Definition>
+    <!--HydrogenThrusters End-->
+
+  </CubeBlocks>
+</Definitions>

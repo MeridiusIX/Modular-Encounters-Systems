@@ -1,0 +1,47 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SpawnGroups>
+
+    <SpawnGroup>
+      <Id>
+        <TypeId>SpawnGroupDefinition</TypeId>
+        <SubtypeId>MES-TestSpawnGroup-StaticEncounter</SubtypeId>
+      </Id>
+      <Description>
+
+        [Modular Encounters SpawnGroup]
+
+        [StaticEncounter:true]
+
+        [FactionOwner:SPRT]
+        [ReplenishSystems:true]
+        [ForceStaticGrid:true]
+        [RotateFirstCockpitToForward:false]
+
+        [TriggerCoords:{X:-42063.2349554825 Y:26455.9472211845 Z:36075.3973816036}]
+        [TriggerRadius:2000]
+
+        [StaticEncounterCoords:{X:-42063.2349554825 Y:26455.9472211845 Z:36075.3973816036}]
+        [StaticEncounterForward:{X:-0.420081287900284 Y:0.101254090733738 Z:-0.901820004582801}]
+        [StaticEncounterUp:{X:0.0224746158535216 Y:0.994611854152303 Z:0.101203513881464}]
+
+      </Description>
+      <IsPirate>true</IsPirate>
+      <Frequency>5.0</Frequency>
+      <Prefabs>
+        <Prefab SubtypeId="Aquila Strike Corvette Hydro">
+          <Position>
+            <X>0.0</X>
+            <Y>0.0</Y>
+            <Z>0.0</Z>
+          </Position>
+          <Speed>25</Speed>
+          <Behaviour></Behaviour>
+          <PlaceToGridOrigin>true</PlaceToGridOrigin>
+        </Prefab>
+      </Prefabs>
+    </SpawnGroup>
+
+  </SpawnGroups>
+
+</Definitions>

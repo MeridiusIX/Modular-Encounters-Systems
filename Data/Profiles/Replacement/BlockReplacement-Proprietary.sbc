@@ -1,0 +1,117 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-ProprietaryValuableBlocks</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_Reactor/SmallBlockSmallGenerator]
+        [NewBlock:MyObjectBuilder_Reactor/ProprietarySmallBlockSmallGenerator]
+
+        [OldBlock:MyObjectBuilder_Reactor/SmallBlockLargeGenerator]
+        [NewBlock:MyObjectBuilder_Reactor/ProprietarySmallBlockLargeGenerator]
+
+        [OldBlock:MyObjectBuilder_Reactor/LargeBlockSmallGenerator]
+        [NewBlock:MyObjectBuilder_Reactor/ProprietaryLargeBlockSmallGenerator]
+
+        [OldBlock:MyObjectBuilder_Reactor/LargeBlockLargeGenerator]
+        [NewBlock:MyObjectBuilder_Reactor/ProprietaryLargeBlockLargeGenerator]
+
+        [OldBlock:MyObjectBuilder_GravityGenerator/(null)]
+        [NewBlock:MyObjectBuilder_GravityGenerator/ProprietaryGravGen]
+
+        [OldBlock:MyObjectBuilder_GravityGeneratorSphere/(null)]
+        [NewBlock:MyObjectBuilder_GravityGeneratorSphere/ProprietaryGravGenSphere]
+
+        [OldBlock:MyObjectBuilder_VirtualMass/VirtualMassLarge]
+        [NewBlock:MyObjectBuilder_VirtualMass/ProprietaryVirtualMassLarge]
+
+        [OldBlock:MyObjectBuilder_VirtualMass/VirtualMassSmall]
+        [NewBlock:MyObjectBuilder_VirtualMass/ProprietaryVirtualMassSmall]
+
+        [OldBlock:MyObjectBuilder_SpaceBall/SpaceBallLarge]
+        [NewBlock:MyObjectBuilder_SpaceBall/ProprietarySpaceBallLarge]
+
+        [OldBlock:MyObjectBuilder_SpaceBall/SpaceBallSmall]
+        [NewBlock:MyObjectBuilder_SpaceBall/ProprietarySpaceBallSmall]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallThrust]
+        [NewBlock:MyObjectBuilder_Thrust/ProprietarySmallBlockSmallThrust]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeThrust]
+        [NewBlock:MyObjectBuilder_Thrust/ProprietarySmallBlockLargeThrust]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallThrust]
+        [NewBlock:MyObjectBuilder_Thrust/ProprietaryLargeBlockSmallThrust]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeThrust]
+        [NewBlock:MyObjectBuilder_Thrust/ProprietaryLargeBlockLargeThrust]
+
+        [OldBlock:MyObjectBuilder_JumpDrive/LargeJumpDrive]
+        [NewBlock:MyObjectBuilder_JumpDrive/ProprietaryLargeJumpDrive]
+
+        [OldBlock:MyObjectBuilder_LaserAntenna/SmallBlockLaserAntenna]
+        [NewBlock:MyObjectBuilder_LaserAntenna/ProprietarySmallBlockLaserAntenna]
+
+        [OldBlock:MyObjectBuilder_LaserAntenna/LargeBlockLaserAntenna]
+        [NewBlock:MyObjectBuilder_LaserAntenna/ProprietaryLargeBlockLaserAntenna]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-ProprietaryCompRichBlocks</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_Conveyor/LargeBlockConveyor]
+        [NewBlock:MyObjectBuilder_Conveyor/ProprietaryLargeBlockConveyor]
+
+        [OldBlock:MyObjectBuilder_ConveyorConnector/ConveyorTube]
+        [NewBlock:MyObjectBuilder_ConveyorConnector/ProprietaryConveyorTube]
+
+        [OldBlock:MyObjectBuilder_ConveyorConnector/ConveyorTubeCurved]
+        [NewBlock:MyObjectBuilder_ConveyorConnector/ProprietaryConveyorTubeCurved]
+
+        [OldBlock:MyObjectBuilder_ConveyorSorter/LargeBlockConveyorSorter]
+        [NewBlock:MyObjectBuilder_ConveyorSorter/ProprietaryLargeBlockConveyorSorter]
+
+        [OldBlock:MyObjectBuilder_Gyro/LargeBlockGyro]
+        [NewBlock:MyObjectBuilder_Gyro/ProprietaryLargeBlockGyro]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-DisposableNpcBeacons</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_Beacon/SmallBlockBeacon]
+        [NewBlock:MyObjectBuilder_Beacon/DisposableNpcBeaconSmall]
+
+        [OldBlock:MyObjectBuilder_Beacon/LargeBlockBeacon]
+        [NewBlock:MyObjectBuilder_Beacon/DisposableNpcBeaconLarge]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

@@ -1,0 +1,284 @@
+using Sandbox.ModAPI;
+using VRageMath;
+using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+using System.Collections.Generic;
+using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Core;
+
+namespace ModularEncountersSystems.Behavior {
+
+	public class CargoShip : IBehaviorSubClass{
+
+		public List<Vector3D> CustomWaypoints;
+		private bool _waypointIsDespawn = true;
+
+		private Vector3D _lastCoords = Vector3D.Zero;
+		private IBehavior _behavior;
+
+		private EncounterWaypoint _cargoShipWaypoint { 
+			
+			get {
+
+				if (_behavior.AutoPilot.State.CargoShipWaypoints.Count > 0) {
+
+					if (_waypointIsDespawn) {
+
+						BehaviorLogger.Write("CargoShip Switching To A Non-Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
+						_waypointIsDespawn = false;
+						_behavior.BehaviorTriggerC = true;
+
+					}
+
+					return _behavior.AutoPilot.State.CargoShipWaypoints[0];
+
+				}
+
+				if (!_waypointIsDespawn) {
+
+					BehaviorLogger.Write("CargoShip Switching To A Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
+					_waypointIsDespawn = true;
+					_behavior.BehaviorTriggerD = true;
+
+
+				}
+
+				return _behavior.AutoPilot.State.CargoShipDespawn;
+
+			} 
+		
+		}
+
+		public CargoShip(IBehavior behavior){
+
+			_behavior = behavior;
+			_waypointIsDespawn = false;
+
+			CustomWaypoints = new List<Vector3D>();
+
+		}
+
+		public void ProcessBehavior() {
+
+			if(MES_SessionCore.IsServer == false) {
+
+				return;
+
+			}
+
+			BehaviorLogger.Write(_behavior.Mode.ToString(), BehaviorDebugEnum.General);
+			
+			if(_behavior.Mode != BehaviorMode.Retreat && _behavior.Settings.DoRetreat == true){
+
+				_behavior.ChangeCoreBehaviorMode(BehaviorMode.Retreat);
+				_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
+
+			}
+
+			bool _firstRun = false;
+
+			//Init
+			if (_behavior.Mode == BehaviorMode.Init) {
+
+				foreach (var waypoint in CustomWaypoints) {
+
+					_behavior.AutoPilot.State.CargoShipWaypoints.Add(new EncounterWaypoint(waypoint));
+				
+				}
+
+				SelectNextWaypoint();
+				_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitAtWaypoint);
+				_firstRun = true;
+
+			}
+
+			//WaitAtWaypoint
+			if (_behavior.Mode == BehaviorMode.WaitAtWaypoint) {
+
+				var timeSpan = MyAPIGateway.Session.GameDateTime - _behavior.AutoPilot.State.WaypointWaitTime;
+
+				if (timeSpan.TotalSeconds >= _behavior.AutoPilot.Data.WaypointWaitTimeTrigger) {
+
+					SelectNextWaypoint();
+					_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
+					_behavior.ChangeCoreBehaviorMode(BehaviorMode.ApproachTarget);
+
+					if (!_firstRun)
+						_behavior.BehaviorTriggerB = true;
+					else
+						_firstRun = false;
+
+				}
+
+			}
+
+			//Approach
+			if (_behavior.Mode == BehaviorMode.ApproachTarget) {
+
+				if (_cargoShipWaypoint == null) {
+
+					_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.None, CheckEnum.No, CheckEnum.Yes);
+					_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitAtWaypoint);
+					return;
+
+				}
+
+				var coords = _cargoShipWaypoint.GetCoords();
+
+				if (!_cargoShipWaypoint.Valid || _cargoShipWaypoint.ReachedWaypoint) {
+
+					_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.None, CheckEnum.No, CheckEnum.Yes);
+					_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitAtWaypoint);
+					return;
+
+				}
+
+				if (!_waypointIsDespawn && _lastCoords != coords) {
+
+					_behavior.AutoPilot.SetInitialWaypoint(coords);
+					_lastCoords = coords;
+
+				}
+
+				if (GetDistanceToWaypoint() < MathTools.Hypotenuse(_behavior.AutoPilot.Data.WaypointTolerance, _behavior.AutoPilot.Data.WaypointTolerance)) {
+
+					_cargoShipWaypoint.ReachedWaypoint = true;
+					_cargoShipWaypoint.ReachedWaypointTime = MyAPIGateway.Session.GameDateTime;
+					_behavior.AutoPilot.State.WaypointWaitTime = MyAPIGateway.Session.GameDateTime;
+
+					if (_waypointIsDespawn) {
+
+						if (_behavior.Despawn.NearestPlayer == null || _behavior.Despawn.PlayerDistance > 1200) {
+
+							_behavior.Settings.DoDespawn = true;
+						
+						}
+
+						_behavior.ChangeCoreBehaviorMode(BehaviorMode.Retreat);
+						_behavior.Settings.DoRetreat = true;
+
+					} else {
+
+						_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.None, CheckEnum.No, CheckEnum.Yes);
+						_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitAtWaypoint);
+						_behavior.BehaviorTriggerA = true;
+
+					}
+				
+				}
+
+			}
+
+			//Retreat
+			if (_behavior.Mode == BehaviorMode.Retreat) {
+
+				if (_behavior.Despawn.NearestPlayer?.Controller?.ControlledEntity?.Entity != null) {
+
+					//BehaviorLogger.AddMsg("DespawnCoordsCreated", true);
+					_behavior.AutoPilot.SetInitialWaypoint(VectorHelper.GetDirectionAwayFromTarget(_behavior.RemoteControl.GetPosition(), _behavior.Despawn.NearestPlayer.GetPosition()) * 1000 + _behavior.RemoteControl.GetPosition());
+
+				}
+
+			}
+
+		}
+
+		private double GetDistanceToWaypoint() {
+
+			if (_behavior.AutoPilot.CurrentPlanet != null && _waypointIsDespawn) {
+
+				var despawnUp = Vector3D.Normalize(_behavior.AutoPilot.State.InitialWaypoint - _behavior.AutoPilot.CurrentPlanet.Center());
+				var mySeaLevel = _behavior.AutoPilot.UpDirectionFromPlanet * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
+				var despawnSeaLevel = despawnUp * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
+
+				return Vector3D.Distance(mySeaLevel, despawnSeaLevel);
+
+			} 
+
+			return Vector3D.Distance(_behavior.RemoteControl.GetPosition(), _behavior.AutoPilot.State.InitialWaypoint); 
+
+		}
+
+		private void SelectNextWaypoint() {
+
+			if (!_behavior.AutoPilot.State.CargoShipDespawn.Valid) {
+
+				var despawnCoords = Vector3D.Zero;
+
+				BehaviorLogger.Write("Setting Initial CargoShip Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
+				//BehaviorLogger.Write("Behavior Null: " + (_behavior == null), BehaviorDebugEnum.Dev);
+				//BehaviorLogger.Write("Current Grid Null: " + (_behavior.CurrentGrid == null), BehaviorDebugEnum.Dev);
+				//BehaviorLogger.Write("NPC Data Null: " + (_behavior.CurrentGrid.Npc == null), BehaviorDebugEnum.Dev);
+
+				if (_behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.EndCoords != Vector3D.Zero)
+					despawnCoords = _behavior.CurrentGrid.Npc.EndCoords;
+
+				if (despawnCoords == Vector3D.Zero) {
+
+					BehaviorLogger.Write("Could Not Get From MES. Creating Manual Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
+					despawnCoords = _behavior.AutoPilot.CalculateDespawnCoords(_behavior.RemoteControl.GetPosition());
+
+				}
+
+				BehaviorLogger.Write("Setting Autopilot State", BehaviorDebugEnum.Dev);
+				_behavior.AutoPilot.State.CargoShipDespawn = new EncounterWaypoint(despawnCoords);
+
+			}
+
+			while (true) {
+
+				if (_behavior.AutoPilot.State.CargoShipWaypoints.Count == 0)
+					break;
+
+				var waypoint = _behavior.AutoPilot.State.CargoShipWaypoints[0];
+				waypoint.GetCoords();
+
+				if (waypoint == null || !waypoint.Valid || waypoint.ReachedWaypoint) {
+
+					BehaviorLogger.Write("Invalid or Reached Waypoint Has Been Removed", BehaviorDebugEnum.BehaviorSpecific);
+					_behavior.AutoPilot.State.CargoShipWaypoints.RemoveAt(0);
+					continue;
+
+				}
+
+				break;
+
+			}
+
+		}
+
+		public void SetDefaultTags() {
+
+			_behavior.AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-CargoShip");
+			_behavior.Despawn.UseNoTargetTimer = false;
+			_behavior.AutoPilot.Weapons.UseStaticGuns = false;
+			_behavior.AutoPilot.Data.DisableInertiaDampeners = false;
+
+		}
+
+		public void InitTags() {
+
+			if(string.IsNullOrWhiteSpace(_behavior.RemoteControl?.CustomData) == false) {
+
+				var descSplit = _behavior.RemoteControl.CustomData.Split('\n');
+
+				foreach(var tag in descSplit) {
+
+					//CustomWaypoints
+					if (tag.Contains("[CustomWaypoints:") == true) {
+
+						TagParse.TagVector3DListCheck(tag, ref CustomWaypoints);
+
+					}	
+
+				}
+				
+			}
+
+		}
+
+	}
+
+}
+	

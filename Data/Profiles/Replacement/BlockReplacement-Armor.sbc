@@ -1,0 +1,344 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Armor-LightToHeavy</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorBlock]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorBlock]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlope]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorSlope]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCornerInv]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorCornerInv]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorBlock]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorBlock]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlope]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorSlope]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCornerInv]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorCornerInv]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHalfArmorBlock]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyHalfArmorBlock]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHalfSlopeArmorBlock]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyHalfSlopeArmorBlock]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/HalfArmorBlock]
+        [NewBlock:MyObjectBuilder_CubeBlock/HeavyHalfArmorBlock]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/HalfSlopeArmorBlock]
+        [NewBlock:MyObjectBuilder_CubeBlock/HeavyHalfSlopeArmorBlock]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorRoundSlope]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorRoundSlope]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorRoundCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorRoundCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorRoundCornerInv]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorRoundCornerInv]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorRoundSlope]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorRoundSlope]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorRoundCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorRoundCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorRoundCornerInv]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorRoundCornerInv]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlope2Base]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorSlope2Base]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlope2Tip]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorSlope2Tip]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCorner2Base]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorCorner2Base]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCorner2Tip]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorCorner2Tip]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorInvCorner2Base]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorInvCorner2Base]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorInvCorner2Tip]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorInvCorner2Tip]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlope2Base]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorSlope2Base]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlope2Tip]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorSlope2Tip]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCorner2Base]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorCorner2Base]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCorner2Tip]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorCorner2Tip]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorInvCorner2Base]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorInvCorner2Base]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorInvCorner2Tip]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorInvCorner2Tip]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCornerSquare]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorCornerSquare]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCornerSquare]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorCornerSquare]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCornerSquareInverted]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorCornerSquareInverted]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCornerSquareInverted]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorCornerSquareInverted]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopeCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopeCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopeCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopeCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopeCornerInverted]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopeCornerInverted]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopeCornerInverted]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopeCornerInverted]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopedCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopedCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopedCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopedCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopedCornerBase]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopedCornerBase]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopedCornerBase]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopedCornerBase]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopeInverted]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopeInverted]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopeInverted]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopeInverted]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlopedCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorSlopedCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlopedCorner]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorSlopedCorner]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlopedCornerBase]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorSlopedCornerBase]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlopedCornerBase]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorSlopedCornerBase]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlopedCornerTip]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorSlopedCornerTip]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlopedCornerTip]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorSlopedCornerTip]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Armor-HeavyToLight</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorBlock]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorBlock]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlope]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorSlope]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCornerInv]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorCornerInv]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorBlock]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorBlock]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlope]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorSlope]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCornerInv]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorCornerInv]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHalfArmorBlock]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyHalfArmorBlock]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeHalfSlopeArmorBlock]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyHalfSlopeArmorBlock]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/HalfArmorBlock]
+        [OldBlock:MyObjectBuilder_CubeBlock/HeavyHalfArmorBlock]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/HalfSlopeArmorBlock]
+        [OldBlock:MyObjectBuilder_CubeBlock/HeavyHalfSlopeArmorBlock]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorRoundSlope]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorRoundSlope]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorRoundCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorRoundCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorRoundCornerInv]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorRoundCornerInv]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorRoundSlope]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorRoundSlope]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorRoundCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorRoundCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorRoundCornerInv]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorRoundCornerInv]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlope2Base]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorSlope2Base]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlope2Tip]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorSlope2Tip]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCorner2Base]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorCorner2Base]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCorner2Tip]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorCorner2Tip]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorInvCorner2Base]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorInvCorner2Base]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorInvCorner2Tip]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeHeavyBlockArmorInvCorner2Tip]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlope2Base]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorSlope2Base]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlope2Tip]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorSlope2Tip]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCorner2Base]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorCorner2Base]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCorner2Tip]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorCorner2Tip]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorInvCorner2Base]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorInvCorner2Base]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorInvCorner2Tip]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallHeavyBlockArmorInvCorner2Tip]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCornerSquare]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorCornerSquare]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCornerSquare]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorCornerSquare]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorCornerSquareInverted]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorCornerSquareInverted]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorCornerSquareInverted]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorCornerSquareInverted]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopeCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopeCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopeCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopeCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopeCornerInverted]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopeCornerInverted]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopeCornerInverted]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopeCornerInverted]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopedCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopedCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopedCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopedCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopedCornerBase]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopedCornerBase]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopedCornerBase]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopedCornerBase]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorHalfSlopeInverted]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorHalfSlopeInverted]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorHalfSlopeInverted]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorHalfSlopeInverted]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlopedCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorSlopedCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlopedCorner]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorSlopedCorner]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlopedCornerBase]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorSlopedCornerBase]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlopedCornerBase]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorSlopedCornerBase]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeBlockArmorSlopedCornerTip]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeBlockHeavyArmorSlopedCornerTip]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlopedCornerTip]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorSlopedCornerTip]
+
+      </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

@@ -204,6 +204,7 @@ namespace ModularEncountersSystems.API {
             if (!APIs.WeaponCore.IsReady)
                 return;
 
+            SpawnLogger.Write("WeaponCore API Loaded", SpawnerDebugEnum.Startup);
             APIs.WeaponCoreApiLoaded = true;
             APIs.WeaponCore.GetAllCoreWeapons(BlockManager.AllWeaponCoreBlocks);
             APIs.WeaponCore.GetAllCoreTurrets(BlockManager.AllWeaponCoreTurrets);

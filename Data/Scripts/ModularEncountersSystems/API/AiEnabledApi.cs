@@ -93,6 +93,7 @@ namespace ModularEncountersSystems.API {
             }
 
             Valid = true;
+            SpawnLogger.Write("AIEnabled API Loaded", SpawnerDebugEnum.Startup);
 
         }
 

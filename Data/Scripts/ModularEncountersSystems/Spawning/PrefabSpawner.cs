@@ -134,6 +134,7 @@ namespace ModularEncountersSystems.Spawning {
 					if (prefabContainer.InitializePrefabForSpawn(sgPrefab.SubtypeId)) {
 
 						prefab = prefabContainer;
+						prefab.SpawnGroupPrefab = sgPrefab;
 						break;
 
 					}
@@ -157,15 +158,12 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.BehaviorName = sgPrefab.Behaviour;
 				npcData.BehaviorTriggerDist = sgPrefab.BehaviourActivationDistance;
 				npcData.InitialFaction = faction;
+				npcData.PrefabSpeed = sgPrefab.Speed;
 
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathStartAltitude);
 				npcData.EndCoords = path.GetPrefabEndCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathEndAltitude);
 
-				//Prefab Manipulation
-				PrefabManipulation.PrepareManipulations(prefab, spawnCollection.SpawnGroup, environment, npcData);
-
-				var options = SpawnGroupManager.CreateSpawningOptions(spawnCollection.Conditions, sgPrefab);
 				Vector3 linearVelocity = Vector3.Zero;
 				Vector3 angularVelocity = Vector3.Zero;
 
@@ -188,8 +186,16 @@ namespace ModularEncountersSystems.Spawning {
 						linearVelocity = dir * path.MinSpeed;
 
 					}
-				
+
+					npcData.PrefabSpeed = linearVelocity.Length();
+
 				}
+
+				//Prefab Manipulation
+				PrefabManipulation.PrepareManipulations(prefab, spawnCollection, environment, npcData);
+
+				var options = SpawnGroupManager.CreateSpawningOptions(spawnCollection.Conditions, sgPrefab);
+				
 
 				var spawnMatrix = path.SpawnMatrix;
 

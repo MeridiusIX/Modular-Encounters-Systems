@@ -83,6 +83,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public Vector3D StaticEncounterForward;
 		public Vector3D StaticEncounterUp;
 
+		public bool StaticEncounterUsePlanetDirectionAndAltitude;
+		public string StaticEncounterPlanet;
+		public Vector3D StaticEncounterPlanetDirection;
+		public double StaticEncounterPlanetAltitude;
+
 		public bool ForceStaticGrid;
 		public bool AdminSpawnOnly;
 
@@ -307,6 +312,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			StaticEncounterCoords = Vector3D.Zero;
 			StaticEncounterForward = Vector3D.Zero;
 			StaticEncounterUp = Vector3D.Zero;
+
+			StaticEncounterUsePlanetDirectionAndAltitude = false;
+			StaticEncounterPlanet = "";
+			StaticEncounterPlanetDirection = Vector3D.Zero;
+			StaticEncounterPlanetAltitude = 0;
 
 			ForceStaticGrid = false;
 			AdminSpawnOnly = false;
@@ -803,6 +813,34 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[StaticEncounterUp:") == true) {
 
 					TagParse.TagVector3DCheck(tag, ref this.StaticEncounterUp);
+
+				}
+
+				//StaticEncounterUsePlanetDirectionAndAltitude
+				if (tag.StartsWith("[StaticEncounterUsePlanetDirectionAndAltitude:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.StaticEncounterUsePlanetDirectionAndAltitude);
+
+				}
+
+				//StaticEncounterPlanet
+				if (tag.StartsWith("[StaticEncounterPlanet:") == true) {
+
+					TagParse.TagStringCheck(tag, ref this.StaticEncounterPlanet);
+
+				}
+
+				//StaticEncounterPlanetDirection
+				if (tag.StartsWith("[StaticEncounterPlanetDirection:") == true) {
+
+					TagParse.TagVector3DCheck(tag, ref this.StaticEncounterPlanetDirection);
+
+				}
+
+				//StaticEncounterPlanetAltitude
+				if (tag.StartsWith("[StaticEncounterPlanetAltitude:") == true) {
+
+					TagParse.TagDoubleCheck(tag, ref this.StaticEncounterPlanetAltitude);
 
 				}
 

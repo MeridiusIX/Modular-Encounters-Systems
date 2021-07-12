@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,9 @@ namespace ModularEncountersSystems.Tasks {
 
                 NpcManager.ActiveNpcs.Add(_grid);
                 _grid.OwnershipMajorityChange += NpcManager.OwnershipMajorityChange;
+
+                if (_grid.Npc.Attributes.HasFlag((NpcAttributes.IsCargoShip)))
+                    CargoShipWatcher.CargoShips.Add(_grid);
 
             }
                 

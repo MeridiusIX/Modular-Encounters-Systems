@@ -99,6 +99,12 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(18)]
 		public int DespawnAttempts;
 
+		[ProtoMember(19)]
+		public double PrefabSpeed;
+
+		[ProtoMember(20)]
+		public string DespawnSource;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -156,6 +162,12 @@ namespace ModularEncountersSystems.World {
 
 		[ProtoIgnore]
 		public List<Action<IMyCubeGrid, string>> DespawnActions;
+
+		[ProtoIgnore]
+		public bool CargoShipDriftCheck;
+
+		[ProtoIgnore]
+		public Vector3 CargoShipDriftVelocity;
 
 		public NpcData() {
 

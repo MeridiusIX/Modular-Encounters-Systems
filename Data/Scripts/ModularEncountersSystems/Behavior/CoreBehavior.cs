@@ -472,9 +472,10 @@ namespace ModularEncountersSystems.Behavior {
 
 				this.ConfigCheck = true;
 				var valA = AddonManager.ConfigInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MTUyMTkwNTg5MA==")));
+				var valB = AddonManager.ConfigInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MjU0MjU5OTEwMA==")));
 				var valC = AddonManager.ConfigInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("NzUwODU1")));
 
-				if (AddonManager.ConfigInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("LnNibQ=="))) && (!valA && !valC)) {
+				if (AddonManager.ConfigInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("LnNibQ=="))) && (!valA && !valB && !valC)) {
 
 					this.BehaviorTerminated = true;
 					return;
@@ -1123,6 +1124,9 @@ namespace ModularEncountersSystems.Behavior {
 				return;
 
 			if (_currentGrid == null || _currentGrid.CubeGrid != RemoteControl.SlimBlock.CubeGrid) {
+
+				if (_currentGrid != null)
+					_currentGrid.Behavior = null;
 
 				_currentGrid = GridManager.GetGridEntity(RemoteControl.SlimBlock.CubeGrid);
 

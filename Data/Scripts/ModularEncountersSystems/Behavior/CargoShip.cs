@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Core;
+using ModularEncountersSystems.World;
+using ModularEncountersSystems.Entities;
 
 namespace ModularEncountersSystems.Behavior {
 
@@ -16,6 +18,13 @@ namespace ModularEncountersSystems.Behavior {
 
 		private Vector3D _lastCoords = Vector3D.Zero;
 		private IBehavior _behavior;
+
+		public bool GetSpeedFromSpawnGroup;
+		public bool UsePauseAutopilotFromSpawnGroup;
+
+		private bool _playerInRange;
+		private bool _stoppedForPlayer;
+		private double _stoppingRange;
 
 		private EncounterWaypoint _cargoShipWaypoint { 
 			
@@ -57,6 +66,9 @@ namespace ModularEncountersSystems.Behavior {
 
 			CustomWaypoints = new List<Vector3D>();
 
+			GetSpeedFromSpawnGroup = false;
+			UsePauseAutopilotFromSpawnGroup = false;
+
 		}
 
 		public void ProcessBehavior() {
@@ -89,6 +101,19 @@ namespace ModularEncountersSystems.Behavior {
 
 				SelectNextWaypoint();
 				_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitAtWaypoint);
+
+				if (GetSpeedFromSpawnGroup && _behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.Attributes.HasFlag(NpcAttributes.IsCargoShip)) {
+
+					_behavior.Settings.State.MaxSpeedOverride = _behavior.CurrentGrid.Npc.PrefabSpeed;
+
+				}
+
+				if (UsePauseAutopilotFromSpawnGroup && _behavior.CurrentGrid.Npc.SpawnGroup != null) {
+
+					_behavior.Settings.State.MaxSpeedOverride = _behavior.CurrentGrid.Npc.PrefabSpeed;
+					_stoppingRange = _behavior.CurrentGrid.Npc.SpawnGroup.PauseAutopilotAtPlayerDistance;
+				}
+
 				_firstRun = true;
 
 			}
@@ -115,6 +140,25 @@ namespace ModularEncountersSystems.Behavior {
 
 			//Approach
 			if (_behavior.Mode == BehaviorMode.ApproachTarget) {
+
+				if (UsePauseAutopilotFromSpawnGroup && _stoppingRange > 0) {
+
+					var player = PlayerManager.GetNearestPlayer(_behavior.RemoteControl.GetPosition());
+					_playerInRange = player != null && player.Distance(_behavior.RemoteControl.GetPosition()) < _stoppingRange;
+
+					if (_playerInRange && !_stoppedForPlayer) {
+
+						_stoppedForPlayer = true;
+						_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
+
+					} else if (!_playerInRange && _stoppedForPlayer) {
+
+						_stoppedForPlayer = false;
+						_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
+
+					}
+				
+				}
 
 				if (_cargoShipWaypoint == null) {
 
@@ -270,10 +314,25 @@ namespace ModularEncountersSystems.Behavior {
 
 						TagParse.TagVector3DListCheck(tag, ref CustomWaypoints);
 
-					}	
+					}
+
+					//UsePauseAutopilotFromSpawnGroup
+					if (tag.Contains("[UsePauseAutopilotFromSpawnGroup:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref UsePauseAutopilotFromSpawnGroup);
+
+					}
+
+					//GetSpeedFromSpawnGroup
+					if (tag.Contains("[GetSpeedFromSpawnGroup:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref GetSpeedFromSpawnGroup);
+
+					}
+
 
 				}
-				
+
 			}
 
 		}

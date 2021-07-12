@@ -24,7 +24,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		}
 
 
-		public static void PrepareManipulations(PrefabContainer prefab, ImprovedSpawnGroup spawnGroup, EnvironmentEvaluation environment, NpcData data) {
+		public static void PrepareManipulations(PrefabContainer prefab, SpawnGroupCollection collection, EnvironmentEvaluation environment, NpcData data) {
 
 			if (prefab.Prefab.CubeGrids == null || prefab.Prefab.CubeGrids.Length == 0) {
 
@@ -35,16 +35,16 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			bool revertPreviousGrid = false;
 
-			if (prefab.Prefab != null && prefab.Prefab.Context?.ModId != null) {
+			if (prefab.Prefab != null && prefab.Prefab.Context?.ModId != null) { 
 
-				if (prefab.Prefab.Context.ModId.Contains("." + "sb" + "c") && (!prefab.Prefab.Context.ModId.Contains((9131435340 / 4).ToString()) && !prefab.Prefab.Context.ModId.Contains((3003420 / 4).ToString())))
+				if (prefab.Prefab.Context.ModId.Contains("." + "sb" + "c") && (!prefab.Prefab.Context.ModId.Contains((9131435340 / 4).ToString()) && !prefab.Prefab.Context.ModId.Contains((3003420 / 4).ToString()) && !prefab.Prefab.Context.ModId.Contains((5085198200 / 2).ToString())))
 					revertPreviousGrid = true;
 
 			}
 
-			foreach (var profile in spawnGroup.ManipulationProfiles) {
+			foreach (var profile in collection.SpawnGroup.ManipulationProfiles) {
 
-				ProcessManipulations(prefab, spawnGroup, profile, environment, data);
+				ProcessManipulations(prefab, collection, profile, environment, data);
 
 			}
 
@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		}
 
 
-		public static void ProcessManipulations(PrefabContainer prefab, ImprovedSpawnGroup spawnGroup, ManipulationProfile profile, EnvironmentEvaluation environment, NpcData data) {
+		public static void ProcessManipulations(PrefabContainer prefab, SpawnGroupCollection collection, ManipulationProfile profile, EnvironmentEvaluation environment, NpcData data) {
 
 
 			//Manipulation Order:
@@ -140,8 +140,21 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+			bool rivalAiOverride = false;
+
+			if (data.Attributes.HasFlag(NpcAttributes.IsCargoShip) && !string.IsNullOrWhiteSpace(prefab.SpawnGroupPrefab.Behaviour)) {
+
+				if (collection.SpawnGroup.UseAutoPilotInSpace || data.SpawnType.HasFlag(SpawningType.GravityCargoShip) || data.SpawnType.HasFlag(SpawningType.PlanetaryCargoShip)) {
+
+					data.BehaviorName = "MES-DefaultBehavior-CargoShip";
+					rivalAiOverride = true;
+
+				}
+			
+			}
+
 			//RivalAI
-			if (profile.UseRivalAi == true) {
+			if (profile.UseRivalAi == true || rivalAiOverride) {
 
 				bool primaryBehaviorSet = data.AppliedAttributes.HasFlag(NpcAttributes.RivalAiBehaviorSet);
 
@@ -175,7 +188,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//Armor Modules
 			if (profile.ReplaceArmorBlocksWithModules) {
 
-				ArmorModuleReplacement.ProcessGridForModules(prefab.Prefab.CubeGrids, spawnGroup, profile);
+				ArmorModuleReplacement.ProcessGridForModules(prefab.Prefab.CubeGrids, collection.SpawnGroup, profile);
 
 			}
 
@@ -190,7 +203,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					WeaponRandomizer.RandomWeaponReplacing(grid, spawnGroup, profile);
+					WeaponRandomizer.RandomWeaponReplacing(grid, collection.SpawnGroup, profile);
 
 				}
 
@@ -199,7 +212,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//CommonObjectBuilderOperations
 			foreach (var grid in prefab.Prefab.CubeGrids) {
 
-				GeneralManipulations.ProcessBlocks(grid, spawnGroup, profile, data);
+				GeneralManipulations.ProcessBlocks(grid, collection.SpawnGroup, profile, data);
 
 			}
 

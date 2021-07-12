@@ -40,6 +40,32 @@ namespace ModularEncountersSystems.Entities {
 
         }
 
+        public static PlanetEntity GetPlanetWithName(string generatorName) {
+
+            foreach (var planet in Planets) {
+
+                if (!string.IsNullOrWhiteSpace(planet?.Planet?.Generator?.Id.SubtypeName) && planet.Planet.Generator.Id.SubtypeName == generatorName)
+                    return planet;
+            
+            }
+
+            return null;
+        
+        }
+
+        public static PlanetEntity GetPlanetWithId(long entityId) {
+
+            foreach (var planet in Planets) {
+
+                if (planet?.Planet != null && planet.Planet.EntityId == entityId)
+                    return planet;
+
+            }
+
+            return null;
+
+        }
+
     }
 
 }

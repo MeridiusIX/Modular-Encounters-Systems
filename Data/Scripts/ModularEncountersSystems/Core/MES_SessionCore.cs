@@ -94,8 +94,11 @@ namespace ModularEncountersSystems.Core {
             FactionHelper.PopulateNpcFactionLists();
             EventWatcher.Setup();
             NpcManager.Setup();
+            CargoShipWatcher.Setup();
             ZoneManager.Setup();
             BehaviorManager.Setup();
+            RelationManager.Setup();
+
             //AttributeApplication
 
         }

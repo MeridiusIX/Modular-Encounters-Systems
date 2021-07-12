@@ -11,7 +11,6 @@ using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
 using VRageMath;
-using ModularEncountersSystems.World;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Helpers;
 
@@ -355,7 +354,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("LnNibQ=="))) == true && (!SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MTUyMTkwNTg5MA=="))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("NzUwODU1"))))) {
+			if (SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("LnNibQ=="))) == true && (!SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MTUyMTkwNTg5MA=="))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("NzUwODU1"))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MjU0MjU5OTEwMA=="))))) {
 
 				SpawnGroups.Clear();
 				return;
@@ -380,6 +379,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			var thisSpawnGroup = new ImprovedSpawnGroup();
 			thisSpawnGroup.SpawnGroupName = spawnGroup.Id.SubtypeName;
+			thisSpawnGroup.SpawnConditionsProfiles[0].ProfileSubtypeId = spawnGroup.Id.SubtypeName;
 			var factionList = MyAPIGateway.Session.Factions.Factions;
 			var factionTags = new List<string>();
 			factionTags.Add("Nobody");
@@ -434,6 +434,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;
+
 
 			} else if (spawnGroup.IsCargoShip == true) {
 

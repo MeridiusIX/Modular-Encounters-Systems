@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModularEncountersSystems.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace ModularEncountersSystems.API {
         public static bool ShieldsApiLoaded = false;
 
         //WaterMod
-        public static bool WaterModApiLoaded = false;
+        public static bool WaterModApiLoaded => WaterAPI.Registered;
 
         //AI Enabled
         public static AiEnabledApi AiEnabled;
@@ -23,8 +24,12 @@ namespace ModularEncountersSystems.API {
         public static void RegisterAPIs(int phase = 0) {
 
             //Water Mod (LoadData)
-            if (AddonManager.WaterMod && phase == 0)
+            if (AddonManager.WaterMod && phase == 0) {
+
                 WaterAPI.LoadData();
+
+            }
+                
 
             if (AddonManager.AiEnabled && phase == 0)
                 AiEnabled = new AiEnabledApi();
@@ -41,7 +46,7 @@ namespace ModularEncountersSystems.API {
                 if (Shields.IsReady) {
 
                     APIs.ShieldsApiLoaded = true;
-                
+                    SpawnLogger.Write("DefenseShield API Loaded", SpawnerDebugEnum.Startup);
                 }
 
             }

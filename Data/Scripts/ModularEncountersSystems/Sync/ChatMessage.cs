@@ -395,12 +395,21 @@ namespace ModularEncountersSystems.Sync {
 
 		private bool ProcessInfo() {
 
-			var array = GetArray(3, 4);
+			var array = GetArray(3, 5);
 
 			if (array == null) {
 
 				SpawnLogger.Write("Array Size Too Small", SpawnerDebugEnum.Settings);
 				return false;
+
+			}
+
+			//GetLogging
+			if (array[2] == "GetLogging") {
+
+				ClipboardPayload = LoggerTools.GetLogging(array, ref ReturnMessage);
+				Mode = ChatMsgMode.ReturnMessage;
+				return string.IsNullOrWhiteSpace(ClipboardPayload);
 
 			}
 
@@ -462,15 +471,27 @@ namespace ModularEncountersSystems.Sync {
 
 				var sb = new StringBuilder();
 
-				sb.Append("Grid Name:          ").Append(thisGrid.CubeGrid.CustomName).AppendLine();
-				sb.Append("Matrix Position:    ").Append(thisGrid.CubeGrid.WorldMatrix.Translation).AppendLine();
-				sb.Append("Matrix Forward:     ").Append(thisGrid.CubeGrid.WorldMatrix.Forward).AppendLine();
-				sb.Append("Matrix Up:          ").Append(thisGrid.CubeGrid.WorldMatrix.Up).AppendLine().AppendLine();
+				sb.Append("Grid Name:          ").Append(thisGrid.CubeGrid.CustomName).AppendLine().AppendLine();
 
 				sb.Append("Tags For SpawnGroup:").AppendLine();
 				sb.Append("[StaticEncounterCoords:{").Append(thisGrid.CubeGrid.WorldMatrix.Translation).Append("}]").AppendLine();
 				sb.Append("[StaticEncounterForward:{").Append(thisGrid.CubeGrid.WorldMatrix.Forward).Append("}]").AppendLine();
-				sb.Append("[StaticEncounterUp:{").Append(thisGrid.CubeGrid.WorldMatrix.Up).Append("}]");
+				sb.Append("[StaticEncounterUp:{").Append(thisGrid.CubeGrid.WorldMatrix.Up).Append("}]").AppendLine().AppendLine();
+
+				var planet = PlanetManager.GetNearestPlanet(thisGrid.CubeGrid.WorldMatrix.Translation);
+
+				if (planet != null) {
+
+					var up = planet.UpAtPosition(thisGrid.CubeGrid.WorldMatrix.Translation);
+					var dist = planet.AltitudeAtPosition(thisGrid.CubeGrid.WorldMatrix.Translation, false);
+
+					sb.Append("Optional Tags For Dynamic Planet Spawning:").AppendLine();
+					sb.Append("[StaticEncounterUsePlanetDirectionAndAltitude:").Append("true").Append("]").AppendLine();
+					sb.Append("[StaticEncounterPlanet:").Append(planet.Planet.Generator.Id.SubtypeName).Append("]").AppendLine();
+					sb.Append("[StaticEncounterPlanetDirection:{").Append(up).Append("}]").AppendLine();
+					sb.Append("[StaticEncounterPlanetAltitude:").Append(dist).Append("]").AppendLine();
+
+				}
 
 				ClipboardPayload = sb.ToString();
 				Mode = ChatMsgMode.ReturnMessage;
@@ -517,24 +538,32 @@ namespace ModularEncountersSystems.Sync {
 
 				//Environment Data Near Player
 				sb.Append("::: Environment Data Near Player :::").AppendLine();
-				sb.Append(" - Distance From World Center:  ").Append(environment.DistanceFromWorldCenter.ToString()).AppendLine();
-				sb.Append(" - Direction From World Center: ").Append(environment.DirectionFromWorldCenter.ToString()).AppendLine();
-				sb.Append(" - Is On Planet:                ").Append(environment.IsOnPlanet.ToString()).AppendLine();
-				sb.Append(" - Planet Name:                 ").Append(environment.IsOnPlanet ? environment.NearestPlanetName : "N/A").AppendLine();
-				sb.Append(" - Planet Diameter:             ").Append(environment.IsOnPlanet ? environment.PlanetDiameter.ToString() : "N/A").AppendLine();
-				sb.Append(" - Oxygen At Position:          ").Append(environment.IsOnPlanet ? environment.OxygenAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Atmosphere At Position:      ").Append(environment.IsOnPlanet ? environment.AtmosphereAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Gravity At Position:         ").Append(environment.IsOnPlanet ? environment.GravityAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Altitude At Position:        ").Append(environment.IsOnPlanet ? environment.AltitudeAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Is Night At Position:        ").Append(environment.IsOnPlanet ? environment.IsNight.ToString() : "N/A").AppendLine();
-				sb.Append(" - Weather At Position:         ").Append(environment.IsOnPlanet && !string.IsNullOrWhiteSpace(environment.WeatherAtPosition) ? environment.WeatherAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Common Terrain At Position:  ").Append(environment.IsOnPlanet ? environment.CommonTerrainAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Water Mod Enabled:           ").Append(AddonManager.WaterMod).AppendLine();
-				sb.Append(" - Planet Has Water:            ").Append(environment.IsOnPlanet ? environment.PlanetHasWater.ToString() : "N/A").AppendLine();
-				sb.Append(" - Position Underwater:         ").Append(environment.IsOnPlanet ? environment.PositionIsUnderWater.ToString() : "N/A").AppendLine();
-				sb.Append(" - Surface Underwater:          ").Append(environment.IsOnPlanet ? environment.SurfaceIsUnderWater.ToString() : "N/A").AppendLine();
-				sb.Append(" - Air Travel Viability Ratio:  ").Append(environment.IsOnPlanet ? (Math.Round(environment.AirTravelViabilityRatio, 3)).ToString() : "N/A").AppendLine();
-				sb.Append(" - Water Coverage Ratio:        ").Append(environment.IsOnPlanet ? (Math.Round(environment.WaterInSurroundingAreaRatio, 3)).ToString() : "N/A").AppendLine();
+				sb.Append(" - Distance From World Center:      ").Append(environment.DistanceFromWorldCenter.ToString()).AppendLine();
+				sb.Append(" - Direction From World Center:     ").Append(environment.DirectionFromWorldCenter.ToString()).AppendLine();
+				sb.Append(" - Is On Planet:                    ").Append(environment.IsOnPlanet.ToString()).AppendLine();
+				sb.Append(" - Planet Name:                     ").Append(environment.IsOnPlanet ? environment.NearestPlanetName : "N/A").AppendLine();
+				sb.Append(" - Planet Diameter:                 ").Append(environment.IsOnPlanet ? environment.PlanetDiameter.ToString() : "N/A").AppendLine();
+				sb.Append(" - Oxygen At Position:              ").Append(environment.IsOnPlanet ? environment.OxygenAtPosition.ToString() : "N/A").AppendLine();
+				sb.Append(" - Atmosphere At Position:          ").Append(environment.IsOnPlanet ? environment.AtmosphereAtPosition.ToString() : "N/A").AppendLine();
+				sb.Append(" - Gravity At Position:             ").Append(environment.IsOnPlanet ? environment.GravityAtPosition.ToString() : "N/A").AppendLine();
+				sb.Append(" - Altitude At Position:            ").Append(environment.IsOnPlanet ? environment.AltitudeAtPosition.ToString() : "N/A").AppendLine();
+				sb.Append(" - Is Night At Position:            ").Append(environment.IsOnPlanet ? environment.IsNight.ToString() : "N/A").AppendLine();
+				sb.Append(" - Weather At Position:             ").Append(environment.IsOnPlanet && !string.IsNullOrWhiteSpace(environment.WeatherAtPosition) ? environment.WeatherAtPosition.ToString() : "N/A").AppendLine();
+				sb.Append(" - Common Terrain At Position:      ").Append(environment.IsOnPlanet ? environment.CommonTerrainAtPosition.ToString() : "N/A").AppendLine();
+				sb.Append(" - Water Mod Enabled:               ").Append(AddonManager.WaterMod).AppendLine();
+				sb.Append(" - Planet Has Water:                ").Append(environment.IsOnPlanet ? environment.PlanetHasWater.ToString() : "N/A").AppendLine();
+				sb.Append(" - Position Underwater:             ").Append(environment.IsOnPlanet ? environment.PositionIsUnderWater.ToString() : "N/A").AppendLine();
+				sb.Append(" - Surface Underwater:              ").Append(environment.IsOnPlanet ? environment.SurfaceIsUnderWater.ToString() : "N/A").AppendLine();
+				sb.Append(" - Air Travel Viability Ratio:      ").Append(environment.IsOnPlanet ? (Math.Round(environment.AirTravelViabilityRatio, 3)).ToString() : "N/A").AppendLine();
+				sb.Append(" - Water Coverage Ratio:            ").Append(environment.IsOnPlanet ? (Math.Round(environment.WaterInSurroundingAreaRatio, 3)).ToString() : "N/A").AppendLine().AppendLine();
+
+				sb.Append(" - Space Cargo Ship Eligible:       ").Append(environment.SpaceCargoShipsEligible).AppendLine();
+				sb.Append(" - Lunar Cargo Ship Eligible:       ").Append(environment.LunarCargoShipsEligible).AppendLine();
+				sb.Append(" - Planetary Cargo Ship Eligible:   ").Append(environment.PlanetaryCargoShipsEligible).AppendLine();
+				sb.Append(" - Gravity Cargo Ship Eligible:     ").Append(environment.GravityAtPosition).AppendLine();
+				sb.Append(" - Random Encounter Eligible:       ").Append(environment.RandomEncountersEligible).AppendLine();
+				sb.Append(" - Planetary Installation Eligible: ").Append(environment.PlanetaryInstallationEligible).AppendLine();
+				sb.Append(" - Water Installation Eligible:     ").Append(environment.WaterInstallationEligible).AppendLine();
 
 				sb.AppendLine();
 

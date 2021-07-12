@@ -54,8 +54,12 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (type == SpawningType.PlanetaryInstallation) {
 
-				if (environment.PlanetaryInstallationEligible)
+				if (environment.PlanetaryInstallationEligible) {
+
 					spawnTypes |= SpawningType.PlanetaryInstallation;
+					spawnTypes |= SpawningType.DryLandInstallation;
+
+				}
 
 				if (environment.WaterInstallationEligible) {
 
@@ -114,48 +118,51 @@ namespace ModularEncountersSystems.Spawning {
 		
 		}
 
-		public static bool SpawningTypeAllowedForGroup(SpawningType type, SpawnConditionsProfile spawnGroup) {
+		public static bool SpawningTypeAllowedForGroup(SpawningType type, SpawnConditionsProfile conditions) {
 
-			if (type.HasFlag(SpawningType.SpaceCargoShip) && spawnGroup.SpaceCargoShip)
+			if (type.HasFlag(SpawningType.SpaceCargoShip) && conditions.SpaceCargoShip)
 				return true;
 
-			if (type.HasFlag(SpawningType.LunarCargoShip) && spawnGroup.LunarCargoShip)
+			if (type.HasFlag(SpawningType.LunarCargoShip) && conditions.LunarCargoShip)
 				return true;
 
-			if (type.HasFlag(SpawningType.RandomEncounter) && spawnGroup.SpaceRandomEncounter)
+			if (type.HasFlag(SpawningType.RandomEncounter) && conditions.SpaceRandomEncounter)
 				return true;
 
-			if (type.HasFlag(SpawningType.PlanetaryCargoShip) && spawnGroup.AtmosphericCargoShip)
+			if (type.HasFlag(SpawningType.PlanetaryCargoShip) && conditions.AtmosphericCargoShip)
 				return true;
 
-			if (type.HasFlag(SpawningType.GravityCargoShip) && spawnGroup.GravityCargoShip)
+			if (type.HasFlag(SpawningType.GravityCargoShip) && conditions.GravityCargoShip)
 				return true;
 
-			if (type.HasFlag(SpawningType.PlanetaryInstallation) && spawnGroup.PlanetaryInstallation)
+			if (type.HasFlag(SpawningType.PlanetaryInstallation) && conditions.PlanetaryInstallation)
 				return true;
 
-			if (type.HasFlag(SpawningType.WaterSurfaceStation) && spawnGroup.PlanetaryInstallation && spawnGroup.InstallationSpawnsOnWaterSurface)
+			if (type.HasFlag(SpawningType.DryLandInstallation) && conditions.PlanetaryInstallation && conditions.InstallationSpawnsOnDryLand)
 				return true;
 
-			if (type.HasFlag(SpawningType.UnderWaterStation) && spawnGroup.PlanetaryInstallation && spawnGroup.InstallationSpawnsUnderwater)
+			if (type.HasFlag(SpawningType.WaterSurfaceStation) && conditions.PlanetaryInstallation && conditions.InstallationSpawnsOnWaterSurface)
 				return true;
 
-			if (type.HasFlag(SpawningType.BossSpace) && (spawnGroup.BossEncounterSpace || spawnGroup.BossEncounterAny))
+			if (type.HasFlag(SpawningType.UnderWaterStation) && conditions.PlanetaryInstallation && conditions.InstallationSpawnsUnderwater)
 				return true;
 
-			if (type.HasFlag(SpawningType.BossAtmo) && (spawnGroup.BossEncounterAtmo || spawnGroup.BossEncounterAny))
+			if (type.HasFlag(SpawningType.BossSpace) && (conditions.BossEncounterSpace || conditions.BossEncounterAny))
 				return true;
 
-			if (type.HasFlag(SpawningType.BossGravity) && (spawnGroup.BossEncounterAny))
+			if (type.HasFlag(SpawningType.BossAtmo) && (conditions.BossEncounterAtmo || conditions.BossEncounterAny))
 				return true;
 
-			if (type.HasFlag(SpawningType.Creature) && spawnGroup.CreatureSpawn)
+			if (type.HasFlag(SpawningType.BossGravity) && (conditions.BossEncounterAny))
 				return true;
 
-			if (type.HasFlag(SpawningType.OtherNPC) && (spawnGroup.RivalAiAnySpawn || spawnGroup.RivalAiAtmosphericSpawn || spawnGroup.RivalAiSpaceSpawn || spawnGroup.RivalAiSpawn))
+			if (type.HasFlag(SpawningType.Creature) && conditions.CreatureSpawn)
 				return true;
 
-			if (type.HasFlag(SpawningType.StaticEncounterSpace) || type.HasFlag(SpawningType.StaticEncounterPlanet) && spawnGroup.StaticEncounter)
+			if (type.HasFlag(SpawningType.OtherNPC) && (conditions.RivalAiAnySpawn || conditions.RivalAiAtmosphericSpawn || conditions.RivalAiSpaceSpawn || conditions.RivalAiSpawn))
+				return true;
+
+			if (type.HasFlag(SpawningType.StaticEncounterSpace) || type.HasFlag(SpawningType.StaticEncounterPlanet) && conditions.StaticEncounter)
 				return true;
 
 			return false;

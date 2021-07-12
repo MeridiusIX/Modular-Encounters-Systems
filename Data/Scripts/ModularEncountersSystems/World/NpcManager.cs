@@ -4,6 +4,7 @@ using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Watchers;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -90,6 +91,9 @@ namespace ModularEncountersSystems.World {
 
 				var encounter = StaticEncounters[i];
 				var gotSpawnGroup = false;
+				var planetMissing = false;
+
+				
 
 				foreach (var spawnGroup in SpawnGroupManager.SpawnGroups) {
 
@@ -97,6 +101,18 @@ namespace ModularEncountersSystems.World {
 						continue;
 
 					foreach (var condition in spawnGroup.SpawnConditionsProfiles) {
+
+						if (condition.StaticEncounter && encounter.PlanetEntityId > 0) {
+
+							var planet = PlanetManager.GetPlanetWithId(encounter.PlanetEntityId);
+
+							if (planet?.Planet == null || planet.Planet.EntityId != encounter.PlanetEntityId) {
+
+								planetMissing = true;
+
+							}
+						
+						}
 
 						if (condition.StaticEncounter || condition.BossEncounterAny || condition.BossEncounterAtmo || condition.BossEncounterSpace) {
 
@@ -116,7 +132,7 @@ namespace ModularEncountersSystems.World {
 
 				}
 
-				if (!gotSpawnGroup) {
+				if (!gotSpawnGroup || planetMissing) {
 
 					updateEncounters = true;
 					UniqueGroupsSpawned.Remove(encounter.SpawnGroupName);
@@ -170,9 +186,16 @@ namespace ModularEncountersSystems.World {
 
 				//Create Static Encounter
 				var activeEncounter = new StaticEncounter();
-				activeEncounter.InitStaticEncounter(spawnGroup, activeConditions);
-				StaticEncounters.Add(activeEncounter);
 
+				activeEncounter.InitStaticEncounter(spawnGroup, activeConditions);
+
+				if (activeEncounter.IsValid) {
+
+					StaticEncounters.Add(activeEncounter);
+					updateEncounters = true;
+
+				}
+		
 			}
 
 			if (updateEncounters)
@@ -225,11 +248,15 @@ namespace ModularEncountersSystems.World {
 				if (!grid.ActiveEntity())
 					continue;
 
-				sb.Append("Name:         ").Append(grid.CubeGrid.CustomName).AppendLine();
-				sb.Append("Type:         ").Append(grid.Npc.SpawnType).AppendLine();
-				sb.Append("Start Coords: ").Append(grid.Npc.StartCoords).AppendLine();
-				sb.Append("End Coords:   ").Append(grid.Npc.EndCoords).AppendLine();
-				sb.Append("Ownership:    ").AppendLine();
+				sb.Append("Name:                   ").Append(grid.CubeGrid.CustomName).AppendLine();
+				sb.Append("Type:                   ").Append(grid.Npc.SpawnType).AppendLine();
+				sb.Append("Start Coords:           ").Append(grid.Npc.StartCoords).AppendLine();
+				sb.Append("End Coords:             ").Append(grid.Npc.EndCoords).AppendLine();
+				sb.Append("Path Distance:          ").Append(Vector3D.Distance(grid.Npc.StartCoords, grid.Npc.EndCoords)).AppendLine();
+				sb.Append("Distance From Start:    ").Append(Vector3D.Distance(grid.Npc.StartCoords, grid.GetPosition())).AppendLine();
+				sb.Append("Distance To End:        ").Append(Vector3D.Distance(grid.Npc.EndCoords, grid.GetPosition())).AppendLine();
+				sb.Append("Is Drifting Cargo Ship: ").Append(CargoShipWatcher.CargoShips.Contains(grid)).AppendLine();
+				sb.Append("Ownership:              ").AppendLine();
 
 
 				if (grid.Ownership != GridOwnershipEnum.None) {

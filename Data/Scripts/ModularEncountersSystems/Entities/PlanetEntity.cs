@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.API;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using Sandbox.Game.Entities;
 using System;
 using System.Collections.Generic;
@@ -118,11 +119,17 @@ namespace ModularEncountersSystems.Entities {
 
 		public bool HasWater() {
 
-			if (!WaterAPI.Registered)
+			if (!APIs.WaterModApiLoaded) {
+
+				//SpawnLogger.Write("Water API Not Loaded", SpawnerDebugEnum.API);
 				return false;
+
+			}
+				
 
 			if (!WaterAPI.HasWater(Planet.EntityId)) {
 
+				SpawnLogger.Write("Water API Says Planet Does Not Have Water", SpawnerDebugEnum.API);
 				Water = null;
 				return false;
 
@@ -172,11 +179,20 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public Vector3D SurfaceCoordsAtPosition(Vector3D coords, bool ignoreWater = false) {
+		public Vector3D SurfaceCoordsAtPosition(Vector3D coords, bool ignoreWater = false, bool onlyGetWaterSurface = false) {
 
 			if (!ignoreWater && HasWater()) {
 
-				return WaterAPI.GetClosestSurfacePoint(coords, Water);
+				var waterCoords = WaterAPI.GetClosestSurfacePoint(coords, Water);
+				var terrainCoords = Planet?.GetClosestSurfacePointGlobal(coords) ?? Vector3D.Zero;
+
+				if (onlyGetWaterSurface)
+					return waterCoords;
+
+				if (DistanceToCore(terrainCoords) > DistanceToCore(waterCoords))
+					return terrainCoords;
+				else
+					return waterCoords;
 
 			}
 
@@ -190,7 +206,7 @@ namespace ModularEncountersSystems.Entities {
 				return SurfaceCoordsAtPosition(coords);
 
 			var planetSurface = SurfaceCoordsAtPosition(coords, true);
-			var waterSurface = SurfaceCoordsAtPosition(coords);
+			var waterSurface = SurfaceCoordsAtPosition(coords, false, true);
 			var planetDist = Vector3D.Distance(planetSurface, Center());
 			var waterDist = Vector3D.Distance(waterSurface, Center());
 			bool dryLand = planetDist > waterDist;

@@ -36,6 +36,7 @@ namespace ModularEncountersSystems.Spawning {
         StaticEncounter = 1 << 15,
         StaticEncounterPlanet = 1 << 16,
         StaticEncounterSpace = 1 << 17,
+        DryLandInstallation = 1 << 18,
 
     }
 
@@ -52,7 +53,7 @@ namespace ModularEncountersSystems.Spawning {
             if (type.HasFlag(SpawningType.PlanetaryCargoShip) || type.HasFlag(SpawningType.GravityCargoShip))
                 return SpawningType.PlanetaryCargoShip;
 
-            if (type.HasFlag(SpawningType.PlanetaryInstallation) || type.HasFlag(SpawningType.WaterSurfaceStation) || type.HasFlag(SpawningType.UnderWaterStation))
+            if (type.HasFlag(SpawningType.PlanetaryInstallation) || type.HasFlag(SpawningType.WaterSurfaceStation) || type.HasFlag(SpawningType.UnderWaterStation) || type.HasFlag(SpawningType.DryLandInstallation))
                 return SpawningType.PlanetaryInstallation;
 
             if (type.HasFlag(SpawningType.BossEncounter) || type.HasFlag(SpawningType.BossSpace) || type.HasFlag(SpawningType.BossAtmo) || type.HasFlag(SpawningType.BossGravity))

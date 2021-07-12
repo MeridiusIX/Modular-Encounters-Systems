@@ -94,6 +94,9 @@ namespace ModularEncountersSystems.Spawning {
 		[ProtoMember(25)]
 		public SpawningType SpecificType;
 
+		[ProtoMember(26)]
+		public long PlanetEntityId;
+
 		//Non-Serialized
 
 		[ProtoIgnore]
@@ -245,9 +248,27 @@ namespace ModularEncountersSystems.Spawning {
 			TriggerRadius = profile.TriggerRadius;
 
 			UseExactSpawnLocation = true;
-			ExactLocationCoords = profile.StaticEncounterCoords;
 			ExactLocationForward = profile.StaticEncounterForward;
 			ExactLocationUp = profile.StaticEncounterUp;
+			ExactLocationCoords = profile.StaticEncounterCoords;
+
+			if (profile.StaticEncounterUsePlanetDirectionAndAltitude) {
+
+				ExactLocationCoords = profile.StaticEncounterCoords;
+
+			} else {
+
+				var planet = PlanetManager.GetPlanetWithName(profile.StaticEncounterPlanet);
+
+				if (planet == null)
+					return;
+
+				PlanetEntityId = planet.Planet.EntityId;
+				var surfaceCoords = planet.SurfaceCoordsAtPosition(planet.Center() + (profile.StaticEncounterPlanetDirection + 10000));
+				ExactLocationCoords = profile.StaticEncounterPlanetDirection * profile.StaticEncounterPlanetAltitude + surfaceCoords;
+
+			}
+
 			SpawnType = SpawningType.StaticEncounter;
 			IsValid = true;
 

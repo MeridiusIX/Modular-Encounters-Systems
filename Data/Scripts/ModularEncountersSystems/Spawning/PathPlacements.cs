@@ -12,6 +12,7 @@ using VRage.Game.ModAPI.Ingame;
 using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Profiles;
+using Sandbox.ModAPI;
 
 namespace ModularEncountersSystems.Spawning {
 
@@ -173,8 +174,8 @@ namespace ModularEncountersSystems.Spawning {
 			//Planetary and Gravity CargoShips
 			if (type == SpawningType.PlanetaryCargoShip) {
 
-				//path.MinSpeed = Settings.PlanetaryCargoShips.UseMinimumSpeed ? Settings.PlanetaryCargoShips.MinimumSpeed : -1;
-				//path.OverrideSpeed = Settings.PlanetaryCargoShips.UseSpeedOverride ? Settings.PlanetaryCargoShips.SpeedOverride : -1;
+				path.MinSpeed = Settings.PlanetaryCargoShips.UseMinimumSpeed ? Settings.PlanetaryCargoShips.MinimumSpeed : -1;
+				path.OverrideSpeed = Settings.PlanetaryCargoShips.UseSpeedOverride ? Settings.PlanetaryCargoShips.SpeedOverride : -1;
 
 				if (environment.PlanetaryCargoShipsEligible) {
 
@@ -193,7 +194,20 @@ namespace ModularEncountersSystems.Spawning {
 			//Planetary Installations
 			if (type == SpawningType.PlanetaryInstallation) {
 
-				CalculatePlanetaryInstallationCoords(path, collection, environment, spawnTypes);
+				//Prune spawnTypes
+				var spawnTypesPruned = spawnTypes;
+
+				if (spawnTypesPruned.HasFlag(SpawningType.DryLandInstallation) && !collection.Conditions.InstallationSpawnsOnDryLand)
+					spawnTypesPruned &= ~SpawningType.DryLandInstallation;
+
+				if (spawnTypesPruned.HasFlag(SpawningType.WaterSurfaceStation) && !collection.Conditions.InstallationSpawnsOnWaterSurface)
+					spawnTypesPruned &= ~SpawningType.WaterSurfaceStation;
+
+				if (spawnTypesPruned.HasFlag(SpawningType.UnderWaterStation) && !collection.Conditions.InstallationSpawnsUnderwater)
+					spawnTypesPruned &= ~SpawningType.UnderWaterStation;
+
+
+				CalculatePlanetaryInstallationCoords(path, collection, environment, spawnTypesPruned);
 				return path;
 
 			}
@@ -642,6 +656,9 @@ namespace ModularEncountersSystems.Spawning {
 					bool isUnderwater = environment.NearestPlanet.IsPositionUnderwater(coords);
 					double depth = environment.NearestPlanet.WaterDepthAtPosition(coords);
 
+					SpawnLogger.Write("Underwater: " + isUnderwater, SpawnerDebugEnum.Pathing);
+					SpawnLogger.Write("Depth: " + depth, SpawnerDebugEnum.Pathing);
+
 					if (!IsPositionSurfaceValid(coords, environment, collection, spawnType, isUnderwater, depth))
 						continue;
 
@@ -786,7 +803,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			//Check For Regular Surface Spawn
-			if (spawnType.HasFlag(SpawningType.PlanetaryInstallation) && !isUnderwater) {
+			if (spawnType.HasFlag(SpawningType.DryLandInstallation) && !isUnderwater) {
 
 				return true;
 			

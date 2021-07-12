@@ -64,6 +64,9 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static void PopulateNpcFactionLists() {
 
+			var identities = new List<IMyIdentity>();
+			MyAPIGateway.Players.GetAllIdentites(identities);
+
 			foreach (var id in MyAPIGateway.Session.Factions.Factions.Keys) {
 
 				var faction = MyAPIGateway.Session.Factions.Factions[id];
@@ -73,9 +76,27 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (IsIdentityPlayer(faction.Members[member].PlayerId)) {
 
-						playerDetected = true;
-						break;
+						var identityBlank = false;
 
+						foreach (var ident in identities) {
+
+							if (ident.IdentityId == faction.Members[member].PlayerId)
+								if (string.IsNullOrWhiteSpace(ident.DisplayName)) {
+
+									identityBlank = true;
+									break;
+
+								}
+						
+						}
+
+						if (!identityBlank) {
+
+							playerDetected = true;
+							break;
+
+						}
+					
 					}
 				
 				}

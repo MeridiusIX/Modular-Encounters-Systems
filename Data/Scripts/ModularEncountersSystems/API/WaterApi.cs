@@ -1,4 +1,5 @@
-﻿using Sandbox.ModAPI;
+﻿using ModularEncountersSystems.Logging;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -216,6 +217,7 @@ namespace ModularEncountersSystems.API {
 						_GetPhysicsData = (Func<long, MyTuple<float, float>>)ModAPIMethods["GetPhysicsData"];
 						_GetTideData = (Func<long, MyTuple<float, float>>)ModAPIMethods["GetTideData"];
 						_GetTideDirection = (Func<long, Vector3D>)ModAPIMethods["GetTideDirection"];
+						SpawnLogger.Write("WaterMod API Loaded", SpawnerDebugEnum.Startup);
 					} catch (Exception e) {
 						MyAPIGateway.Utilities.ShowMessage("WaterMod", "Mod '" + ModName + "' encountered an error when registering the Water Mod API, see log for more info.");
 						MyLog.Default.WriteLine(e);

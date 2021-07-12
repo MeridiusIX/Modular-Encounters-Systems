@@ -14,6 +14,7 @@ namespace ModularEncountersSystems.Spawning {
 		public bool SpawningInProgress;
 		public List<MyObjectBuilder_CubeGrid> GridList;
 		public DateTime SpawnStartTime;
+		public MySpawnGroupDefinition.SpawnGroupPrefab SpawnGroupPrefab;
 
 		public PrefabContainer(string SubtypeId) {
 

@@ -93,6 +93,21 @@ namespace ModularEncountersSystems.Entities {
 		
 		}
 
+		public static GridEntity GetGridEntity(long id) {
+
+			for (int i = Grids.Count - 1; i >= 0; i--) {
+
+				var grid = Grids[i];
+
+				if (grid.ActiveEntity() && grid.CubeGrid.EntityId == id)
+					return grid;
+
+			}
+
+			return null;
+
+		}
+
 		public static bool ProcessBlock(IMySlimBlock block) {
 
 			if (block == null) {

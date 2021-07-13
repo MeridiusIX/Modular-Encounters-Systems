@@ -18,6 +18,8 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMyFaction> NpcTraderFactions = new List<IMyFaction>();
 
 		public static List<string> NpcFactionTags = new List<string>();
+		public static List<string> EconomyFactionTags = new List<string>();
+		public static List<string> EconomyStationTypes = new List<string>();
 
 		public static bool IsIdentityNPC(long id) {
 
@@ -63,6 +65,12 @@ namespace ModularEncountersSystems.Helpers {
 		}
 
 		public static void PopulateNpcFactionLists() {
+
+			
+			EconomyStationTypes.Add("MiningStation");
+			EconomyStationTypes.Add("OrbitalStation");
+			EconomyStationTypes.Add("Outpost");
+			EconomyStationTypes.Add("SpaceStation");
 
 			var identities = new List<IMyIdentity>();
 			MyAPIGateway.Players.GetAllIdentites(identities);
@@ -117,18 +125,21 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (factionOB.FactionType == MyFactionTypes.Miner) {
 
+						EconomyFactionTags.Add(faction.Tag);
 						NpcMinerFactions.Add(faction);
 
 					}
 
 					if (factionOB.FactionType == MyFactionTypes.Trader) {
 
+						EconomyFactionTags.Add(faction.Tag);
 						NpcTraderFactions.Add(faction);
 
 					}
 
 					if (factionOB.FactionType == MyFactionTypes.Builder) {
 
+						EconomyFactionTags.Add(faction.Tag);
 						NpcBuilderFactions.Add(faction);
 
 					}

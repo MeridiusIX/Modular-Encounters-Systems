@@ -117,6 +117,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			string faction = spawnCollection.SelectRandomFaction();
 			long factionOwner = FactionHelper.GetFactionMemberIdFromTag(faction);
+			environment.GetThreat(spawnCollection.Conditions.ThreatLevelCheckRange, spawnCollection.Conditions.ThreatIncludeOtherNpcOwners);
 			SpawnLogger.Write("Spawning " + spawnCollection.PrefabIndexes.Count + " Prefabs With Ownership: " + faction + " / " + factionOwner.ToString(), SpawnerDebugEnum.Spawning);
 
 			for (int i = 0; i < spawnCollection.PrefabIndexes.Count; i++) {
@@ -159,6 +160,7 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.BehaviorTriggerDist = sgPrefab.BehaviourActivationDistance;
 				npcData.InitialFaction = faction;
 				npcData.PrefabSpeed = sgPrefab.Speed;
+				npcData.SpawnedByMES = true;
 
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathStartAltitude);

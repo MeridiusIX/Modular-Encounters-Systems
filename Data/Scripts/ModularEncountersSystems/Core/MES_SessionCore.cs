@@ -98,6 +98,7 @@ namespace ModularEncountersSystems.Core {
             ZoneManager.Setup();
             BehaviorManager.Setup();
             RelationManager.Setup();
+            Cleaning.Setup();
 
             //AttributeApplication
 

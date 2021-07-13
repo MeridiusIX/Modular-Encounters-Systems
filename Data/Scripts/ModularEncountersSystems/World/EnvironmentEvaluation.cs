@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
@@ -268,6 +269,13 @@ namespace ModularEncountersSystems.World {
 			GravityCargoShipsEligible = IsOnPlanet && AltitudeAtPosition > Settings.PlanetaryCargoShips.PlayerSurfaceAltitude;
 			PlanetaryInstallationEligible = IsOnPlanet && AltitudeAtPosition < Settings.PlanetaryInstallations.PlayerMaximumDistanceFromSurface;
 			WaterInstallationEligible = PlanetaryInstallationEligible && WaterInSurroundingAreaRatio > 0.15f;
+
+		}
+
+		public void GetThreat(double distance, bool includeNpc) {
+
+			ThreatScoreCheckDistance = distance;
+			ThreatScore = SpawnConditions.GetThreatLevel(distance, includeNpc, Position);
 
 		}
 

@@ -62,7 +62,6 @@
   <ItemGroup>
     <Folder Include="Data\Blocks\" />
     <Folder Include="Data\Prefabs\" />
-    <Folder Include="Data\Scripts\ModularEncountersSystems\NewFolder\" />
     <Folder Include="Data\Scripts\ModularEncountersSystems\Zones\" />
     <Folder Include="Data\Scripts\ModularEncountersSystems\Sync\" />
     <Folder Include="Audio\" />

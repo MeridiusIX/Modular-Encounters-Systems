@@ -99,7 +99,7 @@ namespace ModularEncountersSystems.Configuration {
 			HighWeightModIdSpawnGroups = 20;
 			HighWeightModIdModifier = 3;
 			UseMaxNpcGrids = false;
-			UseGlobalEventsTimers = true;
+			UseGlobalEventsTimers = false;
 			IgnorePlanetWhitelists = false;
 			IgnorePlanetBlacklists = false;
 			ThreatRefreshTimerMinimum = 20;

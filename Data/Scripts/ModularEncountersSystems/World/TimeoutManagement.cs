@@ -259,13 +259,13 @@ namespace ModularEncountersSystems.World {
 
 			var sb = new StringBuilder();
 			sb.Append(" - [Timeout Zone] ").AppendLine();
-			sb.Append(" - Spawn Type:         ").Append(TimeoutType.ToString()).AppendLine();
+			sb.Append("   - Spawn Type:         ").Append(TimeoutType.ToString()).AppendLine();
 			var spawnLimit = TimeoutManagement.GetSpawnLimit(TimeoutType);
-			sb.Append(" - Spawned Encounters: ").Append(SpawnedEncounters).Append(" / ").Append(spawnLimit).AppendLine();
-			sb.Append(" - Restricting Spawns: ").Append(SpawnedEncounters >= spawnLimit).AppendLine();
+			sb.Append("   - Spawned Encounters: ").Append(SpawnedEncounters).Append(" / ").Append(spawnLimit).AppendLine();
+			sb.Append("   - Restricting Spawns: ").Append(SpawnedEncounters >= spawnLimit).AppendLine();
 			var time = TimeoutLength();
-			sb.Append(" - Time Remaining:     ").Append((int)time.X).Append(" / ").Append((int)time.Y).AppendLine();
-			sb.Append(" - Position In Radius: ").Append(InsideRadius(coords)).AppendLine();
+			sb.Append("   - Time Remaining:     ").Append((int)time.X).Append(" / ").Append((int)time.Y).AppendLine();
+			sb.Append("   - Position In Radius: ").Append(InsideRadius(coords)).AppendLine();
 			
 			return sb.ToString();
 

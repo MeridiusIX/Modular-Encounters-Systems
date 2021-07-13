@@ -105,6 +105,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(20)]
 		public string DespawnSource;
 
+		[ProtoMember(21)]
+		public bool SpawnedByMES;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -169,6 +172,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoIgnore]
 		public Vector3 CargoShipDriftVelocity;
 
+		[ProtoIgnore]
+		public BoolEnum KeenEconomyStation;
+
 		public NpcData() {
 
 			Attributes = NpcAttributes.None;
@@ -194,6 +200,7 @@ namespace ModularEncountersSystems.World {
 			SessionTime = MyAPIGateway.Session.GameDateTime;
 			SecondsSinceSessionLive = 0;
 			Grid = null;
+			KeenEconomyStation = BoolEnum.None;
 
 		}
 

@@ -295,7 +295,9 @@ namespace ModularEncountersSystems.Configuration {
 
 		}
 
-		public static ConfigBase GetConfig(SpawningType type) {
+		public static ConfigBase GetConfig(SpawningType providedType) {
+
+			var type = SpawnRequest.GetPrimarySpawningType(providedType);
 
 			if (type == SpawningType.SpaceCargoShip)
 				return SpaceCargoShips;
@@ -310,6 +312,9 @@ namespace ModularEncountersSystems.Configuration {
 				return PlanetaryInstallations;
 
 			if (type == SpawningType.BossEncounter)
+				return BossEncounters;
+
+			if (type == SpawningType.OtherNPC || type == SpawningType.None)
 				return BossEncounters;
 
 			return null;

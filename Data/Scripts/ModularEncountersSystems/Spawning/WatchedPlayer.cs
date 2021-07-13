@@ -56,11 +56,18 @@ namespace ModularEncountersSystems.Spawning {
 
         public void ProcessPlayerTimers() {
 
-            if (!Player.Online)
+            if (!Player.Online) {
+
                 return;
 
-            if (Player.Player?.Character == null || Player.Player.Character.IsDead)
+            }
+
+
+            if (Player.Player?.Character == null || Player.Player.Character.IsDead) {
+
                 return;
+
+            }
 
             //Space/Lunar Cargo Ships
             if (Settings.SpaceCargoShips.EnableSpawns) {
@@ -69,9 +76,9 @@ namespace ModularEncountersSystems.Spawning {
                 ApplyDecrement(ref SpaceCargoShipTimer);
 
                 if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.SpaceCargoShip, this)) {
-                
-                    
-                
+
+                    var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.SpaceCargoShip);
+
                 }
                 
             }
@@ -83,7 +90,7 @@ namespace ModularEncountersSystems.Spawning {
 
                 if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.PlanetaryCargoShip, this)) {
 
-
+                    var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.PlanetaryCargoShip);
 
                 }
 
@@ -99,7 +106,7 @@ namespace ModularEncountersSystems.Spawning {
 
                 if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.RandomEncounter, this)) {
 
-
+                    var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.RandomEncounter);
 
                 }
 
@@ -115,7 +122,7 @@ namespace ModularEncountersSystems.Spawning {
 
                 if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.PlanetaryInstallation, this)) {
 
-
+                    var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.PlanetaryInstallation);
 
                 }
 
@@ -131,7 +138,7 @@ namespace ModularEncountersSystems.Spawning {
 
                 if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.BossEncounter, this)) {
 
-
+                    var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.BossEncounter);
 
                 }
 
@@ -144,7 +151,7 @@ namespace ModularEncountersSystems.Spawning {
 
                 if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.Creature, this)) {
 
-
+                    var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.Creature);
 
                 }
 
@@ -176,6 +183,48 @@ namespace ModularEncountersSystems.Spawning {
         
         }
 
+        public int GetTimerValue(SpawningType spawnType) {
+
+            if (spawnType == SpawningType.SpaceCargoShip)
+                return SpaceCargoShipTimer;
+
+            if (spawnType == SpawningType.RandomEncounter)
+                return RandomEncounterCheckTimer;
+
+            if (spawnType == SpawningType.PlanetaryCargoShip)
+                return AtmoCargoShipTimer;
+
+            if (spawnType == SpawningType.PlanetaryInstallation)
+                return PlanetaryInstallationCheckTimer;
+
+            if (spawnType == SpawningType.BossEncounter)
+                return BossEncounterCheckTimer;
+
+            if (spawnType == SpawningType.Creature)
+                return CreatureCheckTimer;
+
+            return -9999;
+
+        }
+
+        public Vector3D GetLastPosition(SpawningType type) {
+
+            if (type == SpawningType.RandomEncounter) {
+
+                return RandomEncounterDistanceCoordCheck;
+
+            }
+
+            if (type == SpawningType.PlanetaryInstallation) {
+
+                return InstallationDistanceCoordCheck;
+
+            }
+
+            return Player.GetPosition();
+
+        }
+
         public void ResetTimer(SpawningType spawnType) {
 
             if (spawnType == SpawningType.SpaceCargoShip && SpaceCargoShipTimer <= 0)
@@ -196,6 +245,22 @@ namespace ModularEncountersSystems.Spawning {
             if (spawnType == SpawningType.Creature && CreatureCheckTimer <= 0)
                 CreatureCheckTimer = MathTools.RandomBetween(Settings.Creatures.MinCreatureSpawnTime, Settings.Creatures.MaxCreatureSpawnTime);
 
+        }
+
+        public void ResetPosition(SpawningType type) {
+
+            if (type == SpawningType.RandomEncounter) {
+
+                RandomEncounterDistanceCoordCheck = Player.GetPosition();
+            
+            }
+
+            if (type == SpawningType.PlanetaryInstallation) {
+            
+                InstallationDistanceCoordCheck = Player.GetPosition();
+
+            }
+        
         }
 
         private void ApplyDecrement(ref int setting) {

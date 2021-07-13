@@ -15,7 +15,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> RequiredManipulationSpawnConditions;
 		public float ManipulationThreatMinimum;
 		public float ManipulationThreatMaximum;
-		public double ManipulationThreatDistance;
 
 		public bool RandomizeWeapons;
 		public bool IgnoreWeaponRandomizerMod;

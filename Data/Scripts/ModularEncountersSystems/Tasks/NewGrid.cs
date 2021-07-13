@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using System;
@@ -37,6 +38,7 @@ namespace ModularEncountersSystems.Tasks {
                 //TODO: Create NPC Data
                 _grid.Npc = new NpcData();
                 _grid.Npc.Grid = _grid;
+                _grid.Npc.SpawnType = SpawningType.OtherNPC;
                 _grid.Npc.ProcessTertiaryAttributes();
 
             } else {

@@ -446,56 +446,8 @@ namespace ModularEncountersSystems.Sync {
 			//GetGridMatrix
 			if (array[2] == "GetGridMatrix") {
 
-				var line = new LineD(this.CameraPosition, this.CameraDirection * 400 + this.CameraPosition);
-				GridEntity thisGrid = null;
-
-				foreach (var grid in GridManager.Grids) {
-
-					if (!grid.ActiveEntity())
-						continue;
-
-					if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
-						continue;
-
-					thisGrid = grid;
-					break;
-
-				}
-
-				if (thisGrid == null) {
-
-					ReturnMessage = "Could Not Locate Grid At Player Camera Position.";
-					return false;
-
-				}
-
-				var sb = new StringBuilder();
-
-				sb.Append("Grid Name:          ").Append(thisGrid.CubeGrid.CustomName).AppendLine().AppendLine();
-
-				sb.Append("Tags For SpawnGroup:").AppendLine();
-				sb.Append("[StaticEncounterCoords:{").Append(thisGrid.CubeGrid.WorldMatrix.Translation).Append("}]").AppendLine();
-				sb.Append("[StaticEncounterForward:{").Append(thisGrid.CubeGrid.WorldMatrix.Forward).Append("}]").AppendLine();
-				sb.Append("[StaticEncounterUp:{").Append(thisGrid.CubeGrid.WorldMatrix.Up).Append("}]").AppendLine().AppendLine();
-
-				var planet = PlanetManager.GetNearestPlanet(thisGrid.CubeGrid.WorldMatrix.Translation);
-
-				if (planet != null) {
-
-					var up = planet.UpAtPosition(thisGrid.CubeGrid.WorldMatrix.Translation);
-					var dist = planet.AltitudeAtPosition(thisGrid.CubeGrid.WorldMatrix.Translation, false);
-
-					sb.Append("Optional Tags For Dynamic Planet Spawning:").AppendLine();
-					sb.Append("[StaticEncounterUsePlanetDirectionAndAltitude:").Append("true").Append("]").AppendLine();
-					sb.Append("[StaticEncounterPlanet:").Append(planet.Planet.Generator.Id.SubtypeName).Append("]").AppendLine();
-					sb.Append("[StaticEncounterPlanetDirection:{").Append(up).Append("}]").AppendLine();
-					sb.Append("[StaticEncounterPlanetAltitude:").Append(dist).Append("]").AppendLine();
-
-				}
-
-				ClipboardPayload = sb.ToString();
+				ClipboardPayload = LoggerTools.GetGridMatrixInfo(this);
 				Mode = ChatMsgMode.ReturnMessage;
-				ReturnMessage = "Grid Position Data Sent To Clipboard.";
 				return true;
 
 			}
@@ -708,6 +660,19 @@ namespace ModularEncountersSystems.Sync {
 				//Zones
 
 				//Timeouts
+				if (NpcManager.UniqueGroupsSpawned.Count > 0) {
+
+					sb.Append("::: Timeout Zones In Range :::").AppendLine();
+
+					foreach (var timeout in TimeoutManagement.Timeouts) {
+
+						sb.Append(timeout.GetInfo(environment.Position)).AppendLine();
+
+					}
+
+					sb.AppendLine();
+
+				}
 
 				Mode = ChatMsgMode.ReturnMessage;
 				ReturnMessage = "Eligible Spawns Sent To Clipboard.";

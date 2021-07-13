@@ -92,21 +92,37 @@ namespace ModularEncountersSystems.Spawning {
 
         public static bool PlayerSpawnEligiblity(SpawningType spawnType, WatchedPlayer player) {
 
-            if (!player.CheckTimer(spawnType))
+            if (!player.CheckTimer(spawnType)) {
+
+                SpawnLogger.Write(player.Player.Player.DisplayName + " Timer Check Failed (" + player.GetTimerValue(spawnType) + ") For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
                 return false;
+
+            }
+                
 
             player.ResetTimer(spawnType);
 
             if (!LocationSpawnEligibility(spawnType, player.Player.GetPosition())) {
 
-                //TODO: Reset Last Position
-
+                SpawnLogger.Write(player.Player.Player.DisplayName + " Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+                player.ResetPosition(spawnType);
                 return false;
+
+            } else {
+
+                if (!LocationSpawnEligibility(spawnType, player.GetLastPosition(spawnType))) {
+
+                    SpawnLogger.Write(player.Player.Player.DisplayName + " Previous Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+                    player.ResetPosition(spawnType);
+                    return false;
+
+                }
             
             }
 
             if (!PlayerDistanceToNextEncounter(spawnType, player)) {
 
+                SpawnLogger.Write(player.Player.Player.DisplayName + " Hasn't Travelled Far Enough To Trigger Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
                 return false;
             
             }

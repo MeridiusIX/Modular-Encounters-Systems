@@ -2,6 +2,7 @@
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.World;
@@ -443,6 +444,37 @@ namespace ModularEncountersSystems.Entities {
 			
 			}
 		
+		}
+
+		public SpawningType GetSpawningTypeFromLinkedGrids() {
+
+			var result = SpawningType.None;
+
+			for (int i = LinkedGrids.Count - 1; i >= 0; i--) {
+
+				var grid = LinkedGrids[i];
+
+				if (grid.Npc == null)
+					continue;
+
+				if (result == SpawningType.None && grid.Npc.SpawnType != SpawningType.None) {
+
+					result = grid.Npc.SpawnType;
+					continue;
+
+				}
+
+				if (result == SpawningType.OtherNPC && grid.Npc.SpawnType != SpawningType.OtherNPC && grid.Npc.SpawnType != SpawningType.None) {
+
+					result = grid.Npc.SpawnType;
+					continue;
+
+				}
+
+			}
+
+			return result;
+
 		}
 
 		public void GridSplit(IMyCubeGrid gridA, IMyCubeGrid gridB) {

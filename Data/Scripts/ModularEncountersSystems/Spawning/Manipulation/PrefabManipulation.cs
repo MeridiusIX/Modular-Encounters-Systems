@@ -44,6 +44,13 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			foreach (var profile in collection.SpawnGroup.ManipulationProfiles) {
 
+				//Conditions
+				if (!ProcessConditions(collection, environment, profile, data)) {
+
+					continue;
+
+				}
+
 				ProcessManipulations(prefab, collection, profile, environment, data);
 
 			}
@@ -69,6 +76,64 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+
+		}
+
+		public static bool ProcessConditions(SpawnGroupCollection collection, EnvironmentEvaluation environment, ManipulationProfile profile, NpcData data) {
+
+			if (profile.ManipulationChance < 100) {
+
+				var rndRoll = MathTools.RandomBetween(0, 101);
+
+				if (rndRoll > profile.ManipulationChance) {
+
+					SpawnLogger.Write("Chance Conditions Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+					return false;
+
+				}
+					
+
+			}
+
+			if (profile.RequiredManipulationSpawnConditions.Count > 0) {
+
+				if (!profile.RequiredManipulationSpawnConditions.Contains(collection.Conditions.ProfileSubtypeId)) {
+
+					SpawnLogger.Write("Required Spawn Condition Profile Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+					return false;
+
+				}
+
+			}
+
+			if (profile.RequiredManipulationSpawnType.Count > 0) {
+
+				if (!profile.RequiredManipulationSpawnType.Contains(data.SpawnType)) {
+
+					SpawnLogger.Write("Required Spawn Type Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+					return false;
+
+				}
+		
+			}
+
+			if (profile.ManipulationThreatMinimum > -1 && environment.ThreatScore < profile.ManipulationThreatMinimum) {
+
+				SpawnLogger.Write("Minimum Threat Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+				
+
+			if (profile.ManipulationThreatMaximum > -1 && environment.ThreatScore > profile.ManipulationThreatMaximum) {
+
+				SpawnLogger.Write("Maximum Threat Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+				
+
+			return true;
 
 		}
 

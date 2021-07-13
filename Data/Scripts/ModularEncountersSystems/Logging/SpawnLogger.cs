@@ -34,6 +34,7 @@ namespace ModularEncountersSystems.Logging {
 		Zone = 1 << 11,
 		Entity = 1 << 12,
 		PostSpawn = 1 << 13,
+		Dev = 1 << 14
 
 	}
 
@@ -46,6 +47,7 @@ namespace ModularEncountersSystems.Logging {
 		public static StringBuilder API = new StringBuilder();
 		public static StringBuilder BlockLogic = new StringBuilder();
 		public static StringBuilder CleanUp = new StringBuilder();
+		public static StringBuilder Dev = new StringBuilder();
 		public static StringBuilder Entity = new StringBuilder();
 		public static StringBuilder Error = new StringBuilder();
 		public static StringBuilder Manipulation = new StringBuilder();
@@ -116,6 +118,9 @@ namespace ModularEncountersSystems.Logging {
 
 			if (type == SpawnerDebugEnum.CleanUp)
 				WriteToBuilder(msg, type, CleanUp, forceGameLog);
+
+			if (type == SpawnerDebugEnum.Dev)
+				WriteToBuilder(msg, type, Dev, forceGameLog);
 
 			if (type == SpawnerDebugEnum.Entity)
 				WriteToBuilder(msg, type, Entity, forceGameLog);

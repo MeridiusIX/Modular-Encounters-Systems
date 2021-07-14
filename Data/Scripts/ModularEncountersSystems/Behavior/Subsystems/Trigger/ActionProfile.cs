@@ -554,6 +554,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(181)]
 		public string ParentGridNameRequirement;
 
+
+
 		public ActionProfile() {
 
 			UseChatBroadcast = false;

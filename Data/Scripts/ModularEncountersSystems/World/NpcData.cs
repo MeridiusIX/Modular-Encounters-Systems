@@ -108,6 +108,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(21)]
 		public bool SpawnedByMES;
 
+		[ProtoMember(22)]
+		public long PrimaryRemoteControlId;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -175,6 +178,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoIgnore]
 		public BoolEnum KeenEconomyStation;
 
+		[ProtoIgnore]
+		public IMyRemoteControl PrimaryRemoteControl;
+
 		public NpcData() {
 
 			Attributes = NpcAttributes.None;
@@ -194,6 +200,7 @@ namespace ModularEncountersSystems.World {
 			SecondAttributesCheck = false;
 			ThirdAttributesCheck = false;
 			DespawnAttempts = 0;
+			PrimaryRemoteControlId = 0;
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;

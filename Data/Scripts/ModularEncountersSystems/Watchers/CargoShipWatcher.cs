@@ -109,6 +109,22 @@ namespace ModularEncountersSystems.Watchers {
 		
 		}
 
+		private static void CargoShipAutopilotManager(GridEntity grid, PlayerEntity player) {
+
+			if (!PlanetManager.InGravity(grid.GetPosition()))
+				return;
+
+			if (grid.Npc.PrimaryRemoteControlId == -1)
+				return;
+
+			if (grid.Npc.PrimaryRemoteControlId == 0) {
+			
+				//TODO: Get Remote
+			
+			}
+		
+		}
+
 		private static bool CargoShipDriftCheck(GridEntity cargoShip) {
 
 			if (!cargoShip.Npc.CargoShipDriftCheck) {

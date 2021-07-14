@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<EmissiveColorStatePresets>
+
+		<EmissiveColorStatePreset>
+			<Id>
+				<TypeId>MyObjectBuilder_EmissiveColorStatePresetDefinition</TypeId>
+				<SubtypeId>RivalAIEmissive</SubtypeId>
+			</Id>
+			<EmissiveStates>
+				<EmissiveState StateName="Damaged" EmissiveColorName="Black" DisplayColorName="Black" Emissivity="0" />
+				<EmissiveState StateName="Disabled" EmissiveColorName="Red" DisplayColorName="White" Emissivity="0.5" />
+				<EmissiveState StateName="Working" EmissiveColorName="RAIPurple" DisplayColorName="White" Emissivity="0.8" />
+				<EmissiveState StateName="Warning" EmissiveColorName="RAIPurple" DisplayColorName="White" Emissivity="1" />
+				<EmissiveState StateName="Alternative" EmissiveColorName="RAIPurple" DisplayColorName="White" Emissivity="1" />
+			</EmissiveStates>
+		</EmissiveColorStatePreset>
+
+	</EmissiveColorStatePresets>
+	
+	<EmissiveColors>
+
+			<EmissiveColor>
+				<Id>
+					<TypeId>MyObjectBuilder_EmissiveColorDefinition</TypeId>
+					<SubtypeId>RAIPurple</SubtypeId>
+				</Id>
+				<ColorDefinition>
+					<R>102</R>
+					<G>0</G>
+					<B>255</B>
+					<A>255</A>
+				</ColorDefinition>
+			</EmissiveColor>
+
+		</EmissiveColors>
+	
+</Definitions>

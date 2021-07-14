@@ -66,7 +66,7 @@ namespace ModularEncountersSystems.API {
 
         //AiEnabled
         public static bool AiEnabled = false;
-        private static ulong _aiEnabledSteamId = 2408831996;
+        private static ulong _aiEnabledSteamId = 12345;
 
         //Energy Shields
         public static bool EnergyShields = false;

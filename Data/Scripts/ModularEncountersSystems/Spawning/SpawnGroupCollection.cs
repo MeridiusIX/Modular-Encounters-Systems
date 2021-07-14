@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Zones;
+using VRageMath;
 
 namespace ModularEncountersSystems.Spawning {
 	public class SpawnGroupCollection {
@@ -30,6 +31,7 @@ namespace ModularEncountersSystems.Spawning {
 		public List<ImprovedSpawnGroup> LargeStations;
 
 		public List<int> PrefabIndexes;
+		public int SpawnedPrefabs;
 
 		public Dictionary<string, List<string>> ValidFactions;
 		public Dictionary<string, int> ActiveConditions;
@@ -276,6 +278,17 @@ namespace ModularEncountersSystems.Spawning {
 					PrefabIndexes.RemoveAt(i);
 
 			}
+
+		}
+
+		public Vector3D SelectPrefabOffet(Vector3D originalOffset, int customIndex = -1) {
+
+			var index = customIndex > -1 ? customIndex : SpawnedPrefabs;
+
+			if (index < Conditions.PrefabOffsetOverrides.Count)
+				return Conditions.PrefabOffsetOverrides[index];
+
+			return originalOffset;
 
 		}
 

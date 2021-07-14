@@ -12,7 +12,7 @@ namespace ModularEncountersSystems.API {
 
         public bool Valid; //Can Check This To Ensure API Loaded Properly
 
-        private const long _botControllerModChannel = 2408831996; //This is the channel this object will receive API methods at. Sender should also use this.
+        private const long _botControllerModChannel = 12345; //This is the channel this object will receive API methods at. Sender should also use this.
         private Func<string, string, MyPositionAndOrientation, MyCubeGrid, string, long?, IMyCharacter> _spawnBot;
         private Func<string[]> _getFriendlyBotRoles, _getNPCBotRoles, _getBotSubtypes;
         private Func<bool> _canSpawn;

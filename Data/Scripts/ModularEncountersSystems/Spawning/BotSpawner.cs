@@ -8,6 +8,7 @@ using ModularEncountersSystems.World;
 using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -205,6 +206,8 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			//Disable Wolves and Spiders
+			MyAPIGateway.Session.SessionSettings.EnableWolfs = false;
+			MyAPIGateway.Session.SessionSettings.EnableSpiders = false;
 
 		}
 

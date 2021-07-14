@@ -1,4 +1,5 @@
-﻿using Sandbox.Game.Entities;
+﻿using ModularEncountersSystems.BlockLogic;
+using Sandbox.Game.Entities;
 using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
 using System;
@@ -293,10 +294,18 @@ namespace ModularEncountersSystems.Entities {
 		//------------End Interface Methods------------------
 		//---------------------------------------------------
 
+		public override void CloseEntity(IMyEntity entity) {
+
+			base.CloseEntity(entity);
+			BlockLogicManager.LogicBlocks.Remove(Block.EntityId);
+
+		}
+
 		public override void Unload() {
 
 			base.Unload();
 			Block.IsWorkingChanged -= WorkingChanged;
+			
 
 			if (FunctionalBlock != null)
 				FunctionalBlock.EnabledChanged -= EnabledChanged;

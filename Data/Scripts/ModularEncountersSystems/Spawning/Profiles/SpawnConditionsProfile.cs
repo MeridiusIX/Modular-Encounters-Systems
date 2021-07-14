@@ -245,6 +245,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public Dictionary<string, List<int>> PrefabIndexGroups;
 		public List<string> PrefabIndexGroupNames;
 		public List<int> PrefabIndexGroupValues;
+		public List<Vector3D> PrefabOffsetOverrides;
 
 		public SpawnConditionsProfile() {
 
@@ -454,6 +455,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PrefabIndexGroups = new Dictionary<string, List<int>>();
 			PrefabIndexGroupNames = new List<string>();
 			PrefabIndexGroupValues = new List<int>();
+			PrefabOffsetOverrides = new List<Vector3D>();
 
 		}
 
@@ -1600,6 +1602,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//PrefabOffsetOverrides
+				if (tag.StartsWith("[PrefabOffsetOverrides:") == true) {
+
+					TagParse.TagVector3DListCheck(tag, ref this.PrefabOffsetOverrides);
+
+				}
 
 			}
 

@@ -163,6 +163,13 @@ namespace ModularEncountersSystems.BlockLogic {
 
             }
 
+            if (block.Block as IMyGasTank != null) {
+
+                LogicBlocks.Add(block.Block.EntityId, new InfiniteTank(block));
+                return;
+
+            }
+
         }
 
         public static void Unload() {

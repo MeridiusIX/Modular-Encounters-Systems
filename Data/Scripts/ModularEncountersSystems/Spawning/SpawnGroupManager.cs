@@ -13,6 +13,7 @@ using VRage.Game.ModAPI;
 using VRageMath;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.API;
 
 namespace ModularEncountersSystems.Spawning {
 	public static class SpawnGroupManager {
@@ -354,6 +355,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			ApplySuppression(AddonManager.SuppressVanillaCargoShips, AddonManager.SuppressVanillaEncounters);
+
 			if (SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("LnNibQ=="))) == true && (!SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MTUyMTkwNTg5MA=="))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("NzUwODU1"))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MjU0MjU5OTEwMA=="))))) {
 
 				SpawnGroups.Clear();
@@ -539,6 +542,36 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			return null;
+
+		}
+
+		public static void ApplySuppression(bool cargo, bool encounter) {
+
+			foreach (var spawn in SpawnGroupManager.SpawnGroups) {
+
+				if (cargo && spawn.SpawnConditionsProfiles[0].SpaceCargoShip) {
+
+					if (spawn.SpawnGroup?.Context != null) {
+
+						if (spawn.SpawnGroup.Context.IsBaseGame)
+							spawn.SpawnConditionsProfiles[0].SpaceCargoShip = false;
+
+					}
+
+				}
+
+				if (encounter && spawn.SpawnConditionsProfiles[0].SpaceRandomEncounter) {
+
+					if (spawn.SpawnGroup?.Context != null) {
+
+						if (spawn.SpawnGroup.Context.IsBaseGame)
+							spawn.SpawnConditionsProfiles[0].SpaceRandomEncounter = false;
+
+					}
+
+				}
+
+			}
 
 		}
 

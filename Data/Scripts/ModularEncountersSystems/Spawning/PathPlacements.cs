@@ -300,11 +300,14 @@ namespace ModularEncountersSystems.Spawning {
 				//Check For Obstructions On Each Prefab
 				bool obstructed = false;
 
-				for (int j = 0; j < collection.SpawnGroup.SpawnGroup.Prefabs.Count; j++) {
+				for (int j = 0; j < collection.PrefabIndexes.Count; j++) {
+
+					var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
+					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
 
 					var spawnGroup = collection.SpawnGroup.SpawnGroup;
-					var startPath = path.GetPrefabStartCoords(spawnGroup.Prefabs[j].Position, environment);
-					var endPath = path.GetPrefabEndCoords(spawnGroup.Prefabs[j].Position, environment);
+					var startPath = path.GetPrefabStartCoords(prefabOffset, environment);
+					var endPath = path.GetPrefabEndCoords(prefabOffset, environment);
 					obstructed = IsSpacePathObstructed(planetGravitySphere, playerBox, startPath, endPath, voxelList);
 
 					if (obstructed)
@@ -361,9 +364,13 @@ namespace ModularEncountersSystems.Spawning {
 
 				bool obstructed = false;
 
-				for (int j = 0; j < collection.SpawnGroup.SpawnGroup.Prefabs.Count; j++) {
+				for (int j = 0; j < collection.PrefabIndexes.Count; j++) {
 
-					var startPath = Vector3D.Transform(collection.SpawnGroup.SpawnGroup.Prefabs[j].Position, path.SpawnMatrix);
+					var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
+					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
+
+
+					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 					var endPath = path.SpawnMatrix.Forward * pathDistance + startPath;
 					obstructed = IsSpacePathObstructed(planetGravitySphere, playerBox, startPath, endPath, voxelList);
 
@@ -420,9 +427,12 @@ namespace ModularEncountersSystems.Spawning {
 
 				bool obstructed = false;
 
-				for (int j = 0; j < collection.SpawnGroup.SpawnGroup.Prefabs.Count; j++) {
+				for (int j = 0; j < collection.PrefabIndexes.Count; j++) {
 
-					var startPath = Vector3D.Transform(collection.SpawnGroup.SpawnGroup.Prefabs[j].Position, path.SpawnMatrix);
+					var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
+					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
+
+					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 					var endPath = path.SpawnMatrix.Forward * pathDistance + startPath;
 
 					if (!collection.Conditions.SkipAirDensityCheck) {
@@ -507,9 +517,12 @@ namespace ModularEncountersSystems.Spawning {
 
 				bool obstructed = false;
 
-				for (int j = 0; j < collection.SpawnGroup.SpawnGroup.Prefabs.Count; j++) {
+				for (int j = 0; j < collection.PrefabIndexes.Count; j++) {
 
-					var startPath = Vector3D.Transform(collection.SpawnGroup.SpawnGroup.Prefabs[j].Position, path.SpawnMatrix);
+					var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
+					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
+
+					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 					var endPath = path.SpawnMatrix.Forward * pathDistance + startPath;
 
 					var ray = new RayD(startPath, Vector3D.Normalize(endPath - startPath));
@@ -579,9 +592,12 @@ namespace ModularEncountersSystems.Spawning {
 				//Check for Voxels or Grids
 				bool obstructed = false;
 
-				for (int j = 0; j < collection.SpawnGroup.SpawnGroup.Prefabs.Count; j++) {
+				for (int j = 0; j < collection.PrefabIndexes.Count; j++) {
 
-					var startPath = Vector3D.Transform(collection.SpawnGroup.SpawnGroup.Prefabs[j].Position, path.SpawnMatrix);
+					var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
+					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
+
+					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 
 					if (IsGridWithinMinDistance(startPath, Settings.RandomEncounters.MinDistanceFromOtherEntities)) {
 
@@ -975,9 +991,12 @@ namespace ModularEncountersSystems.Spawning {
 
 				bool badPosition = false;
 
-				for (int j = 0; j < collection.SpawnGroup.SpawnGroup.Prefabs.Count; j++) {
+				for (int j = 0; j < collection.PrefabIndexes.Count; j++) {
 
-					var offsetCoords = Vector3D.Transform(collection.SpawnGroup.SpawnGroup.Prefabs[j].Position, path.SpawnMatrix);
+					var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
+					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
+
+					var offsetCoords = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 
 					if (IsGridWithinMinDistance(offsetCoords, Settings.BossEncounters.MinSignalDistFromOtherEntities)) {
 
@@ -1162,7 +1181,10 @@ namespace ModularEncountersSystems.Spawning {
 			path.StartCoords = spawnMatrix.Translation;
 			bool badCoords = false;
 
-			for (int i = 0; i < collection.SpawnGroup.SpawnGroup.Prefabs.Count; i++) {
+			for (int j = 0; j < collection.PrefabIndexes.Count; j++) {
+
+				var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
+				var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
 
 				if (!collection.Conditions.SkipVoxelSpawnChecks) {
 

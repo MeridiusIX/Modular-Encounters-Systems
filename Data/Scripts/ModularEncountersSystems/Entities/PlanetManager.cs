@@ -66,6 +66,17 @@ namespace ModularEncountersSystems.Entities {
 
         }
 
+        public static bool InGravity(Vector3D coords) {
+
+            var planet = GetNearestPlanet(coords);
+
+            if (planet != null)
+                return planet.IsPositionInGravity(coords);
+
+            return false;
+
+        }
+
     }
 
 }

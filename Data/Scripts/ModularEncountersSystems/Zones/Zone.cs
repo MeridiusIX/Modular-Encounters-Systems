@@ -34,6 +34,7 @@ namespace ModularEncountersSystems.Zones {
 		public Vector3D Direction; //Zone Direction From Planet Center To Surface (If Not Provided, planet center is used as zone center)
 		public double HeightOffset; //Height Offset From Surface for Zone
 		public bool ScaleZoneRadiusWithPlanet;
+		public double IntendedPlanetSize;
 
 		public bool UseZoneTimer; //Determines If Zone Should Expire After Some Time (doesn't apply to Persistent zones)
 		public DateTime TimeCreated; //When in Game Time the Zone Was Created
@@ -98,6 +99,7 @@ namespace ModularEncountersSystems.Zones {
 			Direction = Vector3D.Zero;
 			HeightOffset = 0;
 			ScaleZoneRadiusWithPlanet = false;
+			IntendedPlanetSize = 120000;
 
 			UseZoneTimer = false;
 			TimeCreated = MyAPIGateway.Session.GameDateTime;

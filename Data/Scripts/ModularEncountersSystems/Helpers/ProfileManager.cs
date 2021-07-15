@@ -76,6 +76,16 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (!ZoneConditionsProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Zone Conditions]")) {
+
+					var zone = new ZoneConditionsProfile();
+					zone.InitTags(component.DescriptionText);
+					zone.ProfileSubtypeId = component.Id.SubtypeName;
+					ZoneConditionsProfiles.Add(component.Id.SubtypeName, zone);
+					continue;
+
+				}
+
 				if (component.DescriptionText.Contains("[RivalAI Chat]") == true && ChatObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var chatObject = new ChatProfile();

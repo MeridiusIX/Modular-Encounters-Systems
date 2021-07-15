@@ -1178,10 +1178,6 @@ namespace ModularEncountersSystems.Spawning {
 					if (distance > zone.Radius)
 						continue;
 
-					//Faction Allowed
-					if (zoneCondition.UseFactionOwnedZones && !zone.Factions.Contains(spawnGroup.FactionOwner))
-						continue;
-
 					//Min Dist From Center
 					if (zoneCondition.MinDistanceFromZoneCenter > -1 && distance < zoneCondition.MinDistanceFromZoneCenter)
 						continue;

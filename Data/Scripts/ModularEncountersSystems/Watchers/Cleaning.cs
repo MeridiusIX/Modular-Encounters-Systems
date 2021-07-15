@@ -53,6 +53,7 @@ namespace ModularEncountersSystems.Watchers {
 				//Economy Station Check
 				if (grid.CubeGrid.IsStatic && IsKeenEconomyStation(grid)) {
 
+					GridCleanupData.RemoveData(grid);
 					continue;
 				
 				}

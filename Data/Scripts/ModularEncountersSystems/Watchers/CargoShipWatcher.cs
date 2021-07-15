@@ -5,6 +5,7 @@ using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.World;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +15,7 @@ namespace ModularEncountersSystems.Watchers {
 	public static class CargoShipWatcher {
 
 		public static List<GridEntity> CargoShips = new List<GridEntity>();
+		public static List<GridEntity> LegacyAutopilot = new List<GridEntity>();
 
 		public static void Setup() {
 
@@ -32,6 +34,7 @@ namespace ModularEncountersSystems.Watchers {
 
 					SpawnLogger.Write("Drifting Cargo Ship Entity Not Valid, No Longer NPC, or is Missing Cargo Ship Attribute. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
 					CargoShips.RemoveAt(i);
+					LegacyAutopilot.Remove(cargoShip);
 					continue;
 
 				}
@@ -42,6 +45,7 @@ namespace ModularEncountersSystems.Watchers {
 
 						SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName +" Using RivalAI Behavior for Navigation. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
 						CargoShips.RemoveAt(i);
+						LegacyAutopilot.Remove(cargoShip);
 						continue;
 
 					}
@@ -54,20 +58,27 @@ namespace ModularEncountersSystems.Watchers {
 				var dirFromStartToEnd = Vector3D.Normalize(cargoShip.Npc.EndCoords - cargoShip.Npc.StartCoords);
 				var dirFromStartToShip = Vector3D.Normalize(cargoShip.GetPosition() - cargoShip.Npc.StartCoords);
 				var pathAngle = VectorHelper.GetAngleBetweenDirections(dirFromStartToShip, dirFromStartToEnd);
+				var player = PlayerManager.GetNearestPlayer(cargoShip.GetPosition());
 
-				if (pathAngle > 10 && shipDistFromStart > 1000) {
+				CargoShipAutopilotManager(cargoShip, player);
 
-					SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Deviated From Path By More Than 10 Degrees (" + pathAngle + "). Removed From Watcher", SpawnerDebugEnum.PostSpawn);
-					CargoShips.RemoveAt(i);
-					continue;
+				if (!LegacyAutopilot.Contains(cargoShip)) {
 
-				}
+					if (pathAngle > 10 && shipDistFromStart > 1000) {
 
-				//Drift
-				if (!CargoShipDriftCheck(cargoShip)) {
+						SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Deviated From Path By More Than 10 Degrees (" + pathAngle + "). Removed From Watcher", SpawnerDebugEnum.PostSpawn);
+						CargoShips.RemoveAt(i);
+						continue;
 
-					CargoShips.RemoveAt(i);
-					continue;
+					}
+
+					//Drift
+					if (!CargoShipDriftCheck(cargoShip)) {
+
+						CargoShips.RemoveAt(i);
+						continue;
+
+					}
 
 				}
 
@@ -76,8 +87,6 @@ namespace ModularEncountersSystems.Watchers {
 					continue;
 				
 				}
-
-				var player = PlayerManager.GetNearestPlayer(cargoShip.GetPosition());
 
 				if (player == null || player.Distance(cargoShip.GetPosition()) < Settings.SpaceCargoShips.DespawnDistanceFromPlayer) {
 
@@ -94,14 +103,17 @@ namespace ModularEncountersSystems.Watchers {
 						SpawnLogger.Write("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " At End of Path and Eligible for Despawn.", SpawnerDebugEnum.PostSpawn);
 						SpawnLogger.Write("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " Queued For Removal and Removed From Watcher.", SpawnerDebugEnum.PostSpawn);
 						linkedGrid.Npc.DespawnSource = "Cargo Ship Reached End of Path / Distance";
-						CargoShips.RemoveAt(i);
 
 					}
+
+					CargoShips.RemoveAt(i);
+					LegacyAutopilot.Remove(cargoShip);
 
 				} else {
 
 					SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Was Not Eligible For NPC Despawn. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
 					CargoShips.RemoveAt(i);
+					LegacyAutopilot.Remove(cargoShip);
 
 				}
 			
@@ -111,18 +123,113 @@ namespace ModularEncountersSystems.Watchers {
 
 		private static void CargoShipAutopilotManager(GridEntity grid, PlayerEntity player) {
 
-			if (!PlanetManager.InGravity(grid.GetPosition()))
-				return;
-
 			if (grid.Npc.PrimaryRemoteControlId == -1)
 				return;
 
+			if (!PlanetManager.InGravity(grid.GetPosition()) && (grid.Behavior == null || grid.Behavior.Settings.ActiveBehaviorType != BehaviorSubclass.Passive)) {
+
+				grid.Npc.PrimaryRemoteControlId = -1;
+				return;
+
+			}
+				
 			if (grid.Npc.PrimaryRemoteControlId == 0) {
+
+				IMyRemoteControl mainRemote = null;
+
+				foreach (var block in grid.Controllers) {
+
+					if (!block.ActiveEntity())
+						continue;
+
+					var remote = block.Block as IMyRemoteControl;
+
+					if (remote == null)
+						continue;
+
+					if (mainRemote == null) {
+
+						mainRemote = remote as IMyRemoteControl;
+
+					}
+
+					if (remote.IsMainCockpit || grid.Behavior?.RemoteControl == remote) {
+
+						mainRemote = remote as IMyRemoteControl;
+						break;
+
+					}
+
+				}
+
+				if (mainRemote == null) {
+
+					grid.Npc.PrimaryRemoteControlId = -1;
+					return;
+
+				} else {
+
+					grid.Npc.PrimaryRemoteControlId = mainRemote.EntityId;
+					grid.Npc.PrimaryRemoteControl = mainRemote;
+
+				}
 			
-				//TODO: Get Remote
+			}
+
+			if (grid.Npc.PrimaryRemoteControl != null) {
+
+				double distance = -1;
+				double pauseDistance = grid.Npc.SpawnGroup?.PauseAutopilotAtPlayerDistance ?? -1;
+
+				if (player != null && grid.Npc.SpawnGroup != null && pauseDistance > 0) {
+
+					distance = player.Distance(grid.GetPosition());
+
+				}
+
+				if (pauseDistance > 0 && distance > 0) {
+
+					if (distance < pauseDistance && grid.Npc.PrimaryRemoteControl.IsAutoPilotEnabled) {
+
+						grid.Npc.PrimaryRemoteControl.SetAutoPilotEnabled(false);
+
+					} else if (distance > pauseDistance && !grid.Npc.PrimaryRemoteControl.IsAutoPilotEnabled) {
+
+						AutopilotToCoords(grid);
+						return;
+
+					}
+				
+				} else {
+
+					if (!grid.Npc.PrimaryRemoteControl.IsAutoPilotEnabled) {
+
+						AutopilotToCoords(grid);
+						return;
+
+					}
+				
+				}
+
+				if (grid.Npc.PrimaryRemoteControl.IsAutoPilotEnabled && grid.CubeGrid.Physics.LinearVelocity.Length() < 0.1) {
+
+					grid.Npc.PrimaryRemoteControl.SetAutoPilotEnabled(false);
+
+				}
 			
 			}
 		
+		}
+
+		private static void AutopilotToCoords(GridEntity grid) {
+
+			grid.Npc.PrimaryRemoteControl.SetAutoPilotEnabled(false);
+			grid.Npc.PrimaryRemoteControl.ClearWaypoints();
+			grid.Npc.PrimaryRemoteControl.SpeedLimit = (float)grid.Npc.PrefabSpeed;
+			grid.Npc.PrimaryRemoteControl.FlightMode = Sandbox.ModAPI.Ingame.FlightMode.OneWay;
+			grid.Npc.PrimaryRemoteControl.AddWaypoint(grid.Npc.EndCoords, "Destination");
+			grid.Npc.PrimaryRemoteControl.SetAutoPilotEnabled(true);
+
 		}
 
 		private static bool CargoShipDriftCheck(GridEntity cargoShip) {

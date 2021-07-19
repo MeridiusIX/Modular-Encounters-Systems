@@ -85,6 +85,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(25)]
 		public string ParentGridNameRequirement;
 
+		[ProtoMember(26)]
+		public short FailedAttemptsToIncreaseCount;
+
+		[ProtoMember(27)]
+		public short FailedAttempts;
+
 		[ProtoIgnore]
 		public MatrixD CurrentPositionMatrix;
 
@@ -127,6 +133,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CustomRelativeUp = Direction.None;
 
 			ParentGridNameRequirement = "";
+
+			FailedAttemptsToIncreaseCount = 5;
 
 			CurrentPositionMatrix = MatrixD.Identity;
 			CurrentFactionTag = "";
@@ -382,6 +390,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("ParentGridNameRequirement:") == true){
 
 						TagParse.TagStringCheck(tag, ref ParentGridNameRequirement);
+
+					}
+
+					//FailedAttemptsToIncreaseCount
+					if (tag.Contains("FailedAttemptsToIncreaseCount:") == true) {
+
+						TagParse.TagShortCheck(tag, ref FailedAttemptsToIncreaseCount);
 
 					}
 

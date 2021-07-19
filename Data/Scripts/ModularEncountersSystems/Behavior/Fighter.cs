@@ -82,9 +82,12 @@ namespace ModularEncountersSystems.Behavior {
 		internal CoreBehavior _behavior;
 
 		public byte Counter;
+		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
+		private BehaviorSubclass _subClass;
 
 		public Fighter(CoreBehavior behavior){
 
+			_subClass = BehaviorSubclass.Fighter;
 			_behavior = behavior;
 
 			_fighterEngageDistanceSpace = -1;
@@ -201,7 +204,7 @@ namespace ModularEncountersSystems.Behavior {
 			//Retreat
 			if (_behavior.Mode == BehaviorMode.Retreat) {
 
-				if (_behavior.Despawn.NearestPlayer?.Controller?.ControlledEntity?.Entity != null) {
+				if (_behavior.Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
 
 					//BehaviorLogger.AddMsg("DespawnCoordsCreated", true);
 					_behavior.AutoPilot.SetInitialWaypoint(VectorHelper.GetDirectionAwayFromTarget(_behavior.RemoteControl.GetPosition(), _behavior.Despawn.NearestPlayer.GetPosition()) * 1000 + _behavior.RemoteControl.GetPosition());

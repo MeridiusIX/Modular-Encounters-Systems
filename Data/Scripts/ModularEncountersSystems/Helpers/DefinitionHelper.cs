@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Entities;
 using Sandbox.Definitions;
 using System;
 using System.Collections.Generic;
@@ -26,11 +27,52 @@ namespace ModularEncountersSystems.Helpers {
 		//Entity Components
 		public static List<MyComponentDefinitionBase> EntityComponentDefinitions = new List<MyComponentDefinitionBase>();
 
+		//Weight
+		public static Dictionary<MyDefinitionId, float> ItemWeightReference = new Dictionary<MyDefinitionId, float>();
+		public static Dictionary<MyDefinitionId, float> BlockWeightReference = new Dictionary<MyDefinitionId, float>();
+
+		//Volume
+		public static Dictionary<MyDefinitionId, float> ItemVolumeReference = new Dictionary<MyDefinitionId, float>();
+		public static Dictionary<MyDefinitionId, float> WeaponVolumeReference = new Dictionary<MyDefinitionId, float>();
 
 
 		public static void Setup() {
 
 			var defs = MyDefinitionManager.Static.GetAllDefinitions();
+
+			//Items
+			var physicalItems = MyDefinitionManager.Static.GetPhysicalItemDefinitions();
+
+			foreach (var item in physicalItems) {
+
+				//Main Item
+				if (!AllItemDefinitions.ContainsKey(item.Id))
+					AllItemDefinitions.Add(item.Id, item);
+
+				//Weight
+				if (!ItemWeightReference.ContainsKey(item.Id))
+					ItemWeightReference.Add(item.Id, item.Mass);
+
+				//Volume
+				if (!ItemVolumeReference.ContainsKey(item.Id))
+					ItemVolumeReference.Add(item.Id, item.Volume);
+
+				//Ammo
+				if (item as MyAmmoMagazineDefinition != null) {
+
+					var ammoMag = item as MyAmmoMagazineDefinition;
+
+					if (!NormalAmmoMagReferences.ContainsKey(item.Id))
+						NormalAmmoMagReferences.Add(item.Id, ammoMag);
+
+					var ammo = MyDefinitionManager.Static.GetAmmoDefinition(ammoMag.AmmoDefinitionId);
+
+					if (ammo != null && !NormalAmmoReferences.ContainsKey(item.Id))
+						NormalAmmoReferences.Add(item.Id, ammo);
+
+				}
+
+			}
 
 			//Blocks
 			foreach (var def in defs) {
@@ -40,6 +82,26 @@ namespace ModularEncountersSystems.Helpers {
 				if (block != null) {
 
 					AllBlockDefinitions.Add(block);
+
+					if (!BlockWeightReference.ContainsKey(block.Id)) {
+
+						float totalWeight = 0;
+
+						foreach (var comp in block.Components) {
+
+							float weight = 0;
+
+							if (ItemWeightReference.TryGetValue(comp.Definition.Id, out weight)) {
+
+								totalWeight = weight * comp.Count;
+
+							}
+						
+						}
+
+						BlockWeightReference.Add(block.Id, totalWeight);
+
+					}
 
 					//Battery Max Capacity
 					var battery = block as MyBatteryBlockDefinition;
@@ -61,35 +123,28 @@ namespace ModularEncountersSystems.Helpers {
 						if (!WeaponBlockReferences.ContainsKey(weapon.Id))
 							WeaponBlockReferences.Add(weapon.Id, weapon);
 
+						if (!WeaponVolumeReference.ContainsKey(weapon.Id))
+							WeaponVolumeReference.Add(weapon.Id, weapon.InventoryMaxVolume);
+
 						continue;
 
 					}
 
+					//Weapon-Sorter
+					var weaponSorter = block as MyConveyorSorterDefinition;
 
-				}
+					if (weaponSorter != null && BlockManager.AllWeaponCoreBlocks.Contains(block.Id)) {
 
-			}
+						/*
+						if (!WeaponBlockReferences.ContainsKey(weaponSorter.Id))
+							WeaponBlockReferences.Add(weaponSorter.Id, weaponSorter);
+						*/
+						if (!WeaponVolumeReference.ContainsKey(weaponSorter.Id))
+							WeaponVolumeReference.Add(weaponSorter.Id, weaponSorter.InventorySize.X * weaponSorter.InventorySize.Y * weaponSorter.InventorySize.Z);
 
-			//Items
-			var physicalItems = MyDefinitionManager.Static.GetPhysicalItemDefinitions();
+						continue;
 
-			foreach (var item in physicalItems) {
-
-				if (!AllItemDefinitions.ContainsKey(item.Id))
-					AllItemDefinitions.Add(item.Id, item);
-
-				//Ammo
-				if (item as MyAmmoMagazineDefinition != null) {
-
-					var ammoMag = item as MyAmmoMagazineDefinition;
-
-					if (!NormalAmmoMagReferences.ContainsKey(item.Id))
-						NormalAmmoMagReferences.Add(item.Id, ammoMag);
-
-					var ammo = MyDefinitionManager.Static.GetAmmoDefinition(ammoMag.AmmoDefinitionId);
-
-					if (ammo != null && !NormalAmmoReferences.ContainsKey(item.Id))
-						NormalAmmoReferences.Add(item.Id, ammo);
+					}
 
 				}
 
@@ -122,6 +177,42 @@ namespace ModularEncountersSystems.Helpers {
 			RivalAiControlModules.Add("K_Imperial_DroidCarrier_DroidBrain_Aggressor");
 
 			MES_SessionCore.UnloadActions += Unload;
+
+		}
+
+		public static string GetBlockDefinitionInfo() {
+
+			var sb = new StringBuilder();
+
+			foreach (var def in AllBlockDefinitions) {
+
+				if (def == null) {
+
+					continue;
+
+				}
+
+				sb.Append("Block Name: ").Append(def.DisplayNameText).AppendLine();
+				sb.Append("Block ID:   ").Append(def.Id.ToString()).AppendLine();
+
+				if (def.Context?.ModId != null) {
+
+					if (string.IsNullOrWhiteSpace(def.Context.ModId) == false) {
+
+						sb.Append("Mod ID:     ").Append(def.Context.ModId).AppendLine();
+
+					}
+
+				}
+
+				sb.Append("Is Public:  ").Append(def.Public.ToString()).AppendLine();
+				sb.Append("Size:       ").Append(def.CubeSize.ToString()).AppendLine();
+
+				sb.AppendLine();
+
+			}
+
+			return sb.ToString();
 
 		}
 

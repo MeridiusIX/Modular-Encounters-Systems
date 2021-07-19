@@ -906,6 +906,29 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagShortCheck(string tag, ref short original) {
+
+			short result = 0;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (short.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			} else {
+
+				return;
+
+			}
+
+			original = result;
+
+		}
+
 		public static void TagStringDictionaryCheck(string tag, ref Dictionary<string, string> result) {
 
 			var tagSplit = ProcessTag(tag);

@@ -1,3 +1,4 @@
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.ModAPI;
@@ -26,7 +27,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public int PlayerDistanceTimer; //Storage
 		public double PlayerDistance;
-		public IMyPlayer NearestPlayer;
+		public PlayerEntity NearestPlayer;
 
 		public int RetreatTimer; //Storage
 
@@ -159,11 +160,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				
 			}
 
-			this.NearestPlayer = TargetHelper.GetClosestPlayer(this.RemoteControl.GetPosition());
+			this.NearestPlayer = PlayerManager.GetNearestPlayer(this.RemoteControl.GetPosition());
 
 			if(mode == BehaviorMode.Retreat) {
 
-				if(this.NearestPlayer?.Controller?.ControlledEntity?.Entity != null) {
+				if(this.NearestPlayer.ActiveEntity()) {
 
 					if(Vector3D.Distance(this.RemoteControl.GetPosition(), this.NearestPlayer.GetPosition()) > this.RetreatDespawnDistance){
 
@@ -187,7 +188,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					
 					PlayerDistanceTimer++;
 					
-				}else if(this.NearestPlayer?.Controller?.ControlledEntity?.Entity != null){
+				}else if(this.NearestPlayer.ActiveEntity()) {
 
 					if(Vector3D.Distance(this.NearestPlayer.GetPosition(), this.RemoteControl.GetPosition()) > this.PlayerDistanceTrigger) {
 						

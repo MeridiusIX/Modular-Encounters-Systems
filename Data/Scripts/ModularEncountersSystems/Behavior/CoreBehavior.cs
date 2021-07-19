@@ -444,8 +444,27 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			if (ActiveBehavior != null)
+			if (ActiveBehavior != null && ActiveBehavior.SubClass == Settings.ActiveBehaviorType)
 				ActiveBehavior.ProcessBehavior();
+			else {
+
+				if (Settings.ActiveBehaviorType == BehaviorSubclass.None)
+					Settings.ActiveBehaviorType = BehaviorManager.GetSubclassFromCustomData(RemoteControl?.CustomData);
+
+				if (Settings.ActiveBehaviorType == BehaviorSubclass.None) {
+
+					BehaviorLogger.Write("Could Not Setup Behavior. Behavior Subclass Could Not Be Determined.", BehaviorDebugEnum.BehaviorSetup, true);
+					this.BehaviorTerminated = true;
+					return;
+
+				}
+
+				AssignSubClassBehavior(Settings.ActiveBehaviorType);
+
+				if (ActiveBehavior != null)
+					ActiveBehavior.ProcessBehavior();
+
+			}
 
 		}
 
@@ -526,7 +545,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (ActiveBehavior == null) {
 
-				BehaviorLogger.Write("Could Not Setup Behavior. Behavior Subclass Could Not Be Determined.", BehaviorDebugEnum.BehaviorSetup);
+				BehaviorLogger.Write("Could Not Setup Behavior. Behavior Subclass Could Not Be Determined.", BehaviorDebugEnum.BehaviorSetup, true);
 				this.BehaviorTerminated = true;
 				return;
 
@@ -874,7 +893,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				string tempSettingsString = "";
 
-				this.RemoteControl.Storage.TryGetValue(StorageTools.RivalAiStoredDataKey, out tempSettingsString);
+				this.RemoteControl.Storage.TryGetValue(_settingsStorageKey, out tempSettingsString);
 
 				try {
 

@@ -442,7 +442,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						}
 
 						if (!gotAction)
-							BehaviorLogger.Write("Could Not Find Action Profile Associated To Tag: " + tag, BehaviorDebugEnum.Error, true);
+							ProfileManager.ReportProfileError(tempValue, "Could Not Load Action Profile From Trigger: " + ProfileSubtypeId);
 
 
 					}
@@ -524,7 +524,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						}
 
 						if (!gotCondition)
-							BehaviorLogger.Write("Could Not Find Condition Profile Associated To Tag: " + tag, BehaviorDebugEnum.Error, true);
+							ProfileManager.ReportProfileError(tempValue, "Could Not Load Condition Profile From Trigger: " + ProfileSubtypeId);
 
 
 					}

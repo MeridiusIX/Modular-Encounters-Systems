@@ -38,6 +38,24 @@ namespace ModularEncountersSystems.Entities {
 		
 		}
 
+		public static PlayerEntity GetPlayerWithIdentityId(long id) {
+
+			PlayerEntity result = null;
+
+			foreach (var player in Players) {
+
+				if (!player.ActiveEntity())
+					continue;
+
+				if (player.Player.IdentityId == id)
+					return player;
+
+			}
+
+			return result;
+
+		}
+
 		public static void PlayerConnectEvent(long playerId) {
 
 			MyAPIGateway.Utilities.InvokeOnGameThread(() => { RefreshAllPlayers(true); });

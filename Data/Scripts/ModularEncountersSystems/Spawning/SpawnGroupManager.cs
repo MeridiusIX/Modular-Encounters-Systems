@@ -257,18 +257,21 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (spawnGroup.RotateFirstCockpitToForward == true) {
 
+				SpawnLogger.Write("Added Internal Spawning Option: RotateFirstCockpitToForward", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.RotateFirstCockpitTowardsDirection;
 
 			}
 
 			if (spawnGroup.SpawnRandomCargo == true) {
 
+				SpawnLogger.Write("Added Internal Spawning Option: SpawnRandomCargo", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.SpawnRandomCargo;
 
 			}
 
 			if (spawnGroup.DisableDampeners == true) {
 
+				SpawnLogger.Write("Added Internal Spawning Option: DisableDampeners", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.DisableDampeners;
 
 			}
@@ -277,12 +280,14 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (spawnGroup.ReactorsOn == false) {
 
+				SpawnLogger.Write("Added Internal Spawning Option: TurnOffReactors", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.TurnOffReactors;
 
 			}
 
 			if (prefab.PlaceToGridOrigin == true) {
 
+				SpawnLogger.Write("Added Internal Spawning Option: PlaceToGridOrigin", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.UseGridOrigin;
 
 			}

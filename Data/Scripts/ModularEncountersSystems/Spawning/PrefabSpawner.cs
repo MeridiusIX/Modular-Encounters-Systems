@@ -1,11 +1,14 @@
 ﻿using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Spawning.Profiles;
+using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.World;
 using Sandbox.Definitions;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -165,6 +168,8 @@ namespace ModularEncountersSystems.Spawning {
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathStartAltitude);
 				npcData.EndCoords = path.GetPrefabEndCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathEndAltitude);
+				npcData.Forward = path.SpawnMatrix.Forward;
+				npcData.Up = path.SpawnMatrix.Up;
 
 				Vector3 linearVelocity = Vector3.Zero;
 				Vector3 angularVelocity = Vector3.Zero;
@@ -193,11 +198,22 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
+				var options = SpawnGroupManager.CreateSpawningOptions(spawnCollection.Conditions, sgPrefab);
+
+				if (spawnCollection.Conditions.ForceExactPositionAndOrientation) {
+
+					npcData.Attributes |= NpcAttributes.SetMatrixPostSpawn;
+
+					if (!options.HasFlag(SpawningOptions.UseGridOrigin))
+						options |= SpawningOptions.UseGridOrigin;
+
+					if (options.HasFlag(SpawningOptions.RotateFirstCockpitTowardsDirection))
+						options &= ~SpawningOptions.RotateFirstCockpitTowardsDirection;
+
+				}
+
 				//Prefab Manipulation
 				PrefabManipulation.PrepareManipulations(prefab, spawnCollection, environment, npcData);
-
-				var options = SpawnGroupManager.CreateSpawningOptions(spawnCollection.Conditions, sgPrefab);
-				
 
 				var spawnMatrix = path.SpawnMatrix;
 
@@ -207,6 +223,10 @@ namespace ModularEncountersSystems.Spawning {
 					spawnMatrix = PathPlacements.CalculateDerelictSpawnMatrix(spawnMatrix, spawnCollection.Conditions.RotateInstallations[spawnCollection.PrefabIndexes[i]]);
 
 				}
+
+				SpawnLogger.Write("Final Spawn Matrix Translation: " + spawnMatrix.Translation, SpawnerDebugEnum.Pathing);
+				SpawnLogger.Write("Final Spawn Matrix Forward:     " + spawnMatrix.Forward, SpawnerDebugEnum.Pathing);
+				SpawnLogger.Write("Final Spawn Matrix Up:          " + spawnMatrix.Up, SpawnerDebugEnum.Pathing);
 
 				//Send to IMyPrefabManager
 				try {
@@ -320,6 +340,106 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write("Large Installation Spawning Chance Now Set To: " + largeChance.ToString() + " / 100", SpawnerDebugEnum.Spawning);
 
 			}
+
+		}
+
+		public static void PrefabSpawnDebug(ChatMessage msg) {
+
+
+			var msgSplit = msg.GetArray(4,4);
+
+			if (msgSplit.Length != 4) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(msgSplit[3]);
+
+			if (prefab == null) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Could Not Find Prefab With Name: " + msgSplit[3], 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			var matrix = MatrixD.Identity;
+			matrix.Translation = msg.PlayerPosition;
+			var player = PlayerManager.GetPlayerWithIdentityId(msg.PlayerId);
+
+			if (player?.Player?.Character != null)
+				matrix = player.Player.Character.WorldMatrix;
+
+			Vector3D coords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
+
+			var dummyList = new List<IMyCubeGrid>();
+			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + msgSplit[2] + "]", 5000, "White", msg.PlayerId);
+			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, msgSplit[3], coords, matrix.Backward, matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, msg.PlayerId);
+
+		}
+
+		public static void PrefabStationSpawnDebug(ChatMessage msg) {
+
+			var msgSplit = msg.GetArray(5, 5);
+
+			if (msgSplit.Length != 5) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			double depth = 0;
+			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(msgSplit[4]);
+
+			if (!double.TryParse(msgSplit[3], out depth)) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Could Not Parse Number Value: " + msgSplit[3], 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			if (prefab == null) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Could Not Find Prefab With Name: " + msgSplit[4], 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			var planet = PlanetManager.GetNearestPlanet(msg.PlayerPosition) ;
+
+			if (planet == null) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Could Not Find Nearby Planet", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			var matrix = MatrixD.Identity;
+			matrix.Translation = msg.PlayerPosition;
+			var player = PlayerManager.GetPlayerWithIdentityId(msg.PlayerId);
+
+			if (player?.Player?.Character != null)
+				matrix = player.Player.Character.WorldMatrix;
+
+			Vector3D roughcoords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
+			Vector3D surfacecoords = planet.SurfaceCoordsAtPosition(roughcoords);
+			Vector3D up = planet.UpAtPosition(surfacecoords);
+			Vector3D coords = up * depth + surfacecoords;
+
+			if (Vector3D.Distance(coords, msg.PlayerPosition) < prefab.BoundingSphere.Radius) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Player Too Close To Spawn Location", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			matrix = MatrixD.CreateWorld(coords, Vector3D.CalculatePerpendicularVector(up), up);
+
+			var dummyList = new List<IMyCubeGrid>();
+			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, msgSplit[4], coords, matrix.Backward, matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + msgSplit[4] + "] As Planetary Installation", 5000, "White", msg.PlayerId);
 
 		}
 

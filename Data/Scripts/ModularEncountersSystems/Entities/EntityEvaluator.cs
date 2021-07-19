@@ -626,7 +626,7 @@ namespace ModularEncountersSystems.Entities {
 
 			grid.ThreatScore = result;
 			grid.LastThreatCalculationTime = MyAPIGateway.Session.GameDateTime;
-			return result;
+			return result * 0.70f;
 		
 		}
 

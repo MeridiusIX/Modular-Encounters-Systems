@@ -30,7 +30,17 @@
 				<guid>29FFD684-13D7-4045-BF76-CD48BF80E36A</guid>
 			</RegisteredStorageGuids>
 		</EntityComponent>
-		
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>LegacyNpcDataKey</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>AD4DBD09-359D-48F5-9F48-54D352B59171</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
+
 		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
 			<Id>
 				<TypeId>ModStorageComponent</TypeId>

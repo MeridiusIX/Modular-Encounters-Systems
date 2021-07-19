@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
         public static bool ModEnabled = true;
 
-        public static string ModVersion = "2.0.0";
+        public static string ModVersion = "2.0.3";
         public static MES_SessionCore Instance;
 
         public static bool IsServer;
@@ -82,14 +82,15 @@ namespace ModularEncountersSystems.Core {
             if (!ModEnabled)
                 return;
 
+            ProfileManager.Setup();
             BlockLogicManager.Setup();
             EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
+            SetDefaultSettings();
 
             if (!MyAPIGateway.Multiplayer.IsServer)
                 return;
 
             APIs.RegisterAPIs(2); //Register Any Applicable APIs
-            ProfileManager.Setup();
             SpawnGroupManager.CreateSpawnLists();
             FactionHelper.PopulateNpcFactionLists();
             EventWatcher.Setup();
@@ -99,6 +100,7 @@ namespace ModularEncountersSystems.Core {
             BehaviorManager.Setup();
             RelationManager.Setup();
             Cleaning.Setup();
+            WaveManager.Setup();
 
             //AttributeApplication
 
@@ -140,6 +142,16 @@ namespace ModularEncountersSystems.Core {
 
             return true;
         
+        }
+
+        private static void SetDefaultSettings() {
+
+            if (MyAPIGateway.Session.SessionSettings.CargoShipsEnabled)
+                MyAPIGateway.Session.SessionSettings.CargoShipsEnabled = false;
+
+            if (MyAPIGateway.Session.SessionSettings.EnableEncounters)
+                MyAPIGateway.Session.SessionSettings.EnableEncounters = false;
+
         }
 
     }

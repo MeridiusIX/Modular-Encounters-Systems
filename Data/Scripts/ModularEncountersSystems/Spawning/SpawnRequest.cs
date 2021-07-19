@@ -241,6 +241,8 @@ namespace ModularEncountersSystems.Spawning {
 
         public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD()) {
 
+            SpawnLogger.Write("Spawn Request Received From: " + source, SpawnerDebugEnum.Spawning);
+
             //Main Spawner Enabled
             if (!MES_SessionCore.ModEnabled) {
 
@@ -258,7 +260,7 @@ namespace ModularEncountersSystems.Spawning {
             }
 
             //Max NPCs
-            if (Settings.General.UseMaxNpcGrids && type != SpawningType.Creature && NpcManager.GetGlobalNpcCount() >= Settings.General.MaxGlobalNpcGrids) {
+            if (!adminSpawn && Settings.General.UseMaxNpcGrids && type != SpawningType.Creature && NpcManager.GetGlobalNpcCount() >= Settings.General.MaxGlobalNpcGrids) {
 
                 SpawnLogger.Write("Max Global NPCs Reached/Exceeded", SpawnerDebugEnum.Spawning);
                 return false;
@@ -268,20 +270,20 @@ namespace ModularEncountersSystems.Spawning {
             //Max NPCs Of Type in Area
             var areaSize = Settings.GetSpawnAreaRadius(type);
 
-            if (areaSize > -1 && NpcManager.GetAreaNpcCount(type, coords, areaSize) >= Settings.GetMaxAreaSpawns(type)) {
+            if (!adminSpawn && areaSize > -1 && NpcManager.GetAreaNpcCount(type, coords, areaSize) >= Settings.GetMaxAreaSpawns(type)) {
 
                 SpawnLogger.Write("Max SpawnType NPCs Reached/Exceeded for: " + type.ToString(), SpawnerDebugEnum.Spawning);
                 return false;
             
             }
 
-            //TODO: Clean KPLs and Timeouts
             KnownPlayerLocationManager.CleanExpiredLocations();
 
             if (!forceSpawn && !adminSpawn) {
 
                 if (!TimeoutManagement.IsSpawnAllowed(type, coords)) {
 
+                    //TODO: Add Wave Spawner Exceptions
                     SpawnLogger.Write("Spawning For This Encounter Type Is Timed Out In This Area: " + type.ToString(), SpawnerDebugEnum.Spawning);
                     return false;
 
@@ -416,7 +418,7 @@ namespace ModularEncountersSystems.Spawning {
 
                 var spawnNames = new List<string>();
                 spawnNames.Add(encounter.SpawnGroupName);
-                SpawnGroupManager.GetSpawnGroups(type, environment, encounter.Faction, spawnGroupCollection, false, false, spawnNames);
+                SpawnGroupManager.GetSpawnGroups(type, environment, encounter.Faction, spawnGroupCollection, false, true, spawnNames);
 
                 if (spawnGroupCollection.SpawnGroups.Count == 0) {
 

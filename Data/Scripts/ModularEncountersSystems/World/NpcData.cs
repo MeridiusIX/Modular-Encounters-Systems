@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Spawning.Profiles;
@@ -37,7 +38,8 @@ namespace ModularEncountersSystems.World {
 		WeaponsRandomized = 1 << 13,
 		RivalAiBehaviorSet = 1 << 14,
 		RegisterRemoteControlCode = 1 << 15,
-		CustomThrustDataUsed = 1 << 16
+		CustomThrustDataUsed = 1 << 16,
+		SetMatrixPostSpawn = 1 << 17,
 
 	}
 
@@ -111,6 +113,12 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(22)]
 		public long PrimaryRemoteControlId;
 
+		[ProtoMember(23)]
+		public Vector3D Forward;
+
+		[ProtoMember(24)]
+		public Vector3D Up;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -183,6 +191,51 @@ namespace ModularEncountersSystems.World {
 
 		public NpcData() {
 
+			SetDefaults();
+
+		}
+
+		public NpcData(LegacyActiveNPC legacyActiveNPC) {
+
+			SetDefaults();
+
+			this.SpawnGroupName = legacyActiveNPC.SpawnGroupName;
+			this.InitialFaction = legacyActiveNPC.InitialFaction;
+			this.StartCoords = legacyActiveNPC.StartCoords;
+			this.EndCoords = legacyActiveNPC.EndCoords;
+			this.PrefabSpeed = legacyActiveNPC.AutoPilotSpeed;
+
+			if (Conditions == null)
+				return;
+
+			if (legacyActiveNPC.SpawnType == "SpaceCargoShip")
+				this.SpawnType = SpawningType.SpaceCargoShip;
+
+			if (legacyActiveNPC.SpawnType == "RandomEncounter")
+				this.SpawnType = SpawningType.RandomEncounter;
+
+			if (legacyActiveNPC.SpawnType == "PlanetaryCargoShip")
+				this.SpawnType = SpawningType.PlanetaryCargoShip;
+
+			if (legacyActiveNPC.SpawnType == "PlanetaryInstallation")
+				this.SpawnType = SpawningType.PlanetaryInstallation;
+
+			if (legacyActiveNPC.SpawnType == "BossEncounter")
+				this.SpawnType = SpawningType.BossEncounter;
+
+			if (legacyActiveNPC.SpawnType == "Other" || legacyActiveNPC.SpawnType == "OtherNPC")
+				this.SpawnType = SpawningType.OtherNPC;
+
+			AssignAttributes(SpawnGroup, SpawnType);
+
+			//CleanUp
+			if (legacyActiveNPC.CleanupIgnore && !Attributes.HasFlag(NpcAttributes.IgnoreCleanup))
+				Attributes |= NpcAttributes.IgnoreCleanup;
+
+		}
+
+		private void SetDefaults() {
+
 			Attributes = NpcAttributes.None;
 			Attributes |= NpcAttributes.FixSubparts;
 			AppliedAttributes = NpcAttributes.None;
@@ -201,6 +254,8 @@ namespace ModularEncountersSystems.World {
 			ThirdAttributesCheck = false;
 			DespawnAttempts = 0;
 			PrimaryRemoteControlId = 0;
+			Forward = Vector3D.Forward;
+			Up = Vector3D.Up;
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -249,8 +304,9 @@ namespace ModularEncountersSystems.World {
 			var updateSettings  = true;
 			FirstAttributesCheck = true;
 
+
 			//ForceStatic
-			if (Attributes.HasFlag(NpcAttributes.ForceStatic)) {
+			if (AttributeCheck(NpcAttributes.ForceStatic)) {
 
 				Grid.CubeGrid.IsStatic = true;
 				AppliedAttributes |= NpcAttributes.ForceStatic;
@@ -258,7 +314,7 @@ namespace ModularEncountersSystems.World {
 			}
 
 			//ReleasePrefab
-			if (Attributes.HasFlag(NpcAttributes.ReleasePrefab)) {
+			if (AttributeCheck(NpcAttributes.ReleasePrefab)) {
 
 				foreach (var prefab in PrefabSpawner.Prefabs) {
 
@@ -275,9 +331,12 @@ namespace ModularEncountersSystems.World {
 
 			}
 
-			MyAPIGateway.Utilities.InvokeOnGameThread(() => ProcessSecondaryAttributes());
 			if (updateSettings)
 				Update();
+
+			MyAPIGateway.Utilities.InvokeOnGameThread(() => ProcessSecondaryAttributes());
+
+			
 
 		}
 
@@ -289,8 +348,35 @@ namespace ModularEncountersSystems.World {
 			SecondAttributesCheck = true;
 			var updateSettings = true;
 
+			//SetMatrixPostSpawn
+			if (AttributeCheck(NpcAttributes.SetMatrixPostSpawn)) {
+				/*
+				SpawnLogger.Write("Setting Matrix Post Spawn", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write("Start Matrix Translation:    " + Grid.CubeGrid.WorldMatrix.Translation, SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write("Start Matrix Forward:        " + Grid.CubeGrid.WorldMatrix.Forward, SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write("Start Matrix Up:             " + Grid.CubeGrid.WorldMatrix.Up, SpawnerDebugEnum.Spawning);
+				*/
+
+				var newMatrix = MatrixD.CreateWorld(StartCoords, Forward, Up);
+				Grid.CubeGrid.IsStatic = false;
+				Grid.CubeGrid.PositionComp.SetWorldMatrix(ref newMatrix);
+				Grid.CubeGrid.IsStatic = true;
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Fix MAtrix", 1000);
+
+				/*
+				SpawnLogger.Write("Provided Matrix Translation: " + newMatrix.Translation, SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write("Provided Matrix Forward:     " + newMatrix.Forward, SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write("Provided Matrix Up:          " + newMatrix.Up, SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write("Final Matrix Translation:    " + Grid.CubeGrid.WorldMatrix.Translation, SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write("Final Matrix Forward:        " + Grid.CubeGrid.WorldMatrix.Forward, SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write("Final Matrix Up:             " + Grid.CubeGrid.WorldMatrix.Up, SpawnerDebugEnum.Spawning);
+				*/
+				AppliedAttributes |= NpcAttributes.SetMatrixPostSpawn;
+
+			}
+
 			//ReplenishSystems
-			if (Attributes.HasFlag(NpcAttributes.ReplenishSystems)) {
+			if (AttributeCheck(NpcAttributes.ReplenishSystems)) {
 
 				InventoryHelper.ReplenishGridSystems(Grid.CubeGrid, SpawnGroup);
 				AppliedAttributes |= NpcAttributes.ReplenishSystems;
@@ -327,7 +413,7 @@ namespace ModularEncountersSystems.World {
 			}
 
 			//WeaponRandomizationAdjustments
-			if (Attributes.HasFlag(NpcAttributes.WeaponRandomizationAdjustments)) {
+			if (AttributeCheck(NpcAttributes.WeaponRandomizationAdjustments)) {
 
 				WeaponRandomizer.SetWeaponCoreRandomRanges(Grid.CubeGrid);
 				AppliedAttributes |= NpcAttributes.WeaponRandomizationAdjustments;
@@ -335,7 +421,7 @@ namespace ModularEncountersSystems.World {
 			}
 
 			//ApplyBehavior
-			if (Attributes.HasFlag(NpcAttributes.ApplyBehavior)) {
+			if (AttributeCheck(NpcAttributes.ApplyBehavior)) {
 
 				AppliedAttributes |= NpcAttributes.ApplyBehavior;
 
@@ -345,17 +431,21 @@ namespace ModularEncountersSystems.World {
 
 				}
 
+				BehaviorLogger.Write("Keen Behavior Initialized", BehaviorDebugEnum.BehaviorSetup);
 				MyVisualScriptLogicProvider.SetDroneBehaviourFull(Grid.CubeGrid.EntityId.ToString(), this.BehaviorName, true, false, null, false, null, 10, this.BehaviorTriggerDist);
 
 			}
 
 			//RegisterRemoteControlCode
-			if (Attributes.HasFlag(NpcAttributes.RegisterRemoteControlCode)) {
+			if (AttributeCheck(NpcAttributes.RegisterRemoteControlCode)) {
 
 				WeaponRandomizer.SetWeaponCoreRandomRanges(Grid.CubeGrid);
 				AppliedAttributes |= NpcAttributes.RegisterRemoteControlCode;
 
 			}
+
+			if (updateSettings)
+				Update();
 
 		}
 
@@ -368,7 +458,7 @@ namespace ModularEncountersSystems.World {
 			var updateSettings = true;
 
 			//DigAirTightVoxels
-			if (Attributes.HasFlag(NpcAttributes.DigAirTightVoxels)) {
+			if (AttributeCheck(NpcAttributes.DigAirTightVoxels)) {
 
 				TaskProcessor.Tasks.Add(new CutVoxels(Grid, SpawnGroup?.SpawnConditionsProfiles[ConditionIndex].CutVoxelSize ?? 2.7));
 				AppliedAttributes |= NpcAttributes.DigAirTightVoxels;
@@ -376,7 +466,7 @@ namespace ModularEncountersSystems.World {
 			}
 
 			//InitEconomyBlocks
-			if (Attributes.HasFlag(NpcAttributes.InitEconomyBlocks)) {
+			if (AttributeCheck(NpcAttributes.InitEconomyBlocks)) {
 
 				AppliedAttributes |= NpcAttributes.InitEconomyBlocks;
 				EconomyHelper.InitNpcStoreBlock(Grid.CubeGrid, SpawnGroup);
@@ -384,7 +474,7 @@ namespace ModularEncountersSystems.World {
 			}
 
 			//NonPhysicalAmmo
-			if (Attributes.HasFlag(NpcAttributes.NonPhysicalAmmo)) {
+			if (AttributeCheck(NpcAttributes.NonPhysicalAmmo)) {
 
 				AppliedAttributes |= NpcAttributes.NonPhysicalAmmo;
 				InventoryHelper.NonPhysicalAmmoProcessing(Grid.CubeGrid);
@@ -392,7 +482,7 @@ namespace ModularEncountersSystems.World {
 			}
 
 			//ShieldActivation
-			if (Attributes.HasFlag(NpcAttributes.ShieldActivation)) {
+			if (AttributeCheck(NpcAttributes.ShieldActivation)) {
 
 				NPCShieldManager.ActivateShieldsForNPC(Grid.CubeGrid);
 				AppliedAttributes |= NpcAttributes.ShieldActivation;
@@ -404,20 +494,17 @@ namespace ModularEncountersSystems.World {
 
 		}
 
+		private bool AttributeCheck(NpcAttributes attribute) {
+
+			return Attributes.HasFlag(attribute) && !AppliedAttributes.HasFlag(attribute);
+		
+		}
+
 		private void Update() {
 
-			var byteData = MyAPIGateway.Utilities.SerializeToBinary<NpcData>(this);
-			var stringData = Convert.ToBase64String(byteData);
+			if (Grid != null && Grid.ActiveEntity()) {
 
-			if (Grid != null && !Grid.ActiveEntity()) {
-
-				if (Grid.CubeGrid.Storage == null)
-					Grid.CubeGrid.Storage = new MyModStorageComponent();
-
-				if (Grid.CubeGrid.Storage.ContainsKey(StorageTools.NpcDataKey))
-					Grid.CubeGrid.Storage[StorageTools.NpcDataKey] = stringData;
-				else
-					Grid.CubeGrid.Storage.Add(StorageTools.NpcDataKey, stringData);
+				SerializationHelper.SaveDataToEntity<NpcData>(Grid.CubeGrid, this, StorageTools.NpcDataKey);
 
 			}
 

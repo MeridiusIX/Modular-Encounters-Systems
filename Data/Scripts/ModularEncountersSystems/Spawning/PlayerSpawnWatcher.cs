@@ -29,6 +29,8 @@ namespace ModularEncountersSystems.Spawning {
 
             Timer = 0;
 
+            WaveManager.Run();
+
             for (int i = Players.Count - 1; i >= 0; i--) {
 
                 Players[i].ProcessPlayerTimers();

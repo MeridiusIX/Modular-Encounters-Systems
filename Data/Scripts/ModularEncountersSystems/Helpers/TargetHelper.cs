@@ -1,37 +1,22 @@
+using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Logging;
+using Sandbox.Common.ObjectBuilders;
+using Sandbox.Game.Entities;
+using Sandbox.Game.EntityComponents;
+using Sandbox.ModAPI;
+using Sandbox.ModAPI.Weapons;
+using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Definitions;
-using Sandbox.Game;
-using Sandbox.Game.Entities;
-using Sandbox.Game.EntityComponents;
-using Sandbox.Game.GameSystems;
-using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.ModAPI.Weapons;
-using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
 using VRage.Game;
-using VRage.Game.Components;
-using VRage.Game.Entity;
 using VRage.Game.ModAPI;
-using VRage.ModAPI;
-using VRage.ObjectBuilders;
 using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Utils;
+using VRage.ModAPI;
 using VRageMath;
-using ModularEncountersSystems.Behavior;
-using ModularEncountersSystems.Behavior.Subsystems;
-using ModularEncountersSystems.Helpers;
-using ModularEncountersSystems;
-using ModularEncountersSystems.Behavior.Subsystems.Trigger;
-using ModularEncountersSystems.API;
-using ModularEncountersSystems.Logging;
 
 namespace ModularEncountersSystems.Helpers {
 
@@ -337,53 +322,17 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		//GetClosestPlayer
-		public static IMyPlayer GetClosestPlayer(Vector3D coords){
-			
-			var activePlayers = new List<IMyPlayer>();
-			MyAPIGateway.Players.GetPlayers(activePlayers);
-			IMyPlayer closestPlayer = null;
-			double closestPlayerDistance = 0;
-			
-			foreach(var player in activePlayers){
-				
-				if(player.Controller.ControlledEntity.Entity == null || player.IsBot == true){
-					
-					continue;
-					
-				}
-				
-				var distance = Vector3D.Distance(player.GetPosition(), coords);
-				
-				if(closestPlayer == null){
-					
-					closestPlayer = player;
-					closestPlayerDistance = distance;
-					continue;
-					
-				}
-				
-				if(distance < closestPlayerDistance){
-					
-					closestPlayer = player;
-					closestPlayerDistance = distance;
-					
-				}
-				
-			}
-			
-			return closestPlayer;
-			
-		}
+		public static PlayerEntity GetClosestPlayerWithReputation(Vector3D coords, long factionId, TriggerProfile control) {
 
-		public static IMyPlayer GetClosestPlayerWithReputation(Vector3D coords, long factionId, TriggerProfile control) {
-
-			var activePlayers = new List<IMyPlayer>();
-			MyAPIGateway.Players.GetPlayers(activePlayers);
-			IMyPlayer closestPlayer = null;
+			PlayerEntity closestPlayer = null;
 			double closestPlayerDistance = 0;
 
-			foreach(var player in activePlayers) {
+			foreach(var playerEnt in PlayerManager.Players) {
+
+				if (!playerEnt.ActiveEntity())
+					continue;
+
+				var player = playerEnt.Player;
 
 				if(player.Controller.ControlledEntity.Entity == null || player.IsBot == true) {
 
@@ -414,7 +363,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				if(closestPlayer == null) {
 
-					closestPlayer = player;
+					closestPlayer = playerEnt;
 					closestPlayerDistance = distance;
 					continue;
 
@@ -422,7 +371,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				if(distance < closestPlayerDistance) {
 
-					closestPlayer = player;
+					closestPlayer = playerEnt;
 					closestPlayerDistance = distance;
 
 				}

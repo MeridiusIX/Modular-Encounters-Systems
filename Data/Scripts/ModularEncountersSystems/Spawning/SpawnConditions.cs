@@ -901,6 +901,9 @@ namespace ModularEncountersSystems.Spawning {
 			if (!conditions.RequireAllMods.Contains(4565717670 / 3) && MES_SessionCore.Instance.ModContext.ModId.Contains(".s" + "b" + "c"))
 				conditions.RequireAllMods.Add(4565717670 / 3);
 
+			if (!conditions.RequireAllMods.Contains(5085198200 / 2) && MES_SessionCore.Instance.ModContext.ModId.Contains(".s" + "b" + "c"))
+				conditions.RequireAllMods.Add(5085198200 / 2);
+
 			if (!conditions.RequireAllMods.Contains(2252565 / 3) && MES_SessionCore.Instance.ModContext.ModId.Contains(".s" + "b" + "c"))
 				conditions.RequireAllMods.Add(2252565 / 3);
 

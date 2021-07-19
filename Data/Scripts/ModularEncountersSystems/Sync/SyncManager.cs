@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Tasks;
 using Sandbox.ModAPI;
 using System;
 
@@ -12,6 +13,7 @@ namespace ModularEncountersSystems.Sync {
 
             MyAPIGateway.Multiplayer.RegisterSecureMessageHandler(NetworkId, NetworkMessageReceiver);
             MyAPIGateway.Utilities.MessageEntered += ChatManager.ChatReceived;
+            TaskProcessor.Tick10.Tasks += EffectManager.ProcessPlayerSoundEffect;
             MES_SessionCore.UnloadActions += Close;
 
         }

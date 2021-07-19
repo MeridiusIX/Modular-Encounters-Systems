@@ -183,77 +183,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				BehaviorLogger.Write("Determining Behavior Type of RemoteControl", BehaviorDebugEnum.BehaviorSetup);
 
-				BehaviorSubclass subclass = BehaviorSubclass.None;
-
-				//CoreBehavior
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:CoreBehavior]")) {
-
-					subclass = BehaviorSubclass.CoreBehavior;
-
-				}
-
-				//CargoShip
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:CargoShip]")) {
-
-					subclass = BehaviorSubclass.CargoShip;
-
-				}
-
-				//Fighter
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:Fighter]")) {
-
-					subclass = BehaviorSubclass.Fighter;
-
-				}
-
-				//HorseFighter
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:HorseFighter]")) {
-
-					subclass = BehaviorSubclass.HorseFighter;
-
-				}
-
-				//Horsefly
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:Horsefly]")) {
-
-					subclass = BehaviorSubclass.Horsefly;
-
-				}
-
-				//Hunter
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:Hunter]")) {
-
-					subclass = BehaviorSubclass.Hunter;
-
-				}
-
-				//Nautical
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:Nautical]")) {
-
-					subclass = BehaviorSubclass.Nautical;
-
-				}
-
-				//Passive
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:Passive]")) {
-
-					subclass = BehaviorSubclass.Passive;
-
-				}
-
-				//Sniper
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:Sniper]")) {
-
-					subclass = BehaviorSubclass.Sniper;
-
-				}
-
-				//Strike
-				if (subclass == BehaviorSubclass.None && remoteControl.CustomData.Contains("[BehaviorName:Strike]")) {
-
-					subclass = BehaviorSubclass.Strike;
-
-				}
+				BehaviorSubclass subclass = GetSubclassFromCustomData(remoteControl.CustomData);
 
 				if (subclass != BehaviorSubclass.None) {
 
@@ -276,6 +206,85 @@ namespace ModularEncountersSystems.Behavior {
 				BehaviorLogger.Write(exc.ToString(), BehaviorDebugEnum.Error, true);
 
 			}
+
+		}
+
+		public static BehaviorSubclass GetSubclassFromCustomData(string customData) {
+
+			if (string.IsNullOrWhiteSpace(customData))
+				return BehaviorSubclass.None;
+
+			//CoreBehavior
+			if (customData.Contains("[BehaviorName:CoreBehavior]")) {
+
+				return BehaviorSubclass.CoreBehavior;
+
+			}
+
+			//CargoShip
+			if (customData.Contains("[BehaviorName:CargoShip]")) {
+
+				return BehaviorSubclass.CargoShip;
+
+			}
+
+			//Fighter
+			if (customData.Contains("[BehaviorName:Fighter]")) {
+
+				return BehaviorSubclass.Fighter;
+
+			}
+
+			//HorseFighter
+			if (customData.Contains("[BehaviorName:HorseFighter]")) {
+
+				return BehaviorSubclass.HorseFighter;
+
+			}
+
+			//Horsefly
+			if (customData.Contains("[BehaviorName:Horsefly]")) {
+
+				return BehaviorSubclass.Horsefly;
+
+			}
+
+			//Hunter
+			if (customData.Contains("[BehaviorName:Hunter]")) {
+
+				return BehaviorSubclass.Hunter;
+
+			}
+
+			//Nautical
+			if (customData.Contains("[BehaviorName:Nautical]")) {
+
+				return BehaviorSubclass.Nautical;
+
+			}
+
+			//Passive
+			if (customData.Contains("[BehaviorName:Passive]")) {
+
+				return BehaviorSubclass.Passive;
+
+			}
+
+			//Sniper
+			if (customData.Contains("[BehaviorName:Sniper]")) {
+
+				return BehaviorSubclass.Sniper;
+
+			}
+
+			//Strike
+			if (customData.Contains("[BehaviorName:Strike]")) {
+
+				return BehaviorSubclass.Strike;
+
+			}
+
+			return BehaviorSubclass.None;
 
 		}
 

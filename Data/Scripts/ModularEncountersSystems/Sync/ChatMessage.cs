@@ -163,7 +163,7 @@ namespace ModularEncountersSystems.Sync {
 
 		}
 
-		private string[] GetArray(int length, int combineLength) {
+		public string[] GetArray(int length, int combineLength) {
 
 			var array = Message.Trim().Split('.');
 
@@ -202,6 +202,66 @@ namespace ModularEncountersSystems.Sync {
 
 			SpawnLogger.Write("Get Spawn Type From Chat", SpawnerDebugEnum.Settings);
 			SpawningType type = SpawningType.None;
+
+			if (array[2] == "WaveSpawner") {
+
+				if (array.Length < 4) {
+
+					SpawnLogger.Write("Missing WaveSpawner Type", SpawnerDebugEnum.Settings);
+					ReturnMessage = "Missing WaveSpawner Type";
+					return false;
+
+				}
+
+				if (array[3] == "Space") {
+
+					WaveManager.Space.Timer = WaveManager.Space.TimerTrigger;
+					WaveManager.Space.ProcessWaveSpawner(true);
+					SpawnLogger.Write("Wave Spawner (Space) Activated", SpawnerDebugEnum.Settings);
+					ReturnMessage = "Wave Spawner (Space) Activated";
+					return true;
+
+				}
+
+				if (array[3] == "Planet") {
+
+					WaveManager.Planet.Timer = WaveManager.Planet.TimerTrigger;
+					WaveManager.Planet.ProcessWaveSpawner(true);
+					SpawnLogger.Write("Wave Spawner (Planet) Activated", SpawnerDebugEnum.Settings);
+					ReturnMessage = "Wave Spawner (Planet) Activated";
+					return true;
+
+				}
+
+				if (array[3] == "Creature") {
+
+					WaveManager.Creature.Timer = WaveManager.Creature.TimerTrigger;
+					WaveManager.Creature.ProcessWaveSpawner(true);
+					SpawnLogger.Write("Wave Spawner (Creature) Activated", SpawnerDebugEnum.Settings);
+					ReturnMessage = "Wave Spawner (Creature) Activated";
+					return true;
+
+				}
+
+				SpawnLogger.Write("Provided WaveSpawner Type Not Recognized", SpawnerDebugEnum.Settings);
+				ReturnMessage = "Provided WaveSpawner Type Not Recognized";
+				return false;
+
+			}
+
+			if (array[2] == "Prefab") {
+
+				PrefabSpawner.PrefabSpawnDebug(this);
+				return true;
+
+			}
+
+			if (array[2] == "PrefabStation") {
+
+				PrefabSpawner.PrefabStationSpawnDebug(this);
+				return true;
+
+			}
 
 			if (array[2] == "SpaceCargoShip")
 				type = SpawningType.SpaceCargoShip;
@@ -343,12 +403,36 @@ namespace ModularEncountersSystems.Sync {
 
 		private bool ProcessDebug() {
 
-			var array = GetArray(3, 4);
+			var array = GetArray(3, 8);
 
 			if (array == null) {
 
 				SpawnLogger.Write("Array Size Too Small", SpawnerDebugEnum.Settings);
 				return false;
+
+			}
+
+			//MES.Debug.ChangeCounter
+			if (array[2] == "ChangeCounter") {
+
+				LoggerTools.ChangeCounter(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.ClearAllTimeouts
+			if (array[2] == "ClearAllTimeouts") {
+
+				LoggerTools.ClearAllTimeouts(this);
+				return true;
+
+			}
+
+			//MES.Debug.ClearShipInventory
+			if (array[2] == "ClearShipInventory") {
+
+				LoggerTools.ClearShipInventory(this);
+				return true;
 
 			}
 
@@ -362,8 +446,14 @@ namespace ModularEncountersSystems.Sync {
 				}
 
 				NpcManager.UpdateStaticEncounters();
-				Mode = ChatMsgMode.ReturnMessage;
-				ReturnMessage = "Cleared All Active Static Encounters. Please Reload The World To Regenerate Static Encounters.";
+				return true;
+
+			}
+
+			//MES.Debug.ClearTimeoutsAtPosition
+			if (array[2] == "ClearTimeoutsAtPosition") {
+
+				LoggerTools.ClearTimeoutsAtPosition(this);
 				return true;
 
 			}
@@ -373,8 +463,30 @@ namespace ModularEncountersSystems.Sync {
 
 				NpcManager.UniqueGroupsSpawned.Clear();
 				NpcManager.UpdateStaticEncounters();
-				Mode = ChatMsgMode.ReturnMessage;
-				ReturnMessage = "Cleared All Previously Spawned Unique SpawnGroups.";
+				return true;
+
+			}
+
+			//MES.Debug.CreateKPL
+			if (array[2] == "CreateKPL") {
+
+				LoggerTools.CreateKPL(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.RemoveAllNpcs
+			if (array[2] == "RemoveAllNpcs") {
+
+				LoggerTools.RemoveAllNpcs(this);
+				return true;
+
+			}
+
+			//MES.Debug.ResetReputation
+			if (array[2] == "ResetReputation") {
+
+				LoggerTools.ResetReputation(this, array);
 				return true;
 
 			}
@@ -404,15 +516,6 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-			//GetLogging
-			if (array[2] == "GetLogging") {
-
-				ClipboardPayload = LoggerTools.GetLogging(array, ref ReturnMessage);
-				Mode = ChatMsgMode.ReturnMessage;
-				return string.IsNullOrWhiteSpace(ClipboardPayload);
-
-			}
-
 			//GetActiveNpcs
 			if (array[2] == "GetActiveNpcs") {
 
@@ -423,264 +526,35 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-			//GetProfiles
-			if (array[2] == "GetProfiles") {
+			//GetAllProfiles
+			if (array[2] == "GetAllProfiles") {
 
-				ClipboardPayload = ProfileManager.GetProfileData();
+				ClipboardPayload = LoggerTools.GetAllProfiles();
 				Mode = ChatMsgMode.ReturnMessage;
 				ReturnMessage = "Loaded Profiles Sent To Clipboard.";
 				return true;
 
 			}
 
-			//GetRegisteredSpawnGroups
-			if (array[2] == "GetRegisteredSpawnGroups") {
+			//GetBlockDefinitions
+			if (array[2] == "GetBlockDefinitions") {
 
-				ClipboardPayload = LoggerTools.BuildKeyList("SpawnGroup", SpawnGroupManager.SpawnGroupNames);
+				ClipboardPayload = DefinitionHelper.GetBlockDefinitionInfo();
 				Mode = ChatMsgMode.ReturnMessage;
-				ReturnMessage = "Registered SpawnGroups Sent To Clipboard.";
+				ReturnMessage = "Block Definition Info Sent To Clipboard.";
 				return true;
 
 			}
 
-			//GetGridMatrix
-			if (array[2] == "GetGridMatrix") {
+			//GetBlockMassData
+			if (array[2] == "GetBlockMassData") {
 
-				ClipboardPayload = LoggerTools.GetGridMatrixInfo(this);
+				ClipboardPayload = LoggerTools.GetBlockMassData(this);
 				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Block Mass Data Sent To Clipboard.";
 				return true;
 
 			}
-
-			//GetPlayers
-			if (array[2] == "GetPlayers") {
-
-				var sb = new StringBuilder();
-
-				foreach (var player in PlayerManager.Players) {
-
-					player.ToString(sb);
-
-				}
-
-				ClipboardPayload = sb.ToString();
-				Mode = ChatMsgMode.ReturnMessage;
-				ReturnMessage = "Registered SpawnGroups Sent To Clipboard.";
-				return true;
-
-			}
-
-			//GetEligibleSpawnsAtPosition
-			if (array[2] == "GetEligibleSpawnsAtPosition") {
-
-				//StringBuilder
-				var sb = new StringBuilder();
-
-				//Environment
-				var environment = new EnvironmentEvaluation(this.PlayerPosition);
-				var threatLevel = SpawnConditions.GetThreatLevel(5000, false, this.PlayerPosition);
-				var pcuLevel = SpawnConditions.GetPCULevel(5000, this.PlayerPosition);
-				SpawnGroupCollection collection = null;
-
-				sb.Append("::: Spawn Data Near Player :::").AppendLine();
-				sb.Append(" - Threat Score: ").Append(threatLevel.ToString()).AppendLine();
-				sb.Append(" - PCU Score:    ").Append(pcuLevel.ToString()).AppendLine();
-
-				sb.AppendLine();
-
-				//Environment Data Near Player
-				sb.Append("::: Environment Data Near Player :::").AppendLine();
-				sb.Append(" - Distance From World Center:      ").Append(environment.DistanceFromWorldCenter.ToString()).AppendLine();
-				sb.Append(" - Direction From World Center:     ").Append(environment.DirectionFromWorldCenter.ToString()).AppendLine();
-				sb.Append(" - Is On Planet:                    ").Append(environment.IsOnPlanet.ToString()).AppendLine();
-				sb.Append(" - Planet Name:                     ").Append(environment.IsOnPlanet ? environment.NearestPlanetName : "N/A").AppendLine();
-				sb.Append(" - Planet Diameter:                 ").Append(environment.IsOnPlanet ? environment.PlanetDiameter.ToString() : "N/A").AppendLine();
-				sb.Append(" - Oxygen At Position:              ").Append(environment.IsOnPlanet ? environment.OxygenAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Atmosphere At Position:          ").Append(environment.IsOnPlanet ? environment.AtmosphereAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Gravity At Position:             ").Append(environment.IsOnPlanet ? environment.GravityAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Altitude At Position:            ").Append(environment.IsOnPlanet ? environment.AltitudeAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Is Night At Position:            ").Append(environment.IsOnPlanet ? environment.IsNight.ToString() : "N/A").AppendLine();
-				sb.Append(" - Weather At Position:             ").Append(environment.IsOnPlanet && !string.IsNullOrWhiteSpace(environment.WeatherAtPosition) ? environment.WeatherAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Common Terrain At Position:      ").Append(environment.IsOnPlanet ? environment.CommonTerrainAtPosition.ToString() : "N/A").AppendLine();
-				sb.Append(" - Water Mod Enabled:               ").Append(AddonManager.WaterMod).AppendLine();
-				sb.Append(" - Planet Has Water:                ").Append(environment.IsOnPlanet ? environment.PlanetHasWater.ToString() : "N/A").AppendLine();
-				sb.Append(" - Position Underwater:             ").Append(environment.IsOnPlanet ? environment.PositionIsUnderWater.ToString() : "N/A").AppendLine();
-				sb.Append(" - Surface Underwater:              ").Append(environment.IsOnPlanet ? environment.SurfaceIsUnderWater.ToString() : "N/A").AppendLine();
-				sb.Append(" - Air Travel Viability Ratio:      ").Append(environment.IsOnPlanet ? (Math.Round(environment.AirTravelViabilityRatio, 3)).ToString() : "N/A").AppendLine();
-				sb.Append(" - Water Coverage Ratio:            ").Append(environment.IsOnPlanet ? (Math.Round(environment.WaterInSurroundingAreaRatio, 3)).ToString() : "N/A").AppendLine().AppendLine();
-
-				sb.Append(" - Space Cargo Ship Eligible:       ").Append(environment.SpaceCargoShipsEligible).AppendLine();
-				sb.Append(" - Lunar Cargo Ship Eligible:       ").Append(environment.LunarCargoShipsEligible).AppendLine();
-				sb.Append(" - Planetary Cargo Ship Eligible:   ").Append(environment.PlanetaryCargoShipsEligible).AppendLine();
-				sb.Append(" - Gravity Cargo Ship Eligible:     ").Append(environment.GravityAtPosition).AppendLine();
-				sb.Append(" - Random Encounter Eligible:       ").Append(environment.RandomEncountersEligible).AppendLine();
-				sb.Append(" - Planetary Installation Eligible: ").Append(environment.PlanetaryInstallationEligible).AppendLine();
-				sb.Append(" - Water Installation Eligible:     ").Append(environment.WaterInstallationEligible).AppendLine();
-
-				sb.AppendLine();
-
-				//Space Cargo
-				collection = new SpawnGroupCollection();
-				SpawnGroupManager.GetSpawnGroups(SpawningType.SpaceCargoShip, environment, "", collection);
-
-				if (collection.SpawnGroups.Count > 0) {
-
-					sb.Append("::: Space / Lunar Cargo Ship Eligible Spawns :::").AppendLine();
-
-					foreach (var sgroup in collection.SpawnGroups.Distinct()) {
-
-						sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				//Random Encounter
-				collection = new SpawnGroupCollection();
-				SpawnGroupManager.GetSpawnGroups(SpawningType.RandomEncounter, environment, "", collection);
-
-				if (collection.SpawnGroups.Count > 0) {
-
-					sb.Append("::: Random Encounter Eligible Spawns :::").AppendLine();
-
-					foreach (var sgroup in collection.SpawnGroups.Distinct()) {
-
-						sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				//Planetary Cargo
-				collection = new SpawnGroupCollection();
-				SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryCargoShip, environment, "", collection);
-
-				if (collection.SpawnGroups.Count > 0) {
-
-					sb.Append("::: Planetary / Gravity Cargo Ship Eligible Spawns :::").AppendLine();
-
-					foreach (var sgroup in collection.SpawnGroups.Distinct()) {
-
-						sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				//Planetary Installation
-				collection = new SpawnGroupCollection();
-				SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryInstallation, environment, "", collection);
-
-				if (collection.SpawnGroups.Count > 0) {
-
-					sb.Append("::: Planetary Installation Eligible Spawns :::").AppendLine();
-
-					foreach (var sgroup in collection.SpawnGroups.Distinct()) {
-
-						sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				//Boss
-				collection = new SpawnGroupCollection();
-				SpawnGroupManager.GetSpawnGroups(SpawningType.BossEncounter, environment, "", collection);
-
-				if (collection.SpawnGroups.Count > 0) {
-
-					sb.Append("::: Boss Encounter Eligible Spawns :::").AppendLine();
-
-					foreach (var sgroup in collection.SpawnGroups.Distinct()) {
-
-						sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				//Creature
-				collection = new SpawnGroupCollection();
-				SpawnGroupManager.GetSpawnGroups(SpawningType.Creature, environment, "", collection);
-
-				if (collection.SpawnGroups.Count > 0) {
-
-					sb.Append("::: Creature / Bot Eligible Spawns :::").AppendLine();
-
-					foreach (var sgroup in collection.SpawnGroups.Distinct()) {
-
-						sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				//StaticEncounters
-				if (NpcManager.StaticEncounters.Count > 0) {
-
-					sb.Append("::: Static Encounter Eligible Spawns :::").AppendLine();
-
-					foreach (var enc in NpcManager.StaticEncounters) {
-
-						sb.Append(" - ").Append(!string.IsNullOrWhiteSpace(enc?.ProfileSubtypeId) ? enc.ProfileSubtypeId : "(null)").AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				//UniqueEncounters
-				if (NpcManager.UniqueGroupsSpawned.Count > 0) {
-
-					sb.Append("::: Unique Encounters Already Spawned :::").AppendLine();
-
-					foreach (var enc in NpcManager.UniqueGroupsSpawned) {
-
-						sb.Append(" - ").Append(enc).AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				//Zones
-
-				//Timeouts
-				if (NpcManager.UniqueGroupsSpawned.Count > 0) {
-
-					sb.Append("::: Timeout Zones In Range :::").AppendLine();
-
-					foreach (var timeout in TimeoutManagement.Timeouts) {
-
-						sb.Append(timeout.GetInfo(environment.Position)).AppendLine();
-
-					}
-
-					sb.AppendLine();
-
-				}
-
-				Mode = ChatMsgMode.ReturnMessage;
-				ReturnMessage = "Eligible Spawns Sent To Clipboard.";
-				ClipboardPayload = sb.ToString();
-				return true;
-			
-			}
-				
 
 			//GetBlockOffset
 			/*
@@ -706,6 +580,82 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 			*/
+
+			//GetColorsFromGrid
+			if (array[2] == "GetColorsFromGrid") {
+
+
+				Mode = ChatMsgMode.ReturnMessage;
+				ClipboardPayload = LoggerTools.GetColorListFromGrid(this);
+				return true;
+
+			}
+
+			//GetEligibleSpawnsAtPosition
+			if (array[2] == "GetEligibleSpawnsAtPosition") {
+
+
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Eligible Spawns Sent To Clipboard.";
+				ClipboardPayload = LoggerTools.GetEligibleSpawnsAtPosition(this);
+				return true;
+
+			}
+
+			//GetGridMatrix
+			if (array[2] == "GetGridMatrix") {
+
+				ClipboardPayload = LoggerTools.GetGridMatrixInfo(this);
+				Mode = ChatMsgMode.ReturnMessage;
+				return true;
+
+			}
+
+			//GetItemMassData
+			if (array[2] == "GetItemMassData") {
+
+				ClipboardPayload = LoggerTools.GetItemMassData(this);
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Item Mass Data Sent To Clipboard.";
+				return true;
+
+			}
+
+			//GetLogging
+			if (array[2] == "GetLogging") {
+
+				ClipboardPayload = LoggerTools.GetLogging(array, ref ReturnMessage);
+				Mode = ChatMsgMode.ReturnMessage;
+				return string.IsNullOrWhiteSpace(ClipboardPayload);
+
+			}
+
+			//GetPlayers
+			if (array[2] == "GetPlayers") {
+
+				var sb = new StringBuilder();
+
+				foreach (var player in PlayerManager.Players) {
+
+					player.ToString(sb);
+
+				}
+
+				ClipboardPayload = sb.ToString();
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Current Player Data Sent To Clipboard.";
+				return true;
+
+			}
+
+			//GetThreatScore
+			if (array[2] == "GetThreatScore") {
+
+				LoggerTools.GetThreatScore(this, array);
+				return true;
+
+			}
+
 			return false;
 
 		}

@@ -120,12 +120,14 @@ namespace ModularEncountersSystems.Spawning {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Successful", SpawnerDebugEnum.Spawning);
 					_currentSpawn.SpawnCount++;
+					_currentSpawn.FailedAttempts = 0;
 					_currentSpawn.LastSpawnTime = MyAPIGateway.Session.GameDateTime;
 
 
 				} else {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Failed", SpawnerDebugEnum.Spawning);
+					_currentSpawn.FailedAttempts++;
 
 				}
 
@@ -141,12 +143,14 @@ namespace ModularEncountersSystems.Spawning {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Successful", SpawnerDebugEnum.Spawning);
 					_currentSpawn.SpawnCount++;
+					_currentSpawn.FailedAttempts = 0;
 					_currentSpawn.LastSpawnTime = MyAPIGateway.Session.GameDateTime;
 
 
 				} else {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Failed", SpawnerDebugEnum.Spawning);
+					_currentSpawn.FailedAttempts++;
 
 				}
 
@@ -162,12 +166,14 @@ namespace ModularEncountersSystems.Spawning {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Successful", SpawnerDebugEnum.Spawning);
 					_currentSpawn.SpawnCount++;
+					_currentSpawn.FailedAttempts = 0;
 					_currentSpawn.LastSpawnTime = MyAPIGateway.Session.GameDateTime;
 
 
 				} else {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Failed", SpawnerDebugEnum.Spawning);
+					_currentSpawn.FailedAttempts++;
 
 				}
 
@@ -183,12 +189,14 @@ namespace ModularEncountersSystems.Spawning {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Successful", SpawnerDebugEnum.Spawning);
 					_currentSpawn.SpawnCount++;
+					_currentSpawn.FailedAttempts = 0;
 					_currentSpawn.LastSpawnTime = MyAPIGateway.Session.GameDateTime;
 
 
 				} else {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Failed", SpawnerDebugEnum.Spawning);
+					_currentSpawn.FailedAttempts++;
 
 				}
 
@@ -204,12 +212,14 @@ namespace ModularEncountersSystems.Spawning {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Successful", SpawnerDebugEnum.Spawning);
 					_currentSpawn.SpawnCount++;
+					_currentSpawn.FailedAttempts = 0;
 					_currentSpawn.LastSpawnTime = MyAPIGateway.Session.GameDateTime;
 
 
 				} else {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Failed", SpawnerDebugEnum.Spawning);
+					_currentSpawn.FailedAttempts++;
 
 				}
 
@@ -225,14 +235,24 @@ namespace ModularEncountersSystems.Spawning {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Successful", SpawnerDebugEnum.Spawning);
 					_currentSpawn.SpawnCount++;
+					_currentSpawn.FailedAttempts = 0;
 					_currentSpawn.LastSpawnTime = MyAPIGateway.Session.GameDateTime;
 
 
 				} else {
 
 					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Failed", SpawnerDebugEnum.Spawning);
+					_currentSpawn.FailedAttempts++;
 
 				}
+
+			}
+
+			if (_currentSpawn.FailedAttempts >= _currentSpawn.FailedAttemptsToIncreaseCount) {
+
+				_currentSpawn.FailedAttempts = 0;
+				_currentSpawn.SpawnCount++;
+				_currentSpawn.LastSpawnTime = MyAPIGateway.Session.GameDateTime;
 
 			}
 

@@ -43,6 +43,8 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static Dictionary<string, MyDefinitionBase> DatapadTemplates = new Dictionary<string, MyDefinitionBase>();
 
+		public static List<string> ErrorProfiles = new List<string>();
+
 		public static AutoPilotProfile DefaultAutoPilotSettings = new AutoPilotProfile();
 
 		public static void Setup() {
@@ -400,14 +402,16 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static string GetProfileData() {
+		public static void ReportProfileError(string profileId, string reason) {
 
-			var sb = new StringBuilder();
+			if (ErrorProfiles.Contains(profileId))
+				return;
 
-			sb.Append(LoggerTools.BuildKeyList("StaticEncounter", StaticEncounters.Keys));
+			var profileIdSafe = !string.IsNullOrWhiteSpace(profileId) ? profileId : "(null)";
 
-			return sb.ToString();
-		
+			SpawnLogger.Write(reason + ": [" + profileIdSafe + "]", SpawnerDebugEnum.Error, true);
+			ErrorProfiles.Add(reason + ": [" + profileIdSafe + "]");
+
 		}
 
 		public static void Unload() {

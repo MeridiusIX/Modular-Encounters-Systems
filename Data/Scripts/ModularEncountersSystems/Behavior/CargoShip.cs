@@ -25,6 +25,8 @@ namespace ModularEncountersSystems.Behavior {
 		private bool _playerInRange;
 		private bool _stoppedForPlayer;
 		private double _stoppingRange;
+		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
+		private BehaviorSubclass _subClass;
 
 		private EncounterWaypoint _cargoShipWaypoint { 
 			
@@ -61,6 +63,7 @@ namespace ModularEncountersSystems.Behavior {
 
 		public CargoShip(IBehavior behavior){
 
+			_subClass = BehaviorSubclass.CargoShip;
 			_behavior = behavior;
 			_waypointIsDespawn = false;
 
@@ -217,7 +220,7 @@ namespace ModularEncountersSystems.Behavior {
 			//Retreat
 			if (_behavior.Mode == BehaviorMode.Retreat) {
 
-				if (_behavior.Despawn.NearestPlayer?.Controller?.ControlledEntity?.Entity != null) {
+				if (_behavior.Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
 
 					//BehaviorLogger.AddMsg("DespawnCoordsCreated", true);
 					_behavior.AutoPilot.SetInitialWaypoint(VectorHelper.GetDirectionAwayFromTarget(_behavior.RemoteControl.GetPosition(), _behavior.Despawn.NearestPlayer.GetPosition()) * 1000 + _behavior.RemoteControl.GetPosition());

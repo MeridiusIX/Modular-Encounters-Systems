@@ -1,48 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Definitions;
-using Sandbox.Game;
-using Sandbox.Game.Entities;
-using Sandbox.Game.EntityComponents;
-using Sandbox.Game.GameSystems;
-using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.ModAPI.Weapons;
-using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
-using VRage.Game;
-using VRage.Game.Components;
-using VRage.Game.Entity;
-using VRage.Game.ModAPI;
-using VRage.ModAPI;
-using VRage.ObjectBuilders;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Utils;
-using VRageMath;
-using ModularEncountersSystems;
-using ModularEncountersSystems.Behavior;
-using ModularEncountersSystems.Behavior.Subsystems;
-using ModularEncountersSystems.Helpers;
-using ModularEncountersSystems.Entities;
-using ModularEncountersSystems.Behavior.Subsystems.Profiles;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Core;
-using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Helpers;
+using Sandbox.ModAPI;
+using System;
 
-namespace ModularEncountersSystems.Behavior{
-	
+namespace ModularEncountersSystems.Behavior {
+
 	public class Nautical : IBehaviorSubClass{
 
 		DateTime WaitTime;
 		IBehavior _behavior;
+		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
+		private BehaviorSubclass _subClass;
 		public Nautical(IBehavior behavior) {
 
+			_subClass = BehaviorSubclass.Nautical;
 			_behavior = behavior;
 			WaitTime = MyAPIGateway.Session.GameDateTime;
 
@@ -182,7 +154,7 @@ namespace ModularEncountersSystems.Behavior{
 			//Retreat
 			if (_behavior.Mode == BehaviorMode.Retreat) {
 
-				if (_behavior.Despawn.NearestPlayer?.Controller?.ControlledEntity?.Entity != null) {
+				if (_behavior.Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
 
 					//Logger.AddMsg("DespawnCoordsCreated", true);
 					_behavior.AutoPilot.SetInitialWaypoint(VectorHelper.GetDirectionAwayFromTarget(_behavior.RemoteControl.GetPosition(), _behavior.Despawn.NearestPlayer.GetPosition()) * 1000 + _behavior.RemoteControl.GetPosition());

@@ -187,10 +187,18 @@ namespace ModularEncountersSystems.Entities {
 
 			NpcData data = MyAPIGateway.Utilities.SerializeFromBinary<NpcData>(byteData);
 
-			if (data == null)
-				return;
+			if (data == null) {
 
-			Npc = data;
+				var legacyData = SerializationHelper.GetDataFromEntity<LegacyActiveNPC>(CubeGrid, StorageTools.LegacyNpcDataKey);
+
+				if (legacyData == null)
+					return;
+
+				data = new NpcData(legacyData);
+
+			}	
+
+			Npc = data.Conditions != null ? data : null;
 
 		}
 
@@ -480,6 +488,18 @@ namespace ModularEncountersSystems.Entities {
 		public void GridSplit(IMyCubeGrid gridA, IMyCubeGrid gridB) {
 
 			CleanBlockLists();
+
+		}
+
+		public bool HasNpcOwnership() {
+
+			return Ownership.HasFlag(GridOwnershipEnum.NpcMajority) || Ownership.HasFlag(GridOwnershipEnum.NpcMinority);
+
+		}
+
+		public bool HasPlayerOwnership() {
+
+			return Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || Ownership.HasFlag(GridOwnershipEnum.PlayerMinority);
 
 		}
 

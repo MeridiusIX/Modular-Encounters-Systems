@@ -384,7 +384,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 							State.PrimaryAutopilotId = State.PrimaryAutoPilot.ProfileSubtypeId;
 							BehaviorLogger.Write("Primary AutoPilot: " + State.PrimaryAutopilotId, BehaviorDebugEnum.BehaviorSetup);
 
-						}	
+						} else {
+
+							ProfileManager.ReportProfileError(profileId, "Primary AutoPilot Data Could Not Be Loaded");
+						
+						}
 
 					}
 
@@ -393,12 +397,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 						string profileId = "";
 						TagParse.TagStringCheck(tag, ref profileId);
-						State.PrimaryAutoPilot = ProfileManager.GetAutopilotProfile(profileId);
+						State.SecondaryAutoPilot = ProfileManager.GetAutopilotProfile(profileId);
 
 						if (!string.IsNullOrWhiteSpace(State.SecondaryAutoPilot?.ProfileSubtypeId) && string.IsNullOrWhiteSpace(State.SecondaryAutopilotId)) {
 
 							State.SecondaryAutopilotId = State.SecondaryAutoPilot.ProfileSubtypeId;
 							BehaviorLogger.Write("Secondary AutoPilot: " + State.SecondaryAutopilotId, BehaviorDebugEnum.BehaviorSetup);
+
+						} else {
+
+							ProfileManager.ReportProfileError(profileId, "Secondary AutoPilot Data Could Not Be Loaded From Grid: ");
 
 						}
 
@@ -409,12 +417,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 						string profileId = "";
 						TagParse.TagStringCheck(tag, ref profileId);
-						State.PrimaryAutoPilot = ProfileManager.GetAutopilotProfile(profileId);
+						State.TertiaryAutoPilot = ProfileManager.GetAutopilotProfile(profileId);
 
 						if (!string.IsNullOrWhiteSpace(State.TertiaryAutoPilot?.ProfileSubtypeId) && string.IsNullOrWhiteSpace(State?.TertiaryAutopilotId)) {
 
 							State.TertiaryAutopilotId = State.TertiaryAutoPilot.ProfileSubtypeId;
 							BehaviorLogger.Write("Tertiary AutoPilot: " + State.TertiaryAutopilotId, BehaviorDebugEnum.BehaviorSetup);
+
+						} else {
+
+							ProfileManager.ReportProfileError(profileId, "Tertiary AutoPilot Data Could Not Be Loaded");
 
 						}
 

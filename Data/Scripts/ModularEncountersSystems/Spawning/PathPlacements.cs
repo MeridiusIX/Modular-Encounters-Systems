@@ -1030,6 +1030,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				} else {
 
+					SpawnLogger.Write("Provided Directions Not Perpendicular, Generating Default Directions", SpawnerDebugEnum.Pathing);
 					generateDirections = true;
 
 				}

@@ -850,14 +850,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 							} else {
 
-								BehaviorLogger.Write("Chat Profile Not in Dictionary", BehaviorDebugEnum.Error, true);
+								ProfileManager.ReportProfileError(tempValue, "Chat Profile Not Registered in Profile Manager");
 
 							}
 
 						}
 
 						if (!gotChat)
-							BehaviorLogger.Write("Could Not Find Chat Profile Associated To Tag: " + tag, BehaviorDebugEnum.Error, true);
+							ProfileManager.ReportProfileError(tempValue, "Provided Chat Profile Could Not Be Loaded in Trigger: " + ProfileSubtypeId);
 
 					}
 
@@ -931,7 +931,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						}
 
 						if (!gotSpawn)
-							BehaviorLogger.Write("Could Not Find Spawn Profile Associated To Tag: " + tag, BehaviorDebugEnum.Error, true);
+							ProfileManager.ReportProfileError(tempValue, "Provided Spawn Profile Could Not Be Loaded In Profile: " + ProfileSubtypeId);
 
 
 					}

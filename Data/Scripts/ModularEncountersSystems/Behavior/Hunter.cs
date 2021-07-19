@@ -29,9 +29,13 @@ namespace ModularEncountersSystems.Behavior {
 
 		private bool _inRange;
 		private IBehavior _behavior;
+
+		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
+		private BehaviorSubclass _subClass;
 		
 		public Hunter(IBehavior behavior) {
 
+			_subClass = BehaviorSubclass.Hunter;
 			_behavior = behavior;
 
 			TimeBetweenNewTargetChecks = 15;
@@ -302,7 +306,7 @@ namespace ModularEncountersSystems.Behavior {
 			//Retreat
 			if (_behavior.Mode == BehaviorMode.Retreat) {
 
-				if (_behavior.Despawn.NearestPlayer?.Controller?.ControlledEntity?.Entity != null) {
+				if (_behavior.Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
 
 					//Logger.AddMsg("DespawnCoordsCreated", true);
 					_behavior.AutoPilot.SetInitialWaypoint(VectorHelper.GetDirectionAwayFromTarget(_behavior.RemoteControl.GetPosition(), _behavior.Despawn.NearestPlayer.GetPosition()) * 1000 + _behavior.RemoteControl.GetPosition());

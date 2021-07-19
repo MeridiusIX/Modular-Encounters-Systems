@@ -1,3 +1,5 @@
+using ModularEncountersSystems.Helpers;
+
 namespace ModularEncountersSystems.Behavior {
 
 	public class Passive : IBehaviorSubClass{
@@ -12,9 +14,12 @@ namespace ModularEncountersSystems.Behavior {
 		
 		public byte Counter;
 		IBehavior _behavior;
+		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
+		private BehaviorSubclass _subClass;
 
 		public Passive(IBehavior behavior){
 
+			_subClass = BehaviorSubclass.Passive;
 			_behavior = behavior;
 
 			FighterEngageDistanceSpace = 300;

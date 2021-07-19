@@ -13,9 +13,12 @@ namespace ModularEncountersSystems.Behavior {
 		public DateTime SniperWaypointWaitTime;
 		public DateTime SniperWaypointAbandonTime;
 		private IBehavior _behavior;
+		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
+		private BehaviorSubclass _subClass;
 
 		public Sniper(IBehavior behavior) : base() {
 
+			_subClass = BehaviorSubclass.Sniper;
 			_behavior = behavior;
 			SniperWaypointWaitTime = MyAPIGateway.Session.GameDateTime;
 			SniperWaypointAbandonTime = MyAPIGateway.Session.GameDateTime;
@@ -165,7 +168,7 @@ namespace ModularEncountersSystems.Behavior {
 			//Retreat
 			if (_behavior.Mode == BehaviorMode.Retreat) {
 
-				if (_behavior.Despawn.NearestPlayer?.Controller?.ControlledEntity?.Entity != null) {
+				if (_behavior.Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
 
 					//BehaviorLogger.AddMsg("DespawnCoordsCreated", true);
 					_behavior.AutoPilot.SetInitialWaypoint(VectorHelper.GetDirectionAwayFromTarget(_behavior.RemoteControl.GetPosition(), _behavior.Despawn.NearestPlayer.GetPosition()) * 1000 + _behavior.RemoteControl.GetPosition());

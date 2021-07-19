@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Tasks;
@@ -146,17 +147,31 @@ namespace ModularEncountersSystems.World {
 			for (int i = SpawnGroupManager.SpawnGroups.Count - 1; i >= 0; i--) {
 
 				var spawnGroup = SpawnGroupManager.SpawnGroups[i];
+
+				if (string.IsNullOrWhiteSpace(spawnGroup.SpawnGroupName)) {
+
+					SpawnLogger.Write("Null or Blank SpawnGroupName Found While Checking For Static Encounters", SpawnerDebugEnum.Startup);
+					continue;
+				
+				}
+
 				SpawnConditionsProfile activeConditions = null;
 
 				var conditionValid = false;
 
-				if (UniqueGroupsSpawned.Contains(spawnGroup.SpawnGroupName))
+				if (UniqueGroupsSpawned.Contains(spawnGroup.SpawnGroupName)) {
+
+					SpawnLogger.Write(spawnGroup.SpawnGroupName + " Found in Unique Spawned Encounters While Checking For Static Encounters", SpawnerDebugEnum.Startup);
 					continue;
+
+				}
+					
 
 				foreach (var condition in spawnGroup.SpawnConditionsProfiles) {
 
 					if (condition.StaticEncounter) {
 
+						SpawnLogger.Write(spawnGroup.SpawnGroupName + " Found as Potential Static Encounter", SpawnerDebugEnum.Startup);
 						activeConditions = condition;
 						conditionValid = true;
 						break;
@@ -174,6 +189,7 @@ namespace ModularEncountersSystems.World {
 
 					if (encounter.SpawnGroupName == spawnGroup.SpawnGroupName) {
 
+						SpawnLogger.Write(spawnGroup.SpawnGroupName + " Exists already in world as Static Encounter", SpawnerDebugEnum.Startup);
 						gotSpawnGroup = true;
 						break;
 
@@ -191,8 +207,13 @@ namespace ModularEncountersSystems.World {
 
 				if (activeEncounter.IsValid) {
 
+					SpawnLogger.Write("Adding Static Encounter: " + (!string.IsNullOrWhiteSpace(activeEncounter.SpawnGroupName) ? activeEncounter.SpawnGroupName : "(invalid)"), SpawnerDebugEnum.Startup);
 					StaticEncounters.Add(activeEncounter);
 					updateEncounters = true;
+
+				} else {
+
+					SpawnLogger.Write(spawnGroup.SpawnGroupName + " Static Encounter Init Failed", SpawnerDebugEnum.Startup);
 
 				}
 		

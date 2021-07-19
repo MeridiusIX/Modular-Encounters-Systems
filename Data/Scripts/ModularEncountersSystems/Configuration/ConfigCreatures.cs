@@ -63,6 +63,14 @@ namespace ModularEncountersSystems.Configuration {
 		public int TimeoutSpawnLimit;
 		public int TimeoutDuration;
 
+		public bool EnableWaveSpawner;
+		public string[] UseSpecificRandomGroups;
+		public int MinWaveSpawnTime;
+		public int MaxWaveSpawnTime;
+		public int TotalSpawnEventsPerCluster;
+		public int TimeBetweenWaveSpawns;
+		public double PlayerClusterDistance;
+
 		[XmlIgnore]
 		public Dictionary<string, Func<string, object, bool>> EditorReference;
 
@@ -88,6 +96,14 @@ namespace ModularEncountersSystems.Configuration {
 			TimeoutRadius = 5000;
 			TimeoutSpawnLimit = 12;
 
+			EnableWaveSpawner = false;
+			UseSpecificRandomGroups = new string[] { "SomeSpawnGroupNameHere", "AnotherSpawnGroupNameHere", "EtcEtcEtc" };
+			MinWaveSpawnTime = 1980;
+			MaxWaveSpawnTime = 3600;
+			TotalSpawnEventsPerCluster = 6;
+			TimeBetweenWaveSpawns = 8;
+			PlayerClusterDistance = 15000;
+
 			EditorReference = new Dictionary<string, Func<string, object, bool>> {
 
 				{"EnableSpawns", (s, o) => EditorTools.SetCommandValueBool(s, ref EnableSpawns) },
@@ -101,7 +117,14 @@ namespace ModularEncountersSystems.Configuration {
 				{"UseTimeout", (s, o) => EditorTools.SetCommandValueBool(s, ref UseTimeout) },
 				{"TimeoutDuration", (s, o) => EditorTools.SetCommandValueInt(s, ref TimeoutDuration) },
 				{"TimeoutRadius", (s, o) => EditorTools.SetCommandValueDouble(s, ref TimeoutRadius) },
-				{"TimeoutSpawnLimit", (s, o) => EditorTools.SetCommandValueInt(s, ref TimeoutSpawnLimit) }
+				{"TimeoutSpawnLimit", (s, o) => EditorTools.SetCommandValueInt(s, ref TimeoutSpawnLimit) },
+				{"EnableWaveSpawner", (s, o) => EditorTools.SetCommandValueBool(s, ref EnableWaveSpawner) },
+				{"UseSpecificRandomGroups", (s, o) => EditorTools.SetCommandValueStringArray(s, ref UseSpecificRandomGroups) },
+				{"MinWaveSpawnTime", (s, o) => EditorTools.SetCommandValueInt(s, ref MinWaveSpawnTime) },
+				{"MaxWaveSpawnTime", (s, o) => EditorTools.SetCommandValueInt(s, ref MaxWaveSpawnTime) },
+				{"TotalSpawnEventsPerCluster", (s, o) => EditorTools.SetCommandValueInt(s, ref TotalSpawnEventsPerCluster) },
+				{"TimeBetweenWaveSpawns", (s, o) => EditorTools.SetCommandValueInt(s, ref TimeBetweenWaveSpawns) },
+				{"PlayerClusterDistance", (s, o) => EditorTools.SetCommandValueDouble(s, ref PlayerClusterDistance) },
 
 			};
 

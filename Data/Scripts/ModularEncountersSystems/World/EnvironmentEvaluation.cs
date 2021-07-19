@@ -261,6 +261,10 @@ namespace ModularEncountersSystems.World {
 
 				CommonTerrainAtPosition = highestCountName;
 
+			} else {
+
+				CommonTerrainAtPosition = "N/A";
+			
 			}
 
 			LunarCargoShipsEligible = !Gravity.IsPositionInRange(upDir * Settings.SpaceCargoShips.MinLunarSpawnHeight + Position);

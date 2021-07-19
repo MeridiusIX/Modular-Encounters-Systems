@@ -89,6 +89,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public double StaticEncounterPlanetAltitude;
 
 		public bool ForceStaticGrid;
+		public bool ForceExactPositionAndOrientation;
 		public bool AdminSpawnOnly;
 
 		public bool UseCommonConditions;
@@ -320,6 +321,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			StaticEncounterPlanetAltitude = 0;
 
 			ForceStaticGrid = false;
+			ForceExactPositionAndOrientation = false;
 			AdminSpawnOnly = false;
 
 			UseCommonConditions = true;
@@ -851,6 +853,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 					TagParse.TagBoolCheck(tag, ref this.ForceStaticGrid);
 					setForceStatic = true;
+
+				}
+
+				//ForceExactPositionAndOrientation
+				if (tag.StartsWith("[ForceExactPositionAndOrientation:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.ForceExactPositionAndOrientation);
 
 				}
 

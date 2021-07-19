@@ -71,6 +71,14 @@ namespace ModularEncountersSystems.Configuration {
 		public bool UseMaxSpawnGroupFrequency;
 		public int MaxSpawnGroupFrequency;
 
+		public bool EnableWaveSpawner;
+		public string[] UseSpecificRandomGroups;
+		public int MinWaveSpawnTime;
+		public int MaxWaveSpawnTime;
+		public int TotalSpawnEventsPerCluster;
+		public int TimeBetweenWaveSpawns;
+		public double PlayerClusterDistance;
+
 		[XmlIgnore]
 		public Dictionary<string, Func<string, object, bool>> EditorReference;
 
@@ -89,11 +97,11 @@ namespace ModularEncountersSystems.Configuration {
 			MaxPathDistanceFromPlayer = 5000;
 			MinSpawnDistFromEntities = 1200;
 			MinAirDensity = 0.70f;
-			MinSpawningAltitude = 1700;
-			MaxSpawningAltitude = 2300;
+			MinSpawningAltitude = 1300;
+			MaxSpawningAltitude = 1800;
 			MinPathAltitude = 900;
 			MinPathDistance = 10000;
-			MaxPathDistance = 15000;
+			MaxPathDistance = 13000;
 			PathStepCheckDistance = 100;
 			DespawnDistanceFromEndPath = 750;
 			DespawnDistanceFromPlayer = 1000;
@@ -110,6 +118,14 @@ namespace ModularEncountersSystems.Configuration {
 			TimeoutDuration = 900;
 			TimeoutRadius = 10000;
 			TimeoutSpawnLimit = 2;
+
+			EnableWaveSpawner = false;
+			UseSpecificRandomGroups = new string[] { "SomeSpawnGroupNameHere", "AnotherSpawnGroupNameHere", "EtcEtcEtc" };
+			MinWaveSpawnTime = 1980;
+			MaxWaveSpawnTime = 3600;
+			TotalSpawnEventsPerCluster = 6;
+			TimeBetweenWaveSpawns = 8;
+			PlayerClusterDistance = 15000;
 
 			UseCleanupSettings = true;
 			CleanupUseDistance = true;
@@ -153,6 +169,13 @@ namespace ModularEncountersSystems.Configuration {
 				{"UseSpeedOverride", (s, o) => EditorTools.SetCommandValueBool(s, ref UseSpeedOverride) },
 				{"SpeedOverride", (s, o) => EditorTools.SetCommandValueFloat(s, ref SpeedOverride) },
 				{"MaxSpawnGroupFrequency", (s, o) => EditorTools.SetCommandValueBool(s, ref UseMaxSpawnGroupFrequency) },
+				{"EnableWaveSpawner", (s, o) => EditorTools.SetCommandValueBool(s, ref EnableWaveSpawner) },
+				{"UseSpecificRandomGroups", (s, o) => EditorTools.SetCommandValueStringArray(s, ref UseSpecificRandomGroups) },
+				{"MinWaveSpawnTime", (s, o) => EditorTools.SetCommandValueInt(s, ref MinWaveSpawnTime) },
+				{"MaxWaveSpawnTime", (s, o) => EditorTools.SetCommandValueInt(s, ref MaxWaveSpawnTime) },
+				{"TotalSpawnEventsPerCluster", (s, o) => EditorTools.SetCommandValueInt(s, ref TotalSpawnEventsPerCluster) },
+				{"TimeBetweenWaveSpawns", (s, o) => EditorTools.SetCommandValueInt(s, ref TimeBetweenWaveSpawns) },
+				{"PlayerClusterDistance", (s, o) => EditorTools.SetCommandValueDouble(s, ref PlayerClusterDistance) },
 
 			};
 

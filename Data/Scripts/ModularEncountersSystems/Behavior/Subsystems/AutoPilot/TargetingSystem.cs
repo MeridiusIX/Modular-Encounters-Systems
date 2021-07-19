@@ -1026,7 +1026,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 								}
 
+							} else {
+
+								ProfileManager.ReportProfileError(tempValue, "Target Profile Not Found in Profile Manager");
+
 							}
+
+						} else {
+
+							ProfileManager.ReportProfileError(tempValue, "Target Data Provided Was Null or Blank");
 
 						}
 

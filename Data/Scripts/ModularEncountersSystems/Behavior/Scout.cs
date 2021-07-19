@@ -1,42 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Definitions;
-using Sandbox.Game;
-using Sandbox.Game.Entities;
-using Sandbox.Game.EntityComponents;
-using Sandbox.Game.GameSystems;
-using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.ModAPI.Weapons;
-using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
-using VRage.Game;
-using VRage.Game.Components;
-using VRage.Game.Entity;
-using VRage.Game.ModAPI;
-using VRage.ModAPI;
-using VRage.ObjectBuilders;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Utils;
-using VRageMath;
-using ModularEncountersSystems;
-using ModularEncountersSystems.Behavior;
-using ModularEncountersSystems.Behavior.Subsystems;
-using ModularEncountersSystems.Helpers;
-using ModularEncountersSystems.Entities;
-using ModularEncountersSystems.Behavior.Subsystems.Profiles;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using Sandbox.ModAPI;
+using VRageMath;
 
-namespace ModularEncountersSystems.Behavior{
-	
+namespace ModularEncountersSystems.Behavior {
+
 	public class Scout : CoreBehavior, IBehavior{
 
 		//Configurable
@@ -44,9 +14,11 @@ namespace ModularEncountersSystems.Behavior{
 		public bool RotateToTargetWithinRange;
 
 		public byte Counter;
-
+		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
+		private BehaviorSubclass _subClass;
 		public Scout() : base() {
 
+			_subClass = BehaviorSubclass.Scout;
 			//_behaviorType = "Scout";
 			MaxDistanceFromTarget = 1500;
 			RotateToTargetWithinRange = false;
@@ -164,7 +136,7 @@ namespace ModularEncountersSystems.Behavior{
 			//Retreat
 			if (Mode == BehaviorMode.Retreat) {
 
-				if (Despawn.NearestPlayer?.Controller?.ControlledEntity?.Entity != null) {
+				if (Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
 
 					//Logger.AddMsg("DespawnCoordsCreated", true);
 					AutoPilot.SetInitialWaypoint(VectorHelper.GetDirectionAwayFromTarget(this.RemoteControl.GetPosition(), Despawn.NearestPlayer.GetPosition()) * 1000 + this.RemoteControl.GetPosition());

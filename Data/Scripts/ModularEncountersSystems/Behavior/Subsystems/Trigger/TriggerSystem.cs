@@ -1,4 +1,5 @@
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.ModAPI;
@@ -738,7 +739,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool IsPlayerNearby(TriggerProfile control, bool playerOutsideDistance = false) {
 
-			IMyPlayer player = null;
+			PlayerEntity player = null;
 
 			var remotePosition = Vector3D.Transform(control.PlayerNearPositionOffset, RemoteControl.WorldMatrix);
 
@@ -748,11 +749,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			} else {
 
-				player = TargetHelper.GetClosestPlayer(remotePosition);
+				player = PlayerManager.GetNearestPlayer(remotePosition);
 
 			}
 
-			if (player == null) {
+			if (player == null || !player.ActiveEntity()) {
 
 				//BehaviorLogger.Write(control.ProfileSubtypeId + ": No Eligible Player for PlayerNear Check", BehaviorDebugEnum.Trigger);
 				return false;
@@ -942,7 +943,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 
 					if (!gotTrigger)
-						BehaviorLogger.Write("Could Not Find Trigger Profile Associated To Tag: " + tag, BehaviorDebugEnum.BehaviorSetup);
+						ProfileManager.ReportProfileError(tempValue, "Could Not Add Trigger Profile To Behavior");
 
 				}
 
@@ -985,7 +986,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 
 					if (!gotTrigger)
-						BehaviorLogger.Write("Could Not Find Trigger Group Profile Associated To Tag: " + tag, BehaviorDebugEnum.Error, true);
+						ProfileManager.ReportProfileError(tempValue, "Could Not Add Trigger Group Profile To Behavior");
 
 				}
 

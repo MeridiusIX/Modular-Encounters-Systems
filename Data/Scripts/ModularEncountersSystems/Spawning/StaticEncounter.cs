@@ -252,7 +252,7 @@ namespace ModularEncountersSystems.Spawning {
 			ExactLocationUp = profile.StaticEncounterUp;
 			ExactLocationCoords = profile.StaticEncounterCoords;
 
-			if (profile.StaticEncounterUsePlanetDirectionAndAltitude) {
+			if (!profile.StaticEncounterUsePlanetDirectionAndAltitude) {
 
 				ExactLocationCoords = profile.StaticEncounterCoords;
 
@@ -264,8 +264,9 @@ namespace ModularEncountersSystems.Spawning {
 					return;
 
 				PlanetEntityId = planet.Planet.EntityId;
-				var surfaceCoords = planet.SurfaceCoordsAtPosition(planet.Center() + (profile.StaticEncounterPlanetDirection + 10000));
+				var surfaceCoords = planet.SurfaceCoordsAtPosition(planet.Center() + (profile.StaticEncounterPlanetDirection * 10000));
 				ExactLocationCoords = profile.StaticEncounterPlanetDirection * profile.StaticEncounterPlanetAltitude + surfaceCoords;
+				TriggerCoords = ExactLocationCoords;
 
 			}
 

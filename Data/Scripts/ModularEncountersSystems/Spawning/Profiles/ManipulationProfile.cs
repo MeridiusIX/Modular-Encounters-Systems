@@ -165,6 +165,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ManipulationChance = 100;
 			RequiredManipulationSpawnType = new List<SpawningType>();
 			RequiredManipulationSpawnConditions = new List<string>();
+			ManipulationThreatMinimum = -1;
+			ManipulationThreatMaximum = -1;
 
 			RandomizeWeapons = false;
 			IgnoreWeaponRandomizerMod = false;
@@ -341,6 +343,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[RequiredManipulationSpawnConditions:") == true) {
 
 					TagParse.TagStringListCheck(tag, ref this.RequiredManipulationSpawnConditions);
+
+				}
+
+				//ManipulationThreatMinimum
+				if (tag.StartsWith("[ManipulationThreatMinimum:") == true) {
+
+					TagParse.TagFloatCheck(tag, ref this.ManipulationThreatMinimum);
+
+				}
+
+				//ManipulationThreatMaximum
+				if (tag.StartsWith("[ManipulationThreatMaximum:") == true) {
+
+					TagParse.TagFloatCheck(tag, ref this.ManipulationThreatMaximum);
 
 				}
 

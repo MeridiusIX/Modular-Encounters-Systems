@@ -207,7 +207,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			bool rivalAiOverride = false;
 
-			if (data.Attributes.HasFlag(NpcAttributes.IsCargoShip) && !string.IsNullOrWhiteSpace(prefab.SpawnGroupPrefab.Behaviour)) {
+			if (data.Attributes.HasFlag(NpcAttributes.IsCargoShip) && string.IsNullOrWhiteSpace(prefab.SpawnGroupPrefab.Behaviour)) {
 
 				if (collection.SpawnGroup.UseAutoPilotInSpace || data.SpawnType.HasFlag(SpawningType.GravityCargoShip) || data.SpawnType.HasFlag(SpawningType.PlanetaryCargoShip)) {
 
@@ -221,12 +221,16 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//RivalAI
 			if (profile.UseRivalAi == true || rivalAiOverride) {
 
-				bool primaryBehaviorSet = data.AppliedAttributes.HasFlag(NpcAttributes.RivalAiBehaviorSet);
+				bool primaryBehaviorSet = data.Attributes.HasFlag(NpcAttributes.RivalAiBehaviorSet);
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					if (BehaviorBuilder.RivalAiInitialize(grid, profile, data.BehaviorName, primaryBehaviorSet))
-						data.AppliedAttributes |= NpcAttributes.RivalAiBehaviorSet;
+					if (BehaviorBuilder.RivalAiInitialize(grid, profile, data.BehaviorName, primaryBehaviorSet)) {
+
+						SpawnLogger.Write("RivalAI Behavior Applied To RemoteControl", SpawnerDebugEnum.Manipulation);
+						data.Attributes |= NpcAttributes.RivalAiBehaviorSet;
+
+					}
 
 				}
 
@@ -359,9 +363,13 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//Add NpcData to Prefab
 			if(prefab.Prefab.CubeGrids.Length > 0){
 
-				if (!data.Attributes.HasFlag(NpcAttributes.RivalAiBehaviorSet) && !string.IsNullOrWhiteSpace(data.BehaviorName))
+				if (!data.Attributes.HasFlag(NpcAttributes.RivalAiBehaviorSet) && !string.IsNullOrWhiteSpace(data.BehaviorName)) {
+
+					SpawnLogger.Write("KeenAI Applied To Remote Control", SpawnerDebugEnum.Manipulation);
 					data.Attributes |= NpcAttributes.ApplyBehavior;
 
+				}
+					
 				StorageTools.ApplyCustomGridStorage(prefab.Prefab.CubeGrids[0], StorageTools.NpcDataKey, SerializationHelper.ConvertClassToString<NpcData>(data));
 
 			}

@@ -65,15 +65,6 @@ namespace ModularEncountersSystems.World {
 					if (timeout.TimeoutType != spawn)
 						continue;
 
-					if (timeout.TimeoutType == SpawningType.SpaceCargoShip && WaveSpawning.SpaceCargoShipWavesSpawning)
-						continue;
-
-					if (timeout.TimeoutType == SpawningType.PlanetaryCargoShip && WaveSpawning.PlanetaryCargoShipWavesSpawning)
-						continue;
-
-					if (timeout.TimeoutType == SpawningType.Creature && WaveSpawning.CreatureCargoShipWavesSpawning)
-						continue;
-
 					if (Vector3D.Distance(coords, timeout.Coords) > timeout.Radius)
 						continue;
 

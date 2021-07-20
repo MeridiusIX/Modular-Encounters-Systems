@@ -65,10 +65,10 @@ namespace ModularEncountersSystems.Spawning {
 
 					SpawnLogger.Write(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Conditions [" + conditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
 
-					//AdminSpawn Specific
-					if (adminSpawn && eligibleNames != null && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
+					//Eligible Names
+					if (eligibleNames != null && eligibleNames.Count > 0 && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
 
-						SpawnLogger.Write("   - SpawnGroup Doesn't Match Admin Command", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Write("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup);
 						continue;
 
 					}

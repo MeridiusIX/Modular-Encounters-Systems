@@ -1055,6 +1055,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			lock (NpcManager.RemoteControlCodes) {
 
+				bool maxDistSatisfied = false;
+
 				foreach (var remote in NpcManager.RemoteControlCodes.Keys) {
 
 					if (remote == null || remote.SlimBlock?.CubeGrid?.Physics == null || remote.MarkedForClose || remote.Closed)
@@ -1068,7 +1070,12 @@ namespace ModularEncountersSystems.Spawning {
 					if ((spawnGroup.RemoteControlCodeMinDistance > -1 && distance < spawnGroup.RemoteControlCodeMinDistance) || (spawnGroup.RemoteControlCodeMaxDistance > -1 && distance > spawnGroup.RemoteControlCodeMaxDistance))
 						return false;
 
+					maxDistSatisfied = true;
+
 				}
+
+				if (spawnGroup.RemoteControlCodeMaxDistance > -1 && !maxDistSatisfied)
+					return false;
 
 			}
 

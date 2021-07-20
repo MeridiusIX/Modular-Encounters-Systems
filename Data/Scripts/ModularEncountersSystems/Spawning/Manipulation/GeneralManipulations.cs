@@ -379,5 +379,23 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
+		//GetGridMass
+		public static float GetGridMass(MyObjectBuilder_CubeGrid grid) {
+
+			float result = 0;
+
+			foreach (var block in grid.CubeBlocks) {
+
+				float mass = 0;
+
+				if (DefinitionHelper.BlockWeightReference.TryGetValue(block.GetId(), out mass))
+					result += mass;
+			
+			}
+
+			return result;
+		
+		}
+
 	}
 }

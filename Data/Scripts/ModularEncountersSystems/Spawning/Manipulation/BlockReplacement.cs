@@ -28,13 +28,22 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				if (!string.IsNullOrWhiteSpace(profileName)) {
 
-					if (!ProfileManager.BlockReplacementProfiles.TryGetValue(profileName, out profile))
+					if (!ProfileManager.BlockReplacementProfiles.TryGetValue(profileName, out profile)) {
+
+						SpawnLogger.Write(" - Could not get Block Replacement Profile with name: " + profileName, SpawnerDebugEnum.Manipulation);
 						return;
-					else
+
+					} else {
+
+						SpawnLogger.Write(" - Got Block Replacement Profile with name: " + profileName, SpawnerDebugEnum.Manipulation);
 						reference = profile.Replacement;
+
+					}
+						
 
 				} else {
 
+					SpawnLogger.Write(" - Provided Block Replacement Profile Null or Blank", SpawnerDebugEnum.Manipulation);
 					return;
 				
 				}

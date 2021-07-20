@@ -18,20 +18,29 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public bool RandomizeWeapons;
 		public bool IgnoreWeaponRandomizerMod;
+
 		public bool IgnoreWeaponRandomizerTargetGlobalBlacklist;
 		public bool IgnoreWeaponRandomizerTargetGlobalWhitelist;
 		public bool IgnoreWeaponRandomizerGlobalBlacklist;
 		public bool IgnoreWeaponRandomizerGlobalWhitelist;
+
 		public List<string> WeaponRandomizerTargetBlacklist;
 		public List<string> WeaponRandomizerTargetWhitelist;
 		public List<string> WeaponRandomizerBlacklist;
 		public List<string> WeaponRandomizerWhitelist;
+
 		public int RandomWeaponChance;
 		public int RandomWeaponSizeVariance;
+
 		public List<string> NonRandomWeaponNames;
 		public List<MyDefinitionId> NonRandomWeaponIds;
 		public Dictionary<string, MyDefinitionId> NonRandomWeaponReference;
 		public bool NonRandomWeaponReplacingOnly;
+
+		public bool IgnoreGlobalWeaponMassLimits; //Imp //Doc
+		public bool IgnoreGlobalAmmoMassLimits; //Imp //Doc
+		public bool UseWeaponMassLimits; //Imp //Doc
+		public float WeaponMassMultiplierForGrid; //Imp //Doc
 
 		public bool AddDefenseShieldBlocks = false;
 		public bool IgnoreShieldProviderMod = false;

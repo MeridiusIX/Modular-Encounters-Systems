@@ -176,7 +176,8 @@ namespace ModularEncountersSystems.Helpers {
         RandomEncounter,
         PlanetaryCargoShip,
         PlanetaryInstallation,
-        BossEncounter
+        BossEncounter,
+        Creature
     
     }
 

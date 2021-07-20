@@ -114,7 +114,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending CustomSpawn Data to Spawner", SpawnerDebugEnum.Spawning);
 				var velocity = Vector3D.Transform(_currentSpawn.RelativeSpawnVelocity, _spawnMatrix) - _spawnMatrix.Translation;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, _currentSpawn.IgnoreSafetyChecks, false, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, _currentSpawn.IgnoreSafetyChecks, false, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity);
 
 				if (result == true) {
 
@@ -230,6 +230,29 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending BossEncounter Data to Spawner", SpawnerDebugEnum.Spawning);
 				var spawns = _currentSpawn.SpawnGroups.Count > 0 ? _currentSpawn.SpawnGroups : null;
 				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.BossEncounter, _currentSpawn.IgnoreSafetyChecks, false, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag);
+
+				if (result == true) {
+
+					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Successful", SpawnerDebugEnum.Spawning);
+					_currentSpawn.SpawnCount++;
+					_currentSpawn.FailedAttempts = 0;
+					_currentSpawn.LastSpawnTime = MyAPIGateway.Session.GameDateTime;
+
+
+				} else {
+
+					SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Failed", SpawnerDebugEnum.Spawning);
+					_currentSpawn.FailedAttempts++;
+
+				}
+
+			}
+
+			if (_currentSpawn.SpawningType == SpawnTypeEnum.Creature) {
+
+				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending Creature Data to Spawner", SpawnerDebugEnum.Spawning);
+				var spawns = _currentSpawn.SpawnGroups.Count > 0 ? _currentSpawn.SpawnGroups : null;
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.Creature, _currentSpawn.IgnoreSafetyChecks, false, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag);
 
 				if (result == true) {
 

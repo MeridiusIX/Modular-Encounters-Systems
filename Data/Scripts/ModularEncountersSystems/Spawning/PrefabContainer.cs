@@ -1,4 +1,5 @@
-﻿using Sandbox.Definitions;
+﻿using ModularEncountersSystems.Spawning.Manipulation;
+using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace ModularEncountersSystems.Spawning {
 		public List<MyObjectBuilder_CubeGrid> GridList;
 		public DateTime SpawnStartTime;
 		public MySpawnGroupDefinition.SpawnGroupPrefab SpawnGroupPrefab;
+		public double OriginalMass;
+		public double CurrentMass;
 
 		public PrefabContainer(string SubtypeId) {
 
@@ -35,6 +38,8 @@ namespace ModularEncountersSystems.Spawning {
 			PrefabBuilder.Icons = Prefab.Icons;
 			PrefabBuilder.TooltipImage = Prefab.TooltipImage;
 			PrefabBuilder.SubtypeName = SubtypeId;
+			OriginalMass = 0;
+			CurrentMass = 0;
 
 		}
 
@@ -62,6 +67,14 @@ namespace ModularEncountersSystems.Spawning {
 			Prefab.InitLazy(PrefabBuilder);
 			SpawningInProgress = true;
 			SpawnStartTime = MyAPIGateway.Session.GameDateTime;
+
+			foreach (var grid in GridList) {
+
+				OriginalMass += GeneralManipulations.GetGridMass(grid);
+
+			}
+
+			CurrentMass = OriginalMass;
 
 			return true;
 		

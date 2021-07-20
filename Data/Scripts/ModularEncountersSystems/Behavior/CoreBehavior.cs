@@ -414,7 +414,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				_registeredRemoteCode = true;
 
-				if (NpcManager.RemoteControlCodes.Count > 0) {
+				if (RemoteControlCode.Count > 0) {
 
 					foreach (var code in RemoteControlCode) {
 

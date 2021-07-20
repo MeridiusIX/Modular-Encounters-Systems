@@ -239,7 +239,7 @@ namespace ModularEncountersSystems.Spawning {
         
         }
 
-        public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD()) {
+        public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D()) {
 
             SpawnLogger.Write("Spawn Request Received From: " + source, SpawnerDebugEnum.Spawning);
 
@@ -351,6 +351,8 @@ namespace ModularEncountersSystems.Spawning {
                 return true;
             
             }
+
+            path.CustomVelocity = customVelocity;
 
             //Send Request To Prefab Spawner
 

@@ -263,10 +263,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			//WeaponRandomization
 			var globalRandomizationEnabled = (Settings.Grids.EnableGlobalNPCWeaponRandomizer || AddonManager.NpcWeaponsUpgrade) && !profile.IgnoreWeaponRandomizerMod;
-			var globalRandomizationAllowed = globalRandomizationEnabled && MathTools.RandomBetween(0, 101) > Settings.Grids.RandomWeaponChance;
+			var globalRandomizationAllowed = globalRandomizationEnabled && MathTools.RandomBetween(0, 101) < Settings.Grids.RandomWeaponChance;
 
 			var spawnGroupRandomizationEnabled = profile.RandomizeWeapons;
-			var spawnGroupRandomizationAllowed = spawnGroupRandomizationEnabled && MathTools.RandomBetween(0, 101) > profile.RandomWeaponChance;
+			var spawnGroupRandomizationAllowed = spawnGroupRandomizationEnabled && MathTools.RandomBetween(0, 101) < profile.RandomWeaponChance;
 
 			if (globalRandomizationAllowed || spawnGroupRandomizationAllowed) {
 

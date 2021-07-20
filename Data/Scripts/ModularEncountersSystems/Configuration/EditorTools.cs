@@ -13,6 +13,12 @@ namespace ModularEncountersSystems.Configuration.Editor {
             if (receivedCommand.StartsWith("/MES.Settings.General."))
                 return Settings.General.EditFields(receivedCommand);
 
+            if (receivedCommand.StartsWith("/MES.Settings.Grids."))
+                return Settings.Grids.EditFields(receivedCommand);
+
+            if (receivedCommand.StartsWith("/MES.Settings.CustomBlocks."))
+                return Settings.CustomBlocks.EditFields(receivedCommand);
+
             if (receivedCommand.StartsWith("/MES.Settings.SpaceCargoShips."))
                 return Settings.SpaceCargoShips.EditFields(receivedCommand);
 
@@ -24,6 +30,12 @@ namespace ModularEncountersSystems.Configuration.Editor {
 
             if (receivedCommand.StartsWith("/MES.Settings.PlanetaryInstallations."))
                 return Settings.PlanetaryInstallations.EditFields(receivedCommand);
+
+            if (receivedCommand.StartsWith("/MES.Settings.BossEncounters."))
+                return Settings.BossEncounters.EditFields(receivedCommand);
+
+            if (receivedCommand.StartsWith("/MES.Settings.OtherNPCs."))
+                return Settings.OtherNPCs.EditFields(receivedCommand);
 
             if (receivedCommand.StartsWith("/MES.Settings.Creatures."))
                 return Settings.Creatures.EditFields(receivedCommand);

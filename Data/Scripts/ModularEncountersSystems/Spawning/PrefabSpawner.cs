@@ -174,27 +174,35 @@ namespace ModularEncountersSystems.Spawning {
 				Vector3 linearVelocity = Vector3.Zero;
 				Vector3 angularVelocity = Vector3.Zero;
 
-				if (npcData.StartCoords != npcData.EndCoords) {
+				if (path.CustomVelocity == new Vector3D()) {
 
-					//TODO: Consider if using Autopilot or Behavior
+					if (npcData.StartCoords != npcData.EndCoords) {
 
-					Vector3D dir = Vector3D.Normalize(npcData.EndCoords - npcData.StartCoords);
+						//TODO: Consider if using Autopilot or Behavior
 
-					linearVelocity = dir * sgPrefab.Speed;
+						Vector3D dir = Vector3D.Normalize(npcData.EndCoords - npcData.StartCoords);
 
-					if (path.OverrideSpeed > -1) {
+						linearVelocity = dir * sgPrefab.Speed;
 
-						linearVelocity = dir * path.OverrideSpeed;
+						if (path.OverrideSpeed > -1) {
+
+							linearVelocity = dir * path.OverrideSpeed;
+
+						}
+
+						if (path.MinSpeed > linearVelocity.Length()) {
+
+							linearVelocity = dir * path.MinSpeed;
+
+						}
+
+						npcData.PrefabSpeed = linearVelocity.Length();
 
 					}
 
-					if (path.MinSpeed > linearVelocity.Length()) {
+				} else {
 
-						linearVelocity = dir * path.MinSpeed;
-
-					}
-
-					npcData.PrefabSpeed = linearVelocity.Length();
+					linearVelocity = path.CustomVelocity;
 
 				}
 
@@ -224,9 +232,11 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				SpawnLogger.Write("Final Spawn Matrix Translation: " + spawnMatrix.Translation, SpawnerDebugEnum.Pathing);
-				SpawnLogger.Write("Final Spawn Matrix Forward:     " + spawnMatrix.Forward, SpawnerDebugEnum.Pathing);
-				SpawnLogger.Write("Final Spawn Matrix Up:          " + spawnMatrix.Up, SpawnerDebugEnum.Pathing);
+				SpawnLogger.Write("Relative Spawn Coordinates:   " + spawnMatrix.Translation, SpawnerDebugEnum.Pathing);
+				SpawnLogger.Write("Final Prefab Coordinates:     " + npcData.StartCoords, SpawnerDebugEnum.Pathing);
+				SpawnLogger.Write("Distance From Relative 0,0,0: " + Vector3D.Distance(spawnMatrix.Translation, npcData.StartCoords), SpawnerDebugEnum.Pathing);
+				//SpawnLogger.Write("Final Spawn Matrix Forward:     " + spawnMatrix.Forward, SpawnerDebugEnum.Pathing);
+				//SpawnLogger.Write("Final Spawn Matrix Up:          " + spawnMatrix.Up, SpawnerDebugEnum.Pathing);
 
 				//Send to IMyPrefabManager
 				try {

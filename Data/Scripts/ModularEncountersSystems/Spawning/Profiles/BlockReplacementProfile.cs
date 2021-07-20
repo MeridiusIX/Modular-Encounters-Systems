@@ -44,6 +44,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			foreach (var tag in descSplit) {
 
+				//OldBlock
 				if (tag.Contains("[OldBlock:")) {
 
 					TagParse.TagMyDefIdCheck(tag, ref OldBlock);
@@ -51,7 +52,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-				if (tag.Contains("[MatchOnlyTypeId:")) {
+				//NewBlock
+				if (tag.Contains("[NewBlock:")) {
 
 					TagParse.TagMyDefIdCheck(tag, ref NewBlock);
 					continue;

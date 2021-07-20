@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.API;
 using ModularEncountersSystems.Configuration.Editor;
+using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -652,6 +653,15 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "GetThreatScore") {
 
 				LoggerTools.GetThreatScore(this, array);
+				return true;
+
+			}
+
+			//GetVersion
+			if (array[2] == "GetThreatScore") {
+
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Mod Version: " + MES_SessionCore.ModVersion;
 				return true;
 
 			}

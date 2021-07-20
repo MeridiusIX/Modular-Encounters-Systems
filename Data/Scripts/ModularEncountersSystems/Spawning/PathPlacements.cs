@@ -30,6 +30,8 @@ namespace ModularEncountersSystems.Spawning {
 		public float MinSpeed;
 		public float OverrideSpeed;
 
+		public Vector3D CustomVelocity;
+
 		public List<Vector3D> CreatureCoords;
 
 		public PathDetails() {
@@ -45,6 +47,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			MinSpeed = -1;
 			OverrideSpeed = -1;
+
+			CustomVelocity = new Vector3D();
 
 		}
 
@@ -68,7 +72,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (SpawnType == SpawningType.RandomEncounter || SpawnType == SpawningType.BossSpace || SpawnType == SpawningType.BossGravity || SpawnType == SpawningType.BossAtmo) {
+			if (SpawnType == SpawningType.RandomEncounter || SpawnType == SpawningType.BossSpace || SpawnType == SpawningType.BossGravity || SpawnType == SpawningType.BossAtmo || SpawnType == SpawningType.OtherNPC) {
 
 				return Vector3D.Transform(offset, SpawnMatrix);
 
@@ -672,8 +676,8 @@ namespace ModularEncountersSystems.Spawning {
 					bool isUnderwater = environment.NearestPlanet.IsPositionUnderwater(coords);
 					double depth = environment.NearestPlanet.WaterDepthAtPosition(coords);
 
-					SpawnLogger.Write("Underwater: " + isUnderwater, SpawnerDebugEnum.Pathing);
-					SpawnLogger.Write("Depth: " + depth, SpawnerDebugEnum.Pathing);
+					//SpawnLogger.Write("Underwater: " + isUnderwater, SpawnerDebugEnum.Pathing);
+					//SpawnLogger.Write("Depth: " + depth, SpawnerDebugEnum.Pathing);
 
 					if (!IsPositionSurfaceValid(coords, environment, collection, spawnType, isUnderwater, depth))
 						continue;
@@ -1082,6 +1086,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		private static void CalculateCreatureCoords(PathDetails path, SpawnGroupCollection collection, EnvironmentEvaluation environment) {
 
+			path.SpawnType = SpawningType.Creature;
 			path.CreatureCoords = new List<Vector3D>();
 
 			var up = environment.NearestPlanet.UpAtPosition(environment.Position);
@@ -1174,6 +1179,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		private static void CalculateOtherPath(PathDetails path, SpawnGroupCollection collection, EnvironmentEvaluation environment, MatrixD spawnMatrix) {
 
+			path.SpawnType = SpawningType.OtherNPC;
 			var voxelList = new List<MyVoxelBase>();
 			var voxelSphere = new BoundingSphereD(spawnMatrix.Translation, 20000);
 			MyGamePruningStructure.GetAllVoxelMapsInSphere(ref voxelSphere, voxelList);

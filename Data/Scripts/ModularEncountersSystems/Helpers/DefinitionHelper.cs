@@ -4,10 +4,14 @@ using Sandbox.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Collections;
 using VRage.Game;
 
 namespace ModularEncountersSystems.Helpers {
 	public static class DefinitionHelper {
+
+		//All
+		public static DictionaryValuesReader<MyDefinitionId, MyDefinitionBase> AllDefinitions = new DictionaryValuesReader<MyDefinitionId, MyDefinitionBase>();
 
 		//Blocks
 		public static List<MyCubeBlockDefinition> AllBlockDefinitions = new List<MyCubeBlockDefinition>();
@@ -16,6 +20,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<string> RivalAiControlModules = new List<string>();
 
 		public static Dictionary<MyDefinitionId, MyWeaponBlockDefinition> WeaponBlockReferences = new Dictionary<MyDefinitionId, MyWeaponBlockDefinition>();
+		public static List<MyDefinitionId> WeaponBlockIDs = new List<MyDefinitionId>();
 
 		//Items
 		public static Dictionary<MyDefinitionId, MyPhysicalItemDefinition> AllItemDefinitions = new Dictionary<MyDefinitionId, MyPhysicalItemDefinition>();
@@ -38,7 +43,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static void Setup() {
 
-			var defs = MyDefinitionManager.Static.GetAllDefinitions();
+			AllDefinitions = MyDefinitionManager.Static.GetAllDefinitions();
 
 			//Items
 			var physicalItems = MyDefinitionManager.Static.GetPhysicalItemDefinitions();
@@ -75,7 +80,7 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			//Blocks
-			foreach (var def in defs) {
+			foreach (var def in AllDefinitions) {
 
 				var block = def as MyCubeBlockDefinition;
 
@@ -120,8 +125,13 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (weapon != null) {
 
-						if (!WeaponBlockReferences.ContainsKey(weapon.Id))
+						if (!WeaponBlockReferences.ContainsKey(weapon.Id)) {
+
 							WeaponBlockReferences.Add(weapon.Id, weapon);
+							WeaponBlockIDs.Add(weapon.Id);
+
+						}
+							
 
 						if (!WeaponVolumeReference.ContainsKey(weapon.Id))
 							WeaponVolumeReference.Add(weapon.Id, weapon.InventoryMaxVolume);
@@ -135,10 +145,9 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (weaponSorter != null && BlockManager.AllWeaponCoreBlocks.Contains(block.Id)) {
 
-						/*
-						if (!WeaponBlockReferences.ContainsKey(weaponSorter.Id))
-							WeaponBlockReferences.Add(weaponSorter.Id, weaponSorter);
-						*/
+						if (!WeaponBlockIDs.Contains(weaponSorter.Id))
+							WeaponBlockIDs.Add(weaponSorter.Id);
+
 						if (!WeaponVolumeReference.ContainsKey(weaponSorter.Id))
 							WeaponVolumeReference.Add(weaponSorter.Id, weaponSorter.InventorySize.X * weaponSorter.InventorySize.Y * weaponSorter.InventorySize.Z);
 
@@ -207,6 +216,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				sb.Append("Is Public:  ").Append(def.Public.ToString()).AppendLine();
 				sb.Append("Size:       ").Append(def.CubeSize.ToString()).AppendLine();
+				sb.Append("Is Weapon:  ").Append(WeaponBlockIDs.Contains(def.Id)).AppendLine();
 
 				sb.AppendLine();
 

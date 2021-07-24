@@ -63,6 +63,9 @@ namespace ModularEncountersSystems.Configuration {
 		public bool UseNonPhysicalAmmoForNPCs;
 		public bool RemoveContainerInventoryFromNPCs;
 
+		public bool UseMaxAmmoInventoryWeight;
+		public float MaxAmmoInventoryWeight;
+
 		public string[] GlobalReplenishmentProfiles;
 
 		[XmlIgnore]
@@ -91,7 +94,10 @@ namespace ModularEncountersSystems.Configuration {
 			UseNonPhysicalAmmoForNPCs = false;
 			RemoveContainerInventoryFromNPCs = false;
 
-			GlobalReplenishmentProfiles = new string[] { };
+			UseMaxAmmoInventoryWeight = true;
+			MaxAmmoInventoryWeight = 1500;
+
+			GlobalReplenishmentProfiles = new string[] { "MES-Replenishment-BaseRules" };
 
 			EditorReference = new Dictionary<string, Func<string, object, bool>> {
 
@@ -109,6 +115,8 @@ namespace ModularEncountersSystems.Configuration {
 				{"GlobalBlockReplacerProfiles", (s, o) => EditorTools.SetCommandValueStringArray(s, ref GlobalBlockReplacerProfiles) },
 				{"UseNonPhysicalAmmoForNPCs", (s, o) => EditorTools.SetCommandValueBool(s, ref UseNonPhysicalAmmoForNPCs) },
 				{"RemoveContainerInventoryFromNPCs", (s, o) => EditorTools.SetCommandValueBool(s, ref RemoveContainerInventoryFromNPCs) },
+				{"UseMaxAmmoInventoryWeight", (s, o) => EditorTools.SetCommandValueBool(s, ref UseMaxAmmoInventoryWeight) },
+				{"MaxAmmoInventoryWeight", (s, o) => EditorTools.SetCommandValueFloat(s, ref MaxAmmoInventoryWeight) },
 				{"GlobalReplenishmentProfiles", (s, o) => EditorTools.SetCommandValueStringArray(s, ref GlobalReplenishmentProfiles) }
 
 			};

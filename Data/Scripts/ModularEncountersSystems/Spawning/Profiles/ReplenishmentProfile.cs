@@ -25,12 +25,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			InitTags(data);
 
-			int lowestCount = MaxItemId.Count;
-
-			if (MaxItemAmount.Count < lowestCount)
-				lowestCount = MaxItemAmount.Count;
-
-			for (int i = 0; i < lowestCount; i++) {
+			for (int i = 0; i < MaxItemId.Count && i < MaxItemAmount.Count; i++) {
 
 				if (!MaxItems.ContainsKey(MaxItemId[i]))
 					MaxItems.Add(MaxItemId[i], MaxItemAmount[i]);
@@ -58,8 +53,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-				//MaxItems
-				if (tag.Contains("[MaxItems:")) {
+				//MaxItemId
+				if (tag.Contains("[MaxItemId:")) {
 
 					TagParse.TagMyDefIdCheck(tag, ref MaxItemId);
 					continue;

@@ -1000,9 +1000,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (conditions.UseRemoteControlCodeRestrictions && !CheckRemoteControlCode(conditions, environment.Position)) {
+			if (conditions.UseRemoteControlCodeRestrictions && !CheckRemoteControlCode(conditions, environment.Position, ref failReason)) {
 
-				failReason = "   - Remote Control Code Check Failed";
 				return false;
 
 			}
@@ -1051,7 +1050,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool CheckRemoteControlCode(SpawnConditionsProfile spawnGroup, Vector3D coords) {
+		public static bool CheckRemoteControlCode(SpawnConditionsProfile spawnGroup, Vector3D coords, ref string failReason) {
 
 			lock (NpcManager.RemoteControlCodes) {
 
@@ -1067,15 +1066,31 @@ namespace ModularEncountersSystems.Spawning {
 
 					var distance = Vector3D.Distance(coords, remote.GetPosition());
 
-					if ((spawnGroup.RemoteControlCodeMinDistance > -1 && distance < spawnGroup.RemoteControlCodeMinDistance) || (spawnGroup.RemoteControlCodeMaxDistance > -1 && distance > spawnGroup.RemoteControlCodeMaxDistance))
+					if ((spawnGroup.RemoteControlCodeMinDistance > -1 && distance < spawnGroup.RemoteControlCodeMinDistance)) {
+
+						failReason = "   - Remote Control Code Check Failed: Distance From Remote Is [" + distance + "] While Minimum Distance Is [" + spawnGroup.RemoteControlCodeMinDistance + "]";
 						return false;
+
+					}
+
+					if ((spawnGroup.RemoteControlCodeMaxDistance > -1 && distance > spawnGroup.RemoteControlCodeMaxDistance)) {
+
+						failReason = "   - Remote Control Code Check Failed: Distance From Remote Is [" + distance + "] While Maximum Distance Is [" + spawnGroup.RemoteControlCodeMaxDistance + "]";
+						return false;
+
+					}
 
 					maxDistSatisfied = true;
 
 				}
 
-				if (spawnGroup.RemoteControlCodeMaxDistance > -1 && !maxDistSatisfied)
+				if (spawnGroup.RemoteControlCodeMaxDistance > -1 && !maxDistSatisfied) {
+
+					failReason = "   - Remote Control Code Check Failed: Max Distance Not Satisfied, Possibly Because No Code Exists In Area";
 					return false;
+
+				}
+					
 
 			}
 

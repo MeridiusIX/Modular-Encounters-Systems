@@ -747,7 +747,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					if (badPosition == false) {
+					if (badPosition == false || collection.Conditions.SkipTerrainCheck) {
 
 						//CheckSpawnType
 						var finalCoords = spawnType.HasFlag(SpawningType.WaterSurfaceStation) ? environment.NearestPlanet.SurfaceCoordsAtPosition(checkCoords, false) : coords;

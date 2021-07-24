@@ -9,71 +9,73 @@ using VRageMath;
 
 namespace ModularEncountersSystems.Zones {
 
+	[ProtoContract]
 	public class Zone {
 
-		public bool Active; //Determines if the zone is enabled
-		public bool Persistent; //Zone will not expire after timer or max spawns
-		public bool Strict; //Spawngroups Must Be Allowed to Spawn in this Zone
-		public bool PlayerKnownLocation; //Zone is treated as KPL
-		public bool NoSpawnZone; //Zone Does Not Allow Any Spawning At All
+		[ProtoMember(1)] public bool Active; //Determines if the zone is enabled
+		[ProtoMember(2)] public bool Persistent; //Zone will not expire after timer or max spawns
+		[ProtoMember(3)] public bool Strict; //Spawngroups Must Be Allowed to Spawn in this Zone
+		[ProtoMember(4)] public bool PlayerKnownLocation; //Zone is treated as KPL
+		[ProtoMember(5)] public bool NoSpawnZone; //Zone Does Not Allow Any Spawning At All
 
-		public string Name; //Internal Name Used By SpawnGroups
-		public string PublicName; //Name of Zone That Player Will See
-		public string ProfileSubtypeId; //SubtypeId of the Zone Profile used to create this zone
+		[ProtoMember(6)] public string Name; //Internal Name Used By SpawnGroups
+		[ProtoMember(7)] public string PublicName; //Name of Zone That Player Will See
+		[ProtoMember(8)] public string ProfileSubtypeId; //SubtypeId of the Zone Profile used to create this zone
 
-		public bool UseLimitedFactions; //Determines Whether a SpawnGroup's Current Faction Should be Considered When Spawning
-		public List<string> Factions; //Factions Associated To Zone, if any.
+		[ProtoMember(9)] public bool UseLimitedFactions; //Determines Whether a SpawnGroup's Current Faction Should be Considered When Spawning
+		[ProtoMember(10)] public List<string> Factions; //Factions Associated To Zone, if any.
 
-		public Vector3D Coordinates; //Zone Center (Can Be Provided Manually Or Calculated From Planet)
-		public double Radius; //Zone Radius
-		public double RadiusSquared; //Zone Radius Squared (For Quicker Distnace Checking)
+		[ProtoMember(11)] public Vector3D Coordinates; //Zone Center (Can Be Provided Manually Or Calculated From Planet)
+		[ProtoMember(12)] public double Radius; //Zone Radius
+		[ProtoMember(13)] public double RadiusSquared; //Zone Radius Squared (For Quicker Distnace Checking)
 
-		public bool PlanetaryZone; //Determines if this zone should be dynamically placed on a planet
-		public string PlanetName; //Planet name that receives the zone
-		public long PlanetId; //Planet Entity Id (used internally)
-		public Vector3D Direction; //Zone Direction From Planet Center To Surface (If Not Provided, planet center is used as zone center)
-		public double HeightOffset; //Height Offset From Surface for Zone
-		public bool ScaleZoneRadiusWithPlanet;
-		public double IntendedPlanetSize;
+		[ProtoMember(14)] public bool PlanetaryZone; //Determines if this zone should be dynamically placed on a planet
+		[ProtoMember(15)] public string PlanetName; //Planet name that receives the zone
+		[ProtoIgnore] public long PlanetId; //Planet Entity Id (used internally)
+		[ProtoMember(16)] public Vector3D Direction; //Zone Direction From Planet Center To Surface (If Not Provided, planet center is used as zone center)
+		[ProtoMember(17)] public double HeightOffset; //Height Offset From Surface for Zone
+		[ProtoMember(18)] public bool ScaleZoneRadiusWithPlanet;
+		[ProtoMember(19)] public double IntendedPlanetSize;
 
-		public bool UseZoneTimer; //Determines If Zone Should Expire After Some Time (doesn't apply to Persistent zones)
-		public DateTime TimeCreated; //When in Game Time the Zone Was Created
-		public int MinutesToExpiration; //How Long Until Zone Expires
-		public bool PlayerPresenceResetsTimer; //Determines if Players Being in the Zone will Reset Timer.
+		[ProtoMember(20)] public bool UseZoneTimer; //Determines If Zone Should Expire After Some Time (doesn't apply to Persistent zones)
+		[ProtoMember(21)] public DateTime TimeCreated; //When in Game Time the Zone Was Created
+		[ProtoMember(22)] public int MinutesToExpiration; //How Long Until Zone Expires
+		[ProtoMember(23)] public bool PlayerPresenceResetsTimer; //Determines if Players Being in the Zone will Reset Timer.
 
-		public bool UseMaxSpawnedEncounters; //Determines if the Zone can only have a limited amount of spawns
-		public int SpawnedEncounters; //Number of Spawned Encounters that have occurred inside this Zone
-		public int MaxSpawnedEncounters; //Maximum number of Spawned Encounters Allowed For Zone
+		[ProtoMember(24)] public bool UseMaxSpawnedEncounters; //Determines if the Zone can only have a limited amount of spawns
+		[ProtoMember(25)] public int SpawnedEncounters; //Number of Spawned Encounters that have occurred inside this Zone
+		[ProtoMember(26)] public int MaxSpawnedEncounters; //Maximum number of Spawned Encounters Allowed For Zone
 
-		public bool UseAllowedSpawnGroups; //Determines if the Zone can only spawn certain SpawnGroups (Warning: If Used, SpawnGroups Listed Can ONLY spawn in zones they're allowed in)
-		public List<string> AllowedSpawnGroups; //SpawnGroup IDs for Allowed Spawning
+		[ProtoMember(27)] public bool UseAllowedSpawnGroups; //Determines if the Zone can only spawn certain SpawnGroups (Warning: If Used, SpawnGroups Listed Can ONLY spawn in zones they're allowed in)
+		[ProtoMember(28)] public List<string> AllowedSpawnGroups; //SpawnGroup IDs for Allowed Spawning
 
-		public bool UseRestrictedSpawnGroups; //Determines if the Zone will prevent certain SpawnGroups from spawning
-		public List<string> RestrictedSpawnGroups; //SpawnGroup IDs for Restricted Spawning
+		[ProtoMember(29)] public bool UseRestrictedSpawnGroups; //Determines if the Zone will prevent certain SpawnGroups from spawning
+		[ProtoMember(30)] public List<string> RestrictedSpawnGroups; //SpawnGroup IDs for Restricted Spawning
 
-		public bool UseAllowedModIDs; //Determines if the Zone can only spawn SpawnGroups from certain Mods (Warning: If Used, Mod IDs Listed Can ONLY spawn in zones they're allowed in)
-		public List<ulong> AllowedModIDs; //Mod IDs for Allowed Spawning
+		[ProtoMember(31)] public bool UseAllowedModIDs; //Determines if the Zone can only spawn SpawnGroups from certain Mods (Warning: If Used, Mod IDs Listed Can ONLY spawn in zones they're allowed in)
+		[ProtoMember(32)] public List<ulong> AllowedModIDs; //Mod IDs for Allowed Spawning
 
-		public bool UseRestrictedModIDs; //Determines if the Zone will prevent certain SpawnGroup from specified ModIDs from spawning
-		public List<ulong> RestrictedModIDs; //Mod IDs for Restricted Spawning
+		[ProtoMember(33)] public bool UseRestrictedModIDs; //Determines if the Zone will prevent certain SpawnGroup from specified ModIDs from spawning
+		[ProtoMember(34)] public List<ulong> RestrictedModIDs; //Mod IDs for Restricted Spawning
 
-		public bool UseZoneAnnounce; //Determines if Zone Should Announce To Players A Message When They Enter or Leave the Zone
-		public string ZoneEnterAnnounce; //Message Displayed To Players Entering The Zone
-		public string ZoneLeaveAnnounce; //Message Displayed To Players Leaving The Zone
-		public bool FlashZoneRadius; //Determines if the Radius of the Zone should briefly flash on screen when a player enters or leaves zone.
+		[ProtoMember(35)] public bool UseZoneAnnounce; //Determines if Zone Should Announce To Players A Message When They Enter or Leave the Zone
+		[ProtoMember(36)] public string ZoneEnterAnnounce; //Message Displayed To Players Entering The Zone
+		[ProtoMember(37)] public string ZoneLeaveAnnounce; //Message Displayed To Players Leaving The Zone
+		[ProtoMember(38)] public bool FlashZoneRadius; //Determines if the Radius of the Zone should briefly flash on screen when a player enters or leaves zone.
 
-		public Dictionary<string, long> CustomCounters; //Custom Counters Associated To The Zone (Assigned Via RivalAI behavior)
-		public Dictionary<string, bool> CustomBools; //Custom Bools Associated To The Zone (Assigned Via RivalAI behavior)
+		[ProtoMember(39)] public Dictionary<string, long> CustomCounters; //Custom Counters Associated To The Zone (Assigned Via RivalAI behavior)
+		[ProtoMember(40)] public Dictionary<string, bool> CustomBools; //Custom Bools Associated To The Zone (Assigned Via RivalAI behavior)
 
-		public List<long> PlayersInZone;
+		[ProtoMember(41)] public List<long> PlayersInZone;
 
+		[ProtoIgnore]
 		public BoundingSphereD Sphere { 
 			get {
 				if (_sphere.Radius < 1)
 					_sphere = new BoundingSphereD(Coordinates, Radius);
 				return _sphere;
 			} }
-		private BoundingSphereD _sphere = new BoundingSphereD();
+		[ProtoIgnore] private BoundingSphereD _sphere = new BoundingSphereD();
 
 		public Zone() {
 

@@ -121,6 +121,7 @@ namespace ModularEncountersSystems.Configuration.Editor {
 
         }
 
+        ///MES.Settings.Grids.GlobalReplenishmentProfiles.Add.MES-Replenishment-BaseRules
         public static bool SetCommandValueStringArray(string command, ref string[] target) {
 
             var splitCommand = (command.Trim()).Split('.');
@@ -131,18 +132,28 @@ namespace ModularEncountersSystems.Configuration.Editor {
             _stringList.Clear();
             _stringList.AddArray<string>(target);
 
-            if (splitCommand[5] == "Add") {
+            if (splitCommand[4] == "Add") {
 
-                _stringList.Add(splitCommand[6]);
-                target = _stringList.ToArray();
+                if (!_stringList.Contains(splitCommand[5])) {
+
+                    _stringList.Add(splitCommand[5]);
+                    target = _stringList.ToArray();
+
+                }
+                
                 return true;
 
             }
 
-            if (splitCommand[5] == "Remove") {
+            if (splitCommand[4] == "Remove") {
 
-                _stringList.Remove(splitCommand[6]);
-                target = _stringList.ToArray();
+                if (_stringList.Contains(splitCommand[5])) {
+
+                    _stringList.Remove(splitCommand[5]);
+                    target = _stringList.ToArray();
+
+                }
+                
                 return true;
 
             }

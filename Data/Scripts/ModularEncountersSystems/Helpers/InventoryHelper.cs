@@ -53,7 +53,7 @@ namespace ModularEncountersSystems.Helpers {
 					//Weapons (Regular)
 					if (block as IMyUserControllableGun != null) {
 
-						SimpleBlockReplenish(inventory, spawnGroup);
+						SimpleBlockReplenish(block, inventory, spawnGroup);
 						continue;
 
 					}
@@ -66,7 +66,7 @@ namespace ModularEncountersSystems.Helpers {
 						if (powerDef != null) {
 
 							var totalFuelAdd = (MyFixedPoint)powerDef.MaxPowerOutput;
-							SimpleBlockReplenish(inventory, spawnGroup, (double)totalFuelAdd);
+							SimpleBlockReplenish(block, inventory, spawnGroup, (double)totalFuelAdd);
 
 						}
 
@@ -77,7 +77,7 @@ namespace ModularEncountersSystems.Helpers {
 					//GasGenerators
 					if (block as IMyGasGenerator != null) {
 
-						SimpleBlockReplenish(inventory, spawnGroup);
+						SimpleBlockReplenish(block, inventory, spawnGroup);
 						continue;
 
 					}
@@ -85,7 +85,7 @@ namespace ModularEncountersSystems.Helpers {
 					//Parachute
 					if (block as IMyParachute != null) {
 
-						SimpleBlockReplenish(inventory, spawnGroup);
+						SimpleBlockReplenish(block, inventory, spawnGroup);
 						continue;
 
 					}
@@ -101,13 +101,13 @@ namespace ModularEncountersSystems.Helpers {
 		
 		}
 
-		public static void SimpleBlockReplenish(MyInventory inventory, ImprovedSpawnGroup spawnGroup, double cap = -1) {
+		public static void SimpleBlockReplenish(IMyTerminalBlock block, MyInventory inventory, ImprovedSpawnGroup spawnGroup, double cap = -1) {
 
 			var items = GetCompatibleItemTypes(null, inventory);
 
 			foreach (var item in items) {
 
-				var amount = GetMaxAddCountForReplenish(inventory, item, spawnGroup.ReplenishProfiles, spawnGroup.IgnoreGlobalReplenishProfiles, cap);
+				var amount = GetMaxAddCountForReplenish(block, inventory, item, spawnGroup.ReplenishProfiles, spawnGroup.IgnoreGlobalReplenishProfiles, cap);
 				AddItemsToInventory(inventory, item, (float)amount);
 				break;
 
@@ -127,13 +127,13 @@ namespace ModularEncountersSystems.Helpers {
 
 			if (amountToAdd > amount && amount > -1) {
 
-				var adjustedAmt = amountToAdd - amount;
-				amountToAdd = adjustedAmt;
+				amountToAdd = amount;
 
 			}
 
 			if (amountToAdd > 0 && inventory.CanItemsBeAdded((MyFixedPoint)amountToAdd, itemId) == true) {
 
+				//SpawnLogger.Write(string.Format("Replenish Added {0} of {1} to Inventory Block.", amountToAdd, itemId), SpawnerDebugEnum.PostSpawn);
 				inventory.AddItems((MyFixedPoint)amountToAdd, MyObjectBuilderSerializer.CreateNewObject(itemId));
 				return true;
 
@@ -143,7 +143,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static double GetMaxAddCountForReplenish(MyInventory inventory, MyDefinitionId itemId, List<ReplenishmentProfile> profiles, bool ignoreGlobalProfiles, double initialCap = -1) {
+		public static double GetMaxAddCountForReplenish(IMyTerminalBlock block, MyInventory inventory, MyDefinitionId itemId, List<ReplenishmentProfile> profiles, bool ignoreGlobalProfiles, double initialCap = -1) {
 
 			MyPhysicalItemDefinition item = GetItemDefinition(itemId);
 
@@ -167,7 +167,40 @@ namespace ModularEncountersSystems.Helpers {
 					result = resultB;
 
 			}
-			
+
+			//SpawnLogger.Write(string.Format("Pre Weapon Checking for Mass Restrictions on Ammo: {0}", itemId), SpawnerDebugEnum.PostSpawn);
+
+			if (DefinitionHelper.WeaponBlockIDs.Contains(block.SlimBlock.BlockDefinition.Id)) {
+
+				//SpawnLogger.Write(string.Format("Checking for Mass Restrictions on Ammo: {0}", itemId), SpawnerDebugEnum.PostSpawn);
+
+				if (Settings.Grids.UseMaxAmmoInventoryWeight) {
+
+					var currentMass = (float)inventory.CurrentMass;
+
+					if (currentMass >= Settings.Grids.MaxAmmoInventoryWeight)
+						return 0;
+
+					float itemMass = 0;
+
+					if (DefinitionHelper.ItemWeightReference.TryGetValue(itemId, out itemMass)) {
+
+						var allowedCount = Math.Floor((Settings.Grids.MaxAmmoInventoryWeight - currentMass) / itemMass);
+
+						if (allowedCount == 0)
+							allowedCount = 1;
+
+						if (result > allowedCount)
+							result = allowedCount;
+
+						//SpawnLogger.Write(string.Format("Allowed Ammo Weight For {0} set to {1} from Allowed Count {2}.", itemId, result, allowedCount), SpawnerDebugEnum.PostSpawn);
+
+					}
+					
+				}
+
+			}
+
 			foreach (var profile in profiles) {
 
 				if (profile.RestrictedItems.Contains(item.Id)) {
@@ -191,9 +224,37 @@ namespace ModularEncountersSystems.Helpers {
 			if (!ignoreGlobalProfiles) {
 
 				foreach (var profileName in Settings.Grids.GlobalReplenishmentProfiles) {
-				
+
+					ReplenishmentProfile profile = null;
+
+					if (!ProfileManager.ReplenishmentProfiles.TryGetValue(profileName, out profile)) {
+
+						SpawnLogger.Write("Global Replenishment Profile Name [" + profileName + "] Has No Registered Profile.", SpawnerDebugEnum.PostSpawn);
+						continue;
+
+					}
+						
+
+					if (profile.RestrictedItems.Contains(item.Id)) {
+
+						result = 0;
+						break;
+
+					}
+
+					float limit = 0;
+
+					if (profile.MaxItems.TryGetValue(item.Id, out limit)) {
+
+						if (limit < result) {
+
+							//SpawnLogger.Write(string.Format("{0} Has Replenishment Limit of {1}", item.Id, limit), SpawnerDebugEnum.PostSpawn);
+							result = limit;
+
+						}
+
+					}
 					
-				
 				}
 			
 			}
@@ -217,7 +278,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			foreach (var ammoId in ammoList) {
 
-				double maxAmmo = GetMaxAddCountForReplenish(inventory, ammoId, spawnGroup.ReplenishProfiles, spawnGroup.IgnoreGlobalReplenishProfiles);
+				double maxAmmo = GetMaxAddCountForReplenish(block, inventory, ammoId, spawnGroup.ReplenishProfiles, spawnGroup.IgnoreGlobalReplenishProfiles);
 
 				if (!maxMagazinesPerAmmoType.ContainsKey(ammoId))
 					maxMagazinesPerAmmoType.Add(ammoId, new Vector2I(0, (int)maxAmmo));
@@ -232,7 +293,16 @@ namespace ModularEncountersSystems.Helpers {
 				bool noLoop = true;
 				bool addedItem = false;
 
+				
+
 				foreach (var ammoId in ammoList) {
+
+					if (Settings.Grids.UseMaxAmmoInventoryWeight && (float)inventory.CurrentMass >= Settings.Grids.MaxAmmoInventoryWeight) {
+
+						noLoop = true;
+						break;
+					
+					}
 
 					if (ammoId.SubtypeName == "Energy")
 						continue;

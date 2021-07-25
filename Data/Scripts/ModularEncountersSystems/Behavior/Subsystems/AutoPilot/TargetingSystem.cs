@@ -61,6 +61,52 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
+		public List<TargetFilterEnum> AllUniqueFilters {
+			get {
+
+				if (string.IsNullOrWhiteSpace(Data?.ProfileSubtypeId)) {
+
+					_allUniqueFilters.Clear();
+					_currentTargetDataName = "";
+					return _allUniqueFilters;
+
+				}
+
+				if (Data.ProfileSubtypeId != _currentTargetDataName) {
+
+					foreach (var filter in Data.MatchAllFilters) {
+
+						if (!_allUniqueFilters.Contains(filter))
+							_allUniqueFilters.Add(filter);
+
+					}
+
+					foreach (var filter in Data.MatchAnyFilters) {
+
+						if (!_allUniqueFilters.Contains(filter))
+							_allUniqueFilters.Add(filter);
+
+					}
+
+					foreach (var filter in Data.MatchNoneFilters) {
+
+						if (!_allUniqueFilters.Contains(filter))
+							_allUniqueFilters.Add(filter);
+
+					}
+
+				}
+
+				return _allUniqueFilters;
+
+
+			}
+		
+		}
+
+		private string _currentTargetDataName;
+		private List<TargetFilterEnum> _allUniqueFilters;
+
 		public ITarget NormalTarget;
 		public TargetProfile NormalData;
 
@@ -112,6 +158,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			UseNewTargetProfile = false;
 			ResetTimerOnProfileChange = false;
 			NewTargetProfileName = "";
+
+			_currentTargetDataName = "";
+			_allUniqueFilters = new List<TargetFilterEnum>();
 
 		}
 
@@ -462,33 +511,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			BehaviorLogger.Write(string.Format(" - Evaluating Target: {0} using profile {1}", target.Name(), data.ProfileSubtypeId), BehaviorDebugEnum.TargetEvaluation);
 
-			if (!data.BuiltUniqueFilterList) {
-
-				foreach (var filter in data.MatchAllFilters) {
-
-					if (!data.AllUniqueFilters.Contains(filter))
-						data.AllUniqueFilters.Add(filter);
-
-				}
-
-				foreach (var filter in data.MatchAnyFilters) {
-
-					if (!data.AllUniqueFilters.Contains(filter))
-						data.AllUniqueFilters.Add(filter);
-
-				}
-
-				foreach (var filter in data.MatchNoneFilters) {
-
-					if (!data.AllUniqueFilters.Contains(filter))
-						data.AllUniqueFilters.Add(filter);
-
-				}
-
-				data.BuiltUniqueFilterList = true;
-
-			}
-
 			List<TargetFilterEnum> FilterHits = new List<TargetFilterEnum>();
 
 			//Distance
@@ -501,7 +523,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Altitude
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Altitude)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Altitude)) {
 
 				var altitude = target.CurrentAltitude();
 
@@ -513,7 +535,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Broadcasting
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Broadcasting)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Broadcasting)) {
 
 				var range = target.BroadcastRange(data.BroadcastOnlyAntenna);
 				
@@ -525,7 +547,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Faction
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Faction)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Faction)) {
 
 				var faction = target.FactionOwner() ?? "";
 
@@ -537,7 +559,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Gravity
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Gravity)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Gravity)) {
 
 				var gravity = target.CurrentGravity();
 
@@ -549,7 +571,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//LineOfSight
-			if (!skipExpensiveChecks && data.AllUniqueFilters.Contains(TargetFilterEnum.LineOfSight) && _behavior.AutoPilot.Collision.TargetResult.HasTarget()) {
+			if (!skipExpensiveChecks && AllUniqueFilters.Contains(TargetFilterEnum.LineOfSight) && _behavior.AutoPilot.Collision.TargetResult.HasTarget()) {
 				
 				bool targetMatch = (target.GetParentEntity().EntityId == _behavior.AutoPilot.Collision.TargetResult.GetCollisionEntity().EntityId);
 
@@ -559,7 +581,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//MovementScore
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.MovementScore)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.MovementScore)) {
 
 				if (distance < data.MaxMovementDetectableDistance || data.MaxMovementDetectableDistance < 0) {
 
@@ -573,7 +595,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Name
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Name)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Name)) {
 
 				var name = target.Name();
 				string successName = "N/A";
@@ -613,7 +635,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//OutsideOfSafezone
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.OutsideOfSafezone)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.OutsideOfSafezone)) {
 
 				bool inZone = target.InSafeZone();
 
@@ -625,7 +647,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Owner
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Owner)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Owner)) {
 
 				var owners = target.OwnerTypes(data.OnlyGetFromEntityOwner, data.GetFromMinorityGridOwners);
 				bool gotRelation = false;
@@ -658,7 +680,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//PlayerControlled
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.PlayerControlled)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.PlayerControlled)) {
 
 				var controlled = target.PlayerControlled();
 
@@ -670,7 +692,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//PlayerKnownLocation
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.PlayerKnownLocation)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.PlayerKnownLocation)) {
 
 				bool inKnownLocation = false;
 
@@ -686,7 +708,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Powered
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Powered)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Powered)) {
 
 				bool powered = target.IsPowered();
 
@@ -698,7 +720,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Relation
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Relation)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Relation)) {
 
 				var relations = target.RelationTypes(RemoteControl.OwnerId, data.OnlyGetFromEntityOwner, data.GetFromMinorityGridOwners);
 				bool gotRelation = false;
@@ -729,7 +751,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Shielded
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Shielded)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Shielded)) {
 
 				bool shielded = target.ProtectedByShields();
 
@@ -741,7 +763,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Speed
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Speed)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Speed)) {
 
 				var speed = target.CurrentSpeed();
 
@@ -753,7 +775,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Static
-			if (data.IsStatic != CheckEnum.Ignore && data.AllUniqueFilters.Contains(TargetFilterEnum.Static)) {
+			if (data.IsStatic != CheckEnum.Ignore && AllUniqueFilters.Contains(TargetFilterEnum.Static)) {
 
 				var staticGrid = target.IsStatic();
 
@@ -765,7 +787,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//TargetValue
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.TargetValue)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.TargetValue)) {
 
 				var targetValue = target.TargetValue();
 
@@ -777,7 +799,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Underwater
-			if (data.AllUniqueFilters.Contains(TargetFilterEnum.Underwater)) {
+			if (AllUniqueFilters.Contains(TargetFilterEnum.Underwater)) {
 
 				bool result = false;
 
@@ -1005,26 +1027,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 						if (string.IsNullOrWhiteSpace(tempValue) == false) {
 
-							byte[] byteData = { };
+							TargetProfile profile = null;
 
-							if (ProfileManager.TargetObjectTemplates.TryGetValue(tempValue, out byteData) == true) {
+							if (ProfileManager.TargetProfiles.TryGetValue(tempValue, out profile) == true) {
 
-								try {
-
-									var profile = MyAPIGateway.Utilities.SerializeFromBinary<TargetProfile>(byteData);
-
-									if (profile != null) {
-
-										this.NormalData = profile;
-										BehaviorLogger.Write(profile.ProfileSubtypeId + " Target Profile Loaded", BehaviorDebugEnum.BehaviorSetup);
-
-									}
-
-								} catch (Exception) {
-
-
-
-								}
+								NormalData = profile;
 
 							} else {
 
@@ -1048,28 +1055,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 						if (string.IsNullOrWhiteSpace(tempValue) == false) {
 
-							byte[] byteData = { };
+							TargetProfile profile = null;
 
-							if (ProfileManager.TargetObjectTemplates.TryGetValue(tempValue, out byteData) == true) {
+							if (ProfileManager.TargetProfiles.TryGetValue(tempValue, out profile) == true) {
 
-								try {
+								OverrideData = profile;
+								BehaviorLogger.Write(profile.ProfileSubtypeId + " Override Target Profile Loaded", BehaviorDebugEnum.BehaviorSetup);
 
-									var profile = MyAPIGateway.Utilities.SerializeFromBinary<TargetProfile>(byteData);
+							} 
 
-									if (profile != null) {
+						} else {
 
-										this.OverrideData = profile;
-										BehaviorLogger.Write(profile.ProfileSubtypeId + " Override Target Profile Loaded", BehaviorDebugEnum.BehaviorSetup);
-
-									}
-
-								} catch (Exception) {
-
-
-
-								}
-
-							}
+							ProfileManager.ReportProfileError(tempValue, "Override Target Data Provided Was Null or Blank");
 
 						}
 

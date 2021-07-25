@@ -272,7 +272,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					WeaponRandomizer.RandomWeaponReplacing(grid, collection.SpawnGroup, profile);
+					WeaponRandomizer.RandomWeaponReplacing(grid, collection, prefab, profile);
 
 				}
 

@@ -14,7 +14,7 @@ using VRageMath;
 namespace ModularEncountersSystems.Helpers {
 	public static class TagParse {
 
-		private static string[] ProcessTag(string tag) {
+		public static string[] ProcessTag(string tag) {
 
 			var thisTag = tag.Trim();
 			thisTag = thisTag.Replace("[", "");

@@ -28,7 +28,6 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<MyDefinitionId, MyAmmoMagazineDefinition> NormalAmmoMagReferences = new Dictionary<MyDefinitionId, MyAmmoMagazineDefinition>();
 		public static Dictionary<MyDefinitionId, MyAmmoDefinition> NormalAmmoReferences = new Dictionary<MyDefinitionId, MyAmmoDefinition>();
 
-
 		//Entity Components
 		public static List<MyComponentDefinitionBase> EntityComponentDefinitions = new List<MyComponentDefinitionBase>();
 
@@ -39,6 +38,9 @@ namespace ModularEncountersSystems.Helpers {
 		//Volume
 		public static Dictionary<MyDefinitionId, float> ItemVolumeReference = new Dictionary<MyDefinitionId, float>();
 		public static Dictionary<MyDefinitionId, float> WeaponVolumeReference = new Dictionary<MyDefinitionId, float>();
+
+		//Grids
+		public static List<string> DropContainerNames = new List<string>();
 
 
 		public static void Setup() {
@@ -184,6 +186,27 @@ namespace ModularEncountersSystems.Helpers {
 			RivalAiControlModules.Add("K_Imperial_ProbeDroid_Top_II");
 			RivalAiControlModules.Add("K_Imperial_DroidCarrier_DroidBrain");
 			RivalAiControlModules.Add("K_Imperial_DroidCarrier_DroidBrain_Aggressor");
+
+			//DropPods
+			var containers = MyDefinitionManager.Static.GetDropContainerDefinitions();
+
+			foreach (var container in containers.Keys) {
+
+				var drop = containers[container];
+
+				if (drop.Prefab?.CubeGrids == null)
+					continue;
+
+				if (drop.Prefab.CubeGrids.Length == 0)
+					continue;
+
+				if (string.IsNullOrWhiteSpace(drop.Prefab.CubeGrids[0].DisplayName))
+					continue;
+
+				if (!DropContainerNames.Contains(drop.Prefab.CubeGrids[0].DisplayName))
+					DropContainerNames.Add(drop.Prefab.CubeGrids[0].DisplayName);
+			
+			}
 
 			MES_SessionCore.UnloadActions += Unload;
 

@@ -260,7 +260,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			} catch (Exception e) {
 
-				MyVisualScriptLogicProvider.ShowNotificationToAll("Modular Encounters Spawner + NPC Weapon Replacer Encountered An Error.", 10000, "Red");
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Modular Encounters Systems + NPC Weapon Replacer Encountered An Error.", 10000, "Red");
 				MyVisualScriptLogicProvider.ShowNotificationToAll("Please Submit A Copy Of The Game Log To The Mod Author.", 10000, "Red");
 				SpawnLogger.Write("Error While Handling Weapon Replacer Setup", SpawnerDebugEnum.Error, true);
 				SpawnLogger.Write(errorDebugging.ToString(), SpawnerDebugEnum.Error, true);
@@ -270,7 +270,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
-		public static void RandomWeaponReplacing(MyObjectBuilder_CubeGrid cubeGrid, ImprovedSpawnGroup spawnGroup, ManipulationProfile profile) {
+		public static void RandomWeaponReplacing(MyObjectBuilder_CubeGrid cubeGrid, SpawnGroupCollection collection, PrefabContainer prefab, ManipulationProfile profile) {
 
 			var errorDebugging = new StringBuilder();
 
@@ -380,7 +380,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 						}
 
 						//Get details of weapon block being replaced
-						string defIdString = weaponBlock.GetId().ToString();
+						var defId = weaponBlock.GetId();
+						string defIdString = defId.ToString();
 						errorDebugging.Append("Processing Grid Weapon: ").Append(defIdString).AppendLine();
 						MyCubeBlockDefinition blockDefinition = BlockDirectory[defIdString];
 						MyWeaponBlockDefinition targetWeaponBlockDef = (MyWeaponBlockDefinition)blockDefinition;
@@ -526,6 +527,28 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 							}
 
+							if (Settings.Grids.WeaponReplacerUseTotalGridMassMultiplier && !profile.IgnoreGlobalWeaponMassLimits) {
+
+								if (!MassValidation(defId, weaponProfile.BlockDefinition.Id, (float)prefab.CurrentMass, (float)prefab.OriginalMass * Settings.Grids.WeaponReplacerTotalGridMassMultiplier)) {
+
+									errorDebugging.Append(" - Block Would Exceed Mass Limits Per Global Grid Mass Limits").AppendLine();
+									continue;
+
+								}
+							
+							}
+
+							if (profile.UseWeaponMassLimits) {
+
+								if (!MassValidation(defId, weaponProfile.BlockDefinition.Id, (float)prefab.CurrentMass, (float)prefab.OriginalMass * profile.WeaponMassMultiplierForGrid)) {
+
+									errorDebugging.Append(" - Block Would Exceed Mass Limits Per Manipulation Profile Grid Mass Limits").AppendLine();
+									continue;
+
+								}
+
+							}
+
 
 							bool isPowerHog = false;
 							float powerDrain = 0;
@@ -664,6 +687,16 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 							}
 
+							float oldBlockMass = 0;
+							float newBlockMass = 0;
+
+							if (DefinitionHelper.BlockWeightReference.TryGetValue(defId, out oldBlockMass) && DefinitionHelper.BlockWeightReference.TryGetValue(weaponProfile.BlockDefinition.Id, out newBlockMass)) {
+
+								prefab.CurrentMass -= oldBlockMass;
+								prefab.CurrentMass += newBlockMass;
+							
+							}
+
 							SpawnLogger.Write("Replaced " + oldWeaponId + " with new weapon " + weaponProfile.BlockDefinition.Id.ToString(), SpawnerDebugEnum.Manipulation);
 							errorDebugging.Append(" - Weapon replaced!").AppendLine();
 							break;
@@ -737,6 +770,20 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			}
 
 			return true;
+
+		}
+
+		public static bool MassValidation(MyDefinitionId oldBlock, MyDefinitionId newBlock, float currentTotalMass, float massLimit) {
+
+			float oldMass = 0;
+			float newMass = 0;
+
+			if (!DefinitionHelper.BlockWeightReference.TryGetValue(oldBlock, out oldMass) || !DefinitionHelper.BlockWeightReference.TryGetValue(newBlock, out newMass))
+				return false;
+
+			var massAfterReplacement = currentTotalMass - oldMass;
+			massAfterReplacement += newMass;
+			return massAfterReplacement <= massLimit;
 
 		}
 

@@ -18,7 +18,9 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, BlockReplacementProfile> BlockReplacementProfiles = new Dictionary<string, BlockReplacementProfile>();
 		public static Dictionary<string, ReplenishmentProfile> ReplenishmentProfiles = new Dictionary<string, ReplenishmentProfile>();
 		public static Dictionary<string, DerelictionProfile> DerelictionProfiles = new Dictionary<string, DerelictionProfile>();
+		public static Dictionary<string, ManipulationGroup> ManipulationGroups = new Dictionary<string, ManipulationGroup>();
 		public static Dictionary<string, ManipulationProfile> ManipulationProfiles = new Dictionary<string, ManipulationProfile>();
+		public static Dictionary<string, SpawnConditionsGroup> SpawnConditionGroups = new Dictionary<string, SpawnConditionsGroup>();
 		public static Dictionary<string, SpawnConditionsProfile> SpawnConditionProfiles = new Dictionary<string, SpawnConditionsProfile>();
 		public static Dictionary<string, StaticEncounter> StaticEncounters = new Dictionary<string, StaticEncounter>();
 		public static Dictionary<string, Zone> ZoneProfiles = new Dictionary<string, Zone>();
@@ -37,6 +39,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, byte[]> TriggerGroupObjectTemplates = new Dictionary<string, byte[]>();
 
 		public static Dictionary<string, AutoPilotProfile> AutoPilotProfiles = new Dictionary<string, AutoPilotProfile>();
+		public static Dictionary<string, ActionReferenceProfile> ActionReferenceProfiles = new Dictionary<string, ActionReferenceProfile>();
 		public static Dictionary<string, CommandProfile> CommandProfiles = new Dictionary<string, CommandProfile>();
 		public static Dictionary<string, TargetProfile> TargetProfiles = new Dictionary<string, TargetProfile>();
 		public static Dictionary<string, WaypointProfile> WaypointProfiles = new Dictionary<string, WaypointProfile>();
@@ -158,9 +161,15 @@ namespace ModularEncountersSystems.Helpers {
 					var actionObject = new ActionProfile();
 					actionObject.InitTags(component.DescriptionText);
 					actionObject.ProfileSubtypeId = component.Id.SubtypeName;
+
+					var actionReference = new ActionReferenceProfile();
+					actionReference.InitTags(component.DescriptionText);
+					actionReference.ProfileSubtypeId = component.Id.SubtypeName;
+
 					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<ActionProfile>(actionObject);
 					//Logger.WriteLog("Action Profile Added: " + component.Id.SubtypeName);
 					ActionObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
+					ActionReferenceProfiles.Add(component.Id.SubtypeName, actionReference);
 					continue;
 
 				}
@@ -182,6 +191,7 @@ namespace ModularEncountersSystems.Helpers {
 					var targetObject = new TargetProfile();
 					targetObject.InitTags(component.DescriptionText);
 					targetObject.ProfileSubtypeId = component.Id.SubtypeName;
+					TargetProfiles.Add(targetObject.ProfileSubtypeId, targetObject);
 					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<TargetProfile>(targetObject);
 					//Logger.WriteLog("Target Profile Added: " + component.Id.SubtypeName);
 					TargetObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
@@ -193,6 +203,24 @@ namespace ModularEncountersSystems.Helpers {
 
 			//Third Phase
 			foreach (var component in DefinitionHelper.EntityComponentDefinitions) {
+
+				if (!ManipulationGroups.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Manipulation Group]")) {
+
+					var profile = new ManipulationGroup(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					ManipulationGroups.Add(component.Id.SubtypeName, profile);
+					continue;
+
+				}
+
+				if (!SpawnConditionGroups.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Spawn Conditions Group]")) {
+
+					var profile = new SpawnConditionsGroup(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					SpawnConditionGroups.Add(component.Id.SubtypeName, profile);
+					continue;
+
+				}
 
 				if (component.DescriptionText.Contains("[RivalAI Trigger]") == true && TriggerObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 

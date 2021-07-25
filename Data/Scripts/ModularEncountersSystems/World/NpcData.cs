@@ -512,7 +512,7 @@ namespace ModularEncountersSystems.World {
 		
 		}
 
-		private void Update() {
+		public void Update() {
 
 			if (Grid != null && Grid.ActiveEntity()) {
 

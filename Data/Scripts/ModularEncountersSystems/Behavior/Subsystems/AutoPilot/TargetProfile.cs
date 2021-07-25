@@ -132,11 +132,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		[ProtoMember(41)]
 		public string PlayerKnownLocationFactionOverride;
 
-		[ProtoIgnore]
-		public bool BuiltUniqueFilterList;
-
-		[ProtoIgnore]
-		public List<TargetFilterEnum> AllUniqueFilters;
 		public TargetProfile() {
 
 			UseCustomTargeting = false;
@@ -200,8 +195,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			PlayerKnownLocationFactionOverride = "";
 
 			ProfileSubtypeId = "";
-			BuiltUniqueFilterList = false;
-			AllUniqueFilters = new List<TargetFilterEnum>();
 
 		}
 

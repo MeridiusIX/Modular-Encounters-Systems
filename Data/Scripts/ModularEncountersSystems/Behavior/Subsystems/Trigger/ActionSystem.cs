@@ -1,44 +1,34 @@
-﻿using System;
+﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Sync;
+using ModularEncountersSystems.Zones;
+using Sandbox.ModAPI;
+using SpaceEngineers.Game.ModAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Definitions;
-using Sandbox.Game;
-using Sandbox.Game.Entities;
-using Sandbox.Game.EntityComponents;
-using Sandbox.Game.GameSystems;
-using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.ModAPI.Weapons;
-using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
-using VRage.Game;
-using VRage.Game.Components;
-using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
-using VRage.ObjectBuilders;
-using VRage.Game.ObjectBuilders.Definitions;
 using VRage.Utils;
 using VRageMath;
-using ModularEncountersSystems.Helpers;
-using ModularEncountersSystems.Sync;
-using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
-using ModularEncountersSystems.Behavior.Subsystems.Trigger;
-using ModularEncountersSystems.Spawning;
-using ModularEncountersSystems.Logging;
-using ModularEncountersSystems.Zones;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 	public partial class TriggerSystem {
 
-		public void ProcessAction(TriggerProfile trigger, ActionProfile actions, long attackerEntityId = 0, long detectedEntity = 0, Command command = null) {
+		public void ProcessAction(TriggerProfile trigger, ActionProfile actionsBase, long attackerEntityId = 0, long detectedEntity = 0, Command command = null) {
 
-			BehaviorLogger.Write(trigger.ProfileSubtypeId + " Attempting To Execute Action Profile " + actions.ProfileSubtypeId, BehaviorDebugEnum.Action);
+			BehaviorLogger.Write(trigger.ProfileSubtypeId + " Attempting To Execute Action Profile " + actionsBase.ProfileSubtypeId, BehaviorDebugEnum.Action);
+
+			var actions = actionsBase.ActionReference;
+
+			if (actions == null) {
+
+				BehaviorLogger.Write(actionsBase.ProfileSubtypeId + " Has No Associated Action Reference Profile. Aborting." + actionsBase.ProfileSubtypeId, BehaviorDebugEnum.Action);
+				return;
+
+			}
 
 			if (!string.IsNullOrWhiteSpace(actions.ParentGridNameRequirement) && !string.IsNullOrWhiteSpace(_behavior?.RemoteControl?.SlimBlock?.CubeGrid?.CustomName)) {
 
@@ -66,7 +56,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//ChatBroadcast
 			if (actions.UseChatBroadcast == true) {
 
-				foreach (var chatData in actions.ChatData) {
+				foreach (var chatData in actionsBase.ChatData) {
 
 					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
 					_broadcast.BroadcastRequest(chatData);
@@ -127,7 +117,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//SpawnReinforcements
 			if (actions.SpawnEncounter == true) {
 
-				foreach (var spawner in actions.Spawner) {
+				foreach (var spawner in actionsBase.Spawner) {
 
 					if (spawner.UseSpawn) {
 

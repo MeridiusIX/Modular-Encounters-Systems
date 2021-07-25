@@ -14,6 +14,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public MySpawnGroupDefinition SpawnGroup;
 
 		public List<SpawnConditionsProfile> SpawnConditionsProfiles;
+		public List<string> SpawnConditionGroups;
 
 		public int Frequency;
 		public string FactionOwner;
@@ -33,6 +34,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> ContainerTypesForStoreOrders;
 
 		public List<ManipulationProfile> ManipulationProfiles;
+		public List<string> ManipulationGroups;
 
 		public bool UseAutoPilotInSpace;
 		public double PauseAutopilotAtPlayerDistance;
@@ -47,6 +49,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			SpawnConditionsProfiles = new List<SpawnConditionsProfile>();
 			SpawnConditionsProfiles.Add(new SpawnConditionsProfile());
+
+			SpawnConditionGroups = new List<string>();
 
 			Frequency = 0;
 			
@@ -67,6 +71,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			ManipulationProfiles = new List<ManipulationProfile>();
 			ManipulationProfiles.Add(new ManipulationProfile());
+
+			ManipulationGroups = new List<string>();
 
 			UseAutoPilotInSpace = false;
 			PauseAutopilotAtPlayerDistance = -1;
@@ -110,6 +116,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[SpawnConditionsProfiles:") == true) {
 
 					TagParse.TagSpawnConditionsProfileCheck(tag, ref improveSpawnGroup.SpawnConditionsProfiles);
+
+				}
+
+				//SpawnConditionGroups
+				if (tag.StartsWith("[SpawnConditionGroups:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref improveSpawnGroup.SpawnConditionGroups);
 
 				}
 
@@ -220,6 +233,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//ManipulationGroups
+				if (tag.StartsWith("[ManipulationGroups:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref improveSpawnGroup.ManipulationGroups);
+
+				}
+
 				//PauseAutopilotAtPlayerDistance
 				if (tag.StartsWith("[PauseAutopilotAtPlayerDistance:") == true) {
 
@@ -231,6 +251,48 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[PreventOwnershipChange:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.PreventOwnershipChange);
+
+				}
+
+			}
+
+			//Spawn Condition Groups
+			foreach (var conditionName in SpawnConditionGroups) {
+
+				if (string.IsNullOrWhiteSpace(conditionName))
+					continue;
+
+				SpawnConditionsGroup group = null;
+
+				if (ProfileManager.SpawnConditionGroups.TryGetValue(conditionName, out group)) {
+
+					foreach (var condition in group.SpawnConditionProfiles) {
+
+						if (!SpawnConditionsProfiles.Contains(condition))
+							SpawnConditionsProfiles.Add(condition);
+
+					}
+				
+				}
+			
+			}
+
+			//Manipulation Groups
+			foreach (var manipulationName in ManipulationGroups) {
+
+				if (string.IsNullOrWhiteSpace(manipulationName))
+					continue;
+
+				ManipulationGroup group = null;
+
+				if (ProfileManager.ManipulationGroups.TryGetValue(manipulationName, out group)) {
+
+					foreach (var condition in group.ManipulationProfiles) {
+
+						if (!ManipulationProfiles.Contains(condition))
+							ManipulationProfiles.Add(condition);
+
+					}
 
 				}
 

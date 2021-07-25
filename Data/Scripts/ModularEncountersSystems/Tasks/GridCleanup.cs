@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Watchers;
 using Sandbox.Game.Entities;
@@ -56,7 +57,27 @@ namespace ModularEncountersSystems.Tasks {
 
 				using (cubeGrid.Pin()) {
 
+					//Check For DespawnActions
+					if (grid?.Npc?.DespawnActions != null) {
+
+						foreach (var despawnAction in grid.Npc.DespawnActions) {
+
+							despawnAction?.Invoke(cubeGrid, grid.Npc.DespawnSource);
+
+						}
+
+						grid.Npc.DespawnActions.Clear();
+
+					}
+
 					SpawnLogger.Write(grid.CubeGrid.CustomName + " Grid is being Closed.", SpawnerDebugEnum.CleanUp, true);
+
+					foreach (var owner in grid.CubeGrid.BigOwners) {
+
+						SpawnLogger.Write(string.Format(" - Grid Majority Owner [{0}]. NPC Ownership: {1}", owner, OwnershipHelper.IsNPC(owner)), SpawnerDebugEnum.CleanUp, true);
+
+					}
+
 					cubeGrid.Close();
 					cleanedGrid = true;
 					SpawnLogger.Write(grid.CubeGrid.CustomName + " Grid is Closed.", SpawnerDebugEnum.CleanUp);

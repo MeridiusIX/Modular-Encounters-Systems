@@ -58,6 +58,14 @@ namespace ModularEncountersSystems.Watchers {
 				
 				}
 
+				//Drop Container
+				if (!string.IsNullOrWhiteSpace(grid.CubeGrid.CustomName) && DefinitionHelper.DropContainerNames.Contains(grid.CubeGrid.CustomName)) {
+
+					GridCleanupData.RemoveData(grid);
+					continue;
+
+				}
+
 				//Get Config and Cleanup Data
 				var type = grid.GetSpawningTypeFromLinkedGrids();
 				

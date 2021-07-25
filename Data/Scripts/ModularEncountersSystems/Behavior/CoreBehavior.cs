@@ -1058,7 +1058,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			BehaviorLogger.Write("Behavior Mode Set To: " + Mode.ToString(), BehaviorDebugEnum.BehaviorSetup); 
 			BehaviorLogger.Write("Core Settings Setup Complete", BehaviorDebugEnum.BehaviorSetup);
-
+			 
 
 		}
 
@@ -1069,51 +1069,25 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (savedTarget || string.IsNullOrWhiteSpace(AutoPilot.Targeting.NormalData.ProfileSubtypeId)) {
 
-				byte[] byteData = { };
+				TargetProfile profile = null;
 
-				if (ProfileManager.TargetObjectTemplates.TryGetValue(targetProfileName, out byteData) == true) {
+				if (ProfileManager.TargetProfiles.TryGetValue(targetProfileName, out profile) == true) {
 
-					try {
-
-						var profile = MyAPIGateway.Utilities.SerializeFromBinary<TargetProfile>(byteData);
-
-						if (profile != null) {
-
-							AutoPilot.Targeting.NormalData = profile;
-
-						}
-
-					} catch (Exception) {
-
-
-
-					}
+					AutoPilot.Targeting.NormalData = profile;
 
 				}
 
 			}
 
+			var overrideProfileName = string.IsNullOrWhiteSpace(AutoPilot.Targeting.OverrideData.ProfileSubtypeId) ? "RivalAI-GenericTargetProfile-EnemyOverride" : AutoPilot.Targeting.OverrideData.ProfileSubtypeId;
+
 			if (string.IsNullOrWhiteSpace(AutoPilot.Targeting.OverrideData.ProfileSubtypeId)) {
 
-				byte[] byteData = { };
+				TargetProfile profile = null;
 
-				if (ProfileManager.TargetObjectTemplates.TryGetValue("RivalAI-GenericTargetProfile-EnemyOverride", out byteData) == true) {
+				if (ProfileManager.TargetProfiles.TryGetValue(overrideProfileName, out profile) == true) {
 
-					try {
-
-						var profile = MyAPIGateway.Utilities.SerializeFromBinary<TargetProfile>(byteData);
-
-						if (profile != null) {
-
-							AutoPilot.Targeting.OverrideData = profile;
-
-						}
-
-					} catch (Exception) {
-
-
-
-					}
+					AutoPilot.Targeting.OverrideData = profile;
 
 				}
 

@@ -53,6 +53,9 @@ namespace ModularEncountersSystems.Configuration {
 		public string[] WeaponReplacerTargetWhitelist;
 		public int RandomWeaponChance;
 		public int RandomWeaponSizeVariance;
+		public bool WeaponReplacerMassLimits;
+		public bool WeaponReplacerUseTotalGridMassMultiplier;
+		public float WeaponReplacerTotalGridMassMultiplier;
 
 		public int ShieldProviderChance;
 
@@ -84,6 +87,8 @@ namespace ModularEncountersSystems.Configuration {
 			WeaponReplacerTargetWhitelist = new string[]{};
 			RandomWeaponChance = 100;
 			RandomWeaponSizeVariance = -1;
+			WeaponReplacerUseTotalGridMassMultiplier = false;
+			WeaponReplacerTotalGridMassMultiplier = 1.20f;
 
 			ShieldProviderChance = 100;
 
@@ -117,6 +122,8 @@ namespace ModularEncountersSystems.Configuration {
 				{"RemoveContainerInventoryFromNPCs", (s, o) => EditorTools.SetCommandValueBool(s, ref RemoveContainerInventoryFromNPCs) },
 				{"UseMaxAmmoInventoryWeight", (s, o) => EditorTools.SetCommandValueBool(s, ref UseMaxAmmoInventoryWeight) },
 				{"MaxAmmoInventoryWeight", (s, o) => EditorTools.SetCommandValueFloat(s, ref MaxAmmoInventoryWeight) },
+				{"WeaponReplacerUseTotalGridMassMultiplier", (s, o) => EditorTools.SetCommandValueBool(s, ref WeaponReplacerUseTotalGridMassMultiplier) },
+				{"WeaponReplacerTotalGridMassMultiplier", (s, o) => EditorTools.SetCommandValueFloat(s, ref WeaponReplacerTotalGridMassMultiplier) },
 				{"GlobalReplenishmentProfiles", (s, o) => EditorTools.SetCommandValueStringArray(s, ref GlobalReplenishmentProfiles) }
 
 			};

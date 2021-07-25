@@ -349,6 +349,20 @@ namespace ModularEncountersSystems.World {
 
 		}
 
+		public static GridEntity GetNpcFromGrid(IMyCubeGrid grid) {
+
+			var gridEnt = GridManager.GetGridEntity(grid);
+
+			if (gridEnt == null)
+				return null;
+
+			if (ActiveNpcs.Contains(gridEnt))
+				return gridEnt;
+
+			return null;
+		
+		}
+
 		public static void OwnershipMajorityChange(GridEntity grid) {
 
 			if (!grid.ActiveEntity()) {

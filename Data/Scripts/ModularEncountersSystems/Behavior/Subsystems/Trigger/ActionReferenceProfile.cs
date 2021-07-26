@@ -500,6 +500,167 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
+				{"BarrelRoll", (s, o) => TagParse.TagBoolCheck(s, ref BarrelRoll) },
+				{"Strafe", (s, o) => TagParse.TagBoolCheck(s, ref Strafe) },
+				{"ChangeAutopilotSpeed", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotSpeed) },
+				{"NewAutopilotSpeed", (s, o) => TagParse.TagFloatCheck(s, ref NewAutopilotSpeed) },
+				{"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
+				{"SelfDestruct", (s, o) => TagParse.TagBoolCheck(s, ref SelfDestruct) },
+				{"Retreat", (s, o) => TagParse.TagBoolCheck(s, ref Retreat) },
+				{"TerminateBehavior", (s, o) => TagParse.TagBoolCheck(s, ref TerminateBehavior) },
+				{"BroadcastCurrentTarget", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCurrentTarget) },
+				{"SwitchToReceivedTarget", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToReceivedTarget) },
+				{"SwitchTargetToDamager", (s, o) => TagParse.TagBoolCheck(s, ref SwitchTargetToDamager) },
+				{"BroadcastDamagerTarget", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastDamagerTarget) },
+				{"BroadcastSendCode", (s, o) => TagParse.TagStringCheck(s, ref BroadcastSendCode) },
+				{"SwitchToBehavior", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToBehavior) },
+				{"NewBehavior", (s, o) => TagParse.TagStringCheck(s, ref NewBehavior) },
+				{"PreserveSettingsOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveSettingsOnBehaviorSwitch) },
+				{"PreserveTriggersOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveTriggersOnBehaviorSwitch) },
+				{"PreserveTargetDataOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveTargetDataOnBehaviorSwitch) },
+				{"RefreshTarget", (s, o) => TagParse.TagBoolCheck(s, ref RefreshTarget) },
+				{"SwitchTargetProfile", (s, o) => TagParse.TagBoolCheck(s, ref SwitchTargetProfile) },
+				{"NewTargetProfile", (s, o) => TagParse.TagStringCheck(s, ref NewTargetProfile) },
+				{"TriggerTimerBlocks", (s, o) => TagParse.TagBoolCheck(s, ref TriggerTimerBlocks) },
+				{"TimerBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref TimerBlockNames) },
+				{"ChangeReputationWithPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationWithPlayers) },
+				{"ReputationChangeRadius", (s, o) => TagParse.TagDoubleCheck(s, ref ReputationChangeRadius) },
+				{"ReputationChangeFactions", (s, o) => TagParse.TagStringListCheck(s, ref ReputationChangeFactions) },
+				{"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
+				{"ActivateAssertiveAntennas", (s, o) => TagParse.TagBoolCheck(s, ref ActivateAssertiveAntennas) },
+				{"ChangeAntennaOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaOwnership) },
+				{"AntennaFactionOwner", (s, o) => TagParse.TagStringCheck(s, ref AntennaFactionOwner) },
+				{"CreateKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref CreateKnownPlayerArea) },
+				{"KnownPlayerAreaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref KnownPlayerAreaRadius) },
+				{"KnownPlayerAreaTimer", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaTimer) },
+				{"KnownPlayerAreaMaxSpawns", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMaxSpawns) },
+				{"KnownPlayerAreaMinThreatForAvoidingAbandonment", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMinThreatForAvoidingAbandonment) },
+				{"DamageToolAttacker", (s, o) => TagParse.TagBoolCheck(s, ref DamageToolAttacker) },
+				{"DamageToolAttackerAmount", (s, o) => TagParse.TagFloatCheck(s, ref DamageToolAttackerAmount) },
+				{"DamageToolAttackerParticle", (s, o) => TagParse.TagStringCheck(s, ref DamageToolAttackerParticle) },
+				{"DamageToolAttackerSound", (s, o) => TagParse.TagStringCheck(s, ref DamageToolAttackerSound) },
+				{"PlayParticleEffectAtRemote", (s, o) => TagParse.TagBoolCheck(s, ref PlayParticleEffectAtRemote) },
+				{"ParticleEffectId", (s, o) => TagParse.TagStringCheck(s, ref ParticleEffectId) },
+				{"ParticleEffectOffset", (s, o) => TagParse.TagVector3DCheck(s, ref ParticleEffectOffset) },
+				{"ParticleEffectScale", (s, o) => TagParse.TagFloatCheck(s, ref ParticleEffectScale) },
+				{"ParticleEffectMaxTime", (s, o) => TagParse.TagFloatCheck(s, ref ParticleEffectMaxTime) },
+				{"ParticleEffectColor", (s, o) => TagParse.TagVector3DCheck(s, ref ParticleEffectColor) },
+				{"SetBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansTrue) },
+				{"SetBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansFalse) },
+				{"IncreaseCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseCounters) },
+				{"DecreaseCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseCounters) },
+				{"ResetCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetCounters) },
+				{"SetSandboxBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansTrue) },
+				{"SetSandboxBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansFalse) },
+				{"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
+				{"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
+				{"ResetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetSandboxCounters) },
+				{"ChangeAttackerReputation", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackerReputation) },
+				{"ChangeAttackerReputationFaction", (s, o) => TagParse.TagStringListCheck(s, ref ChangeAttackerReputationFaction) },
+				{"ChangeAttackerReputationAmount", (s, o) => TagParse.TagIntListCheck(s, ref ChangeAttackerReputationAmount) },
+				{"ReputationChangesForAllAttackPlayerFactionMembers", (s, o) => TagParse.TagBoolCheck(s, ref ReputationChangesForAllAttackPlayerFactionMembers) },
+				{"ChangeTargetProfile", (s, o) => TagParse.TagBoolCheck(s, ref ChangeTargetProfile) },
+				{"NewTargetProfileId", (s, o) => TagParse.TagStringCheck(s, ref NewTargetProfileId) },
+				{"ChangeBlockNames", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockNames) },
+				{"ChangeBlockNamesFrom", (s, o) => TagParse.TagStringListCheck(s, ref ChangeBlockNamesFrom) },
+				{"ChangeBlockNamesTo", (s, o) => TagParse.TagStringListCheck(s, ref ChangeBlockNamesTo) },
+				{"ChangeAntennaRanges", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaRanges) },
+				{"AntennaNamesForRangeChange", (s, o) => TagParse.TagStringListCheck(s, ref AntennaNamesForRangeChange) },
+				{"AntennaRangeChangeType", (s, o) => TagParse.TagStringCheck(s, ref AntennaRangeChangeType) },
+				{"AntennaRangeChangeAmount", (s, o) => TagParse.TagFloatCheck(s, ref AntennaRangeChangeAmount) },
+				{"ForceDespawn", (s, o) => TagParse.TagBoolCheck(s, ref ForceDespawn) },
+				{"ResetCooldownTimeOfTriggers", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfTriggers) },
+				{"ResetTriggerCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownNames) },
+				{"BroadcastGenericCommand", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastGenericCommand) },
+				{"BehaviorSpecificEventA", (s, o) => TagParse.TagBoolCheck(s, ref BehaviorSpecificEventA) },
+				{"ChangeInertiaDampeners", (s, o) => TagParse.TagBoolCheck(s, ref ChangeInertiaDampeners) },
+				{"InertiaDampenersEnable", (s, o) => TagParse.TagBoolCheck(s, ref InertiaDampenersEnable) },
+				{"EnableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref EnableTriggers) },
+				{"EnableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerNames) },
+				{"DisableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref DisableTriggers) },
+				{"DisableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerNames) },
+				{"StaggerWarheadDetonation", (s, o) => TagParse.TagBoolCheck(s, ref StaggerWarheadDetonation) },
+				{"ChangeRotationDirection", (s, o) => TagParse.TagBoolCheck(s, ref ChangeRotationDirection) },
+				{"RotationDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref RotationDirection) },
+				{"GenerateExplosion", (s, o) => TagParse.TagBoolCheck(s, ref GenerateExplosion) },
+				{"ExplosionOffsetFromRemote", (s, o) => TagParse.TagVector3DCheck(s, ref ExplosionOffsetFromRemote) },
+				{"ExplosionRange", (s, o) => TagParse.TagIntCheck(s, ref ExplosionRange) },
+				{"ExplosionDamage", (s, o) => TagParse.TagIntCheck(s, ref ExplosionDamage) },
+				{"ExplosionIgnoresVoxels", (s, o) => TagParse.TagBoolCheck(s, ref ExplosionIgnoresVoxels) },
+				{"GridEditable", (s, o) => TagParse.TagCheckEnumCheck(s, ref GridEditable) },
+				{"SubGridsEditable", (s, o) => TagParse.TagCheckEnumCheck(s, ref SubGridsEditable) },
+				{"GridDestructible", (s, o) => TagParse.TagCheckEnumCheck(s, ref GridDestructible) },
+				{"SubGridsDestructible", (s, o) => TagParse.TagCheckEnumCheck(s, ref SubGridsDestructible) },
+				{"RecolorGrid", (s, o) => TagParse.TagBoolCheck(s, ref RecolorGrid) },
+				{"RecolorSubGrids", (s, o) => TagParse.TagBoolCheck(s, ref RecolorSubGrids) },
+				{"OldBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref OldBlockColors) },
+				{"NewBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref NewBlockColors) },
+				{"NewBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref NewBlockSkins) },
+				{"ChangeBlockOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockOwnership) },
+				{"OwnershipBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref OwnershipBlockNames) },
+				{"OwnershipBlockFactions", (s, o) => TagParse.TagStringListCheck(s, ref OwnershipBlockFactions) },
+				{"ChangeBlockDamageMultipliers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockDamageMultipliers) },
+				{"DamageMultiplierBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref DamageMultiplierBlockNames) },
+				{"DamageMultiplierValues", (s, o) => TagParse.TagIntListCheck(s, ref DamageMultiplierValues) },
+				{"RazeBlocksWithNames", (s, o) => TagParse.TagBoolCheck(s, ref RazeBlocksWithNames) },
+				{"RazeBlocksNames", (s, o) => TagParse.TagStringListCheck(s, ref RazeBlocksNames) },
+				{"ManuallyActivateTrigger", (s, o) => TagParse.TagBoolCheck(s, ref ManuallyActivateTrigger) },
+				{"ManuallyActivatedTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref ManuallyActivatedTriggerNames) },
+				{"SendCommandWithoutAntenna", (s, o) => TagParse.TagBoolCheck(s, ref SendCommandWithoutAntenna) },
+				{"SendCommandWithoutAntennaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref SendCommandWithoutAntennaRadius) },
+				{"RemoveKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref RemoveKnownPlayerArea) },
+				{"RemoveAllKnownPlayerAreas", (s, o) => TagParse.TagBoolCheck(s, ref RemoveAllKnownPlayerAreas) },
+				{"Chance", (s, o) => TagParse.TagIntCheck(s, ref Chance) },
+				{"EnableBlocks", (s, o) => TagParse.TagBoolCheck(s, ref EnableBlocks) },
+				{"EnableBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableBlockNames) },
+				{"EnableBlockStates", (s, o) => TagParse.TagSwitchEnumCheck(s, ref EnableBlockStates) },
+				{"ChangeAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotProfile) },
+				{"AutopilotProfile", (s, o) => TagParse.TagAutoPilotProfileModeCheck(s, ref AutopilotProfile) },
+				{"Ramming", (s, o) => TagParse.TagBoolCheck(s, ref Ramming) },
+				{"CreateRandomLightning", (s, o) => TagParse.TagBoolCheck(s, ref CreateRandomLightning) },
+				{"CreateLightningAtAttacker", (s, o) => TagParse.TagBoolCheck(s, ref CreateLightningAtAttacker) },
+				{"LightningDamage", (s, o) => TagParse.TagIntCheck(s, ref LightningDamage) },
+				{"LightningExplosionRadius", (s, o) => TagParse.TagIntCheck(s, ref LightningExplosionRadius) },
+				{"LightningColor", (s, o) => TagParse.TagVector3DCheck(s, ref LightningColor) },
+				{"LightningMinDistance", (s, o) => TagParse.TagDoubleCheck(s, ref LightningMinDistance) },
+				{"LightningMaxDistance", (s, o) => TagParse.TagDoubleCheck(s, ref LightningMaxDistance) },
+				{"CreateLightningAtTarget", (s, o) => TagParse.TagBoolCheck(s, ref CreateLightningAtTarget) },
+				{"SelfDestructTimerPadding", (s, o) => TagParse.TagIntCheck(s, ref SelfDestructTimerPadding) },
+				{"SelfDestructTimeBetweenBlasts", (s, o) => TagParse.TagIntCheck(s, ref SelfDestructTimeBetweenBlasts) },
+				{"SetCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetCounters) },
+				{"SetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxCounters) },
+				{"SetCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersValues) },
+				{"SetSandboxCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetSandboxCountersValues) },
+				{"InheritLastAttackerFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref InheritLastAttackerFromCommand) },
+				{"ChangePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCredits) },
+				{"ChangePlayerCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangePlayerCreditsAmount) },
+				{"ChangeNpcFactionCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangeNpcFactionCredits) },
+				{"ChangeNpcFactionCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangeNpcFactionCreditsAmount) },
+				{"ChangeNpcFactionCreditsTag", (s, o) => TagParse.TagStringCheck(s, ref ChangeNpcFactionCreditsTag) },
+				{"BuildProjectedBlocks", (s, o) => TagParse.TagBoolCheck(s, ref BuildProjectedBlocks) },
+				{"MaxProjectedBlocksToBuild", (s, o) => TagParse.TagIntCheck(s, ref MaxProjectedBlocksToBuild) },
+				{"ForceManualTriggerActivation", (s, o) => TagParse.TagBoolCheck(s, ref ForceManualTriggerActivation) },
+				{"OverwriteAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref OverwriteAutopilotProfile) },
+				{"OverwriteAutopilotMode", (s, o) => TagParse.TagAutoPilotProfileModeCheck(s, ref OverwriteAutopilotMode) },
+				{"OverwriteAutopilotId", (s, o) => TagParse.TagStringCheck(s, ref OverwriteAutopilotId) },
+				{"BroadcastCommandProfiles", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCommandProfiles) },
+				{"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
+				{"AddWaypointFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AddWaypointFromCommand) },
+				{"RecalculateDespawnCoords", (s, o) => TagParse.TagBoolCheck(s, ref RecalculateDespawnCoords) },
+				{"AddDatapadsToSeats", (s, o) => TagParse.TagBoolCheck(s, ref AddDatapadsToSeats) },
+				{"DatapadNamesToAdd", (s, o) => TagParse.TagStringListCheck(s, ref DatapadNamesToAdd) },
+				{"DatapadCountToAdd", (s, o) => TagParse.TagIntCheck(s, ref DatapadCountToAdd) },
+				{"ToggleBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref ToggleBlocksOfType) },
+				{"BlockTypesToToggle", (s, o) => TagParse.TagMyDefIdCheck(s, ref BlockTypesToToggle) },
+				{"BlockTypeToggles", (s, o) => TagParse.TagSwitchEnumCheck(s, ref BlockTypeToggles) },
+				{"CancelWaitingAtWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref CancelWaitingAtWaypoint) },
+				{"SwitchToNextWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToNextWaypoint) },
+				{"HeavyYaw", (s, o) => TagParse.TagBoolCheck(s, ref HeavyYaw) },
+				{"StopAllRotation", (s, o) => TagParse.TagBoolCheck(s, ref StopAllRotation) },
+				{"StopAllThrust", (s, o) => TagParse.TagBoolCheck(s, ref StopAllThrust) },
+				{"RandomGyroRotation", (s, o) => TagParse.TagBoolCheck(s, ref RandomGyroRotation) },
+				{"RandomThrustDirection", (s, o) => TagParse.TagBoolCheck(s, ref RandomThrustDirection) },
+				{"ParentGridNameRequirement", (s, o) => TagParse.TagStringCheck(s, ref ParentGridNameRequirement) },
 
 			};
 
@@ -530,1140 +691,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				foreach (var tag in descSplit) {
 
-					//UseChatBroadcast
-					if (tag.Contains("[UseChatBroadcast:") == true) {
-
-						TagParse.TagBoolCheck(tag, ref UseChatBroadcast);
-
-					}
-
-					//BarrelRoll
-					if (tag.Contains("[BarrelRoll:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref BarrelRoll);
-
-					}
-
-					//Strafe
-					if (tag.Contains("[Strafe:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref Strafe);
-
-					}
-
-					//ChangeAutopilotSpeed
-					if (tag.Contains("[ChangeAutopilotSpeed:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeAutopilotSpeed);
-
-					}
-
-					//NewAutopilotSpeed
-					if (tag.Contains("[NewAutopilotSpeed:") == true) {
-
-						 TagParse.TagFloatCheck(tag, ref NewAutopilotSpeed);
-
-					}
-
-					//SpawnEncounter
-					if (tag.Contains("[SpawnEncounter:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref SpawnEncounter);
-
-					}
-
-					//SelfDestruct
-					if (tag.Contains("[SelfDestruct:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref SelfDestruct);
-
-					}
-
-					//Retreat
-					if (tag.Contains("[Retreat:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref Retreat);
-
-					}
-
-					//TerminateBehavior
-					if (tag.Contains("[TerminateBehavior:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref TerminateBehavior);
-
-					}
-
-					//BroadcastCurrentTarget
-					if (tag.Contains("[BroadcastCurrentTarget:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref BroadcastCurrentTarget);
-
-					}
-
-					//SwitchToReceivedTarget
-					if (tag.Contains("[SwitchToReceivedTarget:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref SwitchToReceivedTarget);
-
-					}
-
-					//SwitchTargetToDamager
-					if (tag.Contains("[SwitchTargetToDamager:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref SwitchTargetToDamager);
-
-					}
-
-					//BroadcastDamagerTarget
-					if (tag.Contains("[BroadcastDamagerTarget:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref BroadcastDamagerTarget);
-
-					}
-
-					//BroadcastSendCode
-					if (tag.Contains("[BroadcastSendCode:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref BroadcastSendCode);
-
-					}
-
-					//SwitchToBehavior
-					if (tag.Contains("[SwitchToBehavior:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref SwitchToBehavior);
-
-					}
-
-					//NewBehavior
-					if (tag.Contains("[NewBehavior:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref NewBehavior);
-
-					}
-
-					//PreserveSettingsOnBehaviorSwitch
-					if (tag.Contains("[PreserveSettingsOnBehaviorSwitch:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref PreserveSettingsOnBehaviorSwitch);
-
-					}
-
-					//PreserveTriggersOnBehaviorSwitch
-					if (tag.Contains("[PreserveTriggersOnBehaviorSwitch:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref PreserveTriggersOnBehaviorSwitch);
-
-					}
-
-					//PreserveTargetDataOnBehaviorSwitch
-					if (tag.Contains("[PreserveTargetDataOnBehaviorSwitch:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref PreserveTargetDataOnBehaviorSwitch);
-
-					}
-
-					//RefreshTarget
-					if (tag.Contains("[RefreshTarget:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RefreshTarget);
-
-					}
-
-					//SwitchTargetProfile
-					if (tag.Contains("[SwitchTargetProfile:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref SwitchTargetProfile);
-
-					}
-
-					//NewTargetProfile
-					if (tag.Contains("[NewTargetProfile:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref NewTargetProfile);
-
-					}
-
-					//TriggerTimerBlocks
-					if (tag.Contains("[TriggerTimerBlocks:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref TriggerTimerBlocks);
-
-					}
-
-					//TimerBlockNames
-					if (tag.Contains("[TimerBlockNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref TimerBlockNames);
-
-					}
-
-					//ChangeReputationWithPlayers
-					if (tag.Contains("[ChangeReputationWithPlayers:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeReputationWithPlayers);
-
-					}
-
-					//ReputationChangeRadius
-					if (tag.Contains("[ReputationChangeRadius:") == true) {
-
-						 TagParse.TagDoubleCheck(tag, ref ReputationChangeRadius);
-
-					}
-
-					//ReputationChangeFactions
-					if (tag.Contains("[ReputationChangeFactions:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref ReputationChangeFactions);
-
-					}
-
-					//ReputationChangeAmount
-					if (tag.Contains("[ReputationChangeAmount:") == true) {
-
-						TagParse.TagIntListCheck(tag, ref ReputationChangeAmount);
-
-					}
-
-					//ActivateAssertiveAntennas
-					if (tag.Contains("[ActivateAssertiveAntennas:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ActivateAssertiveAntennas);
-
-					}
-
-					//ChangeAntennaOwnership
-					if (tag.Contains("[ChangeAntennaOwnership:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeAntennaOwnership);
-
-					}
-
-					//AntennaFactionOwner
-					if (tag.Contains("[AntennaFactionOwner:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref AntennaFactionOwner);
-
-					}
-
-					//CreateKnownPlayerArea
-					if (tag.Contains("[CreateKnownPlayerArea:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref CreateKnownPlayerArea);
-
-					}
-
-					//KnownPlayerAreaRadius
-					if (tag.Contains("[KnownPlayerAreaRadius:") == true) {
-
-						 TagParse.TagDoubleCheck(tag, ref KnownPlayerAreaRadius);
-
-					}
-
-					//KnownPlayerAreaTimer
-					if (tag.Contains("[KnownPlayerAreaTimer:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref KnownPlayerAreaTimer);
-
-					}
-
-					//KnownPlayerAreaMaxSpawns
-					if (tag.Contains("[KnownPlayerAreaMaxSpawns:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref KnownPlayerAreaMaxSpawns);
-
-					}
-
-					//KnownPlayerAreaMinThreatForAvoidingAbandonment
-					if (tag.Contains("[KnownPlayerAreaMinThreatForAvoidingAbandonment:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref KnownPlayerAreaMinThreatForAvoidingAbandonment);
-
-					}
-
-					//DamageToolAttacker
-					if (tag.Contains("[DamageToolAttacker:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref DamageToolAttacker);
-
-					}
-
-					//DamageToolAttackerAmount
-					if (tag.Contains("[DamageToolAttackerAmount:") == true) {
-
-						 TagParse.TagFloatCheck(tag, ref DamageToolAttackerAmount);
-
-					}
-
-					//DamageToolAttackerParticle
-					if (tag.Contains("[DamageToolAttackerParticle:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref DamageToolAttackerParticle);
-
-					}
-
-					//DamageToolAttackerSound
-					if (tag.Contains("[DamageToolAttackerSound:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref DamageToolAttackerSound);
-
-					}
-
-					//PlayParticleEffectAtRemote
-					if (tag.Contains("[PlayParticleEffectAtRemote:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref PlayParticleEffectAtRemote);
-
-					}
-
-					//ParticleEffectId
-					if (tag.Contains("[ParticleEffectId:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref ParticleEffectId);
-
-					}
-
-					//ParticleEffectOffset
-					if (tag.Contains("[ParticleEffectOffset:") == true) {
-
-						 TagParse.TagVector3DCheck(tag, ref ParticleEffectOffset);
-
-					}
-
-					//ParticleEffectScale
-					if (tag.Contains("[ParticleEffectScale:") == true) {
-
-						 TagParse.TagFloatCheck(tag, ref ParticleEffectScale);
-
-					}
-
-					//ParticleEffectMaxTime
-					if (tag.Contains("[ParticleEffectMaxTime:") == true) {
-
-						 TagParse.TagFloatCheck(tag, ref ParticleEffectMaxTime);
-
-					}
-
-					//ParticleEffectColor
-					if (tag.Contains("[ParticleEffectColor:") == true) {
-
-						 TagParse.TagVector3DCheck(tag, ref ParticleEffectColor);
-
-					}
-
-					//SetBooleansTrue
-					if (tag.Contains("[SetBooleansTrue:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref SetBooleansTrue);
-
-					}
-
-					//SetBooleansFalse
-					if (tag.Contains("[SetBooleansFalse:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref SetBooleansFalse);
-
-					}
-
-					//IncreaseCounters
-					if (tag.Contains("[IncreaseCounters:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref IncreaseCounters);
-
-					}
-
-					//DecreaseCounters
-					if (tag.Contains("[DecreaseCounters:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref DecreaseCounters);
-
-					}
-
-					//ResetCounters
-					if (tag.Contains("[ResetCounters:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref ResetCounters);
-
-					}
-
-					//SetSandboxBooleansTrue
-					if (tag.Contains("[SetSandboxBooleansTrue:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref SetSandboxBooleansTrue);
-
-					}
-
-					//SetSandboxBooleansFalse
-					if (tag.Contains("[SetSandboxBooleansFalse:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref SetSandboxBooleansFalse);
-
-					}
-
-					//IncreaseSandboxCounters
-					if (tag.Contains("[IncreaseSandboxCounters:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref IncreaseSandboxCounters);
-
-					}
-
-					//DecreaseSandboxCounters
-					if (tag.Contains("[DecreaseSandboxCounters:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref DecreaseSandboxCounters);
-
-					}
-
-					//ResetSandboxCounters
-					if (tag.Contains("[ResetSandboxCounters:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref ResetSandboxCounters);
-
-					}
-
-					//ChangeAttackerReputation
-					if (tag.Contains("[ChangeAttackerReputation:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeAttackerReputation);
-
-					}
-
-					//ChangeAttackerReputationFaction
-					if (tag.Contains("[ChangeAttackerReputationFaction:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref ChangeAttackerReputationFaction);
-
-					}
-
-					//ChangeAttackerReputationAmount
-					if (tag.Contains("[ChangeAttackerReputationAmount:") == true) {
-
-						TagParse.TagIntListCheck(tag, ref ChangeAttackerReputationAmount);
-
-					}
-
-					//ReputationChangesForAllAttackPlayerFactionMembers
-					if (tag.Contains("[ReputationChangesForAllAttackPlayerFactionMembers:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ReputationChangesForAllAttackPlayerFactionMembers);
-
-					}
-
-					//ChangeTargetProfile
-					if (tag.Contains("[ChangeTargetProfile:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeTargetProfile);
-
-					}
-
-					//NewTargetProfileId
-					if (tag.Contains("[NewTargetProfileId:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref NewTargetProfileId);
-
-					}
-
-					//ChangeBlockNames
-					if (tag.Contains("[ChangeBlockNames:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeBlockNames);
-
-					}
-
-					//ChangeBlockNamesFrom
-					if (tag.Contains("[ChangeBlockNamesFrom:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref ChangeBlockNamesFrom);
-
-					}
-
-					//ChangeBlockNamesTo
-					if (tag.Contains("[ChangeBlockNamesTo:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref ChangeBlockNamesTo);
-
-					}
-
-					//ChangeAntennaRanges
-					if (tag.Contains("[ChangeAntennaRanges:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeAntennaRanges);
-
-					}
-
-					//AntennaNamesForRangeChange
-					if (tag.Contains("[AntennaNamesForRangeChange:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref AntennaNamesForRangeChange);
-
-					}
-
-					//AntennaRangeChangeType
-					if (tag.Contains("[AntennaRangeChangeType:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref AntennaRangeChangeType);
-
-					}
-
-					//AntennaRangeChangeAmount
-					if (tag.Contains("[AntennaRangeChangeAmount:") == true) {
-
-						 TagParse.TagFloatCheck(tag, ref AntennaRangeChangeAmount);
-
-					}
-
-					//ForceDespawn
-					if (tag.Contains("[ForceDespawn:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ForceDespawn);
-
-					}
-
-					//ResetCooldownTimeOfTriggers
-					if (tag.Contains("[ResetCooldownTimeOfTriggers:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ResetCooldownTimeOfTriggers);
-
-					}
-
-					//ResetTriggerCooldownNames
-					if (tag.Contains("[ResetTriggerCooldownNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref ResetTriggerCooldownNames);
-
-					}
-
-					//BroadcastGenericCommand
-					if (tag.Contains("[BroadcastGenericCommand:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref BroadcastGenericCommand);
-
-					}
-
-					//BehaviorSpecificEventA
-					if (tag.Contains("[BehaviorSpecificEventA:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref BehaviorSpecificEventA);
-
-					}
-
-					//ChangeInertiaDampeners
-					if (tag.Contains("[ChangeInertiaDampeners:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeInertiaDampeners);
-
-					}
-
-					//InertiaDampenersEnable
-					if (tag.Contains("[InertiaDampenersEnable:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref InertiaDampenersEnable);
-
-					}
-
-					//EnableTriggers
-					if (tag.Contains("[EnableTriggers:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref EnableTriggers);
-
-					}
-
-					//EnableTriggerNames
-					if (tag.Contains("[EnableTriggerNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref EnableTriggerNames);
-
-					}
-
-					//DisableTriggers
-					if (tag.Contains("[DisableTriggers:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref DisableTriggers);
-
-					}
-
-					//DisableTriggerNames
-					if (tag.Contains("[DisableTriggerNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref DisableTriggerNames);
-
-					}
-
-					//StaggerWarheadDetonation
-					if (tag.Contains("[StaggerWarheadDetonation:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref StaggerWarheadDetonation);
-
-					}
-
-					//ChangeRotationDirection
-					if (tag.Contains("[ChangeRotationDirection:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeRotationDirection);
-
-					}
-
-					//RotationDirection
-					if (tag.Contains("[RotationDirection:") == true) {
-
-						 TagParse.TagDirectionEnumCheck(tag, ref RotationDirection);
-
-					}
-
-					//GenerateExplosion
-					if (tag.Contains("[GenerateExplosion:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref GenerateExplosion);
-
-					}
-
-					//ExplosionOffsetFromRemote
-					if (tag.Contains("[ExplosionOffsetFromRemote:") == true) {
-
-						 TagParse.TagVector3DCheck(tag, ref ExplosionOffsetFromRemote);
-
-					}
-
-					//ExplosionRange
-					if (tag.Contains("[ExplosionRange:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref ExplosionRange);
-
-					}
-
-					//ExplosionDamage
-					if (tag.Contains("[ExplosionDamage:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref ExplosionDamage);
-
-					}
-
-					//ExplosionIgnoresVoxels
-					if (tag.Contains("[ExplosionIgnoresVoxels:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ExplosionIgnoresVoxels);
-
-					}
-
-					//GridEditable
-					if (tag.Contains("[GridEditable:") == true) {
-
-						 TagParse.TagCheckEnumCheck(tag, ref GridEditable);
-
-					}
-
-					//SubGridsEditable
-					if (tag.Contains("[SubGridsEditable:") == true) {
-
-						 TagParse.TagCheckEnumCheck(tag, ref SubGridsEditable);
-
-					}
-
-					//GridDestructible
-					if (tag.Contains("[GridDestructible:") == true) {
-
-						 TagParse.TagCheckEnumCheck(tag, ref GridDestructible);
-
-					}
-
-					//SubGridsDestructible
-					if (tag.Contains("[SubGridsDestructible:") == true) {
-
-						 TagParse.TagCheckEnumCheck(tag, ref SubGridsDestructible);
-
-					}
-
-					//RecolorGrid
-					if (tag.Contains("[RecolorGrid:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RecolorGrid);
-
-					}
-
-					//RecolorSubGrids
-					if (tag.Contains("[RecolorSubGrids:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RecolorSubGrids);
-
-					}
-
-					//OldBlockColors
-					if (tag.Contains("[OldBlockColors:") == true) {
-
-						TagParse.TagVector3DListCheck(tag, ref OldBlockColors);
-
-					}
-
-					//NewBlockColors
-					if (tag.Contains("[NewBlockColors:") == true) {
-
-						TagParse.TagVector3DListCheck(tag, ref NewBlockColors);
-
-					}
-
-					//NewBlockSkins
-					if (tag.Contains("[NewBlockSkins:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref NewBlockSkins);
-
-					}
-
-					//ChangeBlockOwnership
-					if (tag.Contains("[ChangeBlockOwnership:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeBlockOwnership);
-
-					}
-
-					//OwnershipBlockNames
-					if (tag.Contains("[OwnershipBlockNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref OwnershipBlockNames);
-
-					}
-
-					//OwnershipBlockFactions
-					if (tag.Contains("[OwnershipBlockFactions:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref OwnershipBlockFactions);
-
-					}
-
-					//ChangeBlockDamageMultipliers
-					if (tag.Contains("[ChangeBlockDamageMultipliers:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeBlockDamageMultipliers);
-
-					}
-
-					//DamageMultiplierBlockNames
-					if (tag.Contains("[DamageMultiplierBlockNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref DamageMultiplierBlockNames);
-
-					}
-
-					//DamageMultiplierValues
-					if (tag.Contains("[DamageMultiplierValues:") == true) {
-
-						TagParse.TagIntListCheck(tag, ref DamageMultiplierValues);
-
-					}
-
-					//RazeBlocksWithNames
-					if (tag.Contains("[RazeBlocksWithNames:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RazeBlocksWithNames);
-
-					}
-
-					//RazeBlocksNames
-					if (tag.Contains("[RazeBlocksNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref RazeBlocksNames);
-
-					}
-
-					//ManuallyActivateTrigger
-					if (tag.Contains("[ManuallyActivateTrigger:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ManuallyActivateTrigger);
-
-					}
-
-					//ManuallyActivatedTriggerNames
-					if (tag.Contains("[ManuallyActivatedTriggerNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref ManuallyActivatedTriggerNames);
-
-					}
-
-					//SendCommandWithoutAntenna
-					if (tag.Contains("[SendCommandWithoutAntenna:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref SendCommandWithoutAntenna);
-
-					}
-
-					//SendCommandWithoutAntennaRadius
-					if (tag.Contains("[SendCommandWithoutAntennaRadius:") == true) {
-
-						 TagParse.TagDoubleCheck(tag, ref SendCommandWithoutAntennaRadius);
-
-					}
-
-					//RemoveKnownPlayerArea
-					if (tag.Contains("[RemoveKnownPlayerArea:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RemoveKnownPlayerArea);
-
-					}
-
-					//RemoveAllKnownPlayerAreas
-					if (tag.Contains("[RemoveAllKnownPlayerAreas:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RemoveAllKnownPlayerAreas);
-
-					}
-
-					//Chance
-					if (tag.Contains("[Chance:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref Chance);
-
-					}
-
-					//EnableBlocks
-					if (tag.Contains("[EnableBlocks:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref EnableBlocks);
-
-					}
-
-					//EnableBlockNames
-					if (tag.Contains("[EnableBlockNames:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref EnableBlockNames);
-
-					}
-
-					//EnableBlockStates
-					if (tag.Contains("[EnableBlockStates:") == true) {
-
-						TagParse.TagSwitchEnumCheck(tag, ref EnableBlockStates);
-
-					}
-
-					//ChangeAutopilotProfile
-					if (tag.Contains("[ChangeAutopilotProfile:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeAutopilotProfile);
-
-					}
-
-					//AutopilotProfile
-					if (tag.Contains("[AutopilotProfile:") == true) {
-
-						 TagParse.TagAutoPilotProfileModeCheck(tag, ref AutopilotProfile);
-
-					}
-
-					//Ramming
-					if (tag.Contains("[Ramming:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref Ramming);
-
-					}
-
-					//CreateRandomLightning
-					if (tag.Contains("[CreateRandomLightning:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref CreateRandomLightning);
-
-					}
-
-					//CreateLightningAtAttacker
-					if (tag.Contains("[CreateLightningAtAttacker:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref CreateLightningAtAttacker);
-
-					}
-
-					//LightningDamage
-					if (tag.Contains("[LightningDamage:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref LightningDamage);
-
-					}
-
-					//LightningExplosionRadius
-					if (tag.Contains("[LightningExplosionRadius:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref LightningExplosionRadius);
-
-					}
-
-					//LightningColor
-					if (tag.Contains("[LightningColor:") == true) {
-
-						 TagParse.TagVector3DCheck(tag, ref LightningColor);
-
-					}
-
-					//LightningMinDistance
-					if (tag.Contains("[LightningMinDistance:") == true) {
-
-						 TagParse.TagDoubleCheck(tag, ref LightningMinDistance);
-
-					}
-
-					//LightningMaxDistance
-					if (tag.Contains("[LightningMaxDistance:") == true) {
-
-						 TagParse.TagDoubleCheck(tag, ref LightningMaxDistance);
-
-					}
-
-					//CreateLightningAtTarget
-					if (tag.Contains("[CreateLightningAtTarget:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref CreateLightningAtTarget);
-
-					}
-
-					//SelfDestructTimerPadding
-					if (tag.Contains("[SelfDestructTimerPadding:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref SelfDestructTimerPadding);
-
-					}
-
-					//SelfDestructTimeBetweenBlasts
-					if (tag.Contains("[SelfDestructTimeBetweenBlasts:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref SelfDestructTimeBetweenBlasts);
-
-					}
-
-					//SetCounters
-					if (tag.Contains("[SetCounters:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref SetCounters);
-
-					}
-
-					//SetSandboxCounters
-					if (tag.Contains("[SetSandboxCounters:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref SetSandboxCounters);
-
-					}
-
-					//SetCountersValues
-					if (tag.Contains("[SetCountersValues:") == true) {
-
-						TagParse.TagIntListCheck(tag, ref SetCountersValues);
-
-					}
-
-					//SetSandboxCountersValues
-					if (tag.Contains("[SetSandboxCountersValues:") == true) {
-
-						TagParse.TagIntListCheck(tag, ref SetSandboxCountersValues);
-
-					}
-
-					//InheritLastAttackerFromCommand
-					if (tag.Contains("[InheritLastAttackerFromCommand:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref InheritLastAttackerFromCommand);
-
-					}
-
-					//ChangePlayerCredits
-					if (tag.Contains("[ChangePlayerCredits:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangePlayerCredits);
-
-					}
-
-					//ChangePlayerCreditsAmount
-					if (tag.Contains("[ChangePlayerCreditsAmount:") == true) {
-
-						 TagParse.TagLongCheck(tag, ref ChangePlayerCreditsAmount);
-
-					}
-
-					//ChangeNpcFactionCredits
-					if (tag.Contains("[ChangeNpcFactionCredits:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ChangeNpcFactionCredits);
-
-					}
-
-					//ChangeNpcFactionCreditsAmount
-					if (tag.Contains("[ChangeNpcFactionCreditsAmount:") == true) {
-
-						 TagParse.TagLongCheck(tag, ref ChangeNpcFactionCreditsAmount);
-
-					}
-
-					//ChangeNpcFactionCreditsTag
-					if (tag.Contains("[ChangeNpcFactionCreditsTag:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref ChangeNpcFactionCreditsTag);
-
-					}
-
-					//BuildProjectedBlocks
-					if (tag.Contains("[BuildProjectedBlocks:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref BuildProjectedBlocks);
-
-					}
-
-					//MaxProjectedBlocksToBuild
-					if (tag.Contains("[MaxProjectedBlocksToBuild:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref MaxProjectedBlocksToBuild);
-
-					}
-
-					//ForceManualTriggerActivation
-					if (tag.Contains("[ForceManualTriggerActivation:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ForceManualTriggerActivation);
-
-					}
-
-					//OverwriteAutopilotProfile
-					if (tag.Contains("[OverwriteAutopilotProfile:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref OverwriteAutopilotProfile);
-
-					}
-
-					//OverwriteAutopilotMode
-					if (tag.Contains("[OverwriteAutopilotMode:") == true) {
-
-						 TagParse.TagAutoPilotProfileModeCheck(tag, ref OverwriteAutopilotMode);
-
-					}
-
-					//OverwriteAutopilotId
-					if (tag.Contains("[OverwriteAutopilotId:") == true) {
-
-						 TagParse.TagStringCheck(tag, ref OverwriteAutopilotId);
-
-					}
-
-					//BroadcastCommandProfiles
-					if (tag.Contains("[BroadcastCommandProfiles:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref BroadcastCommandProfiles);
-
-					}
-
-					//CommandProfileIds
-					if (tag.Contains("[CommandProfileIds:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref CommandProfileIds);
-
-					}
-
-					//AddWaypointFromCommand
-					if (tag.Contains("[AddWaypointFromCommand:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref AddWaypointFromCommand);
-
-					}
-
-					//RecalculateDespawnCoords
-					if (tag.Contains("[RecalculateDespawnCoords:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RecalculateDespawnCoords);
-
-					}
-
-					//AddDatapadsToSeats
-					if (tag.Contains("[AddDatapadsToSeats:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref AddDatapadsToSeats);
-
-					}
-
-					//DatapadNamesToAdd
-					if (tag.Contains("[DatapadNamesToAdd:") == true) {
-
-						TagParse.TagStringListCheck(tag, ref DatapadNamesToAdd);
-
-					}
-
-					//DatapadCountToAdd
-					if (tag.Contains("[DatapadCountToAdd:") == true) {
-
-						 TagParse.TagIntCheck(tag, ref DatapadCountToAdd);
-
-					}
-
-					//ToggleBlocksOfType
-					if (tag.Contains("[ToggleBlocksOfType:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref ToggleBlocksOfType);
-
-					}
-
-					//BlockTypesToToggle
-					if (tag.Contains("[BlockTypesToToggle:") == true) {
-
-						TagParse.TagMyDefIdCheck(tag, ref BlockTypesToToggle);
-
-					}
-
-					//BlockTypeToggles
-					if (tag.Contains("[BlockTypeToggles:") == true) {
-
-						TagParse.TagSwitchEnumCheck(tag, ref BlockTypeToggles);
-
-					}
-
-					//CancelWaitingAtWaypoint
-					if (tag.Contains("[CancelWaitingAtWaypoint:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref CancelWaitingAtWaypoint);
-
-					}
-
-					//SwitchToNextWaypoint
-					if (tag.Contains("[SwitchToNextWaypoint:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref SwitchToNextWaypoint);
-
-					}
-
-					//HeavyYaw
-					if (tag.Contains("[HeavyYaw:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref HeavyYaw);
-
-					}
-
-					//StopAllRotation
-					if (tag.Contains("[StopAllRotation:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref StopAllRotation);
-
-					}
-
-					//StopAllThrust
-					if (tag.Contains("[StopAllThrust:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref StopAllThrust);
-
-					}
-
-					//RandomGyroRotation
-					if (tag.Contains("[RandomGyroRotation:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RandomGyroRotation);
-
-					}
-
-					//RandomThrustDirection
-					if (tag.Contains("[RandomThrustDirection:") == true) {
-
-						 TagParse.TagBoolCheck(tag, ref RandomThrustDirection);
-
-					}
-
-					//ParentGridNameRequirement
-					if (tag.Contains("ParentGridNameRequirement:") == true) {
-
-						TagParse.TagStringCheck(tag, ref ParentGridNameRequirement);
-
-					}
-
+					EditValue(tag);
+					
 				}
 
 			}

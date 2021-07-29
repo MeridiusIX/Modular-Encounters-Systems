@@ -1,6 +1,7 @@
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Watchers;
 using Sandbox.ModAPI;
 using System;
 using VRage.Game.ModAPI;
@@ -260,6 +261,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		}
 
 		public void DespawnGrid() {
+
+			if (_behavior.CurrentGrid != null) {
+
+				_behavior.CurrentGrid.RefreshSubGrids();
+
+				foreach (var grid in _behavior.CurrentGrid.LinkedGrids) {
+
+					Cleaning.RemoveGrid(grid);
+
+					if (grid.Npc != null)
+						grid.Npc.DespawnSource = "Despawn-Behavior";
+
+				}
+			
+			}
 
 			BehaviorLogger.Write("Despawning Grid: " + this.RemoteControl.SlimBlock.CubeGrid.CustomName, BehaviorDebugEnum.Despawn);
 

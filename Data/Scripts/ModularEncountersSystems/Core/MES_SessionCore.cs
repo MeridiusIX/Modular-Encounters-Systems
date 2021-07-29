@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
         public static bool ModEnabled = true;
 
-        public static string ModVersion = "2.0.10";
+        public static string ModVersion = "2.0.11";
         public static MES_SessionCore Instance;
 
         public static bool IsServer;
@@ -101,6 +101,7 @@ namespace ModularEncountersSystems.Core {
             RelationManager.Setup();
             Cleaning.Setup();
             WaveManager.Setup();
+            DamageHelper.Setup();
 
             //AttributeApplication
 

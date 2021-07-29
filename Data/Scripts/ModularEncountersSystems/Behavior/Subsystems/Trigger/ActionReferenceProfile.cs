@@ -259,6 +259,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeZoneAtPosition;
 		public string ZoneName;
 
+		public bool ZoneRadiusChange;
+		public bool ZoneRadiusSet;
+		public double ZoneRadius;
+
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 		public ActionReferenceProfile() {

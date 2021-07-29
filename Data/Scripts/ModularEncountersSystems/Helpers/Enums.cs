@@ -161,6 +161,17 @@ namespace ModularEncountersSystems.Helpers {
 
     }
 
+    public enum ModifierEnum {
+    
+        None,
+        Set,
+        Add,
+        Subtract,
+        Multiply,
+        Divide
+    
+    }
+
     public enum SwitchEnum {
     
         Off,

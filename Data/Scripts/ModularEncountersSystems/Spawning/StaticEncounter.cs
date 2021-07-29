@@ -4,6 +4,7 @@ using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Watchers;
+using ModularEncountersSystems.World;
 using ProtoBuf;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -97,6 +98,9 @@ namespace ModularEncountersSystems.Spawning {
 		[ProtoMember(26)]
 		public long PlanetEntityId;
 
+		[ProtoMember(27)]
+		public bool IsBoss;
+
 		//Non-Serialized
 
 		[ProtoIgnore]
@@ -182,6 +186,7 @@ namespace ModularEncountersSystems.Spawning {
 		public void InitBossEncounter(string spawnGroupName, int condition, Vector3D coords, string faction, SpawningType type) {
 
 			IsValid = true;
+			IsBoss = true;
 			SpawnGroupName = spawnGroupName;
 			ConditionIndex = condition;
 			TriggerCoords = coords;
@@ -205,6 +210,24 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
+				bool alreadyHasBoss = false;
+
+				foreach (var encounter in NpcManager.StaticEncounters) {
+
+					if (!encounter.IsValid || !encounter.IsBoss)
+						continue;
+
+					if (!encounter.SpecificPlayers.Contains(player.Player.IdentityId))
+						continue;
+
+					alreadyHasBoss = true;
+					break;
+				
+				}
+
+				if (alreadyHasBoss)
+					continue;
+
 				if (player.Distance(coords) > Settings.BossEncounters.PlayersWithinDistance) {
 
 					SpawnLogger.Write("Player is outside Boss Creation Range", SpawnerDebugEnum.Spawning);
@@ -224,6 +247,12 @@ namespace ModularEncountersSystems.Spawning {
 					MyVisualScriptLogicProvider.SendChatMessage(Condition.BossCustomAnnounceMessage, Condition.BossCustomAnnounceAuthor, player.Player.IdentityId, "Red");
 				
 				}
+
+			}
+
+			if (SpecificPlayers.Count == 0) {
+
+				IsValid = false;
 
 			}
 

@@ -198,6 +198,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(57)]
 		public double MaxTargetDistanceUnderwater;
 
+		[ProtoMember(58)]
+		public bool AltitudeCheck;
+
+		[ProtoMember(59)]
+		public double MinAltitude;
+
+		[ProtoMember(60)]
+		public double MaxAltitude;
+
 		[ProtoIgnore]
 		private IMyRemoteControl _remoteControl;
 
@@ -310,6 +319,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MaxDistanceUnderwater = -1;
 			MinTargetDistanceUnderwater = -1;
 			MaxTargetDistanceUnderwater = -1;
+
+			AltitudeCheck = false;
+			MinAltitude = -1;
+			MaxAltitude = -1;
 
 			BehaviorModeCheck = false;
 			CurrentBehaviorMode = BehaviorMode.Init;
@@ -806,6 +819,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if(_behavior.Mode == CurrentBehaviorMode)
 					satisfiedConditions++;
+
+			}
+
+			if (AltitudeCheck) {
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.CurrentPlanet != null)
+					if ((MinAltitude == -1 || _behavior.AutoPilot.MyAltitude > MinAltitude) && (MaxAltitude == -1 || _behavior.AutoPilot.MyAltitude < MaxAltitude))
+						satisfiedConditions++;
 
 			}
 
@@ -1424,6 +1447,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[MaxTargetDistanceUnderwater:") == true) {
 
 						TagParse.TagDoubleCheck(tag, ref MaxTargetDistanceUnderwater);
+
+					}
+
+					//AltitudeCheck
+					if (tag.Contains("[AltitudeCheck:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref AltitudeCheck);
+
+					}
+
+					//MinAltitude
+					if (tag.Contains("[MinAltitude:") == true) {
+
+						TagParse.TagDoubleCheck(tag, ref MinAltitude);
+
+					}
+
+					//MaxAltitude
+					if (tag.Contains("[MaxAltitude:") == true) {
+
+						TagParse.TagDoubleCheck(tag, ref MaxAltitude);
 
 					}
 

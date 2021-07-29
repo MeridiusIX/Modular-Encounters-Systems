@@ -73,6 +73,22 @@ namespace ModularEncountersSystems.Logging {
 		
 		}
 
+		public static void ClearAllLogging(string type) {
+
+			if (type == "SpawnDebug") {
+			
+				
+			
+			}
+
+			if (type == "BehaviorDebug") {
+
+
+
+			}
+
+		}
+
 		public static void ClearAllTimeouts(ChatMessage msg) {
 
 			foreach (var zone in TimeoutManagement.Timeouts) {

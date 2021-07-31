@@ -603,6 +603,15 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//GetGridBehavior
+			if (array[2] == "GetGridBehavior") {
+
+				ClipboardPayload = LoggerTools.GetGridBehavior(this);
+				Mode = ChatMsgMode.ReturnMessage;
+				return true;
+
+			}
+
 			//GetGridMatrix
 			if (array[2] == "GetGridMatrix") {
 

@@ -535,6 +535,42 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static string GetGridBehavior(ChatMessage message) {
+
+			var line = new LineD(message.CameraPosition, message.CameraDirection * 10000 + message.CameraPosition);
+			GridEntity thisGrid = null;
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (grid.Behavior == null)
+					continue;
+
+				if (!grid.Ownership.HasFlag(GridOwnershipEnum.NpcMajority) && !grid.Ownership.HasFlag(GridOwnershipEnum.NpcMinority))
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				message.ReturnMessage = "Could Not Locate NPC Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM";
+				return "";
+
+			}
+
+			message.ReturnMessage = "NPC Behavior Data Sent To Clipboard";
+			return thisGrid.Behavior.ToString();
+
+		}
+
 		public static string GetGridMatrixInfo(ChatMessage message) {
 
 			var line = new LineD(message.CameraPosition, message.CameraDirection * 400 + message.CameraPosition);
@@ -660,8 +696,68 @@ namespace ModularEncountersSystems.Logging {
 
 			} else if (command[3] == "BehaviorDebug") {
 
+				if (command[4] == "Action")
+					result = BehaviorLogger.Action.ToString();
+
+				if (command[4] == "AutoPilot")
+					result = BehaviorLogger.AutoPilot.ToString();
+
+				if (command[4] == "BehaviorMode")
+					result = BehaviorLogger.BehaviorMode.ToString();
+
 				if (command[4] == "BehaviorSetup")
-					result = SpawnLogger.BlockLogic.ToString();
+					result = BehaviorLogger.BehaviorSetup.ToString();
+
+				if (command[4] == "BehaviorSpecific")
+					result = BehaviorLogger.BehaviorSpecific.ToString();
+
+				if (command[4] == "Chat")
+					result = BehaviorLogger.Chat.ToString();
+
+				if (command[4] == "Command")
+					result = BehaviorLogger.Command.ToString();
+
+				if (command[4] == "Condition")
+					result = BehaviorLogger.Condition.ToString();
+
+				if (command[4] == "Collision")
+					result = BehaviorLogger.Collision.ToString();
+
+				if (command[4] == "Despawn")
+					result = BehaviorLogger.Despawn.ToString();
+
+				if (command[4] == "Error")
+					result = BehaviorLogger.Error.ToString();
+
+				if (command[4] == "General")
+					result = BehaviorLogger.General.ToString();
+
+				if (command[4] == "Owner")
+					result = BehaviorLogger.Owner.ToString();
+
+				if (command[4] == "Spawn")
+					result = BehaviorLogger.Spawn.ToString();
+
+				if (command[4] == "Startup")
+					result = BehaviorLogger.Startup.ToString();
+
+				if (command[4] == "TargetAcquisition")
+					result = BehaviorLogger.TargetAcquisition.ToString();
+
+				if (command[4] == "TargetEvaluation")
+					result = BehaviorLogger.TargetEvaluation.ToString();
+
+				if (command[4] == "Thrust")
+					result = BehaviorLogger.Thrust.ToString();
+
+				if (command[4] == "Trigger")
+					result = BehaviorLogger.Trigger.ToString();
+
+				if (command[4] == "Weapon")
+					result = BehaviorLogger.Weapon.ToString();
+
+				if (command[4] == "Dev")
+					result = BehaviorLogger.Dev.ToString();
 
 			}
 

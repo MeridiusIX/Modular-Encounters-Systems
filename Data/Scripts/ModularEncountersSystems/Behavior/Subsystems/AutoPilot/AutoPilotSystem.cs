@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		private IMyRemoteControl _remoteControl;
 		private IBehavior _behavior;
 
-		public AutoPilotState State { get { return _behavior.Settings.State; }}
+		public AutoPilotState State { get { return _behavior.BehaviorSettings.State; }}
 
 		public AutoPilotProfile Data {
 
@@ -636,6 +636,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
+		public string GetThrustAndRotationData() {
+
+			var sb = new StringBuilder();
+			sb.Append(" - Speed:   ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
+			sb.Append(" - Allowed Waypoint Types: ").AppendLine();
+			sb.Append("   - ").Append(DirectWaypointType.ToString()).AppendLine();
+			sb.Append(" - Restricted Waypoint Types: ").AppendLine();
+			sb.Append("   - ").Append(IndirectWaypointType.ToString()).AppendLine();
+
+			sb.AppendLine().Append(" - Dampeners Enabled: ").Append(_remoteControl.DampenersOverride.ToString()).AppendLine();
+			sb.Append(" - Forward Thrust Mode: ").AppendLine();
+			sb.Append("   - ").Append(_debugThrustForwardMode).AppendLine().AppendLine();
+			sb.Append(" - Upward Thrust Mode:  ").AppendLine();
+			sb.Append("   - ").Append(_debugThrustUpMode).AppendLine().AppendLine();
+			sb.Append(" - Side Thrust Mode:  ").AppendLine();
+			sb.Append("   - ").Append(_debugThrustSideMode).AppendLine().AppendLine();
+			sb.Append(" - Altitude:  ").AppendLine();
+			sb.Append("   - ").Append(MyAltitude.ToString()).AppendLine();
+
+
+			sb.AppendLine();
+			sb.Append(" - ForwardDir:       ").Append(_behavior.BehaviorSettings.RotationDirection.ToString()).AppendLine();
+			sb.Append(" - Pitch: ").AppendLine();
+			sb.Append("   - Angle:         ").Append(Math.Round(PitchAngleDifference, 2)).AppendLine();
+			sb.Append("   - Target Diff:   ").Append(Math.Round(PitchTargetAngleResult, 2)).AppendLine();
+			sb.Append("   - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.X, 4)).AppendLine();
+			sb.Append("   - Magnitude:     ").Append(Math.Round(ExistingPitchMagnitude, 4)).AppendLine();
+			sb.Append(" - Yaw: ").AppendLine();
+			sb.Append("   - Angle:         ").Append(Math.Round(YawAngleDifference, 2)).AppendLine();
+			sb.Append("   - Target Diff:   ").Append(Math.Round(YawTargetAngleResult, 2)).AppendLine();
+			sb.Append("   - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.Y, 4)).AppendLine();
+			sb.Append("   - Magnitude:     ").Append(Math.Round(ExistingYawMagnitude, 4)).AppendLine();
+			sb.Append(" - Roll: ").AppendLine();
+			sb.Append("   - Angle:         ").Append(Math.Round(RollAngleDifference, 2)).AppendLine();
+			sb.Append("   - Target Diff:   ").Append(Math.Round(RollTargetAngleResult, 2)).AppendLine();
+			sb.Append("   - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.Z, 4)).AppendLine();
+			sb.Append("   - Magnitude:     ").Append(Math.Round(ExistingRollMagnitude, 4)).AppendLine();
+
+			return sb.ToString();
+		
+		}
+
 		private void ApplyAutopilot() {
 
 			ApplyGyroRotation();
@@ -1037,7 +1079,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					double ammoInitVel;
 					double ammoVel;
 
-					Weapons.GetAmmoSpeedDetails(_behavior.Settings.RotationDirection, out ammoVel, out ammoInitVel, out ammoAccel);
+					Weapons.GetAmmoSpeedDetails(_behavior.BehaviorSettings.RotationDirection, out ammoVel, out ammoInitVel, out ammoAccel);
 
 					if (ammoVel > 0) {
 
@@ -1657,7 +1699,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			if (InGravity()) {
 
-				BehaviorLogger.Write("Manually Created Despawn Coords in Gravity", BehaviorDebugEnum.AutoPilot);
+				BehaviorLogger.Write("Manually Created Despawn Coords in Gravity", BehaviorDebugEnum.BehaviorSpecific);
 				var center = CurrentPlanet.Center();
 				var up = Vector3D.Normalize(coords - center);
 				var forward = MyUtils.GetRandomPerpendicularVector(ref up);
@@ -1710,7 +1752,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			} else {
 
-				BehaviorLogger.Write("Manually Created Despawn Coords in Space", BehaviorDebugEnum.AutoPilot);
+				BehaviorLogger.Write("Manually Created Despawn Coords in Space", BehaviorDebugEnum.BehaviorSpecific);
 				var randomDir = Vector3D.Normalize(MyUtils.GetRandomVector3D());
 				Vector3D result = randomDir * distance + coords;
 

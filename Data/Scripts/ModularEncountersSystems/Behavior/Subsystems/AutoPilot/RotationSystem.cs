@@ -221,22 +221,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		public MatrixD GetReferenceMatrix(MatrixD originalMatrix) {
 
-			if (_behavior.Settings.RotationDirection == Direction.Forward)
+			if (_behavior.BehaviorSettings.RotationDirection == Direction.Forward)
 				return originalMatrix;
 
-			if (_behavior.Settings.RotationDirection == Direction.Backward)
+			if (_behavior.BehaviorSettings.RotationDirection == Direction.Backward)
 				return MatrixD.CreateWorld(originalMatrix.Translation, originalMatrix.Backward, originalMatrix.Up);
 
-			if (_behavior.Settings.RotationDirection == Direction.Left)
+			if (_behavior.BehaviorSettings.RotationDirection == Direction.Left)
 				return MatrixD.CreateWorld(originalMatrix.Translation, originalMatrix.Left, originalMatrix.Up);
 
-			if (_behavior.Settings.RotationDirection == Direction.Right)
+			if (_behavior.BehaviorSettings.RotationDirection == Direction.Right)
 				return MatrixD.CreateWorld(originalMatrix.Translation, originalMatrix.Right, originalMatrix.Up);
 
-			if (_behavior.Settings.RotationDirection == Direction.Down)
+			if (_behavior.BehaviorSettings.RotationDirection == Direction.Down)
 				return MatrixD.CreateWorld(originalMatrix.Translation, originalMatrix.Down, originalMatrix.Forward);
 
-			if (_behavior.Settings.RotationDirection == Direction.Up)
+			if (_behavior.BehaviorSettings.RotationDirection == Direction.Up)
 				return MatrixD.CreateWorld(originalMatrix.Translation, originalMatrix.Up, originalMatrix.Backward);
 
 			return originalMatrix;

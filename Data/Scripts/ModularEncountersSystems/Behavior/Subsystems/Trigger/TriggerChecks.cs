@@ -41,14 +41,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		//DespawnNear
 		public bool CheckDespawnNear(TriggerProfile trigger) {
 
-			return _behavior.Settings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.Settings.DespawnCoords) < trigger.TargetDistance;
+			return _behavior.BehaviorSettings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords) < trigger.TargetDistance;
 
 		}
 
 		//DespawnFar
 		public bool CheckDespawnFar(TriggerProfile trigger) {
 
-			return _behavior.Settings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.Settings.DespawnCoords) > trigger.TargetDistance;
+			return _behavior.BehaviorSettings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords) > trigger.TargetDistance;
 
 		}
 

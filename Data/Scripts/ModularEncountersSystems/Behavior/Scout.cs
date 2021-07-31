@@ -39,7 +39,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			//Logger.Write(Mode.ToString(), BehaviorDebugEnum.General);
 
-			if (Mode != BehaviorMode.Retreat && Settings.DoRetreat == true){
+			if (Mode != BehaviorMode.Retreat && BehaviorSettings.DoRetreat == true){
 
 				ChangeCoreBehaviorMode(BehaviorMode.Retreat);
 				AutoPilot.ActivateAutoPilot(this.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);

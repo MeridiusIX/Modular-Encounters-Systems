@@ -298,6 +298,9 @@ namespace ModularEncountersSystems.Spawning {
 
 		public static void CreateSpawnLists() {
 
+			if (!MyAPIGateway.Multiplayer.IsServer)
+				return;
+
 			//Planet Names First
 			var planetDefList = MyDefinitionManager.Static.GetPlanetsGeneratorsDefinitions();
 			foreach (var planetDef in planetDefList) {

@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			//Logger.Write(Mode.ToString(), BehaviorDebugEnum.General);
 
-			if (_behavior.Mode != BehaviorMode.Retreat && _behavior.Settings.DoRetreat == true){
+			if (_behavior.Mode != BehaviorMode.Retreat && _behavior.BehaviorSettings.DoRetreat == true){
 
 				_behavior.ChangeCoreBehaviorMode(BehaviorMode.Retreat);
 				_behavior.AutoPilot.ActivateAutoPilot(_behavior.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
@@ -82,13 +82,13 @@ namespace ModularEncountersSystems.Behavior {
 			
 			if(_behavior.Mode == BehaviorMode.Init) {
 
-				if (_behavior.Settings.DespawnCoords == Vector3D.Zero) {
+				if (_behavior.BehaviorSettings.DespawnCoords == Vector3D.Zero) {
 
-					if(_behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.EndCoords != Vector3D.Zero)
-						_behavior.Settings.DespawnCoords = _behavior.CurrentGrid.Npc.EndCoords;
+					if(_behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.EndCoords != Vector3D.Zero && _behavior.CurrentGrid.Npc.EndCoords != _behavior.CurrentGrid.Npc.StartCoords)
+						_behavior.BehaviorSettings.DespawnCoords = _behavior.CurrentGrid.Npc.EndCoords;
 
-					if (_behavior.Settings.DespawnCoords == Vector3D.Zero)
-						_behavior.Settings.DespawnCoords = _behavior.AutoPilot.CalculateDespawnCoords(_behavior.RemoteControl.GetPosition());
+					if (_behavior.BehaviorSettings.DespawnCoords == Vector3D.Zero)
+						_behavior.BehaviorSettings.DespawnCoords = _behavior.AutoPilot.CalculateDespawnCoords(_behavior.RemoteControl.GetPosition());
 
 				}
 
@@ -102,13 +102,13 @@ namespace ModularEncountersSystems.Behavior {
 
 				_behavior.BehaviorActionA = false;
 
-				if (_behavior.Settings.LastDamagerEntity != 0) {
+				if (_behavior.BehaviorSettings.LastDamagerEntity != 0) {
 
 					//Logger.Write("Damager Entity Id Valid" + _behavior.Settings.LastDamagerEntity.ToString(), BehaviorDebugEnum.General);
 
 					IMyEntity tempEntity = null;
 
-					if (MyAPIGateway.Entities.TryGetEntityById(_behavior.Settings.LastDamagerEntity, out tempEntity)) {
+					if (MyAPIGateway.Entities.TryGetEntityById(_behavior.BehaviorSettings.LastDamagerEntity, out tempEntity)) {
 
 						//Logger.Write("Damager Entity Valid", BehaviorDebugEnum.General);
 
@@ -177,9 +177,12 @@ namespace ModularEncountersSystems.Behavior {
 
 				if (!_behavior.BehaviorTriggerA) {
 
-					if (Vector3D.Distance(_behavior.RemoteControl.GetPosition(), _behavior.Settings.DespawnCoords) <= MathTools.Hypotenuse(_behavior.AutoPilot.Data.WaypointTolerance, _behavior.AutoPilot.Data.WaypointTolerance)) {
+					if (Vector3D.Distance(_behavior.RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords) <= MathTools.Hypotenuse(_behavior.AutoPilot.Data.WaypointTolerance, _behavior.AutoPilot.Data.WaypointTolerance)) {
 
-						_behavior.Settings.DoDespawn = true;
+						BehaviorLogger.Write("Hunter Reached Despawn Coords", BehaviorDebugEnum.BehaviorSpecific);
+						BehaviorLogger.Write(" - Distance From Start:   " + Vector3D.Distance(_behavior?.CurrentGrid?.Npc?.StartCoords ?? Vector3D.Zero, _behavior.BehaviorSettings.DespawnCoords), BehaviorDebugEnum.BehaviorSpecific);
+						BehaviorLogger.Write(" - Distance From Despawn: " + Vector3D.Distance(_behavior.RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords), BehaviorDebugEnum.BehaviorSpecific);
+						_behavior.BehaviorSettings.DoDespawn = true;
 					
 					}
 				
@@ -325,7 +328,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			_behavior.ChangeCoreBehaviorMode(BehaviorMode.ApproachWaypoint);
 			_behavior.AutoPilot.SetAutoPilotDataMode(AutoPilotDataMode.Primary);
-			_behavior.AutoPilot.ActivateAutoPilot(_behavior.Settings.DespawnCoords, NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
+			_behavior.AutoPilot.ActivateAutoPilot(_behavior.BehaviorSettings.DespawnCoords, NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
 			_checkActiveTargetTimer = MyAPIGateway.Session.GameDateTime;
 
 		}

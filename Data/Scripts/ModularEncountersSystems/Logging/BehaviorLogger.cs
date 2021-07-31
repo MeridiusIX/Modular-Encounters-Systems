@@ -54,6 +54,7 @@ namespace ModularEncountersSystems.Logging {
 		public static StringBuilder Command = new StringBuilder();
 		public static StringBuilder Condition = new StringBuilder();
 		public static StringBuilder Collision = new StringBuilder();
+		public static StringBuilder Despawn = new StringBuilder();
 		public static StringBuilder Dev = new StringBuilder();
 		public static StringBuilder Error = new StringBuilder();
 		public static StringBuilder General = new StringBuilder();
@@ -141,6 +142,9 @@ namespace ModularEncountersSystems.Logging {
 
 			if (type == BehaviorDebugEnum.Collision)
 				WriteToBuilder(msg, type, Collision, forceGameLog);
+
+			if (type == BehaviorDebugEnum.Despawn)
+				WriteToBuilder(msg, type, Despawn, forceGameLog);
 
 			if (type == BehaviorDebugEnum.Dev)
 				WriteToBuilder(msg, type, Dev, forceGameLog);

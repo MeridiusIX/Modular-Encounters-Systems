@@ -149,7 +149,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					//BehaviorLogger.Write("Checking DespawnFar Trigger: " + trigger.ProfileSubtypeId, BehaviorDebugEnum.Trigger);
 					if (trigger.UseTrigger == true) {
 
-						if (_behavior.Settings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.Settings.DespawnCoords) > trigger.TargetDistance) {
+						if (_behavior.BehaviorSettings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords) > trigger.TargetDistance) {
 
 							trigger.ActivateTrigger(CheckDespawnFar);
 

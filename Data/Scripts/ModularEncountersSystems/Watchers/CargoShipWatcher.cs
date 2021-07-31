@@ -41,7 +41,7 @@ namespace ModularEncountersSystems.Watchers {
 
 				if (cargoShip.Behavior != null) {
 
-					if (cargoShip.Behavior.Settings.ActiveBehaviorType != BehaviorSubclass.Passive) {
+					if (cargoShip.Behavior.BehaviorSettings.ActiveBehaviorType != BehaviorSubclass.Passive) {
 
 						SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName +" Using RivalAI Behavior for Navigation. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
 						CargoShips.RemoveAt(i);
@@ -126,7 +126,7 @@ namespace ModularEncountersSystems.Watchers {
 			if (grid.Npc.PrimaryRemoteControlId == -1)
 				return;
 
-			if (!PlanetManager.InGravity(grid.GetPosition()) && (grid.Behavior == null || grid.Behavior.Settings.ActiveBehaviorType != BehaviorSubclass.Passive)) {
+			if (!PlanetManager.InGravity(grid.GetPosition()) && (grid.Behavior == null || grid.Behavior.BehaviorSettings.ActiveBehaviorType != BehaviorSubclass.Passive)) {
 
 				grid.Npc.PrimaryRemoteControlId = -1;
 				return;

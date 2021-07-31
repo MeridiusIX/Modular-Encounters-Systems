@@ -170,14 +170,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					if(Vector3D.Distance(this.RemoteControl.GetPosition(), this.NearestPlayer.GetPosition()) > this.RetreatDespawnDistance){
 
 						BehaviorLogger.Write("Retreat Despawn: Player Far Enough", BehaviorDebugEnum.Despawn);
-						_behavior.Settings.DoDespawn = true;
+						_behavior.BehaviorSettings.DoDespawn = true;
 						
 					}
 
 				} else {
 
 					BehaviorLogger.Write("Retreat Despawn: No Player", BehaviorDebugEnum.Despawn);
-					_behavior.Settings.DoDespawn = true;
+					_behavior.BehaviorSettings.DoDespawn = true;
 
 				}
 
@@ -198,7 +198,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						if(PlayerDistanceTimer >= PlayerDistanceTimerTrigger) {
 
 							BehaviorLogger.Write("No Player Within Distance", BehaviorDebugEnum.Despawn);
-							_behavior.Settings.DoDespawn = true;
+							_behavior.BehaviorSettings.DoDespawn = true;
 
 						}
 						
@@ -232,19 +232,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 			
-			if(this.UseRetreatTimer == true && _behavior.Settings.DoRetreat == false){
+			if(this.UseRetreatTimer == true && _behavior.BehaviorSettings.DoRetreat == false){
 				
 				RetreatTimer++;
 
 				if(RetreatTimer >= RetreatTimerTrigger) {
 
-					_behavior.Settings.DoRetreat = true;
+					_behavior.BehaviorSettings.DoRetreat = true;
 
 				}
 				
 			}
 
-			if (_behavior.Settings.DoDespawn) {
+			if (_behavior.BehaviorSettings.DoDespawn) {
 				_behavior.Trigger.ProcessDespawnTriggers();
 				DespawnGrid();
 			
@@ -256,7 +256,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			_behavior.Trigger.ProcessRetreatTriggers();
 			BehaviorLogger.Write("Retreat Signal Received For Grid: " + this.RemoteControl.SlimBlock.CubeGrid.CustomName, BehaviorDebugEnum.Despawn);
-			_behavior.Settings.DoRetreat = true;
+			_behavior.BehaviorSettings.DoRetreat = true;
 			
 		}
 
@@ -277,8 +277,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			
 			}
 
-			BehaviorLogger.Write("Despawning Grid: " + this.RemoteControl.SlimBlock.CubeGrid.CustomName, BehaviorDebugEnum.Despawn);
-
+			/*
 			MyAPIGateway.Utilities.InvokeOnGameThread(() => {
 
 				var gridGroup = MyAPIGateway.GridGroups.GetGroup(this.RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Logical);
@@ -294,6 +293,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				}
 
 			});
+			*/
 
 		}
 		

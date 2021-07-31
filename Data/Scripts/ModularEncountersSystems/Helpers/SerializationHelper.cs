@@ -1,4 +1,5 @@
-﻿using Sandbox.Game.EntityComponents;
+﻿using ModularEncountersSystems.Logging;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,12 @@ namespace ModularEncountersSystems.Helpers {
 
 			byte[] byteData = Convert.FromBase64String(data);
 
-			if (byteData == null)
+			if (byteData == null) {
+
 				return null;
 
+			}
+				
 			return MyAPIGateway.Utilities.SerializeFromBinary<T>(byteData);
 
 		}
@@ -64,10 +68,15 @@ namespace ModularEncountersSystems.Helpers {
 			if (entity.Storage == null)
 				entity.Storage = new MyModStorageComponent();
 
-			var stringData = ConvertClassToString<T>(saveData);
+			var byteData = MyAPIGateway.Utilities.SerializeToBinary<T>(saveData);
+			var stringData = Convert.ToBase64String(byteData);
 
-			if (stringData == null)
+			if (stringData == null) {
+
+				//SpawnLogger.Write("Failed To Convert Class To String While Saving To Entity", SpawnerDebugEnum.Error, true);
 				return;
+
+			}
 
 			if (entity.Storage.ContainsKey(guid)) {
 

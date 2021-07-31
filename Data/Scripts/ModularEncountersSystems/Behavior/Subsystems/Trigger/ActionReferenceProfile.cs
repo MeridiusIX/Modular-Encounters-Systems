@@ -259,10 +259,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeZoneAtPosition;
 		public string ZoneName;
 
-		public bool ZoneRadiusChange;
-		public bool ZoneRadiusSet;
-		public double ZoneRadius;
+		public ModifierEnum ZoneRadiusChangeType;
+		public double ZoneRadiusChangeAmount;
 
+		public bool ZoneCustomCounterChange;
+		public List<ModifierEnum> ZoneCustomCounterChangeType;
+		public List<string> ZoneCustomCounterChangeName;
+		public List<int> ZoneCustomCounterChangeAmount;
+
+		public bool ZoneCustomBoolChange;
+		public List<string> ZoneCustomBoolChangeName;
+		public List<bool> ZoneCustomBoolChangeAmount;
+
+		public bool CreateBots;
+		public List<string> BotSpawnGroup;
+		public List<string> BotConditionProfile;
+		public List<string> BotWaypoint;
+
+		public bool ChangeBehaviorSubclass;
+		public BehaviorSubclass NewBehaviorSubclass;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -500,6 +515,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ParentGridNameRequirement = "";
 
+			ChangeZoneAtPosition = false;
+			ZoneName = "";
+
+			ZoneRadiusChangeType = ModifierEnum.None;
+			ZoneRadiusChangeAmount = 0;
+
+			ZoneCustomCounterChange = false;
+			ZoneCustomCounterChangeType = new List<ModifierEnum>();
+			ZoneCustomCounterChangeName = new List<string>();
+			ZoneCustomCounterChangeAmount = new List<int>();
+
+			ZoneCustomBoolChange = false;
+			ZoneCustomBoolChangeName = new List<string>();
+			ZoneCustomBoolChangeAmount = new List<bool>();
+
+			CreateBots = false;
+			BotSpawnGroup = new List<string>();
+			BotConditionProfile = new List<string>();
+			BotWaypoint = new List<string>();
+
+			ChangeBehaviorSubclass = false;
+			NewBehaviorSubclass = BehaviorSubclass.None;
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -666,6 +704,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"RandomGyroRotation", (s, o) => TagParse.TagBoolCheck(s, ref RandomGyroRotation) },
 				{"RandomThrustDirection", (s, o) => TagParse.TagBoolCheck(s, ref RandomThrustDirection) },
 				{"ParentGridNameRequirement", (s, o) => TagParse.TagStringCheck(s, ref ParentGridNameRequirement) },
+				{"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+				{"ZoneName", (s, o) => TagParse.TagStringCheck(s, ref ZoneName) },
+				{"ZoneRadiusChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneRadiusChangeType) },
+				{"ZoneRadiusChangeAmount", (s, o) => TagParse.TagDoubleCheck(s, ref ZoneRadiusChangeAmount) },
+				{"ZoneCustomCounterChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChange) },
+				{"ZoneCustomCounterChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneCustomCounterChangeType) },
+				{"ZoneCustomCounterChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomCounterChangeName) },
+				{"ZoneCustomCounterChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ZoneCustomCounterChangeAmount) },
+				{"ZoneCustomBoolChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChange) },
+				{"ZoneCustomBoolChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomBoolChangeName) },
+				{"ZoneCustomBoolChangeAmount", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeAmount) },
 
 			};
 

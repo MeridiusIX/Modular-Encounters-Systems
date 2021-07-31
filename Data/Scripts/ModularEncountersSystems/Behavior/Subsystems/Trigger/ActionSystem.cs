@@ -267,8 +267,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (commandProfile.SendDamagerEntityId)
 
-						if(_behavior.Settings.LastDamagerEntity == 0)
-							newCommand.DamagerEntityId = _behavior.Settings.LastDamagerEntity;
+						if(_behavior.BehaviorSettings.LastDamagerEntity == 0)
+							newCommand.DamagerEntityId = _behavior.BehaviorSettings.LastDamagerEntity;
 						else
 							BehaviorLogger.Write("No Damager ID To Send With Command", BehaviorDebugEnum.Command);
 
@@ -294,7 +294,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 									IMyEntity entity = null;
 
-									if (MyAPIGateway.Entities.TryGetEntityById(_behavior.Settings.LastDamagerEntity, out entity)) {
+									if (MyAPIGateway.Entities.TryGetEntityById(_behavior.BehaviorSettings.LastDamagerEntity, out entity)) {
 
 										var parentEnt = entity.GetTopMostParent();
 
@@ -414,7 +414,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//InheritLastAttackerFromCommand
 			if (actions.InheritLastAttackerFromCommand) {
 
-				_behavior.Settings.LastDamagerEntity = command != null ? command.TargetEntityId : 0;
+				_behavior.BehaviorSettings.LastDamagerEntity = command != null ? command.TargetEntityId : 0;
 
 			}
 
@@ -477,13 +477,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 			//SwitchTargetToDamager
-			if (actions.SwitchTargetToDamager == true && _behavior.Settings.LastDamagerEntity != 0) {
+			if (actions.SwitchTargetToDamager == true && _behavior.BehaviorSettings.LastDamagerEntity != 0) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Switch Target to Damager", BehaviorDebugEnum.Action);
 
 				IMyEntity tempEntity = null;
 
-				if (MyAPIGateway.Entities.TryGetEntityById(_behavior.Settings.LastDamagerEntity, out tempEntity)) {
+				if (MyAPIGateway.Entities.TryGetEntityById(_behavior.BehaviorSettings.LastDamagerEntity, out tempEntity)) {
 
 					//BehaviorLogger.Write("Damager Entity Valid", BehaviorDebugEnum.General);
 
@@ -858,7 +858,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//ChangeRotationDirection
 			if (actions.ChangeRotationDirection) {
 
-				_behavior.Settings.SetRotation(actions.RotationDirection);
+				_behavior.BehaviorSettings.SetRotation(actions.RotationDirection);
 				_behavior.AutoPilot.StopAllThrust();
 
 			}

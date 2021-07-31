@@ -38,7 +38,7 @@ namespace ModularEncountersSystems.Spawning {
 			else
 				count = MathTools.RandomBetween(collection.Conditions.MinCreatureCount, collection.Conditions.MaxCreatureCount);
 
-			if (count < path.CreatureCoords.Count)
+			if (count > path.CreatureCoords.Count)
 				count = path.CreatureCoords.Count;
 
 			bool spawnedBot = false;

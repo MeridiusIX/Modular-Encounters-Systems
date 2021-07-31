@@ -68,7 +68,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			bool skipEngageCheck = false;
 
-			if (_behavior.Mode != BehaviorMode.Retreat && _behavior.Settings.DoRetreat == true) {
+			if (_behavior.Mode != BehaviorMode.Retreat && _behavior.BehaviorSettings.DoRetreat == true) {
 
 				ChangeCoreBehaviorMode(BehaviorMode.Retreat);
 				_behavior.AutoPilot.ActivateAutoPilot(_behavior.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);

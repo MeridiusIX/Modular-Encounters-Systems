@@ -72,6 +72,16 @@ namespace ModularEncountersSystems.Tasks {
 
 					SpawnLogger.Write(grid.CubeGrid.CustomName + " Grid is being Closed.", SpawnerDebugEnum.CleanUp, true);
 
+					if (!string.IsNullOrWhiteSpace(grid?.Npc?.DespawnSource)) {
+
+						SpawnLogger.Write(string.Format(" - Despawn Source: [{0}]", grid.Npc.DespawnSource), SpawnerDebugEnum.CleanUp, true);
+
+					} else {
+
+						SpawnLogger.Write(string.Format(" - Despawn Source: Unknown"), SpawnerDebugEnum.CleanUp, true);
+
+					}
+
 					foreach (var owner in grid.CubeGrid.BigOwners) {
 
 						SpawnLogger.Write(string.Format(" - Grid Majority Owner [{0}]. NPC Ownership: {1}", owner, OwnershipHelper.IsNPC(owner)), SpawnerDebugEnum.CleanUp, true);

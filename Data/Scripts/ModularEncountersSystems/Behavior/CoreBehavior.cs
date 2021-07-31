@@ -85,15 +85,15 @@ namespace ModularEncountersSystems.Behavior {
 		public DespawnSystem Despawn { get { return _despawn; } set { _despawn = value; } }
 		public GridSystem Grid { get { return _extras; } set { _extras = value; } }
 		public OwnerSystem Owner { get { return _owner; } set { _owner = value; } }
-		public StoredSettings Settings { get { return _settings; } set { _settings = value; } }
+		public StoredSettings BehaviorSettings { get { return _settings; } set { _settings = value; } }
 		public TriggerSystem Trigger { get { return _trigger; } set { _trigger = value; } }
 
 		public BehaviorMode Mode { 
 			
 			get {
 				
-				if(this.Settings != null)
-					return this.Settings.Mode;
+				if(this.BehaviorSettings != null)
+					return this.BehaviorSettings.Mode;
 
 				return BehaviorMode.Init;
 			
@@ -101,8 +101,8 @@ namespace ModularEncountersSystems.Behavior {
 			
 			set {
 
-				if (this.Settings != null)
-					this.Settings.Mode = value;
+				if (this.BehaviorSettings != null)
+					this.BehaviorSettings.Mode = value;
 
 			}
 		
@@ -365,10 +365,10 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (preserveSettings) {
 
-				Settings.State.DataMode = AutoPilotDataMode.Primary;
-				Settings.State.AutoPilotFlags = NewAutoPilotMode.None;
-				Settings.Mode = BehaviorMode.Init;
-				var newSettings = new StoredSettings(Settings, preserveSettings, preserveTriggers, preserveTargetData);
+				BehaviorSettings.State.DataMode = AutoPilotDataMode.Primary;
+				BehaviorSettings.State.AutoPilotFlags = NewAutoPilotMode.None;
+				BehaviorSettings.Mode = BehaviorMode.Init;
+				var newSettings = new StoredSettings(BehaviorSettings, preserveSettings, preserveTriggers, preserveTargetData);
 				var tempSettingsBytes = MyAPIGateway.Utilities.SerializeToBinary<StoredSettings>(newSettings);
 				var tempSettingsString = Convert.ToBase64String(tempSettingsBytes);
 
@@ -444,14 +444,14 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			if (ActiveBehavior != null && ActiveBehavior.SubClass == Settings.ActiveBehaviorType)
+			if (ActiveBehavior != null && ActiveBehavior.SubClass == BehaviorSettings.ActiveBehaviorType)
 				ActiveBehavior.ProcessBehavior();
 			else {
 
-				if (Settings.ActiveBehaviorType == BehaviorSubclass.None)
-					Settings.ActiveBehaviorType = BehaviorManager.GetSubclassFromCustomData(RemoteControl?.CustomData);
+				if (BehaviorSettings.ActiveBehaviorType == BehaviorSubclass.None)
+					BehaviorSettings.ActiveBehaviorType = BehaviorManager.GetSubclassFromCustomData(RemoteControl?.CustomData);
 
-				if (Settings.ActiveBehaviorType == BehaviorSubclass.None) {
+				if (BehaviorSettings.ActiveBehaviorType == BehaviorSubclass.None) {
 
 					BehaviorLogger.Write("Could Not Setup Behavior. Behavior Subclass Could Not Be Determined.", BehaviorDebugEnum.BehaviorSetup, true);
 					this.BehaviorTerminated = true;
@@ -459,7 +459,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				}
 
-				AssignSubClassBehavior(Settings.ActiveBehaviorType);
+				AssignSubClassBehavior(BehaviorSettings.ActiveBehaviorType);
 
 				if (ActiveBehavior != null)
 					ActiveBehavior.ProcessBehavior();
@@ -525,7 +525,7 @@ namespace ModularEncountersSystems.Behavior {
 			AssignGridEntity();
 
 			BehaviorLogger.Write("Setting Up Subsystems", BehaviorDebugEnum.BehaviorSetup);
-			Settings = new StoredSettings();
+			BehaviorSettings = new StoredSettings();
 			AutoPilot = new AutoPilotSystem(remoteControl, this);
 			Broadcast = new BroadcastSystem(remoteControl);
 			Damage = new DamageSystem(remoteControl);
@@ -536,10 +536,10 @@ namespace ModularEncountersSystems.Behavior {
 			Trigger = new TriggerSystem(remoteControl);
 
 			BehaviorLogger.Write("Setting Up Subsystem References", BehaviorDebugEnum.BehaviorSetup);
-			AutoPilot.SetupReferences(this, Settings, Trigger);
+			AutoPilot.SetupReferences(this, BehaviorSettings, Trigger);
 			Damage.SetupReferences(this.Trigger);
 			Damage.IsRemoteWorking += () => { return IsWorking && PhysicsValid;};
-			Trigger.SetupReferences(this.AutoPilot, this.Broadcast, this.Despawn, this.Grid, this.Owner, this.Settings, this);
+			Trigger.SetupReferences(this.AutoPilot, this.Broadcast, this.Despawn, this.Grid, this.Owner, this.BehaviorSettings, this);
 
 			AssignSubClassBehavior(subclass);
 
@@ -570,20 +570,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _cargoship;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 				
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -595,20 +595,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _fighter;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -620,20 +620,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _horsefighter;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -645,20 +645,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _horsefly;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -670,20 +670,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _hunter;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -695,20 +695,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _nautical;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -720,20 +720,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _passive;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -772,20 +772,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _sniper;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -797,20 +797,20 @@ namespace ModularEncountersSystems.Behavior {
 
 				ActiveBehavior = _strike;
 
-				if (Settings.ActiveBehaviorType != subclass) {
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
 
 					Mode = BehaviorMode.Init;
 
-					if (!Settings.SubclassBehaviorDefaultsSet) {
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
 
-						Settings.SubclassBehaviorDefaultsSet = true;
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
 						ActiveBehavior.SetDefaultTags();
 
 					}
 
 				}
 
-				Settings.ActiveBehaviorType = subclass;
+				BehaviorSettings.ActiveBehaviorType = subclass;
 				return;
 
 			}
@@ -859,7 +859,7 @@ namespace ModularEncountersSystems.Behavior {
 		public void PostTagsSetup() {
 
 
-			if (Settings.ActiveBehaviorType != BehaviorSubclass.Passive) {
+			if (BehaviorSettings.ActiveBehaviorType != BehaviorSubclass.Passive) {
 
 				BehaviorLogger.Write("Setting Inertia Dampeners: " + (AutoPilot.Data.DisableInertiaDampeners ? "False" : "True"), BehaviorDebugEnum.BehaviorSetup);
 				RemoteControl.DampenersOverride = !AutoPilot.Data.DisableInertiaDampeners;
@@ -904,21 +904,21 @@ namespace ModularEncountersSystems.Behavior {
 
 						if (tempSettings != null) {
 
-							Settings = tempSettings;
+							BehaviorSettings = tempSettings;
 							foundStoredSettings = true;
 							BehaviorLogger.Write("Loaded Stored Settings For " + this.RemoteControl.SlimBlock.CubeGrid.CustomName, BehaviorDebugEnum.BehaviorSetup);
-							BehaviorLogger.Write("Stored Settings BehaviorMode: " + Settings.Mode.ToString(), BehaviorDebugEnum.BehaviorSetup);
+							BehaviorLogger.Write("Stored Settings BehaviorMode: " + BehaviorSettings.Mode.ToString(), BehaviorDebugEnum.BehaviorSetup);
 
-							if (!Settings.IgnoreTriggers) {
+							if (!BehaviorSettings.IgnoreTriggers) {
 
-								Trigger.Triggers = Settings.Triggers;
-								Trigger.DamageTriggers = Settings.DamageTriggers;
-								Trigger.CommandTriggers = Settings.CommandTriggers;
-								Trigger.CompromisedTriggers = Settings.CompromisedTriggers;
+								Trigger.Triggers = BehaviorSettings.Triggers;
+								Trigger.DamageTriggers = BehaviorSettings.DamageTriggers;
+								Trigger.CommandTriggers = BehaviorSettings.CommandTriggers;
+								Trigger.CompromisedTriggers = BehaviorSettings.CompromisedTriggers;
 
 							} else {
 
-								Settings.IgnoreTriggers = false;
+								BehaviorSettings.IgnoreTriggers = false;
 
 							}
 
@@ -942,28 +942,28 @@ namespace ModularEncountersSystems.Behavior {
 			if (!foundStoredSettings) {
 
 				BehaviorLogger.Write("Stored Settings Not Found For " + this.RemoteControl.SlimBlock.CubeGrid.CustomName, BehaviorDebugEnum.BehaviorSetup);
-				Settings.Triggers = Trigger.Triggers;
-				Settings.DamageTriggers = Trigger.DamageTriggers;
-				Settings.CommandTriggers = Trigger.CommandTriggers;
-				Settings.CompromisedTriggers = Trigger.CompromisedTriggers;
+				BehaviorSettings.Triggers = Trigger.Triggers;
+				BehaviorSettings.DamageTriggers = Trigger.DamageTriggers;
+				BehaviorSettings.CommandTriggers = Trigger.CommandTriggers;
+				BehaviorSettings.CompromisedTriggers = Trigger.CompromisedTriggers;
 
 			} else {
 
 				var sb = new StringBuilder();
 				sb.Append("Checking and Displaying Existing Stored Booleans and Counters").AppendLine();
 
-				if (Settings.StoredCustomBooleans != null && Settings.StoredCustomBooleans.Keys.Count > 0) {
+				if (BehaviorSettings.StoredCustomBooleans != null && BehaviorSettings.StoredCustomBooleans.Keys.Count > 0) {
 
 					sb.Append("Stored Custom Booleans:").AppendLine();
 
-					foreach (var name in Settings.StoredCustomBooleans.Keys) {
+					foreach (var name in BehaviorSettings.StoredCustomBooleans.Keys) {
 
 						if (string.IsNullOrWhiteSpace(name))
 							continue;
 
 						bool result = false;
 
-						if (Settings.StoredCustomBooleans.TryGetValue(name, out result)) {
+						if (BehaviorSettings.StoredCustomBooleans.TryGetValue(name, out result)) {
 
 							sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
 
@@ -973,18 +973,18 @@ namespace ModularEncountersSystems.Behavior {
 
 				}
 
-				if (Settings.StoredCustomCounters != null && Settings.StoredCustomCounters.Keys.Count > 0) {
+				if (BehaviorSettings.StoredCustomCounters != null && BehaviorSettings.StoredCustomCounters.Keys.Count > 0) {
 
 					sb.Append("Stored Custom Counters:").AppendLine();
 
-					foreach (var name in Settings.StoredCustomCounters.Keys) {
+					foreach (var name in BehaviorSettings.StoredCustomCounters.Keys) {
 
 						if (string.IsNullOrWhiteSpace(name))
 							continue;
 
 						int result = 0;
 
-						if (Settings.StoredCustomCounters.TryGetValue(name, out result)) {
+						if (BehaviorSettings.StoredCustomCounters.TryGetValue(name, out result)) {
 
 							sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
 
@@ -994,9 +994,9 @@ namespace ModularEncountersSystems.Behavior {
 
 				}
 
-				if (Settings.CurrentTargetEntityId != 0) {
+				if (BehaviorSettings.CurrentTargetEntityId != 0) {
 
-					AutoPilot.Targeting.ForceTargetEntityId = Settings.CurrentTargetEntityId;
+					AutoPilot.Targeting.ForceTargetEntityId = BehaviorSettings.CurrentTargetEntityId;
 					AutoPilot.Targeting.ForceRefresh = true;
 
 				}
@@ -1010,7 +1010,7 @@ namespace ModularEncountersSystems.Behavior {
 			BehaviorLogger.Write("Beginning Individual Trigger Reference Setup", BehaviorDebugEnum.BehaviorSetup);
 			foreach (var trigger in Trigger.Triggers) {
 
-				trigger.Conditions.SetReferences(this.RemoteControl, Settings);
+				trigger.Conditions.SetReferences(this.RemoteControl, BehaviorSettings);
 
 				if (!string.IsNullOrWhiteSpace(trigger.ActionsDefunct?.ProfileSubtypeId))
 					trigger.Actions.Add(trigger.ActionsDefunct);
@@ -1023,7 +1023,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			foreach (var trigger in Trigger.DamageTriggers) {
 
-				trigger.Conditions.SetReferences(this.RemoteControl, Settings);
+				trigger.Conditions.SetReferences(this.RemoteControl, BehaviorSettings);
 
 				if (!foundStoredSettings)
 					trigger.ResetTime();
@@ -1033,7 +1033,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			foreach (var trigger in Trigger.CommandTriggers) {
 
-				trigger.Conditions.SetReferences(this.RemoteControl, Settings);
+				trigger.Conditions.SetReferences(this.RemoteControl, BehaviorSettings);
 
 				if (!foundStoredSettings)
 					trigger.ResetTime();
@@ -1042,7 +1042,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			foreach (var trigger in Trigger.CompromisedTriggers) {
 
-				trigger.Conditions.SetReferences(this.RemoteControl, Settings);
+				trigger.Conditions.SetReferences(this.RemoteControl, BehaviorSettings);
 
 				if (!foundStoredSettings)
 					trigger.ResetTime();
@@ -1064,8 +1064,8 @@ namespace ModularEncountersSystems.Behavior {
 
 		internal void SetDefaultTargeting() {
 
-			var savedTarget = !string.IsNullOrWhiteSpace(Settings.CustomTargetProfile);
-			var targetProfileName = !savedTarget ? "RivalAI-GenericTargetProfile-EnemyPlayer" : Settings.CustomTargetProfile;
+			var savedTarget = !string.IsNullOrWhiteSpace(BehaviorSettings.CustomTargetProfile);
+			var targetProfileName = !savedTarget ? "RivalAI-GenericTargetProfile-EnemyPlayer" : BehaviorSettings.CustomTargetProfile;
 
 			if (savedTarget || string.IsNullOrWhiteSpace(AutoPilot.Targeting.NormalData.ProfileSubtypeId)) {
 
@@ -1149,7 +1149,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				try {
 
-					var tempSettingsBytes = MyAPIGateway.Utilities.SerializeToBinary<StoredSettings>(Settings);
+					var tempSettingsBytes = MyAPIGateway.Utilities.SerializeToBinary<StoredSettings>(BehaviorSettings);
 					var tempSettingsString = Convert.ToBase64String(tempSettingsBytes);
 					_settingsDataPending = tempSettingsString;
 					_readyToSaveSettings = true;
@@ -1253,7 +1253,60 @@ namespace ModularEncountersSystems.Behavior {
 
 		}
 
+		public override string ToString() {
+
+			var sb = new StringBuilder();
+
+			//CoreBehavior
+			sb.Append("::: NPC Core Behavior :::").AppendLine();
+			sb.Append(" - Grid Name:         ").Append(RemoteControl.SlimBlock.CubeGrid.CustomName).AppendLine();
+			sb.Append(" - Behavior Name:     ").Append(CurrentGrid?.Npc?.BehaviorName != null ? CurrentGrid.Npc.BehaviorName : "(null)").AppendLine(); //SeeWhyThisIsntPopulated
+			sb.Append(" - Behavior Subclass: ").Append(BehaviorSettings.ActiveBehaviorType).AppendLine();
+			sb.Append(" - Behavior Mode:     ").Append(Mode).AppendLine();
+			sb.AppendLine();
+
+			//AutoPilot
+			sb.Append("::: AutoPilot :::").AppendLine();
+			sb.Append(" - Current Profile: ").Append(AutoPilot.Data.ProfileSubtypeId).AppendLine();
+			sb.Append(AutoPilot.GetThrustAndRotationData());
+			sb.AppendLine();
+
+			sb.Append("::: AutoPilot Flags :::").AppendLine();
+			sb.Append(" - RotateToWaypoint:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.RotateToWaypoint)).AppendLine();
+			sb.Append(" - ThrustForward:              ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.ThrustForward)).AppendLine();
+			sb.Append(" - Strafe:                     ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.Strafe)).AppendLine();
+			sb.Append(" - LevelWithGravity:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.LevelWithGravity)).AppendLine();
+			sb.Append(" - ThrustUpward:               ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.ThrustUpward)).AppendLine();
+			sb.Append(" - BarrelRoll:                 ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.BarrelRoll)).AppendLine();
+			sb.Append(" - CollisionAvoidance:         ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.CollisionAvoidance)).AppendLine();
+			sb.Append(" - PlanetaryPathing:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.PlanetaryPathing)).AppendLine();
+			sb.Append(" - WaypointFromTarget:         ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.WaypointFromTarget)).AppendLine();
+			sb.Append(" - Ram:                        ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.Ram)).AppendLine();
+			sb.Append(" - OffsetWaypoint:             ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.OffsetWaypoint)).AppendLine();
+			sb.Append(" - RotateToTarget:             ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.RotateToTarget)).AppendLine();
+			sb.Append(" - WaterNavigation:            ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.WaterNavigation)).AppendLine();
+			sb.Append(" - HeavyYaw:                   ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.HeavyYaw)).AppendLine();
+			sb.Append(" - UseFlyLevelWithGravity:     ").Append(AutoPilot.State.UseFlyLevelWithGravity).AppendLine();
+			sb.Append(" - UseFlyLevelWithGravityIdle: ").Append(AutoPilot.State.UseFlyLevelWithGravityIdle).AppendLine();
+			sb.AppendLine();
+
+			//CubeGrid
+			sb.Append("::: Grid Debug Data :::").AppendLine();
+			sb.Append(CurrentGrid.DebugData.ToString());
+			sb.AppendLine();
+
+			//Grid NPC Data
+			if (CurrentGrid.Npc != null) {
+
+				sb.Append("::: Grid NPC Data :::").AppendLine();
+				sb.Append(CurrentGrid.Npc.ToString());
+				sb.AppendLine();
+
+			}
+
+			return sb.ToString();
 		
+		}
 
 	}
 	

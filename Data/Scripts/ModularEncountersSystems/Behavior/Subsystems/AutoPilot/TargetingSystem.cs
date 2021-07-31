@@ -35,13 +35,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				if (OverrideTarget != null && OverrideTarget.ActiveEntity()) {
 
 					OverrideTarget = value;
-					_behavior.Settings.CurrentTargetEntityId = OverrideTarget.GetEntityId();
+					_behavior.BehaviorSettings.CurrentTargetEntityId = OverrideTarget.GetEntityId();
 					return;
 				
 				}
 
 				NormalTarget = value;
-				_behavior.Settings.CurrentTargetEntityId = NormalTarget?.GetEntityId() ?? 0;
+				_behavior.BehaviorSettings.CurrentTargetEntityId = NormalTarget?.GetEntityId() ?? 0;
 
 			}
 		}
@@ -1101,14 +1101,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					if (!setOverride) {
 
 						NormalData = targetProfile;
-						_behavior.Settings.CustomTargetProfile = NewTargetProfileName;
+						_behavior.BehaviorSettings.CustomTargetProfile = NewTargetProfileName;
 						BehaviorLogger.Write("Target Profile Switched To: " + NewTargetProfileName, BehaviorDebugEnum.Target);
 
 
 					} else {
 
 						OverrideData = targetProfile;
-						_behavior.Settings.CustomTargetProfile = NewTargetProfileName;
+						_behavior.BehaviorSettings.CustomTargetProfile = NewTargetProfileName;
 						BehaviorLogger.Write("Target Profile Switched To: " + NewTargetProfileName, BehaviorDebugEnum.Target);
 
 					}

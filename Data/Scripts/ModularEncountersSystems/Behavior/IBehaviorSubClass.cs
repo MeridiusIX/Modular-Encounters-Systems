@@ -14,5 +14,7 @@ namespace ModularEncountersSystems.Behavior {
 
 		void SetDefaultTags();
 
+		string ToString();
+
 	}
 }

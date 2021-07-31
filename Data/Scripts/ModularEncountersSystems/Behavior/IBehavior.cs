@@ -18,7 +18,7 @@ namespace ModularEncountersSystems.Behavior {
 		DespawnSystem Despawn { get; }
 		GridSystem Grid { get; }
 		OwnerSystem Owner { get; }
-		StoredSettings Settings { get; }
+		StoredSettings BehaviorSettings { get; }
 		TriggerSystem Trigger { get; }
 		BehaviorMode Mode { get; }
 		bool BehaviorTerminated { get; set; }

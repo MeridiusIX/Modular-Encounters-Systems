@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
         public static bool ModEnabled = true;
 
-        public static string ModVersion = "2.0.11";
+        public static string ModVersion = "2.0.12";
         public static MES_SessionCore Instance;
 
         public static bool IsServer;
@@ -84,6 +84,7 @@ namespace ModularEncountersSystems.Core {
 
             ProfileManager.Setup();
             BlockLogicManager.Setup();
+            SpawnGroupManager.CreateSpawnLists();
             EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
             SetDefaultSettings();
 
@@ -91,7 +92,6 @@ namespace ModularEncountersSystems.Core {
                 return;
 
             APIs.RegisterAPIs(2); //Register Any Applicable APIs
-            SpawnGroupManager.CreateSpawnLists();
             FactionHelper.PopulateNpcFactionLists();
             EventWatcher.Setup();
             NpcManager.Setup();

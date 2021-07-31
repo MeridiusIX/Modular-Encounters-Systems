@@ -119,6 +119,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(24)]
 		public Vector3D Up;
 
+		[ProtoMember(25)]
+		public DateTime LastChangeToData;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -248,6 +251,7 @@ namespace ModularEncountersSystems.World {
 			StartCoords = Vector3D.Zero;
 			EndCoords = Vector3D.Zero;
 			SpawnTime = MyAPIGateway.Session.GameDateTime;
+			LastChangeToData = MyAPIGateway.Session.GameDateTime;
 			InitialFaction = "";
 			FirstAttributesCheck = false;
 			SecondAttributesCheck = false;
@@ -514,12 +518,42 @@ namespace ModularEncountersSystems.World {
 
 		public void Update() {
 
-			if (Grid != null && Grid.ActiveEntity()) {
+			if (Grid != null && Grid.ActiveEntity() && Grid.Npc == this) {
 
+				//ThisIsBreakingShit;
+				LastChangeToData = MyAPIGateway.Session.GameDateTime;
 				SerializationHelper.SaveDataToEntity<NpcData>(Grid.CubeGrid, this, StorageTools.NpcDataKey);
 
 			}
 
+		}
+
+		public override string ToString() {
+
+			var sb = new StringBuilder();
+
+			sb.Append(" - Attributes:          ").Append(Attributes.ToString()).AppendLine();
+			sb.Append(" - AppliedAttributes:   ").Append(AppliedAttributes.ToString()).AppendLine();
+			sb.Append(" - SpawnType:           ").Append(SpawnType.ToString()).AppendLine();
+			sb.Append(" - SpawnGroupName:      ").Append(!string.IsNullOrWhiteSpace(SpawnGroupName) ? SpawnGroupName : "N/A").AppendLine();
+			sb.Append(" - ConditionIndex:      ").Append(ConditionIndex.ToString()).AppendLine();
+			sb.Append(" - ZoneIndex:           ").Append(ZoneIndex.ToString()).AppendLine();
+			sb.Append(" - OriginalPrefabId:    ").Append(!string.IsNullOrWhiteSpace(OriginalPrefabId) ? OriginalPrefabId : "N/A").AppendLine();
+			sb.Append(" - SpawnerPrefabId:     ").Append(!string.IsNullOrWhiteSpace(SpawnerPrefabId) ? SpawnerPrefabId : "N/A").AppendLine();
+			sb.Append(" - BehaviorName:        ").Append(!string.IsNullOrWhiteSpace(BehaviorName) ? BehaviorName : "N/A").AppendLine();
+			sb.Append(" - BehaviorTriggerDist: ").Append(BehaviorTriggerDist.ToString()).AppendLine();
+			sb.Append(" - StartCoords:         ").Append(StartCoords.ToString()).AppendLine();
+			sb.Append(" - EndCoords:           ").Append(EndCoords.ToString()).AppendLine();
+			sb.Append(" - SpawnTime:           ").Append(SpawnTime != null ? SpawnTime.ToString() : "N/A").AppendLine();
+			sb.Append(" - LastChangeToData:    ").Append(LastChangeToData != null ? LastChangeToData.ToString() : "N/A").AppendLine();
+			sb.Append(" - InitialFaction:      ").Append(!string.IsNullOrWhiteSpace(InitialFaction) ? InitialFaction : "N/A").AppendLine();
+			sb.Append(" - DespawnAttempts:     ").Append(DespawnAttempts.ToString()).AppendLine();
+			sb.Append(" - PrefabSpeed:         ").Append(PrefabSpeed.ToString()).AppendLine();
+			sb.Append(" - DespawnSource:       ").Append(!string.IsNullOrWhiteSpace(DespawnSource) ? DespawnSource : "N/A").AppendLine();
+			sb.Append(" - SpawnedByMES:        ").Append(SpawnedByMES.ToString()).AppendLine();
+
+			return sb.ToString();
+			
 		}
 
 	}

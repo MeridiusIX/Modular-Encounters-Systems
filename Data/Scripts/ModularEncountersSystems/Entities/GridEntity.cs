@@ -76,7 +76,11 @@ namespace ModularEncountersSystems.Entities {
 		public Action<GridEntity> OwnershipMajorityChange;
 		public Action UnloadEntities;
 
+		public StringBuilder DebugData;
+
 		public GridEntity(IMyEntity entity) : base(entity) {
+
+			DebugData = new StringBuilder();
 
 			Type = EntityType.Grid;
 			CubeGrid = entity as IMyCubeGrid;
@@ -130,10 +134,12 @@ namespace ModularEncountersSystems.Entities {
 
 			if (CubeGrid.Physics == null) {
 
+				DebugData.Append(" - Grid Has No Physics On Entity Load. Registering Watcher.").AppendLine();
 				CubeGrid.OnPhysicsChanged += PhysicsCheck;
 
 			} else {
 
+				DebugData.Append(" - Grid Has Physics On Entity Load.").AppendLine();
 				HasPhysics = true;
 			
 			}
@@ -167,38 +173,44 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		private void CheckForNpcData() {
+		public void CheckForNpcData() {
 
-			if (CubeGrid?.Storage == null)
+			if (CubeGrid?.Storage == null) {
+
+				DebugData.Append(" - Cube Grid Storage Null. Cannot Check For NPC Data").AppendLine();
 				return;
 
+			}
+				
 			string stringData = null;
-
-			if (!CubeGrid.Storage.TryGetValue(StorageTools.NpcDataKey, out stringData))
-				return;
-
-			if (string.IsNullOrWhiteSpace(stringData))
-				return;
-
-			byte[] byteData = Convert.FromBase64String(stringData);
-
-			if (byteData == null)
-				return;
-
-			NpcData data = MyAPIGateway.Utilities.SerializeFromBinary<NpcData>(byteData);
+			NpcData data = SerializationHelper.GetDataFromEntity<NpcData>(CubeGrid, StorageTools.NpcDataKey);
 
 			if (data == null) {
 
+				DebugData.Append(" - Couldn't Find NpcData. Attempting To Find Legacy NPC Data...").AppendLine();
+
 				var legacyData = SerializationHelper.GetDataFromEntity<LegacyActiveNPC>(CubeGrid, StorageTools.LegacyNpcDataKey);
 
-				if (legacyData == null)
+				if (legacyData == null) {
+
+					DebugData.Append(" - Couldn't Find Any NpcData.").AppendLine();
 					return;
 
+				}
+
+				DebugData.Append(" - Legacy NPC Data Found.").AppendLine();
 				data = new NpcData(legacyData);
 
-			}	
+			} else {
 
+				DebugData.Append(" - Retrieved Following NPC Data: ").AppendLine();
+				DebugData.Append(data.ToString()).AppendLine();
+
+			}
+
+			DebugData.Append(" - Checking if NPC Data Conditions Resolve as Null.").AppendLine();
 			Npc = data.Conditions != null ? data : null;
+			DebugData.Append(" - NPC Data Conditions: ").Append(Npc == null ? "Null" : "OK").AppendLine();
 
 		}
 

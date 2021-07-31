@@ -8,6 +8,8 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Configuration;
 
 namespace ModularEncountersSystems.Behavior {
 
@@ -84,7 +86,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			BehaviorLogger.Write(_behavior.Mode.ToString(), BehaviorDebugEnum.General);
 			
-			if(_behavior.Mode != BehaviorMode.Retreat && _behavior.Settings.DoRetreat == true){
+			if(_behavior.Mode != BehaviorMode.Retreat && _behavior.BehaviorSettings.DoRetreat == true){
 
 				_behavior.ChangeCoreBehaviorMode(BehaviorMode.Retreat);
 				_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
@@ -107,13 +109,13 @@ namespace ModularEncountersSystems.Behavior {
 
 				if (GetSpeedFromSpawnGroup && _behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.Attributes.HasFlag(NpcAttributes.IsCargoShip)) {
 
-					_behavior.Settings.State.MaxSpeedOverride = _behavior.CurrentGrid.Npc.PrefabSpeed;
+					_behavior.BehaviorSettings.State.MaxSpeedOverride = _behavior.CurrentGrid.Npc.PrefabSpeed;
 
 				}
 
 				if (UsePauseAutopilotFromSpawnGroup && _behavior.CurrentGrid.Npc.SpawnGroup != null) {
 
-					_behavior.Settings.State.MaxSpeedOverride = _behavior.CurrentGrid.Npc.PrefabSpeed;
+					_behavior.BehaviorSettings.State.MaxSpeedOverride = _behavior.CurrentGrid.Npc.PrefabSpeed;
 					_stoppingRange = _behavior.CurrentGrid.Npc.SpawnGroup.PauseAutopilotAtPlayerDistance;
 				}
 
@@ -188,7 +190,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				}
 
-				if (GetDistanceToWaypoint() < MathTools.Hypotenuse(_behavior.AutoPilot.Data.WaypointTolerance, _behavior.AutoPilot.Data.WaypointTolerance)) {
+				if (ArrivedAtWaypoint()) {
 
 					_cargoShipWaypoint.ReachedWaypoint = true;
 					_cargoShipWaypoint.ReachedWaypointTime = MyAPIGateway.Session.GameDateTime;
@@ -198,12 +200,12 @@ namespace ModularEncountersSystems.Behavior {
 
 						if (_behavior.Despawn.NearestPlayer == null || _behavior.Despawn.PlayerDistance > 1200) {
 
-							_behavior.Settings.DoDespawn = true;
+							_behavior.BehaviorSettings.DoDespawn = true;
 						
 						}
 
 						_behavior.ChangeCoreBehaviorMode(BehaviorMode.Retreat);
-						_behavior.Settings.DoRetreat = true;
+						_behavior.BehaviorSettings.DoRetreat = true;
 
 					} else {
 
@@ -228,6 +230,55 @@ namespace ModularEncountersSystems.Behavior {
 				}
 
 			}
+
+		}
+
+		private bool ArrivedAtWaypoint() {
+
+			var dist = GetDistanceToWaypoint();
+			var waypointTolerance = MathTools.Hypotenuse(_behavior.AutoPilot.Data.WaypointTolerance, _behavior.AutoPilot.Data.WaypointTolerance);
+
+			if (_waypointIsDespawn) {
+
+				bool gotType = false;
+
+				if (_behavior.CurrentGrid?.Npc != null) {
+
+					var spawnType = SpawnRequest.GetPrimarySpawningType(_behavior.CurrentGrid.Npc.SpawnType);
+
+					if (spawnType == SpawningType.SpaceCargoShip) {
+
+						waypointTolerance = Settings.SpaceCargoShips.DespawnDistanceFromEndPath;
+						gotType = true;
+
+					}
+
+					if (spawnType == SpawningType.PlanetaryCargoShip) {
+
+						waypointTolerance = Settings.PlanetaryCargoShips.DespawnDistanceFromEndPath;
+						gotType = true;
+
+					}
+
+				}
+
+				if (!gotType) {
+
+					if (_behavior.AutoPilot.InGravity()) {
+
+						waypointTolerance = Settings.PlanetaryCargoShips.DespawnDistanceFromEndPath;
+
+					} else {
+
+						waypointTolerance = Settings.SpaceCargoShips.DespawnDistanceFromEndPath;
+
+					}
+				
+				}
+			
+			}
+
+			return dist < waypointTolerance;
 
 		}
 

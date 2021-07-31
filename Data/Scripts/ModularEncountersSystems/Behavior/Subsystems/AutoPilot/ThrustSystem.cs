@@ -36,9 +36,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			get {
 
-				if (_referenceOrientation != _behavior.Settings.BlockOrientation) {
+				if (_referenceOrientation != _behavior.BehaviorSettings.BlockOrientation) {
 
-					_referenceOrientation = _behavior.Settings.BlockOrientation;
+					_referenceOrientation = _behavior.BehaviorSettings.BlockOrientation;
 					SetBaseDirections(_referenceOrientation);
 
 				}
@@ -702,9 +702,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 					}
 
-					var forwardData = _thrustToApply.GetThrustDataFromDirection(Direction.Forward, _behavior.Settings.BlockOrientation);
-					var upData = _thrustToApply.GetThrustDataFromDirection(Direction.Up, _behavior.Settings.BlockOrientation);
-					var sideData = _thrustToApply.GetThrustDataFromDirection(Direction.Right, _behavior.Settings.BlockOrientation);
+					var forwardData = _thrustToApply.GetThrustDataFromDirection(Direction.Forward, _behavior.BehaviorSettings.BlockOrientation);
+					var upData = _thrustToApply.GetThrustDataFromDirection(Direction.Up, _behavior.BehaviorSettings.BlockOrientation);
+					var sideData = _thrustToApply.GetThrustDataFromDirection(Direction.Right, _behavior.BehaviorSettings.BlockOrientation);
 
 					_debugThrustForwardMode = (forwardData.X == 0 || forwardData.Z <= 0.01) ? "None" : forwardData.Y == 1 ? "Strafe Forward" : "Strafe Backward";
 					_debugThrustUpMode = (upData.X == 0 || upData.Z <= 0.01) ? "Strafe None" : upData.Y == 1 ? "Strafe Up" : "Strafe Down";

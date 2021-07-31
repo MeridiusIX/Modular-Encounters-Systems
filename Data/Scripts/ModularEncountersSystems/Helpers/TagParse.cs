@@ -574,6 +574,45 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		//TagModifierEnumCheck
+		public static void TagModifierEnumCheck(string tag, ref ModifierEnum original) {
+
+			ModifierEnum result = ModifierEnum.None;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (ModifierEnum.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
+		public static void TagModifierEnumCheck(string tag, ref List<ModifierEnum> original) {
+
+			ModifierEnum result = ModifierEnum.None;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (ModifierEnum.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original.Add(result);
+
+		}
+
 		public static void TagRelativeEntityEnumCheck(string tag, ref RelativeEntityType original) {
 
 			RelativeEntityType result = RelativeEntityType.None;

@@ -35,17 +35,21 @@ namespace ModularEncountersSystems.Tasks {
 
             if (_grid.Npc == null) {
 
-                //TODO: Create NPC Data
-                _grid.Npc = new NpcData();
-                _grid.Npc.Grid = _grid;
-                _grid.Npc.SpawnType = SpawningType.OtherNPC;
-                _grid.Npc.ProcessTertiaryAttributes();
+                _grid.CheckForNpcData();
 
-            } else {
+                if (_grid.Npc == null) {
 
-                _grid.Npc.ProcessTertiaryAttributes();
+                    //Create NPC Data
+                    _grid.DebugData.Append(" - Creating Blank NPC Data").AppendLine();
+                    _grid.Npc = new NpcData();
+                    _grid.Npc.Grid = _grid;
+                    _grid.Npc.SpawnType = SpawningType.OtherNPC;
+                    
+                }
 
             }
+
+            _grid.Npc.ProcessTertiaryAttributes();
 
             //Add Grid To Active NPCs
             if (!NpcManager.ActiveNpcs.Contains(_grid)) {

@@ -1054,6 +1054,37 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (actions.ChangeZoneAtPosition) {
+
+				//Radius
+				if (actions.ZoneRadiusChangeType != ModifierEnum.None)
+					ZoneManager.ChangeZoneRadius(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneRadiusChangeAmount, actions.ZoneRadiusChangeType);
+
+				//CustomBools
+				if (actions.ZoneCustomBoolChange)
+					ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeAmount);
+
+				//CustomCounters
+				if (actions.ZoneCustomCounterChange)
+					ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+
+			}
+
+			//ChangeBehaviorSubclass
+			if (actions.ChangeBehaviorSubclass) {
+
+				_behavior.BehaviorSettings.ActiveBehaviorType = actions.NewBehaviorSubclass;
+				_behavior.AssignSubClassBehavior(actions.NewBehaviorSubclass);
+				//TODO: Add Custom BehaviorMode Override
+
+			}
+
+			if (actions.CreateBots) {
+			
+				
+			
+			}
+
 			//SetBooleansTrue
 			foreach (var variable in actions.SetBooleansTrue)
 				_settings.SetCustomBool(variable, true);

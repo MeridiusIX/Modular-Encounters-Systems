@@ -639,40 +639,42 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public string GetThrustAndRotationData() {
 
 			var sb = new StringBuilder();
-			sb.Append(" - Speed:   ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
-			sb.Append(" - Allowed Waypoint Types: ").AppendLine();
-			sb.Append("   - ").Append(DirectWaypointType.ToString()).AppendLine();
-			sb.Append(" - Restricted Waypoint Types: ").AppendLine();
-			sb.Append("   - ").Append(IndirectWaypointType.ToString()).AppendLine();
-
-			sb.AppendLine().Append(" - Dampeners Enabled: ").Append(_remoteControl.DampenersOverride.ToString()).AppendLine();
-			sb.Append(" - Forward Thrust Mode: ").AppendLine();
-			sb.Append("   - ").Append(_debugThrustForwardMode).AppendLine().AppendLine();
-			sb.Append(" - Upward Thrust Mode:  ").AppendLine();
-			sb.Append("   - ").Append(_debugThrustUpMode).AppendLine().AppendLine();
-			sb.Append(" - Side Thrust Mode:  ").AppendLine();
-			sb.Append("   - ").Append(_debugThrustSideMode).AppendLine().AppendLine();
-			sb.Append(" - Altitude:  ").AppendLine();
-			sb.Append("   - ").Append(MyAltitude.ToString()).AppendLine();
-
-
+			sb.Append(" - Speed:                              ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
+			sb.Append(" - Altitude:                           ").Append(MyAltitude.ToString()).AppendLine();
+			sb.Append(" - Distance To Initial Waypoint:       ").Append(Vector3D.Distance(_initialWaypoint, _remoteControl.GetPosition())).AppendLine();
+			sb.Append(" - Distance To Current Waypoint:       ").Append(Vector3D.Distance(_currentWaypoint, _remoteControl.GetPosition())).AppendLine();
+			sb.Append(" - Angle To Initial Waypoint:          ").Append(VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(_remoteControl.WorldMatrix.Forward), Vector3D.Normalize(_initialWaypoint - _remoteControl.GetPosition()))).AppendLine();
+			sb.Append(" - Angle To Current Waypoint:          ").Append(VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(_remoteControl.WorldMatrix.Forward), Vector3D.Normalize(_currentWaypoint - _remoteControl.GetPosition()))).AppendLine();
+			sb.Append(" - Velocity Angle To Initial Waypoint: ").Append(VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(MyVelocity), Vector3D.Normalize(_initialWaypoint - _remoteControl.GetPosition()))).AppendLine();
+			sb.Append(" - Velocity Angle To Current Waypoint: ").Append(VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(MyVelocity), Vector3D.Normalize(_currentWaypoint - _remoteControl.GetPosition()))).AppendLine();
 			sb.AppendLine();
-			sb.Append(" - ForwardDir:       ").Append(_behavior.BehaviorSettings.RotationDirection.ToString()).AppendLine();
-			sb.Append(" - Pitch: ").AppendLine();
-			sb.Append("   - Angle:         ").Append(Math.Round(PitchAngleDifference, 2)).AppendLine();
-			sb.Append("   - Target Diff:   ").Append(Math.Round(PitchTargetAngleResult, 2)).AppendLine();
-			sb.Append("   - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.X, 4)).AppendLine();
-			sb.Append("   - Magnitude:     ").Append(Math.Round(ExistingPitchMagnitude, 4)).AppendLine();
+
+			sb.Append(" - Allowed Waypoint Types:             ").Append(DirectWaypointType.ToString()).AppendLine();
+			sb.Append(" - Restricted Waypoint Types:          ").Append(IndirectWaypointType.ToString()).AppendLine();
+			sb.AppendLine();
+
+			sb.Append(" - Dampeners Enabled:                  ").Append(_remoteControl.DampenersOverride.ToString()).AppendLine();
+			sb.Append(" - Forward Thrust Mode:                ").Append(_debugThrustForwardMode).AppendLine();
+			sb.Append(" - Upward Thrust Mode:                 ").Append(_debugThrustUpMode).AppendLine();
+			sb.Append(" - Side Thrust Mode:                   ").Append(_debugThrustSideMode).AppendLine();
+			sb.AppendLine();
+
+			sb.Append(" - ForwardDir:                         ").Append(_behavior.BehaviorSettings.RotationDirection.ToString()).AppendLine();
+			sb.Append(" - Pitch:   ").AppendLine();
+			sb.Append("   - Angle:                            ").Append(Math.Round(PitchAngleDifference, 2)).AppendLine();
+			sb.Append("   - Target Diff:                      ").Append(Math.Round(PitchTargetAngleResult, 2)).AppendLine();
+			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro.RawValues.X, 4)).AppendLine();
+			sb.Append("   - Magnitude:                        ").Append(Math.Round(ExistingPitchMagnitude, 4)).AppendLine();
 			sb.Append(" - Yaw: ").AppendLine();
-			sb.Append("   - Angle:         ").Append(Math.Round(YawAngleDifference, 2)).AppendLine();
-			sb.Append("   - Target Diff:   ").Append(Math.Round(YawTargetAngleResult, 2)).AppendLine();
-			sb.Append("   - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.Y, 4)).AppendLine();
-			sb.Append("   - Magnitude:     ").Append(Math.Round(ExistingYawMagnitude, 4)).AppendLine();
+			sb.Append("   - Angle:                            ").Append(Math.Round(YawAngleDifference, 2)).AppendLine();
+			sb.Append("   - Target Diff:                      ").Append(Math.Round(YawTargetAngleResult, 2)).AppendLine();
+			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro.RawValues.Y, 4)).AppendLine();
+			sb.Append("   - Magnitude:                        ").Append(Math.Round(ExistingYawMagnitude, 4)).AppendLine();
 			sb.Append(" - Roll: ").AppendLine();
-			sb.Append("   - Angle:         ").Append(Math.Round(RollAngleDifference, 2)).AppendLine();
-			sb.Append("   - Target Diff:   ").Append(Math.Round(RollTargetAngleResult, 2)).AppendLine();
-			sb.Append("   - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.Z, 4)).AppendLine();
-			sb.Append("   - Magnitude:     ").Append(Math.Round(ExistingRollMagnitude, 4)).AppendLine();
+			sb.Append("   - Angle:                            ").Append(Math.Round(RollAngleDifference, 2)).AppendLine();
+			sb.Append("   - Target Diff:                      ").Append(Math.Round(RollTargetAngleResult, 2)).AppendLine();
+			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro.RawValues.Z, 4)).AppendLine();
+			sb.Append("   - Magnitude:                        ").Append(Math.Round(ExistingRollMagnitude, 4)).AppendLine();
 
 			return sb.ToString();
 		

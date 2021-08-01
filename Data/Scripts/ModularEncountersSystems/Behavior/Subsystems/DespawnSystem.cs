@@ -165,7 +165,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			if(mode == BehaviorMode.Retreat) {
 
-				if(this.NearestPlayer.ActiveEntity()) {
+				if(this.NearestPlayer != null && this.NearestPlayer.ActiveEntity()) {
 
 					if(Vector3D.Distance(this.RemoteControl.GetPosition(), this.NearestPlayer.GetPosition()) > this.RetreatDespawnDistance){
 

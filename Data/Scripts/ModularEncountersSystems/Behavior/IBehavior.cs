@@ -65,6 +65,7 @@ namespace ModularEncountersSystems.Behavior {
 		void DebugDrawWaypoints();
 		void ChangeTargetProfile(string newTargetProfile);
 		void ChangeBehavior(string newBehavior, bool preserveSettings, bool preserveTriggers, bool preserveTargetData);
+		void AssignSubClassBehavior(BehaviorSubclass subclass);
 
 	}
 }

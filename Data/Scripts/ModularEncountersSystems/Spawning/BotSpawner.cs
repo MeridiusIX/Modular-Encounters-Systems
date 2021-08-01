@@ -105,6 +105,12 @@ namespace ModularEncountersSystems.Spawning {
 		
 		}
 
+		public static void BotSpawnFromAction() {
+		
+			
+		
+		}
+
 		public static void BotOverrideConfig() {
 
 			if (!AddonManager.PlanetCreatureSpawner && !Settings.Creatures.OverrideVanillaCreatureSpawns)

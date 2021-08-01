@@ -265,7 +265,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ZoneCustomCounterChange;
 		public List<ModifierEnum> ZoneCustomCounterChangeType;
 		public List<string> ZoneCustomCounterChangeName;
-		public List<int> ZoneCustomCounterChangeAmount;
+		public List<long> ZoneCustomCounterChangeAmount;
 
 		public bool ZoneCustomBoolChange;
 		public List<string> ZoneCustomBoolChangeName;
@@ -524,7 +524,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ZoneCustomCounterChange = false;
 			ZoneCustomCounterChangeType = new List<ModifierEnum>();
 			ZoneCustomCounterChangeName = new List<string>();
-			ZoneCustomCounterChangeAmount = new List<int>();
+			ZoneCustomCounterChangeAmount = new List<long>();
 
 			ZoneCustomBoolChange = false;
 			ZoneCustomBoolChangeName = new List<string>();
@@ -711,10 +711,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ZoneCustomCounterChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChange) },
 				{"ZoneCustomCounterChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneCustomCounterChangeType) },
 				{"ZoneCustomCounterChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomCounterChangeName) },
-				{"ZoneCustomCounterChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ZoneCustomCounterChangeAmount) },
+				{"ZoneCustomCounterChangeAmount", (s, o) => TagParse.TagLongCheck(s, ref ZoneCustomCounterChangeAmount) },
 				{"ZoneCustomBoolChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChange) },
 				{"ZoneCustomBoolChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomBoolChangeName) },
 				{"ZoneCustomBoolChangeAmount", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeAmount) },
+				{"CreateBots", (s, o) => TagParse.TagBoolCheck(s, ref CreateBots) },
+				{"BotSpawnGroup", (s, o) => TagParse.TagStringListCheck(s, ref BotSpawnGroup) },
+				{"BotConditionProfile", (s, o) => TagParse.TagStringListCheck(s, ref BotConditionProfile) },
+				{"BotWaypoint", (s, o) => TagParse.TagStringListCheck(s, ref BotWaypoint) },
+				{"ChangeBehaviorSubclass", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBehaviorSubclass) },
+				{"NewBehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref NewBehaviorSubclass) },
 
 			};
 

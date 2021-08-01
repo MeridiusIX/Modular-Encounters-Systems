@@ -320,7 +320,83 @@ namespace ModularEncountersSystems.Zones {
 				}
 			
 			}
-		
+
+			if (updateZones)
+				UpdateZoneStorage();
+
+
+		}
+
+		public static void ChangeZoneRadius(Vector3D coords, string name, double radiusChange, ModifierEnum modifier) {
+
+			bool updateZones = false;
+
+			for (int i = 0; i < ActiveZones.Count; i++) {
+
+				var zone = ActiveZones[i];
+
+				if (!zone.Persistent || zone.Name != name)
+					continue;
+
+				if (zone.PositionInsideZone(coords))
+					continue;
+
+				MathTools.ApplyModifier(radiusChange, modifier, ref zone.Radius);
+				updateZones = true;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
+		}
+
+		public static void ChangeZoneCounters(Vector3D coords, string name, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers) {
+
+			bool updateZones = false;
+
+			for (int i = 0; i < ActiveZones.Count; i++) {
+
+				var zone = ActiveZones[i];
+
+				if (!zone.Persistent || zone.Name != name)
+					continue;
+
+				if (zone.PositionInsideZone(coords))
+					continue;
+
+				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
+				updateZones = true;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
+		}
+
+		public static void ChangeZoneBools(Vector3D coords, string name, List<string> counterNames, List<bool> counterValues) {
+
+			bool updateZones = false;
+
+			for (int i = 0; i < ActiveZones.Count; i++) {
+
+				var zone = ActiveZones[i];
+
+				if (!zone.Persistent || zone.Name != name)
+					continue;
+
+				if (zone.PositionInsideZone(coords))
+					continue;
+
+				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
+				updateZones = true;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
 		}
 
 		public static void Unload() {

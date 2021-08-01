@@ -8,6 +8,141 @@ namespace ModularEncountersSystems.Helpers {
 
         private static Random _rnd = new Random();
 
+        public static void ApplyModifier(int value, ModifierEnum modifier, ref int target) {
+
+            if (modifier == ModifierEnum.Set) {
+
+                target = value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Add) {
+
+                target += value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Subtract) {
+
+                target -= value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Multiply) {
+
+                target *= value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Divide) {
+
+                target /= value;
+                return;
+
+            }
+
+        }
+
+        public static void ApplyModifier(long value, ModifierEnum modifier, ref long target) {
+
+            if (modifier == ModifierEnum.Set) {
+
+                target = value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Add) {
+
+                target += value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Subtract) {
+
+                target -= value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Multiply) {
+
+                target *= value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Divide) {
+
+                target /= value;
+                return;
+
+            }
+
+        }
+
+        public static void ApplyModifier(double value, ModifierEnum modifier, ref double target) {
+
+            if (modifier == ModifierEnum.Set) {
+
+                target = value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Add) {
+
+                target += value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Subtract) {
+
+                target -= value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Multiply) {
+
+                target *= value;
+                return;
+
+            }
+
+            if (modifier == ModifierEnum.Divide) {
+
+                target /= value;
+                return;
+
+            }
+
+        }
+
+        public static int LowestCount(params int[] counts) {
+
+            int lowestCount = -1;
+
+            for (int i = 0; i < counts.Length; i++) {
+
+                if (lowestCount == -1)
+                    lowestCount = i;
+
+                if(i < lowestCount)
+                    lowestCount = i;
+
+            }
+
+            return lowestCount;
+        
+        }
+
         /// <summary>
         /// Calculates Acceleration from Provided Force and Mass
         /// </summary>

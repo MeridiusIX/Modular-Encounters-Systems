@@ -249,6 +249,12 @@ namespace ModularEncountersSystems.Zones {
 		
 		}
 
+		public bool PositionInsideZone(Vector3D coords) {
+
+			return Vector3D.Distance(coords, Coordinates) < Radius;
+		
+		}
+
 		public string GetInfo(Vector3D coords) {
 
 			var sb = new StringBuilder();

@@ -10,7 +10,7 @@ using VRage.Game;
 namespace ModularEncountersSystems.Spawning.Manipulation {
 	public static class BehaviorBuilder {
 
-		public static bool RivalAiInitialize(MyObjectBuilder_CubeGrid cubeGrid, ManipulationProfile profile, string behaviorName, bool primaryBehaviorAlreadySet) {
+		public static bool RivalAiInitialize(MyObjectBuilder_CubeGrid cubeGrid, ManipulationProfile profile, string behaviorName, bool primaryBehaviorAlreadySet, bool rivalAIOverride) {
 
 			MyObjectBuilder_RemoteControl primaryRemote = null;
 			MyObjectBuilder_RemoteControl rivalAiRemote = null;
@@ -67,7 +67,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
-			if (primaryRemote != null && rivalAiRemote == null && profile.RivalAiReplaceRemoteControl == true) {
+			if (primaryRemote != null && rivalAiRemote == null && (profile.RivalAiReplaceRemoteControl || rivalAIOverride)) {
 
 				if (!DefinitionHelper.RivalAiControlModules.Contains(primaryRemote.SubtypeName)) {
 

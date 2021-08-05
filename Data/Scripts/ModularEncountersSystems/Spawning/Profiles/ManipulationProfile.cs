@@ -167,6 +167,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public Guid StorageKey;
 		public string StorageValue;
 
+		public bool UseLootProfiles;
+		public List<LootProfile> LootProfiles;
+		public List<string> LootGroups;
+
 		public ManipulationProfile(string data = null) {
 
 			ProfileSubtypeId = "";
@@ -318,6 +322,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			AttachModStorageComponentToGrid = false;
 			StorageKey = new Guid("00000000-0000-0000-0000-000000000000");
 			StorageValue = "";
+
+			UseLootProfiles = false;
+			LootProfiles = new List<LootProfile>();
+			LootGroups = new List<string>();
 
 			InitTags(data);
 
@@ -1137,74 +1145,114 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//UseLootProfiles
+				if (tag.StartsWith("[UseLootProfiles:") == true) {
 
-				//Build Dictionaries
-				if (this.NonRandomWeaponNames.Count > 0 && this.NonRandomWeaponNames.Count == this.NonRandomWeaponIds.Count) {
+					TagParse.TagBoolCheck(tag, ref this.UseLootProfiles);
 
-					for (int i = 0; i < this.NonRandomWeaponNames.Count; i++) {
+				}
 
-						if (!this.NonRandomWeaponReference.ContainsKey(this.NonRandomWeaponNames[i]))
-							this.NonRandomWeaponReference.Add(this.NonRandomWeaponNames[i], this.NonRandomWeaponIds[i]);
+				//LootProfiles
+				if (tag.StartsWith("[UseLootProfiles:") == true) {
+
+					TagParse.TagLootProfileCheck(tag, ref this.LootProfiles);
+
+				}
+
+				//LootGroups
+				if (tag.StartsWith("[LootGroups:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.LootGroups);
+
+				}
+
+			}
+
+			//Build Dictionaries
+			if (this.NonRandomWeaponNames.Count > 0 && this.NonRandomWeaponNames.Count == this.NonRandomWeaponIds.Count) {
+
+				for (int i = 0; i < this.NonRandomWeaponNames.Count; i++) {
+
+					if (!this.NonRandomWeaponReference.ContainsKey(this.NonRandomWeaponNames[i]))
+						this.NonRandomWeaponReference.Add(this.NonRandomWeaponNames[i], this.NonRandomWeaponIds[i]);
+
+				}
+
+			}
+
+			if (this.ReplaceBlockOld.Count > 0 && this.ReplaceBlockOld.Count == this.ReplaceBlockNew.Count) {
+
+				for (int i = 0; i < this.ReplaceBlockOld.Count; i++) {
+
+					if (!this.ReplaceBlockReference.ContainsKey(this.ReplaceBlockOld[i]))
+						this.ReplaceBlockReference.Add(this.ReplaceBlockOld[i], this.ReplaceBlockNew[i]);
+
+				}
+
+			}
+
+			if (this.ReplaceBlockNameOld.Count > 0 && this.ReplaceBlockNameOld.Count == this.ReplaceBlockNameNew.Count) {
+
+				for (int i = 0; i < this.ReplaceBlockNameOld.Count; i++) {
+
+					if (!this.BlockNameReplacerReference.ContainsKey(this.ReplaceBlockNameOld[i]))
+						this.BlockNameReplacerReference.Add(this.ReplaceBlockNameOld[i], this.ReplaceBlockNameNew[i]);
+
+				}
+
+			}
+
+			if (this.ContainerTypeAssignBlockName.Count > 0 && this.ContainerTypeAssignBlockName.Count == this.ContainerTypeAssignSubtypeId.Count) {
+
+				for (int i = 0; i < this.ContainerTypeAssignBlockName.Count; i++) {
+
+					if (!this.ContainerTypeAssignmentReference.ContainsKey(this.ContainerTypeAssignBlockName[i]))
+						this.ContainerTypeAssignmentReference.Add(this.ContainerTypeAssignBlockName[i], this.ContainerTypeAssignSubtypeId[i]);
+
+				}
+
+			}
+
+			if (this.RecolorOld.Count > 0 && this.RecolorOld.Count == this.RecolorNew.Count) {
+
+				for (int i = 0; i < this.RecolorOld.Count; i++) {
+
+					if (!this.ColorReferencePairs.ContainsKey(this.RecolorOld[i]))
+						this.ColorReferencePairs.Add(this.RecolorOld[i], this.RecolorNew[i]);
+
+				}
+
+			}
+
+			if (this.ReskinTarget.Count > 0 && this.ReskinTarget.Count == this.ReskinTexture.Count) {
+
+				for (int i = 0; i < this.ReskinTarget.Count; i++) {
+
+					if (!this.ColorSkinReferencePairs.ContainsKey(this.ReskinTarget[i]))
+						this.ColorSkinReferencePairs.Add(this.ReskinTarget[i], this.ReskinTexture[i]);
+
+				}
+
+			}
+
+			//Loot Groups
+			foreach (var group in LootGroups) {
+
+				if (string.IsNullOrWhiteSpace(group))
+					continue;
+
+				LootGroup lootGroup = null;
+
+				if (ProfileManager.LootGroups.TryGetValue(group, out lootGroup)) {
+
+					foreach (var profile in lootGroup.LootProfiles) {
+
+						if (!LootProfiles.Contains(profile))
+							LootProfiles.Add(profile);
 
 					}
 
 				}
-
-				if (this.ReplaceBlockOld.Count > 0 && this.ReplaceBlockOld.Count == this.ReplaceBlockNew.Count) {
-
-					for (int i = 0; i < this.ReplaceBlockOld.Count; i++) {
-
-						if (!this.ReplaceBlockReference.ContainsKey(this.ReplaceBlockOld[i]))
-							this.ReplaceBlockReference.Add(this.ReplaceBlockOld[i], this.ReplaceBlockNew[i]);
-
-					}
-
-				}
-
-				if (this.ReplaceBlockNameOld.Count > 0 && this.ReplaceBlockNameOld.Count == this.ReplaceBlockNameNew.Count) {
-
-					for (int i = 0; i < this.ReplaceBlockNameOld.Count; i++) {
-
-						if (!this.BlockNameReplacerReference.ContainsKey(this.ReplaceBlockNameOld[i]))
-							this.BlockNameReplacerReference.Add(this.ReplaceBlockNameOld[i], this.ReplaceBlockNameNew[i]);
-
-					}
-
-				}
-
-				if (this.ContainerTypeAssignBlockName.Count > 0 && this.ContainerTypeAssignBlockName.Count == this.ContainerTypeAssignSubtypeId.Count) {
-
-					for (int i = 0; i < this.ContainerTypeAssignBlockName.Count; i++) {
-
-						if (!this.ContainerTypeAssignmentReference.ContainsKey(this.ContainerTypeAssignBlockName[i]))
-							this.ContainerTypeAssignmentReference.Add(this.ContainerTypeAssignBlockName[i], this.ContainerTypeAssignSubtypeId[i]);
-
-					}
-
-				}
-
-				if (this.RecolorOld.Count > 0 && this.RecolorOld.Count == this.RecolorNew.Count) {
-
-					for (int i = 0; i < this.RecolorOld.Count; i++) {
-
-						if (!this.ColorReferencePairs.ContainsKey(this.RecolorOld[i]))
-							this.ColorReferencePairs.Add(this.RecolorOld[i], this.RecolorNew[i]);
-
-					}
-
-				}
-
-				if (this.ReskinTarget.Count > 0 && this.ReskinTarget.Count == this.ReskinTexture.Count) {
-
-					for (int i = 0; i < this.ReskinTarget.Count; i++) {
-
-						if (!this.ColorSkinReferencePairs.ContainsKey(this.ReskinTarget[i]))
-							this.ColorSkinReferencePairs.Add(this.ReskinTarget[i], this.ReskinTexture[i]);
-
-					}
-
-				}
-
 
 			}
 

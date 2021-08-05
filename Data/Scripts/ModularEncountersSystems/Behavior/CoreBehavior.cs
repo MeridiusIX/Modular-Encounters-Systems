@@ -1260,14 +1260,15 @@ namespace ModularEncountersSystems.Behavior {
 			//CoreBehavior
 			sb.Append("::: NPC Core Behavior :::").AppendLine();
 			sb.Append(" - Grid Name:         ").Append(RemoteControl.SlimBlock.CubeGrid.CustomName).AppendLine();
+			sb.Append(" - Grid Static:       ").Append(RemoteControl.SlimBlock.CubeGrid.IsStatic).AppendLine();
 			sb.Append(" - Behavior Name:     ").Append(CurrentGrid?.Npc?.BehaviorName != null ? CurrentGrid.Npc.BehaviorName : "(null)").AppendLine(); //SeeWhyThisIsntPopulated
 			sb.Append(" - Behavior Subclass: ").Append(BehaviorSettings.ActiveBehaviorType).AppendLine();
 			sb.Append(" - Behavior Mode:     ").Append(Mode).AppendLine();
+			sb.Append(" - Vanilla Autopilot: ").Append(RemoteControl.IsAutoPilotEnabled).AppendLine();
 			sb.AppendLine();
 
 			//AutoPilot
 			sb.Append("::: AutoPilot :::").AppendLine();
-			sb.Append(" - Current Profile: ").Append(AutoPilot.Data.ProfileSubtypeId).AppendLine();
 			sb.Append(AutoPilot.GetThrustAndRotationData());
 			sb.AppendLine();
 

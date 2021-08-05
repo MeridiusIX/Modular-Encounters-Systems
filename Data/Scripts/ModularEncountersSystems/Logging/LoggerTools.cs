@@ -545,10 +545,13 @@ namespace ModularEncountersSystems.Logging {
 				if (!grid.ActiveEntity())
 					continue;
 
-				/*
-				if (!grid.Ownership.HasFlag(GridOwnershipEnum.NpcMajority) && !grid.Ownership.HasFlag(GridOwnershipEnum.NpcMinority))
+				if (thisGrid.Behavior == null) {
+
 					continue;
-				*/
+					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);
+					//return "";
+
+				}
 
 				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
 					continue;
@@ -565,14 +568,6 @@ namespace ModularEncountersSystems.Logging {
 
 			}
 
-
-			if (thisGrid.Behavior == null) {
-
-				message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.");
-				return "";
-
-			}
-				
 			message.ReturnMessage = "NPC Behavior Data Sent To Clipboard";
 			return thisGrid.Behavior.ToString();
 

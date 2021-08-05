@@ -52,6 +52,21 @@ namespace ModularEncountersSystems.Sync {
 
         }
 
+        public static void ChatFromApi(string msg, MatrixD playerPos, long owner, ulong steamId) {
+
+            var chat = new ChatMessage();
+            chat.Mode = ChatMsgMode.ServerProcessing;
+            chat.Message = msg;
+            chat.PlayerId = owner;
+            chat.SteamId = steamId;
+            chat.PlayerPosition = playerPos.Translation;
+            chat.CameraDirection = playerPos.Forward;
+            chat.CameraPosition = playerPos.Translation;
+            chat.IsAdmin = true;
+            ChatReceivedNetwork(chat);
+
+        }
+
         public static void ChatReceivedNetwork(ChatMessage chatData) {
 
             if(chatData.Mode == ChatMsgMode.ServerProcessing) {

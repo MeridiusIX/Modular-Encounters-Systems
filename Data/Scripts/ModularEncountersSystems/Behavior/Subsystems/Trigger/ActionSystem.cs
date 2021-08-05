@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
@@ -50,6 +51,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 			}
+
+			LocalApi.BehaviorTriggerWatcher?.Invoke(RemoteControl, trigger.ProfileSubtypeId, actions.ProfileSubtypeId, _behavior.AutoPilot.Targeting.Target?.GetEntity(), _behavior.AutoPilot.GetCurrentWaypoint());
 
 			BehaviorLogger.Write(actions.ProfileSubtypeId + ": Performing Eligible Actions", BehaviorDebugEnum.Action);
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Sandbox.ModAPI;
 using VRage.Game.ModAPI;
+using VRage.ModAPI;
 using VRage.Utils;
 using VRageMath;
 
@@ -9,10 +10,12 @@ using VRageMath;
 namespace ModularEncountersSystems.API {
 	public class MESApi {
 
-		public bool MESApiReady = false;
+		public bool MESApiReady;
 
-		private long _mesModId = 1521905890;
+		private const long _mesModId = 1521905890;
 		private Action<Vector3D, string, double, int, int, int> _addKnownPlayerLocation;
+		private Action<bool, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D>> _behaviorTriggerActivationWatcher; //TODO: Complete This
+		private Action<string, MatrixD, long, ulong> _chatCommand;
 		private Action<Vector3D, string, double, bool> _changeKnownPlayerLocationSize;
 		private Func<string, string> _convertRandomNamePatterns;
 		private Func<List<string>, MatrixD, Vector3, bool, string, string, bool> _customSpawnRequest;
@@ -22,6 +25,7 @@ namespace ModularEncountersSystems.API {
 		private Func<Vector3D, bool, string, bool> _isPositionInKnownPlayerLocation;
 		private Func<IMyCubeGrid, Vector3D> _getNpcStartCoordinates;
 		private Func<IMyCubeGrid, Vector3D> _getNpcEndCoordinates;
+		private Action<bool, Action<IMyRemoteControl, IMyCubeGrid>> _registerCompromisedRemoteWatcher;
 		private Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool> _registerDespawnWatcher;
 		private Action<IMyRemoteControl, string> _registerRemoteControlCode;
 		private Action<Vector3D, string, bool> _removeKnownPlayerLocation;
@@ -33,8 +37,8 @@ namespace ModularEncountersSystems.API {
 		private Func<Vector3D, List<string>, bool> _spawnRandomEncounter;
 		private Func<Vector3D, List<string>, bool> _spawnSpaceCargoShip;
 
-		//Run This Method in your SessionComponent LoadData() Method
-		public void RegisterAPIListener() {
+		//Create this object in your SessionComponent LoadData() Method
+		public MESApi() {
 
 			MyAPIGateway.Utilities.RegisterMessageHandler(_mesModId, APIListener);
 
@@ -51,6 +55,15 @@ namespace ModularEncountersSystems.API {
 		/// <param name="maxSpawns"></param>
 		/// <param name="minThreatForAvoidingAbandonment"></param>
 		public void AddKnownPlayerLocation(Vector3D coords, string faction, double radius, int expirationMinutes, int maxSpawns, int minThreatForAvoidingAbandonment) => _addKnownPlayerLocation?.Invoke(coords, faction, radius, expirationMinutes, maxSpawns, minThreatForAvoidingAbandonment);
+
+		/// <summary>
+		/// Allows you to submit a chat command via the API.
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="playerPosition"></param>
+		/// <param name="identityId"></param>
+		/// <param name="steamUserId"></param>
+		public void ChatCommand(string message, MatrixD playerPosition, long identityId, ulong steamUserId) => _chatCommand?.Invoke(message, playerPosition, identityId, steamUserId);
 
 		/// <summary>
 		/// Used To Spawn A Random SpawnGroup From A Provided List At A Provided Location. The Spawn Will Not Be Categorized As A CargoShip/RandomEncounter/Etc
@@ -114,6 +127,13 @@ namespace ModularEncountersSystems.API {
 		/// <param name="cubeGrid">The cubegrid of the NPC you want to check</param>
 		/// <returns>Coordinates of End Position. Returns Vector3D.Zero if not found</returns>
 		public Vector3D GetNpcEndCoordinates(IMyCubeGrid cubeGrid) => _getNpcEndCoordinates?.Invoke(cubeGrid) ?? Vector3D.Zero;
+
+		/// <summary>
+		/// Allows you to register a method that is triggered whenever a RivalAI Remote Control Block is Compromised
+		/// </summary>
+		/// <param name="register"></param>
+		/// <param name="action"></param>
+		public void RegisterCompromisedRemoteWatcher(bool register, Action<IMyRemoteControl, IMyCubeGrid> action) => _registerCompromisedRemoteWatcher?.Invoke(register, action);
 
 		/// <summary>
 		/// Allows you to provide an action that will be invoked when the spawner despawns a grid.
@@ -210,6 +230,8 @@ namespace ModularEncountersSystems.API {
 
 				MESApiReady = true;
 				_addKnownPlayerLocation = (Action<Vector3D, string, double, int, int, int>)dict["AddKnownPlayerLocation"];
+				_behaviorTriggerActivationWatcher = (Action<bool, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D>>)dict["BehaviorTriggerActivationWatcher"];
+				_chatCommand = (Action<string, MatrixD, long, ulong>)dict["ChatCommand"];
 				_customSpawnRequest = (Func<List<string>, MatrixD, Vector3, bool, string, string, bool>)dict["CustomSpawnRequest"];
 				_getDespawnCoords = (Func<IMyCubeGrid, Vector3D>)dict["GetDespawnCoords"];
 				_getSpawnGroupBlackList = (Func<List<string>>)dict["GetSpawnGroupBlackList"];
@@ -218,6 +240,7 @@ namespace ModularEncountersSystems.API {
 				_convertRandomNamePatterns = (Func<string, string>)dict["ConvertRandomNamePatterns"];
 				_getNpcStartCoordinates = (Func<IMyCubeGrid, Vector3D>)dict["GetNpcStartCoordinates"];
 				_getNpcEndCoordinates = (Func<IMyCubeGrid, Vector3D>)dict["GetNpcEndCoordinates"];
+				_registerCompromisedRemoteWatcher = (Action<bool, Action<IMyRemoteControl, IMyCubeGrid>>)dict["RegisterCompromisedRemoteWatcher"];
 				_registerDespawnWatcher = (Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool>)dict["RegisterDespawnWatcher"];
 				_registerRemoteControlCode = (Action<IMyRemoteControl, string>)dict["RegisterRemoteControlCode"];
 				_removeKnownPlayerLocation = (Action<Vector3D, string, bool>)dict["RemoveKnownPlayerLocation"];

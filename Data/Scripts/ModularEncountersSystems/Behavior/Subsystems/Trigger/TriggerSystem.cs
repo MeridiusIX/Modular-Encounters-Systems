@@ -1,3 +1,4 @@
+using ModularEncountersSystems.API;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
@@ -519,6 +520,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				return;
 
 			RemoteControlCompromised = true;
+			LocalApi.CompromisedRemoteEvent?.Invoke(RemoteControl, _behavior.CurrentGrid?.CubeGrid);
 
 			for (int i = 0; i < CompromisedTriggers.Count; i++) {
 

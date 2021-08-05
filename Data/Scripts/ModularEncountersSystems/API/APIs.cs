@@ -18,7 +18,7 @@ namespace ModularEncountersSystems.API {
         public static bool WaterModApiLoaded => WaterAPI.Registered;
 
         //AI Enabled
-        public static AiEnabledApi AiEnabled;
+        public static RemoteBotAPI AiEnabled;
         public static bool AiEnabledApiLoaded { get { return AiEnabled?.Valid ?? false; } }
 
         public static void RegisterAPIs(int phase = 0) {
@@ -32,7 +32,7 @@ namespace ModularEncountersSystems.API {
                 
 
             if (AddonManager.AiEnabled && phase == 0)
-                AiEnabled = new AiEnabledApi();
+                AiEnabled = new RemoteBotAPI();
 
             //WeaponCore (BeforeStart)
             if (AddonManager.WeaponCore && phase == 2)

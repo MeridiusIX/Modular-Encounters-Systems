@@ -639,6 +639,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public string GetThrustAndRotationData() {
 
 			var sb = new StringBuilder();
+			sb.Append(" - Current Profile:                    ").Append(Data.ProfileSubtypeId).AppendLine();
 			sb.Append(" - Speed:                              ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
 			sb.Append(" - Altitude:                           ").Append(MyAltitude.ToString()).AppendLine();
 			sb.Append(" - Distance To Initial Waypoint:       ").Append(Vector3D.Distance(_initialWaypoint, _remoteControl.GetPosition())).AppendLine();

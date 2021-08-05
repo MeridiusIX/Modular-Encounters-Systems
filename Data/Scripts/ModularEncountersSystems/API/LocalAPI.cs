@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
 using Sandbox.ModAPI;
@@ -8,10 +9,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VRage.Game.ModAPI;
+using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.API {
 	public static class LocalApi {
+
+		public static Action<IMyRemoteControl, string, string, IMyEntity, Vector3D> BehaviorTriggerWatcher;
+		public static Action<IMyRemoteControl, IMyCubeGrid> CompromisedRemoteEvent;
 
 		public static void SendApiToMods() {
 
@@ -25,6 +30,8 @@ namespace ModularEncountersSystems.API {
 
 			var dict = new Dictionary<string, Delegate>();
 			dict.Add("AddKnownPlayerLocation", new Action<Vector3D, string, double, int, int, int>(KnownPlayerLocationManager.AddKnownPlayerLocation));
+			dict.Add("BehaviorTriggerActivationWatcher", new Action<bool, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D>>(ChangeBehaviorTriggerWatcher));
+			dict.Add("ChatCommand", new Action<string, MatrixD, long, ulong>(ChatManager.ChatFromApi));
 			dict.Add("CustomSpawnRequest", new Func<List<string>, MatrixD, Vector3, bool, string, string, bool>(CustomSpawnRequest));
 			dict.Add("GetDespawnCoords", new Func<IMyCubeGrid, Vector3D>(GetDespawnCoords));
 			dict.Add("GetSpawnGroupBlackList", new Func<List<string>>(GetSpawnGroupBlackList));
@@ -33,6 +40,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("ConvertRandomNamePatterns", new Func<string, string>(RandomNameGenerator.CreateRandomNameFromPattern));
 			dict.Add("GetNpcStartCoordinates", new Func<IMyCubeGrid, Vector3D>(GetNpcStartCoordinates));
 			dict.Add("GetNpcEndCoordinates", new Func<IMyCubeGrid, Vector3D>(GetNpcEndCoordinates));
+			dict.Add("RegisterCompromisedRemoteWatcher", new Action<bool, Action<IMyRemoteControl, IMyCubeGrid>>(RegisterCompromisedRemoteWatcher));
 			dict.Add("RegisterDespawnWatcher", new Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool>(RegisterDespawnWatcher));
 			dict.Add("RegisterRemoteControlCode", new Action<IMyRemoteControl, string>(RegisterRemoteControlCode));
 			dict.Add("RemoveKnownPlayerLocation", new Action<Vector3D, string, bool>(KnownPlayerLocationManager.RemoveLocation));
@@ -46,6 +54,17 @@ namespace ModularEncountersSystems.API {
 			return dict;
 
 		}
+
+
+		public static void ChangeBehaviorTriggerWatcher(bool register, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D> action) {
+
+			if (register)
+				BehaviorTriggerWatcher += action;
+			else
+				BehaviorTriggerWatcher -= action;
+
+		}
+
 
 		//CustomSpawnRequest
 		public static bool CustomSpawnRequest(List<string> spawnGroups, MatrixD spawningMatrix, Vector3 velocity, bool ignoreSafetyCheck, string factionOverride, string spawnProfileId) {
@@ -102,6 +121,15 @@ namespace ModularEncountersSystems.API {
 		public static bool IsPositionInKnownPlayerLocation(Vector3D coords, bool mustMatchFaction, string faction) {
 
 			return KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(coords, mustMatchFaction, faction);
+
+		}
+
+		public static void RegisterCompromisedRemoteWatcher(bool register, Action<IMyRemoteControl, IMyCubeGrid> action) {
+
+			if (register)
+				CompromisedRemoteEvent += action;
+			else
+				CompromisedRemoteEvent -= action;
 
 		}
 

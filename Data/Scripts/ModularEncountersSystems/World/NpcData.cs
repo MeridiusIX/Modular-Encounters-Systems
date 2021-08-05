@@ -356,7 +356,7 @@ namespace ModularEncountersSystems.World {
 			if (AttributeCheck(NpcAttributes.ForceStatic, true)) {
 
 				Grid.CubeGrid.IsStatic = true;
-				SpawnLogger.Write(Grid.CubeGrid.CustomName + " Forced To Static Grid After Spawn.", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(Grid.CubeGrid.CustomName + " Forced To Static Grid After Spawn (Secondary Check).", SpawnerDebugEnum.Spawning);
 				AppliedAttributes |= NpcAttributes.ForceStatic;
 
 			}
@@ -509,11 +509,8 @@ namespace ModularEncountersSystems.World {
 
 		private bool AttributeCheck(NpcAttributes attribute, bool force = false) {
 
-			if (force)
-				return true;
+			return Attributes.HasFlag(attribute) && (!AppliedAttributes.HasFlag(attribute) || force);
 
-			return Attributes.HasFlag(attribute) && !AppliedAttributes.HasFlag(attribute);
-		
 		}
 
 		public void Update() {

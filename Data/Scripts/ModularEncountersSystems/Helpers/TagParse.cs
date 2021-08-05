@@ -530,6 +530,24 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagLootProfileCheck(string tag, ref List<LootProfile> original) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length < 2) {
+
+				return;
+
+			}
+
+			var key = tagSplit[1];
+			LootProfile result = null;
+
+			if (ProfileManager.LootProfiles.TryGetValue(key, out result))
+				original.Add(result);
+
+		}
+
 		public static void TagManipulationProfileCheck(string tag, ref List<ManipulationProfile> original) {
 
 			var tagSplit = ProcessTag(tag);

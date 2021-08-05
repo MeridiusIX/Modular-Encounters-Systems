@@ -225,7 +225,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					if (BehaviorBuilder.RivalAiInitialize(grid, profile, data.BehaviorName, primaryBehaviorSet)) {
+					if (BehaviorBuilder.RivalAiInitialize(grid, profile, data.BehaviorName, primaryBehaviorSet, rivalAiOverride)) {
 
 						SpawnLogger.Write("RivalAI Behavior Applied To RemoteControl", SpawnerDebugEnum.Manipulation);
 						data.Attributes |= NpcAttributes.RivalAiBehaviorSet;

@@ -16,13 +16,17 @@ namespace ModularEncountersSystems.Helpers {
 
 		//Spawner Related Profiles
 		public static Dictionary<string, BlockReplacementProfile> BlockReplacementProfiles = new Dictionary<string, BlockReplacementProfile>();
+		public static Dictionary<string, BotSpawnProfile> BotSpawnProfiles = new Dictionary<string, BotSpawnProfile>();
 		public static Dictionary<string, ReplenishmentProfile> ReplenishmentProfiles = new Dictionary<string, ReplenishmentProfile>();
 		public static Dictionary<string, DerelictionProfile> DerelictionProfiles = new Dictionary<string, DerelictionProfile>();
+		public static Dictionary<string, LootGroup> LootGroups = new Dictionary<string, LootGroup>();
+		public static Dictionary<string, LootProfile> LootProfiles = new Dictionary<string, LootProfile>();
 		public static Dictionary<string, ManipulationGroup> ManipulationGroups = new Dictionary<string, ManipulationGroup>();
 		public static Dictionary<string, ManipulationProfile> ManipulationProfiles = new Dictionary<string, ManipulationProfile>();
 		public static Dictionary<string, SpawnConditionsGroup> SpawnConditionGroups = new Dictionary<string, SpawnConditionsGroup>();
 		public static Dictionary<string, SpawnConditionsProfile> SpawnConditionProfiles = new Dictionary<string, SpawnConditionsProfile>();
 		public static Dictionary<string, StaticEncounter> StaticEncounters = new Dictionary<string, StaticEncounter>();
+		public static Dictionary<string, WeaponModRulesProfile> WeaponModRulesProfiles = new Dictionary<string, WeaponModRulesProfile>();
 		public static Dictionary<string, Zone> ZoneProfiles = new Dictionary<string, Zone>();
 		public static Dictionary<string, ZoneConditionsProfile> ZoneConditionsProfiles = new Dictionary<string, ZoneConditionsProfile>();
 
@@ -71,6 +75,16 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (!WeaponModRulesProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Weapon Mod Rules]")) {
+
+					var weaponRule = new WeaponModRulesProfile();
+					weaponRule.InitTags(component.DescriptionText);
+					weaponRule.ProfileSubtypeId = component.Id.SubtypeName;
+					WeaponModRulesProfiles.Add(component.Id.SubtypeName, weaponRule);
+					continue;
+
+				}
+
 				if (!ZoneProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Zone]")) {
 
 					var zone = new Zone();
@@ -87,6 +101,16 @@ namespace ModularEncountersSystems.Helpers {
 					zone.InitTags(component.DescriptionText);
 					zone.ProfileSubtypeId = component.Id.SubtypeName;
 					ZoneConditionsProfiles.Add(component.Id.SubtypeName, zone);
+					continue;
+
+				}
+
+				if (!BotSpawnProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Bot Spawn]")) {
+
+					var bot = new BotSpawnProfile();
+					bot.InitTags(component.DescriptionText);
+					bot.ProfileSubtypeId = component.Id.SubtypeName;
+					BotSpawnProfiles.Add(component.Id.SubtypeName, bot);
 					continue;
 
 				}

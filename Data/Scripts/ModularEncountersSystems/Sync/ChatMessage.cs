@@ -8,6 +8,7 @@ using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ProtoBuf;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -491,6 +492,35 @@ namespace ModularEncountersSystems.Sync {
 				return true;
 
 			}
+
+			/*
+			//MES.Debug.ToolParentEntity
+			if (array[2] == "ToolParentEntity") {
+
+				var character = PlayerManager.GetPlayerWithIdentityId(PlayerId)?.Player?.Character;
+
+				if (character?.EquippedTool == null) {
+
+					MyVisualScriptLogicProvider.ShowNotification("No Character or Equipped Tool", 4000);
+					return true;
+				
+				}
+
+				if (character.EquippedTool.GetTopMostParent() as IMyCharacter == null) {
+
+					MyVisualScriptLogicProvider.ShowNotification("Tool Parent Is Not Character", 4000);
+					MyVisualScriptLogicProvider.ShowNotification("Tool Parent Is Tool: " + (character.EquippedTool.GetTopMostParent() == character.EquippedTool), 4000);
+
+				} else {
+
+					MyVisualScriptLogicProvider.ShowNotification("Tool Parent Is Character", 4000);
+
+				}
+
+				return true;
+
+			}
+			*/
 
 			//MES.Debug.UnlockAdminBlocks
 			if (array[2] == "UnlockNpcBlocks") {

@@ -15,6 +15,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> RequiredManipulationSpawnConditions;
 		public float ManipulationThreatMinimum;
 		public float ManipulationThreatMaximum;
+		public int ManipulationMinBlockCount;
+		public int ManipulationMaxBlockCount;
 
 		public bool RandomizeWeapons;
 		public bool IgnoreWeaponRandomizerMod;
@@ -170,6 +172,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseLootProfiles;
 		public List<LootProfile> LootProfiles;
 		public List<string> LootGroups;
+		public bool ClearExistingContainerTypes;
 
 		public ManipulationProfile(string data = null) {
 
@@ -180,6 +183,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RequiredManipulationSpawnConditions = new List<string>();
 			ManipulationThreatMinimum = -1;
 			ManipulationThreatMaximum = -1;
+			ManipulationMinBlockCount = -1;
+			ManipulationMaxBlockCount = -1;
 
 			RandomizeWeapons = false;
 			IgnoreWeaponRandomizerMod = false;
@@ -326,6 +331,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseLootProfiles = false;
 			LootProfiles = new List<LootProfile>();
 			LootGroups = new List<string>();
+			ClearExistingContainerTypes = false;
 
 			InitTags(data);
 
@@ -374,6 +380,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ManipulationThreatMaximum:") == true) {
 
 					TagParse.TagFloatCheck(tag, ref this.ManipulationThreatMaximum);
+
+				}
+
+				//ManipulationMinBlockCount
+				if (tag.StartsWith("[ManipulationMinBlockCount:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.ManipulationMinBlockCount);
+
+				}
+
+				//ManipulationMaxBlockCount
+				if (tag.StartsWith("[ManipulationMaxBlockCount:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.ManipulationMaxBlockCount);
 
 				}
 
@@ -1163,6 +1183,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[LootGroups:") == true) {
 
 					TagParse.TagStringListCheck(tag, ref this.LootGroups);
+
+				}
+
+				//ClearExistingContainerTypes
+				if (tag.StartsWith("[ClearExistingContainerTypes:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.ClearExistingContainerTypes);
 
 				}
 

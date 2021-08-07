@@ -16,8 +16,10 @@ namespace ModularEncountersSystems.Spawning {
 		public List<MyObjectBuilder_CubeGrid> GridList;
 		public DateTime SpawnStartTime;
 		public MySpawnGroupDefinition.SpawnGroupPrefab SpawnGroupPrefab;
+		public int BlockCount;
 		public double OriginalMass;
 		public double CurrentMass;
+		public bool ClearedContainerTypes;
 
 		public PrefabContainer(string SubtypeId) {
 
@@ -71,6 +73,9 @@ namespace ModularEncountersSystems.Spawning {
 			foreach (var grid in GridList) {
 
 				OriginalMass += GeneralManipulations.GetGridMass(grid);
+
+				if (grid.CubeBlocks != null)
+					BlockCount += grid.CubeBlocks.Count;
 
 			}
 

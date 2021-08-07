@@ -17,6 +17,7 @@ namespace ModularEncountersSystems.API {
 
 		public static Action<IMyRemoteControl, string, string, IMyEntity, Vector3D> BehaviorTriggerWatcher;
 		public static Action<IMyRemoteControl, IMyCubeGrid> CompromisedRemoteEvent;
+		public static Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>> BehaviorCustomTriggers = new Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>>();
 
 		public static void SendApiToMods() {
 
@@ -40,6 +41,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("ConvertRandomNamePatterns", new Func<string, string>(RandomNameGenerator.CreateRandomNameFromPattern));
 			dict.Add("GetNpcStartCoordinates", new Func<IMyCubeGrid, Vector3D>(GetNpcStartCoordinates));
 			dict.Add("GetNpcEndCoordinates", new Func<IMyCubeGrid, Vector3D>(GetNpcEndCoordinates));
+			dict.Add("RegisterBehaviorCustomTrigger", new Action<bool, string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>>(RegisterBehaviorCustomTrigger));
 			dict.Add("RegisterCompromisedRemoteWatcher", new Action<bool, Action<IMyRemoteControl, IMyCubeGrid>>(RegisterCompromisedRemoteWatcher));
 			dict.Add("RegisterDespawnWatcher", new Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool>(RegisterDespawnWatcher));
 			dict.Add("RegisterRemoteControlCode", new Action<IMyRemoteControl, string>(RegisterRemoteControlCode));
@@ -62,6 +64,15 @@ namespace ModularEncountersSystems.API {
 				BehaviorTriggerWatcher += action;
 			else
 				BehaviorTriggerWatcher -= action;
+
+		}
+
+		public static void RegisterBehaviorCustomTrigger(bool register, string methodIdentifier, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool> action) {
+
+			if (register && !BehaviorCustomTriggers.ContainsKey(methodIdentifier))
+				BehaviorCustomTriggers.Add(methodIdentifier, action);
+			else
+				BehaviorCustomTriggers.Remove(methodIdentifier);
 
 		}
 

@@ -21,6 +21,8 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMyCubeGrid> MonitoredGrids = new List<IMyCubeGrid>();
 		public static Dictionary<IMyCubeGrid, Action<object, MyDamageInformation>> RegisteredDamageHandlers = new Dictionary<IMyCubeGrid, Action<object, MyDamageInformation>>();
 
+		public static Action<object, MyDamageInformation> DamageRelay;
+
 		public static List<MissileProfile> CurrentMissiles = new List<MissileProfile>();
 
 		public static void Setup() {
@@ -41,76 +43,65 @@ namespace ModularEncountersSystems.Helpers {
 
 			var grid = block.CubeGrid;
 
-			if (MonitoredGrids.Contains(grid)) {
+			var newInfo = info;
 
-				var newInfo = info;
+			if (info.Type.ToString() == "Explosion") {
 
-				if (info.Type.ToString() == "Explosion") {
+				try {
 
-					try {
+					//Logger.AddMsg("Missile List Count: " + CurrentMissiles.Count.ToString(), true);
 
-						//Logger.AddMsg("Missile List Count: " + CurrentMissiles.Count.ToString(), true);
+					for (int i = CurrentMissiles.Count - 1; i >= 0; i--) {
 
-						for (int i = CurrentMissiles.Count - 1; i >= 0; i--) {
+						if (!CurrentMissiles[i].Removed) {
 
-							if (!CurrentMissiles[i].Removed) {
-
-								continue;
-
-							}
-
-							var duration = MyAPIGateway.Session.GameDateTime - CurrentMissiles[i].RemovalTime;
-
-							//Logger.AddMsg("TimeDiff: " + duration, true);
-
-							if (duration.TotalMilliseconds > 1000) {
-
-								//Logger.AddMsg("Removing Dead Missile", true);
-								CurrentMissiles.RemoveAt(i);
-								continue;
-
-							}
-
-							var dist = Vector3D.Distance(CurrentMissiles[i].RemovalCoords, grid.GridIntegerToWorld(block.Min));
-
-							if (dist > CurrentMissiles[i].ExplodeRadius * 2) {
-
-								//Logger.AddMsg("Distance Fail: " + dist + " vs " + CurrentMissiles[i].ExplodeRadius.ToString(), true);
-								continue;
-
-							}
-
-							if (CurrentMissiles[i].HitObjects.Contains(target)) {
-
-								//Logger.AddMsg("Object Already Hit", true);
-								continue;
-
-							}
-
-							//Logger.AddMsg("AttackerId Set: " + CurrentMissiles[i].LauncherId, true);
-							newInfo.AttackerId = CurrentMissiles[i].LauncherId;
-							CurrentMissiles[i].HitObjects.Add(target);
+							continue;
 
 						}
 
-					} catch (Exception) {
+						var duration = MyAPIGateway.Session.GameDateTime - CurrentMissiles[i].RemovalTime;
 
-						//Logger.AddMsg("Got Crash in Damage Handler For Missiles", true);
+						//Logger.AddMsg("TimeDiff: " + duration, true);
+
+						if (duration.TotalMilliseconds > 1000) {
+
+							//Logger.AddMsg("Removing Dead Missile", true);
+							CurrentMissiles.RemoveAt(i);
+							continue;
+
+						}
+
+						var dist = Vector3D.Distance(CurrentMissiles[i].RemovalCoords, grid.GridIntegerToWorld(block.Min));
+
+						if (dist > CurrentMissiles[i].ExplodeRadius * 2) {
+
+							//Logger.AddMsg("Distance Fail: " + dist + " vs " + CurrentMissiles[i].ExplodeRadius.ToString(), true);
+							continue;
+
+						}
+
+						if (CurrentMissiles[i].HitObjects.Contains(target)) {
+
+							//Logger.AddMsg("Object Already Hit", true);
+							continue;
+
+						}
+
+						//Logger.AddMsg("AttackerId Set: " + CurrentMissiles[i].LauncherId, true);
+						newInfo.AttackerId = CurrentMissiles[i].LauncherId;
+						CurrentMissiles[i].HitObjects.Add(target);
 
 					}
 
-				} 
+				} catch (Exception) {
 
-				Action<object, MyDamageInformation> action = null;
-
-				if (RegisteredDamageHandlers.TryGetValue(grid, out action)) {
-
-					action?.Invoke(target, newInfo);
-					return;
+					//Logger.AddMsg("Got Crash in Damage Handler For Missiles", true);
 
 				}
 
 			}
+
+			DamageRelay?.Invoke(target, newInfo);
 
 		}
 

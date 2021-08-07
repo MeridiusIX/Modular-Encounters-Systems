@@ -45,7 +45,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			foreach (var profile in collection.SpawnGroup.ManipulationProfiles) {
 
 				//Conditions
-				if (!ProcessConditions(collection, environment, profile, data)) {
+				if (!ProcessConditions(prefab, collection, environment, profile, data)) {
 
 					continue;
 
@@ -79,7 +79,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
-		public static bool ProcessConditions(SpawnGroupCollection collection, EnvironmentEvaluation environment, ManipulationProfile profile, NpcData data) {
+		public static bool ProcessConditions(PrefabContainer prefab, SpawnGroupCollection collection, EnvironmentEvaluation environment, ManipulationProfile profile, NpcData data) {
 
 			if (profile.ManipulationChance < 100) {
 
@@ -131,7 +131,22 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				return false;
 
 			}
-				
+
+			if (profile.ManipulationMinBlockCount > -1 && environment.ThreatScore < profile.ManipulationMinBlockCount) {
+
+				SpawnLogger.Write("Minimum Block Count Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+
+
+			if (profile.ManipulationMaxBlockCount > -1 && environment.ThreatScore > profile.ManipulationMaxBlockCount) {
+
+				SpawnLogger.Write("Maximum Block Count Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+
 
 			return true;
 
@@ -283,6 +298,13 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				GeneralManipulations.ProcessBlocks(grid, collection.SpawnGroup, profile, data);
 
+			}
+
+			//Loot
+			if (profile.UseLootProfiles) {
+
+				PrefabInventory.ApplyLootProfiles(prefab, profile);
+			
 			}
 
 			//Cosmetics

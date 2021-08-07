@@ -6,8 +6,8 @@ namespace ModularEncountersSystems.Tasks {
     public abstract class TaskItem {
 
         internal bool _isValid = true;
-        internal byte _tickCounter = 0;
-        internal byte _tickTrigger = 1;
+        internal short _tickCounter = 0;
+        internal short _tickTrigger = 1;
 
         public virtual void Run() {
 

@@ -40,6 +40,7 @@ namespace ModularEncountersSystems.World {
 		RegisterRemoteControlCode = 1 << 15,
 		CustomThrustDataUsed = 1 << 16,
 		SetMatrixPostSpawn = 1 << 17,
+		WeaponRandomizationAggression = 1 << 18,
 
 	}
 
@@ -308,6 +309,7 @@ namespace ModularEncountersSystems.World {
 			var updateSettings  = true;
 			FirstAttributesCheck = true;
 
+			SpawnLogger.Write("Processing Primary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
 			//ForceStatic
 			if (AttributeCheck(NpcAttributes.ForceStatic)) {
@@ -352,6 +354,8 @@ namespace ModularEncountersSystems.World {
 
 			SecondAttributesCheck = true;
 			var updateSettings = true;
+
+			SpawnLogger.Write("Processing Secondary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
 			if (AttributeCheck(NpcAttributes.ForceStatic, true)) {
 
@@ -469,6 +473,8 @@ namespace ModularEncountersSystems.World {
 
 			ThirdAttributesCheck = true;
 			var updateSettings = true;
+
+			SpawnLogger.Write("Processing Tertiary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
 			//DigAirTightVoxels
 			if (AttributeCheck(NpcAttributes.DigAirTightVoxels)) {

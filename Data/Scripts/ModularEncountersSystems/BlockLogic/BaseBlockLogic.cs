@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal virtual void WorkingChanged(IMyCubeBlock block = null) {
 
-			if (Block.Block != null)
+			if (Block?.Block != null)
 				_isWorking = Block.Block.IsFunctional && Block.Block.IsWorking;
 
 		}

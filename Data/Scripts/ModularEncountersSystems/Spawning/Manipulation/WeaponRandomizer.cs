@@ -1259,7 +1259,36 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
-		public static void SetWeaponCoreRandomRanges(IMyCubeGrid cubeGrid) {
+		public static void SetWeaponCoreRandomRanges(IMyCubeGrid cubeGrid, bool useMax = false) {
+
+			if (cubeGrid == null || cubeGrid.MarkedForClose || cubeGrid.Closed)
+				return;
+
+			var blocks = BlockCollectionHelper.GetAllBlocks(cubeGrid);
+			int maxRange = blocks.Count;
+
+			foreach (var block in blocks) {
+
+				if (block?.FatBlock == null)
+					continue;
+
+				if (!BlockManager.AllWeaponCoreTurrets.Contains(block.BlockDefinition.Id))
+					continue;
+
+				var termBlock = block.FatBlock as IMyTerminalBlock;
+				var weaponMax = APIs.WeaponCore.GetMaxWeaponRange(termBlock, 0);
+
+				if (!useMax && weaponMax > 800)
+					weaponMax = 800;
+
+				APIs.WeaponCore.SetBlockTrackingRange(termBlock, weaponMax);
+
+			}
+
+		}
+
+		/*
+		 public static void SetWeaponCoreRandomRanges(IMyCubeGrid cubeGrid) {
 
 			if (cubeGrid == null || cubeGrid.MarkedForClose || cubeGrid.Closed)
 				return;
@@ -1315,6 +1344,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			}
 
 		}
+		 
+		 */
 
 	}
 

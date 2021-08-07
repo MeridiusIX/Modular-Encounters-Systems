@@ -187,5 +187,7 @@ namespace ModularEncountersSystems.API {
 		public bool IsBlockProtected(IMySlimBlock block) => _isBlockProtected?.Invoke(block) ?? false;
 		public MyTuple<bool, Vector3I> GetFacesFast(MyEntity entity) => _getFacesFast?.Invoke(entity) ?? new MyTuple<bool, Vector3I>();
 		public void GetLastAttackers(MyEntity entity, ICollection<MyTuple<long, float, uint>> collection) => _getLastAttackers?.Invoke(entity, collection);
+
 	}
+
 }

@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.World;
 using Sandbox.ModAPI;
 using System;
@@ -20,18 +21,25 @@ namespace ModularEncountersSystems.Tasks {
         internal List<IMyVoxelBase> _mapList;
         internal int _listIndex;
         internal int _runCount;
+        internal int _cutCount;
 
         public CutVoxels(GridEntity grid, double cutSize = 2.7) {
 
             _isValid = true;
             _tickTrigger = 1;
+            _tickCounter = -10;
 
             _grid = grid;
             _airtightCellLocations = new List<MatrixD>();
             _mapList = new List<IMyVoxelBase>();
 
+            _cutSizeMin = -(cutSize / 2);
+            _cutSizeMax = (cutSize / 2);
+
             var min = _grid.CubeGrid.Min;
             var max = _grid.CubeGrid.Max;
+
+            SpawnLogger.Write("Preparing Grid For Voxel Cutting: " + _grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
             for (int x = min.X; x <= max.X; x++) {
 
@@ -65,13 +73,14 @@ namespace ModularEncountersSystems.Tasks {
 
             try {
 
-
                 _listIndex--;
 
                 if (_listIndex < 0 || _listIndex >= _airtightCellLocations.Count) {
 
+                    SpawnLogger.Write("Amount of Voxel Cuts: " + _cutCount, SpawnerDebugEnum.PostSpawn);
                     _listIndex = _airtightCellLocations.Count - 1;
                     _runCount++;
+                    _cutCount = 0;
 
                     if (_runCount >= 2 || _listIndex < 0) {
 
@@ -89,7 +98,7 @@ namespace ModularEncountersSystems.Tasks {
 
                 for (int i = _mapList.Count - 1; i >= 0; i--) {
 
-                    if (_mapList[i].PositionComp.WorldAABB.Intersects(sphere) == false) {
+                    if (_mapList[i].PositionComp.WorldAABB.Contains(sphere) == ContainmentType.Disjoint) {
 
                         _mapList.RemoveAt(i);
 
@@ -104,13 +113,17 @@ namespace ModularEncountersSystems.Tasks {
                 foreach (var voxel in _mapList) {
 
                     MyAPIGateway.Session.VoxelMaps.CutOutShape(voxel, voxelTool);
+                    //var gps = MyAPIGateway.Session.GPS.Create(cutMatrix.Translation.ToString(), "", cutMatrix.Translation, true);
+                    //MyAPIGateway.Session.GPS.AddLocalGps(gps);
+                    _cutCount++;
 
                 }
 
 
             } catch (Exception e) {
 
-                //TODO Logger: Voxel Cut Operation Failed
+                SpawnLogger.Write("Exception In Voxel Cutting Operation", SpawnerDebugEnum.Error);
+                SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error);
                 _isValid = false;
 
             }

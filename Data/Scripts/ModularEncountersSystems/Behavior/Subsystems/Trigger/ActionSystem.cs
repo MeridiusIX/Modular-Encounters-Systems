@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.API;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
@@ -303,25 +304,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 										if (parentEnt != null) {
 
-											//BehaviorLogger.Write("Damager Parent Entity Valid", BehaviorDebugEnum.General);
-											var gridGroup = MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
-											bool isSameGridConstrust = false;
+											if (parentEnt as IMyCubeGrid != null) {
 
-											foreach (var grid in gridGroup) {
+												//BehaviorLogger.Write("Damager Parent Entity Valid", BehaviorDebugEnum.General);
+												var gridGroup = MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
+												bool isSameGridConstrust = false;
 
-												if (grid.EntityId == parentEnt.EntityId) {
+												foreach (var grid in gridGroup) {
 
-													//BehaviorLogger.Write("Damager Parent Entity Was Same Grid", BehaviorDebugEnum.General);
-													isSameGridConstrust = true;
-													break;
+													if (grid.EntityId == parentEnt.EntityId) {
+
+														//BehaviorLogger.Write("Damager Parent Entity Was Same Grid", BehaviorDebugEnum.General);
+														isSameGridConstrust = true;
+														break;
+
+													}
 
 												}
 
-											}
+												if (!isSameGridConstrust) {
 
-											if (!isSameGridConstrust) {
+													newCommand.Waypoint = waypointProfile.GenerateEncounterWaypoint(parentEnt);
 
-												newCommand.Waypoint = waypointProfile.GenerateEncounterWaypoint(parentEnt);
+												}
+
+											} else {
+
+												var potentialPlayer = PlayerManager.GetPlayerUsingTool(entity);
+
+												if (potentialPlayer != null) {
+
+													newCommand.Waypoint = waypointProfile.GenerateEncounterWaypoint(parentEnt);
+
+												}
 
 											}
 
@@ -442,36 +457,50 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (MyAPIGateway.Entities.TryGetEntityById(switchToId, out tempEntity)) {
 
-					//BehaviorLogger.Write("Damager Entity Valid", BehaviorDebugEnum.General);
-
 					var parentEnt = tempEntity.GetTopMostParent();
 
 					if (parentEnt != null) {
 
-						//BehaviorLogger.Write("Damager Parent Entity Valid", BehaviorDebugEnum.General);
-						var gridGroup = MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
-						bool isSameGridConstrust = false;
+						if (parentEnt as IMyCubeGrid != null) {
 
-						foreach (var grid in gridGroup) {
+							var gridGroup = MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
+							bool isSameGridConstrust = false;
 
-							if (grid.EntityId == tempEntity.GetTopMostParent().EntityId) {
+							foreach (var grid in gridGroup) {
 
-								//BehaviorLogger.Write("Damager Parent Entity Was Same Grid", BehaviorDebugEnum.General);
-								isSameGridConstrust = true;
-								break;
+								if (grid.EntityId == tempEntity.GetTopMostParent().EntityId) {
+
+									//BehaviorLogger.Write("Damager Parent Entity Was Same Grid", BehaviorDebugEnum.General);
+									isSameGridConstrust = true;
+									break;
+
+								}
 
 							}
 
+							if (!isSameGridConstrust) {
+
+								//BehaviorLogger.Write("Damager Parent Entity Was External", BehaviorDebugEnum.General);
+								_behavior.AutoPilot.Targeting.ForceTargetEntityId = parentEnt.EntityId;
+								_behavior.AutoPilot.Targeting.ForceTargetEntity = parentEnt;
+								_behavior.AutoPilot.Targeting.ForceRefresh = true;
+
+							}
+
+						} else {
+
+							var potentialPlayer = PlayerManager.GetPlayerUsingTool(tempEntity);
+
+							if (potentialPlayer != null) {
+
+								_behavior.AutoPilot.Targeting.ForceTargetEntityId = potentialPlayer.Player.Character.EntityId;
+								_behavior.AutoPilot.Targeting.ForceTargetEntity = potentialPlayer.Player.Character;
+								_behavior.AutoPilot.Targeting.ForceRefresh = true;
+
+							}
+						
 						}
-
-						if (!isSameGridConstrust) {
-
-							//BehaviorLogger.Write("Damager Parent Entity Was External", BehaviorDebugEnum.General);
-							_behavior.AutoPilot.Targeting.ForceTargetEntityId = parentEnt.EntityId;
-							_behavior.AutoPilot.Targeting.ForceTargetEntity = parentEnt;
-							_behavior.AutoPilot.Targeting.ForceRefresh = true;
-
-						}
+						
 
 					}
 
@@ -494,30 +523,46 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (parentEnt != null) {
 
-						//BehaviorLogger.Write("Damager Parent Entity Valid", BehaviorDebugEnum.General);
-						var gridGroup = MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
-						bool isSameGridConstrust = false;
+						if (parentEnt as IMyCubeGrid != null) {
 
-						foreach (var grid in gridGroup) {
+							var gridGroup = MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
+							bool isSameGridConstrust = false;
 
-							if (grid.EntityId == tempEntity.GetTopMostParent().EntityId) {
+							foreach (var grid in gridGroup) {
 
-								//BehaviorLogger.Write("Damager Parent Entity Was Same Grid", BehaviorDebugEnum.General);
-								isSameGridConstrust = true;
-								break;
+								if (grid.EntityId == tempEntity.GetTopMostParent().EntityId) {
+
+									//BehaviorLogger.Write("Damager Parent Entity Was Same Grid", BehaviorDebugEnum.General);
+									isSameGridConstrust = true;
+									break;
+
+								}
+
+							}
+
+							if (!isSameGridConstrust) {
+
+								//BehaviorLogger.Write("Damager Parent Entity Was External", BehaviorDebugEnum.General);
+								_behavior.AutoPilot.Targeting.ForceTargetEntityId = parentEnt.EntityId;
+								_behavior.AutoPilot.Targeting.ForceTargetEntity = parentEnt;
+								_behavior.AutoPilot.Targeting.ForceRefresh = true;
+
+							}
+
+						} else {
+
+							var potentialPlayer = PlayerManager.GetPlayerUsingTool(tempEntity);
+
+							if (potentialPlayer != null) {
+
+								_behavior.AutoPilot.Targeting.ForceTargetEntityId = potentialPlayer.Player.Character.EntityId;
+								_behavior.AutoPilot.Targeting.ForceTargetEntity = potentialPlayer.Player.Character;
+								_behavior.AutoPilot.Targeting.ForceRefresh = true;
 
 							}
 
 						}
 
-						if (!isSameGridConstrust) {
-
-							//BehaviorLogger.Write("Damager Parent Entity Was External", BehaviorDebugEnum.General);
-							_behavior.AutoPilot.Targeting.ForceTargetEntityId = parentEnt.EntityId;
-							_behavior.AutoPilot.Targeting.ForceTargetEntity = parentEnt;
-							_behavior.AutoPilot.Targeting.ForceRefresh = true;
-
-						}
 
 					}
 

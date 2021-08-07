@@ -72,7 +72,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			base.WorkingChanged(block);
 
-			if (!_isWorking)
+			if (!_isWorking || _blocksInRange == null)
 				return;
 
 			RunTick100();
@@ -81,7 +81,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				var target = _blocksInRange[i];
 
-				if (!target.ActiveEntity())
+				if (!target.ActiveEntity() && target.FunctionalBlock != null)
 					continue;
 
 				target.FunctionalBlock.Enabled = false;

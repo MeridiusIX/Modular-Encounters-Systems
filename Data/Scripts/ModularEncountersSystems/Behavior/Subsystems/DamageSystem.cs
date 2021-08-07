@@ -105,7 +105,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public void DamageHandler(object target, MyDamageInformation info) {
 
-			if(IsRemoteWorking != null && IsRemoteWorking.Invoke() == false)
+			if(IsRemoteWorking != null && !IsRemoteWorking.Invoke())
 				return;
 
 			var block = target as IMySlimBlock;
@@ -113,7 +113,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if(target == null || this.RemoteControl?.SlimBlock?.CubeGrid == null)
 				return;
 
-			if (this.RemoteControl.SlimBlock.CubeGrid.IsSameConstructAs(block.CubeGrid) == false)
+			if (!this.RemoteControl.SlimBlock.CubeGrid.IsSameConstructAs(block.CubeGrid))
 				return;
 
 			_trigger.ProcessDamageTriggerWatchers(target, info);
@@ -124,7 +124,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			DamageHelper.MonitoredGrids.Remove(this.CurrentCubeGrid);
 
-			if(this.CurrentCubeGrid != null && MyAPIGateway.Entities.Exist(this.CurrentCubeGrid) == true) {
+			if(this.CurrentCubeGrid != null && MyAPIGateway.Entities.Exist(this.CurrentCubeGrid)) {
 
 				this.CurrentCubeGrid.OnGridSplit -= GridSplit;
 
@@ -176,11 +176,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				if(!DamageHelper.RegisteredDamageHandlers.ContainsKey(grid)) {
 
-					lock (DamageHelper.RegisteredDamageHandlers) {
-
-						DamageHelper.RegisteredDamageHandlers.Add(grid, new Action<object, MyDamageInformation>(DamageHandler));
-
-					}
+					DamageHelper.DamageRelay += DamageHandler;
 
 				}
 
@@ -200,7 +196,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				grid.OnGridSplit -= GridSplit;
 				DamageHelper.MonitoredGrids.RemoveAll(g => g == grid);
-				DamageHelper.RegisteredDamageHandlers.Remove(grid);
+				DamageHelper.DamageRelay -= DamageHandler;
 
 			}
 

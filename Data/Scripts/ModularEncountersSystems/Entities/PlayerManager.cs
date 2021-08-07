@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game.ModAPI;
+using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.Entities {
@@ -36,6 +37,24 @@ namespace ModularEncountersSystems.Entities {
 
 			return result;
 		
+		}
+
+		public static PlayerEntity GetPlayerUsingTool(IMyEntity entity) {
+
+			PlayerEntity result = null;
+
+			foreach (var player in Players) {
+
+				if (!player.ActiveEntity())
+					continue;
+
+				if (player.Player.Character?.EquippedTool == entity)
+					return player;
+
+			}
+
+			return result;
+
 		}
 
 		public static PlayerEntity GetPlayerWithIdentityId(long id) {

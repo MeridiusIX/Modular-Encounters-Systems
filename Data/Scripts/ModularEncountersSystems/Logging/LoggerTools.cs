@@ -545,7 +545,7 @@ namespace ModularEncountersSystems.Logging {
 				if (!grid.ActiveEntity())
 					continue;
 
-				if (thisGrid.Behavior == null) {
+				if (grid.Behavior == null) {
 
 					continue;
 					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);

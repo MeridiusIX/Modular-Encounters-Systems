@@ -430,9 +430,9 @@ namespace ModularEncountersSystems.World {
 			}
 
 			//WeaponRandomizationAdjustments
-			if (AttributeCheck(NpcAttributes.WeaponRandomizationAdjustments)) {
+			if (AttributeCheck(NpcAttributes.WeaponRandomizationAdjustments, true) && !AppliedAttributes.HasFlag(NpcAttributes.WeaponRandomizationAggression)) {
 
-				WeaponRandomizer.SetWeaponCoreRandomRanges(Grid.CubeGrid);
+				TaskProcessor.Tasks.Add(new WeaponRandomizedGrids(Grid));
 				AppliedAttributes |= NpcAttributes.WeaponRandomizationAdjustments;
 
 			}
@@ -450,14 +450,6 @@ namespace ModularEncountersSystems.World {
 
 				BehaviorLogger.Write("Keen Behavior Initialized", BehaviorDebugEnum.BehaviorSetup);
 				MyVisualScriptLogicProvider.SetDroneBehaviourFull(Grid.CubeGrid.EntityId.ToString(), this.BehaviorName, true, false, null, false, null, 10, this.BehaviorTriggerDist);
-
-			}
-
-			//RegisterRemoteControlCode
-			if (AttributeCheck(NpcAttributes.RegisterRemoteControlCode)) {
-
-				WeaponRandomizer.SetWeaponCoreRandomRanges(Grid.CubeGrid);
-				AppliedAttributes |= NpcAttributes.RegisterRemoteControlCode;
 
 			}
 

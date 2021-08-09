@@ -20,6 +20,7 @@ namespace ModularEncountersSystems.Entities {
 		long GetEntityId();
 		EntityType GetEntityType();
 		List<long> GetOwners(bool onlyGetCurrentEntity = false, bool includeMinorityOwners = false);
+		GridOwnershipEnum GetOwnerType();
 		IMyEntity GetParentEntity();
 		Vector3D GetPosition();
 		double MaxSpeed();

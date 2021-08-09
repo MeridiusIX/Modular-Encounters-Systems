@@ -10,6 +10,7 @@ using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.API;
 using ModularEncountersSystems.Configuration;
+using ModularEncountersSystems.Entities;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -207,6 +208,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(60)]
 		public double MaxAltitude;
 
+		[ProtoMember(61)]
+		public bool CheckIfDamagerIsPlayer;
+
+		[ProtoMember(62)]
+		public bool CheckIfDamagerIsNpc;
+
+		[ProtoMember(63)]
+		public bool CheckIfTargetIsPlayerOwned;
+
+		[ProtoMember(64)]
+		public bool CheckIfTargetIsNpcOwned;
+
 		[ProtoIgnore]
 		private IMyRemoteControl _remoteControl;
 
@@ -323,6 +336,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			AltitudeCheck = false;
 			MinAltitude = -1;
 			MaxAltitude = -1;
+
+			CheckIfDamagerIsPlayer = false;
+			CheckIfDamagerIsNpc = false;
+
+			CheckIfTargetIsPlayerOwned = false;
+			CheckIfTargetIsNpcOwned = false;
 
 			BehaviorModeCheck = false;
 			CurrentBehaviorMode = BehaviorMode.Init;
@@ -829,6 +848,58 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (_behavior.AutoPilot.CurrentPlanet != null)
 					if ((MinAltitude == -1 || _behavior.AutoPilot.MyAltitude > MinAltitude) && (MaxAltitude == -1 || _behavior.AutoPilot.MyAltitude < MaxAltitude))
 						satisfiedConditions++;
+
+			}
+
+			if (CheckIfDamagerIsPlayer) {
+
+				usedConditions++;
+
+				if (_behavior.BehaviorSettings.LastDamagerEntity != 0) {
+
+					if(FactionHelper.IsIdentityPlayer(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity)))
+						satisfiedConditions++;
+
+				}
+			
+			}
+
+			if (CheckIfDamagerIsNpc) {
+
+				usedConditions++;
+
+				if (_behavior.BehaviorSettings.LastDamagerEntity != 0) {
+
+					if (FactionHelper.IsIdentityNPC(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity)))
+						satisfiedConditions++;
+
+				}
+
+			}
+
+			if (CheckIfTargetIsPlayerOwned) {
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget()) {
+
+					if(_behavior.AutoPilot.Targeting.Target.GetOwnerType().HasFlag(GridOwnershipEnum.PlayerMajority))
+						satisfiedConditions++;
+
+				}
+
+			}
+
+			if (CheckIfTargetIsNpcOwned) {
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget()) {
+
+					if (_behavior.AutoPilot.Targeting.Target.GetOwnerType().HasFlag(GridOwnershipEnum.NpcMajority))
+						satisfiedConditions++;
+
+				}
 
 			}
 
@@ -1482,6 +1553,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[CurrentBehaviorMode:") == true) {
 
 						TagParse.TagBehaviorModeEnumCheck(tag, ref CurrentBehaviorMode);
+
+					}
+
+					//CheckIfDamagerIsPlayer
+					if (tag.Contains("[CheckIfDamagerIsPlayer:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref CheckIfDamagerIsPlayer);
+
+					}
+
+					//CheckIfDamagerIsNpc
+					if (tag.Contains("[CheckIfDamagerIsNpc:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref CheckIfDamagerIsNpc);
+
+					}
+
+					//CheckIfTargetIsPlayerOwned
+					if (tag.Contains("[CheckIfTargetIsPlayerOwned:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref CheckIfTargetIsPlayerOwned);
+
+					}
+
+					//CheckIfTargetIsNpcOwned
+					if (tag.Contains("[CheckIfTargetIsNpcOwned:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref CheckIfTargetIsNpcOwned);
 
 					}
 

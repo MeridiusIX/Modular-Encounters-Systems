@@ -1133,6 +1133,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			
 			}
 
+			if (actions.SetWeaponsToMinRange) {
+
+				if (_behavior.CurrentGrid != null)
+					_behavior.CurrentGrid.SetAutomatedWeaponRanges(false);
+
+			}
+
+			if (actions.SetWeaponsToMaxRange) {
+
+				if (_behavior.CurrentGrid != null)
+					_behavior.CurrentGrid.SetAutomatedWeaponRanges(true);
+
+			}
+
 			//SetBooleansTrue
 			foreach (var variable in actions.SetBooleansTrue)
 				_settings.SetCustomBool(variable, true);

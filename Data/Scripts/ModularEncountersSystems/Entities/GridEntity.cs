@@ -7,6 +7,7 @@ using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
@@ -576,6 +577,46 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public void SetAutomatedWeaponRanges(bool useMax = false) {
+
+			WeaponRandomizer.SetWeaponCoreRandomRanges(this, useMax);
+
+			foreach (var grid in this.LinkedGrids) {
+
+				foreach (var turret in this.Turrets) {
+
+					if (!turret.ActiveEntity())
+						continue;
+
+					var turretBlock = turret.Block as IMyLargeTurretBase;
+
+					if (turretBlock == null)
+						continue;
+
+					var def = turretBlock?.SlimBlock?.BlockDefinition as MyLargeTurretBaseDefinition;
+
+					if (def == null)
+						continue;
+
+					if (!useMax) {
+
+						if (def.MaxRangeMeters > 800)
+							turretBlock.Range = 800;
+						else
+							turretBlock.Range = def.MaxRangeMeters;
+
+					} else {
+
+						turretBlock.Range = def.MaxRangeMeters;
+
+					}
+
+				}
+
+			}
+
+		}
+
 		public override void Unload() {
 
 			base.Unload();
@@ -673,6 +714,12 @@ namespace ModularEncountersSystems.Entities {
 
 			return result;
 		
+		}
+
+		public GridOwnershipEnum GetOwnerType() {
+
+			return Ownership;
+
 		}
 
 		public bool IsPowered() {

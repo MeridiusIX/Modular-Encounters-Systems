@@ -15,6 +15,7 @@ using System.Linq;
 using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
+using VRage.ModAPI;
 using VRage.ObjectBuilders;
 using VRageMath;
 
@@ -45,6 +46,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static List<string> BlacklistedWeaponTargetSubtypes = new List<string>();
 		public static List<string> WhitelistedWeaponTargetSubtypes = new List<string>();
 		public static Dictionary<string, float> PowerDrainingWeapons = new Dictionary<string, float>();
+
+		public static Dictionary<MyDefinitionId, float> DefaultRangeWC = new Dictionary<MyDefinitionId, float>();
 
 		public static Dictionary<string, float> BatteryMaxCapacity = new Dictionary<string, float>();
 
@@ -1259,29 +1262,53 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
-		public static void SetWeaponCoreRandomRanges(IMyCubeGrid cubeGrid, bool useMax = false) {
+		public static void SetWeaponCoreRandomRanges(GridEntity grid, bool useMax = false, IMyEntity newTarget = null) {
 
-			if (cubeGrid == null || cubeGrid.MarkedForClose || cubeGrid.Closed)
+			if (!grid.ActiveEntity())
 				return;
 
-			var blocks = BlockCollectionHelper.GetAllBlocks(cubeGrid);
-			int maxRange = blocks.Count;
+			SpawnLogger.Write("Setting WeaponCore Block Ranges For Grid: " + grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
-			foreach (var block in blocks) {
+			grid.RefreshSubGrids();
 
-				if (block?.FatBlock == null)
-					continue;
+			foreach (var subGrid in grid.LinkedGrids) {
 
-				if (!BlockManager.AllWeaponCoreTurrets.Contains(block.BlockDefinition.Id))
-					continue;
+				var cubeGrid = subGrid.CubeGrid;
 
-				var termBlock = block.FatBlock as IMyTerminalBlock;
-				var weaponMax = APIs.WeaponCore.GetMaxWeaponRange(termBlock, 0);
+				if (cubeGrid == null || cubeGrid.MarkedForClose || cubeGrid.Closed)
+					return;
 
-				if (!useMax && weaponMax > 800)
-					weaponMax = 800;
+				var blocks = BlockCollectionHelper.GetAllBlocks(cubeGrid);
+				int maxRange = blocks.Count;
 
-				APIs.WeaponCore.SetBlockTrackingRange(termBlock, weaponMax);
+				foreach (var block in blocks) {
+
+					if (block?.FatBlock == null)
+						continue;
+
+					if (!BlockManager.AllWeaponCoreBlocks.Contains(block.BlockDefinition.Id))
+						continue;
+
+					var termBlock = block.FatBlock as IMyFunctionalBlock;
+					float weaponMax = 800;
+
+					if (!DefaultRangeWC.TryGetValue(block.BlockDefinition.Id, out weaponMax)) {
+
+						weaponMax = APIs.WeaponCore.GetMaxWeaponRange(termBlock, 0);
+						DefaultRangeWC.Add(block.BlockDefinition.Id, weaponMax);
+
+					}
+
+					APIs.WeaponCore.DisableRequiredPower(termBlock);
+
+					if (!useMax && weaponMax > 800)
+						weaponMax = 800;
+
+					APIs.WeaponCore.SetBlockTrackingRange(termBlock, weaponMax);
+
+					SpawnLogger.Write(string.Format("WC Block {0} Range Set To: {1}", termBlock.CustomName, weaponMax), SpawnerDebugEnum.PostSpawn);
+
+				}
 
 			}
 

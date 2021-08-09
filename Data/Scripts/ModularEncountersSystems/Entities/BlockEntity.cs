@@ -20,6 +20,7 @@ namespace ModularEncountersSystems.Entities {
 		public bool Modded;			//Is From a Mod
 		public bool Working;        //Powered
 
+		public GridEntity ParentGrid;
 		public List<GridEntity> LinkedGrids;
 
 		public BlockEntity(IMyEntity entity, IMyEntity parentEntity) : base(entity){
@@ -163,6 +164,24 @@ namespace ModularEncountersSystems.Entities {
 
 			return result;
 		
+		}
+
+		public GridOwnershipEnum GetOwnerType() {
+
+			if (!ActiveEntity())
+				return GridOwnershipEnum.None;
+
+			if (ParentGrid == null || ParentGrid.CubeGrid != Block.SlimBlock.CubeGrid) {
+
+				ParentGrid = GridManager.GetGridEntity(Block.SlimBlock.CubeGrid);
+
+				if(ParentGrid == null)
+					return GridOwnershipEnum.None;
+
+			}
+
+			return ParentGrid.Ownership;
+
 		}
 
 		public bool IsPowered() {

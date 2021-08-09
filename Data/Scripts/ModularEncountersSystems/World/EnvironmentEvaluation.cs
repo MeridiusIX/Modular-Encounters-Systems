@@ -146,7 +146,9 @@ namespace ModularEncountersSystems.World {
 
 			}
 
-			AltitudeAtPosition = Vector3D.Distance(SurfaceCoords, coords);
+			var distToCore = NearestPlanet.DistanceToCore(Position);
+			var surfaceDistToCore = NearestPlanet.DistanceToCore(SurfaceCoords);
+			AltitudeAtPosition = distToCore - surfaceDistToCore;
 			NearestPlanetName = NearestPlanet.Planet.Generator.Id.SubtypeName;
 			PlanetDiameter = NearestPlanet.Planet.AverageRadius * 2;
 

@@ -276,6 +276,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> BotConditionProfile;
 		public List<string> BotWaypoint;
 
+		public bool SetWeaponsToMinRange;
+		public bool SetWeaponsToMaxRange;
+
 		public bool ChangeBehaviorSubclass;
 		public BehaviorSubclass NewBehaviorSubclass;
 
@@ -538,6 +541,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ChangeBehaviorSubclass = false;
 			NewBehaviorSubclass = BehaviorSubclass.None;
 
+			SetWeaponsToMinRange = false;
+			SetWeaponsToMaxRange = false;
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -721,6 +727,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"BotWaypoint", (s, o) => TagParse.TagStringListCheck(s, ref BotWaypoint) },
 				{"ChangeBehaviorSubclass", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBehaviorSubclass) },
 				{"NewBehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref NewBehaviorSubclass) },
+				{"SetWeaponsToMinRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMinRange) },
+				{"SetWeaponsToMaxRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMaxRange) },
+				//
 
 			};
 

@@ -277,6 +277,8 @@ namespace ModularEncountersSystems.Spawning {
             
             }
 
+            
+
             KnownPlayerLocationManager.CleanExpiredLocations();
 
             if (!forceSpawn && !adminSpawn) {
@@ -293,6 +295,14 @@ namespace ModularEncountersSystems.Spawning {
 
             //Generate Environment Object
             var environment = new EnvironmentEvaluation(coords);
+
+            //Underground Condition
+            if (environment.IsOnPlanet && environment.AltitudeAtPosition < -1000) {
+
+                SpawnLogger.Write("Proposed Spawn Location Is 1000m Beneath Planet Surface. Aborting Spawn.", SpawnerDebugEnum.Spawning);
+                return false;
+
+            }
 
             //Get SpawnGroups and Valid Factions
             var spawnGroupCollection = new SpawnGroupCollection();

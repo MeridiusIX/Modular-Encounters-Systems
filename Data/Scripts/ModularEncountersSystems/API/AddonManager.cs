@@ -63,6 +63,7 @@ namespace ModularEncountersSystems.API {
         //WeaponCore
         public static bool WeaponCore = false;
         private static ulong _weaponCoreSteamId = 1918681825;
+        private static ulong _coreSystemsSteamId = 2496225055;
 
         //AiEnabled
         public static bool AiEnabled = false;
@@ -160,7 +161,7 @@ namespace ModularEncountersSystems.API {
                 }
 
                 //WeaponCore
-                if (id == _weaponCoreSteamId) {
+                if (id == _weaponCoreSteamId || id == _coreSystemsSteamId) {
 
                     SpawnLogger.Write("WeaponCore Mod Detected", SpawnerDebugEnum.Startup);
                     WeaponCore = true;

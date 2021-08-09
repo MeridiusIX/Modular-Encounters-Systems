@@ -644,6 +644,17 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			if (conditions.AtmosphericCargoShip && spawnTypes.HasFlag(SpawningType.PlanetaryCargoShip) && !spawnTypes.HasFlag(SpawningType.GravityCargoShip)) {
+
+				if (environment.AirTravelViabilityRatio < 0.25 && !conditions.SkipAirDensityCheck) {
+
+					failReason = "   - Atmosphere Too Thin For Planetary Cargo Ship";
+					return false;
+
+				}
+			
+			}
+
 			if (CheckBlacklists(type, spawnGroup, environment, conditions, ref failReason)) {
 
 				return false;

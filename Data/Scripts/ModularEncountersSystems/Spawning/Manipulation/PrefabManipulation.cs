@@ -289,6 +289,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 					WeaponRandomizer.RandomWeaponReplacing(grid, collection, prefab, profile);
 
+					if(!data.Attributes.HasFlag(NpcAttributes.WeaponRandomizationAdjustments))
+						data.Attributes |= NpcAttributes.WeaponRandomizationAdjustments;
+
 				}
 
 			}

@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Logging;
+﻿using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -256,6 +257,12 @@ namespace ModularEncountersSystems.Entities {
 
 			result.Add(Player.IdentityId);
 			return result;
+		
+		}
+
+		public GridOwnershipEnum GetOwnerType() {
+
+			return FactionHelper.IsIdentityPlayer((Player?.IdentityId ?? 0)) ? GridOwnershipEnum.PlayerMajority : GridOwnershipEnum.NpcMajority;
 		
 		}
 

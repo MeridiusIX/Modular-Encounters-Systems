@@ -594,6 +594,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (trigger.UseTrigger == true && trigger.Type == "DespawnMES") {
 
+					bool despawnMatch = false;
+
+					if (trigger.DespawnTypeFromSpawner == "Any")
+						despawnMatch = true;
+					else if(trigger.DespawnTypeFromSpawner == "CleanUp" && despawnType.StartsWith("CleanUp"))
+						despawnMatch = true;
+					else if (trigger.DespawnTypeFromSpawner == "PathEnd" && despawnType.StartsWith("Cargo Ship Reached End"))
+						despawnMatch = true;
+
 					if (trigger.DespawnTypeFromSpawner == "Any" || despawnType == trigger.DespawnTypeFromSpawner) {
 
 						trigger.ActivateTrigger();

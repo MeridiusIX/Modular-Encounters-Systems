@@ -16,6 +16,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static Guid LegacyNpcDataKey = new Guid("AD4DBD09-359D-48F5-9F48-54D352B59171");
 		public static Guid NpcThrusterDataKey = new Guid("BF529D66-9AA1-4419-B5D3-A65BA21306CE");
 
+		public static List<Guid> CustomStorageKeys = new List<Guid>();
+
 		public static void ApplyCustomBlockStorage(MyObjectBuilder_CubeBlock block, Guid storageKey, string storageValue) {
 
 			if (block.ComponentContainer == null) {
@@ -138,6 +140,38 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+		}
+
+		public static string GetContainerStorage(MyObjectBuilder_ComponentContainer container, Guid guid) {
+
+			string result = "";
+
+			if (container?.Components == null)
+				return result;
+
+			foreach (var component in container.Components) {
+
+				if (component.TypeId != "MyModStorageComponentBase") {
+
+					continue;
+
+				}
+
+				var storage = component.Component as MyObjectBuilder_ModStorageComponent;
+
+				if (storage == null) {
+
+					continue;
+
+				}
+
+				if (storage.Storage.Dictionary.TryGetValue(guid, out result))
+					break;
+
+			}
+
+			return result;
+		
 		}
 
 	}

@@ -163,6 +163,18 @@ namespace ModularEncountersSystems.Sync {
 			if (Message.StartsWith("/MES.GESAP"))
 				Message = Message.Replace("/MES.GESAP", "/MES.Info.GetEligibleSpawnsAtPosition");
 
+			if (Message.StartsWith("/MES.IGLSD"))
+				Message = Message.Replace("/MES.IGLSD", "/MES.Info.GetLogging.SpawnDebug");
+
+			if (Message.StartsWith("/MES.DSD"))
+				Message = Message.Replace("/MES.DSD", "/MES.Debug.SpawnDebug");
+
+			if (Message.StartsWith("/MES.DBD"))
+				Message = Message.Replace("/MES.DBD", "/MES.Debug.BehaviorDebug");
+
+			if (Message.StartsWith("/MES.IGLBD"))
+				Message = Message.Replace("/MES.IGLBD", "/MES.Info.GetLogging.BehaviorDebug");
+
 		}
 
 		public string[] GetArray(int length, int combineLength) {
@@ -192,7 +204,7 @@ namespace ModularEncountersSystems.Sync {
 
 		private bool ProcessSpawn() {
 
-			var array = GetArray(3, 4);
+			var array = GetArray(3, 5);
 
 			if (array == null) {
 
@@ -469,6 +481,16 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.CreateIdStorage
+			if (array[2] == "CreateIdStorage") {
+
+				ClipboardPayload = LoggerTools.CreateIdStorage(this, array);
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Created Id Storage and Saved To Clipboard.";
+				return true;
+
+			}
+
 			//MES.Debug.CreateKPL
 			if (array[2] == "CreateKPL") {
 
@@ -618,6 +640,17 @@ namespace ModularEncountersSystems.Sync {
 
 				Mode = ChatMsgMode.ReturnMessage;
 				ClipboardPayload = LoggerTools.GetColorListFromGrid(this);
+				return true;
+
+			}
+
+			//GetDiagnostics
+			if (array[2] == "GetDiagnostics") {
+
+
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Spawner Diagnostics Sent To Clipboard";
+				ClipboardPayload = LoggerTools.GetDiagnostics(this);
 				return true;
 
 			}

@@ -13,6 +13,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int ManipulationChance;
 		public List<SpawningType> RequiredManipulationSpawnType;
 		public List<string> RequiredManipulationSpawnConditions;
+		public BlockSizeEnum ManipulationBlockSizeCheck;
 		public float ManipulationThreatMinimum;
 		public float ManipulationThreatMaximum;
 		public int ManipulationMinBlockCount;
@@ -181,6 +182,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ManipulationChance = 100;
 			RequiredManipulationSpawnType = new List<SpawningType>();
 			RequiredManipulationSpawnConditions = new List<string>();
+			ManipulationBlockSizeCheck = BlockSizeEnum.None;
 			ManipulationThreatMinimum = -1;
 			ManipulationThreatMaximum = -1;
 			ManipulationMinBlockCount = -1;
@@ -373,6 +375,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ManipulationThreatMinimum:") == true) {
 
 					TagParse.TagFloatCheck(tag, ref this.ManipulationThreatMinimum);
+
+				}
+
+				//ManipulationBlockSizeCheck
+				if (tag.StartsWith("[ManipulationBlockSizeCheck:") == true) {
+
+					TagParse.TagBlockSizeEnumCheck(tag, ref this.ManipulationBlockSizeCheck);
 
 				}
 

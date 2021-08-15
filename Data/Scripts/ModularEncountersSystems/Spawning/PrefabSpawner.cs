@@ -221,6 +221,7 @@ namespace ModularEncountersSystems.Spawning {
 				}
 
 				//Prefab Manipulation
+				SpawnLogger.Write("Starting Prefab Manipulations", SpawnerDebugEnum.Spawning);
 				PrefabManipulation.PrepareManipulations(prefab, spawnCollection, environment, npcData);
 
 				var spawnMatrix = path.SpawnMatrix;

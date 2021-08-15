@@ -19,6 +19,7 @@ namespace ModularEncountersSystems.Spawning {
 	public static class SpawnGroupManager {
 
 		public static List<ImprovedSpawnGroup> SpawnGroups = new List<ImprovedSpawnGroup>();
+		public static Dictionary<string, string> UniqueNpcModNames = new Dictionary<string, string>();
 
 		public static List<string> SpawnGroupNames = new List<string>();
 		public static List<string> PlanetNames = new List<string>();
@@ -324,6 +325,14 @@ namespace ModularEncountersSystems.Spawning {
 				}
 
 				SpawnGroupNames.Add(spawnGroup.Id.SubtypeName);
+
+				if (!string.IsNullOrWhiteSpace(spawnGroup.Context?.ModName) && !string.IsNullOrWhiteSpace(spawnGroup.Context?.ModId)) {
+
+					if (!UniqueNpcModNames.ContainsKey(spawnGroup.Context.ModId))
+						UniqueNpcModNames.Add(spawnGroup.Context.ModId, spawnGroup.Context.ModName);
+
+
+				}
 
 				/*
 				if (TerritoryManager.IsSpawnGroupATerritory(spawnGroup) == true) {

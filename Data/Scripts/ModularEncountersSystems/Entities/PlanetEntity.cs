@@ -129,7 +129,7 @@ namespace ModularEncountersSystems.Entities {
 
 			if (!WaterAPI.HasWater(Planet.EntityId)) {
 
-				SpawnLogger.Write("Water API Says Planet Does Not Have Water", SpawnerDebugEnum.API);
+				//SpawnLogger.Write("Water API Says Planet Does Not Have Water", SpawnerDebugEnum.API);
 				Water = null;
 				return false;
 

@@ -10,6 +10,7 @@ using ModularEncountersSystems.World;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Configuration;
+using System.Text;
 
 namespace ModularEncountersSystems.Behavior {
 
@@ -388,6 +389,18 @@ namespace ModularEncountersSystems.Behavior {
 				}
 
 			}
+
+		}
+
+		public override string ToString() {
+
+			var sb = new StringBuilder();
+			sb.Append("::: Cargo Ship Behavior :::").AppendLine();
+			sb.Append(" - Current Waypoint Is Despawn: ").Append(_waypointIsDespawn).AppendLine();
+			sb.Append(" - Total Waypoints:             ").Append(_behavior.AutoPilot.State.CargoShipWaypoints.Count).AppendLine();
+			sb.Append(" - Custom Waypoints:            ").Append(CustomWaypoints.Count).AppendLine();
+			sb.AppendLine();
+			return sb.ToString();
 
 		}
 

@@ -28,6 +28,8 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<MyDefinitionId, MyAmmoMagazineDefinition> NormalAmmoMagReferences = new Dictionary<MyDefinitionId, MyAmmoMagazineDefinition>();
 		public static Dictionary<MyDefinitionId, MyAmmoDefinition> NormalAmmoReferences = new Dictionary<MyDefinitionId, MyAmmoDefinition>();
 
+		public static Dictionary<MyDefinitionId, List<MyDefinitionId>> WeaponCoreAmmoReferences = new Dictionary<MyDefinitionId, List<MyDefinitionId>>();
+
 		//Entity Components
 		public static List<MyComponentDefinitionBase> EntityComponentDefinitions = new List<MyComponentDefinitionBase>();
 
@@ -192,7 +194,10 @@ namespace ModularEncountersSystems.Helpers {
 
 			foreach (var container in containers.Keys) {
 
-				var drop = containers[container];
+				MyDropContainerDefinition drop = null;
+
+				if (!containers.TryGetValue(container, out drop))
+					continue;
 
 				if (drop.Prefab?.CubeGrids == null)
 					continue;

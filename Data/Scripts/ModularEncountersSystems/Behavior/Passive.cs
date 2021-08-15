@@ -47,6 +47,12 @@ namespace ModularEncountersSystems.Behavior {
 
 		}
 
+		public override string ToString() {
+
+			return "";
+
+		}
+
 		public void InitTags() {
 		
 			//Nothing Here

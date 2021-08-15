@@ -636,7 +636,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
-		public string GetThrustAndRotationData() {
+		public string GetAutopilotData() {
 
 			var sb = new StringBuilder();
 			sb.Append(" - Current Profile:                    ").Append(Data.ProfileSubtypeId).AppendLine();

@@ -169,6 +169,12 @@ namespace ModularEncountersSystems.Behavior {
 
 		}
 
+		public override string ToString() {
+
+			return "";
+
+		}
+
 		public void InitTags() {
 
 			if(string.IsNullOrWhiteSpace(this.RemoteControl?.CustomData) == false) {

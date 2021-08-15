@@ -334,6 +334,7 @@ namespace ModularEncountersSystems.Spawning {
             
             }
 
+            SpawnLogger.Write("Spawn Conditions Selected: " + spawnGroupCollection.Conditions.ProfileSubtypeId, SpawnerDebugEnum.Spawning);
             SpawnLogger.Write("SpawnGroup Selected: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
 
             SpawnLogger.Write("Start Pathing", SpawnerDebugEnum.Spawning);

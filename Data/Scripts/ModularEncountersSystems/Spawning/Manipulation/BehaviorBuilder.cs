@@ -12,6 +12,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		public static bool RivalAiInitialize(MyObjectBuilder_CubeGrid cubeGrid, ManipulationProfile profile, string behaviorName, bool primaryBehaviorAlreadySet, bool rivalAIOverride) {
 
+			SpawnLogger.Write("Attempting To Add RivalAI Block / Behavior", SpawnerDebugEnum.Manipulation);
+
 			MyObjectBuilder_RemoteControl primaryRemote = null;
 			MyObjectBuilder_RemoteControl rivalAiRemote = null;
 
@@ -89,6 +91,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			if (primaryBehaviorAlreadySet) {
 
+				SpawnLogger.Write("RivalAI Behavior Already Set On This Prefab", SpawnerDebugEnum.Manipulation);
 				return false;
 
 			}
@@ -106,10 +109,12 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				StorageTools.ApplyCustomBlockStorage(rivalAiRemote, StorageTools.CustomDataKey, fullBehavior);
 
+				SpawnLogger.Write("Applied Following RivalAI Behavior To Prefab: " + behaviorName, SpawnerDebugEnum.Manipulation);
 				return true;
 
 			}
 
+			SpawnLogger.Write("Following Behavior Could Not Be Applied To Prefab: " + behaviorName, SpawnerDebugEnum.Manipulation);
 			return false;
 
 		}

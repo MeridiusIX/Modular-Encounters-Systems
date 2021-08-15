@@ -145,6 +145,14 @@ namespace ModularEncountersSystems.Helpers {
 
     }
 
+    public enum BlockSizeEnum {
+    
+        None,
+        Small,
+        Large
+    
+    }
+
     public enum BoolEnum {
     
         None,

@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, SpawnConditionsGroup> SpawnConditionGroups = new Dictionary<string, SpawnConditionsGroup>();
 		public static Dictionary<string, SpawnConditionsProfile> SpawnConditionProfiles = new Dictionary<string, SpawnConditionsProfile>();
 		public static Dictionary<string, StaticEncounter> StaticEncounters = new Dictionary<string, StaticEncounter>();
-		public static Dictionary<string, WeaponModRulesProfile> WeaponModRulesProfiles = new Dictionary<string, WeaponModRulesProfile>();
+		public static Dictionary<MyDefinitionId, WeaponModRulesProfile> WeaponModRulesProfiles = new Dictionary<MyDefinitionId, WeaponModRulesProfile>();
 		public static Dictionary<string, Zone> ZoneProfiles = new Dictionary<string, Zone>();
 		public static Dictionary<string, ZoneConditionsProfile> ZoneConditionsProfiles = new Dictionary<string, ZoneConditionsProfile>();
 
@@ -75,12 +75,22 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (!WeaponModRulesProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Weapon Mod Rules]")) {
+				if (component.DescriptionText.Contains("[MES Weapon Mod Rules]")) {
 
 					var weaponRule = new WeaponModRulesProfile();
 					weaponRule.InitTags(component.DescriptionText);
 					weaponRule.ProfileSubtypeId = component.Id.SubtypeName;
-					WeaponModRulesProfiles.Add(component.Id.SubtypeName, weaponRule);
+
+					if (!WeaponModRulesProfiles.ContainsKey(weaponRule.WeaponBlock)) {
+
+						WeaponModRulesProfiles.Add(weaponRule.WeaponBlock, weaponRule);
+
+					} else {
+
+						//TODO: Log Dup Key
+
+					}
+					
 					continue;
 
 				}

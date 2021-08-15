@@ -144,6 +144,25 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagBlockSizeEnumCheck(string tag, ref BlockSizeEnum original) {
+
+			BlockSizeEnum result = BlockSizeEnum.None;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (BlockSizeEnum.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
 		public static void TagBlockTargetTypesCheck(string tag, ref List<BlockTypeEnum> orginal) {
 
 			BlockTypeEnum result = BlockTypeEnum.None;

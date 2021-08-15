@@ -20,6 +20,7 @@ using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.ObjectBuilders;
 using VRageMath;
+using static ModularEncountersSystems.API.WcApiDef;
 
 namespace ModularEncountersSystems.Helpers {
 	public static class InventoryHelper {
@@ -115,12 +116,17 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static bool AddItemsToInventory(MyInventory inventory, MyDefinitionId itemId, float amount = -1) {
+		public static bool AddItemsToInventory(MyInventory inventory, MyDefinitionId itemId, float amount = -1, bool ignoreConstraintCheck = false) {
 
 			var itemDef = GetItemDefinition(itemId);
 
-			if (itemDef == null)
+			if (itemDef == null) {
+
+				//SpawnLogger.Write(" - Inventory Item Definition Null", SpawnerDebugEnum.PostSpawn);
 				return false;
+
+			}
+				
 
 			float freeSpace = (float)(inventory.MaxVolume - inventory.CurrentVolume);
 			var amountToAdd = Math.Floor(freeSpace / itemDef.Volume);
@@ -131,11 +137,17 @@ namespace ModularEncountersSystems.Helpers {
 
 			}
 
-			if (amountToAdd > 0 && inventory.CanItemsBeAdded((MyFixedPoint)amountToAdd, itemId) == true) {
+			var canAdd = ignoreConstraintCheck || inventory.CanItemsBeAdded((MyFixedPoint)amountToAdd, itemId);
+
+			if (amountToAdd > 0 && canAdd) {
 
 				//SpawnLogger.Write(string.Format("Replenish Added {0} of {1} to Inventory Block.", amountToAdd, itemId), SpawnerDebugEnum.PostSpawn);
 				inventory.AddItems((MyFixedPoint)amountToAdd, MyObjectBuilderSerializer.CreateNewObject(itemId));
 				return true;
+
+			} else {
+
+				//SpawnLogger.Write(string.Format(" - Add Failed For Reasons: [Amount : {0}] [Can Add : {1}]", amountToAdd, canAdd), SpawnerDebugEnum.PostSpawn);
 
 			}
 
@@ -265,12 +277,17 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static void WeaponCoreReplenishment(IMyTerminalBlock block, MyInventory inventory, ImprovedSpawnGroup spawnGroup) {
 
+			//SpawnLogger.Write(string.Format("Replenishing WeaponCore Ammo For Block: {0}", block.SlimBlock.BlockDefinition.Id), SpawnerDebugEnum.PostSpawn);
 			APIs.WeaponCore.DisableRequiredPower(block);
-			var ammoList = GetCompatibleItemTypes(block, inventory);
+			var ammoList = GetCompatibleWeaponCoreAmmos(block);
 
-			if (ammoList.Count == 0)
+			if (ammoList.Count == 0) {
+
+				//SpawnLogger.Write(string.Format(" - Compatible Ammo: 0"), SpawnerDebugEnum.PostSpawn);
 				return;
 
+			}
+				
 			//Fill Ammos - 
 			int totalMagazines = 0;
 			int totalLoopRuns = 0;
@@ -293,12 +310,11 @@ namespace ModularEncountersSystems.Helpers {
 				bool noLoop = true;
 				bool addedItem = false;
 
-				
-
 				foreach (var ammoId in ammoList) {
 
 					if (Settings.Grids.UseMaxAmmoInventoryWeight && (float)inventory.CurrentMass >= Settings.Grids.MaxAmmoInventoryWeight) {
 
+						//SpawnLogger.Write(string.Format(" - Ammo Weight Exceeded or Reached"), SpawnerDebugEnum.PostSpawn);
 						noLoop = true;
 						break;
 					
@@ -313,14 +329,18 @@ namespace ModularEncountersSystems.Helpers {
 						continue;
 
 					noLoop = false;
-					
-					if (AddItemsToInventory(inventory, ammoId, 1)) {
+
+					if (AddItemsToInventory(inventory, ammoId, 1, true)) {
 
 						ammoAdd.X++;
 						maxMagazinesPerAmmoType[ammoId] = ammoAdd;
 						totalMagazines++;
 						addedItem = true;
 
+					} else {
+
+						//SpawnLogger.Write(string.Format(" - Item [{0}] Could Not Be Added To Inventory", ammoId), SpawnerDebugEnum.PostSpawn);
+					
 					}
 
 				}
@@ -356,6 +376,48 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			return inventory.Constraint.ConstrainedIds;
+
+		}
+
+		public static List<MyDefinitionId> GetCompatibleWeaponCoreAmmos(IMyTerminalBlock block) {
+
+			List<MyDefinitionId> list = null;
+
+			if (DefinitionHelper.WeaponCoreAmmoReferences.TryGetValue(block.SlimBlock.BlockDefinition.Id, out list))
+				return list;
+
+			list = new List<MyDefinitionId>();
+			var weaponsInBlock = new Dictionary<string, int>();
+			APIs.WeaponCore.GetBlockWeaponMap(block, weaponsInBlock);
+
+			foreach (var weaponName in weaponsInBlock.Keys) {
+
+				WeaponDefinition weaponDef = new WeaponDefinition();
+
+				foreach (var definition in APIs.WeaponCore.WeaponDefinitions) {
+
+					if (definition.HardPoint.WeaponName == weaponName) {
+
+						weaponDef = definition;
+						break;
+
+					}
+
+				}
+
+				foreach (var ammo in weaponDef.Ammos) {
+
+					var ammoMagDefId = new MyDefinitionId(typeof(MyObjectBuilder_AmmoMagazine), ammo.AmmoMagazine);
+
+					if (!list.Contains(ammoMagDefId))
+						list.Add(ammoMagDefId);
+				
+				}
+
+			}
+
+			DefinitionHelper.WeaponCoreAmmoReferences.Add(block.SlimBlock.BlockDefinition.Id, list);
+			return list;
 
 		}
 

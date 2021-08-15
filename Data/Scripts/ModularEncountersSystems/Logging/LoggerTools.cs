@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning;
@@ -160,6 +161,32 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static string CreateIdStorage(ChatMessage msg, string[] msgSplit) {
+
+			var sb = new StringBuilder();
+
+			for (int i = 0; i < 20; i++) {
+
+				int a = MathTools.RandomBetween(0, 999999999);
+				ulong b = msg.SteamId;
+				ulong c = 0;
+				int d = MathTools.RandomBetween(0, 999999999);
+
+				if (!ulong.TryParse(msgSplit[3], out c)) {
+
+					continue;
+
+				}
+
+				var list = new List<ulong> { (ulong)a, b, c, (ulong)d };
+				sb.Append(SerializationHelper.ConvertClassToString<List<ulong>>(list)).AppendLine();
+
+			}
+
+			return sb.ToString();
+		
+		}
+
 		public static void CreateKPL(ChatMessage msg, string[] msgSplit) {
 
 			if (msgSplit.Length < 3) {
@@ -300,6 +327,90 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static string GetDiagnostics(ChatMessage msg) {
+
+			var sb = new StringBuilder();
+
+			sb.Append("::: MES Diagnostics :::").AppendLine();
+			sb.Append(" - Mod Version: ").Append(MES_SessionCore.ModVersion).AppendLine();
+			sb.AppendLine();
+
+			//NPC Mods
+			if (SpawnGroupManager.UniqueNpcModNames.Keys.Count > 0) {
+
+				sb.Append("::: NPC Content Mods :::").AppendLine();
+
+				foreach (var mod in SpawnGroupManager.UniqueNpcModNames.Keys.OrderBy(x => x)) {
+
+					sb.Append(" - ").Append(SpawnGroupManager.UniqueNpcModNames[mod]).Append(" [").Append(mod).Append("]").AppendLine();
+
+				}
+
+				sb.AppendLine();
+
+			}
+
+			//Settings
+			sb.Append("::: Settings :::").AppendLine();
+			var settings = MyAPIGateway.Session.SessionSettings;
+			sb.Append(" - Dedicated Server:             ").Append(MyAPIGateway.Utilities.IsDedicated).AppendLine();
+			sb.Append(" - Sync Distance:                ").Append(settings.SyncDistance).AppendLine();
+			sb.Append(" - Block Limits Enabled:         ").Append(settings.BlockLimitsEnabled).AppendLine();
+			sb.Append(" - NPC PCU Limit:                ").Append(settings.PiratePCU).AppendLine();
+			sb.Append(" - Cargo Ships Enabled:          ").Append(settings.CargoShipsEnabled).AppendLine();
+			sb.Append(" - Random Encounters Enabled:    ").Append(settings.EnableEncounters).AppendLine();
+			sb.Append(" - Wolves Enabled:               ").Append(settings.EnableWolfs).AppendLine();
+			sb.Append(" - Spiders Enabled:              ").Append(settings.EnableSpiders).AppendLine();
+			sb.Append(" - Drones Enabled:               ").Append(settings.EnableDrones).AppendLine();
+			sb.Append(" - Max Drones:                   ").Append(settings.MaxDrones).AppendLine();
+			sb.Append(" - Economy Enabled:              ").Append(settings.EnableEconomy).AppendLine();
+			sb.Append(" - Survival Mode:                ").Append(MyAPIGateway.Session.SurvivalMode).AppendLine();
+			sb.Append(" - Ingame Scripting Enabled:     ").Append(settings.EnableIngameScripts).AppendLine();
+			sb.Append(" - Unsupported Stations Enabled: ").Append(settings.StationVoxelSupport).AppendLine();
+
+			sb.AppendLine();
+
+			//APIs
+			sb.Append("::: Enabled APIs :::").AppendLine();
+			sb.Append(" - AI Enabled:                 ").Append(APIs.AiEnabledApiLoaded).AppendLine();
+			sb.Append(" - Defense Shields:            ").Append(APIs.ShieldsApiLoaded).AppendLine();
+			sb.Append(" - Water Mod:                  ").Append(APIs.WaterModApiLoaded).AppendLine();
+			sb.Append(" - Weapon Core / Core Systems: ").Append(APIs.WeaponCoreApiLoaded).AppendLine();
+			sb.AppendLine();
+
+			//GESAP
+			sb.Append(GetEligibleSpawnsAtPosition(msg));
+
+			//All Mods
+			if (AddonManager.ModIdNameReferences.Keys.Count > 0) {
+
+				sb.Append("::: All Mods :::").AppendLine();
+
+				foreach (var mod in AddonManager.ModIdNameReferences.Keys.OrderBy(x => x)) {
+
+					sb.Append(" - ").Append(AddonManager.ModIdNameReferences[mod]).Append(" [").Append(mod).Append("]").AppendLine();
+
+				}
+
+				sb.AppendLine();
+
+			}
+
+			//Errors
+			var errors = SpawnLogger.Error.ToString();
+
+			if (!string.IsNullOrWhiteSpace(errors)) {
+
+				sb.Append("::: Detected Errors :::").AppendLine();
+				sb.Append(errors).AppendLine();
+				sb.AppendLine();
+
+			}
+
+			return sb.ToString();
+		
+		}
+
 		public static string GetEligibleSpawnsAtPosition(ChatMessage msg) {
 
 			//StringBuilder
@@ -311,7 +422,6 @@ namespace ModularEncountersSystems.Logging {
 			var pcuLevel = SpawnConditions.GetPCULevel(5000, msg.PlayerPosition);
 			SpawnGroupCollection collection = null;
 
-			SpawnLogger.Write("Write Threat", SpawnerDebugEnum.Error, true);
 			sb.Append("::: Spawn Data Near Player :::").AppendLine();
 			sb.Append(" - Threat Score: ").Append(threatLevel.ToString()).AppendLine();
 			sb.Append(" - PCU Score:    ").Append(pcuLevel.ToString()).AppendLine();
@@ -342,7 +452,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Space Cargo Ship Eligible:       ").Append(environment.SpaceCargoShipsEligible).AppendLine();
 			sb.Append(" - Lunar Cargo Ship Eligible:       ").Append(environment.LunarCargoShipsEligible).AppendLine();
 			sb.Append(" - Planetary Cargo Ship Eligible:   ").Append(environment.PlanetaryCargoShipsEligible).AppendLine();
-			sb.Append(" - Gravity Cargo Ship Eligible:     ").Append(environment.GravityAtPosition).AppendLine();
+			sb.Append(" - Gravity Cargo Ship Eligible:     ").Append(environment.GravityCargoShipsEligible).AppendLine();
 			sb.Append(" - Random Encounter Eligible:       ").Append(environment.RandomEncountersEligible).AppendLine();
 			sb.Append(" - Planetary Installation Eligible: ").Append(environment.PlanetaryInstallationEligible).AppendLine();
 			sb.Append(" - Water Installation Eligible:     ").Append(environment.WaterInstallationEligible).AppendLine();
@@ -540,21 +650,24 @@ namespace ModularEncountersSystems.Logging {
 			var line = new LineD(message.CameraPosition, message.CameraDirection * 10000 + message.CameraPosition);
 			GridEntity thisGrid = null;
 
+			var sb = new StringBuilder();
+
 			foreach (var grid in GridManager.Grids) {
 
 				if (!grid.ActiveEntity())
 					continue;
 
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
 				if (grid.Behavior == null) {
 
+					sb.Append("Grid Does Not Have Registered Behavior In Entity: " + grid.CubeGrid?.CustomName ?? "(null grid name)");
 					continue;
 					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);
 					//return "";
 
 				}
-
-				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
-					continue;
 
 				thisGrid = grid;
 				break;
@@ -563,8 +676,8 @@ namespace ModularEncountersSystems.Logging {
 
 			if (thisGrid == null) {
 
-				message.ReturnMessage = "Could Not Locate NPC Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM";
-				return "";
+				message.ReturnMessage = "Could Not Locate NPC Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return sb.ToString() ?? "No Data";
 
 			}
 

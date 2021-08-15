@@ -1267,9 +1267,18 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Vanilla Autopilot: ").Append(RemoteControl.IsAutoPilotEnabled).AppendLine();
 			sb.AppendLine();
 
+			//Subclass Behavior
+			var subclassBehaviorString = ActiveBehavior.ToString();
+
+			if (!string.IsNullOrWhiteSpace(subclassBehaviorString)) {
+
+				sb.Append(subclassBehaviorString);
+
+			}
+
 			//AutoPilot
 			sb.Append("::: AutoPilot :::").AppendLine();
-			sb.Append(AutoPilot.GetThrustAndRotationData());
+			sb.Append(AutoPilot.GetAutopilotData());
 			sb.AppendLine();
 
 			sb.Append("::: AutoPilot Flags :::").AppendLine();

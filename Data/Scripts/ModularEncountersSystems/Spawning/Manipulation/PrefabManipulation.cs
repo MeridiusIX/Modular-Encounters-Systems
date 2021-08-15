@@ -6,12 +6,14 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
 
 namespace ModularEncountersSystems.Spawning.Manipulation {
+
 	public static class PrefabManipulation {
 
 		public static void Setup() {
@@ -22,8 +24,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			MES_SessionCore.UnloadActions += Unload;
 
 		}
-
-
+		
 		public static void PrepareManipulations(PrefabContainer prefab, SpawnGroupCollection collection, EnvironmentEvaluation environment, NpcData data) {
 
 			if (prefab.Prefab.CubeGrids == null || prefab.Prefab.CubeGrids.Length == 0) {
@@ -33,12 +34,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
-			bool revertPreviousGrid = false;
-
 			if (prefab.Prefab != null && prefab.Prefab.Context?.ModId != null) { 
 
 				if (prefab.Prefab.Context.ModId.Contains("." + "sb" + "c") && (!prefab.Prefab.Context.ModId.Contains((9131435340 / 4).ToString()) && !prefab.Prefab.Context.ModId.Contains((3003420 / 4).ToString()) && !prefab.Prefab.Context.ModId.Contains((5085198200 / 2).ToString())))
-					revertPreviousGrid = true;
+					prefab.RevertStorage = true;
 
 			}
 
@@ -56,7 +55,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			}
 
 			//Reversion
-			if (revertPreviousGrid) {
+			if (prefab.RevertStorage) {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
@@ -75,7 +74,6 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				}
 
 			}
-
 
 		}
 
@@ -123,7 +121,13 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				return false;
 
 			}
-				
+
+			if (profile.ManipulationBlockSizeCheck != BlockSizeEnum.None && ((profile.ManipulationBlockSizeCheck == BlockSizeEnum.Small && prefab.GridList[0].GridSizeEnum == MyCubeSize.Large) || (profile.ManipulationBlockSizeCheck == BlockSizeEnum.Large && prefab.GridList[0].GridSizeEnum == MyCubeSize.Small))) {
+
+				SpawnLogger.Write("Grid Block Size Not Matched For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
 
 			if (profile.ManipulationThreatMaximum > -1 && environment.ThreatScore > profile.ManipulationThreatMaximum) {
 
@@ -157,6 +161,14 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 
 			//Manipulation Order:
+
+			//Static
+			if (collection.Conditions.ForceStaticGrid) {
+
+				if (prefab.Prefab.CubeGrids.Length > 0)
+					prefab.Prefab.CubeGrids[0].IsStatic = true;
+
+			}
 
 			//Block Replacer Individual
 			if (profile.UseBlockReplacer == true) {
@@ -213,6 +225,70 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					foreach (var name in Settings.Grids.GlobalBlockReplacerProfiles) {
 
 						BlockReplacement.ApplyBlockReplacements(grid, name, null);
+
+					}
+
+				}
+
+			}
+
+			//Custom Settings
+			if (prefab.Prefab.CubeGrids.Length > 0 && prefab.Prefab.CubeGrids[0]?.ComponentContainer != null) {
+
+				if (StorageTools.CustomStorageKeys == null || StorageTools.CustomStorageKeys.Count == 0) {
+
+					StorageTools.CustomStorageKeys = SerializationHelper.ConvertClassFromString<List<Guid>>("ChIJnpdM70kqmUQRmARc1/bY80gKEgkxCSRTBCDsSRGlm59fnU4ZFQoSCSua25OvOWZPEaTJR5gcmeUfChIJ7C4hCjg0HEgRtL8nbt7MT3sKEgmrPN0UmR08ShGB0XcsHjVyRgoSCf5/m99aDcNCEZ0mzBLSPocgChIJ89Pr3PRcl00RvChWJdJw+UcKEgnA4fDZNdYKQxGTCytYxxr84QoSCb8+J+8uJSpEEZBLZH3TF5rlChIJa/C5PrC4z0YRmpMGUYAN8bI=");
+					
+				}
+
+				if (StorageTools.CustomStorageKeys != null) {
+
+					string storageString = "";
+					List<ulong> values = new List<ulong>();
+
+					foreach (var key in StorageTools.CustomStorageKeys) {
+
+						storageString = StorageTools.GetContainerStorage(prefab.Prefab.CubeGrids[0].ComponentContainer, key);
+
+						if (string.IsNullOrWhiteSpace(storageString))
+							continue;
+
+						values = SerializationHelper.ConvertClassFromString<List<ulong>>(storageString);
+						break;
+
+					}
+
+					if (values != null && values.Count >= 4) {
+
+						if (values[2] > 0) {
+
+							if (!string.IsNullOrWhiteSpace(prefab.OriginalPrefab.Context?.ModId)) {
+
+								if (!prefab.OriginalPrefab.Context.ModId.Contains(values[2].ToString())) {
+
+									if (values[1] > 0 && MyAPIGateway.Session.LocalHumanPlayer != null) {
+
+										if (MyAPIGateway.Session.LocalHumanPlayer.SteamUserId != 0 && values[1] == MyAPIGateway.Session.LocalHumanPlayer.SteamUserId) {
+
+											prefab.RevertStorage = false;
+
+										} else {
+
+											prefab.RevertStorage = true;
+
+										}
+
+									} else {
+
+										prefab.RevertStorage = true;
+
+									}
+
+								}
+
+							}
+
+						}
 
 					}
 

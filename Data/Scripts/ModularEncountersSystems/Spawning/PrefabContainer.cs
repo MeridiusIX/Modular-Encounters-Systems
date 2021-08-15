@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Spawning.Manipulation;
+﻿using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Spawning.Manipulation;
 using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using System;
@@ -11,6 +12,7 @@ namespace ModularEncountersSystems.Spawning {
 		public bool Valid;
 		public string PrefabSubtypeId;
 		public MyPrefabDefinition Prefab;
+		public MyPrefabDefinition OriginalPrefab;
 		public MyObjectBuilder_PrefabDefinition PrefabBuilder;
 		public bool SpawningInProgress;
 		public List<MyObjectBuilder_CubeGrid> GridList;
@@ -19,7 +21,9 @@ namespace ModularEncountersSystems.Spawning {
 		public int BlockCount;
 		public double OriginalMass;
 		public double CurrentMass;
+		public BlockSizeEnum BlockSize;
 		public bool ClearedContainerTypes;
+		public bool RevertStorage;
 
 		public PrefabContainer(string SubtypeId) {
 
@@ -48,8 +52,9 @@ namespace ModularEncountersSystems.Spawning {
 		public bool InitializePrefabForSpawn(string subtypeId) {
 
 			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(subtypeId);
+			OriginalPrefab = prefab;
 
-			if (prefab == null)
+			if (prefab?.CubeGrids == null || prefab.CubeGrids.Length == 0)
 				return false;
 
 			GridList.Clear();

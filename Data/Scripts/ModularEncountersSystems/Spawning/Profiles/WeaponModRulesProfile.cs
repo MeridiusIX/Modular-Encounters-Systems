@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Helpers;
+using Sandbox.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,6 +28,24 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			AllowedTargetBlocks = new List<MyDefinitionId>();
 			RestrictedTargetBlocks = new List<MyDefinitionId>();
+
+		}
+
+		public bool CheckRules(MyCubeBlockDefinition oldWeapon, MyCubeBlockDefinition newWeapon) {
+
+			if (!AllowInRandomization)
+				return false;
+
+			if (AllowOnlyIfExactSize && oldWeapon.Size != newWeapon.Size)
+				return false;
+
+			if (AllowedTargetBlocks.Count > 0 && !AllowedTargetBlocks.Contains(oldWeapon.Id))
+				return false;
+
+			if (RestrictedTargetBlocks.Count > 0 && RestrictedTargetBlocks.Contains(oldWeapon.Id))
+				return false;
+
+			return true;
 
 		}
 

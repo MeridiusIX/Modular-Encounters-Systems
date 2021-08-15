@@ -12,6 +12,7 @@ namespace ModularEncountersSystems.API {
     public static class AddonManager {
 
         public static List<ulong> ModIdList = new List<ulong>();
+        public static Dictionary<string, string> ModIdNameReferences = new Dictionary<string, string>();
         public static string ConfigInstance;
 
         //Modular Encounters Systems
@@ -87,6 +88,20 @@ namespace ModularEncountersSystems.API {
 
                 if (!ModIdList.Contains(id))
                     ModIdList.Add(id);
+
+                if (id != 0) {
+
+                    if (!ModIdNameReferences.ContainsKey(id.ToString()))
+                        ModIdNameReferences.Add(id.ToString(), mod.FriendlyName);
+
+                } else {
+
+                    if (!ModIdNameReferences.ContainsKey(mod.Name))
+                        ModIdNameReferences.Add(mod.Name, mod.FriendlyName);
+
+                }
+
+                
 
                 //NPC Weapons Upgrade
                 if (id == _npcWeaponsUpgradeSteamId || id == _npcWeaponsUpgradeModIoId) {

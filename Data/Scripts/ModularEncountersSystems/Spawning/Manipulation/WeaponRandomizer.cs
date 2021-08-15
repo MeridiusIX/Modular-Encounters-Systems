@@ -181,8 +181,15 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 					if (!definition.Public) {
 
-						if (!DefaultPublicBlocks.Contains(definition.Id))
-							continue;
+						WeaponModRulesProfile profile = null;
+						ProfileManager.WeaponModRulesProfiles.TryGetValue(definition.Id, out profile);
+
+						if (profile == null || !profile.AllowIfNonPublic) {
+
+							if (!DefaultPublicBlocks.Contains(definition.Id))
+								continue;
+
+						}
 
 					}
 
@@ -502,8 +509,17 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 							}
 
 							var weaponProfile = WeaponProfiles[randId];
+							WeaponModRulesProfile ruleProfile = null;
+							ProfileManager.WeaponModRulesProfiles.TryGetValue(weaponProfile.BlockDefinition.Id, out ruleProfile);
 
-							if (IsWeaponSizeAllowed(blockDefinition.Size, weaponProfile.BlockDefinition.Size, profile.RandomWeaponSizeVariance)) {
+							if (ruleProfile != null && !ruleProfile.CheckRules(blockDefinition, weaponProfile.BlockDefinition)) {
+
+								errorDebugging.Append(" - Weapon Mod Rules Do Not Allow This Block").AppendLine();
+								continue;
+
+							}
+
+							if (!IsWeaponSizeAllowed(blockDefinition.Size, weaponProfile.BlockDefinition.Size, profile.RandomWeaponSizeVariance)) {
 
 								errorDebugging.Append(" - Weapon Size Variance Outside Limit").AppendLine();
 
@@ -712,7 +728,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				if (SpawnLogger.ActiveDebug.HasFlag(SpawnerDebugEnum.GameLog)) {
 
-					SpawnLogger.Write(errorDebugging.ToString(), SpawnerDebugEnum.Manipulation);
+					//SpawnLogger.Write(errorDebugging.ToString(), SpawnerDebugEnum.Manipulation);
 
 				}
 

@@ -36,6 +36,7 @@ namespace ModularEncountersSystems.Logging {
 		Weapon = 1 << 21,
 		Target = 1 << 22,
 		Dev = 1 << 23,
+		BehaviorLog = 1 << 24,
 
 	}
 

@@ -33,6 +33,7 @@ namespace ModularEncountersSystems.Behavior {
 	public static class BehaviorManager {
 
 		public static List<IBehavior> Behaviors = new List<IBehavior>();
+		public static List<IBehavior> TerminatedBehaviors = new List<IBehavior>();
 		public static List<IMyRemoteControl> DormantAiBlocks = new List<IMyRemoteControl>();
 		public static List<long> RegisteredRemoteBlocks = new List<long>();
 
@@ -152,6 +153,7 @@ namespace ModularEncountersSystems.Behavior {
 
 					if (Behaviors[i] == null || Behaviors[i].IsClosed() || Behaviors[i].BehaviorTerminated) {
 
+						TerminatedBehaviors.Add(Behaviors[i]);
 						Behaviors.RemoveAt(i);
 						continue;
 
@@ -329,6 +331,7 @@ namespace ModularEncountersSystems.Behavior {
 			ProcessAutoPilotMain();
 			ProcessWeaponsMain();
 			ProcessTriggersMain();
+			ProcessDiagnosticsMain();
 			ProcessDespawnConditions();
 			ProcessMainBehavior();
 			Mode = BehaviorManagerMode.None;
@@ -467,6 +470,22 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].ProcessActivatedTriggers();
+
+			}
+
+		}
+
+		private static void ProcessDiagnosticsMain() {
+
+			if (!BehaviorLogger.ActiveDebug.HasFlag(BehaviorDebugEnum.BehaviorLog))
+				return;
+
+			for (int i = Behaviors.Count - 1; i >= 0; i--) {
+
+				if (!Behaviors[i].IsAIReady())
+					continue;
+
+				Behaviors[i].Diagnostic.UpdateLogFile();
 
 			}
 

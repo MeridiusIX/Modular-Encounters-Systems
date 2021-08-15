@@ -25,6 +25,7 @@ namespace ModularEncountersSystems.API {
 		private Func<Vector3D, bool, string, bool> _isPositionInKnownPlayerLocation;
 		private Func<IMyCubeGrid, Vector3D> _getNpcStartCoordinates;
 		private Func<IMyCubeGrid, Vector3D> _getNpcEndCoordinates;
+		private Action<bool, string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>> _registerBehaviorCustomTrigger;
 		private Action<bool, Action<IMyRemoteControl, IMyCubeGrid>> _registerCompromisedRemoteWatcher;
 		private Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool> _registerDespawnWatcher;
 		private Action<IMyRemoteControl, string> _registerRemoteControlCode;
@@ -55,6 +56,21 @@ namespace ModularEncountersSystems.API {
 		/// <param name="maxSpawns"></param>
 		/// <param name="minThreatForAvoidingAbandonment"></param>
 		public void AddKnownPlayerLocation(Vector3D coords, string faction, double radius, int expirationMinutes, int maxSpawns, int minThreatForAvoidingAbandonment) => _addKnownPlayerLocation?.Invoke(coords, faction, radius, expirationMinutes, maxSpawns, minThreatForAvoidingAbandonment);
+
+		/// <summary>
+		/// This method allows you to register a method that will be invoked each time a RivalAI Behavior Action is Successfully Triggered.
+		/// </summary>
+		/// <param name="register">If true, the method provided will be registered. If false, the provided method will be deregistered.</param>
+		/// <param name="action">The method you want invoked when an Action is triggered.</param>
+		/*
+			Action Parameters:
+			IMyRemoteControl:  The remote control the behavior is attached to
+			string:            The Trigger Profile SubtypeId that activated the Action Profile
+			string:            The Action Profile SubtypeId that was activated by the Trigger
+			IMyEntity:         The current Targeted Entity the behavior has. Null if no current target.
+			Vector3D:          The current waypoint the behavior is using.
+		*/
+		public void BehaviorTriggerActivationWatcher(bool register, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D> action) => _behaviorTriggerActivationWatcher?.Invoke(register, action);
 
 		/// <summary>
 		/// Allows you to submit a chat command via the API.
@@ -127,6 +143,21 @@ namespace ModularEncountersSystems.API {
 		/// <param name="cubeGrid">The cubegrid of the NPC you want to check</param>
 		/// <returns>Coordinates of End Position. Returns Vector3D.Zero if not found</returns>
 		public Vector3D GetNpcEndCoordinates(IMyCubeGrid cubeGrid) => _getNpcEndCoordinates?.Invoke(cubeGrid) ?? Vector3D.Zero;
+
+		/// <summary>
+		/// Allows you to register a method that is invoked when a Behavior Trigger is checked. The Trigger will pass or fail depending on the bool output of your provided method.
+		/// </summary>
+		/// <param name="register">If true, the method provided will be registered. If false, the provided method will be deregistered.</param>
+		/// <param name="methodIdentifier">A unique name that is used to link your method to a Trigger Profile</param>
+		/// <param name="func">The method you want invoked when Trigger is activated.</param>
+		/*
+			Func Parameters:
+			IMyRemoteControl:  The remote control the behavior is attached to
+			string:            The Trigger Profile SubtypeId that is being checked
+			IMyEntity:         The current Targeted Entity the behavior has. Null if no current target.
+			Vector3D:          The current waypoint the behavior is using.
+		*/
+		public void RegisterBehaviorCustomTrigger(bool register, string methodIdentifier, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool> func) => _registerBehaviorCustomTrigger?.Invoke(register, methodIdentifier, func);
 
 		/// <summary>
 		/// Allows you to register a method that is triggered whenever a RivalAI Remote Control Block is Compromised
@@ -241,6 +272,7 @@ namespace ModularEncountersSystems.API {
 				_getNpcStartCoordinates = (Func<IMyCubeGrid, Vector3D>)dict["GetNpcStartCoordinates"];
 				_getNpcEndCoordinates = (Func<IMyCubeGrid, Vector3D>)dict["GetNpcEndCoordinates"];
 				_registerCompromisedRemoteWatcher = (Action<bool, Action<IMyRemoteControl, IMyCubeGrid>>)dict["RegisterCompromisedRemoteWatcher"];
+				_registerBehaviorCustomTrigger = (Action<bool, string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>>)dict["RegisterBehaviorCustomTrigger"];
 				_registerDespawnWatcher = (Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool>)dict["RegisterDespawnWatcher"];
 				_registerRemoteControlCode = (Action<IMyRemoteControl, string>)dict["RegisterRemoteControlCode"];
 				_removeKnownPlayerLocation = (Action<Vector3D, string, bool>)dict["RemoveKnownPlayerLocation"];

@@ -16,6 +16,7 @@ namespace ModularEncountersSystems.Behavior {
 		BroadcastSystem Broadcast { get; }
 		DamageSystem Damage { get; }
 		DespawnSystem Despawn { get; }
+		DiagnosticSystem Diagnostic { get; }
 		GridSystem Grid { get; }
 		OwnerSystem Owner { get; }
 		StoredSettings BehaviorSettings { get; }

@@ -36,6 +36,7 @@ namespace ModularEncountersSystems.Behavior {
 		private BroadcastSystem _broadcast;
 		private DamageSystem _damage;
 		private DespawnSystem _despawn;
+		private DiagnosticSystem _diagnostic;
 		private GridSystem _extras;
 		private OwnerSystem _owner;
 		private StoredSettings _settings;
@@ -83,6 +84,7 @@ namespace ModularEncountersSystems.Behavior {
 		public BroadcastSystem Broadcast { get { return _broadcast; } set { _broadcast = value; } }
 		public DamageSystem Damage { get { return _damage; } set { _damage = value; } }
 		public DespawnSystem Despawn { get { return _despawn; } set { _despawn = value; } }
+		public DiagnosticSystem Diagnostic { get { return _diagnostic; } set { _diagnostic = value; } }
 		public GridSystem Grid { get { return _extras; } set { _extras = value; } }
 		public OwnerSystem Owner { get { return _owner; } set { _owner = value; } }
 		public StoredSettings BehaviorSettings { get { return _settings; } set { _settings = value; } }
@@ -444,6 +446,13 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
+			if (CurrentGrid != null) {
+
+				if (CurrentGrid.Behavior == null)
+					CurrentGrid.Behavior = this;
+
+			}
+
 			if (ActiveBehavior != null && ActiveBehavior.SubClass == BehaviorSettings.ActiveBehaviorType)
 				ActiveBehavior.ProcessBehavior();
 			else {
@@ -530,6 +539,7 @@ namespace ModularEncountersSystems.Behavior {
 			Broadcast = new BroadcastSystem(remoteControl);
 			Damage = new DamageSystem(remoteControl);
 			Despawn = new DespawnSystem(this, remoteControl);
+			Diagnostic = new DiagnosticSystem(this, remoteControl);
 			Grid = new GridSystem(remoteControl);
 			Owner = new OwnerSystem(remoteControl);
 			//Spawning = new SpawningSystem(remoteControl);
@@ -1264,6 +1274,7 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Behavior Name:     ").Append(CurrentGrid?.Npc?.BehaviorName != null ? CurrentGrid.Npc.BehaviorName : "(null)").AppendLine(); //SeeWhyThisIsntPopulated
 			sb.Append(" - Behavior Subclass: ").Append(BehaviorSettings.ActiveBehaviorType).AppendLine();
 			sb.Append(" - Behavior Mode:     ").Append(Mode).AppendLine();
+			sb.Append(" - Terminated:        ").Append(BehaviorTerminated).AppendLine();
 			sb.Append(" - Vanilla Autopilot: ").Append(RemoteControl.IsAutoPilotEnabled).AppendLine();
 			sb.AppendLine();
 

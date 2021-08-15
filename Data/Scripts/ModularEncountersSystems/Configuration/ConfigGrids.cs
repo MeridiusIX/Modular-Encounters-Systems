@@ -92,9 +92,9 @@ namespace ModularEncountersSystems.Configuration {
 
 			ShieldProviderChance = 100;
 
-			UseGlobalBlockReplacer = false;
+			UseGlobalBlockReplacer = true;
 			GlobalBlockReplacerReference = new string[]{};
-			GlobalBlockReplacerProfiles = new string[]{};
+			GlobalBlockReplacerProfiles = new string[]{ "MES-Turret-InteriorToNpcInterior" };
 
 			UseNonPhysicalAmmoForNPCs = false;
 			RemoveContainerInventoryFromNPCs = false;

@@ -5,6 +5,22 @@
     <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
       <Id>
         <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Turret-InteriorToNpcInterior</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Block Replacement]
+
+        [OldBlock:MyObjectBuilder_InteriorTurret/LargeInteriorTurret]
+        [NewBlock:MyObjectBuilder_InteriorTurret/NpcLargeInteriorTurret]
+
+      </Description>
+
+    </EntityComponent>
+    
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
         <SubtypeId>MES-Turret-GatlingToMissile</SubtypeId>
       </Id>
       <Description>

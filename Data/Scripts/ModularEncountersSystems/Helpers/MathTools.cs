@@ -125,6 +125,17 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static double Average(params double[] values) {
+
+            double result = 0;
+
+            for (int i = 0; i < values.Length; i++)
+                result += values[i];
+
+            return result / values.Length;
+
+        }
+
         public static int LowestCount(params int[] counts) {
 
             int lowestCount = -1;

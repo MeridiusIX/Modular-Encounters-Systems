@@ -6,48 +6,60 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace ModularEncountersSystems.Behavior.Subsystems {
-	public class DiagnosticSystem {
 
-		private bool _diagnosticsReady = false;
+	public class DiagnosticOutput {
+
+		public string Output;
+
+		public DiagnosticOutput() {
+
+			Output = "";
+
+		}
+	
+	}
+
+	public class DiagnosticSystem {
 
 		private IMyRemoteControl _remoteControl;
 		private IBehavior _behavior;
+		private DiagnosticOutput _output;
 
-		private List<string> _events;
+		private string _diagnosticLogFileName;
+
+		
 
 		public DiagnosticSystem(IBehavior behavior, IMyRemoteControl remoteControl) {
 
 			_remoteControl = remoteControl;
 			_behavior = behavior;
+			_output = new DiagnosticOutput();
 
 			if (remoteControl == null || behavior == null)
 				return;
 
-			_diagnosticsReady = true;
-			_events = new List<string>();
-
-			//TODO: Add Log Beginning For Behavior
-
+			_diagnosticLogFileName = LoggerTools.GetDateAndTime() + " - " + _remoteControl.SlimBlock.CubeGrid.CustomName + "-" + _remoteControl.SlimBlock.CubeGrid.CustomName + ".log";
 
 		}
 
-		public void LogEvent(string text, BehaviorDebugEnum eventType) {
+		public void UpdateLogFile() {
 
-			if (!BehaviorLogger.LoggerDebugMode)
-				return;
+			try {
 
-			var sb = new StringBuilder();
-			sb.Append("[").Append(DateTime.Now.ToString("yyyyMMddHHmmssfff")).Append("] ");
-			sb.Append("[").Append(eventType.ToString()).Append("] ");
-			sb.Append(text).AppendLine();
+				using (var writer = MyAPIGateway.Utilities.WriteFileInWorldStorage(_diagnosticLogFileName, typeof(IBehavior))) {
 
-		}
+					//_output.Output = ;
+					writer.Write(_behavior);
+					//SpawnLogger.Write("Test", SpawnerDebugEnum.Error, true);
 
-		private void AddEventToLogger(string text) {
+				}
 
-			lock (_events)
-				_events.Add(text);
+			} catch (Exception e) {
 
+				SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error, true);
+			
+			}
+		
 		}
 
 	}

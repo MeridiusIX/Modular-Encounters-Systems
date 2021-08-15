@@ -1127,7 +1127,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (actions.CreateBots) {
+			if (actions.AddBotsToSeats) {
 			
 				
 			

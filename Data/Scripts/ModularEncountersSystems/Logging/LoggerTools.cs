@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
@@ -23,6 +24,13 @@ namespace ModularEncountersSystems.Logging {
 
 			DateTime time = DateTime.Now;
 			sb.Append(time.ToString("yyyy-MM-dd hh-mm-ss-fff")).Append(": ");
+
+		}
+
+		public static string GetDateAndTime() {
+
+			DateTime time = DateTime.Now;
+			return time.ToString("yyyy-MM-dd hh-mm-ss-fff");
 
 		}
 
@@ -662,8 +670,42 @@ namespace ModularEncountersSystems.Logging {
 
 				if (grid.Behavior == null) {
 
-					sb.Append("Grid Does Not Have Registered Behavior In Entity: " + grid.CubeGrid?.CustomName ?? "(null grid name)");
-					continue;
+					foreach (var behavior in BehaviorManager.Behaviors) {
+
+						if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+							grid.Behavior = behavior;
+							break;
+
+						}
+					
+					}
+
+					if(grid.Behavior == null) {
+
+						foreach (var behavior in BehaviorManager.TerminatedBehaviors) {
+
+							if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+								grid.Behavior = behavior;
+								break;
+
+							}
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						sb.Append("No Matching Behavior Found In Master Behavior List Or Terminated Behavior List").AppendLine();
+						sb.Append("Grid Does Not Have Registered Behavior In Entity: " + grid.CubeGrid?.CustomName ?? "(null grid name)").AppendLine();
+
+						continue;
+
+					}
+
+					
 					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);
 					//return "";
 

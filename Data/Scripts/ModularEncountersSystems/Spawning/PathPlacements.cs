@@ -413,6 +413,21 @@ namespace ModularEncountersSystems.Spawning {
 				var upAtHalfPath = environment.NearestPlanet.UpAtPosition(halfPathPointRough);
 				var randomPerpAtHalf = VectorHelper.RandomPerpendicular(upAtHalfPath);
 				var startPathPoint = upAtHalfPath * pathHeight + halfPathPointRough;
+
+				if (environment.NearestPlanet.Planet.GetAirDensity(startPathPoint) < Settings.PlanetaryCargoShips.MinAirDensity) {
+
+					pathHeight = MathTools.Average(Settings.PlanetaryCargoShips.MinSpawningAltitude, Settings.PlanetaryCargoShips.MaxSpawningAltitude);
+					startPathPoint = upAtHalfPath * pathHeight + halfPathPointRough;
+
+					if (environment.NearestPlanet.Planet.GetAirDensity(startPathPoint) < Settings.PlanetaryCargoShips.MinAirDensity) {
+
+						pathHeight = Settings.PlanetaryCargoShips.MinSpawningAltitude;
+						startPathPoint = upAtHalfPath * pathHeight + halfPathPointRough;
+
+					}
+
+				}
+
 				var startMatrix = MatrixD.CreateWorld(startPathPoint, randomPerpAtHalf, upAtHalfPath);
 
 				var pathDirection = VectorHelper.GetDirectionClosestTo(Vector3D.Normalize(environment.Position - startPathPoint), startMatrix.Forward, startMatrix.Right, startMatrix.Backward, startMatrix.Left);

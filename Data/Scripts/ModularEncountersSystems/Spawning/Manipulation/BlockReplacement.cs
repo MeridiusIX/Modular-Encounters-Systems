@@ -93,6 +93,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				if (block.GetId().TypeId == newBlockBuilder.GetId().TypeId) {
 
 					block.SubtypeName = newBlockBuilder.SubtypeName;
+					SpecialBlockSettings(newBlockDef, block);
 					continue;
 
 				}
@@ -116,11 +117,30 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				newBlockBuilder.ColorMaskHSV = block.ColorMaskHSV;
 				newBlockBuilder.Owner = block.Owner;
 
+				SpecialBlockSettings(newBlockDef, newBlockBuilder);
+
 				cubeGrid.CubeBlocks.RemoveAt(i);
 				cubeGrid.CubeBlocks.Add(newBlockBuilder);
 
 			}
 
+		}
+
+		public static void SpecialBlockSettings(MyCubeBlockDefinition def, MyObjectBuilder_CubeBlock block) {
+
+			//Set NPC Interior Turret To Maximum Range
+			if (def.Id.SubtypeName == "NpcLargeInteriorTurret") {
+
+				var turret = block as MyObjectBuilder_TurretBase;
+
+				if (turret != null) {
+
+					turret.Range = 800;
+
+				}
+			
+			}
+		
 		}
 
 	}

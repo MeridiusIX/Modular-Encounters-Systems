@@ -90,15 +90,23 @@ namespace ModularEncountersSystems.Spawning {
 
 					if (character != null) {
 
-						//Logger.Write("AiEnabled Character Spawned");
+						SpawnLogger.Write(string.Format("AiEnabled Character Spawning: {0}", botId), SpawnerDebugEnum.Spawning);
+
+					} else {
+
+						SpawnLogger.Write(string.Format("AiEnabled Spawn Failed For: {0}", botId), SpawnerDebugEnum.Spawning);
 
 					}
-				
+
+				} else {
+
+					SpawnLogger.Write("AiEnabled Found, But API Not Loaded", SpawnerDebugEnum.Spawning);
+
 				}
 			
 			} else {
 
-				//MyVisualScriptLogicProvider.SpawnBot(botId, coords.Translation);
+				SpawnLogger.Write(string.Format("Regular Bot Spawning: {0}", botId), SpawnerDebugEnum.Spawning);
 				MyVisualScriptLogicProvider.SpawnBot(botId, coords.Translation, coords.Forward, coords.Up, (string.IsNullOrWhiteSpace(name) ? null : name));
 
 			}

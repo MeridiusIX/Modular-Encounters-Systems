@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Core;
+﻿using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Tasks;
 using Sandbox.Game;

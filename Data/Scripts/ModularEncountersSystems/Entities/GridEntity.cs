@@ -53,6 +53,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> Production;
 		public List<BlockEntity> Power;
 		public List<BlockEntity> RivalAi;
+		public List<BlockEntity> Seats;
 		public List<BlockEntity> Shields;
 		public List<BlockEntity> Thrusters;
 		public List<BlockEntity> Tools;
@@ -102,6 +103,7 @@ namespace ModularEncountersSystems.Entities {
 			Production = new List<BlockEntity>();
 			Power = new List<BlockEntity>();
 			RivalAi = new List<BlockEntity>();
+			Seats = new List<BlockEntity>();
 			Shields = new List<BlockEntity>();
 			Thrusters = new List<BlockEntity>();
 			Tools = new List<BlockEntity>();
@@ -124,6 +126,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.Production, Production);
 			BlockListReference.Add(BlockTypeEnum.Power, Power);
 			BlockListReference.Add(BlockTypeEnum.RivalAi, RivalAi);
+			BlockListReference.Add(BlockTypeEnum.Seats, Seats);
 			BlockListReference.Add(BlockTypeEnum.Shields, Shields);
 			BlockListReference.Add(BlockTypeEnum.Thrusters, Thrusters);
 			BlockListReference.Add(BlockTypeEnum.Tools, Tools);
@@ -171,6 +174,12 @@ namespace ModularEncountersSystems.Entities {
 			}
 
 			TaskProcessor.Tasks.Add(new NewGrid(this));
+
+		}
+
+		public void AppendDebug(string msg) {
+
+			DebugData.Append(msg).AppendLine();
 
 		}
 
@@ -304,6 +313,13 @@ namespace ModularEncountersSystems.Entities {
 			if (terminalBlock as IMyPowerProducer != null) {
 
 				assignedBlock = AddBlock(terminalBlock, Power);
+
+			}
+
+			//Seats
+			if (terminalBlock as IMyCockpit != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Seats);
 
 			}
 
@@ -544,6 +560,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(NanoBots);
 				CleanBlockList(Production);
 				CleanBlockList(Power);
+				CleanBlockList(Seats);
 				CleanBlockList(Shields);
 				CleanBlockList(Thrusters);
 				CleanBlockList(Tools);

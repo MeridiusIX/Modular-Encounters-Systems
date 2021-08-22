@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Tasks;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -20,14 +21,10 @@ namespace ModularEncountersSystems.Entities {
 
 		public bool PlayerEntityChanged;
 
-		public bool JetpackInhibitorNullifierActive;
-		public DateTime LastJetpackInhibitorNullifierTime;
-
-		public bool DrillInhibitorNullifierActive;
-		public DateTime LastDrillInhibitorNullifierTime;
-
-		public bool PlayerInhibitorNullifierActive;
-		public DateTime LastPlayerInhibitorNullifierTime;
+		public bool ItemConsumeEventRegistered;
+		public ConsumableItemTimer JetpackInhibitorNullifier;
+		public ConsumableItemTimer DrillInhibitorNullifier;
+		public ConsumableItemTimer PlayerInhibitorNullifier;
 
 		public List<GridEntity> LinkedGrids;
 
@@ -47,13 +44,78 @@ namespace ModularEncountersSystems.Entities {
 			MyVisualScriptLogicProvider.PlayerConnected += PlayerConnect;
 
 			MyVisualScriptLogicProvider.PlayerSpawned += PlayerSpawn;
+			MyVisualScriptLogicProvider.PlayerDied += PlayerDied;
 			MyVisualScriptLogicProvider.PlayerLeftCockpit += PlayerCockpitAction;
 			MyVisualScriptLogicProvider.PlayerEnteredCockpit += PlayerCockpitAction;
 			MyVisualScriptLogicProvider.RemoteControlChanged += PlayerRemoteAction;
 
+			PlayerConnect(Player.IdentityId);
+
 			RefreshPlayerEntity();
 			SpawnLogger.Write("New Player Added To Watcher: " + player.DisplayName, SpawnerDebugEnum.Entity);
 
+		}
+
+		public void ItemConsumedEvent(IMyCharacter character, MyDefinitionId id) {
+
+			if (!ActiveEntity() || Player?.Character == null || Player.Character != character)
+				return;
+
+
+			if (id.SubtypeName == "JetpackInhibitorBlocker") {
+
+				if (JetpackInhibitorNullifier == null || !JetpackInhibitorNullifier.EffectActive()) {
+
+					JetpackInhibitorNullifier = new ConsumableItemTimer(30, Player.IdentityId, "Jetpack Inhibitor Nullifier");
+					TaskProcessor.Tasks.Add(JetpackInhibitorNullifier);
+
+
+				} else {
+
+					JetpackInhibitorNullifier.ResetTimer(30);
+
+				}
+			
+			}
+
+			if (id.SubtypeName == "DrillInhibitorBlocker") {
+
+				if (DrillInhibitorNullifier == null || !DrillInhibitorNullifier.EffectActive()) {
+
+					DrillInhibitorNullifier = new ConsumableItemTimer(30, Player.IdentityId, "Drill Inhibitor Nullifier");
+					TaskProcessor.Tasks.Add(DrillInhibitorNullifier);
+
+
+				} else {
+
+					DrillInhibitorNullifier.ResetTimer(30);
+
+				}
+
+			}
+
+			if (id.SubtypeName == "PlayerInhibitorBlocker") {
+
+				if (PlayerInhibitorNullifier == null || !PlayerInhibitorNullifier.EffectActive()) {
+
+					PlayerInhibitorNullifier = new ConsumableItemTimer(30, Player.IdentityId, "Player Inhibitor Nullifier");
+					TaskProcessor.Tasks.Add(PlayerInhibitorNullifier);
+
+
+				} else {
+
+					PlayerInhibitorNullifier.ResetTimer(30);
+
+				}
+
+			}
+
+		}
+
+		public Vector3D GetCharacterPosition() {
+
+			return Player?.Character?.GetPosition() ?? Vector3D.Zero;
+		
 		}
 
 		public void PlayerCockpitAction(string entA, long id, string entB) {
@@ -71,6 +133,7 @@ namespace ModularEncountersSystems.Entities {
 				return;
 
 			Online = true;
+			RegisterConsumeEvent(true);
 			SpawnLogger.Write("Player Connected: " + Player.DisplayName, SpawnerDebugEnum.Entity);
 
 		}
@@ -81,7 +144,25 @@ namespace ModularEncountersSystems.Entities {
 				return;
 
 			Online = false;
+			RegisterConsumeEvent(false);
 			SpawnLogger.Write("Player Disconnected: " + Player.DisplayName, SpawnerDebugEnum.Entity);
+
+		}
+
+		public bool PlayerInPressurizedSeat() {
+
+			if (!IsParentEntitySeat)
+				return false;
+
+			var controller = Player?.Controller?.ControlledEntity?.Entity as IMyCockpit;
+
+			if (controller == null)
+				return false;
+
+			if (controller.OxygenFilledRatio > 0 && controller.OxygenCapacity > 0)
+				return true;
+
+			return false;
 
 		}
 
@@ -94,12 +175,41 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public void PlayerDied(long id) {
+
+			if (id != Player.IdentityId)
+				return;
+
+			JetpackInhibitorNullifier?.ExpireConsumableEffect();
+			DrillInhibitorNullifier?.ExpireConsumableEffect();
+			PlayerInhibitorNullifier?.ExpireConsumableEffect();
+			RegisterConsumeEvent(false);
+
+		}
+
 		public void PlayerSpawn(long id) {
 
 			if (id != Player.IdentityId)
 				return;
 
 			PlayerEntityChanged = true;
+			RegisterConsumeEvent(true);
+
+		}
+
+		public void RegisterConsumeEvent(bool register) {
+
+			if (register && !ItemConsumeEventRegistered) {
+
+				ItemConsumeEventRegistered = true;
+				//TODO += ItemConsumedEvent;
+
+			} else if (!register && ItemConsumeEventRegistered) {
+
+				ItemConsumeEventRegistered = false;
+				//TODO -= ItemConsumedEvent;
+
+			}
 
 		}
 
@@ -527,6 +637,7 @@ namespace ModularEncountersSystems.Entities {
 			base.Unload();
 			MyVisualScriptLogicProvider.PlayerDisconnected -= PlayerDisconnect;
 			MyVisualScriptLogicProvider.PlayerConnected -= PlayerConnect;
+			MyVisualScriptLogicProvider.PlayerDied -= PlayerDied;
 			MyVisualScriptLogicProvider.PlayerSpawned -= PlayerSpawn;
 			MyVisualScriptLogicProvider.PlayerLeftCockpit -= PlayerCockpitAction;
 			MyVisualScriptLogicProvider.PlayerEnteredCockpit -= PlayerCockpitAction;

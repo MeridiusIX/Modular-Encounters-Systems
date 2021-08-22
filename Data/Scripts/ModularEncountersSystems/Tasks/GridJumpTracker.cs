@@ -34,7 +34,7 @@ namespace ModularEncountersSystems.Tasks {
 			var currentPos = _grid.GetPosition();
 			var dist = Vector3D.Distance(_previousCoords, currentPos);
 			
-
+			//TODO: Account For Grid Speed And Etc
 			if (dist < 2000) {
 
 				_previousCoords = currentPos;

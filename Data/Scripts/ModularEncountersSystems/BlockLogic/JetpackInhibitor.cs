@@ -101,7 +101,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			//Check Player Distances and Status
 			foreach (var player in PlayerManager.Players) {
 
-				if (!player.ActiveEntity() || player.IsParentEntitySeat || player.JetpackInhibitorNullifierActive) {
+				if (!player.ActiveEntity() || player.IsParentEntitySeat || (player.JetpackInhibitorNullifier != null && player.JetpackInhibitorNullifier.EffectActive())) {
 
 					RemovePlayer(player);
 					continue;

@@ -322,6 +322,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+				//JumpRequested
+				if (trigger.Type == "JumpRequested") {
+
+					trigger.ActivateTrigger(JumpRequested);
+					continue;
+
+				}
+
+				//JumpCompleted
+				if (trigger.Type == "JumpCompleted") {
+
+					trigger.ActivateTrigger(JumpCompleted);
+					continue;
+
+				}
+
 			}
 
 			_behavior.BehaviorTriggerA = false;
@@ -550,6 +566,56 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (trigger.UseTrigger == true && trigger.Type == "Retreat") {
 
+					trigger.ActivateTrigger();
+
+					if (trigger.Triggered == true) {
+
+						ProcessTrigger(trigger);
+
+					}
+
+				}
+
+			}
+
+		}
+
+		public void ProcessJumpRequestTriggers(GridEntity grid, Vector3D coords) {
+
+			for (int i = 0; i < Triggers.Count; i++) {
+
+				var trigger = Triggers[i];
+
+				if (trigger.UseTrigger == true && trigger.Type == "JumpRequested") {
+
+					trigger.JumpedGrid = grid;
+					trigger.JumpStart = coords;
+					trigger.JumpEnd = coords;
+					trigger.ActivateTrigger();
+
+					if (trigger.Triggered == true) {
+
+						ProcessTrigger(trigger);
+
+					}
+
+				}
+
+			}
+
+		}
+
+		public void ProcessJumpCompletedTriggers(GridEntity grid, Vector3D startCoords, Vector3D endCoords) {
+
+			for (int i = 0; i < Triggers.Count; i++) {
+
+				var trigger = Triggers[i];
+
+				if (trigger.UseTrigger == true && trigger.Type == "JumpCompleted") {
+
+					trigger.JumpedGrid = grid;
+					trigger.JumpStart = startCoords;
+					trigger.JumpEnd = endCoords;
 					trigger.ActivateTrigger();
 
 					if (trigger.Triggered == true) {

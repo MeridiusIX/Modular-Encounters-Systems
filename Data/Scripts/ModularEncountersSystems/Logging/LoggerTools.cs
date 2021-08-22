@@ -363,6 +363,7 @@ namespace ModularEncountersSystems.Logging {
 			var settings = MyAPIGateway.Session.SessionSettings;
 			sb.Append(" - Dedicated Server:             ").Append(MyAPIGateway.Utilities.IsDedicated).AppendLine();
 			sb.Append(" - Sync Distance:                ").Append(settings.SyncDistance).AppendLine();
+			sb.Append(" - Selective Physics Updates:    ").Append(settings.EnableSelectivePhysicsUpdates).AppendLine();
 			sb.Append(" - Block Limits Enabled:         ").Append(settings.BlockLimitsEnabled).AppendLine();
 			sb.Append(" - NPC PCU Limit:                ").Append(settings.PiratePCU).AppendLine();
 			sb.Append(" - Cargo Ships Enabled:          ").Append(settings.CargoShipsEnabled).AppendLine();

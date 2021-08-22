@@ -61,7 +61,6 @@ namespace ModularEncountersSystems.Tasks {
                     CargoShipWatcher.CargoShips.Add(_grid);
 
             }
-                
 
         }
 

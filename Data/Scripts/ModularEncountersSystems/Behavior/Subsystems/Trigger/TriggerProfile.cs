@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using VRageMath;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Entities;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -132,6 +133,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		[ProtoMember(38)]
 		public List<string> WeatherTypes;
+
+		[ProtoIgnore]
+		public GridEntity JumpedGrid;
+
+		[ProtoIgnore]
+		public Vector3D JumpStart;
+
+		[ProtoIgnore]
+		public Vector3D JumpEnd;
 
 		[ProtoIgnore]
 		public Random Rnd;

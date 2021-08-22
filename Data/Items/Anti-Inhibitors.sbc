@@ -31,7 +31,7 @@
       <Stats>
         <Stat Name="BatteryCharge" Value ="-0.01" Time="30"/>
       </Stats>
-      <MinimalPricePerUnit>5000000</MinimalPricePerUnit>
+      <MinimalPricePerUnit>50000000</MinimalPricePerUnit>
       <CanPlayerOrder>true</CanPlayerOrder>
       <CanSpawnFromScreen>false</CanSpawnFromScreen>
     </PhysicalItem>
@@ -57,7 +57,7 @@
       <Stats>
         <Stat Name="BatteryCharge" Value ="-0.005" Time="60"/>
       </Stats>
-      <MinimalPricePerUnit>5000000</MinimalPricePerUnit>
+      <MinimalPricePerUnit>50000000</MinimalPricePerUnit>
       <CanPlayerOrder>true</CanPlayerOrder>
       <CanSpawnFromScreen>false</CanSpawnFromScreen>
     </PhysicalItem>
@@ -83,7 +83,33 @@
       <Stats>
         <Stat Name="BatteryCharge" Value ="-0.01" Time="30"/>
       </Stats>
-      <MinimalPricePerUnit>5000000</MinimalPricePerUnit>
+      <MinimalPricePerUnit>50000000</MinimalPricePerUnit>
+      <CanPlayerOrder>true</CanPlayerOrder>
+      <CanSpawnFromScreen>false</CanSpawnFromScreen>
+    </PhysicalItem>
+    
+  <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
+      <Id>
+        <TypeId>ConsumableItem</TypeId>
+        <SubtypeId>CounterfeitInhibitorBlocker</SubtypeId>
+      </Id>
+      <DisplayName>Counterfeit Inhibitor Nullifier</DisplayName>
+      <Description>This module is a counterfeit Inhibitor Nullifier, and is not effective against any Inhibitor Type. It will probably cause sudden death if used.</Description>
+      <Icon>Textures\GUI\Icons\Items\PowerKit.dds</Icon>
+      <IconSymbol>CN</IconSymbol>
+      <Size>
+        <X>0.14</X>
+        <Y>0.43</Y>
+        <Z>0.14</Z>
+      </Size>
+      <Mass>9</Mass>
+      <Volume>9</Volume>
+      <Model>Models\Items\PowerKit.mwm</Model>
+      <PhysicalMaterial>Metal</PhysicalMaterial>
+      <Stats>
+        <Stat Name="BatteryCharge" Value ="-1" Time="1"/>
+      </Stats>
+      <MinimalPricePerUnit>50000000</MinimalPricePerUnit>
       <CanPlayerOrder>true</CanPlayerOrder>
       <CanSpawnFromScreen>false</CanSpawnFromScreen>
     </PhysicalItem>

@@ -206,6 +206,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+		//JumpRequested
+		public bool JumpRequested(TriggerProfile trigger) {
+
+			var dist = Vector3D.Distance(trigger.JumpStart, _behavior.RemoteControl.GetPosition());
+			return dist < trigger.TargetDistance;
+
+		}
+
+		//JumpCompleted
+		public bool JumpCompleted(TriggerProfile trigger) {
+
+			var dist = Vector3D.Distance(trigger.JumpStart, _behavior.RemoteControl.GetPosition());
+			return dist < trigger.TargetDistance;
+
+		}
+
 	}
 
 }

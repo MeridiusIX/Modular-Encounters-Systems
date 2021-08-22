@@ -33,6 +33,7 @@ namespace ModularEncountersSystems.Entities {
 		Power,
 		Production,
 		RivalAi,
+		Seats,
 		Shields,
 		Thrusters,
 		Tools,

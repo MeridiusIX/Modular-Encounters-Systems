@@ -4,8 +4,11 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Zones;
+using Sandbox.Game;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using System;
@@ -1127,10 +1130,63 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (actions.AddBotsToSeats) {
-			
+			if (actions.AddBotsToSeats && _behavior.CurrentGrid != null && actions.BotsForSeats.Count > 0) {
+
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Attempting To Add Bots", 3000);
+
+				var list = new List<IMyCockpit>();
+
+				foreach (var seat in _behavior.CurrentGrid.Seats) {
+
+					if (seat.ActiveEntity())
+						list.Add(seat.Block as IMyCockpit);
 				
-			
+				}
+
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Seat Count: " + list.Count, 3000);
+
+				for (int i = 0; i < actions.BotSeatCount; i++) {
+
+					if (list.Count == 0)
+						break;
+
+					var seat = list[MathTools.RandomBetween(0, list.Count)];
+					var botProfileName = actions.BotsForSeats[MathTools.RandomBetween(0, actions.BotsForSeats.Count)];
+					BotSpawnProfile botProfile = null;
+
+					if (ProfileManager.BotSpawnProfiles.TryGetValue(botProfileName, out botProfile)) {
+
+						var coords = Vector3D.Zero;
+						var matrix = MatrixD.CreateWorld(coords, seat.WorldMatrix.Backward, seat.WorldMatrix.Up);
+						IMyCharacter character = null;
+						BotSpawner.SpawnBotRequest(botProfile.BotType, matrix, out character, botProfile.BotDisplayName, botProfile.UseAiEnabled, botProfile.BotBehavior, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, 0);
+
+						if (character != null) {
+
+							var botIdentity = character.ControllerInfo.ControllingIdentityId;
+							var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(botIdentity);
+							MyVisualScriptLogicProvider.SetPlayersFaction(botIdentity, faction?.Tag ?? "");
+							MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Added To Seat", 3000);
+							seat.AttachPilot(character);
+
+						} else {
+
+							MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Failed", 3000);
+
+						}
+
+					} else {
+
+						MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Profile Not Found: " + botProfileName, 3000);
+
+					}
+
+					list.Remove(seat);
+
+				}
+
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Add Bots Done", 3000);
+
 			}
 
 			if (actions.SetWeaponsToMinRange) {

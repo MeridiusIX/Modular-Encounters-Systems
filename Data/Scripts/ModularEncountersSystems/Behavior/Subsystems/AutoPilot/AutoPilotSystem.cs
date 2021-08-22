@@ -650,12 +650,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			sb.Append(" - Velocity Angle To Current Waypoint: ").Append(VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(MyVelocity), Vector3D.Normalize(_currentWaypoint - _remoteControl.GetPosition()))).AppendLine();
 			sb.AppendLine();
 
+			sb.Append(" - Active Gyroscopes:                  ").Append(GyroProfiles.Count).AppendLine();
+			sb.Append(" - Active Thrusters:                   ").Append(ThrustProfiles.Count.ToString()).AppendLine();
+
 			sb.Append(" - Allowed Waypoint Types:             ").Append(DirectWaypointType.ToString()).AppendLine();
 			sb.Append(" - Restricted Waypoint Types:          ").Append(IndirectWaypointType.ToString()).AppendLine();
 			sb.AppendLine();
 
 			sb.Append(" - Dampeners Enabled:                  ").Append(_remoteControl.DampenersOverride.ToString()).AppendLine();
 			sb.Append(" - Forward Thrust Mode:                ").Append(_debugThrustForwardMode).AppendLine();
+			sb.Append(" - Forward Thrust Max Angle:           ").Append(Data?.AngleAllowedForForwardThrust.ToString() ?? "null").AppendLine();
 			sb.Append(" - Upward Thrust Mode:                 ").Append(_debugThrustUpMode).AppendLine();
 			sb.Append(" - Side Thrust Mode:                   ").Append(_debugThrustSideMode).AppendLine();
 			sb.AppendLine();

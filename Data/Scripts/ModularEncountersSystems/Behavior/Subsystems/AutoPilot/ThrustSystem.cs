@@ -728,8 +728,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		//Main Thread
 		public void ApplyThrust() {
 
-			foreach (var thrust in ThrustProfiles)
+			for (int i = ThrustProfiles.Count - 1; i >= 0; i--) {
+
+				var thrust = ThrustProfiles[i];
+
+				if (!thrust.ValidCheck()) {
+
+					ThrustProfiles.RemoveAt(i);
+					continue;
+
+				}
+
 				thrust.ApplyThrust(_thrustToApply);
+
+			}
 
 		}
 

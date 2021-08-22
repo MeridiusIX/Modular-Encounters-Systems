@@ -198,8 +198,6 @@ namespace ModularEncountersSystems.API {
 
 		}
 
-
-
 	}
 
 }

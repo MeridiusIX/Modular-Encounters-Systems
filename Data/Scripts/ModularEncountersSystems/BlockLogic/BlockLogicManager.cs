@@ -78,7 +78,9 @@ namespace ModularEncountersSystems.BlockLogic {
             NanobotInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Small"));
             NanobotInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Large"));
             JumpInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Small"));
-            JumpInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large")); 
+            JumpInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large"));
+            PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Small"));
+            PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
             MES_SessionCore.UnloadActions += Unload;
         
         }
@@ -138,6 +140,13 @@ namespace ModularEncountersSystems.BlockLogic {
             if (JumpInhibitorIds.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
 
                 LogicBlocks.Add(block.Block.EntityId, new JumpDriveInhibitor(block));
+                return;
+
+            }
+
+            if (PlayerInhibitorIds.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
+
+                LogicBlocks.Add(block.Block.EntityId, new PlayerInhibitor(block));
                 return;
 
             }

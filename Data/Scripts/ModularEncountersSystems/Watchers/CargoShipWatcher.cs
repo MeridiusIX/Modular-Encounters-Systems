@@ -9,6 +9,7 @@ using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.Watchers {
@@ -33,6 +34,10 @@ namespace ModularEncountersSystems.Watchers {
 				if (!cargoShip.ActiveEntity() || cargoShip.Npc == null || !cargoShip.Npc.Attributes.HasFlag(NpcAttributes.IsCargoShip)) {
 
 					SpawnLogger.Write("Drifting Cargo Ship Entity Not Valid, No Longer NPC, or is Missing Cargo Ship Attribute. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
+
+					if (cargoShip.ActiveEntity())
+						cargoShip.AppendDebug("Drifting Cargo Ship Entity Not Valid, No Longer NPC, or is Missing Cargo Ship Attribute. Removed From Watcher");
+
 					CargoShips.RemoveAt(i);
 					LegacyAutopilot.Remove(cargoShip);
 					continue;
@@ -44,6 +49,7 @@ namespace ModularEncountersSystems.Watchers {
 					if (cargoShip.Behavior.BehaviorSettings.ActiveBehaviorType != BehaviorSubclass.Passive) {
 
 						SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName +" Using RivalAI Behavior for Navigation. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
+						cargoShip.AppendDebug("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Using RivalAI Behavior for Navigation. Removed From Watcher");
 						CargoShips.RemoveAt(i);
 						LegacyAutopilot.Remove(cargoShip);
 						continue;
@@ -67,6 +73,7 @@ namespace ModularEncountersSystems.Watchers {
 					if (pathAngle > 10 && shipDistFromStart > 1000) {
 
 						SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Deviated From Path By More Than 10 Degrees (" + pathAngle + "). Removed From Watcher", SpawnerDebugEnum.PostSpawn);
+						cargoShip.AppendDebug("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Deviated From Path By More Than 10 Degrees (" + pathAngle + "). Removed From Watcher");
 						CargoShips.RemoveAt(i);
 						continue;
 
@@ -102,6 +109,8 @@ namespace ModularEncountersSystems.Watchers {
 						Cleaning.RemoveGrid(linkedGrid);
 						SpawnLogger.Write("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " At End of Path and Eligible for Despawn.", SpawnerDebugEnum.PostSpawn);
 						SpawnLogger.Write("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " Queued For Removal and Removed From Watcher.", SpawnerDebugEnum.PostSpawn);
+						cargoShip.AppendDebug("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " At End of Path and Eligible for Despawn.");
+						cargoShip.AppendDebug("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " Queued For Removal and Removed From Watcher.");
 						linkedGrid.Npc.DespawnSource = "Cargo Ship Reached End of Path / Distance";
 
 					}
@@ -112,6 +121,7 @@ namespace ModularEncountersSystems.Watchers {
 				} else {
 
 					SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Was Not Eligible For NPC Despawn. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
+					cargoShip.AppendDebug("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Was Not Eligible For NPC Despawn. Removed From Watcher");
 					CargoShips.RemoveAt(i);
 					LegacyAutopilot.Remove(cargoShip);
 
@@ -128,49 +138,59 @@ namespace ModularEncountersSystems.Watchers {
 
 			if (!PlanetManager.InGravity(grid.GetPosition()) && (grid.Behavior == null || grid.Behavior.BehaviorSettings.ActiveBehaviorType != BehaviorSubclass.Passive)) {
 
-				grid.Npc.PrimaryRemoteControlId = -1;
+				DeactivateKeenAutopilot(grid, "Grid Not In Gravity, Has Null Behavior, Or Behavior Isn't Passive");
 				return;
 
 			}
 				
-			if (grid.Npc.PrimaryRemoteControlId == 0) {
+			if (grid.Npc.PrimaryRemoteControlId == 0 || grid.Npc.PrimaryRemoteControl == null) {
 
 				IMyRemoteControl mainRemote = null;
+				IMyEntity mainRemoteEntity = null;
 
-				foreach (var block in grid.Controllers) {
+				if (!MyAPIGateway.Entities.TryGetEntityById(grid.Npc.PrimaryRemoteControlId, out mainRemoteEntity)) {
 
-					if (!block.ActiveEntity())
-						continue;
+					foreach (var block in grid.Controllers) {
 
-					var remote = block.Block as IMyRemoteControl;
+						if (!block.ActiveEntity())
+							continue;
 
-					if (remote == null)
-						continue;
+						var remote = block.Block as IMyRemoteControl;
 
-					if (mainRemote == null) {
+						if (remote == null)
+							continue;
 
-						mainRemote = remote as IMyRemoteControl;
+						if (mainRemote == null) {
+
+							mainRemote = remote as IMyRemoteControl;
+
+						}
+
+						if (remote.IsMainCockpit || grid.Behavior?.RemoteControl == remote) {
+
+							mainRemote = remote as IMyRemoteControl;
+							break;
+
+						}
 
 					}
 
-					if (remote.IsMainCockpit || grid.Behavior?.RemoteControl == remote) {
+				} else {
 
-						mainRemote = remote as IMyRemoteControl;
-						break;
-
-					}
-
+					mainRemote = mainRemoteEntity as IMyRemoteControl;
+				
 				}
 
 				if (mainRemote == null) {
 
-					grid.Npc.PrimaryRemoteControlId = -1;
+					DeactivateKeenAutopilot(grid, "Remote Control Could Not Be Found For Cargo Ship Movement");
 					return;
 
 				} else {
 
 					grid.Npc.PrimaryRemoteControlId = mainRemote.EntityId;
 					grid.Npc.PrimaryRemoteControl = mainRemote;
+					LegacyAutopilot.Add(grid);
 
 				}
 			
@@ -232,6 +252,22 @@ namespace ModularEncountersSystems.Watchers {
 
 		}
 
+		private static void DeactivateKeenAutopilot(GridEntity grid, string reason = "") {
+
+			grid.Npc.PrimaryRemoteControlId = -1;
+
+			if (grid.Npc.PrimaryRemoteControl != null) {
+
+				grid.Npc.PrimaryRemoteControl.SetAutoPilotEnabled(false);
+				grid.Npc.PrimaryRemoteControl.ClearWaypoints();
+
+			}
+
+			grid.AppendDebug(reason);
+			LegacyAutopilot.Remove(grid);
+
+		}
+
 		private static bool CargoShipDriftCheck(GridEntity cargoShip) {
 
 			if (!cargoShip.Npc.CargoShipDriftCheck) {
@@ -244,6 +280,7 @@ namespace ModularEncountersSystems.Watchers {
 					if (cargoShip.Npc.CargoShipDriftVelocity.Length() < 0.2) {
 
 						SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Initial Speed Lower Than 0.2. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
+						cargoShip.AppendDebug("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Initial Speed Lower Than 0.2. Removed From Watcher");
 						return false;
 
 					}
@@ -268,6 +305,7 @@ namespace ModularEncountersSystems.Watchers {
 				} else {
 
 					SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Previous Speed Was 0. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
+					cargoShip.AppendDebug("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Previous Speed Was 0. Removed From Watcher");
 					return false;
 				
 				}
@@ -280,6 +318,7 @@ namespace ModularEncountersSystems.Watchers {
 				if (diff <= 0.8f || diff >= 1.2f) {
 
 					SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Slowed Down From External Influence. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
+					cargoShip.AppendDebug("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Slowed Down From External Influence. Removed From Watcher");
 					return false;
 
 				} else {

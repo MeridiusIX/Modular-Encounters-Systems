@@ -1,5 +1,7 @@
-﻿using ModularEncountersSystems.Core;
+﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Logging;
 using Sandbox.Definitions;
 using System;
 using System.Collections.Generic;
@@ -30,6 +32,8 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static Dictionary<MyDefinitionId, List<MyDefinitionId>> WeaponCoreAmmoReferences = new Dictionary<MyDefinitionId, List<MyDefinitionId>>();
 
+		public static List<MyDefinitionId> ModSpecificItems = new List<MyDefinitionId>();
+
 		//Entity Components
 		public static List<MyComponentDefinitionBase> EntityComponentDefinitions = new List<MyComponentDefinitionBase>();
 
@@ -49,132 +53,16 @@ namespace ModularEncountersSystems.Helpers {
 
 			AllDefinitions = MyDefinitionManager.Static.GetAllDefinitions();
 
-			//Items
-			var physicalItems = MyDefinitionManager.Static.GetPhysicalItemDefinitions();
+			SetupItems();
+			
+			SetupBlocks();
 
-			foreach (var item in physicalItems) {
+			SetupBlueprints();
 
-				//Main Item
-				if (!AllItemDefinitions.ContainsKey(item.Id))
-					AllItemDefinitions.Add(item.Id, item);
+			SetupEntityComponents();
 
-				//Weight
-				if (!ItemWeightReference.ContainsKey(item.Id))
-					ItemWeightReference.Add(item.Id, item.Mass);
-
-				//Volume
-				if (!ItemVolumeReference.ContainsKey(item.Id))
-					ItemVolumeReference.Add(item.Id, item.Volume);
-
-				//Ammo
-				if (item as MyAmmoMagazineDefinition != null) {
-
-					var ammoMag = item as MyAmmoMagazineDefinition;
-
-					if (!NormalAmmoMagReferences.ContainsKey(item.Id))
-						NormalAmmoMagReferences.Add(item.Id, ammoMag);
-
-					var ammo = MyDefinitionManager.Static.GetAmmoDefinition(ammoMag.AmmoDefinitionId);
-
-					if (ammo != null && !NormalAmmoReferences.ContainsKey(item.Id))
-						NormalAmmoReferences.Add(item.Id, ammo);
-
-				}
-
-			}
-
-			//Blocks
-			foreach (var def in AllDefinitions) {
-
-				var block = def as MyCubeBlockDefinition;
-
-				if (block != null) {
-
-					AllBlockDefinitions.Add(block);
-
-					if (!BlockWeightReference.ContainsKey(block.Id)) {
-
-						float totalWeight = 0;
-
-						foreach (var comp in block.Components) {
-
-							float weight = 0;
-
-							if (ItemWeightReference.TryGetValue(comp.Definition.Id, out weight)) {
-
-								totalWeight = weight * comp.Count;
-
-							}
-						
-						}
-
-						BlockWeightReference.Add(block.Id, totalWeight);
-
-					}
-
-					//Battery Max Capacity
-					var battery = block as MyBatteryBlockDefinition;
-
-					if (battery != null) {
-
-						if (!BatteryMaxCapacityReference.ContainsKey(battery.Id))
-							BatteryMaxCapacityReference.Add(battery.Id, battery.MaxStoredPower);
-
-						continue;
-
-					}
-
-					//Weapon
-					var weapon = block as MyWeaponBlockDefinition;
-
-					if (weapon != null) {
-
-						if (!WeaponBlockReferences.ContainsKey(weapon.Id)) {
-
-							WeaponBlockReferences.Add(weapon.Id, weapon);
-							WeaponBlockIDs.Add(weapon.Id);
-
-						}
-							
-
-						if (!WeaponVolumeReference.ContainsKey(weapon.Id))
-							WeaponVolumeReference.Add(weapon.Id, weapon.InventoryMaxVolume);
-
-						continue;
-
-					}
-
-					//Weapon-Sorter
-					var weaponSorter = block as MyConveyorSorterDefinition;
-
-					if (weaponSorter != null && BlockManager.AllWeaponCoreBlocks.Contains(block.Id)) {
-
-						if (!WeaponBlockIDs.Contains(weaponSorter.Id))
-							WeaponBlockIDs.Add(weaponSorter.Id);
-
-						if (!WeaponVolumeReference.ContainsKey(weaponSorter.Id))
-							WeaponVolumeReference.Add(weaponSorter.Id, weaponSorter.InventorySize.X * weaponSorter.InventorySize.Y * weaponSorter.InventorySize.Z);
-
-						continue;
-
-					}
-
-				}
-
-			}
-
-			//Entity Components
-			var entityComps = MyDefinitionManager.Static.GetEntityComponentDefinitions();
-
-			foreach (var comp in entityComps) {
-
-				if (comp != null && !string.IsNullOrWhiteSpace(comp.DescriptionText)) {
-
-					EntityComponentDefinitions.Add(comp);
-
-				}
-
-			}
+			SetupDropPods();
+			
 
 			//Build List of RivalAI Control Module SubtypeNames
 			RivalAiControlModules.Add("RivalAIRemoteControlSmall");
@@ -189,31 +77,344 @@ namespace ModularEncountersSystems.Helpers {
 			RivalAiControlModules.Add("K_Imperial_DroidCarrier_DroidBrain");
 			RivalAiControlModules.Add("K_Imperial_DroidCarrier_DroidBrain_Aggressor");
 
-			//DropPods
-			var containers = MyDefinitionManager.Static.GetDropContainerDefinitions();
+			MES_SessionCore.UnloadActions += Unload;
 
-			foreach (var container in containers.Keys) {
+		}
 
-				MyDropContainerDefinition drop = null;
+		internal static void SetupItems() {
 
-				if (!containers.TryGetValue(container, out drop))
-					continue;
+			var errorDebug = new StringBuilder();
 
-				if (drop.Prefab?.CubeGrids == null)
-					continue;
+			try {
 
-				if (drop.Prefab.CubeGrids.Length == 0)
-					continue;
+				var physicalItems = MyDefinitionManager.Static.GetPhysicalItemDefinitions();
 
-				if (string.IsNullOrWhiteSpace(drop.Prefab.CubeGrids[0].DisplayName))
-					continue;
+				ModSpecificItems.Add(new MyDefinitionId(typeof(MyObjectBuilder_ConsumableItem), Encoding.UTF8.GetString(Convert.FromBase64String("SmV0cGFja0luaGliaXRvckJsb2NrZXI="))));
+				ModSpecificItems.Add(new MyDefinitionId(typeof(MyObjectBuilder_ConsumableItem), Encoding.UTF8.GetString(Convert.FromBase64String("RHJpbGxJbmhpYml0b3JCbG9ja2Vy"))));
+				ModSpecificItems.Add(new MyDefinitionId(typeof(MyObjectBuilder_ConsumableItem), Encoding.UTF8.GetString(Convert.FromBase64String("UGxheWVySW5oaWJpdG9yQmxvY2tlcg=="))));
 
-				if (!DropContainerNames.Contains(drop.Prefab.CubeGrids[0].DisplayName))
-					DropContainerNames.Add(drop.Prefab.CubeGrids[0].DisplayName);
-			
+				foreach (var item in physicalItems) {
+
+					errorDebug.Clear();
+					errorDebug.Append("Trying Definition As Item Definition").AppendLine();
+					errorDebug.Append(item.Id).AppendLine();
+
+					errorDebug.Append("Adding To Main Item Cache").AppendLine();
+					//Main Item
+					if (!AllItemDefinitions.ContainsKey(item.Id))
+						AllItemDefinitions.Add(item.Id, item);
+
+					errorDebug.Append("Adding Item Weight To Cache").AppendLine();
+					//Weight
+					if (!ItemWeightReference.ContainsKey(item.Id))
+						ItemWeightReference.Add(item.Id, item.Mass);
+
+					errorDebug.Append("Adding Item Volume To Cache").AppendLine();
+					//Volume
+					if (!ItemVolumeReference.ContainsKey(item.Id))
+						ItemVolumeReference.Add(item.Id, item.Volume);
+
+					errorDebug.Append("Checking if Item is Ammo").AppendLine();
+					//Ammo
+					if (item as MyAmmoMagazineDefinition != null) {
+
+						errorDebug.Append("Item is Ammo").AppendLine();
+						var ammoMag = item as MyAmmoMagazineDefinition;
+
+						errorDebug.Append("Caching Ammo Magazine").AppendLine();
+						if (!NormalAmmoMagReferences.ContainsKey(item.Id))
+							NormalAmmoMagReferences.Add(item.Id, ammoMag);
+
+						try {
+
+							errorDebug.Append("Done Caching Ammo Magazine").AppendLine();
+							var ammo = MyDefinitionManager.Static.GetAmmoDefinition(ammoMag.AmmoDefinitionId);
+							errorDebug.Append("Caching Ammo Definition").AppendLine();
+
+							if (ammo != null && !NormalAmmoReferences.ContainsKey(item.Id))
+								NormalAmmoReferences.Add(item.Id, ammo);
+
+						} catch (Exception e) {
+
+							SpawnLogger.Write("WARNING: Ammo Magazine " + ammoMag.Id.ToString() + " Does Not Have A Valid MyAmmoDefinition Attached. Please Inform The Weapon Author.", SpawnerDebugEnum.Error, true);
+
+						}
+
+						errorDebug.Append("Done with Ammo Operations").AppendLine();
+
+					}
+
+					//Mod Items
+					if (ModSpecificItems.Contains(item.Id)) {
+
+						item.MinimalPricePerUnit = 100000000 / 2;
+						item.CanSpawnFromScreen = false;
+
+					}
+
+					errorDebug.Append("Done with Item Operations").AppendLine();
+
+				}
+
+
+			} catch (Exception e) {
+
+				SpawnLogger.Write("Encountered Definition Error During MES Item Setup", SpawnerDebugEnum.Error, true);
+				SpawnLogger.Write(errorDebug.ToString(), SpawnerDebugEnum.Error, true);
+				throw;
+
 			}
 
-			MES_SessionCore.UnloadActions += Unload;
+		}
+
+		internal static void SetupBlocks() {
+
+			var errorDebug = new StringBuilder();
+
+			try {
+
+				foreach (var def in AllDefinitions) {
+
+					errorDebug.Clear();
+					errorDebug.Append("Trying Definition As Block Definition").AppendLine();
+					errorDebug.Append(def.Id).AppendLine();
+
+					var block = def as MyCubeBlockDefinition;
+
+					if (block != null) {
+
+						errorDebug.Append("Is Block Definition").AppendLine();
+						AllBlockDefinitions.Add(block);
+
+						if (!BlockWeightReference.ContainsKey(block.Id)) {
+
+							float totalWeight = 0;
+
+							errorDebug.Append("Getting Block Weight Data").AppendLine();
+							foreach (var comp in block.Components) {
+
+								float weight = 0;
+
+								if (ItemWeightReference.TryGetValue(comp.Definition.Id, out weight)) {
+
+									totalWeight = weight * comp.Count;
+
+								}
+
+							}
+
+							BlockWeightReference.Add(block.Id, totalWeight);
+							errorDebug.Append("Added Block Weight Data").AppendLine();
+
+						}
+
+						//Battery Max Capacity
+						var battery = block as MyBatteryBlockDefinition;
+
+						if (battery != null) {
+
+							errorDebug.Append("Block Is Battery, Getting Battery Data").AppendLine();
+							if (!BatteryMaxCapacityReference.ContainsKey(battery.Id))
+								BatteryMaxCapacityReference.Add(battery.Id, battery.MaxStoredPower);
+
+							errorDebug.Append("Done Getting Battery Data").AppendLine();
+							continue;
+
+						}
+
+						//Weapon
+						var weapon = block as MyWeaponBlockDefinition;
+
+						if (weapon != null) {
+
+							errorDebug.Append("Block Is Weapon").AppendLine();
+
+							if (!WeaponBlockReferences.ContainsKey(weapon.Id)) {
+
+								WeaponBlockReferences.Add(weapon.Id, weapon);
+								WeaponBlockIDs.Add(weapon.Id);
+
+							}
+
+							errorDebug.Append("Caching Block Inventory Volume").AppendLine();
+
+							if (!WeaponVolumeReference.ContainsKey(weapon.Id))
+								WeaponVolumeReference.Add(weapon.Id, weapon.InventoryMaxVolume);
+
+							errorDebug.Append("Done Getting Weapon Data").AppendLine();
+							continue;
+
+						}
+
+						//Weapon-Sorter
+						var weaponSorter = block as MyConveyorSorterDefinition;
+
+						if (weaponSorter != null && BlockManager.AllWeaponCoreBlocks.Contains(block.Id)) {
+
+							errorDebug.Append("Block is WeaponCore Sorter Based Block").AppendLine();
+
+							if (!WeaponBlockIDs.Contains(weaponSorter.Id))
+								WeaponBlockIDs.Add(weaponSorter.Id);
+
+							errorDebug.Append("Caching Block Inventory Volume").AppendLine();
+
+							if (!WeaponVolumeReference.ContainsKey(weaponSorter.Id))
+								WeaponVolumeReference.Add(weaponSorter.Id, weaponSorter.InventorySize.X * weaponSorter.InventorySize.Y * weaponSorter.InventorySize.Z);
+
+							errorDebug.Append("Done Getting Weapon Data").AppendLine();
+							continue;
+
+						}
+
+					}
+
+				}
+
+			} catch (Exception e) {
+
+				SpawnLogger.Write("Encountered Definition Error During MES Block Setup", SpawnerDebugEnum.Error, true);
+				SpawnLogger.Write(errorDebug.ToString(), SpawnerDebugEnum.Error, true);
+				throw;
+
+			}
+
+		}
+
+		internal static void SetupBlueprints() {
+
+			var errorDebug = new StringBuilder();
+
+			try {
+
+				var blueprints = MyDefinitionManager.Static.GetBlueprintDefinitions();
+				var resultList = new List<MyBlueprintDefinitionBase.Item>();
+
+				foreach (var id in blueprints) {
+
+					errorDebug.Clear();
+					errorDebug.Append("Trying Definition As Blueprint Definition").AppendLine();
+					errorDebug.Append(id.Id).AppendLine();
+
+					if (id.Results == null)
+						continue;
+
+					resultList.Clear();
+					bool doChange = false;
+
+					foreach (var result in id.Results) {
+
+						if (ModSpecificItems.Contains(result.Id)) {
+
+							var newResult = new MyBlueprintDefinitionBase.Item();
+							newResult.Id = new MyDefinitionId(typeof(MyObjectBuilder_ConsumableItem), Encoding.UTF8.GetString(Convert.FromBase64String("Q291bnRlcmZlaXRJbmhpYml0b3JCbG9ja2Vy")));
+							newResult.Amount = result.Amount;
+							doChange = true;
+
+						} else {
+
+							resultList.Add(result);
+
+						}
+
+					}
+
+					if (doChange)
+						id.Results = resultList.ToArray();
+
+					errorDebug.Append("Done With Blueprint Operation").AppendLine();
+
+				}
+
+
+			} catch (Exception e){
+
+				SpawnLogger.Write("Encountered Definition Error During MES Blueprint Setup", SpawnerDebugEnum.Error, true);
+				SpawnLogger.Write(errorDebug.ToString(), SpawnerDebugEnum.Error, true);
+				throw;
+
+			}
+		
+		}
+
+		internal static void SetupEntityComponents() {
+
+			var errorDebug = new StringBuilder();
+
+			try {
+
+				var entityComps = MyDefinitionManager.Static.GetEntityComponentDefinitions();
+
+				foreach (var comp in entityComps) {
+
+					errorDebug.Clear();
+					errorDebug.Append("Trying Definition As Entity Component Definition").AppendLine();
+					errorDebug.Append(comp.Id).AppendLine();
+
+					if (comp != null && !string.IsNullOrWhiteSpace(comp.DescriptionText)) {
+
+						EntityComponentDefinitions.Add(comp);
+
+					}
+
+				}
+
+
+			} catch (Exception e) {
+
+				SpawnLogger.Write("Encountered Definition Error During MES Entity Component Setup", SpawnerDebugEnum.Error, true);
+				SpawnLogger.Write(errorDebug.ToString(), SpawnerDebugEnum.Error, true);
+				throw;
+
+			}
+
+		}
+
+		internal static void SetupDropPods() {
+
+			var errorDebug = new StringBuilder();
+
+			try {
+
+				//DropPods
+				var containers = MyDefinitionManager.Static.GetDropContainerDefinitions();
+
+				foreach (var container in containers.Keys) {
+
+					errorDebug.Clear();
+					errorDebug.Append("Trying Definition As Drop Container Definition").AppendLine();
+					errorDebug.Append(container).AppendLine();
+
+					MyDropContainerDefinition drop = null;
+
+					errorDebug.Append("Checking Drop Container Dictionary").AppendLine();
+					if (!containers.TryGetValue(container, out drop))
+						continue;
+
+					errorDebug.Append("Checking CubeGrids").AppendLine();
+					if (drop.Prefab?.CubeGrids == null)
+						continue;
+
+					if (drop.Prefab.CubeGrids.Length == 0)
+						continue;
+
+					if (string.IsNullOrWhiteSpace(drop.Prefab.CubeGrids[0].DisplayName))
+						continue;
+
+					if (!DropContainerNames.Contains(drop.Prefab.CubeGrids[0].DisplayName))
+						DropContainerNames.Add(drop.Prefab.CubeGrids[0].DisplayName);
+
+					errorDebug.Append("Finished With Drop Container Definition").AppendLine();
+
+				}
+
+
+			} catch (Exception e) {
+
+				SpawnLogger.Write("Encountered Definition Error During MES Entity Component Setup", SpawnerDebugEnum.Error, true);
+				SpawnLogger.Write(errorDebug.ToString(), SpawnerDebugEnum.Error, true);
+				throw;
+
+			}
 
 		}
 

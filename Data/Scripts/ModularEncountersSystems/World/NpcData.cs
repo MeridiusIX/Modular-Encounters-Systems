@@ -538,7 +538,15 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - BehaviorName:        ").Append(!string.IsNullOrWhiteSpace(BehaviorName) ? BehaviorName : "N/A").AppendLine();
 			sb.Append(" - BehaviorTriggerDist: ").Append(BehaviorTriggerDist.ToString()).AppendLine();
 			sb.Append(" - StartCoords:         ").Append(StartCoords.ToString()).AppendLine();
+			sb.Append(" - Start Coords Dist:   ").Append(Vector3D.Distance(StartCoords, Grid.GetPosition())).AppendLine();
+			var startEndDir = Vector3D.Normalize(EndCoords - StartCoords);
+			var startPosDir = Vector3D.Normalize(Grid.GetPosition() - StartCoords);
+			sb.Append(" - Start/End Angle:     ").Append(VectorHelper.GetAngleBetweenDirections(startEndDir, startPosDir)).AppendLine();
 			sb.Append(" - EndCoords:           ").Append(EndCoords.ToString()).AppendLine();
+			sb.Append(" - End Coords Dist      ").Append(Vector3D.Distance(EndCoords, Grid.GetPosition())).AppendLine();
+			var endStartDir = Vector3D.Normalize(StartCoords - EndCoords);
+			var endPosDir = Vector3D.Normalize(Grid.GetPosition() - EndCoords);
+			sb.Append(" - Start/End Angle:     ").Append(VectorHelper.GetAngleBetweenDirections(endStartDir, endPosDir)).AppendLine();
 			sb.Append(" - SpawnTime:           ").Append(SpawnTime != null ? SpawnTime.ToString() : "N/A").AppendLine();
 			sb.Append(" - LastChangeToData:    ").Append(LastChangeToData != null ? LastChangeToData.ToString() : "N/A").AppendLine();
 			sb.Append(" - InitialFaction:      ").Append(!string.IsNullOrWhiteSpace(InitialFaction) ? InitialFaction : "N/A").AppendLine();

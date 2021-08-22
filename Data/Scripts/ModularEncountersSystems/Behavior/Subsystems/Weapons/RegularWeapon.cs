@@ -12,6 +12,7 @@ using VRageMath;
 using Sandbox.Game.Gui;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Logging;
+using VRage.Game.ModAPI;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 	public class RegularWeapon : BaseWeapon, IWeapon{

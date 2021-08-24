@@ -167,6 +167,106 @@
         [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlopedCornerTip]
         [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorSlopedCornerTip]
 
+        /////////////////
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorSlopedSidePanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorSlopedSidePanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorSlopedPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorSlopedPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorHalfPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorHalfPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorQuarterPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorQuarterPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedPanelTipLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedPanelTipHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideBasePanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideBasePanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideTipPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideTipPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideBasePanelLightInv]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideBasePanelHeavyInv]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideTipPanelLightInv]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideTipPanelHeavyInv]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorHalfSlopedPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorHalfSlopedPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedPanelLightRight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedPanelHeavyRight]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedTipPanelLightRight]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedTipPanelHeavyRight]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedPanelLightLeft]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedPanelHeavyLeft]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedTipPanelLightLeft]
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedTipPanelHeavyLeft]
+
+        /////////////////
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorSlopedSidePanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorSlopedSidePanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorSlopedPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorSlopedPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorHalfPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorHalfPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorQuarterPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorQuarterPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedPanelTipLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedPanelTipHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideBasePanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideBasePanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideTipPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideTipPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideBasePanelLightInv]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideBasePanelHeavyInv]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideTipPanelLightInv]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideTipPanelHeavyInv]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorHalfSlopedPanelLight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorHalfSlopedPanelHeavy]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedPanelLightRight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedPanelHeavyRight]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedTipPanelLightRight]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedTipPanelHeavyRight]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedPanelLightLeft]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedPanelHeavyLeft]
+
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedTipPanelLightLeft]
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedTipPanelHeavyLeft]
+
       </Description>
 
     </EntityComponent>
@@ -335,6 +435,106 @@
 
         [NewBlock:MyObjectBuilder_CubeBlock/SmallBlockArmorSlopedCornerTip]
         [OldBlock:MyObjectBuilder_CubeBlock/SmallBlockHeavyArmorSlopedCornerTip]
+
+        /////////////////
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorSlopedSidePanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorSlopedSidePanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorSlopedPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorSlopedPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorHalfPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorHalfPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorQuarterPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorQuarterPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedPanelTipLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedPanelTipHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideBasePanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideBasePanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideTipPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideTipPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideBasePanelLightInv]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideBasePanelHeavyInv]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideTipPanelLightInv]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1SlopedSideTipPanelHeavyInv]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmorHalfSlopedPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmorHalfSlopedPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedPanelLightRight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedPanelHeavyRight]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedTipPanelLightRight]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedTipPanelHeavyRight]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedPanelLightLeft]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedPanelHeavyLeft]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedTipPanelLightLeft]
+        [OldBlock:MyObjectBuilder_CubeBlock/LargeArmor2x1HalfSlopedTipPanelHeavyLeft]
+
+        /////////////////
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorSlopedSidePanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorSlopedSidePanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorSlopedPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorSlopedPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorHalfPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorHalfPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorQuarterPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorQuarterPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedPanelTipLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedPanelTipHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideBasePanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideBasePanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideTipPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideTipPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideBasePanelLightInv]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideBasePanelHeavyInv]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideTipPanelLightInv]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1SlopedSideTipPanelHeavyInv]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmorHalfSlopedPanelLight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmorHalfSlopedPanelHeavy]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedPanelLightRight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedPanelHeavyRight]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedTipPanelLightRight]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedTipPanelHeavyRight]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedPanelLightLeft]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedPanelHeavyLeft]
+
+        [NewBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedTipPanelLightLeft]
+        [OldBlock:MyObjectBuilder_CubeBlock/SmallArmor2x1HalfSlopedTipPanelHeavyLeft]
 
       </Description>
 

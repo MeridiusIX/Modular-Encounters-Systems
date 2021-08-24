@@ -17,12 +17,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> SpawnConditionGroups;
 
 		public int Frequency;
-		public string FactionOwner;
-		public bool UseRandomMinerFaction;
-		public bool UseRandomBuilderFaction;
-		public bool UseRandomTraderFaction;
 		public bool IgnoreCleanupRules;
-
 
 		public bool ReplenishSystems;
 		public List<ReplenishmentProfile> ReplenishProfiles;
@@ -53,11 +48,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			SpawnConditionGroups = new List<string>();
 
 			Frequency = 0;
-			
-			FactionOwner = "SPRT";
-			UseRandomMinerFaction = false;
-			UseRandomBuilderFaction = false;
-			UseRandomTraderFaction = false;
+
 			IgnoreCleanupRules = false;
 
 			ReplenishSystems = false;
@@ -128,40 +119,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				//Frequency
 				improveSpawnGroup.Frequency = (int)Math.Round((double)spawnGroup.Frequency * 10);
-
-				//FactionOwner
-				if (tag.StartsWith("[FactionOwner:") == true) {
-
-					TagParse.TagStringCheck(tag, ref improveSpawnGroup.FactionOwner);
-
-					if (improveSpawnGroup.FactionOwner == "") {
-
-						improveSpawnGroup.FactionOwner = "SPRT";
-
-					}
-
-				}
-
-				//UseRandomMinerFaction
-				if (tag.StartsWith("[UseRandomMinerFaction:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.UseRandomMinerFaction);
-
-				}
-
-				//UseRandomBuilderFaction
-				if (tag.StartsWith("[UseRandomBuilderFaction:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.UseRandomBuilderFaction);
-
-				}
-
-				//UseRandomTraderFaction
-				if (tag.StartsWith("[UseRandomTraderFaction:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.UseRandomTraderFaction);
-
-				}
 
 				//IgnoreCleanupRules
 				if (tag.StartsWith("[IgnoreCleanupRules:") == true) {

@@ -271,7 +271,7 @@ namespace ModularEncountersSystems.Spawning {
 		public void InitStaticEncounter(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile profile) {
 
 			SpawnGroupName = spawnGroup.SpawnGroupName;
-			Faction = spawnGroup.FactionOwner;
+			Faction = profile.FactionOwner;
 
 			TriggerCoords = profile.TriggerCoords;
 			TriggerRadius = profile.TriggerRadius;

@@ -350,8 +350,11 @@ namespace ModularEncountersSystems.Spawning {
 
 						var zone = new Zone();
 						zone.InitLegacyTags(spawnGroup.DescriptionText);
+						zone.Persistent = true;
+						zone.Active = true;
 						zone.ProfileSubtypeId = spawnGroup.Id.SubtypeName;
 						ProfileManager.ZoneProfiles.Add(spawnGroup.Id.SubtypeName, zone);
+						SpawnGroupNames.Remove(spawnGroup.Id.SubtypeName);
 						continue;
 					
 					}
@@ -465,9 +468,9 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (spawnGroup.Context.IsBaseGame == true && thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip == true) {
 
-				thisSpawnGroup.UseRandomMinerFaction = true;
-				thisSpawnGroup.UseRandomBuilderFaction = true;
-				thisSpawnGroup.UseRandomTraderFaction = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomMinerFaction = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomBuilderFaction = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomTraderFaction = true;
 
 			}
 
@@ -475,14 +478,14 @@ namespace ModularEncountersSystems.Spawning {
 
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceRandomEncounter = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].ReactorsOn = false;
-				thisSpawnGroup.FactionOwner = "Nobody";
+				thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = "Nobody";
 
 			}
 
 			if (spawnGroup.IsPirate == true && spawnGroup.IsEncounter == true) {
 
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceRandomEncounter = true;
-				thisSpawnGroup.FactionOwner = "SPRT";
+				thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPRT";
 
 			}
 
@@ -491,7 +494,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (spawnGroup.Id.SubtypeName.Contains("(" + tag + ")") == true) {
 
-					thisSpawnGroup.FactionOwner = tag;
+					thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = tag;
 					break;
 
 				}

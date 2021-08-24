@@ -14,17 +14,6 @@ using ModularEncountersSystems.Entities;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
-	public enum CounterCompareEnum {
-	
-		GreaterOrEqual,
-		Greater,
-		Equal,
-		NotEqual,
-		Less,
-		LessOrEqual,
-	
-	}
-
 	[ProtoContract]
 	public class ConditionProfile {
 
@@ -220,6 +209,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(64)]
 		public bool CheckIfTargetIsNpcOwned;
 
+		[ProtoMember(65)]
+		public bool CheckCommandGridValue;
+
+		[ProtoMember(66)]
+		public float CommandGridValue;
+
+		[ProtoMember(67)]
+		public CounterCompareEnum CheckCommandGridValueCompare;
+
+		[ProtoMember(68)]
+		public bool CompareCommandGridValue;
+
+		[ProtoMember(69)]
+		public CounterCompareEnum CompareCommandGridValueMode;
+
+		[ProtoMember(70)]
+		public float CompareCommandGridValueSelfMultiplier;
+
 		[ProtoIgnore]
 		private IMyRemoteControl _remoteControl;
 
@@ -346,6 +353,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			BehaviorModeCheck = false;
 			CurrentBehaviorMode = BehaviorMode.Init;
 
+			CheckCommandGridValue = false;
+			CommandGridValue = 0;
+			CheckCommandGridValueCompare = CounterCompareEnum.GreaterOrEqual;
+
+			CompareCommandGridValue = false;
+			CompareCommandGridValueMode = CounterCompareEnum.GreaterOrEqual;
+			CompareCommandGridValueSelfMultiplier = 1;
+
 			ProfileSubtypeId = "";
 
 			_remoteControl = null;
@@ -368,7 +383,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		public bool AreConditionsMets() {
+		public bool AreConditionsMets(Command command = null) {
 
 			if (!_gotWatchedBlocks)
 				SetupWatchedBlocks();
@@ -903,6 +918,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (CheckCommandGridValue) {
+
+				usedConditions++;
+
+				if (command != null) {
+				
+					if(MathTools.CompareValues(command.GridValueScore, CommandGridValue, CheckCommandGridValueCompare))
+						satisfiedConditions++;
+
+				}
+			
+			}
+
+			if (CompareCommandGridValue) {
+
+				usedConditions++;
+
+				if (command != null) {
+
+					var myScore = (_behavior.CurrentGrid?.TargetValue() ?? 0) * CompareCommandGridValueSelfMultiplier;
+
+					if (MathTools.CompareValues(command.GridValueScore, myScore, CheckCommandGridValueCompare))
+						satisfiedConditions++;
+
+				}
+
+			}
+
 			if (MatchAnyCondition == false) {
 
 				bool result = satisfiedConditions >= usedConditions;
@@ -920,9 +963,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 		}
-
 		
-
 		private void SetupWatchedBlocks() {
 
 			BehaviorLogger.Write("Setting Up Required Block Watcher", BehaviorDebugEnum.Condition);
@@ -1581,6 +1622,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[CheckIfTargetIsNpcOwned:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref CheckIfTargetIsNpcOwned);
+
+					}
+
+					//CheckCommandGridValue
+					if (tag.Contains("[CheckCommandGridValue:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref CheckCommandGridValue);
+
+					}
+
+					//CommandGridValue
+					if (tag.Contains("[CommandGridValue:") == true) {
+
+						TagParse.TagFloatCheck(tag, ref CommandGridValue);
+
+					}
+
+					//CheckCommandGridValueCompare
+					if (tag.Contains("[CheckCommandGridValueCompare:") == true) {
+
+						TagParse.TagCounterCompareEnumCheck(tag, ref CheckCommandGridValueCompare);
+
+					}
+
+					//CompareCommandGridValue
+					if (tag.Contains("[CompareCommandGridValue:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref CompareCommandGridValue);
+
+					}
+
+					//CompareCommandGridValueMode
+					if (tag.Contains("[CompareCommandGridValueMode:") == true) {
+
+						TagParse.TagCounterCompareEnumCheck(tag, ref CompareCommandGridValueMode);
+
+					}
+
+					//CompareCommandGridValueSelfMultiplier
+					if (tag.Contains("[CompareCommandGridValueSelfMultiplier:") == true) {
+
+						TagParse.TagFloatCheck(tag, ref CompareCommandGridValueSelfMultiplier);
 
 					}
 

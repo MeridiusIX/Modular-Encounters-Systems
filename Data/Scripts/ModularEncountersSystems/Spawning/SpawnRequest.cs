@@ -459,8 +459,6 @@ namespace ModularEncountersSystems.Spawning {
             SpawnLogger.Write("Static/Boss SpawnGroup Selected: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
 
             //Determine Path or Placement
-
-            var spawnMatrix = MatrixD.Identity;
             var path = PathPlacements.GetStaticSpawnPlacement(type, spawnTypes, spawnGroupCollection, environment, encounter);
 
             if (!path.ValidPath) {

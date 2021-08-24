@@ -258,7 +258,24 @@ namespace ModularEncountersSystems.Zones {
 		public string GetInfo(Vector3D coords) {
 
 			var sb = new StringBuilder();
-			sb.Append(" - [Zone Info] ").AppendLine();
+			sb.Append(" - Zone Name:                   ").Append(Name).AppendLine();
+			sb.Append(" - Public Name:                 ").Append(PublicName).AppendLine();
+			sb.Append(" - Active:                      ").Append(Active).AppendLine();
+			sb.Append(" - Persistent:                  ").Append(Persistent).AppendLine();
+			sb.Append(" - Strict:                      ").Append(Strict).AppendLine();
+			sb.Append(" - Player Known Location:       ").Append(PlayerKnownLocation).AppendLine();
+			sb.Append(" - No Spawn Zone:               ").Append(NoSpawnZone).AppendLine();
+			sb.Append(" - Use Limited Factions:        ").Append(UseLimitedFactions).AppendLine();
+			sb.Append(" - Coordinates:                 ").Append(Coordinates).AppendLine();
+			sb.Append(" - Radius:                      ").Append(Radius).AppendLine();
+			sb.Append(" - Planetary Zone:              ").Append(PlanetaryZone).AppendLine();
+			sb.Append(" - Planet Name:                 ").Append(PlanetName).AppendLine();
+			sb.Append(" - Use Zone Timer:              ").Append(UseZoneTimer).AppendLine();
+			sb.Append(" - Use Max Spawned Encounters:  ").Append(UseMaxSpawnedEncounters).AppendLine();
+			sb.Append(" - Use Allowed Spawn Groups:    ").Append(UseAllowedSpawnGroups).AppendLine();
+			sb.Append(" - Use Restricted Spawn Groups: ").Append(UseRestrictedSpawnGroups).AppendLine();
+			sb.Append(" - Use Allowed Mod IDs:         ").Append(UseAllowedModIDs).AppendLine();
+			sb.Append(" - Use Restricted Mod IDs:      ").Append(UseRestrictedModIDs).AppendLine();
 
 			return sb.ToString();
 
@@ -543,7 +560,7 @@ namespace ModularEncountersSystems.Zones {
 				}
 
 				//Radius
-				if (tag.Contains("[Radius") == true) {
+				if (tag.Contains("[Radius:") == true) {
 
 					TagParse.TagDoubleCheck(tag, ref Radius);
 

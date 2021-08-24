@@ -940,6 +940,28 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void GetZones(ChatMessage msg) {
+
+			var sb = new StringBuilder();
+			sb.Append("::::: Zone Data :::::").AppendLine().AppendLine();
+
+			for (int i = ZoneManager.ActiveZones.Count - 1; i >= 0; i--) {
+
+				var zone = ZoneManager.ActiveZones[i];
+
+				if (zone == null || !zone.Active)
+					continue;
+
+				sb.Append(zone.GetInfo(msg.PlayerPosition)).AppendLine();
+
+			}
+
+			msg.ClipboardPayload = sb.ToString();
+			msg.Mode = ChatMsgMode.ReturnMessage;
+			msg.ReturnMessage = "Zone Data Copied To Clipboard";
+		
+		}
+
 		public static void RemoveAllNpcs(ChatMessage msg) {
 
 			for (int i = NpcManager.ActiveNpcs.Count - 1; i >= 0; i--) {

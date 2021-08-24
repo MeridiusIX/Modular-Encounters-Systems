@@ -742,7 +742,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (conditions.UseKnownPlayerLocations == true) {
 
-				if (KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(environment.Position, conditions.KnownPlayerLocationMustMatchFaction, spawnGroup.FactionOwner) == false) {
+				if (KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(environment.Position, conditions.KnownPlayerLocationMustMatchFaction, conditions.FactionOwner) == false) {
 
 					failReason = "   - Known Player Location Check Failed";
 					return false;
@@ -1194,6 +1194,8 @@ namespace ModularEncountersSystems.Spawning {
 
 		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position){
 
+			bool zoneRequirement = false;
+
 			for (int i = 0; i < conditions.ZoneConditions.Count; i++) {
 
 				var zoneCondition = conditions.ZoneConditions[i];
@@ -1204,6 +1206,9 @@ namespace ModularEncountersSystems.Spawning {
 
 					if (!zone.Persistent)
 						continue;
+
+					if (!zoneRequirement && !string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
+						zoneRequirement = true;
 
 					if (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && zone.PublicName != zoneCondition.ZoneName)
 						continue;
@@ -1301,6 +1306,9 @@ namespace ModularEncountersSystems.Spawning {
 			if (collection.MustUseStrictZone)
 				return false;
 
+			if (zoneRequirement)
+				return false;
+
 			if (collection.AllowedZoneFactions.Count > 0)
 				return false;
 
@@ -1313,9 +1321,9 @@ namespace ModularEncountersSystems.Spawning {
 
 			var resultList = new List<string>();
 			var factionList = new List<IMyFaction>();
-			var initialFactionTag = !string.IsNullOrWhiteSpace(factionOverride) ? factionOverride : spawnGroup.FactionOwner;
+			var initialFactionTag = !string.IsNullOrWhiteSpace(factionOverride) ? factionOverride : condition.FactionOwner;
 
-			if (!string.IsNullOrWhiteSpace(factionOverride) || (spawnGroup.UseRandomBuilderFaction == false && spawnGroup.UseRandomMinerFaction == false && spawnGroup.UseRandomTraderFaction == false)) {
+			if (!string.IsNullOrWhiteSpace(factionOverride) || (condition.UseRandomBuilderFaction == false && condition.UseRandomMinerFaction == false && condition.UseRandomTraderFaction == false)) {
 
 				if (Settings.General.NpcSpawnGroupBlacklist.Contains(initialFactionTag))
 					return resultList;
@@ -1340,21 +1348,21 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (spawnGroup.UseRandomBuilderFaction == true) {
+			if (condition.UseRandomBuilderFaction == true) {
 
 				var tempList = factionList.Concat(FactionHelper.NpcBuilderFactions);
 				factionList = new List<IMyFaction>(tempList.ToList());
 
 			}
 
-			if (spawnGroup.UseRandomMinerFaction == true) {
+			if (condition.UseRandomMinerFaction == true) {
 
 				var tempList = factionList.Concat(FactionHelper.NpcMinerFactions);
 				factionList = new List<IMyFaction>(tempList.ToList());
 
 			}
 
-			if (spawnGroup.UseRandomTraderFaction == true) {
+			if (condition.UseRandomTraderFaction == true) {
 
 				var tempList = factionList.Concat(FactionHelper.NpcTraderFactions);
 				factionList = new List<IMyFaction>(tempList.ToList());
@@ -1363,7 +1371,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (factionList.Count == 0) {
 
-				var defaultFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(spawnGroup.FactionOwner);
+				var defaultFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(condition.FactionOwner);
 
 				if (defaultFaction != null) {
 

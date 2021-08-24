@@ -990,7 +990,8 @@ namespace ModularEncountersSystems.Spawning {
 					var perp = VectorHelper.RandomPerpendicular(upDir);
 					var roughCoords = environment.NearestPlanet.SurfaceCoordsAtPosition(perp * randDist + coords);
 					var upRough = environment.NearestPlanet.UpAtPosition(upDir);
-					var coordsCandidate = upRough * Settings.BossEncounters.MinPlanetAltitude + roughCoords;
+					var upDist = MathTools.RandomBetween(Settings.BossEncounters.MinSpawnDistFromCoords, Settings.BossEncounters.MaxSpawnDistFromCoords);
+					var coordsCandidate = upRough * upDist + roughCoords;
 
 					if (spawnType.HasFlag(SpawningType.BossAtmo) && !collection.Conditions.SkipAirDensityCheck) {
 

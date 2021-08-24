@@ -738,6 +738,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//GetZones
+			if (array[2] == "GetZones") {
+
+				LoggerTools.GetZones(this);
+				return true;
+
+			}
+
 			return false;
 
 		}

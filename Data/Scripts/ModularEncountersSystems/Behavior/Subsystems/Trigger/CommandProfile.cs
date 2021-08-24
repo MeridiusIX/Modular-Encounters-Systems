@@ -17,6 +17,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SendTargetEntityId;
 		public bool SendDamagerEntityId;
 		public bool SendWaypoint;
+		public bool SendGridValue;
+
+		public CommandTransmissionType TransmissionType;
 
 		public bool MatchSenderReceiverOwners;
 
@@ -35,6 +38,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SendTargetEntityId = false;
 			SendDamagerEntityId = false;
 			SendWaypoint = false;
+
+			TransmissionType = CommandTransmissionType.None;
 
 			MatchSenderReceiverOwners = true;
 
@@ -103,6 +108,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[SendWaypoint:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref SendWaypoint);
+
+					}
+
+					//SendGridValue
+					if (tag.Contains("[SendGridValue:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref SendGridValue);
+
+					}
+
+					//TransmissionType
+					if (tag.Contains("[TransmissionType:") == true) {
+
+						TagParse.TagCommandTransmissionTypeEnumCheck(tag, ref TransmissionType);
 
 					}
 

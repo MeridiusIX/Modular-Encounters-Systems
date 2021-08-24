@@ -125,6 +125,48 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static bool CompareValues(float providedValue, float comparedValue, CounterCompareEnum compare) {
+
+            if (compare == CounterCompareEnum.GreaterOrEqual)
+                return providedValue >= comparedValue;
+
+            if (compare == CounterCompareEnum.Greater)
+                return providedValue > comparedValue;
+
+            if (compare == CounterCompareEnum.Equal)
+                return providedValue == comparedValue;
+
+            if (compare == CounterCompareEnum.Less)
+                return providedValue < comparedValue;
+
+            if (compare == CounterCompareEnum.LessOrEqual)
+                return providedValue <= comparedValue;
+
+            return false;
+
+        }
+
+        public static bool CompareValues(int providedValue, int comparedValue, CounterCompareEnum compare) {
+
+            if (compare == CounterCompareEnum.GreaterOrEqual)
+                return providedValue >= comparedValue;
+
+            if (compare == CounterCompareEnum.Greater)
+                return providedValue > comparedValue;
+
+            if (compare == CounterCompareEnum.Equal)
+                return providedValue == comparedValue;
+
+            if (compare == CounterCompareEnum.Less)
+                return providedValue < comparedValue;
+
+            if (compare == CounterCompareEnum.LessOrEqual)
+                return providedValue <= comparedValue;
+
+            return false;
+
+        }
+
         public static double Average(params double[] values) {
 
             double result = 0;

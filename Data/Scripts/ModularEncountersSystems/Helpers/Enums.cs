@@ -169,6 +169,17 @@ namespace ModularEncountersSystems.Helpers {
 
     }
 
+    public enum CounterCompareEnum {
+
+        GreaterOrEqual,
+        Greater,
+        Equal,
+        NotEqual,
+        Less,
+        LessOrEqual,
+
+    }
+
     public enum ModifierEnum {
     
         None,

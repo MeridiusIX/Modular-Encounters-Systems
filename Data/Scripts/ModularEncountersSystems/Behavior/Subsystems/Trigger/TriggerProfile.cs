@@ -203,7 +203,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		public void ActivateTrigger(Func<TriggerProfile, bool> mainTriggerCheck = null) {
+		public void ActivateTrigger(Func<TriggerProfile, bool> mainTriggerCheck = null, Command command = null) {
 
 			if (MaxActions >= 0 && TriggerCount >= MaxActions) {
 

@@ -512,7 +512,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (trigger.UseTrigger == true && commandCodePass) {
 
-					trigger.ActivateTrigger();
+					trigger.ActivateTrigger(null, command);
 
 					if (trigger.Triggered) {
 

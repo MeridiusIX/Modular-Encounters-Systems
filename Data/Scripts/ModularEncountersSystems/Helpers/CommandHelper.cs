@@ -1,6 +1,10 @@
 using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Logging;
+using Sandbox.ModAPI;
 using System;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
 
@@ -11,6 +15,18 @@ namespace ModularEncountersSystems.Helpers {
         DroneAntenna,
         PlayerChat,
         
+    }
+
+    public enum CommandTransmissionType {
+
+        None,
+        Greeting,
+        Warning,
+        Taunt,
+        Attack,
+        Relent,
+        Retreat,
+
     }
 
     public class Command {
@@ -53,20 +69,14 @@ namespace ModularEncountersSystems.Helpers {
 
         public long CommandOwnerId;
 
+        public float GridValueScore;
+
+        public CommandTransmissionType TransmissionType;
+
 
         public Command() {
 
             Defaults();
-
-        }
-
-        public Command(CommandProfile profile) {
-
-            Defaults();
-            this.CommandCode = profile.CommandCode;
-            this.SingleRecipient = profile.SingleRecipient;
-            this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
-            this.MatchSenderReceiverOwners = profile.MatchSenderReceiverOwners;
 
         }
 
@@ -88,9 +98,147 @@ namespace ModularEncountersSystems.Helpers {
             Waypoint = null;
             MatchSenderReceiverOwners = false;
             CommandOwnerId = 0;
+            GridValueScore = 0;
+            TransmissionType = CommandTransmissionType.None;
 
         }
-        
+
+        public void PrepareCommand(IBehavior behavior, CommandProfile profile, ActionReferenceProfile action, Command receivedCommand, long attackerId, long detectedId) {
+
+            this.CommandCode = profile.CommandCode;
+            this.SingleRecipient = profile.SingleRecipient;
+            this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
+            this.MatchSenderReceiverOwners = profile.MatchSenderReceiverOwners;
+            RemoteControl = behavior.RemoteControl;
+            CommandOwnerId = behavior.RemoteControl.OwnerId;
+
+            double sendRadius = 0;
+
+            if (profile.IgnoreAntennaRequirement) {
+
+                sendRadius = profile.Radius;
+                this.IgnoreAntennaRequirement = true;
+
+            } else {
+
+                var antenna = behavior.Grid.GetAntennaWithHighestRange();
+
+                if (antenna != null)
+                    sendRadius = antenna.Radius;
+
+            }
+
+            if (profile.MaxRadius > -1 && sendRadius > profile.MaxRadius)
+                sendRadius = profile.MaxRadius;
+
+            this.Radius = sendRadius;
+
+            if (profile.SendTargetEntityId)
+
+                if (behavior.AutoPilot.Targeting.HasTarget())
+                    this.TargetEntityId = behavior.AutoPilot.Targeting.Target.GetEntityId();
+                else
+                    BehaviorLogger.Write("No Current Target To Send With Command", BehaviorDebugEnum.Command);
+
+            if (profile.SendDamagerEntityId)
+
+                if (behavior.BehaviorSettings.LastDamagerEntity == 0)
+                    this.DamagerEntityId = behavior.BehaviorSettings.LastDamagerEntity;
+                else
+                    BehaviorLogger.Write("No Damager ID To Send With Command", BehaviorDebugEnum.Command);
+
+            if (profile.SendGridValue) {
+
+                GridValueScore = behavior.CurrentGrid?.TargetValue() ?? 0;
+            
+            }
+
+            TransmissionType = profile.TransmissionType;
+
+            if (profile.SendWaypoint) {
+
+                WaypointProfile waypointProfile = null;
+
+                if (ProfileManager.WaypointProfiles.TryGetValue(profile.Waypoint, out waypointProfile)) {
+
+                    if ((int)waypointProfile.Waypoint > 2) {
+
+                        BehaviorLogger.Write(action.ProfileSubtypeId + ": Creating an Entity/Relative Waypoint", BehaviorDebugEnum.Command);
+
+                        if (waypointProfile.RelativeEntity == RelativeEntityType.Self)
+                            this.Waypoint = waypointProfile.GenerateEncounterWaypoint(RemoteControl);
+
+                        if (waypointProfile.RelativeEntity == RelativeEntityType.Target && behavior.AutoPilot.Targeting.HasTarget())
+                            this.Waypoint = waypointProfile.GenerateEncounterWaypoint(behavior.AutoPilot.Targeting.Target.GetEntity());
+                        else
+                            BehaviorLogger.Write("No Current Target To Send As Target Relative Waypoint", BehaviorDebugEnum.Command);
+
+                        if (waypointProfile.RelativeEntity == RelativeEntityType.Damager) {
+
+                            IMyEntity entity = null;
+
+                            if (MyAPIGateway.Entities.TryGetEntityById(behavior.BehaviorSettings.LastDamagerEntity, out entity)) {
+
+                                var parentEnt = entity.GetTopMostParent();
+
+                                if (parentEnt != null) {
+
+                                    if (parentEnt as IMyCubeGrid != null) {
+
+                                        //BehaviorLogger.Write("Damager Parent Entity Valid", BehaviorDebugEnum.General);
+                                        var gridGroup = MyAPIGateway.GridGroups.GetGroup(behavior.RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
+                                        bool isSameGridConstrust = false;
+
+                                        foreach (var grid in gridGroup) {
+
+                                            if (grid.EntityId == parentEnt.EntityId) {
+
+                                                //BehaviorLogger.Write("Damager Parent Entity Was Same Grid", BehaviorDebugEnum.General);
+                                                isSameGridConstrust = true;
+                                                break;
+
+                                            }
+
+                                        }
+
+                                        if (!isSameGridConstrust) {
+
+                                            this.Waypoint = waypointProfile.GenerateEncounterWaypoint(parentEnt);
+
+                                        }
+
+                                    } else {
+
+                                        var potentialPlayer = PlayerManager.GetPlayerUsingTool(entity);
+
+                                        if (potentialPlayer != null) {
+
+                                            this.Waypoint = waypointProfile.GenerateEncounterWaypoint(parentEnt);
+
+                                        }
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    } else {
+
+                        this.Waypoint = waypointProfile.GenerateEncounterWaypoint(RemoteControl);
+
+                    }
+
+
+                }
+
+            }
+
+
+        }
+
     }
 
     public static class CommandHelper {

@@ -75,6 +75,16 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (!LootProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Loot]")) {
+
+					var profile = new LootProfile();
+					profile.InitTags(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					LootProfiles.Add(component.Id.SubtypeName, profile);
+					continue;
+
+				}
+
 				if (component.DescriptionText.Contains("[MES Weapon Mod Rules]")) {
 
 					var weaponRule = new WeaponModRulesProfile();
@@ -153,6 +163,15 @@ namespace ModularEncountersSystems.Helpers {
 
 			//Second Phase
 			foreach (var component in DefinitionHelper.EntityComponentDefinitions) {
+
+				if (!LootGroups.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Loot Group]")) {
+
+					var profile = new LootGroup(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					LootGroups.Add(component.Id.SubtypeName, profile);
+					continue;
+
+				}
 
 				if (!ReplenishmentProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Replenishment]")) {
 

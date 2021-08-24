@@ -258,6 +258,44 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagCommandTransmissionTypeEnumCheck(string tag, ref CommandTransmissionType original) {
+
+			CommandTransmissionType result = CommandTransmissionType.None;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (CommandTransmissionType.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
+		public static void TagCounterCompareEnumCheck(string tag, ref CounterCompareEnum original) {
+
+			CounterCompareEnum result = CounterCompareEnum.GreaterOrEqual;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (CounterCompareEnum.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
 		public static void TagCounterCompareEnumCheck(string tag, ref List<CounterCompareEnum> original) {
 
 			CounterCompareEnum result = CounterCompareEnum.GreaterOrEqual;

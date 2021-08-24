@@ -94,6 +94,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public bool UseCommonConditions;
 
+		public string FactionOwner;
+		public bool UseRandomMinerFaction;
+		public bool UseRandomBuilderFaction;
+		public bool UseRandomTraderFaction;
+
 		public int RandomNumberRoll;
 		public int ChanceCeiling;
 		public int SpaceCargoShipChance;
@@ -325,6 +330,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			AdminSpawnOnly = false;
 
 			UseCommonConditions = true;
+
+			FactionOwner = "SPRT";
+			UseRandomMinerFaction = false;
+			UseRandomBuilderFaction = false;
+			UseRandomTraderFaction = false;
 
 			RandomNumberRoll = 1;
 			ChanceCeiling = 100;
@@ -896,6 +906,40 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[UseCommonConditions:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.UseCommonConditions);
+
+				}
+
+				//FactionOwner
+				if (tag.StartsWith("[FactionOwner:") == true) {
+
+					TagParse.TagStringCheck(tag, ref this.FactionOwner);
+
+					if (this.FactionOwner == "") {
+
+						this.FactionOwner = "SPRT";
+
+					}
+
+				}
+
+				//UseRandomMinerFaction
+				if (tag.StartsWith("[UseRandomMinerFaction:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseRandomMinerFaction);
+
+				}
+
+				//UseRandomBuilderFaction
+				if (tag.StartsWith("[UseRandomBuilderFaction:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseRandomBuilderFaction);
+
+				}
+
+				//UseRandomTraderFaction
+				if (tag.StartsWith("[UseRandomTraderFaction:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseRandomTraderFaction);
 
 				}
 

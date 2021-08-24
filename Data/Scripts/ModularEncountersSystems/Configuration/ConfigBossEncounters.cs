@@ -84,7 +84,7 @@ namespace ModularEncountersSystems.Configuration {
 			MinCoordsDistancePlanet = 6000;
 			MaxCoordsDistancePlanet = 8000;
 			PlayersWithinDistance = 25000;
-			MinPlanetAltitude = 1000;
+			MinPlanetAltitude = 1500;
 			MinSignalDistFromOtherEntities = 2000;
 			MinSpawnDistFromCoords = 2500;
 			MaxSpawnDistFromCoords = 4000;

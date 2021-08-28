@@ -116,7 +116,13 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static bool AddItemsToInventory(MyInventory inventory, MyDefinitionId itemId, float amount = -1, bool ignoreConstraintCheck = false) {
+		public static bool AddItemsToInventory(MyInventory inventory, MyDefinitionId itemId, float amount = -1, bool ignoreConstraintCheck = false, string source = null) {
+
+			if (source != null) {
+			
+				
+			
+			}
 
 			var itemDef = GetItemDefinition(itemId);
 

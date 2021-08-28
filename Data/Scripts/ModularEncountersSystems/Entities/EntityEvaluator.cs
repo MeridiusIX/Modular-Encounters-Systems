@@ -31,6 +31,7 @@ namespace ModularEncountersSystems.Entities {
 		Medical,
 		NanoBots,
 		Power,
+		Parachutes,
 		Production,
 		RivalAi,
 		Seats,

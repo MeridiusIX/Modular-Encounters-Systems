@@ -1,38 +1,17 @@
+using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
+using Sandbox.Definitions;
+using Sandbox.Game.Entities;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Definitions;
-using Sandbox.Game;
-using Sandbox.Game.Entities;
-using Sandbox.Game.EntityComponents;
-using Sandbox.Game.GameSystems;
-using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.ModAPI.Weapons;
-using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
 using VRage.Game;
-using VRage.Game.Components;
-using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
-using VRage.ObjectBuilders;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Utils;
-using VRageMath;
-using ModularEncountersSystems;
-using ModularEncountersSystems.Behavior;
-using ModularEncountersSystems.Behavior.Subsystems;
-using ModularEncountersSystems.Helpers;
-using ModularEncountersSystems.Logging;
 
-namespace ModularEncountersSystems.Behavior.Subsystems{
-	
+namespace ModularEncountersSystems.Behavior.Subsystems {
+
 	public class OwnerSystem{
 		
 		public IMyRemoteControl RemoteControl;
@@ -131,6 +110,57 @@ namespace ModularEncountersSystems.Behavior.Subsystems{
 
 						return;
 
+					}else{
+
+						bool hasHuman = false;
+						var identities = new List<IMyIdentity>();
+						MyAPIGateway.Players.GetAllIdentites(identities);
+
+						for (int i = faction.Members.Keys.Count() - 1; i >= 0; i--) {
+
+							long member = faction.Members.Keys.ElementAt(i);
+							var isNpc = FactionHelper.IsIdentityNPC(member);
+
+							if (isNpc)
+								continue;
+
+							for (int j = identities.Count - 1; j >= 0; j--) {
+
+								var identity = identities[j];
+
+								if (identity.IdentityId == member && !string.IsNullOrWhiteSpace(identity.DisplayName)) {
+
+									hasHuman = true;
+									break;
+
+								}
+
+							}
+
+							if (hasHuman)
+								break;
+
+						}
+
+						if (!hasHuman) {
+
+							this.NpcOwned = true;
+							this.WasNpcOwned = true;
+							this.Faction = faction;
+							this.FactionId = faction.FactionId;
+							BehaviorLogger.Write("Owner Check: Valid NPC Faction", BehaviorDebugEnum.Owner);
+							var npcSteam = MyAPIGateway.Players.TryGetSteamId(block.OwnerId);
+
+							if (npcSteam != 0) {
+
+								BehaviorLogger.Write("Warning. NPC Identity: " + block.OwnerId.ToString() + " has a SteamId of: " + npcSteam.ToString() + " - Please Alert Mod Author", BehaviorDebugEnum.Error);
+
+							}
+
+							return;
+
+						}
+					
 					}
 
 				} else {

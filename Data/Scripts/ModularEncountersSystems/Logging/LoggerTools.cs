@@ -390,6 +390,15 @@ namespace ModularEncountersSystems.Logging {
 			//GESAP
 			sb.Append(GetEligibleSpawnsAtPosition(msg));
 
+			//Player Data
+			sb.Append("::: Player Data :::").AppendLine();
+			foreach (var player in PlayerManager.Players) {
+
+				if (player != null)
+					sb.Append(player.ToString());
+			
+			}
+
 			//All Mods
 			if (AddonManager.ModIdNameReferences.Keys.Count > 0) {
 
@@ -634,6 +643,18 @@ namespace ModularEncountersSystems.Logging {
 
 
 			//Zones
+			if (ZoneManager.ActiveZones.Count > 0) {
+
+				sb.Append("::: Active Zones In Range :::").AppendLine();
+
+				foreach (var zone in ZoneManager.ActiveZones) {
+
+					if (zone.PositionInsideZone(environment.Position))
+						sb.Append(zone.GetInfo(environment.Position)).AppendLine();
+				
+				}
+
+			}
 
 			//Timeouts
 			if (TimeoutManagement.Timeouts.Count > 0) {

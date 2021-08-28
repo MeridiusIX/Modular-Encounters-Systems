@@ -32,7 +32,7 @@
         <Stat Name="BatteryCharge" Value ="-0.01" Time="30"/>
       </Stats>
       <MinimalPricePerUnit>50000000</MinimalPricePerUnit>
-      <CanPlayerOrder>true</CanPlayerOrder>
+      <CanPlayerOrder>false</CanPlayerOrder>
       <CanSpawnFromScreen>false</CanSpawnFromScreen>
     </PhysicalItem>
 
@@ -58,7 +58,7 @@
         <Stat Name="BatteryCharge" Value ="-0.005" Time="60"/>
       </Stats>
       <MinimalPricePerUnit>50000000</MinimalPricePerUnit>
-      <CanPlayerOrder>true</CanPlayerOrder>
+      <CanPlayerOrder>false</CanPlayerOrder>
       <CanSpawnFromScreen>false</CanSpawnFromScreen>
     </PhysicalItem>
 
@@ -84,7 +84,7 @@
         <Stat Name="BatteryCharge" Value ="-0.01" Time="30"/>
       </Stats>
       <MinimalPricePerUnit>50000000</MinimalPricePerUnit>
-      <CanPlayerOrder>true</CanPlayerOrder>
+      <CanPlayerOrder>false</CanPlayerOrder>
       <CanSpawnFromScreen>false</CanSpawnFromScreen>
     </PhysicalItem>
     
@@ -110,7 +110,7 @@
         <Stat Name="BatteryCharge" Value ="-1" Time="1"/>
       </Stats>
       <MinimalPricePerUnit>50000000</MinimalPricePerUnit>
-      <CanPlayerOrder>true</CanPlayerOrder>
+      <CanPlayerOrder>false</CanPlayerOrder>
       <CanSpawnFromScreen>false</CanSpawnFromScreen>
     </PhysicalItem>
     

@@ -50,6 +50,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> Mechanical;
 		public List<BlockEntity> Medical;
 		public List<BlockEntity> NanoBots;
+		public List<BlockEntity> Parachutes;
 		public List<BlockEntity> Production;
 		public List<BlockEntity> Power;
 		public List<BlockEntity> RivalAi;
@@ -100,6 +101,7 @@ namespace ModularEncountersSystems.Entities {
 			Mechanical = new List<BlockEntity>();
 			Medical = new List<BlockEntity>();
 			NanoBots = new List<BlockEntity>();
+			Parachutes = new List<BlockEntity>();
 			Production = new List<BlockEntity>();
 			Power = new List<BlockEntity>();
 			RivalAi = new List<BlockEntity>();
@@ -123,6 +125,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.Mechanical, Mechanical);
 			BlockListReference.Add(BlockTypeEnum.Medical, Medical);
 			BlockListReference.Add(BlockTypeEnum.NanoBots, NanoBots);
+			BlockListReference.Add(BlockTypeEnum.Parachutes, Parachutes);
 			BlockListReference.Add(BlockTypeEnum.Production, Production);
 			BlockListReference.Add(BlockTypeEnum.Power, Power);
 			BlockListReference.Add(BlockTypeEnum.RivalAi, RivalAi);
@@ -299,6 +302,13 @@ namespace ModularEncountersSystems.Entities {
 			if (terminalBlock as IMyMedicalRoom != null || terminalBlock.SlimBlock.BlockDefinition.Id.TypeId == typeof(MyObjectBuilder_SurvivalKit)) {
 
 				assignedBlock = AddBlock(terminalBlock, Medical);
+
+			}
+
+			//Parachutes
+			if (terminalBlock as IMyParachute != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Parachutes);
 
 			}
 
@@ -558,6 +568,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(Mechanical);
 				CleanBlockList(Medical);
 				CleanBlockList(NanoBots);
+				CleanBlockList(Parachutes);
 				CleanBlockList(Production);
 				CleanBlockList(Power);
 				CleanBlockList(Seats);
@@ -580,6 +591,35 @@ namespace ModularEncountersSystems.Entities {
 			RefreshSubGrids();
 			EntityEvaluator.GetGridOwnerships(LinkedGrids, true);
 
+		}
+
+		public bool ParachutesDeployed() {
+
+			bool result = false;
+
+			lock (Parachutes) {
+
+				for (int i = Parachutes.Count - 1; i >= 0; i--) {
+
+					var parachute = Parachutes[i];
+					var parachuteBlock = parachute?.Block as IMyParachute;
+
+					if (parachuteBlock == null || !parachute.ActiveEntity())
+						continue;
+
+					if (parachuteBlock.Status == Sandbox.ModAPI.Ingame.DoorStatus.Open) {
+
+						result = true;
+						break;
+
+					}
+		
+				}
+			
+			}
+
+			return result;
+		
 		}
 
 		public void PhysicsCheck(IMyEntity entity) {

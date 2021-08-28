@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
         public static bool ModEnabled = true;
 
-        public static string ModVersion = "2.0.20";
+        public static string ModVersion = "2.0.21";
         public static MES_SessionCore Instance;
 
         public static bool IsServer;
@@ -51,12 +51,12 @@ namespace ModularEncountersSystems.Core {
             SyncManager.Setup(); //Register Network and Chat Handlers
             DefinitionHelper.Setup();
             Settings.InitSettings(); //Get Existing Settings From XML or Create New
+            AddonManager.DetectAddons(); //Check Add-on Mods
             BotSpawner.Setup();
 
             if (!IsServer)
                 return;
 
-            AddonManager.DetectAddons(); //Check Add-on Mods
             APIs.RegisterAPIs(0); //Register Any Applicable APIs
             BlockManager.Setup(); //Build Lists of Special Blocks
             PlayerSpawnWatcher.Setup();

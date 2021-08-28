@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Tasks;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -261,11 +262,32 @@ namespace ModularEncountersSystems.Entities {
 
 		public void ToString(StringBuilder sb) {
 
-			sb.Append("Player Name: ").Append(Player.DisplayName).AppendLine();
-			sb.Append("Identity Id: ").Append(Player.IdentityId).AppendLine();
-			sb.Append("Steam Id:    ").Append(Player.SteamUserId).AppendLine();
-			sb.Append("Online:      ").Append(Online).AppendLine();
-			sb.Append("Closed:      ").Append(IsClosed()).AppendLine();
+			sb.Append("Player Name:                     ").Append(Player?.DisplayName ?? "null").AppendLine();
+			sb.Append("Identity Id:                     ").Append(Player?.IdentityId ?? 0).AppendLine();
+			sb.Append("Steam Id:                        ").Append(Player?.SteamUserId ?? 0).AppendLine();
+			sb.Append("Online:                          ").Append(Online).AppendLine();
+			sb.Append("Closed:                          ").Append(IsClosed()).AppendLine();
+			
+			foreach (var watchedPlayer in PlayerSpawnWatcher.Players) {
+
+				if (watchedPlayer.Player == this) {
+
+					sb.Append("Space Cargo Ship Timer:          ").Append(watchedPlayer.SpaceCargoShipTimer).AppendLine();
+					sb.Append("Planetary Cargo Ship Timer:      ").Append(watchedPlayer.AtmoCargoShipTimer).AppendLine();
+					sb.Append("Random Encounter Timer:          ").Append(watchedPlayer.RandomEncounterCheckTimer).AppendLine();
+					sb.Append("Random Encounter Cooldown:       ").Append(watchedPlayer.RandomEncounterCoolDownTimer).AppendLine();
+					sb.Append("Planetary Installation Timer:    ").Append(watchedPlayer.PlanetaryInstallationCheckTimer).AppendLine();
+					sb.Append("Planetary Installation Cooldown: ").Append(watchedPlayer.PlanetaryInstallationCooldownTimer).AppendLine();
+					sb.Append("Boss Encounter Timer:            ").Append(watchedPlayer.BossEncounterCheckTimer).AppendLine();
+					sb.Append("Boss Encounter Cooldown:         ").Append(watchedPlayer.BossEncounterCooldownTimer).AppendLine();
+					sb.Append("Creature Timer:                  ").Append(watchedPlayer.CreatureCheckTimer).AppendLine();
+
+					break;
+				
+				}
+			
+			}
+
 			sb.AppendLine();
 
 		}

@@ -1,837 +1,820 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
+﻿using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
-using Sandbox.Game.EntityComponents;
-using Sandbox.Game.GameSystems;
-using Sandbox.Game.Weapons;
 using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.ModAPI.Weapons;
 using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using VRage.Game;
-using VRage.Game.Components;
-using VRage.Game.Entity;
 using VRage.Game.ModAPI;
-using VRage.ModAPI;
 using VRage.ObjectBuilders;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Utils;
 using VRageMath;
-using ModularEncountersSystems;
-using ModularEncountersSystems.Behavior;
-using ModularEncountersSystems.Behavior.Subsystems;
-using ModularEncountersSystems.Helpers;
-using VRage;
-using ModularEncountersSystems.Logging;
 
 namespace ModularEncountersSystems.Behavior.Subsystems {
 
-    public class GridSystem {
+	public class GridSystem {
 
-        public IMyRemoteControl RemoteControl;
-        public Random Rnd;
+		public IMyRemoteControl RemoteControl;
+		public Random Rnd;
 
-        public bool ListsBuilt;
+		public bool ListsBuilt;
 
-        public List<IMyCubeGrid> ConnectedGrids;
-        public DateTime LastConnectedGridCheck;
-        public bool OverrideConnectedGridCheck;
+		public List<IMyCubeGrid> ConnectedGrids;
+		public DateTime LastConnectedGridCheck;
+		public bool OverrideConnectedGridCheck;
 
-        public List<IMySlimBlock> AllBlocks;
-        public List<IMyTerminalBlock> AllTerminalBlocks;
-        public List<IMyFunctionalBlock> AllFunctionalBlocks;
+		public List<IMySlimBlock> AllBlocks;
+		public List<IMyTerminalBlock> AllTerminalBlocks;
+		public List<IMyFunctionalBlock> AllFunctionalBlocks;
 
-        public List<IMyRadioAntenna> Antennas;
-        public List<IMyCameraBlock> Cameras;
-        public List<IMyProjector> Projectors;
-        public List<IMyCockpit> Seats;
-        public List<IMySensorBlock> Sensors;
-        public List<IMyTimerBlock> Timers;
-        public List<IMyWarhead> Warheads;
+		public List<IMyRadioAntenna> Antennas;
+		public List<IMyCameraBlock> Cameras;
+		public List<IMyProjector> Projectors;
+		public List<IMyCockpit> Seats;
+		public List<IMySensorBlock> Sensors;
+		public List<IMyTimerBlock> Timers;
+		public List<IMyWarhead> Warheads;
 
-        public GridSystem(IMyRemoteControl remoteControl = null) {
+		public GridSystem(IMyRemoteControl remoteControl = null) {
 
-            this.RemoteControl = remoteControl;
-            Rnd = new Random();
+			this.RemoteControl = remoteControl;
+			Rnd = new Random();
 
-            ListsBuilt = false;
+			ListsBuilt = false;
 
-            ConnectedGrids = new List<IMyCubeGrid>();
-            LastConnectedGridCheck = MyAPIGateway.Session.GameDateTime;
-            OverrideConnectedGridCheck = false;
+			ConnectedGrids = new List<IMyCubeGrid>();
+			LastConnectedGridCheck = MyAPIGateway.Session.GameDateTime;
+			OverrideConnectedGridCheck = false;
 
-            AllBlocks = new List<IMySlimBlock>();
-            AllTerminalBlocks = new List<IMyTerminalBlock>();
-            AllFunctionalBlocks = new List<IMyFunctionalBlock>();
+			AllBlocks = new List<IMySlimBlock>();
+			AllTerminalBlocks = new List<IMyTerminalBlock>();
+			AllFunctionalBlocks = new List<IMyFunctionalBlock>();
 
-            Antennas = new List<IMyRadioAntenna>();
-            Cameras = new List<IMyCameraBlock>();
-            Projectors = new List<IMyProjector>();
-            Seats = new List<IMyCockpit>();
-            Sensors = new List<IMySensorBlock>();
-            Timers = new List<IMyTimerBlock>();
-            Warheads = new List<IMyWarhead>();
-            
-            BuildLists();
+			Antennas = new List<IMyRadioAntenna>();
+			Cameras = new List<IMyCameraBlock>();
+			Projectors = new List<IMyProjector>();
+			Seats = new List<IMyCockpit>();
+			Sensors = new List<IMySensorBlock>();
+			Timers = new List<IMyTimerBlock>();
+			Warheads = new List<IMyWarhead>();
+			
+			BuildLists();
 
-        }
+		}
 
-        public void BuildLists() {
+		public void BuildLists() {
 
-            if (ListsBuilt)
-                return;
+			if (ListsBuilt)
+				return;
 
-            ListsBuilt = true;
+			ListsBuilt = true;
 
-            if (this.RemoteControl?.SlimBlock?.CubeGrid == null)
-                return;
+			if (this.RemoteControl?.SlimBlock?.CubeGrid == null)
+				return;
 
-            this.RemoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplit;
-            
-            OverrideConnectedGridCheck = true;
-            CheckConnectedGrids();
+			this.RemoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplit;
+			
+			OverrideConnectedGridCheck = true;
+			CheckConnectedGrids();
 
-            var tempAllBlocks = TargetHelper.GetAllBlocks(this.RemoteControl.SlimBlock.CubeGrid);
+			var tempAllBlocks = TargetHelper.GetAllBlocks(this.RemoteControl.SlimBlock.CubeGrid);
 
-            foreach (var block in tempAllBlocks) {
+			foreach (var block in tempAllBlocks) {
 
-                AddBlock(block, true);
+				AddBlock(block, true);
 
-            }
+			}
 
-            this.RemoteControl.SlimBlock.CubeGrid.OnBlockAdded += AddBlock;
+			this.RemoteControl.SlimBlock.CubeGrid.OnBlockAdded += AddBlock;
 
-        }
+		}
 
-        public void AddBlock(IMySlimBlock block) {
+		public void AddBlock(IMySlimBlock block) {
 
-            AddBlock(block, false);
+			AddBlock(block, false);
 
-        }
+		}
  
-        public void AddBlock(IMySlimBlock block, bool skipTimer = false) {
+		public void AddBlock(IMySlimBlock block, bool skipTimer = false) {
 
-            if (block == null)
-                return;
+			if (block == null)
+				return;
 
-            if (!skipTimer && !OverrideConnectedGridCheck)
-                CheckConnectedGrids();
+			if (!skipTimer && !OverrideConnectedGridCheck)
+				CheckConnectedGrids();
 
-            if (!ConnectedGrids.Contains(block.CubeGrid))
-                return;
+			if (!ConnectedGrids.Contains(block.CubeGrid))
+				return;
 
-            AllBlocks.Add(block);
+			AllBlocks.Add(block);
 
-            if (block.FatBlock == null)
-                return;
+			if (block.FatBlock == null)
+				return;
 
-            if ((block.FatBlock as IMyTerminalBlock) != null)
-                AllTerminalBlocks.Add(block.FatBlock as IMyTerminalBlock);
+			if ((block.FatBlock as IMyTerminalBlock) != null)
+				AllTerminalBlocks.Add(block.FatBlock as IMyTerminalBlock);
 
-            if ((block.FatBlock as IMyFunctionalBlock) != null)
-                AllFunctionalBlocks.Add(block.FatBlock as IMyFunctionalBlock);
+			if ((block.FatBlock as IMyFunctionalBlock) != null)
+				AllFunctionalBlocks.Add(block.FatBlock as IMyFunctionalBlock);
 
-            if ((block.FatBlock as IMyRadioAntenna) != null)
-                Antennas.Add(block.FatBlock as IMyRadioAntenna);
+			if ((block.FatBlock as IMyRadioAntenna) != null)
+				Antennas.Add(block.FatBlock as IMyRadioAntenna);
 
-            if ((block.FatBlock as IMyCameraBlock) != null)
-                Cameras.Add(block.FatBlock as IMyCameraBlock);
+			if ((block.FatBlock as IMyCameraBlock) != null)
+				Cameras.Add(block.FatBlock as IMyCameraBlock);
 
-            if ((block.FatBlock as IMyProjector) != null)
-                Projectors.Add(block.FatBlock as IMyProjector);
+			if ((block.FatBlock as IMyProjector) != null)
+				Projectors.Add(block.FatBlock as IMyProjector);
 
-            if ((block.FatBlock as IMyCockpit) != null)
-                Seats.Add(block.FatBlock as IMyCockpit);
+			if ((block.FatBlock as IMyCockpit) != null)
+				Seats.Add(block.FatBlock as IMyCockpit);
 
-            if ((block.FatBlock as IMySensorBlock) != null)
-                Sensors.Add(block.FatBlock as IMySensorBlock);
+			if ((block.FatBlock as IMySensorBlock) != null)
+				Sensors.Add(block.FatBlock as IMySensorBlock);
 
-            if ((block.FatBlock as IMyTimerBlock) != null)
-                Timers.Add(block.FatBlock as IMyTimerBlock);
+			if ((block.FatBlock as IMyTimerBlock) != null)
+				Timers.Add(block.FatBlock as IMyTimerBlock);
 
-            if ((block.FatBlock as IMyWarhead) != null)
-                Warheads.Add(block.FatBlock as IMyWarhead);
+			if ((block.FatBlock as IMyWarhead) != null)
+				Warheads.Add(block.FatBlock as IMyWarhead);
 
-        }
+		}
 
-        public void BuildProjectedBlocks(int maxBlocksToBuild) {
+		public void BuildProjectedBlocks(int maxBlocksToBuild) {
 
-            int builtBlocks = 0;
+			int builtBlocks = 0;
 
-            foreach(var projector in Projectors) {
+			foreach(var projector in Projectors) {
 
-                if (projector == null || projector.MarkedForClose) 
-                    continue;
+				if (projector == null || projector.MarkedForClose) 
+					continue;
 
-                if (projector.ProjectedGrid == null)
-                    continue;
+				if (projector.ProjectedGrid == null)
+					continue;
 
-                var projectedBlocks = new List<IMySlimBlock>();
+				var projectedBlocks = new List<IMySlimBlock>();
 
-                while (maxBlocksToBuild > 0 || builtBlocks < maxBlocksToBuild) {
+				while (maxBlocksToBuild > 0 || builtBlocks < maxBlocksToBuild) {
 
-                    if (projector.ProjectedGrid == null)
-                        break;
+					if (projector.ProjectedGrid == null)
+						break;
 
-                    projectedBlocks.Clear();
-                    projector.ProjectedGrid.GetBlocks(projectedBlocks);
+					projectedBlocks.Clear();
+					projector.ProjectedGrid.GetBlocks(projectedBlocks);
 
-                    if (projectedBlocks.Count == 0)
-                        break;
+					if (projectedBlocks.Count == 0)
+						break;
 
-                    bool restartLoop = false;
+					bool restartLoop = false;
 
-                    while (projectedBlocks.Count > 0) {
+					while (projectedBlocks.Count > 0) {
 
-                        int randomIndex = 0;
+						int randomIndex = 0;
 
-                        if (projectedBlocks.Count > 1)
-                            randomIndex = MathTools.RandomBetween(0, projectedBlocks.Count);
+						if (projectedBlocks.Count > 1)
+							randomIndex = MathTools.RandomBetween(0, projectedBlocks.Count);
 
-                        var projectedBlock = projectedBlocks[randomIndex];
-                        projectedBlocks.RemoveAt(randomIndex);
+						var projectedBlock = projectedBlocks[randomIndex];
+						projectedBlocks.RemoveAt(randomIndex);
 
-                        if (projectedBlock == null)
-                            continue;
+						if (projectedBlock == null)
+							continue;
 
-                        if (projector.CanBuild(projectedBlock, true) != BuildCheckResult.OK)
-                            continue;
+						if (projector.CanBuild(projectedBlock, true) != BuildCheckResult.OK)
+							continue;
 
-                        projector.Build(projectedBlock, RemoteControl.OwnerId, RemoteControl.OwnerId, true);
-                        builtBlocks++;
-                        restartLoop = true;
-                        break;
+						projector.Build(projectedBlock, RemoteControl.OwnerId, RemoteControl.OwnerId, true);
+						builtBlocks++;
+						restartLoop = true;
+						break;
 
-                    }
+					}
 
-                    if (restartLoop)
-                        continue;
+					if (restartLoop)
+						continue;
 
-                    break;
+					break;
 
-                }
+				}
 
-            }
-        
-        }
+			}
+		
+		}
 
-        public bool CheckBlockValid(IMyTerminalBlock block) {
+		public bool CheckBlockValid(IMyTerminalBlock block) {
 
-            CheckConnectedGrids();
+			CheckConnectedGrids();
 
-            if (block == null || block.MarkedForClose) {
+			if (block == null || block.MarkedForClose) {
 
-                return false;
+				return false;
 
-            }
+			}
 
-            if (!ConnectedGrids.Contains(block.SlimBlock.CubeGrid)) {
+			if (!ConnectedGrids.Contains(block.SlimBlock.CubeGrid)) {
 
-                return false;
+				return false;
 
-            }
+			}
 
-            return true;
+			return true;
 
-        }
+		}
 
-        public bool CheckBlockValid(IMySlimBlock block) {
+		public bool CheckBlockValid(IMySlimBlock block) {
 
-            CheckConnectedGrids();
+			CheckConnectedGrids();
 
-            if (block == null) {
+			if (block == null) {
 
-                return false;
+				return false;
 
-            }
+			}
 
-            if (!ConnectedGrids.Contains(block.CubeGrid)) {
+			if (!ConnectedGrids.Contains(block.CubeGrid)) {
 
-                return false;
+				return false;
 
-            }
+			}
 
-            return true;
+			return true;
 
-        }
+		}
 
-        public void CheckConnectedGrids() {
+		public void CheckConnectedGrids() {
 
-            if (!OverrideConnectedGridCheck) {
+			if (!OverrideConnectedGridCheck) {
 
-                var time = MyAPIGateway.Session.GameDateTime - LastConnectedGridCheck;
+				var time = MyAPIGateway.Session.GameDateTime - LastConnectedGridCheck;
 
-                if (time.TotalMilliseconds < 1000)
-                    return;
+				if (time.TotalMilliseconds < 1000)
+					return;
 
-            } else {
+			} else {
 
-                OverrideConnectedGridCheck = false;
+				OverrideConnectedGridCheck = false;
 
-            }
+			}
 
-            ConnectedGrids.Clear();
-            ConnectedGrids = MyAPIGateway.GridGroups.GetGroup(this.RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
-            LastConnectedGridCheck = MyAPIGateway.Session.GameDateTime;
+			ConnectedGrids.Clear();
+			ConnectedGrids = MyAPIGateway.GridGroups.GetGroup(this.RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
+			LastConnectedGridCheck = MyAPIGateway.Session.GameDateTime;
 
-        }
+		}
 
-        public void EnableBlocks(List<string> names, List<SwitchEnum> states) {
+		public void EnableBlocks(List<string> names, List<SwitchEnum> states) {
 
-            if (names.Count != states.Count)
-                return;
+			if (names.Count != states.Count)
+				return;
 
-            for (int i = AllFunctionalBlocks.Count - 1; i >= 0; i--) {
+			for (int i = AllFunctionalBlocks.Count - 1; i >= 0; i--) {
 
-                var block = AllFunctionalBlocks[i];
+				var block = AllFunctionalBlocks[i];
 
-                if (!CheckBlockValid(block)) {
+				if (!CheckBlockValid(block)) {
 
-                    AllFunctionalBlocks.RemoveAt(i);
-                    continue;
+					AllFunctionalBlocks.RemoveAt(i);
+					continue;
 
-                }
+				}
 
-                if (string.IsNullOrWhiteSpace(block.CustomName))
-                    continue;
+				if (string.IsNullOrWhiteSpace(block.CustomName))
+					continue;
 
-                for (int j = 0; j < names.Count; j++) {
+				for (int j = 0; j < names.Count; j++) {
 
-                    if (block.CustomName == names[j]) {
+					if (block.CustomName == names[j]) {
 
-                        bool changeTo = block.Enabled;
+						bool changeTo = block.Enabled;
 
-                        if (states[j] == SwitchEnum.Off)
-                            changeTo = false;
+						if (states[j] == SwitchEnum.Off)
+							changeTo = false;
 
-                        if (states[j] == SwitchEnum.On)
-                            changeTo = true;
+						if (states[j] == SwitchEnum.On)
+							changeTo = true;
 
-                        if (states[j] == SwitchEnum.Toggle)
-                            changeTo = changeTo ? false : true;
+						if (states[j] == SwitchEnum.Toggle)
+							changeTo = changeTo ? false : true;
 
-                        block.Enabled = changeTo;
-                        break;
+						block.Enabled = changeTo;
+						break;
 
-                    }
+					}
   
-                }
+				}
 
-            }
-        
-        }
+			}
+		
+		}
 
-        public void EnableBlocksInGroup(string groupName, SwitchEnum state) {
+		public void EnableBlocksInGroup(string groupName, SwitchEnum state) {
 
-            var terminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(RemoteControl.SlimBlock.CubeGrid);
+			var terminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(RemoteControl.SlimBlock.CubeGrid);
 
-            if (terminal == null)
-                return;
+			if (terminal == null)
+				return;
 
-            var group = terminal.GetBlockGroupWithName(groupName);
+			var group = terminal.GetBlockGroupWithName(groupName);
 
-            if (group == null)
-                return;
+			if (group == null)
+				return;
 
-            var functionalBlocksInGroup = new List<IMyFunctionalBlock>();
-            group.GetBlocksOfType<IMyFunctionalBlock>(functionalBlocksInGroup);
+			var functionalBlocksInGroup = new List<IMyFunctionalBlock>();
+			group.GetBlocksOfType<IMyFunctionalBlock>(functionalBlocksInGroup);
 
-            for (int i = functionalBlocksInGroup.Count - 1; i >= 0; i--) {
+			for (int i = functionalBlocksInGroup.Count - 1; i >= 0; i--) {
 
-                var block = functionalBlocksInGroup[i];
+				var block = functionalBlocksInGroup[i];
 
-                bool changeTo = block.Enabled;
+				bool changeTo = block.Enabled;
 
-                if (state == SwitchEnum.Off)
-                    changeTo = false;
+				if (state == SwitchEnum.Off)
+					changeTo = false;
 
-                if (state == SwitchEnum.On)
-                    changeTo = true;
+				if (state == SwitchEnum.On)
+					changeTo = true;
 
-                if (state == SwitchEnum.Toggle)
-                    changeTo = changeTo ? false : true;
+				if (state == SwitchEnum.Toggle)
+					changeTo = changeTo ? false : true;
 
-                block.Enabled = changeTo;
+				block.Enabled = changeTo;
 
-            }
+			}
 
-        }
+		}
 
-        public void ToggleBlocksOfType(List<SerializableDefinitionId> types, List<SwitchEnum> toggles) {
+		public void ToggleBlocksOfType(List<SerializableDefinitionId> types, List<SwitchEnum> toggles) {
 
-            int maxIndex = types.Count <= toggles.Count ? types.Count : toggles.Count;
+			int maxIndex = types.Count <= toggles.Count ? types.Count : toggles.Count;
 
-            for (int i = AllFunctionalBlocks.Count - 1; i >= 0; i--) {
+			if (maxIndex == 0)
+				return;
 
-                var block = AllFunctionalBlocks[i];
+			for (int i = AllFunctionalBlocks.Count - 1; i >= 0; i--) {
 
-                if (!CheckBlockValid(block)) {
+				var block = AllFunctionalBlocks[i];
 
-                    Antennas.RemoveAt(i);
-                    continue;
+				if (!CheckBlockValid(block)) {
 
-                }
+					AllFunctionalBlocks.RemoveAt(i);
+					continue;
 
-                bool actionPerformed = false;
+				}
 
-                for (int j = 0; j < maxIndex; j++) {
+				bool actionPerformed = false;
 
-                    var type = (MyDefinitionId)types[j];
-                    var toggle = toggles[j];
+				for (int j = 0; j < maxIndex; j++) {
 
-                    if (block.SlimBlock.BlockDefinition.Id == type) {
+					var type = (MyDefinitionId)types[j];
+					var toggle = toggles[j];
 
-                        if (toggle == SwitchEnum.Toggle)
-                            block.Enabled = !block.Enabled;
+					if (block.SlimBlock.BlockDefinition.Id == type) {
 
-                        if (toggle == SwitchEnum.Off)
-                            block.Enabled = false;
+						if (toggle == SwitchEnum.Toggle)
+							block.Enabled = !block.Enabled;
 
-                        if (toggle == SwitchEnum.On)
-                            block.Enabled = true;
+						if (toggle == SwitchEnum.Off)
+							block.Enabled = false;
 
-                        actionPerformed = true;
+						if (toggle == SwitchEnum.On)
+							block.Enabled = true;
 
-                    }
+						actionPerformed = true;
 
-                    if (actionPerformed)
-                        break;
+					}
 
-                }
+					if (actionPerformed)
+						break;
 
-                if (actionPerformed)
-                    continue;
+				}
 
-            }
-        
-        }
+				if (actionPerformed)
+					continue;
 
-        public IMyRadioAntenna GetActiveAntenna() {
+			}
+		
+		}
 
-            IMyRadioAntenna resultAntenna = null;
-            float range = 0;
+		public IMyRadioAntenna GetActiveAntenna() {
 
-            for (int i = Antennas.Count - 1; i >= 0; i--) {
+			IMyRadioAntenna resultAntenna = null;
+			float range = 0;
 
-                var antenna = Antennas[i];
+			for (int i = Antennas.Count - 1; i >= 0; i--) {
 
-                if (!CheckBlockValid(antenna)) {
+				var antenna = Antennas[i];
 
-                    Antennas.RemoveAt(i);
-                    continue;
+				if (!CheckBlockValid(antenna)) {
 
-                }
+					Antennas.RemoveAt(i);
+					continue;
 
-                if (antenna.IsWorking == false || antenna.IsFunctional == false) {
+				}
 
-                    continue;
+				if (antenna.IsWorking == false || antenna.IsFunctional == false) {
 
-                }
+					continue;
 
-                return antenna;
+				}
 
-            }
+				return antenna;
 
-            return resultAntenna;
+			}
 
-        }
+			return resultAntenna;
 
-        public IMyRadioAntenna GetAntennaWithHighestRange(string antennaName = "") {
+		}
 
-            IMyRadioAntenna resultAntenna = null;
-            float range = 0;
+		public IMyRadioAntenna GetAntennaWithHighestRange(string antennaName = "") {
 
-            for (int i = Antennas.Count - 1; i >= 0; i--) {
+			IMyRadioAntenna resultAntenna = null;
+			float range = 0;
 
-                var antenna = Antennas[i];
+			for (int i = Antennas.Count - 1; i >= 0; i--) {
 
-                if (!CheckBlockValid(antenna)) {
+				var antenna = Antennas[i];
 
-                    Antennas.RemoveAt(i);
-                    continue;
+				if (!CheckBlockValid(antenna)) {
 
-                }
+					Antennas.RemoveAt(i);
+					continue;
 
-                if (antenna.IsWorking == false || antenna.IsFunctional == false || antenna.IsBroadcasting == false) {
+				}
 
-                    continue;
+				if (antenna.IsWorking == false || antenna.IsFunctional == false || antenna.IsBroadcasting == false) {
 
-                }
+					continue;
 
-                if (!string.IsNullOrWhiteSpace(antennaName) && antennaName != antenna.CustomName)
-                    continue;
+				}
 
-                if (antenna.Radius > range) {
+				if (!string.IsNullOrWhiteSpace(antennaName) && antennaName != antenna.CustomName)
+					continue;
 
-                    resultAntenna = antenna;
-                    range = antenna.Radius;
+				if (antenna.Radius > range) {
 
-                }
+					resultAntenna = antenna;
+					range = antenna.Radius;
 
-            }
+				}
 
-            return resultAntenna;
+			}
 
-        }
+			return resultAntenna;
 
-        public void GridSplit(IMyCubeGrid gridA, IMyCubeGrid gridB) {
+		}
 
-            gridA.OnGridSplit -= GridSplit;
-            gridB.OnGridSplit -= GridSplit;
+		public void GridSplit(IMyCubeGrid gridA, IMyCubeGrid gridB) {
 
-            if (RemoteControl == null || RemoteControl.MarkedForClose || RemoteControl?.SlimBlock?.CubeGrid == null)
-                return;
+			gridA.OnGridSplit -= GridSplit;
+			gridB.OnGridSplit -= GridSplit;
 
-            if(gridA == RemoteControl.SlimBlock.CubeGrid)
-                gridA.OnGridSplit -= GridSplit;
+			if (RemoteControl == null || RemoteControl.MarkedForClose || RemoteControl?.SlimBlock?.CubeGrid == null)
+				return;
 
-            if (gridB == RemoteControl.SlimBlock.CubeGrid)
-                gridB.OnGridSplit -= GridSplit;
+			if(gridA == RemoteControl.SlimBlock.CubeGrid)
+				gridA.OnGridSplit -= GridSplit;
 
-            OverrideConnectedGridCheck = true;
-            CheckConnectedGrids();
+			if (gridB == RemoteControl.SlimBlock.CubeGrid)
+				gridB.OnGridSplit -= GridSplit;
 
-        }
+			OverrideConnectedGridCheck = true;
+			CheckConnectedGrids();
 
-        public bool InsertDatapadIntoInventory(IMyTerminalBlock block, string datapadId) {
+		}
 
-            if (block == null || !block.HasInventory)
-                return false;
+		public bool InsertDatapadIntoInventory(IMyTerminalBlock block, string datapadId) {
 
-            var inventory = block.GetInventory() as MyInventory;
+			if (block == null || !block.HasInventory)
+				return false;
 
-            if (inventory == null)
-                return false;
+			var inventory = block.GetInventory() as MyInventory;
 
-            MyDefinitionBase def = null;
+			if (inventory == null)
+				return false;
 
-            if (!ProfileManager.DatapadTemplates.TryGetValue(datapadId, out def))
-                return false;
+			MyDefinitionBase def = null;
 
-            var id = new MyDefinitionId(typeof(MyObjectBuilder_Datapad), "Datapad");
-            var datapadOb = MyObjectBuilderSerializer.CreateNewObject(id) as MyObjectBuilder_Datapad;
+			if (!ProfileManager.DatapadTemplates.TryGetValue(datapadId, out def))
+				return false;
 
-            if (datapadOb == null) {
+			var id = new MyDefinitionId(typeof(MyObjectBuilder_Datapad), "Datapad");
+			var datapadOb = MyObjectBuilderSerializer.CreateNewObject(id) as MyObjectBuilder_Datapad;
 
-                return false;
-            
-            }
+			if (datapadOb == null) {
 
-            datapadOb.Name = def.DisplayNameString;
-            datapadOb.Data = def.DescriptionString;
+				return false;
+			
+			}
 
-            if (!inventory.CanItemsBeAdded(1, id) == true) {
+			datapadOb.Name = def.DisplayNameString;
+			datapadOb.Data = def.DescriptionString;
 
-                return false;
+			if (!inventory.CanItemsBeAdded(1, id) == true) {
 
-            }
+				return false;
 
-            inventory.AddItems(1, datapadOb);
-            return true;
-        
-        }
+			}
 
-        public void InsertDatapadsIntoSeats(List<string> datapadIds, int count) {
+			inventory.AddItems(1, datapadOb);
+			return true;
+		
+		}
 
-            if (Seats.Count == 0)
-                return;
+		public void InsertDatapadsIntoSeats(List<string> datapadIds, int count) {
 
-            var dataPadList = new List<string>(datapadIds.ToList());
+			if (Seats.Count == 0)
+				return;
 
-            for (int i = 0; i < count; i++) {
+			var dataPadList = new List<string>(datapadIds.ToList());
 
-                var listCount = dataPadList.Count;
+			for (int i = 0; i < count; i++) {
 
-                if (listCount == 0)
-                    break;
+				var listCount = dataPadList.Count;
 
-                string id = "";
+				if (listCount == 0)
+					break;
 
-                if (listCount == 1) {
+				string id = "";
 
-                    id = dataPadList[0];
-                    dataPadList.RemoveAt(0);
+				if (listCount == 1) {
 
-                } else {
+					id = dataPadList[0];
+					dataPadList.RemoveAt(0);
 
-                    int index = MathTools.RandomBetween(0, listCount);
-                    id = dataPadList[index];
-                    dataPadList.RemoveAt(index);
+				} else {
 
-                }
+					int index = MathTools.RandomBetween(0, listCount);
+					id = dataPadList[index];
+					dataPadList.RemoveAt(index);
 
-                int seatIndex = 0;
+				}
 
-                if (Seats.Count > 1)
-                    seatIndex = MathTools.RandomBetween(0, Seats.Count);
+				int seatIndex = 0;
 
-                if (!InsertDatapadIntoInventory(Seats[seatIndex], id))
-                    i--;
+				if (Seats.Count > 1)
+					seatIndex = MathTools.RandomBetween(0, Seats.Count);
 
-            }
-        
-        }
+				if (!InsertDatapadIntoInventory(Seats[seatIndex], id))
+					i--;
 
-        public bool RaycastGridCheck(Vector3D coords) {
+			}
+		
+		}
 
-            bool gotHit = false;
+		public bool RaycastGridCheck(Vector3D coords) {
 
-            for (int i = Cameras.Count - 1; i >= 0; i--) {
+			bool gotHit = false;
 
-                var camera = Cameras[i];
+			for (int i = Cameras.Count - 1; i >= 0; i--) {
 
-                if (!CheckBlockValid(camera)) {
+				var camera = Cameras[i];
 
-                    Cameras.RemoveAt(i);
-                    continue;
+				if (!CheckBlockValid(camera)) {
 
-                }
+					Cameras.RemoveAt(i);
+					continue;
 
-                if (!camera.EnableRaycast)
-                    camera.EnableRaycast = true;
+				}
 
-                if (!camera.CanScan(coords))
-                    continue;
+				if (!camera.EnableRaycast)
+					camera.EnableRaycast = true;
 
-                var result = camera.Raycast(coords);
+				if (!camera.CanScan(coords))
+					continue;
 
-                if (result.IsEmpty())
-                    continue;
+				var result = camera.Raycast(coords);
 
-                if (result.Type.ToString().EndsWith("Grid") || result.Type == Sandbox.ModAPI.Ingame.MyDetectedEntityType.CharacterHuman) {
+				if (result.IsEmpty())
+					continue;
 
-                    gotHit = true;
-                    break;
-                
-                }
+				if (result.Type.ToString().EndsWith("Grid") || result.Type == Sandbox.ModAPI.Ingame.MyDetectedEntityType.CharacterHuman) {
 
-            }
+					gotHit = true;
+					break;
+				
+				}
 
-            return gotHit;
+			}
 
-        }
+			return gotHit;
 
-        public void RazeBlocksWithNames(List<string> names) {
+		}
 
-            BehaviorLogger.Write("Razing Blocks With Names Count: " + names.Count.ToString(), BehaviorDebugEnum.Action);
-            BehaviorLogger.Write("Razing Blocks Total Terminal Blocks: " + AllTerminalBlocks.Count.ToString(), BehaviorDebugEnum.Action);
+		public void RazeBlocksWithNames(List<string> names) {
 
-            for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
+			BehaviorLogger.Write("Razing Blocks With Names Count: " + names.Count.ToString(), BehaviorDebugEnum.Action);
+			BehaviorLogger.Write("Razing Blocks Total Terminal Blocks: " + AllTerminalBlocks.Count.ToString(), BehaviorDebugEnum.Action);
 
-                var block = AllTerminalBlocks[i];
+			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
 
-                if (!CheckBlockValid(block)) {
+				var block = AllTerminalBlocks[i];
 
-                    AllTerminalBlocks.RemoveAt(i);
-                    continue;
+				if (!CheckBlockValid(block)) {
 
-                }
+					AllTerminalBlocks.RemoveAt(i);
+					continue;
 
-                if (names.Contains(block.CustomName))
-                    block.SlimBlock.CubeGrid.RazeBlock(block.SlimBlock.Min);
+				}
 
-            }
+				if (names.Contains(block.CustomName))
+					block.SlimBlock.CubeGrid.RazeBlock(block.SlimBlock.Min);
 
-        }
+			}
 
-        public void RecolorBlocks(IMyCubeGrid grid, List<Vector3D> oldColors, List<Vector3D> newColors, List<string> newSkins) {
+		}
 
-            for (int j = AllBlocks.Count - 1; j >= 0; j--) {
+		public void RecolorBlocks(IMyCubeGrid grid, List<Vector3D> oldColors, List<Vector3D> newColors, List<string> newSkins) {
 
-                var block = AllBlocks[j];
+			for (int j = AllBlocks.Count - 1; j >= 0; j--) {
 
-                if (!CheckBlockValid(block)) {
+				var block = AllBlocks[j];
 
-                    AllTerminalBlocks.RemoveAt(j);
-                    continue;
+				if (!CheckBlockValid(block)) {
 
-                }
+					AllTerminalBlocks.RemoveAt(j);
+					continue;
 
-                if (block.CubeGrid != grid)
-                    continue;
+				}
 
-                for (int i = 0; i < oldColors.Count; i++) {
+				if (block.CubeGrid != grid)
+					continue;
 
-                    if (i >= newColors.Count && i >= newSkins.Count)
-                        break;
+				for (int i = 0; i < oldColors.Count; i++) {
 
-                    if (Math.Round(oldColors[i].X, 3) != Math.Round(block.ColorMaskHSV.X, 3))
-                        continue;
+					if (i >= newColors.Count && i >= newSkins.Count)
+						break;
 
-                    if (Math.Round(oldColors[i].Y, 3) != Math.Round(block.ColorMaskHSV.Y, 3))
-                        continue;
+					if (Math.Round(oldColors[i].X, 3) != Math.Round(block.ColorMaskHSV.X, 3))
+						continue;
 
-                    if (Math.Round(oldColors[i].Z, 3) != Math.Round(block.ColorMaskHSV.Z, 3))
-                        continue;
+					if (Math.Round(oldColors[i].Y, 3) != Math.Round(block.ColorMaskHSV.Y, 3))
+						continue;
 
-                    if (i < newColors.Count) {
+					if (Math.Round(oldColors[i].Z, 3) != Math.Round(block.ColorMaskHSV.Z, 3))
+						continue;
 
-                        if (newColors[i] != new Vector3D(-10, -10, -10))
-                            grid.ColorBlocks(block.Min, block.Min, newColors[i]);
+					if (i < newColors.Count) {
 
-                    }
+						if (newColors[i] != new Vector3D(-10, -10, -10))
+							grid.ColorBlocks(block.Min, block.Min, newColors[i]);
 
-                    if (i < newSkins.Count) {
+					}
 
-                        if (!string.IsNullOrWhiteSpace(newSkins[i]))
-                            grid.SkinBlocks(block.Min, block.Min, null, newSkins[i]);
+					if (i < newSkins.Count) {
 
-                    }
+						if (!string.IsNullOrWhiteSpace(newSkins[i]))
+							grid.SkinBlocks(block.Min, block.Min, null, newSkins[i]);
 
-                }
+					}
 
-            }
+				}
 
-        }
+			}
 
-        public void RenameBlocks(List<string> oldNames, List<string> newNames, string actionId) {
+		}
 
-            if (oldNames.Count != newNames.Count) {
+		public void RenameBlocks(List<string> oldNames, List<string> newNames, string actionId) {
 
-                BehaviorLogger.Write(actionId + ": ChangeBlockNames From and To lists not the same count. Aborting operation", BehaviorDebugEnum.Action);
-                return;
+			if (oldNames.Count != newNames.Count) {
 
-            }
+				BehaviorLogger.Write(actionId + ": ChangeBlockNames From and To lists not the same count. Aborting operation", BehaviorDebugEnum.Action);
+				return;
 
-            var dictionary = new Dictionary<string, string>();
+			}
 
-            for (int i = 0; i < oldNames.Count; i++) {
+			var dictionary = new Dictionary<string, string>();
 
-                if (!dictionary.ContainsKey(oldNames[i]))
-                    dictionary.Add(oldNames[i], newNames[i]);
+			for (int i = 0; i < oldNames.Count; i++) {
 
-            }
+				if (!dictionary.ContainsKey(oldNames[i]))
+					dictionary.Add(oldNames[i], newNames[i]);
 
-            for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
+			}
 
-                var block = AllTerminalBlocks[i];
+			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
 
-                if (!CheckBlockValid(block)) {
+				var block = AllTerminalBlocks[i];
 
-                    AllTerminalBlocks.RemoveAt(i);
-                    continue;
+				if (!CheckBlockValid(block)) {
 
-                }
+					AllTerminalBlocks.RemoveAt(i);
+					continue;
 
-                if (oldNames.Contains(block.CustomName))
-                    block.CustomName = dictionary[block.CustomName];
+				}
 
-            }
+				if (oldNames.Contains(block.CustomName))
+					block.CustomName = dictionary[block.CustomName];
 
-        }
+			}
 
-        public bool SensorCheck(string sensorName, bool triggeredState = true) {
+		}
 
-            bool result = false;
-            var entities = new List<Sandbox.ModAPI.Ingame.MyDetectedEntityInfo>();
+		public bool SensorCheck(string sensorName, bool triggeredState = true) {
 
-            for (int i = Sensors.Count - 1; i >= 0; i--) {
+			bool result = false;
+			var entities = new List<Sandbox.ModAPI.Ingame.MyDetectedEntityInfo>();
 
-                var sensor = Sensors[i];
+			for (int i = Sensors.Count - 1; i >= 0; i--) {
 
-                if (!CheckBlockValid(sensor)) {
+				var sensor = Sensors[i];
 
-                    Sensors.RemoveAt(i);
-                    continue;
+				if (!CheckBlockValid(sensor)) {
 
-                }
+					Sensors.RemoveAt(i);
+					continue;
 
-                if (sensor.CustomName != sensorName)
-                    continue;
+				}
 
-                entities.Clear();
-                sensor.DetectedEntities(entities);
+				if (sensor.CustomName != sensorName)
+					continue;
 
-                if ((entities.Count > 0) == triggeredState) {
+				entities.Clear();
+				sensor.DetectedEntities(entities);
 
-                    result = true;
-                    break;
-                
-                }
+				if ((entities.Count > 0) == triggeredState) {
 
-            }
+					result = true;
+					break;
+				
+				}
 
-            return result;
-        
-        }
+			}
 
-        public void SetGridAntennaRanges(List<string> names, string operation, float amount) {
+			return result;
+		
+		}
 
-            bool checkNames = names.Count > 0 ? true : false;
+		public void SetGridAntennaRanges(List<string> names, string operation, float amount) {
 
-            for (int i = Antennas.Count - 1; i >= 0; i--) {
+			bool checkNames = names.Count > 0 ? true : false;
 
-                var antenna = Antennas[i];
+			for (int i = Antennas.Count - 1; i >= 0; i--) {
 
-                if (!CheckBlockValid(antenna)) {
+				var antenna = Antennas[i];
 
-                    Antennas.RemoveAt(i);
-                    continue;
+				if (!CheckBlockValid(antenna)) {
 
-                }
+					Antennas.RemoveAt(i);
+					continue;
 
-                if (operation == "Set") {
+				}
 
-                    antenna.Radius = amount;
-                    continue;
+				if (operation == "Set") {
 
-                }
+					antenna.Radius = amount;
+					continue;
 
-                if (operation == "Increase") {
+				}
 
-                    antenna.Radius += amount;
-                    continue;
+				if (operation == "Increase") {
 
-                }
+					antenna.Radius += amount;
+					continue;
 
-                if (operation == "Decrease") {
+				}
 
-                    antenna.Radius -= amount;
-                    continue;
+				if (operation == "Decrease") {
 
-                }
+					antenna.Radius -= amount;
+					continue;
 
-            }
+				}
 
-        }
+			}
 
-        public void SetGridDestructible(IMyCubeGrid cubeGrid, bool enabled) {
+		}
 
-            var grid = cubeGrid as MyCubeGrid;
+		public void SetGridDestructible(IMyCubeGrid cubeGrid, bool enabled) {
 
-            if (grid == null)
-                return;
+			var grid = cubeGrid as MyCubeGrid;
 
-            grid.DestructibleBlocks = enabled;
+			if (grid == null)
+				return;
 
-        }
+			grid.DestructibleBlocks = enabled;
 
-        public void SetGridEditable(IMyCubeGrid cubeGrid, bool enabled) {
+		}
 
-            var grid = cubeGrid as MyCubeGrid;
+		public void SetGridEditable(IMyCubeGrid cubeGrid, bool enabled) {
 
-            if (grid == null)
-                return;
+			var grid = cubeGrid as MyCubeGrid;
 
-            grid.Editable = enabled;
+			if (grid == null)
+				return;
 
-        }
+			grid.Editable = enabled;
 
-        public void Unload() {
-        
-            
-        
-        }
+		}
 
-    }
+		public void Unload() {
+		
+			
+		
+		}
+
+	}
 
 }

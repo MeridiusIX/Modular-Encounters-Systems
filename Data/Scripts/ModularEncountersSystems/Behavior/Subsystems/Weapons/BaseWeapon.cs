@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
@@ -349,6 +350,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			_pendingAmmoRefill = false;
 
+			BehaviorLogger.Write("Sending Replenish Request For Weapon: " + _block?.SlimBlock?.BlockDefinition?.Id ?? "Null", BehaviorDebugEnum.Weapon);
 			InventoryHelper.AddItemsToInventory(_inventory, _currentAmmoMagazine, _weaponSystem.AmmoReplenishClipAmount);
 			_ammoRefills++;
 

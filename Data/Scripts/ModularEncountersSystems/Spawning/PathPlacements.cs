@@ -34,6 +34,8 @@ namespace ModularEncountersSystems.Spawning {
 
 		public List<Vector3D> CreatureCoords;
 
+		public StringBuilder PathDebugging;
+
 		public PathDetails() {
 
 			SpawnType = SpawningType.None;
@@ -49,6 +51,8 @@ namespace ModularEncountersSystems.Spawning {
 			OverrideSpeed = -1;
 
 			CustomVelocity = new Vector3D();
+
+			PathDebugging = new StringBuilder();
 
 		}
 
@@ -398,6 +402,7 @@ namespace ModularEncountersSystems.Spawning {
 		private static void CalculateAtmoPath(PathDetails path, SpawnGroupCollection collection, EnvironmentEvaluation environment) {
 
 			path.SpawnType = SpawningType.PlanetaryCargoShip;
+			path.PathDebugging.Append("Planetary Cargo Ship Pathing Result: ").AppendLine();
 
 			for (int i = 0; i < Settings.PlanetaryCargoShips.MaxSpawnAttempts; i++) {
 
@@ -452,19 +457,33 @@ namespace ModularEncountersSystems.Spawning {
 					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
 
 					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
-					var endPath = path.SpawnMatrix.Forward * pathDistance + startPath;
+					var startAltitude = environment.NearestPlanet.DistanceToCore(startPath);
+					var endPathRough = path.SpawnMatrix.Forward * pathDistance + startPath;
+					var endPathUp = environment.NearestPlanet.UpAtPosition(endPathRough);
+					var endPath = endPathUp * startAltitude + environment.NearestPlanet.Center();
+					var endSurface = environment.NearestPlanet.SurfaceCoordsAtPosition(endPath);
+
+					if (environment.NearestPlanet.AltitudeAtPosition(endPath) < Settings.PlanetaryCargoShips.MinSpawningAltitude) {
+
+						endPath = endPathUp * Settings.PlanetaryCargoShips.MinSpawningAltitude + endSurface;
+
+					}
 
 					if (!collection.Conditions.SkipAirDensityCheck) {
 
-						if (environment.NearestPlanet.Planet.GetAirDensity(startPath) < Settings.PlanetaryCargoShips.MinAirDensity) {
+						var startDensity = environment.NearestPlanet.Planet.GetAirDensity(startPath);
+						if (startDensity < Settings.PlanetaryCargoShips.MinAirDensity) {
 
+							path.PathDebugging.Append(" - Attempt Failed: Air Density Too Low At Start Path").AppendLine();
 							obstructed = true;
 							break;
 
 						}
 
-						if (environment.NearestPlanet.Planet.GetAirDensity(endPath) < Settings.PlanetaryCargoShips.MinAirDensity) {
+						var endDensity = environment.NearestPlanet.Planet.GetAirDensity(endPath);
+						if (endDensity < Settings.PlanetaryCargoShips.MinAirDensity) {
 
+							path.PathDebugging.Append(" - Attempt Failed: Air Density Too Low At End Path").AppendLine();
 							obstructed = true;
 							break;
 
@@ -474,9 +493,13 @@ namespace ModularEncountersSystems.Spawning {
 
 					obstructed = IsPlanetPathObstructed(playerBox, startPath, endPath, pathDistance, environment);
 
-					if (obstructed)
+					if (obstructed) {
+
+						path.PathDebugging.Append(" - Attempt Failed: Path Obstructed By Voxel or Entity").AppendLine();
 						break;
 
+					}
+	
 				}
 
 				if (obstructed)

@@ -346,6 +346,7 @@ namespace ModularEncountersSystems.Spawning {
             if (!path.ValidPath) {
 
                 SpawnLogger.Write("SpawnGroup Path/Placement Invalid", SpawnerDebugEnum.Spawning);
+                SpawnLogger.Write(path.PathDebugging.ToString(), SpawnerDebugEnum.Spawning);
                 return false;
             
             }

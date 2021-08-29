@@ -251,6 +251,7 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void ProcessWeaponChecks() {
 
+			//BehaviorLogger.Write("Prepare Weapons", BehaviorDebugEnum.Weapon);
 			AutoPilot.Weapons.PrepareWeapons();
 
 		}

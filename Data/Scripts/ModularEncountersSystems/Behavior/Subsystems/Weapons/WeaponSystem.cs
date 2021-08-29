@@ -358,7 +358,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				foreach (var turret in StaticWeapons) {
+				foreach (var turret in Turrets) {
 
 					turret.DetermineWeaponReadiness();
 

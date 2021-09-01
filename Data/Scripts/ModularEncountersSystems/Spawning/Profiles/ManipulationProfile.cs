@@ -77,6 +77,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public float NpcHydroThrustForceMultiply;
 		public float NpcHydroThrustPowerMultiply;
 
+		public bool SetNpcGyroscopeMultiplier;
+		public float NpcGyroscopeMultiplier;
+
 		public bool IgnoreGlobalBlockReplacer;
 
 		public bool ConvertToHeavyArmor;
@@ -236,6 +239,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RestrictNpcHydroThrust = false;
 			NpcHydroThrustForceMultiply = 1;
 			NpcHydroThrustPowerMultiply = 1;
+
+			SetNpcGyroscopeMultiplier = false;
+			NpcGyroscopeMultiplier = 1;
 
 			IgnoreGlobalBlockReplacer = false;
 
@@ -648,6 +654,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[NpcHydroThrustPowerMultiply:") == true) {
 
 					TagParse.TagFloatCheck(tag, ref this.NpcHydroThrustPowerMultiply);
+
+				}
+
+				//SetNpcGyroscopeMultiplier
+				if (tag.StartsWith("[SetNpcGyroscopeMultiplier:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.SetNpcGyroscopeMultiplier);
+
+				}
+
+				//NpcGyroscopeMultiplier
+				if (tag.StartsWith("[NpcGyroscopeMultiplier:") == true) {
+
+					TagParse.TagFloatCheck(tag, ref this.NpcGyroscopeMultiplier);
 
 				}
 

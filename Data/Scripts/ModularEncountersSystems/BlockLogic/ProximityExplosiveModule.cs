@@ -41,7 +41,6 @@ namespace ModularEncountersSystems.BlockLogic {
 			_playersInBlockRange = new List<PlayerEntity>();
 			_warhead = block.Block as IMyWarhead;
 			_logicType = "Proximity Explosive Module";
-			_useTick60 = true;
 			_useTick100 = true;
 			_warhead.CustomName = "[Proximity Explosive Module]";
 			_warhead.CustomNameChanged += NameChange;
@@ -52,24 +51,6 @@ namespace ModularEncountersSystems.BlockLogic {
 		
 			if(_warhead.CustomName != "[Proximity Explosive Module]")
 				_warhead.CustomName = "[Proximity Explosive Module]";
-
-		}
-
-		internal override void RunTick60() {
-
-			if (!_isWorking || !Active || !_playersInRange)
-				return;
-
-			foreach (var player in _playersInBlockRange) {
-
-				if (!player.ActiveEntity() || player.IsParentEntitySeat)
-					continue;
-
-				float distanceRatio = 1 - (float)(Vector3D.Distance(player.GetPosition(), _warhead.GetPosition()) / _antennaRange);
-
-				player.Player.Character.DoDamage(_damageAtZeroDistance * distanceRatio, MyStringHash.GetOrCompute("Radiation"), true, null, _warhead.EntityId);
-
-			}
 
 		}
 

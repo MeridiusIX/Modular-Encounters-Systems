@@ -14,6 +14,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static Guid RivalAiStoredDataKey = new Guid("87EBD383-DF97-454F-9022-92423426E5C9");
 		public static Guid NpcDataKey = new Guid("29FFD684-13D7-4045-BF76-CD48BF80E36A");
 		public static Guid LegacyNpcDataKey = new Guid("AD4DBD09-359D-48F5-9F48-54D352B59171");
+		public static Guid NpcGyroDataKey = new Guid("864E2D34-5AD7-49AC-A3AA-E20D879471A8");
 		public static Guid NpcThrusterDataKey = new Guid("BF529D66-9AA1-4419-B5D3-A65BA21306CE");
 
 		public static List<Guid> CustomStorageKeys = new List<Guid>();

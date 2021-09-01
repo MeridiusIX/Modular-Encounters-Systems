@@ -57,6 +57,11 @@ namespace ModularEncountersSystems.World {
 		public bool SurfaceIsUnderWater;
 		public float WaterInSurroundingAreaRatio;
 
+		public bool InsideNebula;
+		public float NebulaDensity;
+		public float NebulaMaterial;
+		public string NebulaWeather;
+
 		public float ThreatScore;
 		public double ThreatScoreCheckDistance;
 
@@ -144,6 +149,30 @@ namespace ModularEncountersSystems.World {
 
 				}
 
+			}
+
+			if (AddonManager.NebulaMod) {
+
+				if (APIs.NebulaApiLoaded) {
+
+					if (NebulaAPI.InsideNebula(Position)) {
+
+						InsideNebula = true;
+						NebulaDensity = NebulaAPI.GetNebulaDensity(Position);
+						NebulaMaterial = NebulaAPI.GetMaterial(Position);
+						NebulaWeather = NebulaAPI.GetWeather(Position) ?? "N/A";
+
+					} else {
+
+						InsideNebula = false;
+						NebulaDensity = 0;
+						NebulaMaterial = 0;
+						NebulaWeather = "N/A";
+
+					}
+				
+				}
+			
 			}
 
 			var distToCore = NearestPlanet.DistanceToCore(Position);

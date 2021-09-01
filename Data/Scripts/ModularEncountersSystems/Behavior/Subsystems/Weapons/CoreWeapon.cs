@@ -54,7 +54,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				foreach (var ammo in _weaponDefinition.Ammos) {
 
-					BehaviorLogger.Write(string.Format(" - {0} / {1}", ammo.AmmoMagazine, ammo.AmmoRound), BehaviorDebugEnum.Weapon);
+					//BehaviorLogger.Write(string.Format(" - {0} / {1}", ammo.AmmoMagazine, ammo.AmmoRound), BehaviorDebugEnum.Weapon);
 
 					if (!_ammoToMagazine.ContainsKey(ammo.AmmoRound))
 						_ammoToMagazine.Add(ammo.AmmoRound, new MyDefinitionId(typeof(MyObjectBuilder_AmmoMagazine), ammo.AmmoMagazine));
@@ -66,7 +66,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			} else {
 
-				BehaviorLogger.Write(_block.CustomName + " Has No WC Ammo Definitions", BehaviorDebugEnum.Weapon);
+				//BehaviorLogger.Write(_block.CustomName + " Has No WC Ammo Definitions", BehaviorDebugEnum.Weapon);
 				_isValid = false;
 			
 			}
@@ -75,6 +75,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		private void StaticWeaponReadiness() {
 
+			//BehaviorLogger.Write("WC Check Static ", BehaviorDebugEnum.Weapon);
 			var trajectory = _weaponSystem.MaxStaticWeaponRange > -1 ? MathHelper.Clamp(_ammoMaxTrajectory, 0, _weaponSystem.MaxStaticWeaponRange) : _ammoMaxTrajectory;
 
 			//Homing Weapon
@@ -118,6 +119,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 					} else {
 
+						//BehaviorLogger.Write(" - No Autopilot Target To assign For Homing Ammo", BehaviorDebugEnum.Weapon);
 						_readyToFire = false;
 						return;
 
@@ -133,6 +135,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				
 				}
 
+				//BehaviorLogger.Write(" - Got Target For Homing Shot", BehaviorDebugEnum.Weapon);
 				return;
 
 			}
@@ -148,6 +151,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
+				//BehaviorLogger.Write(" - Homing Threats Detected For Firing Flares", BehaviorDebugEnum.Weapon);
 				return;
 			
 			}
@@ -157,6 +161,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			//---------------------
 
 			_readyToFire = StaticWeaponAlignedToTarget(_beamAmmo);
+			//BehaviorLogger.Write("WC Ready To Fire: " + _readyToFire, BehaviorDebugEnum.Weapon);
 
 		}
 
@@ -256,14 +261,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		public void DetermineWeaponReadiness() {
 
-			//BehaviorLogger.Write(_block.CustomName + " WC Check Readiness", BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write(_block.CustomName + " WC Check Readiness", BehaviorDebugEnum.Weapon);
 
 			_readyToFire = true;
 
 			//Valid
 			if (!IsValid() || !IsActive()) {
 
-				//BehaviorLogger.Write(string.Format(" - Core Valid/Active Check Failed: {0} / {1}", IsValid(), IsActive()), BehaviorDebugEnum.Weapon);
+				BehaviorLogger.Write(string.Format(" - Core Valid/Active Check Failed: {0} / {1}", IsValid(), IsActive()), BehaviorDebugEnum.Weapon);
 				_readyToFire = false;
 				return;
 
@@ -272,7 +277,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			//Ammo
 			if (!HasAmmo()) {
 
-				//BehaviorLogger.Write(string.Format(" - AmmoRound: {0} /// AmmoMag: {1}", _ammoRound ?? "null", _currentAmmoMagazine.SubtypeName ?? "null"), BehaviorDebugEnum.Weapon);
+				BehaviorLogger.Write(string.Format(" - AmmoRound: {0} /// AmmoMag: {1}", _ammoRound ?? "null", _currentAmmoMagazine.SubtypeName ?? "null"), BehaviorDebugEnum.Weapon);
 				_readyToFire = false;
 				return;
 

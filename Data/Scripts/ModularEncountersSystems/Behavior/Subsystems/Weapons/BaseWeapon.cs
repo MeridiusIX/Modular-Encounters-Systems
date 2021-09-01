@@ -169,7 +169,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (collision == null) {
 
-				//Logger.Write(" - Collision Null", BehaviorDebugEnum.Weapon);
+				//BehaviorLogger.Write("WC Collision Null", BehaviorDebugEnum.Weapon);
 
 			} else {
 
@@ -207,6 +207,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				}
 			
 			}
+
+			/*
+			BehaviorLogger.Write("WeaponCore Static Can Shoot Waypoint:   " + canShootWaypoint, BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write("WeaponCore Static Can Shoot Target:     " + canShootTarget, BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write("WeaponCore Static Has Collision:        " + hasCollision, BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write("WeaponCore Static Hostile:              " + hostile, BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write("WeaponCore Static Must Contact Hostile: " + mustContactHostile, BehaviorDebugEnum.Weapon);
+			*/
 
 			if (!canShootWaypoint && !canShootTarget)
 				return false;

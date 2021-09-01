@@ -271,9 +271,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> ZoneCustomBoolChangeName;
 		public List<bool> ZoneCustomBoolChangeAmount;
 
-		public bool AddBotsToSeats;
-		public int BotSeatCount;
-		public List<string> BotsForSeats;
+		public bool AddBotsToGrid;
+		public int BotCount;
+		public List<string> BotSpawnProfileNames;
+		public bool OnlySpawnBotsInPressurizedRooms;
 
 		public bool SetWeaponsToMinRange;
 		public bool SetWeaponsToMaxRange;
@@ -532,9 +533,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ZoneCustomBoolChangeName = new List<string>();
 			ZoneCustomBoolChangeAmount = new List<bool>();
 
-			AddBotsToSeats = false;
-			BotSeatCount = 1;
-			BotsForSeats = new List<string>();
+			AddBotsToGrid = false;
+			BotCount = 1;
+			BotSpawnProfileNames = new List<string>();
+			OnlySpawnBotsInPressurizedRooms = false;
 
 			ChangeBehaviorSubclass = false;
 			NewBehaviorSubclass = BehaviorSubclass.None;
@@ -719,9 +721,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ZoneCustomBoolChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChange) },
 				{"ZoneCustomBoolChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomBoolChangeName) },
 				{"ZoneCustomBoolChangeAmount", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeAmount) },
-				{"AddBotsToSeats", (s, o) => TagParse.TagBoolCheck(s, ref AddBotsToSeats) },
-				{"BotSeatCount", (s, o) => TagParse.TagIntCheck(s, ref BotSeatCount) },
-				{"BotsForSeats", (s, o) => TagParse.TagStringListCheck(s, ref BotsForSeats) },
+				{"AddBotsToGrid", (s, o) => TagParse.TagBoolCheck(s, ref AddBotsToGrid) },
+				{"BotCount", (s, o) => TagParse.TagIntCheck(s, ref BotCount) },
+				{"BotSpawnProfileNames", (s, o) => TagParse.TagStringListCheck(s, ref BotSpawnProfileNames) },
+				{"OnlySpawnBotsInPressurizedRooms", (s, o) => TagParse.TagBoolCheck(s, ref OnlySpawnBotsInPressurizedRooms) },
 				{"ChangeBehaviorSubclass", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBehaviorSubclass) },
 				{"NewBehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref NewBehaviorSubclass) },
 				{"SetWeaponsToMinRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMinRange) },

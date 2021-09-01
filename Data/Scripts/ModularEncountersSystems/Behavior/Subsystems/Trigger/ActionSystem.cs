@@ -1012,34 +1012,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (actions.AddBotsToSeats && _behavior.CurrentGrid != null && actions.BotsForSeats.Count > 0) {
+			if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && actions.BotSpawnProfileNames.Count > 0) {
 
 				MyVisualScriptLogicProvider.ShowNotificationToAll("Attempting To Add Bots", 3000);
 
-				var list = new List<IMyCockpit>();
+				var list = APIs.AiEnabled.GetAvailableGridNodes(_behavior.CurrentGrid.CubeGrid as MyCubeGrid, actions.BotCount, RemoteControl.WorldMatrix.Up, actions.OnlySpawnBotsInPressurizedRooms);
 
-				foreach (var seat in _behavior.CurrentGrid.Seats) {
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Node Count: " + list.Count, 3000);
 
-					if (seat.ActiveEntity())
-						list.Add(seat.Block as IMyCockpit);
-				
-				}
-
-				MyVisualScriptLogicProvider.ShowNotificationToAll("Seat Count: " + list.Count, 3000);
-
-				for (int i = 0; i < actions.BotSeatCount; i++) {
+				for (int i = 0; i < actions.BotCount; i++) {
 
 					if (list.Count == 0)
 						break;
 
-					var seat = list[MathTools.RandomBetween(0, list.Count)];
-					var botProfileName = actions.BotsForSeats[MathTools.RandomBetween(0, actions.BotsForSeats.Count)];
+					var cell = list[MathTools.RandomBetween(0, list.Count)];
+					var botProfileName = actions.BotSpawnProfileNames[MathTools.RandomBetween(0, actions.BotSpawnProfileNames.Count)];
 					BotSpawnProfile botProfile = null;
 
 					if (ProfileManager.BotSpawnProfiles.TryGetValue(botProfileName, out botProfile)) {
 
-						var coords = Vector3D.Zero;
-						var matrix = MatrixD.CreateWorld(coords, seat.WorldMatrix.Backward, seat.WorldMatrix.Up);
+						var coords = _behavior.CurrentGrid.CubeGrid.GridIntegerToWorld(cell);
+						var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
 						IMyCharacter character = null;
 						BotSpawner.SpawnBotRequest(botProfile.BotType, matrix, out character, botProfile.BotDisplayName, botProfile.UseAiEnabled, botProfile.BotBehavior, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, 0);
 
@@ -1048,8 +1041,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							var botIdentity = character.ControllerInfo.ControllingIdentityId;
 							var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(botIdentity);
 							MyVisualScriptLogicProvider.SetPlayersFaction(botIdentity, faction?.Tag ?? "");
-							MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Added To Seat", 3000);
-							seat.AttachPilot(character);
+							MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Added To Grid", 3000);
+
+							if (character.Physics != null && _behavior.CurrentGrid.CubeGrid.Physics != null) {
+
+								character.Physics.LinearVelocity = _behavior.CurrentGrid.CubeGrid.Physics.LinearVelocity + (RemoteControl.WorldMatrix.Down * 2);
+
+							}
 
 						} else {
 
@@ -1063,7 +1061,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
-					list.Remove(seat);
+					list.Remove(cell);
 
 				}
 

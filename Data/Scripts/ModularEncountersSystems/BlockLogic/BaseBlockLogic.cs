@@ -140,7 +140,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			TaskProcessor.Tick60.Tasks -= RunTick60;
 			TaskProcessor.Tick100.Tasks -= RunTick100;
 
-			if (Block.Block != null)
+			if (Block?.Block != null)
 				Block.Block.IsWorkingChanged -= WorkingChanged;
 
 		}

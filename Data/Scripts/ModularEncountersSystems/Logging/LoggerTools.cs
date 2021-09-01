@@ -466,6 +466,10 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Surface Underwater:              ").Append(environment.IsOnPlanet ? environment.SurfaceIsUnderWater.ToString() : "N/A").AppendLine();
 			sb.Append(" - Air Travel Viability Ratio:      ").Append(environment.IsOnPlanet ? (Math.Round(environment.AirTravelViabilityRatio, 3)).ToString() : "N/A").AppendLine();
 			sb.Append(" - Water Coverage Ratio:            ").Append(environment.IsOnPlanet ? (Math.Round(environment.WaterInSurroundingAreaRatio, 3)).ToString() : "N/A").AppendLine().AppendLine();
+			sb.Append(" - Inside Nebula:                   ").Append(environment.InsideNebula).AppendLine();
+			sb.Append(" - Nebula Density:                  ").Append(environment.NebulaDensity).AppendLine();
+			sb.Append(" - Nebula Material:                 ").Append(environment.NebulaMaterial).AppendLine();
+			sb.Append(" - Nebula Weather:                  ").Append(environment.NebulaWeather).AppendLine();
 
 			sb.Append(" - Space Cargo Ship Eligible:       ").Append(environment.SpaceCargoShipsEligible).AppendLine();
 			sb.Append(" - Lunar Cargo Ship Eligible:       ").Append(environment.LunarCargoShipsEligible).AppendLine();

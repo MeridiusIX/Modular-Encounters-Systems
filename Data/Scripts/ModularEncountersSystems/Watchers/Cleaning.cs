@@ -78,7 +78,7 @@ namespace ModularEncountersSystems.Watchers {
 				var config = Settings.GetConfig(type);
 				var data = GridCleanupData.GetData(grid);
 
-				if (config == null || data == null) {
+				if (config == null || data == null || !config.UseCleanupSettings) {
 
 					continue;
 				

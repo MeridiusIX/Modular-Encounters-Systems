@@ -57,6 +57,10 @@ namespace ModularEncountersSystems.API {
         public static bool WaterMod = false;
         private static ulong _waterModSteamId = 2200451495;
 
+        //Nebula Mod
+        public static bool NebulaMod = false;
+        private static ulong _nebulaModSteamId = 2200451495;
+
         //Defense Shields
         public static bool DefenseShields = false;
         private static ulong _defenseShieldsSteamId = 1365616918;

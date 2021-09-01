@@ -179,6 +179,13 @@ namespace ModularEncountersSystems.BlockLogic {
 
             }
 
+            if (block.Block as IMyGyro != null) {
+
+                LogicBlocks.Add(block.Block.EntityId, new NpcGyro(block));
+                return;
+
+            }
+
         }
 
         public static void Unload() {

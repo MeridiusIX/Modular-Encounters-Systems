@@ -51,6 +51,13 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+			//Gyro Settings
+			if (profile.SetNpcGyroscopeMultiplier) {
+
+				StorageTools.ApplyCustomGridStorage(cubeGrid, StorageTools.NpcGyroDataKey, profile.NpcGyroscopeMultiplier.ToString());
+
+			}
+
 			if (profile.AttachModStorageComponentToGrid == true) {
 
 				SpawnLogger.Write("Assigning ModStorageComponent", SpawnerDebugEnum.Manipulation);

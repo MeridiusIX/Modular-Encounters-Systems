@@ -430,22 +430,33 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				sb.Append("Block Name: ").Append(def.DisplayNameText).AppendLine();
-				sb.Append("Block ID:   ").Append(def.Id.ToString()).AppendLine();
+				sb.Append("Block Name:           ").Append(def.DisplayNameText).AppendLine();
+				sb.Append("Block ID:             ").Append(def.Id.ToString()).AppendLine();
 
 				if (def.Context?.ModId != null) {
 
 					if (string.IsNullOrWhiteSpace(def.Context.ModId) == false) {
 
-						sb.Append("Mod ID:     ").Append(def.Context.ModId).AppendLine();
+						sb.Append("Mod ID:               ").Append(def.Context.ModId).AppendLine();
 
 					}
 
 				}
+				
+				sb.Append("Is Public:            ").Append(def.Public.ToString()).AppendLine();
+				sb.Append("Size:                 ").Append(def.CubeSize.ToString()).AppendLine();
 
-				sb.Append("Is Public:  ").Append(def.Public.ToString()).AppendLine();
-				sb.Append("Size:       ").Append(def.CubeSize.ToString()).AppendLine();
-				sb.Append("Is Weapon:  ").Append(WeaponBlockIDs.Contains(def.Id)).AppendLine();
+				if (BlockManager.AllWeaponCoreBlocks.Contains(def.Id)) {
+
+					sb.Append("Is WeaponCore Static: ").Append(BlockManager.AllWeaponCoreGuns.Contains(def.Id)).AppendLine();
+					sb.Append("Is WeaponCore Turret: ").Append(BlockManager.AllWeaponCoreTurrets.Contains(def.Id)).AppendLine();
+
+
+				} else {
+
+					sb.Append("Is Weapon:            ").Append(WeaponBlockIDs.Contains(def.Id)).AppendLine();
+
+				}
 
 				sb.AppendLine();
 

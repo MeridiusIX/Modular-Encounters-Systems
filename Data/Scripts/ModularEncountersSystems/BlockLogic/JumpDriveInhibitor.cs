@@ -216,7 +216,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			foreach (var block in _blocksInRange) {
 
-				if (block.ActiveEntity())
+				if (block != null && block.ActiveEntity() && block.FunctionalBlock != null)
 					block.FunctionalBlock.EnabledChanged -= EnableChanged;
 
 

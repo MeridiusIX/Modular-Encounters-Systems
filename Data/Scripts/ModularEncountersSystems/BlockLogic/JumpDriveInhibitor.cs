@@ -214,11 +214,13 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			}
 
+			if (_blocksInRange == null)
+				return;
+
 			foreach (var block in _blocksInRange) {
 
 				if (block != null && block.ActiveEntity() && block.FunctionalBlock != null)
 					block.FunctionalBlock.EnabledChanged -= EnableChanged;
-
 
 			}
 		

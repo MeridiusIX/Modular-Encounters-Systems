@@ -730,7 +730,7 @@ namespace ModularEncountersSystems.Sync {
 			}
 
 			//GetVersion
-			if (array[2] == "GetThreatScore") {
+			if (array[2] == "GetVersion") {
 
 				Mode = ChatMsgMode.ReturnMessage;
 				ReturnMessage = "Mod Version: " + MES_SessionCore.ModVersion;

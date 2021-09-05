@@ -1200,15 +1200,15 @@ namespace ModularEncountersSystems.Spawning {
 
 				var zoneCondition = conditions.ZoneConditions[i];
 
+				if (!zoneRequirement && !string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
+					zoneRequirement = true;
+
 				for (int j = 0; j < ZoneManager.ActiveZones.Count; j++) {
 
 					var zone = ZoneManager.ActiveZones[j];
 
 					if (!zone.Persistent)
 						continue;
-
-					if (!zoneRequirement && !string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
-						zoneRequirement = true;
 
 					if (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && zone.PublicName != zoneCondition.ZoneName)
 						continue;

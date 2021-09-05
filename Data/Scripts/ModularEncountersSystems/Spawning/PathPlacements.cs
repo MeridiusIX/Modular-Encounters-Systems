@@ -1012,7 +1012,7 @@ namespace ModularEncountersSystems.Spawning {
 					var upDir = environment.NearestPlanet.UpAtPosition(coords);
 					var perp = VectorHelper.RandomPerpendicular(upDir);
 					var roughCoords = environment.NearestPlanet.SurfaceCoordsAtPosition(perp * randDist + coords);
-					var upRough = environment.NearestPlanet.UpAtPosition(upDir);
+					var upRough = environment.NearestPlanet.UpAtPosition(roughCoords);
 					var upDist = MathTools.RandomBetween(Settings.BossEncounters.MinSpawnDistFromCoords, Settings.BossEncounters.MaxSpawnDistFromCoords);
 					var coordsCandidate = upRough * upDist + roughCoords;
 
@@ -1029,6 +1029,7 @@ namespace ModularEncountersSystems.Spawning {
 				} else {
 
 					SpawnLogger.Write("Unidentified Boss SpawnType For Path", SpawnerDebugEnum.Pathing);
+					continue;
 				
 				}
 

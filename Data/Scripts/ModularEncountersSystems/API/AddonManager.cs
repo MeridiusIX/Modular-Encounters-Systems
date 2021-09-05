@@ -72,8 +72,8 @@ namespace ModularEncountersSystems.API {
 
         //AiEnabled
         public static bool AiEnabled = false;
-        private static ulong _aiEnabledSteamId = 2408831996;
-
+        private static ulong _aiEnabledDevSteamId = 2408831996;
+        private static ulong _aiEnabledSteamId = 2592663531;
         //Energy Shields
         public static bool EnergyShields = false;
         private static ulong _energyShieldsSteamId = 484504816;
@@ -189,7 +189,7 @@ namespace ModularEncountersSystems.API {
                 }
 
                 //AiEnabled
-                if (id == _aiEnabledSteamId) {
+                if (id == _aiEnabledSteamId || id == _aiEnabledDevSteamId) {
 
                     SpawnLogger.Write("AiEnabled Mod Detected", SpawnerDebugEnum.Startup);
                     AiEnabled = true;

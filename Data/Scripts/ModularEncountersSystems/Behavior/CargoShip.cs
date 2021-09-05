@@ -399,6 +399,8 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Current Waypoint Is Despawn: ").Append(_waypointIsDespawn).AppendLine();
 			sb.Append(" - Total Waypoints:             ").Append(_behavior.AutoPilot.State.CargoShipWaypoints.Count).AppendLine();
 			sb.Append(" - Custom Waypoints:            ").Append(CustomWaypoints.Count).AppendLine();
+			sb.Append(" - Distance To Waypoint:        ").Append(GetDistanceToWaypoint()).AppendLine();
+			sb.Append(" - Arrived At Waypoint:         ").Append(ArrivedAtWaypoint()).AppendLine();
 			sb.AppendLine();
 			return sb.ToString();
 

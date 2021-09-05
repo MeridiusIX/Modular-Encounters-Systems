@@ -1012,13 +1012,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && actions.BotSpawnProfileNames.Count > 0) {
+			if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && APIs.AiEnabled.Valid && actions.BotSpawnProfileNames.Count > 0) {
 
-				MyVisualScriptLogicProvider.ShowNotificationToAll("Attempting To Add Bots", 3000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Attempting To Add Bots", 3000);
 
 				var list = APIs.AiEnabled.GetAvailableGridNodes(_behavior.CurrentGrid.CubeGrid as MyCubeGrid, actions.BotCount, RemoteControl.WorldMatrix.Up, actions.OnlySpawnBotsInPressurizedRooms);
 
-				MyVisualScriptLogicProvider.ShowNotificationToAll("Node Count: " + list.Count, 3000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Node Count: " + list.Count, 3000);
 
 				for (int i = 0; i < actions.BotCount; i++) {
 
@@ -1038,10 +1038,40 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						if (character != null) {
 
-							var botIdentity = character.ControllerInfo.ControllingIdentityId;
-							var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(botIdentity);
-							MyVisualScriptLogicProvider.SetPlayersFaction(botIdentity, faction?.Tag ?? "");
-							MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Added To Grid", 3000);
+							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Added To Grid", 3000);
+
+							var botIdentity = character?.ControllerInfo?.ControllingIdentityId ?? 0;
+							
+
+							if (botIdentity != 0) {
+
+								var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(RemoteControl.OwnerId);
+
+								if (faction != null) {
+
+									var result = MyVisualScriptLogicProvider.SetPlayersFaction(botIdentity, faction?.Tag ?? "");
+
+									if (result) {
+									
+										//NA				
+									
+									} else {
+
+										//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Adding To Grid Faction Has Failed", 3000);
+
+									}
+
+								} else {
+
+									//MyVisualScriptLogicProvider.ShowNotificationToAll("Grid Does Not Have Faction", 3000);
+
+								}
+
+							} else {
+
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Doesn't Have Identity Id in [character.ControllerInfo.ControllingIdentityId]", 3000);
+
+							}
 
 							if (character.Physics != null && _behavior.CurrentGrid.CubeGrid.Physics != null) {
 
@@ -1051,13 +1081,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						} else {
 
-							MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Failed", 3000);
+							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Failed", 3000);
 
 						}
 
 					} else {
 
-						MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Profile Not Found: " + botProfileName, 3000);
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Profile Not Found: " + botProfileName, 3000);
 
 					}
 
@@ -1065,7 +1095,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				MyVisualScriptLogicProvider.ShowNotificationToAll("Add Bots Done", 3000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Add Bots Done", 3000);
 
 			}
 

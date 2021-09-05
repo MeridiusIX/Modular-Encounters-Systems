@@ -135,10 +135,17 @@ namespace ModularEncountersSystems.BlockLogic {
 			_physicsActive = false;
 			_isValid = false;
 
-			TaskProcessor.Tick1.Tasks -= RunTick1;
-			TaskProcessor.Tick10.Tasks -= RunTick10;
-			TaskProcessor.Tick60.Tasks -= RunTick60;
-			TaskProcessor.Tick100.Tasks -= RunTick100;
+			if(TaskProcessor.Tick1?.Tasks != null)
+				TaskProcessor.Tick1.Tasks -= RunTick1;
+
+			if (TaskProcessor.Tick10?.Tasks != null)
+				TaskProcessor.Tick10.Tasks -= RunTick10;
+
+			if (TaskProcessor.Tick60?.Tasks != null)
+				TaskProcessor.Tick60.Tasks -= RunTick60;
+
+			if (TaskProcessor.Tick100?.Tasks != null)
+				TaskProcessor.Tick100.Tasks -= RunTick100;
 
 			if (Block?.Block != null)
 				Block.Block.IsWorkingChanged -= WorkingChanged;

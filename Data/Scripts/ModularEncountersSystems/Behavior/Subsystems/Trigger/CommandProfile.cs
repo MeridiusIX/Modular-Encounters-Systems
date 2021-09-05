@@ -38,6 +38,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SendTargetEntityId = false;
 			SendDamagerEntityId = false;
 			SendWaypoint = false;
+			SendGridValue = false;
 
 			TransmissionType = CommandTransmissionType.None;
 

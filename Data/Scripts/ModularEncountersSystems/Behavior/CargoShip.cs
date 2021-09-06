@@ -184,7 +184,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				}
 
-				if (!_waypointIsDespawn && _lastCoords != coords) {
+				if ((!_waypointIsDespawn && _lastCoords != coords) || (coords != Vector3D.Zero && _behavior.AutoPilot.State.InitialWaypoint == Vector3D.Zero)) {
 
 					_behavior.AutoPilot.SetInitialWaypoint(coords);
 					_lastCoords = coords;
@@ -285,7 +285,7 @@ namespace ModularEncountersSystems.Behavior {
 
 		private double GetDistanceToWaypoint() {
 
-			if (_behavior.AutoPilot.CurrentPlanet != null && _waypointIsDespawn) {
+			if (_behavior.AutoPilot.CurrentPlanet?.Planet != null && _behavior.AutoPilot.UpDirectionFromPlanet != Vector3D.Zero && _waypointIsDespawn) {
 
 				var despawnUp = Vector3D.Normalize(_behavior.AutoPilot.State.InitialWaypoint - _behavior.AutoPilot.CurrentPlanet.Center());
 				var mySeaLevel = _behavior.AutoPilot.UpDirectionFromPlanet * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
@@ -399,8 +399,27 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Current Waypoint Is Despawn: ").Append(_waypointIsDespawn).AppendLine();
 			sb.Append(" - Total Waypoints:             ").Append(_behavior.AutoPilot.State.CargoShipWaypoints.Count).AppendLine();
 			sb.Append(" - Custom Waypoints:            ").Append(CustomWaypoints.Count).AppendLine();
+
+			if (_cargoShipWaypoint.Valid) {
+
+				sb.Append(" - Waypoint:                    ").Append(_cargoShipWaypoint.GetCoords()).AppendLine();
+
+			}
+
 			sb.Append(" - Distance To Waypoint:        ").Append(GetDistanceToWaypoint()).AppendLine();
 			sb.Append(" - Arrived At Waypoint:         ").Append(ArrivedAtWaypoint()).AppendLine();
+			
+			if (_behavior.AutoPilot.CurrentPlanet != null) {
+
+				var despawnUp = Vector3D.Normalize(_behavior.AutoPilot.State.InitialWaypoint - _behavior.AutoPilot.CurrentPlanet.Center());
+				var mySeaLevel = _behavior.AutoPilot.UpDirectionFromPlanet * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
+				var despawnSeaLevel = despawnUp * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
+				sb.Append(" - Planet AvgRadius Distance:   ").Append(_behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius).AppendLine();
+				sb.Append(" - Position At AvgRadius:       ").Append(mySeaLevel).AppendLine();
+				sb.Append(" - Despawn Coords At AvgRadius: ").Append(despawnSeaLevel).AppendLine();
+
+			}
+
 			sb.AppendLine();
 			return sb.ToString();
 

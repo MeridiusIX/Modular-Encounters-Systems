@@ -134,6 +134,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(38)]
 		public List<string> WeatherTypes;
 
+		[ProtoMember(39)]
+		public string ZoneName;
+
 		[ProtoIgnore]
 		public GridEntity JumpedGrid;
 
@@ -195,6 +198,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			DespawnTypeFromSpawner = "";
 
 			WeatherTypes = new List<string>();
+
+			ZoneName = "";
 
 			ProfileSubtypeId = "";
 
@@ -585,6 +590,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[WeatherTypes:") == true) {
 
 						TagParse.TagStringListCheck(tag, ref WeatherTypes);
+
+					}
+
+					//ZoneName
+					if (tag.Contains("[ZoneName:") == true) {
+
+						TagParse.TagStringCheck(tag, ref ZoneName);
 
 					}
 

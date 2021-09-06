@@ -230,6 +230,41 @@ namespace ModularEncountersSystems.API {
             APIs.WeaponCore.GetAllCoreTurrets(BlockManager.AllWeaponCoreTurrets);
             APIs.WeaponCore.GetAllCoreStaticLaunchers(BlockManager.AllWeaponCoreGuns);
 
+            if (BlockManager.AllWeaponCoreBlocks.Count > 0) {
+
+                if (BlockManager.AllWeaponCoreTurrets.Count == 0 || BlockManager.AllWeaponCoreGuns.Count == 0) {
+
+                    foreach (var weapon in BlockManager.AllWeaponCoreBlocks) {
+
+                        foreach (var definition in APIs.WeaponCore.WeaponDefinitions) {
+
+                            var list = BlockManager.AllWeaponCoreTurrets;
+
+                            if (!definition.HardPoint.Ai.TurretAttached)
+                                list = BlockManager.AllWeaponCoreGuns;
+
+                            if (definition.Assignments.MountPoints.Length > 0) {
+
+                                if (definition.Assignments.MountPoints[0].SubtypeId != weapon.SubtypeName)
+                                    continue;
+
+                                if(!list.Contains(weapon))
+                                    list.Add(weapon);
+
+                                break;
+
+                            }
+                        
+                        }
+
+                    }
+                
+                }
+
+
+
+            }
+
         }
 
     }

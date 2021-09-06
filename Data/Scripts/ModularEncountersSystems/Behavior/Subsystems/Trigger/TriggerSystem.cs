@@ -338,6 +338,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+				//InsideZone
+				if (trigger.Type == "InsideZone") {
+
+					trigger.ActivateTrigger(InsideZone);
+					continue;
+
+				}
+
+				//OutsideZone
+				if (trigger.Type == "OutsideZone") {
+
+					trigger.ActivateTrigger(OutsideZone);
+					continue;
+
+				}
+
 			}
 
 			_behavior.BehaviorTriggerA = false;

@@ -642,8 +642,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			sb.Append(" - Current Profile:                    ").Append(Data.ProfileSubtypeId).AppendLine();
 			sb.Append(" - Speed:                              ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
 			sb.Append(" - Altitude:                           ").Append(MyAltitude.ToString()).AppendLine();
+			sb.Append(" - Position:                           ").Append(_remoteControl.GetPosition().ToString()).AppendLine();
+			sb.Append(" - Initial Waypoint:                   ").Append(_initialWaypoint.ToString()).AppendLine();
+			sb.Append(" - Current Waypoint:                   ").Append(_currentWaypoint.ToString()).AppendLine();
 			sb.Append(" - Distance To Initial Waypoint:       ").Append(Vector3D.Distance(_initialWaypoint, _remoteControl.GetPosition())).AppendLine();
 			sb.Append(" - Distance To Current Waypoint:       ").Append(Vector3D.Distance(_currentWaypoint, _remoteControl.GetPosition())).AppendLine();
+			sb.Append(" - Distance From Initial To Current:   ").Append(Vector3D.Distance(_currentWaypoint, _initialWaypoint)).AppendLine();
 			sb.Append(" - Angle To Initial Waypoint:          ").Append(VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(_remoteControl.WorldMatrix.Forward), Vector3D.Normalize(_initialWaypoint - _remoteControl.GetPosition()))).AppendLine();
 			sb.Append(" - Angle To Current Waypoint:          ").Append(VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(_remoteControl.WorldMatrix.Forward), Vector3D.Normalize(_currentWaypoint - _remoteControl.GetPosition()))).AppendLine();
 			sb.Append(" - Velocity Angle To Initial Waypoint: ").Append(VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(MyVelocity), Vector3D.Normalize(_initialWaypoint - _remoteControl.GetPosition()))).AppendLine();

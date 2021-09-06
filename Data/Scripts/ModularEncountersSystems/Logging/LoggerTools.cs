@@ -460,16 +460,19 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Is Night At Position:            ").Append(environment.IsOnPlanet ? environment.IsNight.ToString() : "N/A").AppendLine();
 			sb.Append(" - Weather At Position:             ").Append(environment.IsOnPlanet && !string.IsNullOrWhiteSpace(environment.WeatherAtPosition) ? environment.WeatherAtPosition.ToString() : "N/A").AppendLine();
 			sb.Append(" - Common Terrain At Position:      ").Append(environment.IsOnPlanet ? environment.CommonTerrainAtPosition.ToString() : "N/A").AppendLine();
+			sb.Append(" - Air Travel Viability Ratio:      ").Append(environment.IsOnPlanet ? (Math.Round(environment.AirTravelViabilityRatio, 3)).ToString() : "N/A").AppendLine().AppendLine();
+
 			sb.Append(" - Water Mod Enabled:               ").Append(AddonManager.WaterMod).AppendLine();
 			sb.Append(" - Planet Has Water:                ").Append(environment.IsOnPlanet ? environment.PlanetHasWater.ToString() : "N/A").AppendLine();
 			sb.Append(" - Position Underwater:             ").Append(environment.IsOnPlanet ? environment.PositionIsUnderWater.ToString() : "N/A").AppendLine();
 			sb.Append(" - Surface Underwater:              ").Append(environment.IsOnPlanet ? environment.SurfaceIsUnderWater.ToString() : "N/A").AppendLine();
-			sb.Append(" - Air Travel Viability Ratio:      ").Append(environment.IsOnPlanet ? (Math.Round(environment.AirTravelViabilityRatio, 3)).ToString() : "N/A").AppendLine();
 			sb.Append(" - Water Coverage Ratio:            ").Append(environment.IsOnPlanet ? (Math.Round(environment.WaterInSurroundingAreaRatio, 3)).ToString() : "N/A").AppendLine().AppendLine();
+
+			sb.Append(" - Nebula Mod Enabled:              ").Append(AddonManager.NebulaMod).AppendLine();
 			sb.Append(" - Inside Nebula:                   ").Append(environment.InsideNebula).AppendLine();
 			sb.Append(" - Nebula Density:                  ").Append(environment.NebulaDensity).AppendLine();
 			sb.Append(" - Nebula Material:                 ").Append(environment.NebulaMaterial).AppendLine();
-			sb.Append(" - Nebula Weather:                  ").Append(environment.NebulaWeather).AppendLine();
+			sb.Append(" - Nebula Weather:                  ").Append(environment.NebulaWeather).AppendLine().AppendLine();
 
 			sb.Append(" - Space Cargo Ship Eligible:       ").Append(environment.SpaceCargoShipsEligible).AppendLine();
 			sb.Append(" - Lunar Cargo Ship Eligible:       ").Append(environment.LunarCargoShipsEligible).AppendLine();

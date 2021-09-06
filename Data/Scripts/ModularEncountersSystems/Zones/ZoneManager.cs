@@ -399,6 +399,29 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
+		public static bool InsideZoneWithName(Vector3D coords, string zoneName) {
+
+			bool result = false;
+
+			for (int i = ActiveZones.Count - 1; i >= 0; i--) {
+
+				var zone = ActiveZones[i];
+
+				if (zone.PublicName != zoneName)
+					continue;
+
+				if (!zone.PositionInsideZone(coords))
+					continue;
+
+				result = true;
+				break;
+
+			}
+
+			return result;
+		
+		}
+
 		public static void Unload() {
 		
 			

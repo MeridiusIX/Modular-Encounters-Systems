@@ -222,6 +222,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+		//InsideZone
+		public bool InsideZone(TriggerProfile trigger) {
+
+			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName);
+
+		}
+
+		//OutsideZone
+		public bool OutsideZone(TriggerProfile trigger) {
+
+			return !ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName);
+
+		}
+
 	}
 
 }

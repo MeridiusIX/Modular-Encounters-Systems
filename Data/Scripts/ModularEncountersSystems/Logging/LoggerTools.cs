@@ -8,6 +8,7 @@ using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
+using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -421,6 +422,29 @@ namespace ModularEncountersSystems.Logging {
 
 				sb.Append("::: Detected Errors :::").AppendLine();
 				sb.Append(errors).AppendLine();
+				sb.AppendLine();
+
+			}
+
+			return sb.ToString();
+		
+		}
+
+		public static string GetItemPrices(ChatMessage msg) {
+
+			var sb = new StringBuilder();
+
+			foreach (var item in EconomyHelper.MinimumValuesMaster.Keys/*.OrderBy(x => x)*/) {
+
+				MyPhysicalItemDefinition itemDef = null;
+
+				if (!DefinitionHelper.AllItemDefinitions.TryGetValue(item, out itemDef))
+					continue;
+
+				sb.Append("Item Name:   ").Append(itemDef.DisplayNameText != null ? itemDef.DisplayNameText : "(Unnamed)").AppendLine();
+				sb.Append("Item Id:     ").Append(item).AppendLine();
+				sb.Append("Item Value:  ").Append(EconomyHelper.MinimumValuesMaster[item]).AppendLine();
+				sb.Append("Item Source: ").Append(itemDef.Context?.ModName != null ? itemDef.Context.ModName : "None").AppendLine();
 				sb.AppendLine();
 
 			}

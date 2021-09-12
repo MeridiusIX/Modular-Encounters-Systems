@@ -244,6 +244,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						}
 
+						if (!Triggered) {
+
+							BehaviorLogger.Write(ProfileSubtypeId + ": Condition Profile Not Satisfied", BehaviorDebugEnum.Trigger);
+
+						}
+
 					} else {
 
 						BehaviorLogger.Write(ProfileSubtypeId + ": Trigger Cooldown Satisfied. Trigger Activated: " + Type, BehaviorDebugEnum.Trigger);
@@ -267,6 +273,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						BehaviorLogger.Write(ProfileSubtypeId + ": Trigger Conditions Satisfied. Trigger Activated: " + Type, BehaviorDebugEnum.Trigger);
 						Triggered = true;
+
+					}
+
+					if (!Triggered) {
+
+						BehaviorLogger.Write(ProfileSubtypeId + ": Condition Profile Not Satisfied", BehaviorDebugEnum.Trigger);
 
 					}
 

@@ -20,7 +20,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ProfileSubtypeId = "";
 
 			BotType = "";
-			UseAiEnabled = false;
+			UseAiEnabled = true;
 			BotBehavior = "Default";
 			BotDisplayName = "";
 			Color = new Vector3D();

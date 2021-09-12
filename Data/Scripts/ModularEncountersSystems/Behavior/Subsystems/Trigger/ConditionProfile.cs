@@ -860,9 +860,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				usedConditions++;
 
-				if (_behavior.AutoPilot.CurrentPlanet != null)
-					if ((MinAltitude == -1 || _behavior.AutoPilot.MyAltitude > MinAltitude) && (MaxAltitude == -1 || _behavior.AutoPilot.MyAltitude < MaxAltitude))
+				if (_behavior.AutoPilot.CurrentPlanet != null) {
+
+					if ((MinAltitude == -1 || _behavior.AutoPilot.MyAltitude > MinAltitude) && (MaxAltitude == -1 || _behavior.AutoPilot.MyAltitude < MaxAltitude)) {
+
 						satisfiedConditions++;
+
+					} else {
+
+						BehaviorLogger.Write("Altitude Check Failed. Current Altitude: " + _behavior.AutoPilot.MyAltitude, BehaviorDebugEnum.Condition);
+
+					}
+
+				} else {
+
+					BehaviorLogger.Write("Altitude Check Failed, Not On Planet", BehaviorDebugEnum.Condition);
+
+				}
+					
 
 			}
 

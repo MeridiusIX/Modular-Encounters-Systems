@@ -17,8 +17,13 @@ namespace ModularEncountersSystems.Helpers {
 		public static string[] ProcessTag(string tag) {
 
 			var thisTag = tag.Trim();
-			thisTag = thisTag.Replace("[", "");
-			thisTag = thisTag.Replace("]", "");
+
+			if (thisTag.Length > 0 && thisTag[0] == '[')
+				thisTag = thisTag.Remove(0, 1);
+
+			if (thisTag.Length > 0 && thisTag[thisTag.Length - 1] == ']')
+				thisTag = thisTag.Remove(thisTag.Length - 1, 1);
+
 			var tagSplit = thisTag.Split(':');
 			string a = "";
 			string b = "";

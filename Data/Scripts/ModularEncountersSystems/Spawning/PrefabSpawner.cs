@@ -164,6 +164,8 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.InitialFaction = faction;
 				npcData.PrefabSpeed = sgPrefab.Speed;
 				npcData.SpawnedByMES = true;
+				npcData.ConditionIndex = spawnCollection.ConditionsIndex;
+				npcData.ZoneIndex = spawnCollection.ZoneIndex;
 
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathStartAltitude);

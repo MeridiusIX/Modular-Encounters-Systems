@@ -91,6 +91,19 @@ namespace ModularEncountersSystems.Spawning {
 					if (character != null) {
 
 						SpawnLogger.Write(string.Format("AiEnabled Character Spawning: {0}", botId), SpawnerDebugEnum.Spawning);
+						var botIdentity = character?.ControllerInfo?.ControllingIdentityId ?? 0;
+
+						if (botIdentity != 0) {
+
+							var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction((long)owner);
+
+							if (faction != null) {
+
+								var result = MyVisualScriptLogicProvider.SetPlayersFaction(botIdentity, faction?.Tag ?? "");
+
+							}
+
+						}
 
 					} else {
 
@@ -176,6 +189,7 @@ namespace ModularEncountersSystems.Spawning {
 					spawnGroup.SpawnConditionsProfiles[0].MaxCreatureCount = planet.AnimalSpawnInfo.WaveCountMax;
 					spawnGroup.SpawnConditionsProfiles[0].MinCreatureDistance = (int)planet.AnimalSpawnInfo.SpawnDistMin;
 					spawnGroup.SpawnConditionsProfiles[0].MaxCreatureDistance = (int)planet.AnimalSpawnInfo.SpawnDistMax;
+					spawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPID";
 					spawnGroup.SpawnGroup = dummyGroup;
 					spawnGroup.SpawnConditionsProfiles[0].PlanetWhitelist.Add(planet.Id.SubtypeName);
 					spawnGroup.Frequency = 30;
@@ -199,6 +213,7 @@ namespace ModularEncountersSystems.Spawning {
 					spawnGroup.SpawnConditionsProfiles[0].MaxCreatureCount = planet.NightAnimalSpawnInfo.WaveCountMax;
 					spawnGroup.SpawnConditionsProfiles[0].MinCreatureDistance = (int)planet.NightAnimalSpawnInfo.SpawnDistMin;
 					spawnGroup.SpawnConditionsProfiles[0].MaxCreatureDistance = (int)planet.NightAnimalSpawnInfo.SpawnDistMax;
+					spawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPID";
 					spawnGroup.SpawnGroup = dummyGroup;
 					spawnGroup.SpawnConditionsProfiles[0].UseDayOrNightOnly = true;
 					spawnGroup.SpawnConditionsProfiles[0].SpawnOnlyAtNight = true;

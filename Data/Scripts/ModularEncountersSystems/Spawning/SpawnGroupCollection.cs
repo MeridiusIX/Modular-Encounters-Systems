@@ -58,7 +58,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			SpawnGroup = null;
 			ConditionsIndex = 0;
-			ZoneIndex = 0;
+			ZoneIndex = -1;
 			Faction = "";
 
 			SpawnGroups = new List<ImprovedSpawnGroup>();

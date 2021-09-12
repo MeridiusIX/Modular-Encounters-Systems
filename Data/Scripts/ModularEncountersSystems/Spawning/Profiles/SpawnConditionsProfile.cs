@@ -60,6 +60,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public bool CreatureSpawn;
 		public List<string> CreatureIds;
+		public bool AiEnabledReady;
 		public bool AiEnabledModBots;
 		public string AiEnabledRole;
 		public int MinCreatureCount;
@@ -237,6 +238,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public Vector3D BossCustomGPSColor;
 		public string BossMusicId;
 
+		public bool PlaySoundAtSpawnTriggerPosition;
+		public string SpawnTriggerPositionSoundId;
+
 		public bool RotateFirstCockpitToForward;
 		public bool PositionAtFirstCockpit;
 		public bool SpawnRandomCargo;
@@ -298,6 +302,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			CreatureSpawn = false;
 			CreatureIds = new List<string>();
 			AiEnabledModBots = false;
+			AiEnabledReady = false;
 			AiEnabledRole = "";
 			MinCreatureCount = 1;
 			MaxCreatureCount = 1;
@@ -452,6 +457,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			BossCustomGPSLabel = "Dangerous Encounter";
 			BossCustomGPSColor = new Vector3D(255, 0, 255);
 			BossMusicId = "";
+
+			PlaySoundAtSpawnTriggerPosition = false;
+			SpawnTriggerPositionSoundId = "";
 
 			RotateFirstCockpitToForward = true;
 			PositionAtFirstCockpit = false;
@@ -722,6 +730,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[AiEnabledModBots:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.AiEnabledModBots);
+
+				}
+
+				//AiEnabledReady
+				if (tag.StartsWith("[AiEnabledReady:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.AiEnabledReady);
 
 				}
 
@@ -1573,6 +1588,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[BossMusicId:") == true) {
 
 					TagParse.TagStringCheck(tag, ref this.BossMusicId);
+
+				}
+
+				//PlaySoundAtSpawnTriggerPosition
+				if (tag.StartsWith("[PlaySoundAtSpawnTriggerPosition:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.PlaySoundAtSpawnTriggerPosition);
+
+				}
+
+				//SpawnTriggerPositionSoundId
+				if (tag.StartsWith("[SpawnTriggerPositionSoundId:") == true) {
+
+					TagParse.TagStringCheck(tag, ref this.SpawnTriggerPositionSoundId);
 
 				}
 

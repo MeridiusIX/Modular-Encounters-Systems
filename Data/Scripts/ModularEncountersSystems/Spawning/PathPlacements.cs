@@ -1407,11 +1407,20 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static MatrixD CalculateDerelictSpawnMatrix(MatrixD existingMatrix, Vector3D rotationValues) {
+		public static MatrixD CalculateDerelictSpawnMatrix(MatrixD existingMatrix, Vector3D providedRotationValues) {
 
 			//X: Pitch - Up/Forward | +Up -Down
 			//Y: Yaw   - Forward/Up | +Right -Left
 			//Z: Roll  - Up/Forward | +Right -Left
+			var rotationValues = providedRotationValues;
+
+			if (rotationValues.X == 100 && rotationValues.Y == 100 && rotationValues.Z == 100) {
+
+				rotationValues.X = MathTools.RandomBetween(-100, 110) / 10;
+				rotationValues.Y = MathTools.RandomBetween(-100, 110) / 10;
+				rotationValues.Z = MathTools.RandomBetween(-100, 110) / 10;
+
+			}
 
 			var resultMatrix = existingMatrix;
 

@@ -260,6 +260,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			
 		}
 
+		public Vector3D GetRetreatCoords() {
+
+			if (_behavior.AutoPilot.InGravity() && _behavior.AutoPilot.Data.UseVerticalRetreat)
+				return _behavior.AutoPilot.UpDirectionFromPlanet * 1000 + _behavior.RemoteControl.GetPosition();
+
+			return VectorHelper.GetDirectionAwayFromTarget(_behavior.RemoteControl.GetPosition(), _behavior.Despawn.NearestPlayer.GetPosition()) * 1000 + _behavior.RemoteControl.GetPosition();
+
+
+
+		}
+
 		public void DespawnGrid() {
 
 			if (_behavior.CurrentGrid != null) {

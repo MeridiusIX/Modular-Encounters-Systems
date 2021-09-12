@@ -260,6 +260,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		[ProtoMember(80)]
 		public BoolEnum UseVelocityCollisionEvasion;
 
+		[ProtoMember(81)]
+		public bool UseVerticalRetreat;
+
 		public AutoPilotProfile() {
 
 			ProfileSubtypeId = "";
@@ -365,6 +368,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			HoverPathStepDistance = 50;
 
 			MaxVerticalSpeed = -1;
+
+			UseVerticalRetreat = false;
 
 			UseVelocityCollisionEvasion = BoolEnum.True;
 
@@ -953,6 +958,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[UseVelocityCollisionEvasion:") == true) {
 
 				TagParse.TagBoolEnumCheck(tag, ref UseVelocityCollisionEvasion);
+
+			}
+
+			//UseVerticalRetreat
+			if (tag.Contains("[UseVerticalRetreat:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref UseVerticalRetreat);
 
 			}
 

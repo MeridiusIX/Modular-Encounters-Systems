@@ -91,6 +91,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(27)]
 		public short FailedAttempts;
 
+		[ProtoMember(28)]
+		public bool ProcessAsAdminSpawn;
+
 		[ProtoIgnore]
 		public MatrixD CurrentPositionMatrix;
 
@@ -135,6 +138,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ParentGridNameRequirement = "";
 
 			FailedAttemptsToIncreaseCount = 5;
+
+			ProcessAsAdminSpawn = false;
 
 			CurrentPositionMatrix = MatrixD.Identity;
 			CurrentFactionTag = "";
@@ -397,6 +402,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("FailedAttemptsToIncreaseCount:") == true) {
 
 						TagParse.TagShortCheck(tag, ref FailedAttemptsToIncreaseCount);
+
+					}
+
+					//ProcessAsAdminSpawn
+					if (tag.Contains("[ProcessAsAdminSpawn:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref ProcessAsAdminSpawn);
 
 					}
 

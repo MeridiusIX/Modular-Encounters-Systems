@@ -11,6 +11,7 @@ using VRageMath;
 using ModularEncountersSystems.Logging;
 using Sandbox.ModAPI;
 using ModularEncountersSystems.Helpers;
+using Sandbox.Game;
 
 namespace ModularEncountersSystems.Spawning {
 
@@ -507,6 +508,13 @@ namespace ModularEncountersSystems.Spawning {
 
             //KPL and Zone Increases
             KnownPlayerLocationManager.IncreaseSpawnCountOfLocations(path.StartCoords, spawnGroupCollection.Faction);
+
+            //SpawnSound
+            if (spawnGroupCollection.Conditions != null && spawnGroupCollection.Conditions.PlaySoundAtSpawnTriggerPosition && spawnGroupCollection.Conditions.SpawnTriggerPositionSoundId != null) {
+
+                MyVisualScriptLogicProvider.PlaySingleSoundAtPosition(spawnGroupCollection.Conditions.SpawnTriggerPositionSoundId, environment.Position);
+            
+            }
 
         }
 

@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.API {
         //AiEnabled
         public static bool AiEnabled = false;
         private static ulong _aiEnabledDevSteamId = 2408831996;
-        private static ulong _aiEnabledSteamId = 2592663531;
+        private static ulong _aiEnabledSteamId = 2596208372;
         //Energy Shields
         public static bool EnergyShields = false;
         private static ulong _energyShieldsSteamId = 484504816;
@@ -81,6 +81,10 @@ namespace ModularEncountersSystems.API {
         //Nanobot Build and Repair
         public static bool NanobotBuildAndRepair = false;
         private static ulong _nanobotBuildAndRepairSteamId = 857053359;
+
+        //Aerodynamic Drag
+        public static bool AerodynamicDrag = false;
+        public static ulong _aerodynamicDragSteamId = 571920453;
 
         public static void DetectAddons() {
 
@@ -170,6 +174,15 @@ namespace ModularEncountersSystems.API {
 
                 }
 
+                //Water Mod
+                if (id == _nebulaModSteamId) {
+
+                    SpawnLogger.Write("Nebula Mod Detected", SpawnerDebugEnum.Startup);
+                    NebulaMod = true;
+                    continue;
+
+                }
+
                 //Defense Shields
                 if (id == _defenseShieldsSteamId) {
 
@@ -211,6 +224,15 @@ namespace ModularEncountersSystems.API {
 
                     SpawnLogger.Write("Nanobots Build and Repair Mod Detected", SpawnerDebugEnum.Startup);
                     NanobotBuildAndRepair = true;
+                    continue;
+
+                }
+
+                //Aerodynamic Drag
+                if (id == _aerodynamicDragSteamId) {
+
+                    SpawnLogger.Write("Aerodynamic Drag Mod Detected", SpawnerDebugEnum.Startup);
+                    AerodynamicDrag = true;
                     continue;
 
                 }

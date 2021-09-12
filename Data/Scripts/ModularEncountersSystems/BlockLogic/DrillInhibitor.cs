@@ -160,7 +160,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				if (drill.IsShooting) {
 
-					MyVisualScriptLogicProvider.SetPlayersHealth(MyAPIGateway.Session.LocalHumanPlayer.IdentityId, MyVisualScriptLogicProvider.GetPlayersHealth(MyAPIGateway.Session.LocalHumanPlayer.IdentityId) - 6);
+					MyVisualScriptLogicProvider.SetPlayersHealth(player.Player.IdentityId, MyVisualScriptLogicProvider.GetPlayersHealth(player.Player.IdentityId) - 6);
 
 				}
 
@@ -169,7 +169,7 @@ namespace ModularEncountersSystems.BlockLogic {
 				if (_toolbarIndexes[player] > 8)
 					_toolbarIndexes[player] = 0;
 
-				MyVisualScriptLogicProvider.SwitchToolbarToSlot(_toolbarIndexes[player], MyAPIGateway.Session.LocalHumanPlayer.IdentityId);
+				MyVisualScriptLogicProvider.SwitchToolbarToSlot(_toolbarIndexes[player], player.Player.IdentityId);
 
 			}
 

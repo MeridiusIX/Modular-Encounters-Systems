@@ -694,6 +694,16 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//GetItemPrices
+			if (array[2] == "GetItemPrices") {
+
+				ClipboardPayload = LoggerTools.GetItemPrices(this);
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Item Price Data Sent To Clipboard.";
+				return true;
+
+			}
+
 			//GetLogging
 			if (array[2] == "GetLogging") {
 

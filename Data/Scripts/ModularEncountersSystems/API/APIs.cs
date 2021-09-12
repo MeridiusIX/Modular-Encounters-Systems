@@ -26,6 +26,10 @@ namespace ModularEncountersSystems.API {
         public static RemoteBotAPI AiEnabled;
         public static bool AiEnabledApiLoaded { get { return AiEnabled?.Valid ?? false; } }
 
+        //Aerodynamic Drag
+        public static RemoteDragSettings Drag;
+        public static bool DragApiLoaded { get { return Drag?.Heartbeat ?? false; } }
+
         public static void RegisterAPIs(int phase = 0) {
 
             //Water Mod (LoadData)
@@ -44,6 +48,9 @@ namespace ModularEncountersSystems.API {
 
             if (AddonManager.AiEnabled && phase == 0)
                 AiEnabled = new RemoteBotAPI();
+
+            if (AddonManager.AerodynamicDrag && phase == 0)
+                Drag = new RemoteDragSettings();
 
             //WeaponCore (BeforeStart)
             if (AddonManager.WeaponCore && phase == 2)

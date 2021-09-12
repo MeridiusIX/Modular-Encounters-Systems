@@ -678,6 +678,17 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			if ((spawnTypes.HasFlag(SpawningType.Creature) && conditions.AiEnabledModBots) || conditions.AiEnabledReady) {
+
+				if (!AddonManager.AiEnabled || !APIs.AiEnabled.Valid || !APIs.AiEnabled.CanSpawn) {
+
+					failReason = "   - AiEnabled Bot Cannot Spawn Because AiEnabled Is Not Installed, API is Not Loaded, or AiEnabled Has Not Finished Loading.";
+					return false;
+
+				}
+			
+			}
+
 			if (conditions.UniqueEncounter == true && NpcManager.UniqueGroupsSpawned.Contains(spawnGroup.SpawnGroup.Id.SubtypeName) == true) {
 
 				failReason = "   - SpawnGroup Is Unique Encounter That Already Spawned In This World";
@@ -1207,7 +1218,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					var zone = ZoneManager.ActiveZones[j];
 
-					if (!zone.Persistent)
+					if (!zone.Persistent || !zone.Active || string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
 						continue;
 
 					if (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && zone.PublicName != zoneCondition.ZoneName)
@@ -1296,6 +1307,7 @@ namespace ModularEncountersSystems.Spawning {
 					}
 
 					collection.ActiveZone = zone;
+					collection.ZoneIndex = i;
 					return true;
 
 				}
@@ -1381,103 +1393,123 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (forceSpawn)
-				return resultList;
+			if (!forceSpawn) {
 
-			if (condition.UsePlayerFactionReputation == true) {
+				if (condition.UsePlayerFactionReputation == true) {
 
-				foreach (var faction in factionList.ToList()) {
+					foreach (var faction in factionList.ToList()) {
 
-					if (Settings.General.NpcSpawnGroupBlacklist.Contains(faction.Tag))
-						continue;
+						if (Settings.General.NpcSpawnGroupBlacklist.Contains(faction.Tag))
+							continue;
 
-					bool validFaction = false;
-					bool specificFactionCheck = false;
+						bool validFaction = false;
+						bool specificFactionCheck = false;
 
-					IMyFaction checkFaction = faction;
+						IMyFaction checkFaction = faction;
 
-					if (string.IsNullOrWhiteSpace(condition.CheckReputationAgainstOtherNPCFaction) == false) {
+						if (string.IsNullOrWhiteSpace(condition.CheckReputationAgainstOtherNPCFaction) == false) {
 
-						var factionOvr = MyAPIGateway.Session.Factions.TryGetFactionByTag(condition.CheckReputationAgainstOtherNPCFaction);
+							var factionOvr = MyAPIGateway.Session.Factions.TryGetFactionByTag(condition.CheckReputationAgainstOtherNPCFaction);
 
-						if (factionOvr != null) {
+							if (factionOvr != null) {
 
-							if (FactionHelper.NpcFactionTags.Contains(factionOvr.Tag) == false) {
+								if (FactionHelper.NpcFactionTags.Contains(factionOvr.Tag) == false) {
+
+									continue;
+
+								}
+
+								checkFaction = factionOvr;
+								specificFactionCheck = true;
+
+							}
+
+						}
+
+						foreach (var player in PlayerManager.Players) {
+
+							if (!player.Online)
+								continue;
+
+							if (player.Player.IsBot == true || player.Player.Character == null) {
 
 								continue;
 
 							}
 
-							checkFaction = factionOvr;
-							specificFactionCheck = true;
+							if (player.Distance(coords) > condition.PlayerReputationCheckRadius) {
 
-						}
+								continue;
 
-					}
+							}
 
-					foreach (var player in PlayerManager.Players) {
+							//var playerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(player.IdentityId);
 
-						if (!player.Online)
-							continue;
+							int rep = 0;
+							rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.Player.IdentityId, checkFaction.FactionId);
 
-						if (player.Player.IsBot == true || player.Player.Character == null) {
+							/*
+							if(playerFaction != null) {
 
-							continue;
+								rep = MyAPIGateway.Session.Factions.GetReputationBetweenFactions(playerFaction.FactionId, checkFaction.FactionId);
 
-						}
+							} else {
 
-						if (player.Distance(coords) > condition.PlayerReputationCheckRadius) {
+								rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.IdentityId, checkFaction.FactionId);
 
-							continue;
+							}
+							*/
 
-						}
+							if (rep < condition.MinimumReputation && condition.MinimumReputation > -1501) {
 
-						//var playerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(player.IdentityId);
+								continue;
 
-						int rep = 0;
-						rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.Player.IdentityId, checkFaction.FactionId);
+							}
 
-						/*
-						if(playerFaction != null) {
+							if (rep > condition.MaximumReputation && condition.MaximumReputation < 1501) {
 
-							rep = MyAPIGateway.Session.Factions.GetReputationBetweenFactions(playerFaction.FactionId, checkFaction.FactionId);
+								continue;
 
-						} else {
+							}
 
-							rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.IdentityId, checkFaction.FactionId);
-
-						}
-						*/
-
-						if (rep < condition.MinimumReputation && condition.MinimumReputation > -1501) {
-
-							continue;
-
-						}
-
-						if (rep > condition.MaximumReputation && condition.MaximumReputation < 1501) {
-
-							continue;
-
-						}
-
-						validFaction = true;
-						break;
-
-					}
-
-					if (validFaction == false) {
-
-						factionList.Remove(faction);
-
-						if (specificFactionCheck == true) {
-
-							factionList.Clear();
+							validFaction = true;
 							break;
 
 						}
 
-						continue;
+						if (validFaction == false) {
+
+							factionList.Remove(faction);
+
+							if (specificFactionCheck == true) {
+
+								factionList.Clear();
+								break;
+
+							}
+
+							continue;
+
+						}
+
+					}
+
+				}
+
+				if (condition.ChargeNpcFactionForSpawn) {
+
+					for (int i = factionList.Count - 1; i >= 0; i--) {
+
+						var faction = factionList[i];
+						long cost = 0;
+						var costResult = faction.TryGetBalanceInfo(out cost);
+
+						if (cost > 0 && cost < condition.ChargeForSpawning) {
+
+							factionList.RemoveAt(i);
+							continue;
+
+						}
 
 					}
 
@@ -1485,24 +1517,6 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (condition.ChargeNpcFactionForSpawn) {
-
-				for (int i = factionList.Count - 1; i >= 0; i--) {
-
-					var faction = factionList[i];
-					long cost = 0;
-					var costResult = faction.TryGetBalanceInfo(out cost);
-
-					if (cost > 0 && cost < condition.ChargeForSpawning) {
-
-						factionList.RemoveAt(i);
-						continue;
-
-					}
-
-				}
-
-			}
 
 			foreach (var faction in factionList) {
 

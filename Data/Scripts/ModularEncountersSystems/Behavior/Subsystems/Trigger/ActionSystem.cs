@@ -714,7 +714,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//EnableTriggers
 			if (actions.EnableTriggers) {
 
-				BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Enable Triggers.", BehaviorDebugEnum.Action);
+				BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Enable " + actions.EnableTriggerNames.Count + " Triggers.", BehaviorDebugEnum.Action);
 
 				foreach (var resetTrigger in Triggers) {
 

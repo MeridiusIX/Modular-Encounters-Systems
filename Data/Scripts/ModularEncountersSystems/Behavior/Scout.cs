@@ -138,8 +138,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				if (Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
 
-					//Logger.AddMsg("DespawnCoordsCreated", true);
-					AutoPilot.SetInitialWaypoint(VectorHelper.GetDirectionAwayFromTarget(this.RemoteControl.GetPosition(), Despawn.NearestPlayer.GetPosition()) * 1000 + this.RemoteControl.GetPosition());
+					//_behavior.AutoPilot.SetInitialWaypoint(_behavior.Despawn.GetRetreatCoords());
 
 				}
 

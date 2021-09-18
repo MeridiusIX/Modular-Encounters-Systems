@@ -1706,7 +1706,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			}
 
-			if (this.PlanetaryInstallation == true && setForceStatic == false) {
+			if (this.PlanetaryInstallation == true && !this.InstallationSpawnsOnWaterSurface && setForceStatic == false) {
 
 				this.ForceStaticGrid = true;
 

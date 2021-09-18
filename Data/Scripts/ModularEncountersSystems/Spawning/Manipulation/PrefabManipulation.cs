@@ -329,10 +329,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			//Shield Provider
 			var globalShieldProviderEnabled = (Settings.Grids.EnableGlobalNPCShieldProvider || AddonManager.NpcShieldProvider) && !profile.IgnoreShieldProviderMod;
-			var globalShieldProviderAllowed = globalShieldProviderEnabled && MathTools.RandomBetween(0, 101) > Settings.Grids.ShieldProviderChance;
+			var globalShieldProviderAllowed = globalShieldProviderEnabled && MathTools.RandomBetween(0, 101) <= Settings.Grids.ShieldProviderChance;
 
 			var spawnGroupShieldProviderEnabled = profile.AddDefenseShieldBlocks;
-			var spawnGroupShieldProviderAllowed = spawnGroupShieldProviderEnabled && MathTools.RandomBetween(0, 101) > profile.ShieldProviderChance;
+			var spawnGroupShieldProviderAllowed = spawnGroupShieldProviderEnabled && MathTools.RandomBetween(0, 101) <= profile.ShieldProviderChance;
 
 			if (globalShieldProviderAllowed || spawnGroupShieldProviderAllowed) {
 
@@ -354,10 +354,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			//WeaponRandomization
 			var globalRandomizationEnabled = (Settings.Grids.EnableGlobalNPCWeaponRandomizer || AddonManager.NpcWeaponsUpgrade) && !profile.IgnoreWeaponRandomizerMod;
-			var globalRandomizationAllowed = globalRandomizationEnabled && MathTools.RandomBetween(0, 101) < Settings.Grids.RandomWeaponChance;
+			var globalRandomizationAllowed = globalRandomizationEnabled && MathTools.RandomBetween(0, 101) <= Settings.Grids.RandomWeaponChance;
 
 			var spawnGroupRandomizationEnabled = profile.RandomizeWeapons;
-			var spawnGroupRandomizationAllowed = spawnGroupRandomizationEnabled && MathTools.RandomBetween(0, 101) < profile.RandomWeaponChance;
+			var spawnGroupRandomizationAllowed = spawnGroupRandomizationEnabled && MathTools.RandomBetween(0, 101) <= profile.RandomWeaponChance;
 
 			if (globalRandomizationAllowed || spawnGroupRandomizationAllowed) {
 

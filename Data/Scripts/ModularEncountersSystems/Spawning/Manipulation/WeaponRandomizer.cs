@@ -146,12 +146,12 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					bool isTurret = false;
 					bool isStatic = false;
 
-					if (AllWeaponCoreIDs.Contains(definition.Id)) {
+					if (BlockManager.AllWeaponCoreBlocks.Contains(definition.Id)) {
 
 						weaponBlock = definition as MyCubeBlockDefinition;
 						isWeaponCore = true;
-						isStatic = AllWeaponCoreStaticIDs.Contains(definition.Id);
-						isTurret = AllWeaponCoreTurretIDs.Contains(definition.Id);
+						isStatic = BlockManager.AllWeaponCoreGuns.Contains(definition.Id);
+						isTurret = BlockManager.AllWeaponCoreTurrets.Contains(definition.Id);
 
 					} else {
 
@@ -392,7 +392,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 						//Get details of weapon block being replaced
 						var defId = weaponBlock.GetId();
 						string defIdString = defId.ToString();
-						errorDebugging.Append("Processing Grid Weapon: ").Append(defIdString).AppendLine();
+						errorDebugging.AppendLine().Append("Processing Grid Weapon: ").Append(defIdString).AppendLine();
 						MyCubeBlockDefinition blockDefinition = BlockDirectory[defIdString];
 						MyWeaponBlockDefinition targetWeaponBlockDef = (MyWeaponBlockDefinition)blockDefinition;
 
@@ -461,14 +461,20 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 							} else {
 
+								errorDebugging.Append("Name For Non-Random Was Not In NonRandomWeaponReference.").AppendLine();
 								onlyNamedReplacements = profile.NonRandomWeaponReplacingOnly;
 
 							}
 
 						}
 
-						if (onlyNamedReplacements)
+						if (onlyNamedReplacements) {
+
+							errorDebugging.Append("Skipped After Only Named Replacement Check.").AppendLine();
 							continue;
+
+						}
+							
 
 						//Remove The Old Block
 						errorDebugging.Append("Removing Old Block and Cells From Reference.").AppendLine();
@@ -726,9 +732,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				}
 
-				if (SpawnLogger.ActiveDebug.HasFlag(SpawnerDebugEnum.GameLog)) {
+				if (SpawnLogger.ActiveDebug.HasFlag(SpawnerDebugEnum.Dev)) {
 
-					//SpawnLogger.Write(errorDebugging.ToString(), SpawnerDebugEnum.Manipulation);
+					SpawnLogger.Write(errorDebugging.ToString(), SpawnerDebugEnum.Manipulation);
 
 				}
 

@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
         public static bool ModEnabled = true;
 
-        public static string ModVersion = "2.0.30";
+        public static string ModVersion = "2.0.32";
         public static MES_SessionCore Instance;
 
         public static bool IsServer;
@@ -62,7 +62,6 @@ namespace ModularEncountersSystems.Core {
             BlockManager.Setup(); //Build Lists of Special Blocks
             PlayerSpawnWatcher.Setup();
             PrefabSpawner.Setup();
-            PrefabManipulation.Setup();
 
         }
 
@@ -104,6 +103,7 @@ namespace ModularEncountersSystems.Core {
             Cleaning.Setup();
             WaveManager.Setup();
             DamageHelper.Setup();
+            PrefabManipulation.Setup();
 
             //AttributeApplication
 
@@ -158,4 +158,5 @@ namespace ModularEncountersSystems.Core {
         }
 
     }
+
 }

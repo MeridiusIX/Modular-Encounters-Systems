@@ -23,6 +23,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static bool DefenseShieldModLoaded = false;
 		public static bool NPCShieldProviderModLoaded = false;
 
+		public static bool InitBlockList = false;
+
 		public static List<IMyCubeGrid> NewlyAddedGridsForShieldProcessing = new List<IMyCubeGrid>();
 
 		private static MyDefinitionId _smallGridController = new MyDefinitionId(typeof(MyObjectBuilder_UpgradeModule), "NPCControlSB");
@@ -44,8 +46,15 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		public static bool AddDefenseShieldsToGrid(MyObjectBuilder_CubeGrid cubeGrid, bool spawnGroupAdd) {
 
+			if (!InitBlockList) {
+
+				InitBlockList = true;
+				InitializeArmorBlockList();
+			
+			}
+
 			SpawnLogger.Write("DSP: Check for Mod", SpawnerDebugEnum.Manipulation);
-			if (!DefenseShieldModLoaded)
+			if (!AddonManager.DefenseShields)
 				return false;
 
 			SpawnLogger.Write("DSP: Check if Spawn Eligible", SpawnerDebugEnum.Manipulation);
@@ -91,8 +100,14 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			}
 
 			SpawnLogger.Write("DSP: Check if Min and Max armors are null", SpawnerDebugEnum.Manipulation);
-			if (minArmor == null || maxArmor == null)
+			if (minArmor == null || maxArmor == null) {
+
+				SpawnLogger.Write(string.Format("Min Null {0}", minArmor == null), SpawnerDebugEnum.Manipulation);
+				SpawnLogger.Write(string.Format("Max Null {0}", maxArmor == null), SpawnerDebugEnum.Manipulation);
 				return false;
+
+			}
+				
 
 			SpawnLogger.Write("DSP: Build Shield Blocks and replace armor with them.", SpawnerDebugEnum.Manipulation);
 			SerializableDefinitionId emitterId = new SerializableDefinitionId();
@@ -135,7 +150,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		public static void ActivateShieldsForNPC(IMyCubeGrid cubeGrid) {
 
-			if (!DefenseShieldModLoaded || !IsGlobalShieldProviderEnabled())
+			if (!AddonManager.DefenseShields || !IsGlobalShieldProviderEnabled())
 				return;
 
 			if (cubeGrid.BigOwners.Count == 0) {

@@ -8,13 +8,17 @@ using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ProtoBuf;
+using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VRage;
+using VRage.Game;
 using VRage.Game.ModAPI;
+using VRage.ObjectBuilders;
 using VRageMath;
 
 namespace ModularEncountersSystems.Sync {
@@ -511,6 +515,38 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "ResetReputation") {
 
 				LoggerTools.ResetReputation(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.Meteor
+			if (array[2] == "Meteor") {
+
+				var definitionId = new MyDefinitionId(typeof(MyObjectBuilder_Ore), "Stone");
+				var amount = (MyFixedPoint)10000;
+				var content = (MyObjectBuilder_PhysicalObject)MyObjectBuilderSerializer.CreateNewObject(definitionId);
+				MyObjectBuilder_InventoryItem inventoryItem = new MyObjectBuilder_InventoryItem { Amount = amount, Content = content, PhysicalContent = content };
+
+				var matrix = MatrixD.CreateWorld(CameraPosition, CameraDirection, VectorHelper.RandomPerpendicular(CameraDirection));
+				var offset = new Vector3D(0, MathTools.RandomBetween(-600, -100), MathTools.RandomBetween(-600, -100));
+				var position = new MyPositionAndOrientation {
+					Position = Vector3D.Transform(offset, matrix),
+					Forward = (Vector3)matrix.Forward,
+					Up = (Vector3)matrix.Up,
+				};
+
+
+				var meteor = new MyObjectBuilder_Meteor();
+				meteor.Item = inventoryItem;
+				meteor.PersistentFlags = VRage.ObjectBuilders.MyPersistentEntityFlags2.InScene;
+				meteor.PositionAndOrientation = position;
+				meteor.LinearVelocity = (Vector3)matrix.Forward * 500;
+				meteor.Integrity = 350;
+
+				MyAPIGateway.Entities.RemapObjectBuilder(meteor);
+				var entity = MyAPIGateway.Entities.CreateFromObjectBuilderAndAdd(meteor);
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Spiders!", 2000);
+
 				return true;
 
 			}

@@ -125,6 +125,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 					}
 
+					if (_behavior.BehaviorSettings.HomingWeaponRangeOverride != -1 && trajectory > _behavior.BehaviorSettings.HomingWeaponRangeOverride)
+						trajectory = _behavior.BehaviorSettings.HomingWeaponRangeOverride;
+
 					if (trajectory < _behavior.AutoPilot.Targeting.Target.Distance(_block.GetPosition())) {
 
 						//BehaviorLogger.Write(" - Target Out Of Range For Homing Ammo", BehaviorDebugEnum.Weapon);

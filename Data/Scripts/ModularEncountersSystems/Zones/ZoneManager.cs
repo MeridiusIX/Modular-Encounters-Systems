@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Tasks;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -37,9 +38,21 @@ namespace ModularEncountersSystems.Zones {
 
 					ActiveZones = MyAPIGateway.Utilities.SerializeFromBinary<List<Zone>>(persData);
 
-					if (ActiveZones == null)
+					if (ActiveZones == null) {
+
+						SpawnLogger.Write("No Zones Stored In World At Startup. List Null.", SpawnerDebugEnum.Startup, true);
 						ActiveZones = new List<Zone>();
 
+					} else if (ActiveZones.Count == 0) {
+
+						SpawnLogger.Write("No Zones Stored In World At Startup. List Empty.", SpawnerDebugEnum.Startup, true);
+
+					} else {
+
+						SpawnLogger.Write("Zones Loaded At Startup: " + ActiveZones.Count, SpawnerDebugEnum.Startup, true);
+
+					}
+						
 				}
 			
 			}
@@ -51,6 +64,7 @@ namespace ModularEncountersSystems.Zones {
 
 				if (string.IsNullOrWhiteSpace(zone?.ProfileSubtypeId)) {
 
+					SpawnLogger.Write("Removing Zone With No ProfileSubtypeId: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
 					ActiveZones.RemoveAt(i);
 					continue;
 
@@ -58,6 +72,7 @@ namespace ModularEncountersSystems.Zones {
 
 				if (!ProfileManager.ZoneProfiles.ContainsKey(zone.ProfileSubtypeId)) {
 
+					SpawnLogger.Write("Removing Zone That Wasn't Registered In Profile Manager: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
 					ActiveZones.RemoveAt(i);
 					continue;
 
@@ -82,6 +97,7 @@ namespace ModularEncountersSystems.Zones {
 
 					if (!planetExists) {
 
+						SpawnLogger.Write("Removing Zone That No Longer Has Associated Planet: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
 						ActiveZones.RemoveAt(i);
 						continue;
 
@@ -90,6 +106,15 @@ namespace ModularEncountersSystems.Zones {
 				}
 			
 			}
+
+			AddNewZones();
+
+			TaskProcessor.Tick60.Tasks += AnnounceDepartMessages;
+			MES_SessionCore.UnloadActions += Unload;
+		
+		}
+
+		public static void AddNewZones() {
 
 			//Add New Zones
 			bool updateZones = false;
@@ -112,7 +137,7 @@ namespace ModularEncountersSystems.Zones {
 							break;
 
 						}
-					
+
 					}
 
 					if (skip)
@@ -134,23 +159,24 @@ namespace ModularEncountersSystems.Zones {
 
 						if (string.IsNullOrWhiteSpace(id) || id != zone.PlanetName) {
 
+							SpawnLogger.Write("Planet Id Null or Id doesn't Match PlanetName in Zone: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
 							continue;
-						
+
 						}
 
 						bool skipPlanet = false;
 
 						foreach (var perZone in ActiveZones) {
 
-							if (perZone.ProfileSubtypeId == zone.ProfileSubtypeId) {
+							if (id == perZone.PlanetName && planet.Planet.EntityId == perZone.PlanetId) {
 
-								if (id == perZone.PlanetName && planet.Planet.EntityId == perZone.PlanetId) {
+								if (perZone.ProfileSubtypeId == zone.ProfileSubtypeId) {
 
-									skip = true;
+									skipPlanet = true;
 									break;
 
 								}
-								
+
 							}
 
 						}
@@ -176,12 +202,14 @@ namespace ModularEncountersSystems.Zones {
 							updateZones = true;
 
 						}
-					
+
 					}
-				
+
 				}
 
 			}
+
+			SpawnLogger.Write("Zones After Newly Detected: " + ActiveZones.Count, SpawnerDebugEnum.Startup);
 
 			if (updateZones) {
 
@@ -189,9 +217,7 @@ namespace ModularEncountersSystems.Zones {
 
 			}
 
-			TaskProcessor.Tick60.Tasks += AnnounceDepartMessages;
-			MES_SessionCore.UnloadActions += Unload;
-		
+
 		}
 
 		public static void RemoveZone(Zone zone) {
@@ -359,7 +385,7 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.Persistent || zone.Name != name)
+				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
 				if (zone.PositionInsideZone(coords))
@@ -383,7 +409,7 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.Persistent || zone.Name != name)
+				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
 				if (zone.PositionInsideZone(coords))
@@ -420,6 +446,55 @@ namespace ModularEncountersSystems.Zones {
 
 			return result;
 		
+		}
+
+		public static void ToggleZonesAtPosition(Vector3D coords, string zoneName = null, bool mode = false) {
+
+			bool updateZones = false;
+
+			for (int i = ActiveZones.Count - 1; i >= 0; i--) {
+
+				var zone = ActiveZones[i];
+
+				if (zoneName != null && zone.PublicName != zoneName)
+					continue;
+
+				if (!zone.PositionInsideZone(coords))
+					continue;
+
+				zone.Active = mode;
+
+				updateZones = true;
+				break;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
+		}
+
+		public static void ToggleZones(string zoneName = null, bool mode = false) {
+
+			bool updateZones = false;
+
+			for (int i = ActiveZones.Count - 1; i >= 0; i--) {
+
+				var zone = ActiveZones[i];
+
+				if (zoneName != null && zone.PublicName != zoneName)
+					continue;
+
+				zone.Active = mode;
+
+				updateZones = true;
+				break;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
 		}
 
 		public static void Unload() {

@@ -45,17 +45,51 @@ namespace ModularEncountersSystems.Spawning {
 
 			for (int i = 0; i < count; i++) {
 
+				BotSpawnProfile profile = null;
 				string botType = "";
+				string role = "";
+				string name = null;
+				bool useAiEnabled = false;
+				Color? color = null;
 
-				if (collection.Conditions.CreatureIds.Count == 1) {
+				if (collection.Conditions.BotProfiles.Count > 0) {
 
-					botType = collection.Conditions.CreatureIds[0];
+					if (collection.Conditions.BotProfiles.Count == 1) {
+
+						profile = collection.Conditions.BotProfiles[0];
+
+					} else {
+
+						profile = collection.Conditions.BotProfiles[MathTools.RandomBetween(0, collection.Conditions.BotProfiles.Count)];
+
+					}
+
+					botType = profile.BotType;
+					role = profile.BotBehavior;
+					name = profile.BotDisplayName;
+					useAiEnabled = true;
+
+					if (profile.Color != new Vector3I(300, 300, 300))
+						color = new Color((int)profile.Color.X, (int)profile.Color.Y, (int)profile.Color.Z);
 
 				} else {
 
-					botType = collection.Conditions.CreatureIds[MathTools.RandomBetween(0, collection.Conditions.CreatureIds.Count)];
+					if (collection.Conditions.CreatureIds.Count == 1) {
+
+						botType = collection.Conditions.CreatureIds[0];
+
+					} else {
+
+						botType = collection.Conditions.CreatureIds[MathTools.RandomBetween(0, collection.Conditions.CreatureIds.Count)];
+
+					}
+
+					role = collection.Conditions.AiEnabledRole;
+					useAiEnabled = collection.Conditions.AiEnabledModBots;
 
 				}
+
+				
 
 				if (string.IsNullOrWhiteSpace(botType))
 					continue;
@@ -67,9 +101,9 @@ namespace ModularEncountersSystems.Spawning {
 				var matrix = MatrixD.CreateWorld(coords, forward, up);
 				IMyCharacter character = null;
 				collection.Faction = collection.SelectRandomFaction();
-				long owner = FactionHelper.GetFactionOwner(collection.Faction);
+				long owner = FactionHelper.GetFactionMemberIdFromTag(collection.Faction);
 				//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Faction Owner: " + collection.Faction, 3000);
-				SpawnBotRequest(botType, matrix, out character, null, collection.Conditions.AiEnabledModBots, collection.Conditions.AiEnabledRole, null, owner);
+				SpawnBotRequest(botType, matrix, out character, name, useAiEnabled, role, null, owner, color);
 				spawnedBot = true;
 
 			}
@@ -78,7 +112,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static void SpawnBotRequest(string botId, MatrixD coords, out IMyCharacter character, string name = "", bool aiEnabled = false, string role = null, MyCubeGrid grid = null, long? owner = null) {
+		public static void SpawnBotRequest(string botId, MatrixD coords, out IMyCharacter character, string name = "", bool aiEnabled = false, string role = null, MyCubeGrid grid = null, long? owner = null, Color? color = null) {
 
 			character = null;
 
@@ -88,7 +122,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					//Logger.Write("API for AiEnabled Detected");
 					var position = new MyPositionAndOrientation(coords);
-					character = APIs.AiEnabled.SpawnBot(botId, name, position, grid, role, 0);
+					character = APIs.AiEnabled.SpawnBot(botId, name, position, grid, role, 0, color);
 
 					if (character != null) {
 
@@ -193,51 +227,63 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (planet.AnimalSpawnInfo?.Animals != null && planet.AnimalSpawnInfo.Animals.Length > 0) {
 
-					var spawnGroup = new ImprovedSpawnGroup();
-					spawnGroup.SpawnGroupName = "CreatureSpawn-" + planet.Id.SubtypeName + "-InternalDaySpawns";
-					spawnGroup.SpawnConditionsProfiles[0].CreatureSpawn = true;
-					spawnGroup.SpawnConditionsProfiles[0].MinCreatureCount = planet.AnimalSpawnInfo.WaveCountMin;
-					spawnGroup.SpawnConditionsProfiles[0].MaxCreatureCount = planet.AnimalSpawnInfo.WaveCountMax;
-					spawnGroup.SpawnConditionsProfiles[0].MinCreatureDistance = (int)planet.AnimalSpawnInfo.SpawnDistMin;
-					spawnGroup.SpawnConditionsProfiles[0].MaxCreatureDistance = (int)planet.AnimalSpawnInfo.SpawnDistMax;
-					spawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPID";
-					spawnGroup.SpawnGroup = dummyGroup;
-					spawnGroup.SpawnConditionsProfiles[0].PlanetWhitelist.Add(planet.Id.SubtypeName);
-					spawnGroup.Frequency = 30;
+					var name = "CreatureSpawn-" + planet.Id.SubtypeName + "-InternalDaySpawns";
 
-					foreach (var animal in planet.AnimalSpawnInfo.Animals) {
+					if (!SpawnGroupManager.SpawnGroupNames.Contains(name)) {
 
-						spawnGroup.SpawnConditionsProfiles[0].CreatureIds.Add(animal.AnimalType);
+						var spawnGroup = new ImprovedSpawnGroup();
+						spawnGroup.SpawnGroupName = name;
+						spawnGroup.SpawnConditionsProfiles[0].CreatureSpawn = true;
+						spawnGroup.SpawnConditionsProfiles[0].MinCreatureCount = planet.AnimalSpawnInfo.WaveCountMin;
+						spawnGroup.SpawnConditionsProfiles[0].MaxCreatureCount = planet.AnimalSpawnInfo.WaveCountMax;
+						spawnGroup.SpawnConditionsProfiles[0].MinCreatureDistance = (int)planet.AnimalSpawnInfo.SpawnDistMin;
+						spawnGroup.SpawnConditionsProfiles[0].MaxCreatureDistance = (int)planet.AnimalSpawnInfo.SpawnDistMax;
+						spawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPID";
+						spawnGroup.SpawnGroup = dummyGroup;
+						spawnGroup.SpawnConditionsProfiles[0].PlanetWhitelist.Add(planet.Id.SubtypeName);
+						spawnGroup.Frequency = 30;
+
+						foreach (var animal in planet.AnimalSpawnInfo.Animals) {
+
+							spawnGroup.SpawnConditionsProfiles[0].CreatureIds.Add(animal.AnimalType);
+
+						}
+
+						SpawnGroupManager.AddSpawnGroup(spawnGroup);
 
 					}
-
-					SpawnGroupManager.AddSpawnGroup(spawnGroup);
 
 				}
 
 				if (planet.NightAnimalSpawnInfo?.Animals != null && planet.NightAnimalSpawnInfo.Animals.Length > 0) {
 
-					var spawnGroup = new ImprovedSpawnGroup();
-					spawnGroup.SpawnGroupName = "CreatureSpawn-" + planet.Id.SubtypeName + "-InternalNightSpawns";
-					spawnGroup.SpawnConditionsProfiles[0].CreatureSpawn = true;
-					spawnGroup.SpawnConditionsProfiles[0].MinCreatureCount = planet.NightAnimalSpawnInfo.WaveCountMin;
-					spawnGroup.SpawnConditionsProfiles[0].MaxCreatureCount = planet.NightAnimalSpawnInfo.WaveCountMax;
-					spawnGroup.SpawnConditionsProfiles[0].MinCreatureDistance = (int)planet.NightAnimalSpawnInfo.SpawnDistMin;
-					spawnGroup.SpawnConditionsProfiles[0].MaxCreatureDistance = (int)planet.NightAnimalSpawnInfo.SpawnDistMax;
-					spawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPID";
-					spawnGroup.SpawnGroup = dummyGroup;
-					spawnGroup.SpawnConditionsProfiles[0].UseDayOrNightOnly = true;
-					spawnGroup.SpawnConditionsProfiles[0].SpawnOnlyAtNight = true;
-					spawnGroup.SpawnConditionsProfiles[0].PlanetWhitelist.Add(planet.Id.SubtypeName);
-					spawnGroup.Frequency = 30;
+					var name = "CreatureSpawn-" + planet.Id.SubtypeName + "-InternalNightSpawns";
 
-					foreach (var animal in planet.NightAnimalSpawnInfo.Animals) {
+					if (!SpawnGroupManager.SpawnGroupNames.Contains(name)) {
 
-						spawnGroup.SpawnConditionsProfiles[0].CreatureIds.Add(animal.AnimalType);
+						var spawnGroup = new ImprovedSpawnGroup();
+						spawnGroup.SpawnGroupName = name;
+						spawnGroup.SpawnConditionsProfiles[0].CreatureSpawn = true;
+						spawnGroup.SpawnConditionsProfiles[0].MinCreatureCount = planet.NightAnimalSpawnInfo.WaveCountMin;
+						spawnGroup.SpawnConditionsProfiles[0].MaxCreatureCount = planet.NightAnimalSpawnInfo.WaveCountMax;
+						spawnGroup.SpawnConditionsProfiles[0].MinCreatureDistance = (int)planet.NightAnimalSpawnInfo.SpawnDistMin;
+						spawnGroup.SpawnConditionsProfiles[0].MaxCreatureDistance = (int)planet.NightAnimalSpawnInfo.SpawnDistMax;
+						spawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPID";
+						spawnGroup.SpawnGroup = dummyGroup;
+						spawnGroup.SpawnConditionsProfiles[0].UseDayOrNightOnly = true;
+						spawnGroup.SpawnConditionsProfiles[0].SpawnOnlyAtNight = true;
+						spawnGroup.SpawnConditionsProfiles[0].PlanetWhitelist.Add(planet.Id.SubtypeName);
+						spawnGroup.Frequency = 30;
+
+						foreach (var animal in planet.NightAnimalSpawnInfo.Animals) {
+
+							spawnGroup.SpawnConditionsProfiles[0].CreatureIds.Add(animal.AnimalType);
+
+						}
+
+						SpawnGroupManager.AddSpawnGroup(spawnGroup);
 
 					}
-
-					SpawnGroupManager.AddSpawnGroup(spawnGroup);
 
 				}
 

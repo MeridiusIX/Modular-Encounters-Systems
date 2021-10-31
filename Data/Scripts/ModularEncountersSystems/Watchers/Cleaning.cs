@@ -5,6 +5,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.World;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -66,6 +67,13 @@ namespace ModularEncountersSystems.Watchers {
 
 				}
 
+				//Safezone Check
+				if (SafeZoneManager.IsPositionInSafeZone(grid.GetPosition())) {
+
+					continue;
+
+				}
+
 				//Get Config and Cleanup Data
 				var type = grid.GetSpawningTypeFromLinkedGrids();
 				
@@ -76,9 +84,23 @@ namespace ModularEncountersSystems.Watchers {
 				}
 
 				var config = Settings.GetConfig(type);
+
+				if (config != null && config != Settings.OtherNPCs && config.UseTypeDisownTimer) {
+
+					if ((MyAPIGateway.Session.GameDateTime - grid.Npc.SpawnTime).TotalSeconds >= config.TypeDisownTimer) {
+
+						SpawnLogger.Write(grid.Name() + ": SpawnType Has Been Disowned After " + config.TypeDisownTimer + " Seconds. It is now registered as OtherNPC", SpawnerDebugEnum.CleanUp);
+						grid.Npc.SpawnType = SpawningType.OtherNPC;
+						grid.Npc.Update();
+						config = Settings.GetConfig(SpawningType.OtherNPC);
+
+					}
+				
+				}
+
 				var data = GridCleanupData.GetData(grid);
 
-				if (config == null || data == null || !config.UseCleanupSettings) {
+				if (config == null || data == null || config.UseCleanupSettings == false) {
 
 					continue;
 				
@@ -177,7 +199,6 @@ namespace ModularEncountersSystems.Watchers {
 
 		}
 
-		
 
 		public static bool BasicCleanupChecks(GridEntity grid) {
 

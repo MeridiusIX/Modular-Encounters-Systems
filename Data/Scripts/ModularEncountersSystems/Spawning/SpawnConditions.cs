@@ -114,6 +114,12 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			if (type == SpawningType.DroneEncounter) {
+
+				spawnTypes |= SpawningType.DroneEncounter;
+
+			}
+
 			return spawnTypes;
 		
 		}
@@ -163,6 +169,9 @@ namespace ModularEncountersSystems.Spawning {
 				return true;
 
 			if (type.HasFlag(SpawningType.StaticEncounterSpace) || type.HasFlag(SpawningType.StaticEncounterPlanet) && conditions.StaticEncounter)
+				return true;
+
+			if (type.HasFlag(SpawningType.DroneEncounter) && conditions.DroneEncounter)
 				return true;
 
 			return false;
@@ -304,6 +313,7 @@ namespace ModularEncountersSystems.Spawning {
 							continue;
 
 						allowed = true;
+						break;
 
 					}
 
@@ -426,7 +436,13 @@ namespace ModularEncountersSystems.Spawning {
 					return false;
 
 				}
-					
+
+				if (spawnGroup.MinWaterDepth > 0 && environment.NearestPlanet.WaterDepthAtPosition(environment.SurfaceCoords) < spawnGroup.MinWaterDepth) {
+
+					failReason = "   - Water Depth Check Failed";
+					return false;
+
+				}
 
 			}
 
@@ -631,13 +647,16 @@ namespace ModularEncountersSystems.Spawning {
 			if (spawnTypes.HasFlag(SpawningType.Creature) && spawnGroup.CreatureChance < spawnGroup.ChanceCeiling)
 				return MathTools.RandomChance(spawnGroup.CreatureChance, spawnGroup.ChanceCeiling);
 
+			if (spawnTypes.HasFlag(SpawningType.DroneEncounter) && spawnGroup.DroneEncounterChance < spawnGroup.ChanceCeiling)
+				return MathTools.RandomChance(spawnGroup.DroneEncounterChance, spawnGroup.ChanceCeiling);
+
 			return true;
 		
 		}
 
-		public static bool CheckCommonSpawnConditions(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, EnvironmentEvaluation environment, bool adminSpawn, SpawningType type, SpawningType spawnTypes, ref string failReason) {
+		public static bool CheckCommonSpawnConditions(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, EnvironmentEvaluation environment, bool adminSpawn, SpawningType type, SpawningType spawnTypes, Dictionary<string, DateTime> playerDroneTracker, ref string failReason) {
 
-			if (spawnGroup.SpawnGroupEnabled == false && !adminSpawn) {
+			if (spawnGroup.SpawnGroupEnabled == false) {
 
 				failReason = "   - SpawnGroup Not Enabled";
 				return false;
@@ -653,6 +672,40 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 			
+			}
+
+			if (playerDroneTracker != null) {
+
+				if (conditions.MinimumPlayerTime > 0) {
+
+					DateTime storedTime = DateTime.Now;
+
+					if (!playerDroneTracker.TryGetValue(spawnGroup.SpawnGroupName, out storedTime)) {
+
+						var timeAdd = conditions.MaximumPlayerTime - conditions.MinimumPlayerTime;
+
+						storedTime = MES_SessionCore.SessionStartTime.Add(new TimeSpan(0,0, timeAdd));
+						playerDroneTracker.Add(spawnGroup.SpawnGroupName, storedTime);
+
+					}
+
+					if ((MyAPIGateway.Session.GameDateTime - storedTime).TotalSeconds < conditions.MinimumPlayerTime) {
+
+						failReason = "   - Minimum Player Spawn Time Not Satisfied.";
+						return false;
+
+					}
+
+					if (conditions.FailedDroneSpawnResetsPlayerTime) {
+
+						var timeAdd = conditions.MaximumPlayerTime - conditions.MinimumPlayerTime;
+						storedTime = MyAPIGateway.Session.GameDateTime.Add(new TimeSpan(0, 0, timeAdd));
+						playerDroneTracker[spawnGroup.SpawnGroupName] = storedTime;
+
+					}
+
+				}
+
 			}
 
 			if (CheckBlacklists(type, spawnGroup, environment, conditions, ref failReason)) {

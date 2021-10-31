@@ -55,11 +55,22 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool RivalAiAtmosphericSpawn;
 		public bool RivalAiAnySpawn;
 
+		public bool DroneEncounter;
+		public int MinimumPlayerTime;
+		public int MaximumPlayerTime;
+		public bool FailedDroneSpawnResetsPlayerTime;
+		public double MinDroneDistance;
+		public double MaxDroneDistance;
+		public double MinDroneAltitude;
+		public double MaxDroneAltitude;
+		public bool DroneInheritsSourceAltitude;
+
 		public bool SkipVoxelSpawnChecks;
 		public bool SkipGridSpawnChecks;
 
 		public bool CreatureSpawn;
 		public List<string> CreatureIds;
+		public List<BotSpawnProfile> BotProfiles;
 		public bool AiEnabledReady;
 		public bool AiEnabledModBots;
 		public string AiEnabledRole;
@@ -93,8 +104,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool ForceExactPositionAndOrientation;
 		public bool AdminSpawnOnly;
 
-		public bool UseCommonConditions;
-
 		public string FactionOwner;
 		public bool UseRandomMinerFaction;
 		public bool UseRandomBuilderFaction;
@@ -110,6 +119,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int PlanetaryInstallationChance;
 		public int BossEncounterChance;
 		public int CreatureChance;
+		public int DroneEncounterChance; //Doc
 
 		public bool SettingsAutoHeal;
 		public bool SettingsAutoRespawn;
@@ -136,10 +146,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public double MinSpawnFromWorldCenter;
 		public double MaxSpawnFromWorldCenter;
-		public Vector3D CustomWorldCenter;
-		public List<Vector3D> DirectionFromWorldCenter;
-		public double MinAngleFromDirection;
-		public double MaxAngleFromDirection;
+		public Vector3D CustomWorldCenter; //Doc
+		public List<Vector3D> DirectionFromWorldCenter; //Doc
+		public double MinAngleFromDirection; //Doc
+		public double MaxAngleFromDirection; //Doc
 
 		public List<Vector3D> DirectionFromPlanetCenter;
 		public double MinAngleFromPlanetCenterDirection;
@@ -199,8 +209,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int MinimumReputation;
 		public int MaximumReputation;
 
-		public bool ChargeNpcFactionForSpawn;
-		public long ChargeForSpawning;
+		public bool ChargeNpcFactionForSpawn; //Implement / Doc
+		public long ChargeForSpawning; //Implement / Doc
 
 		public bool UseSandboxCounterCosts;
 		public List<string> SandboxCounterCostNames;
@@ -229,17 +239,17 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int KnownPlayerLocationMinSpawnedEncounters;
 		public int KnownPlayerLocationMaxSpawnedEncounters;
 
-		public List<ZoneConditionsProfile> ZoneConditions;
+		public List<ZoneConditionsProfile> ZoneConditions; //Doc
 
 		public bool BossCustomAnnounceEnable;
 		public string BossCustomAnnounceAuthor;
 		public string BossCustomAnnounceMessage;
 		public string BossCustomGPSLabel;
-		public Vector3D BossCustomGPSColor;
-		public string BossMusicId;
+		public Vector3D BossCustomGPSColor; //Doc
+		public string BossMusicId; //Doc
 
-		public bool PlaySoundAtSpawnTriggerPosition;
-		public string SpawnTriggerPositionSoundId;
+		public bool PlaySoundAtSpawnTriggerPosition; //Doc
+		public string SpawnTriggerPositionSoundId; //Doc
 
 		public bool RotateFirstCockpitToForward;
 		public bool PositionAtFirstCockpit;
@@ -296,11 +306,22 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RivalAiAtmosphericSpawn = false;
 			RivalAiAnySpawn = false;
 
+			DroneEncounter = false;
+			MinimumPlayerTime = -1;
+			MaximumPlayerTime = 0;
+			FailedDroneSpawnResetsPlayerTime = false;
+			MinDroneDistance = 1000;
+			MaxDroneDistance = 1000;
+			MinDroneAltitude = 1000;
+			MaxDroneAltitude = 1000;
+			DroneInheritsSourceAltitude = false;
+
 			SkipVoxelSpawnChecks = false;
 			SkipGridSpawnChecks = false;
 
 			CreatureSpawn = false;
 			CreatureIds = new List<string>();
+			BotProfiles = new List<BotSpawnProfile>();
 			AiEnabledModBots = false;
 			AiEnabledReady = false;
 			AiEnabledRole = "";
@@ -334,8 +355,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ForceExactPositionAndOrientation = false;
 			AdminSpawnOnly = false;
 
-			UseCommonConditions = true;
-
 			FactionOwner = "SPRT";
 			UseRandomMinerFaction = false;
 			UseRandomBuilderFaction = false;
@@ -351,6 +370,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PlanetaryInstallationChance = 100;
 			BossEncounterChance = 100;
 			CreatureChance = 100;
+			DroneEncounterChance = 100;
 
 			SandboxVariables = new List<string>();
 			FalseSandboxVariables = new List<string>();
@@ -698,6 +718,69 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//DroneEncounter
+				if (tag.StartsWith("[DroneEncounter:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.DroneEncounter);
+
+				}
+
+				//MinimumPlayerTime
+				if (tag.StartsWith("[MinimumPlayerTime:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.MinimumPlayerTime);
+
+				}
+
+				//MaximumPlayerTime
+				if (tag.StartsWith("[MaximumPlayerTime:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.MaximumPlayerTime);
+
+				}
+
+				//FailedDroneSpawnResetsPlayerTime
+				if (tag.StartsWith("[FailedDroneSpawnResetsPlayerTime:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.FailedDroneSpawnResetsPlayerTime);
+
+				}
+
+				//MinDroneDistance
+				if (tag.StartsWith("[MinDroneDistance:") == true) {
+
+					TagParse.TagDoubleCheck(tag, ref this.MinDroneDistance);
+
+				}
+
+				//MaxDroneDistance
+				if (tag.StartsWith("[MaxDroneDistance:") == true) {
+
+					TagParse.TagDoubleCheck(tag, ref this.MaxDroneDistance);
+
+				}
+
+				//MinDroneAltitude
+				if (tag.StartsWith("[MinDroneAltitude:") == true) {
+
+					TagParse.TagDoubleCheck(tag, ref this.MinDroneAltitude);
+
+				}
+
+				//MaxDroneAltitude
+				if (tag.StartsWith("[MaxDroneAltitude:") == true) {
+
+					TagParse.TagDoubleCheck(tag, ref this.MaxDroneAltitude);
+
+				}
+
+				//DroneInheritsSourceAltitude
+				if (tag.StartsWith("[DroneInheritsSourceAltitude:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.DroneInheritsSourceAltitude);
+
+				}
+
 				//SkipVoxelSpawnChecks
 				if (tag.StartsWith("[SkipVoxelSpawnChecks:") == true) {
 
@@ -723,6 +806,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[CreatureIds:") == true) {
 
 					TagParse.TagStringListCheck(tag, ref this.CreatureIds);
+
+				}
+
+				//BotProfiles
+				if (tag.StartsWith("[BotProfiles:") == true) {
+
+					TagParse.TagBotProfileListCheck(tag, ref this.BotProfiles);
 
 				}
 
@@ -917,13 +1007,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-				//UseCommonConditions
-				if (tag.StartsWith("[UseCommonConditions:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseCommonConditions);
-
-				}
-
 				//FactionOwner
 				if (tag.StartsWith("[FactionOwner:") == true) {
 
@@ -1021,6 +1104,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//DroneEncounterChance
+				if (tag.StartsWith("[DroneEncounterChance:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.DroneEncounterChance);
+
+				}
 
 				//MinSpawnFromWorldCenter
 				if (tag.StartsWith("[MinSpawnFromWorldCenter:") == true) {
@@ -1666,7 +1755,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				//PrefabIndexes
 				if (tag.StartsWith("[PrefabIndexes:") == true) {
 
-					TagParse.TagIntListCheck(tag, ref this.PrefabIndexes);
+					TagParse.TagIntListCheck(tag, true, ref this.PrefabIndexes);
 
 				}
 
@@ -1680,7 +1769,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				//PrefabIndexGroupValues
 				if (tag.StartsWith("[PrefabIndexGroupValues:") == true) {
 
-					TagParse.TagIntListCheck(tag, ref this.PrefabIndexGroupValues);
+					TagParse.TagIntListCheck(tag, true, ref this.PrefabIndexGroupValues);
 
 				}
 

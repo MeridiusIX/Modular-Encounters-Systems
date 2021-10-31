@@ -30,6 +30,10 @@ namespace ModularEncountersSystems.Spawning {
 
         public int CreatureCheckTimer;
 
+        public int DroneEncounterTimer;
+        public int DroneEncounterTimerCooldownTimer;
+        public Dictionary<string, DateTime> DroneEncounterTracker;
+
         public WatchedPlayer(PlayerEntity player) {
 
             Player = player;
@@ -48,6 +52,10 @@ namespace ModularEncountersSystems.Spawning {
             BossEncounterActive = false;
 
             CreatureCheckTimer = MathTools.RandomBetween(Settings.Creatures.MinCreatureSpawnTime, Settings.Creatures.MaxCreatureSpawnTime);
+
+            DroneEncounterTimer = 30;
+            DroneEncounterTimerCooldownTimer = 0;
+            DroneEncounterTracker = new Dictionary<string, DateTime>();
 
             RandomEncounterDistanceCoordCheck = player.GetPosition();
             InstallationDistanceCoordCheck = player.GetPosition();
@@ -108,6 +116,9 @@ namespace ModularEncountersSystems.Spawning {
 
                     var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.RandomEncounter);
 
+                    if (result)
+                        RandomEncounterCoolDownTimer = Settings.RandomEncounters.PlayerSpawnCooldown;
+
                 }
 
             }
@@ -123,6 +134,9 @@ namespace ModularEncountersSystems.Spawning {
                 if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.PlanetaryInstallation, this)) {
 
                     var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.PlanetaryInstallation);
+
+                    if (result)
+                        PlanetaryInstallationCooldownTimer = Settings.PlanetaryInstallations.PlayerSpawnCooldown;
 
                 }
 
@@ -140,6 +154,9 @@ namespace ModularEncountersSystems.Spawning {
 
                     var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.BossEncounter);
 
+                    if (result)
+                        BossEncounterCooldownTimer = Settings.BossEncounters.PlayerSpawnCooldown;
+
                 }
 
             }
@@ -152,6 +169,25 @@ namespace ModularEncountersSystems.Spawning {
                 if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.Creature, this)) {
 
                     var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.Creature);
+
+                }
+
+            }
+
+            //Drone Encounters
+            if (Settings.OtherNPCs.EnableDroneEncounters) {
+
+                if (DroneEncounterTimerCooldownTimer > 0)
+                    ApplyDecrement(ref DroneEncounterTimerCooldownTimer);
+                else
+                    ApplyDecrement(ref DroneEncounterTimer);
+
+                if (SpawnRequest.PlayerSpawnEligiblity(SpawningType.DroneEncounter, this)) {
+
+                    var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.DroneEncounter);
+
+                    if (result)
+                        DroneEncounterTimerCooldownTimer = Settings.OtherNPCs.PlayerSpawnCooldown;
 
                 }
 
@@ -177,6 +213,9 @@ namespace ModularEncountersSystems.Spawning {
                 return true;
 
             if (spawnType == SpawningType.Creature && CreatureCheckTimer <= 0)
+                return true;
+
+            if (spawnType == SpawningType.DroneEncounter && DroneEncounterTimer <= 0)
                 return true;
 
             return false;
@@ -244,6 +283,9 @@ namespace ModularEncountersSystems.Spawning {
 
             if (spawnType == SpawningType.Creature && CreatureCheckTimer <= 0)
                 CreatureCheckTimer = MathTools.RandomBetween(Settings.Creatures.MinCreatureSpawnTime, Settings.Creatures.MaxCreatureSpawnTime);
+
+            if (spawnType == SpawningType.DroneEncounter && DroneEncounterTimer <= 0)
+                DroneEncounterTimer = Settings.OtherNPCs.SpawnTimerTrigger;
 
         }
 

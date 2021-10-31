@@ -40,7 +40,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		public static bool IsGlobalShieldProviderEnabled() {
 
-			return NPCShieldProviderModLoaded || Settings.Grids.EnableGlobalNPCShieldProvider;
+			return AddonManager.NpcShieldProvider || Settings.Grids.EnableGlobalNPCShieldProvider;
 
 		}
 
@@ -148,9 +148,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
-		public static void ActivateShieldsForNPC(IMyCubeGrid cubeGrid) {
+		public static void ActivateShieldsForNPC(IMyCubeGrid cubeGrid, bool usingSpawnerShields) {
 
-			if (!AddonManager.DefenseShields || !IsGlobalShieldProviderEnabled())
+			if (!AddonManager.DefenseShields || (!IsGlobalShieldProviderEnabled() && !usingSpawnerShields))
 				return;
 
 			if (cubeGrid.BigOwners.Count == 0) {

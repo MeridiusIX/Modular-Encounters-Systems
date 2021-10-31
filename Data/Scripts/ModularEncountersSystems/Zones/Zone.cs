@@ -31,7 +31,7 @@ namespace ModularEncountersSystems.Zones {
 
 		[ProtoMember(14)] public bool PlanetaryZone; //Determines if this zone should be dynamically placed on a planet
 		[ProtoMember(15)] public string PlanetName; //Planet name that receives the zone
-		[ProtoIgnore] public long PlanetId; //Planet Entity Id (used internally)
+		
 		[ProtoMember(16)] public Vector3D Direction; //Zone Direction From Planet Center To Surface (If Not Provided, planet center is used as zone center)
 		[ProtoMember(17)] public double HeightOffset; //Height Offset From Surface for Zone
 		[ProtoMember(18)] public bool ScaleZoneRadiusWithPlanet;
@@ -67,6 +67,8 @@ namespace ModularEncountersSystems.Zones {
 		[ProtoMember(40)] public Dictionary<string, bool> CustomBools; //Custom Bools Associated To The Zone (Assigned Via RivalAI behavior)
 
 		[ProtoMember(41)] public List<long> PlayersInZone;
+
+		[ProtoMember(42)] public long PlanetId; //Planet Entity Id (used internally)
 
 		[ProtoIgnore]
 		public BoundingSphereD Sphere { 
@@ -191,6 +193,8 @@ namespace ModularEncountersSystems.Zones {
 
 		public void PlanetSetup(PlanetEntity planet) {
 
+			PlanetId = planet.Planet.EntityId;
+
 			if (this.Direction != Vector3D.Zero) {
 
 				Coordinates = planet.SurfaceCoordsAtPosition(planet.Center() + this.Direction);
@@ -258,7 +262,7 @@ namespace ModularEncountersSystems.Zones {
 		public string GetInfo(Vector3D coords) {
 
 			var sb = new StringBuilder();
-			sb.Append(" - Zone Name:                   ").Append(Name).AppendLine();
+			sb.Append(" - Profile SubtypeId:           ").Append(ProfileSubtypeId).AppendLine();
 			sb.Append(" - Public Name:                 ").Append(PublicName).AppendLine();
 			sb.Append(" - Active:                      ").Append(Active).AppendLine();
 			sb.Append(" - Persistent:                  ").Append(Persistent).AppendLine();
@@ -270,6 +274,7 @@ namespace ModularEncountersSystems.Zones {
 			sb.Append(" - Radius:                      ").Append(Radius).AppendLine();
 			sb.Append(" - Planetary Zone:              ").Append(PlanetaryZone).AppendLine();
 			sb.Append(" - Planet Name:                 ").Append(PlanetName).AppendLine();
+			sb.Append(" - Planet Id:                   ").Append(PlanetId).AppendLine();
 			sb.Append(" - Use Zone Timer:              ").Append(UseZoneTimer).AppendLine();
 			sb.Append(" - Use Max Spawned Encounters:  ").Append(UseMaxSpawnedEncounters).AppendLine();
 			sb.Append(" - Use Allowed Spawn Groups:    ").Append(UseAllowedSpawnGroups).AppendLine();

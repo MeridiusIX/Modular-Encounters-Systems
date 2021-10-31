@@ -76,7 +76,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (SpawnType == SpawningType.RandomEncounter || SpawnType == SpawningType.BossSpace || SpawnType == SpawningType.BossGravity || SpawnType == SpawningType.BossAtmo || SpawnType == SpawningType.OtherNPC) {
+			if (SpawnType == SpawningType.RandomEncounter || SpawnType == SpawningType.BossEncounter || SpawnType == SpawningType.BossSpace || SpawnType == SpawningType.BossGravity || SpawnType == SpawningType.BossAtmo || SpawnType == SpawningType.OtherNPC) {
 
 				return Vector3D.Transform(offset, SpawnMatrix);
 
@@ -241,6 +241,15 @@ namespace ModularEncountersSystems.Spawning {
 			if (type == SpawningType.Creature) {
 
 				CalculateCreatureCoords(path, collection, environment);
+				return path;
+
+			}
+
+			//Drone Encounters
+			if (type == SpawningType.DroneEncounter) {
+
+				CalculateDroneEncounterPath(path, collection, environment);
+				return path;
 
 			}
 
@@ -248,9 +257,11 @@ namespace ModularEncountersSystems.Spawning {
 			if (type == SpawningType.OtherNPC) {
 
 				CalculateOtherPath(path, collection, environment, spawningMatrix);
-			
+				return path;
+
 			}
 
+			SpawnLogger.Write("No Path For Selected Type: " + type.ToString(), SpawnerDebugEnum.Pathing);
 			return path;
 		
 		}
@@ -286,7 +297,7 @@ namespace ModularEncountersSystems.Spawning {
 			var voxelList = new List<MyVoxelBase>();
 			var voxelSphere = new BoundingSphereD(environment.Position, 20000);
 			MyGamePruningStructure.GetAllVoxelMapsInSphere(ref voxelSphere, voxelList);
-			var planetGravitySphere = environment.NearestPlanet.GetGravitySphere(0.05);
+			var planetGravitySphere = environment.NearestPlanet?.GetGravitySphere(0.05) ?? new BoundingSphereD(Vector3D.Zero, 0);
 
 			for (int i = 0; i < Settings.SpaceCargoShips.MaxSpawnAttempts; i++) {
 
@@ -419,6 +430,8 @@ namespace ModularEncountersSystems.Spawning {
 				var randomPerpAtHalf = VectorHelper.RandomPerpendicular(upAtHalfPath);
 				var startPathPoint = upAtHalfPath * pathHeight + halfPathPointRough;
 
+				var pathDistance = MathTools.RandomBetween(Settings.PlanetaryCargoShips.MinPathDistance, Settings.PlanetaryCargoShips.MaxPathDistance);
+				
 				if (environment.NearestPlanet.Planet.GetAirDensity(startPathPoint) < Settings.PlanetaryCargoShips.MinAirDensity) {
 
 					pathHeight = MathTools.Average(Settings.PlanetaryCargoShips.MinSpawningAltitude, Settings.PlanetaryCargoShips.MaxSpawningAltitude);
@@ -438,8 +451,6 @@ namespace ModularEncountersSystems.Spawning {
 				var pathDirection = VectorHelper.GetDirectionClosestTo(Vector3D.Normalize(environment.Position - startPathPoint), startMatrix.Forward, startMatrix.Right, startMatrix.Backward, startMatrix.Left);
 				pathDirection = VectorHelper.GetNextClockwiseDirection(pathDirection, startMatrix);
 				startMatrix = MatrixD.CreateWorld(startPathPoint, pathDirection, upAtHalfPath);
-
-				var pathDistance = MathTools.RandomBetween(Settings.PlanetaryCargoShips.MinPathDistance, Settings.PlanetaryCargoShips.MaxPathDistance);
 
 				//Save To PathDetails
 				path.StartCoords = startPathPoint;
@@ -469,6 +480,18 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
+					/*
+					var midPathAltitude = MidPointAltitude(startPath, endPath, pathDistance, environment);
+
+					if (midPathAltitude < Settings.PlanetaryCargoShips.MinPathAltitude) {
+
+						//TODO: Recalculate A Bunch Of Crap
+						svar altitudeAddition = (Settings.PlanetaryCargoShips.MinPathAltitude - midPathAltitude) * 1.15;
+						startPathPoint = upAtHalfPath * (pathHeight + altitudeAddition) + halfPathPointRough;
+
+					}
+					*/
+
 					if (!collection.Conditions.SkipAirDensityCheck) {
 
 						var startDensity = environment.NearestPlanet.Planet.GetAirDensity(startPath);
@@ -491,7 +514,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					obstructed = IsPlanetPathObstructed(playerBox, startPath, endPath, pathDistance, environment);
+					obstructed = IsPlanetPathObstructed(playerBox, startPath, endPath, pathDistance, environment, path.PathDebugging);
 
 					if (obstructed) {
 
@@ -627,7 +650,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				//Set Paths
 				path.StartCoords = initialCoords;
-				path.SpawnMatrix = MatrixD.CreateWorld(initialCoords, -randDir, VectorHelper.RandomPerpendicular(-randDir));
+				path.SpawnMatrix = MatrixD.CreateWorld(initialCoords, Vector3D.Forward, Vector3D.Up);
 				path.PathDirection = -randDir;
 				path.PathDistance = randDist;
 
@@ -805,6 +828,84 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 		}
+
+		private static void CalculateDroneEncounterPath(PathDetails path, SpawnGroupCollection collection, EnvironmentEvaluation environment) {
+
+			path.SpawnType = SpawningType.OtherNPC;
+
+			var voxelList = new List<MyVoxelBase>();
+			var voxelSphere = new BoundingSphereD(environment.Position, 20000);
+			MyGamePruningStructure.GetAllVoxelMapsInSphere(ref voxelSphere, voxelList);
+			var planetGravitySphere = environment.NearestPlanet.GetGravitySphere(0.05);
+
+			for (int i = 0; i < Settings.OtherNPCs.MaxSpawnAttempts; i++) {
+
+				//Setup Path
+
+				var coords = Vector3D.Zero;
+				var distance = MathTools.RandomBetween(collection.Conditions.MinDroneDistance, collection.Conditions.MaxDroneDistance);
+
+				if (!environment.IsOnPlanet) {
+
+					var dir = VectorHelper.RandomDirection();
+					coords = distance * dir + environment.Position;
+
+					if(environment.NearestPlanet != null && environment.NearestPlanet.IsPositionInGravity(coords))
+						coords = distance * -dir + environment.Position;
+
+					var dirToPosition = Vector3D.Normalize(environment.Position - coords);
+
+					path.SpawnMatrix = MatrixD.CreateWorld(coords, dirToPosition, VectorHelper.RandomPerpendicular(dirToPosition));
+					path.PathDirection = dirToPosition;
+					
+
+
+				} else {
+
+					var randomCompass = VectorHelper.RandomPerpendicular(environment.NearestPlanet.UpAtPosition(environment.Position));
+					var surfaceCoords = environment.NearestPlanet.SurfaceCoordsAtPosition(randomCompass * distance + environment.Position);
+					var addAltitude = collection.Conditions.DroneInheritsSourceAltitude ? Math.Abs(environment.AltitudeAtPosition) : 0;
+					var altitude = MathTools.RandomBetween(collection.Conditions.MinDroneAltitude, collection.Conditions.MaxDroneAltitude) + addAltitude;
+					var upAtSurface = environment.NearestPlanet.UpAtPosition(surfaceCoords);
+					coords = upAtSurface * altitude + surfaceCoords;
+					var randDirAtUp = VectorHelper.RandomPerpendicular(upAtSurface);
+					path.SpawnMatrix = MatrixD.CreateWorld(coords, randDirAtUp, upAtSurface);
+					path.PathDirection = randDirAtUp;
+
+				}
+
+
+				//Save To PathDetails
+				path.StartCoords = coords;
+				path.PathDistance = distance;
+
+				//Check For Obstructions On Each Prefab
+
+				bool obstructed = false;
+
+				for (int j = 0; j < collection.PrefabIndexes.Count; j++) {
+
+					var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
+					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
+					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
+
+					obstructed = IsGridWithinMinDistance(path.StartCoords, Settings.OtherNPCs.MinDistanceFromOtherEntities) && IsVoxelIntersecting(voxelList, path.StartCoords + new Vector3D(-300, -300, -300), path.StartCoords + new Vector3D(300, 300, 300));
+
+					if (obstructed)
+						break;
+
+				}
+
+				if (obstructed)
+					continue;
+
+				path.ValidPath = true;
+				break;
+
+			}
+
+		}
+
 
 		private static void PopulateSearchDirections(List<Vector3D> directions, MatrixD matrix, bool useAggressive) {
 
@@ -1301,7 +1402,14 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		private static bool IsPlanetPathObstructed(BoundingBoxD box, Vector3D start, Vector3D end, double pathDistance, EnvironmentEvaluation environment) {
+		private static double MidPointAltitude(Vector3D start, Vector3D direction, double pathDistance, EnvironmentEvaluation environment) {
+
+			var midPoint = direction * (pathDistance / 2) + start;
+			return environment.NearestPlanet?.AltitudeAtPosition(midPoint) ?? 0;
+		
+		}
+
+		private static bool IsPlanetPathObstructed(BoundingBoxD box, Vector3D start, Vector3D end, double pathDistance, EnvironmentEvaluation environment, StringBuilder sb = null) {
 
 			var ray = new RayD(start, Vector3D.Normalize(end - start));
 			var pathDirection = Vector3D.Normalize(end - start);
@@ -1309,13 +1417,17 @@ namespace ModularEncountersSystems.Spawning {
 			//Check For Intersection With Player Box
 			if (ray.Intersects(box).HasValue) {
 
-				//Prefab Path Intersecting Player Box, Abandoning Path
+				if (sb != null)
+					sb.Append("   - Ray Intersects Box").AppendLine();
+
 				return true;
 
 			}
 
 			if (IsGridWithinMinDistance(start, Settings.PlanetaryCargoShips.MinSpawnDistFromEntities)) {
 
+				if (sb != null)
+					sb.Append("   - Grid Within Min Distance").AppendLine();
 				return true;
 
 			}
@@ -1327,8 +1439,12 @@ namespace ModularEncountersSystems.Spawning {
 
 				stepDistance += Settings.PlanetaryCargoShips.PathStepCheckDistance;
 				var stepCoords = pathDirection * stepDistance + start;
+				var altitude = environment.NearestPlanet.AltitudeAtPosition(stepCoords);
 
-				if (environment.NearestPlanet.AltitudeAtPosition(stepCoords) < Settings.PlanetaryCargoShips.MinPathAltitude) {
+				if (altitude < Settings.PlanetaryCargoShips.MinPathAltitude) {
+
+					if (sb != null)
+						sb.Append("   - Planet Altitude Below Acceptable Level: " + altitude).AppendLine();
 
 					badPath = true;
 					break;

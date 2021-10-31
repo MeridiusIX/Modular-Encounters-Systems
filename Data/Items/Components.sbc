@@ -1,107 +1,107 @@
 ﻿<?xml version="1.0"?>
 <Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Components>
-    
+	<Components>
+		
 	<Component>
-      <Id>
-        <TypeId>Component</TypeId>
-        <SubtypeId>MESThrust</SubtypeId>
-      </Id>
-      <DisplayName>Proprietary Thrust Component</DisplayName>
-      <Icon>Textures\GUI\Icons\component\thrust_components_component.dds</Icon>
-      <Size>
-        <X>0.2</X>
-        <Y>0.2</Y>
-        <Z>0.2</Z>
-      </Size>
-      <Mass>40</Mass>
-      <Volume>10</Volume>
-      <Model>Models\Components\thrust_components_component.mwm</Model>
-      <PhysicalMaterial>Metal</PhysicalMaterial>
-      <MaxIntegrity>30</MaxIntegrity>
-      <DropProbability>0.2</DropProbability>
-      <Health>12</Health>
-      <MinimumOfferAmount>100</MinimumOfferAmount>
-      <MaximumOfferAmount>500</MaximumOfferAmount>
-      <MinimumOrderAmount>50</MinimumOrderAmount>
-      <MaximumOrderAmount>500</MaximumOrderAmount>
-      <CanPlayerOrder>true</CanPlayerOrder>
+			<Id>
+				<TypeId>Component</TypeId>
+				<SubtypeId>MESThrust</SubtypeId>
+			</Id>
+			<DisplayName>Proprietary Thrust Component</DisplayName>
+			<Icon>Textures\GUI\Icons\component\thrust_components_component.dds</Icon>
+			<Size>
+				<X>0.2</X>
+				<Y>0.2</Y>
+				<Z>0.2</Z>
+			</Size>
+			<Mass>40</Mass>
+			<Volume>10</Volume>
+			<Model>Models\Components\thrust_components_component.mwm</Model>
+			<PhysicalMaterial>Metal</PhysicalMaterial>
+			<MaxIntegrity>30</MaxIntegrity>
+			<DropProbability>0.2</DropProbability>
+			<Health>12</Health>
+			<MinimumOfferAmount>100</MinimumOfferAmount>
+			<MaximumOfferAmount>500</MaximumOfferAmount>
+			<MinimumOrderAmount>50</MinimumOrderAmount>
+			<MaximumOrderAmount>500</MaximumOrderAmount>
+			<CanPlayerOrder>true</CanPlayerOrder>
 
-      <MinimumAcquisitionAmount>10</MinimumAcquisitionAmount>
-      <MaximumAcquisitionAmount>100</MaximumAcquisitionAmount>
+			<MinimumAcquisitionAmount>10</MinimumAcquisitionAmount>
+			<MaximumAcquisitionAmount>100</MaximumAcquisitionAmount>
 
-    </Component>
+		</Component>
 	
-    <Component>
-      <Id>
-        <TypeId>Component</TypeId>
-        <SubtypeId>ProprietaryTech</SubtypeId>
-      </Id>
-      <DisplayName>Proprietary Circuits</DisplayName>
-      <Icon>Textures\GUI\Icons\component\computer_component.dds</Icon>
-      <Size>
-        <X>0.1</X>
-        <Y>0.1</Y>
-        <Z>0.2</Z>
-      </Size>
-      <Mass>0.250</Mass>
-      <Volume>1</Volume>
-      <Model>Models\Components\computer_component.mwm</Model>
-      <PhysicalMaterial>Metal</PhysicalMaterial>
-      <CanSpawnFromScreen>false</CanSpawnFromScreen>
-      <MinimalPricePerUnit>-1</MinimalPricePerUnit>
-      <MinimumOfferAmount>-1</MinimumOfferAmount>
-      <MaximumOfferAmount>-1</MaximumOfferAmount>
-      <CanPlayerOrder>false</CanPlayerOrder>
+		<Component>
+			<Id>
+				<TypeId>Component</TypeId>
+				<SubtypeId>ProprietaryTech</SubtypeId>
+			</Id>
+			<DisplayName>Proprietary Circuits</DisplayName>
+			<Icon>Textures\GUI\Icons\component\computer_component.dds</Icon>
+			<Size>
+				<X>0.1</X>
+				<Y>0.1</Y>
+				<Z>0.2</Z>
+			</Size>
+			<Mass>0.250</Mass>
+			<Volume>1</Volume>
+			<Model>Models\Components\computer_component.mwm</Model>
+			<PhysicalMaterial>Metal</PhysicalMaterial>
+			<CanSpawnFromScreen>false</CanSpawnFromScreen>
+			<MinimalPricePerUnit>-1</MinimalPricePerUnit>
+			<MinimumOfferAmount>-1</MinimumOfferAmount>
+			<MaximumOfferAmount>-1</MaximumOfferAmount>
+			<CanPlayerOrder>false</CanPlayerOrder>
 
-      <MaxIntegrity>1</MaxIntegrity>
-      <DropProbability>0</DropProbability>
-    </Component>
+			<MaxIntegrity>1</MaxIntegrity>
+			<DropProbability>0</DropProbability>
+		</Component>
 
-    <Component>
-      <Id>
-        <TypeId>Component</TypeId>
-        <SubtypeId>InhibitorChip</SubtypeId>
-      </Id>
-      <DisplayName>Inhibitor Chip</DisplayName>
-      <Icon>Textures\GUI\Icons\component\computer_component.dds</Icon>
-      <Size>
-        <X>0.1</X>
-        <Y>0.1</Y>
-        <Z>0.2</Z>
-      </Size>
-      <Mass>0.250</Mass>
-      <Volume>1</Volume>
-      <Model>Models\Components\computer_component.mwm</Model>
-      <PhysicalMaterial>Metal</PhysicalMaterial>
-      <CanSpawnFromScreen>false</CanSpawnFromScreen>
-      <MinimalPricePerUnit>10000000</MinimalPricePerUnit>
-      <MinimumOfferAmount>10000000</MinimumOfferAmount>
-      <MaximumOfferAmount>10000000</MaximumOfferAmount>
-      <CanPlayerOrder>true</CanPlayerOrder>
+		<Component>
+			<Id>
+				<TypeId>Component</TypeId>
+				<SubtypeId>InhibitorChip</SubtypeId>
+			</Id>
+			<DisplayName>Inhibitor Chip</DisplayName>
+			<Icon>Textures\GUI\Icons\component\computer_component.dds</Icon>
+			<Size>
+				<X>0.1</X>
+				<Y>0.1</Y>
+				<Z>0.2</Z>
+			</Size>
+			<Mass>0.250</Mass>
+			<Volume>1</Volume>
+			<Model>Models\Components\computer_component.mwm</Model>
+			<PhysicalMaterial>Metal</PhysicalMaterial>
+			<CanSpawnFromScreen>false</CanSpawnFromScreen>
+			<MinimalPricePerUnit>10000000</MinimalPricePerUnit>
+			<MinimumOfferAmount>10000000</MinimumOfferAmount>
+			<MaximumOfferAmount>10000000</MaximumOfferAmount>
+			<CanPlayerOrder>true</CanPlayerOrder>
 
-      <MaxIntegrity>1</MaxIntegrity>
-      <DropProbability>0</DropProbability>
-    </Component>
-    
-  </Components>
-  
-  <Blueprints>
+			<MaxIntegrity>1</MaxIntegrity>
+			<DropProbability>0</DropProbability>
+		</Component>
+		
+	</Components>
+	
+	<Blueprints>
 
-    <Blueprint>
-      <Id>
-        <TypeId>BlueprintDefinition</TypeId>
-        <SubtypeId>MESThrustComponent</SubtypeId>
-      </Id>
-      <DisplayName>Proprietrary Thrust Component</DisplayName>
-      <Icon>Textures\GUI\Icons\component\thrust_components_component.dds</Icon>
-      <Prerequisites>
-        <Item Amount="41" TypeId="Ingot" SubtypeId="Iron" />
-      </Prerequisites>
-      <Result Amount="1" TypeId="Component" SubtypeId="MESThrust" />
-      <BaseProductionTimeInSeconds>4</BaseProductionTimeInSeconds>
-    </Blueprint>
+		<Blueprint>
+			<Id>
+				<TypeId>BlueprintDefinition</TypeId>
+				<SubtypeId>MESThrustComponent</SubtypeId>
+			</Id>
+			<DisplayName>Proprietrary Thrust Component</DisplayName>
+			<Icon>Textures\GUI\Icons\component\thrust_components_component.dds</Icon>
+			<Prerequisites>
+				<Item Amount="41" TypeId="Ingot" SubtypeId="Iron" />
+			</Prerequisites>
+			<Result Amount="1" TypeId="Component" SubtypeId="MESThrust" />
+			<BaseProductionTimeInSeconds>4</BaseProductionTimeInSeconds>
+		</Blueprint>
 
-  </Blueprints>
-  
+	</Blueprints>
+	
 </Definitions>

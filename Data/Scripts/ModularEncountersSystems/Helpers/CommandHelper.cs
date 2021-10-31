@@ -61,6 +61,8 @@ namespace ModularEncountersSystems.Helpers {
 
         public bool SingleRecipient;
 
+        public bool ReturnToSender;
+
         public long Recipient;
 
         public EncounterWaypoint Waypoint;
@@ -72,6 +74,10 @@ namespace ModularEncountersSystems.Helpers {
         public float GridValueScore;
 
         public CommandTransmissionType TransmissionType;
+
+        public IBehavior Behavior;
+
+        public bool RequestEscortSlot;
 
 
         public Command() {
@@ -94,23 +100,28 @@ namespace ModularEncountersSystems.Helpers {
             PlayerIdentity = 0;
             UseTriggerTargetDistance = false;
             SingleRecipient = false;
+            ReturnToSender = false;
             Recipient = 0;
             Waypoint = null;
             MatchSenderReceiverOwners = false;
             CommandOwnerId = 0;
             GridValueScore = 0;
             TransmissionType = CommandTransmissionType.None;
+            Behavior = null;
+            RequestEscortSlot = false;
 
         }
 
         public void PrepareCommand(IBehavior behavior, CommandProfile profile, ActionReferenceProfile action, Command receivedCommand, long attackerId, long detectedId) {
 
+            this.Behavior = behavior;
             this.CommandCode = profile.CommandCode;
             this.SingleRecipient = profile.SingleRecipient;
             this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
             this.MatchSenderReceiverOwners = profile.MatchSenderReceiverOwners;
             RemoteControl = behavior.RemoteControl;
             CommandOwnerId = behavior.RemoteControl.OwnerId;
+            this.RequestEscortSlot = profile.RequestEscortSlot;
 
             double sendRadius = 0;
 
@@ -140,6 +151,9 @@ namespace ModularEncountersSystems.Helpers {
                 else
                     BehaviorLogger.Write("No Current Target To Send With Command", BehaviorDebugEnum.Command);
 
+            if (profile.SendSelfAsTargetEntityId)
+                this.TargetEntityId = behavior.RemoteControl.EntityId;
+
             if (profile.SendDamagerEntityId)
 
                 if (behavior.BehaviorSettings.LastDamagerEntity == 0)
@@ -154,6 +168,17 @@ namespace ModularEncountersSystems.Helpers {
             }
 
             TransmissionType = profile.TransmissionType;
+
+            if (receivedCommand != null) {
+
+                if (profile.ReturnToSender) {
+
+                    this.SingleRecipient = true;
+                    this.Recipient = receivedCommand.RemoteControl.EntityId;
+                
+                }
+            
+            }
 
             if (profile.SendWaypoint) {
 

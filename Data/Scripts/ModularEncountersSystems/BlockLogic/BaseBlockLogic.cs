@@ -1,11 +1,15 @@
 ﻿using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Tasks;
+using Sandbox.Game;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game.Components;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
+using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
 	public abstract class BaseBlockLogic : TaskItem, ITaskItem {
@@ -16,6 +20,11 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal bool _entityActive;
 		internal bool _physicsActive;
+
+		internal bool _tamperCheck;
+		internal DateTime _createTime;
+		internal IMyCubeGrid _parentGrid;
+		internal Vector3I _blockCell;
 
 		internal bool _isWorking;
 		internal bool _isNpcOwned;
@@ -31,8 +40,11 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		public BlockEntity Block;
 		public IMyEntity Entity;
+		public bool FunctionalOverride;
 
 		internal virtual void Setup(BlockEntity block) {
+
+			_createTime = MyAPIGateway.Session.GameDateTime;
 
 			Block = block;
 			Entity = block.Entity;
@@ -45,6 +57,8 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_isServer = MyAPIGateway.Multiplayer.IsServer;
 			_isDedicated = MyAPIGateway.Utilities.IsDedicated;
+			_parentGrid = block?.Block?.SlimBlock?.CubeGrid;
+			_blockCell = block.Block.SlimBlock.Min;
 
 			if (block?.Block?.SlimBlock?.CubeGrid?.Physics == null) {
 
@@ -55,6 +69,9 @@ namespace ModularEncountersSystems.BlockLogic {
 				_physicsActive = true;
 			
 			}
+
+			if(_tamperCheck)
+				TaskProcessor.Tasks.Add(new FixBlock(this));
 
 			TaskProcessor.Tasks.Add(this);
 
@@ -71,7 +88,14 @@ namespace ModularEncountersSystems.BlockLogic {
 			
 		}
 
-		internal virtual void WorkingChanged(IMyCubeBlock block = null) {
+		public virtual void WorkingChanged(IMyCubeBlock block = null) {
+
+			if (FunctionalOverride) {
+
+				_isWorking = true;
+				return;
+
+			}
 
 			if (Block?.Block != null)
 				_isWorking = Block.Block.IsFunctional && Block.Block.IsWorking;

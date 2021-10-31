@@ -33,14 +33,14 @@ namespace ModularEncountersSystems.Helpers {
 			if (gravityProvider != null && gravityProvider.IsPositionInRange(coords)) {
 
 				var up = Vector3D.Normalize(coords - planetEntity.GetPosition());
-				Vector3D randDirection = MyUtils.GetRandomPerpendicularVector(up);
+				Vector3D randDirection = MyUtils.GetRandomPerpendicularVector((Vector3)up);
 				var surfaceCoords = planet.GetClosestSurfacePointGlobal(randDirection * distance + coords);
 				result = Vector3D.Normalize(surfaceCoords - planetEntity.GetPosition()) * altitude + surfaceCoords;
 
 			} else if (planet != null) {
 
 				var up = Vector3D.Normalize(coords - planetEntity.GetPosition());
-				Vector3D randDirection = MyUtils.GetRandomPerpendicularVector(up);
+				Vector3D randDirection = MyUtils.GetRandomPerpendicularVector((Vector3)up);
 				result = randDirection * distance + coords;
 
 			} else {
@@ -125,7 +125,7 @@ namespace ModularEncountersSystems.Helpers {
 			if (dirA == Vector3D.Zero || dirB == Vector3D.Zero)
 				return 0;
 
-			var radians = MyUtils.GetAngleBetweenVectors(dirA, dirB);
+			var radians = MyUtils.GetAngleBetweenVectors((Vector3)dirA, (Vector3)dirB);
 			return (180 / Math.PI) * radians;
 
 		}

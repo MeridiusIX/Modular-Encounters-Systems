@@ -1,523 +1,577 @@
-﻿using ModularEncountersSystems.World;
-using ModularEncountersSystems.Configuration;
+﻿using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
-using ModularEncountersSystems.Watchers;
+using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
+using Sandbox.Game;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using VRageMath;
-using ModularEncountersSystems.Logging;
-using Sandbox.ModAPI;
-using ModularEncountersSystems.Helpers;
-using Sandbox.Game;
 
 namespace ModularEncountersSystems.Spawning {
 
-    [Flags]
-    public enum SpawningType {
-    
-        None = 0,
-        SpaceCargoShip = 1,
-        LunarCargoShip = 1 << 1,
-        RandomEncounter = 1 << 2,
-        PlanetaryCargoShip = 1 << 3,
-        GravityCargoShip = 1 << 4,
-        PlanetaryInstallation = 1 << 5,
-        WaterSurfaceStation = 1 << 6,
-        UnderWaterStation = 1 << 7,
-        BossEncounter = 1 << 8,
-        BossSpace = 1 << 9,
-        BossAtmo = 1 << 10,
-        BossGravity = 1 << 11,
-        Creature = 1 << 12,
-        ForcedCreature = 1 << 13,
-        OtherNPC = 1 << 14,
-        StaticEncounter = 1 << 15,
-        StaticEncounterPlanet = 1 << 16,
-        StaticEncounterSpace = 1 << 17,
-        DryLandInstallation = 1 << 18,
+	[Flags]
+	public enum SpawningType {
+	
+		None = 0,
+		SpaceCargoShip = 1,
+		LunarCargoShip = 1 << 1,
+		RandomEncounter = 1 << 2,
+		PlanetaryCargoShip = 1 << 3,
+		GravityCargoShip = 1 << 4,
+		PlanetaryInstallation = 1 << 5,
+		WaterSurfaceStation = 1 << 6,
+		UnderWaterStation = 1 << 7,
+		BossEncounter = 1 << 8,
+		BossSpace = 1 << 9,
+		BossAtmo = 1 << 10,
+		BossGravity = 1 << 11,
+		Creature = 1 << 12,
+		ForcedCreature = 1 << 13,
+		OtherNPC = 1 << 14,
+		StaticEncounter = 1 << 15,
+		StaticEncounterPlanet = 1 << 16,
+		StaticEncounterSpace = 1 << 17,
+		DryLandInstallation = 1 << 18,
+		DroneEncounter = 1 << 19,
 
-    }
+	}
 
-    public static class SpawnRequest {
+	public static class SpawnRequest {
 
-        public static SpawningType GetPrimarySpawningType(SpawningType type) {
+		public static Dictionary<string, Dictionary<string, DateTime>> DroneEncounterPlayerTracker = new Dictionary<string, Dictionary<string, DateTime>>();
 
-            if (type.HasFlag(SpawningType.SpaceCargoShip) || type.HasFlag(SpawningType.LunarCargoShip))
-                return SpawningType.SpaceCargoShip;
+		public static SpawningType GetPrimarySpawningType(SpawningType type) {
 
-            if (type.HasFlag(SpawningType.RandomEncounter))
-                return SpawningType.RandomEncounter;
+			if (type.HasFlag(SpawningType.SpaceCargoShip) || type.HasFlag(SpawningType.LunarCargoShip))
+				return SpawningType.SpaceCargoShip;
 
-            if (type.HasFlag(SpawningType.PlanetaryCargoShip) || type.HasFlag(SpawningType.GravityCargoShip))
-                return SpawningType.PlanetaryCargoShip;
+			if (type.HasFlag(SpawningType.RandomEncounter))
+				return SpawningType.RandomEncounter;
 
-            if (type.HasFlag(SpawningType.PlanetaryInstallation) || type.HasFlag(SpawningType.WaterSurfaceStation) || type.HasFlag(SpawningType.UnderWaterStation) || type.HasFlag(SpawningType.DryLandInstallation))
-                return SpawningType.PlanetaryInstallation;
+			if (type.HasFlag(SpawningType.PlanetaryCargoShip) || type.HasFlag(SpawningType.GravityCargoShip))
+				return SpawningType.PlanetaryCargoShip;
 
-            if (type.HasFlag(SpawningType.BossEncounter) || type.HasFlag(SpawningType.BossSpace) || type.HasFlag(SpawningType.BossAtmo) || type.HasFlag(SpawningType.BossGravity))
-                return SpawningType.BossEncounter;
+			if (type.HasFlag(SpawningType.PlanetaryInstallation) || type.HasFlag(SpawningType.WaterSurfaceStation) || type.HasFlag(SpawningType.UnderWaterStation) || type.HasFlag(SpawningType.DryLandInstallation))
+				return SpawningType.PlanetaryInstallation;
 
-            if (type.HasFlag(SpawningType.Creature) || type.HasFlag(SpawningType.ForcedCreature))
-                return SpawningType.Creature;
+			if (type.HasFlag(SpawningType.BossEncounter) || type.HasFlag(SpawningType.BossSpace) || type.HasFlag(SpawningType.BossAtmo) || type.HasFlag(SpawningType.BossGravity))
+				return SpawningType.BossEncounter;
 
-            if (type.HasFlag(SpawningType.OtherNPC))
-                return SpawningType.OtherNPC;
+			if (type.HasFlag(SpawningType.Creature) || type.HasFlag(SpawningType.ForcedCreature))
+				return SpawningType.Creature;
 
-            if (type.HasFlag(SpawningType.StaticEncounter) || type.HasFlag(SpawningType.StaticEncounterPlanet))
-                return SpawningType.StaticEncounter;
+			if (type.HasFlag(SpawningType.OtherNPC))
+				return SpawningType.OtherNPC;
 
-            return SpawningType.None;
+			if (type.HasFlag(SpawningType.StaticEncounter) || type.HasFlag(SpawningType.StaticEncounterPlanet))
+				return SpawningType.StaticEncounter;
 
-        }
+			if (type.HasFlag(SpawningType.DroneEncounter))
+				return SpawningType.DroneEncounter;
 
-        public static bool IsCargoShip(SpawningType type) {
+			return SpawningType.None;
 
-            if (type.HasFlag(SpawningType.SpaceCargoShip))
-                return true;
+		}
 
-            if (type.HasFlag(SpawningType.PlanetaryCargoShip))
-                return true;
+		public static bool IsCargoShip(SpawningType type) {
 
-            if (type.HasFlag(SpawningType.LunarCargoShip))
-                return true;
+			if (type.HasFlag(SpawningType.SpaceCargoShip))
+				return true;
 
-            if (type.HasFlag(SpawningType.GravityCargoShip))
-                return true;
+			if (type.HasFlag(SpawningType.PlanetaryCargoShip))
+				return true;
 
-            return false;
+			if (type.HasFlag(SpawningType.LunarCargoShip))
+				return true;
 
-        }
+			if (type.HasFlag(SpawningType.GravityCargoShip))
+				return true;
 
-        public static bool PlayerSpawnEligiblity(SpawningType spawnType, WatchedPlayer player) {
+			return false;
 
-            if (!player.CheckTimer(spawnType)) {
+		}
 
-                SpawnLogger.Write(player.Player.Player.DisplayName + " Timer Check Failed (" + player.GetTimerValue(spawnType) + ") For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
-                return false;
+		public static bool PlayerSpawnEligiblity(SpawningType spawnType, WatchedPlayer player) {
 
-            }
-                
+			if (!player.CheckTimer(spawnType)) {
 
-            player.ResetTimer(spawnType);
+				SpawnLogger.Write(player.Player.Player.DisplayName + " Timer Check Failed (" + player.GetTimerValue(spawnType) + ") For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+				return false;
 
-            if (!LocationSpawnEligibility(spawnType, player.Player.GetPosition())) {
+			}
+				
 
-                SpawnLogger.Write(player.Player.Player.DisplayName + " Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
-                player.ResetPosition(spawnType);
-                return false;
+			player.ResetTimer(spawnType);
 
-            } else {
+			if (player.Player.GetPosition() == Vector3D.Zero) {
 
-                if (!LocationSpawnEligibility(spawnType, player.GetLastPosition(spawnType))) {
+				player.Player.RefreshPlayerEntity();
 
-                    SpawnLogger.Write(player.Player.Player.DisplayName + " Previous Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
-                    player.ResetPosition(spawnType);
-                    return false;
+				if (player.Player.GetPosition() == Vector3D.Zero) {
 
-                }
-            
-            }
+					SpawnLogger.Write(player.Player.Player.DisplayName + " Position Recorded As Vector3D.Zero for Spawning. Player may be online, but not controlling a character/grid entity.", SpawnerDebugEnum.Spawning);
 
-            if (!PlayerDistanceToNextEncounter(spawnType, player)) {
+				}
 
-                SpawnLogger.Write(player.Player.Player.DisplayName + " Hasn't Travelled Far Enough To Trigger Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
-                return false;
-            
-            }
+			}
 
-            return true;
-        
-        }
+			if (!LocationSpawnEligibility(spawnType, player.Player.GetPosition())) {
 
-        public static bool PlayerDistanceToNextEncounter(SpawningType spawnType, WatchedPlayer player) {
+				SpawnLogger.Write(player.Player.Player.DisplayName + " Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+				player.ResetPosition(spawnType);
+				return false;
 
-            PlanetEntity planet = null;
-            var coords = player.Player.GetPosition();
+			} else {
 
-            foreach (var planetEnt in PlanetManager.Planets) {
+				if (!LocationSpawnEligibility(spawnType, player.GetLastPosition(spawnType))) {
 
-                if (!planetEnt.IsPositionInGravity(coords))
-                    continue;
+					SpawnLogger.Write(player.Player.Player.DisplayName + " Previous Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+					player.ResetPosition(spawnType);
+					return false;
 
-                planet = planetEnt;
-                break;
+				}
+			
+			}
 
-            }
+			if (!PlayerDistanceToNextEncounter(spawnType, player)) {
 
-            if (spawnType == SpawningType.RandomEncounter) {
+				SpawnLogger.Write(player.Player.Player.DisplayName + " Hasn't Travelled Far Enough To Trigger Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+				return false;
+			
+			}
 
-                if (planet != null)
-                    return false;
+			return true;
+		
+		}
 
-                if (Vector3D.Distance(coords, player.RandomEncounterDistanceCoordCheck) < Settings.RandomEncounters.PlayerTravelDistance)
-                    return false;
+		public static bool PlayerDistanceToNextEncounter(SpawningType spawnType, WatchedPlayer player) {
 
-                player.RandomEncounterDistanceCoordCheck = coords;
-                return true;
+			PlanetEntity planet = null;
+			var coords = player.Player.GetPosition();
 
-            }
+			foreach (var planetEnt in PlanetManager.Planets) {
 
-            if (spawnType == SpawningType.PlanetaryInstallation) {
+				if (!planetEnt.IsPositionInGravity(coords))
+					continue;
 
-                if (planet == null)
-                    return false;
+				planet = planetEnt;
+				break;
 
-                if (!planet.IsPositionInGravity(player.InstallationDistanceCoordCheck))
-                    player.InstallationDistanceCoordCheck = coords;
+			}
 
-                if (Vector3D.Distance(planet.GetPositionAtAverageRadius(coords), planet.GetPositionAtAverageRadius(player.InstallationDistanceCoordCheck)) < Settings.PlanetaryInstallations.PlayerDistanceSpawnTrigger)
-                    return false;
+			if (spawnType == SpawningType.RandomEncounter) {
 
-                player.InstallationDistanceCoordCheck = coords;
-                return true;
+				if (planet != null)
+					return false;
 
-            }
+				if (Vector3D.Distance(coords, player.RandomEncounterDistanceCoordCheck) < Settings.RandomEncounters.PlayerTravelDistance)
+					return false;
 
-            return true;
-        
-        }
+				player.RandomEncounterDistanceCoordCheck = coords;
+				return true;
 
-        public static bool LocationSpawnEligibility(SpawningType spawnType, Vector3D coords) {
+			}
 
-            bool InGravity = false;
-            double Altitude = 0;
+			if (spawnType == SpawningType.PlanetaryInstallation) {
 
-            foreach (var planet in PlanetManager.Planets) {
+				if (planet == null)
+					return false;
 
-                if (!planet.IsPositionInGravity(coords))
-                    continue;
+				if (!planet.IsPositionInGravity(player.InstallationDistanceCoordCheck))
+					player.InstallationDistanceCoordCheck = coords;
 
-                InGravity = true;
-                Altitude = planet.AltitudeAtPosition(coords);
-                break;
+				if (Vector3D.Distance(planet.GetPositionAtAverageRadius(coords), planet.GetPositionAtAverageRadius(player.InstallationDistanceCoordCheck)) < Settings.PlanetaryInstallations.PlayerDistanceSpawnTrigger)
+					return false;
 
-            }
+				player.InstallationDistanceCoordCheck = coords;
+				return true;
 
-            if (spawnType == SpawningType.SpaceCargoShip) {
+			}
 
-                return true;
-            
-            }
+			return true;
+		
+		}
 
-            if (spawnType == SpawningType.RandomEncounter) {
+		public static bool LocationSpawnEligibility(SpawningType spawnType, Vector3D coords) {
 
-                if (!InGravity)
-                    return true;
+			bool InGravity = false;
+			double Altitude = 0;
 
-            }
+			foreach (var planet in PlanetManager.Planets) {
 
-            if (spawnType == SpawningType.PlanetaryCargoShip) {
+				if (!planet.IsPositionInGravity(coords))
+					continue;
 
-                if (InGravity)
-                    return true;
+				InGravity = true;
+				Altitude = planet.AltitudeAtPosition(coords);
+				break;
 
-            }
+			}
 
-            if (spawnType == SpawningType.PlanetaryInstallation) {
+			if (spawnType == SpawningType.SpaceCargoShip) {
 
-                if (InGravity && Altitude <= Settings.PlanetaryInstallations.PlayerMaximumDistanceFromSurface)
-                    return true;
+				return true;
+			
+			}
 
-            }
+			if (spawnType == SpawningType.RandomEncounter) {
 
-            if (spawnType == SpawningType.BossEncounter) {
+				if (!InGravity)
+					return true;
 
-                return true;
+			}
 
-            }
+			if (spawnType == SpawningType.PlanetaryCargoShip) {
 
-            if (spawnType == SpawningType.Creature) {
+				if (InGravity)
+					return true;
 
-                if (InGravity && Altitude <= Settings.PlanetaryInstallations.PlayerMaximumDistanceFromSurface)
-                    return true;
+			}
 
-            }
+			if (spawnType == SpawningType.PlanetaryInstallation) {
 
-            return false;
-        
-        }
+				if (InGravity && Altitude <= Settings.PlanetaryInstallations.PlayerMaximumDistanceFromSurface)
+					return true;
 
-        public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D()) {
+			}
 
-            SpawnLogger.Write("Spawn Request Received From: " + source, SpawnerDebugEnum.Spawning);
+			if (spawnType == SpawningType.BossEncounter) {
 
-            //Main Spawner Enabled
-            if (!MES_SessionCore.ModEnabled) {
+				return true;
 
-                SpawnLogger.Write("Spawner Not Enabled", SpawnerDebugEnum.Spawning);
-                return false;
+			}
 
-            }
+			if (spawnType == SpawningType.Creature) {
 
-            //No Spawning Type
-            if (type == SpawningType.None) {
+				if (InGravity && Altitude <= Settings.PlanetaryInstallations.PlayerMaximumDistanceFromSurface)
+					return true;
 
-                SpawnLogger.Write("No Spawning Type Provided", SpawnerDebugEnum.Spawning);
-                return false;
-            
-            }
+			}
 
-            //Max NPCs
-            if (!adminSpawn && Settings.General.UseMaxNpcGrids && type != SpawningType.Creature && NpcManager.GetGlobalNpcCount() >= Settings.General.MaxGlobalNpcGrids) {
+			if (spawnType == SpawningType.DroneEncounter) {
 
-                SpawnLogger.Write("Max Global NPCs Reached/Exceeded", SpawnerDebugEnum.Spawning);
-                return false;
-            
-            }
+				return true;
+			
+			}
 
-            //Max NPCs Of Type in Area
-            var areaSize = Settings.GetSpawnAreaRadius(type);
+			return false;
+		
+		}
 
-            if (!adminSpawn && areaSize > -1 && NpcManager.GetAreaNpcCount(type, coords, areaSize) >= Settings.GetMaxAreaSpawns(type)) {
+		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D()) {
 
-                SpawnLogger.Write("Max SpawnType NPCs Reached/Exceeded for: " + type.ToString(), SpawnerDebugEnum.Spawning);
-                return false;
-            
-            }
+			SpawnLogger.Write("Spawn Request Received From: " + source, SpawnerDebugEnum.Spawning);
 
-            
+			//Main Spawner Enabled
+			if (!MES_SessionCore.ModEnabled) {
 
-            KnownPlayerLocationManager.CleanExpiredLocations();
+				SpawnLogger.Write("Spawner Not Enabled", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(string.Format("[{0}] Spawner Not Enabled", string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				return false;
 
-            if (!forceSpawn && !adminSpawn) {
+			}
 
-                if (!TimeoutManagement.IsSpawnAllowed(type, coords)) {
+			//No Spawning Type
+			if (type == SpawningType.None) {
 
-                    //TODO: Add Wave Spawner Exceptions
-                    SpawnLogger.Write("Spawning For This Encounter Type Is Timed Out In This Area: " + type.ToString(), SpawnerDebugEnum.Spawning);
-                    return false;
+				SpawnLogger.Write("No Spawning Type Provided", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(string.Format("[{0}] No Spawning Type Provided", string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				return false;
+			
+			}
 
-                }
-            
-            }
+			//Max NPCs
+			if (!adminSpawn && Settings.General.UseMaxNpcGrids && type != SpawningType.Creature && NpcManager.GetGlobalNpcCount() >= Settings.General.MaxGlobalNpcGrids) {
 
-            //Generate Environment Object
-            var environment = new EnvironmentEvaluation(coords);
+				SpawnLogger.Write("Max Global NPCs Reached/Exceeded", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(string.Format("[{0}] Max Global NPCs Reached/Exceeded", string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				return false;
+			
+			}
 
-            //Underground Condition
-            if (environment.IsOnPlanet && environment.AltitudeAtPosition < -1000) {
+			//Max NPCs Of Type in Area
+			var areaSize = Settings.GetSpawnAreaRadius(type);
 
-                SpawnLogger.Write("Proposed Spawn Location Is 1000m Beneath Planet Surface. Aborting Spawn.", SpawnerDebugEnum.Spawning);
-                return false;
+			if (!adminSpawn && areaSize > -1 && NpcManager.GetAreaNpcCount(type, coords, areaSize) >= Settings.GetMaxAreaSpawns(type)) {
 
-            }
+				SpawnLogger.Write("Max SpawnType NPCs Reached/Exceeded for: " + type.ToString(), SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(string.Format("[{0}] Max SpawnType NPCs Reached/Exceeded for: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				return false;
+			
+			}
 
-            //Get SpawnGroups and Valid Factions
-            var spawnGroupCollection = new SpawnGroupCollection();
-            SpawnGroupManager.GetSpawnGroups(type, environment, factionOverride, spawnGroupCollection, forceSpawn, adminSpawn, eligibleNames);
+			
 
-            //Select By ModID
-            if (Settings.General.UseModIdSelectionForSpawning == true) {
+			KnownPlayerLocationManager.CleanExpiredLocations();
 
-                spawnGroupCollection.SelectSpawnGroupSublist(spawnGroupCollection.SpawnGroupSublists, spawnGroupCollection.EligibleSpawnsByModId, spawnGroupCollection.SpawnGroups);
-                spawnGroupCollection.SelectSpawnGroupSublist(spawnGroupCollection.SmallSpawnGroupSublists, spawnGroupCollection.EligibleSmallSpawnsByModId, spawnGroupCollection.SmallStations);
-                spawnGroupCollection.SelectSpawnGroupSublist(spawnGroupCollection.MediumSpawnGroupSublists, spawnGroupCollection.EligibleMediumSpawnsByModId, spawnGroupCollection.MediumStations);
-                spawnGroupCollection.SelectSpawnGroupSublist(spawnGroupCollection.LargeSpawnGroupSublists, spawnGroupCollection.EligibleLargeSpawnsByModId, spawnGroupCollection.LargeStations);
+			if (!forceSpawn && !adminSpawn) {
 
-            }
+				if (!TimeoutManagement.IsSpawnAllowed(type, coords)) {
 
-            if (spawnGroupCollection.SpawnGroups.Count == 0) {
+					//TODO: Add Wave Spawner Exceptions
+					SpawnLogger.Write("Spawning For This Encounter Type Is Timed Out In This Area: " + type.ToString(), SpawnerDebugEnum.Spawning);
+					SpawnLogger.Write(string.Format("[{0}] Spawning For This Encounter Type Is Timed Out In This Area: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+					return false;
 
-                SpawnLogger.Write("Eligible SpawnGroup Count 0", SpawnerDebugEnum.Spawning);
-                return false;
+				}
+			
+			}
 
-            }
+			//Generate Environment Object
+			var environment = new EnvironmentEvaluation(coords);
 
-            SpawnLogger.Write("Selecting Random SpawnGroup", SpawnerDebugEnum.Spawning);
-            //Select Random Group
-            if (!spawnGroupCollection.SelectRandomSpawnGroup(type, environment)) {
+			//Underground Condition
+			if (environment.IsOnPlanet && environment.AltitudeAtPosition < -1000) {
 
-                SpawnLogger.Write("Failed To Select Random SpawnGroup", SpawnerDebugEnum.Spawning);
-                return false;
-            
-            }
+				SpawnLogger.Write("Proposed Spawn Location Is 1000m Beneath Planet Surface. Aborting Spawn.", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(string.Format("[{0}] Proposed Spawn Location Is 1000m Beneath Planet Surface. Aborting Spawn.", string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				return false;
 
-            SpawnLogger.Write("Spawn Conditions Selected: " + spawnGroupCollection.Conditions.ProfileSubtypeId, SpawnerDebugEnum.Spawning);
-            SpawnLogger.Write("SpawnGroup Selected: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
+			}
 
-            SpawnLogger.Write("Start Pathing", SpawnerDebugEnum.Spawning);
-            //Determine Path or Placement
-            var spawnTypes = SpawnConditions.AllowedSpawningTypes(type, environment);
-            var path = PathPlacements.GetSpawnPlacement(type, spawnTypes, spawnGroupCollection, environment, spawnMatrix);
+			Dictionary<string, DateTime> dronePlayerTracker = null;
 
-            SpawnLogger.Write("End Pathing", SpawnerDebugEnum.Spawning);
-            if (!path.ValidPath) {
+			if (!string.IsNullOrWhiteSpace(source) && source.StartsWith("Player")) {
 
-                SpawnLogger.Write("SpawnGroup Path/Placement Invalid", SpawnerDebugEnum.Spawning);
-                SpawnLogger.Write(path.PathDebugging.ToString(), SpawnerDebugEnum.Spawning);
-                return false;
-            
-            }
+				if (!DroneEncounterPlayerTracker.TryGetValue(source, out dronePlayerTracker)) {
 
-            SpawnLogger.Write("Pathing Successful", SpawnerDebugEnum.Spawning);
+					dronePlayerTracker = new Dictionary<string, DateTime>();
+					DroneEncounterPlayerTracker.Add(source, dronePlayerTracker);
 
-            //Create Boss Encounter
-            if (type.HasFlag(SpawningType.BossEncounter)) {
+				}
+			
+			}
 
-                SpawnLogger.Write("Initializing Boss Encounter", SpawnerDebugEnum.Spawning);
-                var bossEncounter = new StaticEncounter();
-                bossEncounter.InitBossEncounter(spawnGroupCollection.SpawnGroup.SpawnGroupName, spawnGroupCollection.ConditionsIndex, path.StartCoords, spawnGroupCollection.SelectRandomFaction(), spawnTypes);
-                NpcManager.StaticEncounters.Add(bossEncounter);
-                return true;
-            
-            }
+			//Get SpawnGroups and Valid Factions
+			var spawnGroupCollection = new SpawnGroupCollection();
+			SpawnGroupManager.GetSpawnGroups(type, environment, factionOverride, spawnGroupCollection, forceSpawn, adminSpawn, eligibleNames, dronePlayerTracker);
 
-            path.CustomVelocity = customVelocity;
+			//Select By ModID
+			if (Settings.General.UseModIdSelectionForSpawning == true) {
 
-            //Send Request To Prefab Spawner
+				spawnGroupCollection.SelectSpawnGroupSublist(spawnGroupCollection.SpawnGroupSublists, spawnGroupCollection.EligibleSpawnsByModId, ref spawnGroupCollection.SpawnGroups);
+				spawnGroupCollection.SelectSpawnGroupSublist(spawnGroupCollection.SmallSpawnGroupSublists, spawnGroupCollection.EligibleSmallSpawnsByModId, ref spawnGroupCollection.SmallStations);
+				spawnGroupCollection.SelectSpawnGroupSublist(spawnGroupCollection.MediumSpawnGroupSublists, spawnGroupCollection.EligibleMediumSpawnsByModId, ref spawnGroupCollection.MediumStations);
+				spawnGroupCollection.SelectSpawnGroupSublist(spawnGroupCollection.LargeSpawnGroupSublists, spawnGroupCollection.EligibleLargeSpawnsByModId, ref spawnGroupCollection.LargeStations);
 
-            bool result = false;
+			}
 
-            if (type == SpawningType.Creature) {
+			if (spawnGroupCollection.SpawnGroups.Count == 0) {
 
-                SpawnLogger.Write("SpawnGroup Sent To Bot Spawner", SpawnerDebugEnum.Spawning);
-                result = BotSpawner.SpawnBots(spawnGroupCollection, path, environment);
-            
-            } else {
+				SpawnLogger.Write("Eligible SpawnGroup Count 0", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(string.Format("[{0}] No Eligible SpawnGroups In Area For Type: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				return false;
 
-                SpawnLogger.Write("SpawnGroup Sent To Prefab Spawner", SpawnerDebugEnum.Spawning);
-                result = PrefabSpawner.ProcessSpawning(spawnGroupCollection, path, environment);
+			}
 
-            }
+			SpawnLogger.Write("Selecting Random SpawnGroup", SpawnerDebugEnum.Spawning);
+			//Select Random Group
+			if (!spawnGroupCollection.SelectRandomSpawnGroup(type, environment)) {
 
-            if (!result)
-                return false;
+				SpawnLogger.Write("Failed To Select Random SpawnGroup", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(string.Format("[{0}] Failed To Select Random SpawnGroup For Type: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				return false;
+			
+			}
 
-            SpawnLogger.Write("Spawn Successful: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
+			SpawnLogger.Write("Spawn Conditions Selected: " + spawnGroupCollection.Conditions.ProfileSubtypeId, SpawnerDebugEnum.Spawning);
+			SpawnLogger.Write("SpawnGroup Selected: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
 
-            //Post Spawn Checks
-            PostSpawn(type, path, spawnGroupCollection, environment);
+			SpawnLogger.Write("Start Pathing", SpawnerDebugEnum.Spawning);
+			//Determine Path or Placement
+			var spawnTypes = SpawnConditions.AllowedSpawningTypes(type, environment);
+			var path = PathPlacements.GetSpawnPlacement(type, spawnTypes, spawnGroupCollection, environment, spawnMatrix);
 
-            return true;
-        
-        }
+			SpawnLogger.Write("End Pathing", SpawnerDebugEnum.Spawning);
+			if (!path.ValidPath) {
 
-        public static bool CalculateStaticSpawn(StaticEncounter encounter, PlayerEntity player, SpawningType type, SpawningType spawnTypes) {
+				SpawnLogger.Write("SpawnGroup Path/Placement Invalid", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(path.PathDebugging.ToString(), SpawnerDebugEnum.Pathing);
+				SpawnLogger.Write(string.Format("[{0}] Could Not Generate Path / Coords For Type: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				return false;
+			
+			}
 
-            SpawnLogger.Write("Static/Boss Encounter Requested", SpawnerDebugEnum.Spawning);
+			SpawnLogger.Write("Pathing Successful", SpawnerDebugEnum.Spawning);
 
-            //Main Spawner Enabled
-            if (!MES_SessionCore.ModEnabled) {
+			//Create Boss Encounter
+			if (type.HasFlag(SpawningType.BossEncounter)) {
 
-                SpawnLogger.Write("Spawner Not Enabled", SpawnerDebugEnum.Spawning);
-                return false;
+				SpawnLogger.Write("Initializing Boss Encounter", SpawnerDebugEnum.Spawning);
+				SpawnLogger.Write(string.Format("[{0}] Initializing Boss Encounter Event / Signal", string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
+				var bossEncounter = new StaticEncounter();
+				bossEncounter.InitBossEncounter(spawnGroupCollection.SpawnGroup.SpawnGroupName, spawnGroupCollection.ConditionsIndex, path.StartCoords, spawnGroupCollection.SelectRandomFaction(), spawnTypes);
+				NpcManager.StaticEncounters.Add(bossEncounter);
+				return true;
+			
+			}
 
-            }
+			path.CustomVelocity = customVelocity;
 
-            //Check SpawnGroup
-            if (encounter.SpawnGroup == null) {
+			//Send Request To Prefab Spawner
 
-                SpawnLogger.Write("SpawnGroup Null", SpawnerDebugEnum.Spawning);
-                return false;
+			bool result = false;
 
-            }
+			if (type == SpawningType.Creature) {
 
-            //TODO: Clean KPLs and Timeouts
-            KnownPlayerLocationManager.CleanExpiredLocations();
+				SpawnLogger.Write("SpawnGroup Sent To Bot Spawner", SpawnerDebugEnum.Spawning);
+				result = BotSpawner.SpawnBots(spawnGroupCollection, path, environment);
+			
+			} else {
 
-            //Generate Environment Object
-            var environment = new EnvironmentEvaluation(encounter.TriggerCoords);
+				SpawnLogger.Write("SpawnGroup Sent To Prefab Spawner", SpawnerDebugEnum.Spawning);
+				result = PrefabSpawner.ProcessSpawning(spawnGroupCollection, path, environment);
 
-            //Get SpawnGroups and Valid Factions
-            var spawnGroupCollection = new SpawnGroupCollection();
-            spawnGroupCollection.StaticEncounterInstance = encounter;
+			}
 
-            if (type == SpawningType.BossEncounter) {
+			if (!result)
+				return false;
 
-                spawnGroupCollection.InitFromBossEncounter(encounter);
+			SpawnLogger.Write("Spawn Successful: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
+			SpawnLogger.Write(string.Format("[{0}] Spawn Successfully Processed: [" + spawnGroupCollection.SpawnGroup.SpawnGroupName + "] for Type: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
 
-            } else {
+			//Post Spawn Checks
+			PostSpawn(type, path, spawnGroupCollection, environment, dronePlayerTracker);
 
-                var spawnNames = new List<string>();
-                spawnNames.Add(encounter.SpawnGroupName);
-                SpawnGroupManager.GetSpawnGroups(type, environment, encounter.Faction, spawnGroupCollection, false, true, spawnNames);
+			return true;
+		
+		}
 
-                if (spawnGroupCollection.SpawnGroups.Count == 0) {
+		public static bool CalculateStaticSpawn(StaticEncounter encounter, PlayerEntity player, SpawningType type, SpawningType spawnTypes) {
 
-                    SpawnLogger.Write("Eligible SpawnGroup Count 0", SpawnerDebugEnum.Spawning);
-                    return false;
+			SpawnLogger.Write("Static/Boss Encounter Requested", SpawnerDebugEnum.Spawning);
 
-                }
+			//Main Spawner Enabled
+			if (!MES_SessionCore.ModEnabled) {
 
-                if (!spawnGroupCollection.SelectRandomSpawnGroup(type, environment)) {
+				SpawnLogger.Write("Spawner Not Enabled", SpawnerDebugEnum.Spawning);
+				return false;
 
-                    SpawnLogger.Write("Failed To Select Random SpawnGroup", SpawnerDebugEnum.Spawning);
-                    return false;
+			}
 
-                }
+			//Check SpawnGroup
+			if (encounter.SpawnGroup == null) {
 
-            }
+				SpawnLogger.Write("SpawnGroup Null", SpawnerDebugEnum.Spawning);
+				return false;
 
-            if (spawnGroupCollection.SpawnGroup == null) {
+			}
 
-                SpawnLogger.Write("Static/Boss SpawnGroup Null", SpawnerDebugEnum.Spawning);
-                return false;
+			//TODO: Clean KPLs and Timeouts
+			KnownPlayerLocationManager.CleanExpiredLocations();
 
-            }
+			//Generate Environment Object
+			var environment = new EnvironmentEvaluation(encounter.TriggerCoords);
 
-            SpawnLogger.Write("Static/Boss SpawnGroup Selected: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
+			//Get SpawnGroups and Valid Factions
+			var spawnGroupCollection = new SpawnGroupCollection();
+			spawnGroupCollection.StaticEncounterInstance = encounter;
 
-            //Determine Path or Placement
-            var path = PathPlacements.GetStaticSpawnPlacement(type, spawnTypes, spawnGroupCollection, environment, encounter);
+			if (type == SpawningType.BossEncounter) {
 
-            if (!path.ValidPath) {
+				spawnGroupCollection.InitFromBossEncounter(encounter);
 
-                SpawnLogger.Write("Static/Boss SpawnGroup Path/Placement Invalid", SpawnerDebugEnum.Spawning);
-                return false;
+			} else {
 
-            }
+				var spawnNames = new List<string>();
+				spawnNames.Add(encounter.SpawnGroupName);
+				SpawnGroupManager.GetSpawnGroups(type, environment, encounter.Faction, spawnGroupCollection, false, true, spawnNames);
 
-            //Send Request To Prefab Spawner
+				if (spawnGroupCollection.SpawnGroups.Count == 0) {
 
-            SpawnLogger.Write("Attempting Spawn", SpawnerDebugEnum.Spawning);
+					SpawnLogger.Write("Eligible SpawnGroup Count 0", SpawnerDebugEnum.Spawning);
+					return false;
 
-            var result = PrefabSpawner.ProcessSpawning(spawnGroupCollection, path, environment);
+				}
 
-            if (!result)
-                return false;
+				if (!spawnGroupCollection.SelectRandomSpawnGroup(type, environment)) {
 
-            SpawnLogger.Write("Spawn Successful: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
+					SpawnLogger.Write("Failed To Select Random SpawnGroup", SpawnerDebugEnum.Spawning);
+					return false;
 
-            PostSpawn(type, path, spawnGroupCollection, environment);
+				}
 
-            return true;
+			}
 
-        }
+			if (spawnGroupCollection.SpawnGroup == null) {
 
-        public static void PostSpawn(SpawningType type, PathDetails path, SpawnGroupCollection spawnGroupCollection, EnvironmentEvaluation environment) {
+				SpawnLogger.Write("Static/Boss SpawnGroup Null", SpawnerDebugEnum.Spawning);
+				return false;
 
-            //Post Spawn Checks
-            if (GetPrimarySpawningType(path.SpawnType) == SpawningType.PlanetaryInstallation)
-                PrefabSpawner.ApplyInstallationIncrement(spawnGroupCollection, environment);
-            
-            PrefabSpawner.ApplySpawningCosts(spawnGroupCollection.Conditions, spawnGroupCollection.SelectRandomFaction());
+			}
 
-            //Apply Timeout Increases
-            TimeoutManagement.ApplySpawnTimeoutToZones(type, path.StartCoords);
+			SpawnLogger.Write("Static/Boss SpawnGroup Selected: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
 
-            //Apply Unique Encounter
-            if (spawnGroupCollection.Conditions.StaticEncounter || spawnGroupCollection.Conditions.UniqueEncounter) {
+			//Determine Path or Placement
+			var path = PathPlacements.GetStaticSpawnPlacement(type, spawnTypes, spawnGroupCollection, environment, encounter);
 
-                NpcManager.UniqueGroupsSpawned.Add(spawnGroupCollection.SpawnGroup.SpawnGroupName);
-                SerializationHelper.SaveDataToSandbox<List<string>>("MES-UniqueEncountersSpawned", NpcManager.UniqueGroupsSpawned);
-            
-            }
+			if (!path.ValidPath) {
 
-            //KPL and Zone Increases
-            KnownPlayerLocationManager.IncreaseSpawnCountOfLocations(path.StartCoords, spawnGroupCollection.Faction);
+				SpawnLogger.Write("Static/Boss SpawnGroup Path/Placement Invalid", SpawnerDebugEnum.Spawning);
+				return false;
 
-            //SpawnSound
-            if (spawnGroupCollection.Conditions != null && spawnGroupCollection.Conditions.PlaySoundAtSpawnTriggerPosition && spawnGroupCollection.Conditions.SpawnTriggerPositionSoundId != null) {
+			}
 
-                MyVisualScriptLogicProvider.PlaySingleSoundAtPosition(spawnGroupCollection.Conditions.SpawnTriggerPositionSoundId, environment.Position);
-            
-            }
+			//Send Request To Prefab Spawner
 
-        }
+			SpawnLogger.Write("Attempting Spawn", SpawnerDebugEnum.Spawning);
 
-    }
+			var result = PrefabSpawner.ProcessSpawning(spawnGroupCollection, path, environment);
+
+			if (!result)
+				return false;
+
+			SpawnLogger.Write("Spawn Successful: " + spawnGroupCollection.SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
+
+			PostSpawn(type, path, spawnGroupCollection, environment, null);
+
+			return true;
+
+		}
+
+		public static void PostSpawn(SpawningType type, PathDetails path, SpawnGroupCollection spawnGroupCollection, EnvironmentEvaluation environment, Dictionary<string, DateTime> playerDroneTracker) {
+
+			//Post Spawn Checks
+			if (GetPrimarySpawningType(path.SpawnType) == SpawningType.PlanetaryInstallation)
+				PrefabSpawner.ApplyInstallationIncrement(spawnGroupCollection, environment);
+			
+			PrefabSpawner.ApplySpawningCosts(spawnGroupCollection.Conditions, spawnGroupCollection.SelectRandomFaction());
+
+			//Apply Timeout Increases
+			TimeoutManagement.ApplySpawnTimeoutToZones(type, path.StartCoords);
+
+			//Apply Unique Encounter
+			if (spawnGroupCollection.Conditions.StaticEncounter || spawnGroupCollection.Conditions.UniqueEncounter) {
+
+				NpcManager.UniqueGroupsSpawned.Add(spawnGroupCollection.SpawnGroup.SpawnGroupName);
+				SerializationHelper.SaveDataToSandbox<List<string>>("MES-UniqueEncountersSpawned", NpcManager.UniqueGroupsSpawned);
+			
+			}
+
+			//KPL and Zone Increases
+			KnownPlayerLocationManager.IncreaseSpawnCountOfLocations(path.StartCoords, spawnGroupCollection.Faction);
+
+			//SpawnSound
+			if (spawnGroupCollection.Conditions != null && spawnGroupCollection.Conditions.PlaySoundAtSpawnTriggerPosition && spawnGroupCollection.Conditions.SpawnTriggerPositionSoundId != null) {
+
+				MyVisualScriptLogicProvider.PlaySingleSoundAtPosition(spawnGroupCollection.Conditions.SpawnTriggerPositionSoundId, environment.Position);
+			
+			}
+
+			//Player Timers
+			if (playerDroneTracker != null && spawnGroupCollection.Conditions.MinimumPlayerTime > 0) {
+
+				var timeAdd = spawnGroupCollection.Conditions.MaximumPlayerTime - spawnGroupCollection.Conditions.MinimumPlayerTime;
+				playerDroneTracker[spawnGroupCollection.SpawnGroup.SpawnGroupName] = MyAPIGateway.Session.GameDateTime.Add(new TimeSpan(0,0, timeAdd));
+
+			}
+
+		}
+
+	}
 
 }

@@ -223,16 +223,33 @@ namespace ModularEncountersSystems.Entities {
 			if (!this.Online)
 				return;
 
-			if (Player?.Controller?.ControlledEntity?.Entity == null)
-				return;
+			var controlledEntity = Player?.Controller?.ControlledEntity?.Entity;
 
-			if (Player.Controller.ControlledEntity.Entity.Closed || Player.Controller.ControlledEntity.Entity.MarkedForClose)
-				return;
+			if (controlledEntity == null || controlledEntity.Closed || controlledEntity.MarkedForClose) {
 
-			if (Entity != null && !Entity.Closed && !Entity.MarkedForClose)
-				Entity.OnClose -= (e) => { Closed = true; };
+				controlledEntity = Player?.Character;
 
-			var character = Player.Controller.ControlledEntity.Entity as IMyCharacter;
+				if (controlledEntity == null || controlledEntity.Closed || controlledEntity.MarkedForClose) {
+
+					Closed = true;
+					if (Entity != null && !Entity.Closed && !Entity.MarkedForClose)
+						Entity.OnClose -= CloseEntity;
+					return;
+				
+				}
+			
+			}
+
+			bool reregisterEntityClose = false;
+
+			if (Entity != null && controlledEntity != Entity && !Entity.Closed && !Entity.MarkedForClose) {
+
+				Entity.OnClose -= CloseEntity;
+				Entity = null;
+
+			}
+			
+			var character = controlledEntity as IMyCharacter;
 
 			if (character != null) {
 
@@ -240,34 +257,41 @@ namespace ModularEncountersSystems.Entities {
 				this.Closed = false;
 				this.Entity = character;
 				this.ParentEntity = character;
-				return;
+
+			} else {
+
+				var controller = controlledEntity as IMyShipController;
+
+				if (controller != null) {
+
+					//RivalAI.Helpers.Logger.Write("Player Character Entity: ", Helpers.BehaviorDebugEnum.BehaviorMode);
+					this.Closed = false;
+					this.Entity = controller;
+					this.ParentEntity = controller.SlimBlock.CubeGrid;
+					this.IsParentEntityGrid = true;
+					this.IsParentEntitySeat = (controller as IMyCockpit) != null;
+
+				}
 
 			}
 
-			var controller = Player.Controller.ControlledEntity.Entity as IMyShipController;
+			if (reregisterEntityClose) {
 
-			if (controller != null) {
-
-				//RivalAI.Helpers.Logger.Write("Player Character Entity: ", Helpers.BehaviorDebugEnum.BehaviorMode);
-				this.Closed = false;
-				this.Entity = controller;
-				this.ParentEntity = controller.SlimBlock.CubeGrid;
-				this.IsParentEntityGrid = true;
-				this.IsParentEntitySeat = (controller as IMyCockpit) != null;
-				return;
+				Entity.OnClose += CloseEntity;
 
 			}
 
 		}
 
-		public void ToString(StringBuilder sb) {
+		public void GetPlayerInfo(StringBuilder sb) {
 
 			sb.Append("Player Name:                     ").Append(Player?.DisplayName ?? "null").AppendLine();
 			sb.Append("Identity Id:                     ").Append(Player?.IdentityId ?? 0).AppendLine();
 			sb.Append("Steam Id:                        ").Append(Player?.SteamUserId ?? 0).AppendLine();
 			sb.Append("Online:                          ").Append(Online).AppendLine();
 			sb.Append("Closed:                          ").Append(IsClosed()).AppendLine();
-			
+			sb.Append("Position:                        ").Append(GetPosition()).AppendLine();
+
 			foreach (var watchedPlayer in PlayerSpawnWatcher.Players) {
 
 				if (watchedPlayer.Player == this) {
@@ -301,7 +325,7 @@ namespace ModularEncountersSystems.Entities {
 			if (PlayerEntityChanged)
 				RefreshPlayerEntity();
 
-			if (IsClosed() || !Online) {
+			if (IsClosed() || Entity == null) {
 
 				return false;
 

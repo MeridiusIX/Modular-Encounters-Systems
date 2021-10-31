@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Zones;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
@@ -16,6 +17,7 @@ namespace ModularEncountersSystems.Entities {
 
 		
 		public static bool NewPlayerConnected = false;
+		public static bool EntityWatcherRegistered = false;
 
 		public static Action UnloadEntities;
 
@@ -37,8 +39,9 @@ namespace ModularEncountersSystems.Entities {
 			UnloadEntities += PlayerManager.UnloadEntities;
 
 			MyAPIGateway.Entities.OnEntityAdd += NewEntityDetected;
+			EntityWatcherRegistered = true;
 
-			
+
 
 			MES_SessionCore.UnloadActions += UnregisterWatcher;
 
@@ -69,6 +72,7 @@ namespace ModularEncountersSystems.Entities {
 				var planetEntity = new PlanetEntity(entity);
 				UnloadEntities += planetEntity.Unload;
 				PlanetManager.Planets.Add(planetEntity);
+				ZoneManager.AddNewZones();
 				return;
 
 			}

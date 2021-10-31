@@ -97,8 +97,8 @@ namespace ModularEncountersSystems.Configuration {
 			MaxPathDistanceFromPlayer = 5000;
 			MinSpawnDistFromEntities = 1200;
 			MinAirDensity = 0.70f;
-			MinSpawningAltitude = 1300;
-			MaxSpawningAltitude = 1800;
+			MinSpawningAltitude = 1700;
+			MaxSpawningAltitude = 2500;
 			MinPathAltitude = 900;
 			MinPathDistance = 10000;
 			MaxPathDistance = 13000;
@@ -118,6 +118,9 @@ namespace ModularEncountersSystems.Configuration {
 			TimeoutDuration = 900;
 			TimeoutRadius = 10000;
 			TimeoutSpawnLimit = 2;
+
+			UseTypeDisownTimer = true;
+			TypeDisownTimer = 1800;
 
 			EnableWaveSpawner = false;
 			UseSpecificRandomGroups = new string[] { "SomeSpawnGroupNameHere", "AnotherSpawnGroupNameHere", "EtcEtcEtc" };
@@ -224,7 +227,7 @@ namespace ModularEncountersSystems.Configuration {
 			
 		}
 		
-		public string SaveSettings(ConfigPlanetaryCargoShips settings){
+		public string SaveThisSettings(ConfigPlanetaryCargoShips settings){
 			
 			try{
 				
@@ -264,7 +267,7 @@ namespace ModularEncountersSystems.Configuration {
 				return "Provided Value For [" + commandSplit[3] + "] Could Not Be Parsed.";
 
 			InitDefinitionDisableList();
-			return SaveSettings();
+			return SaveThisSettings(this);
 
 		}
 

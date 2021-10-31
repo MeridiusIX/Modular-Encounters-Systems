@@ -7,6 +7,9 @@ using System.Text;
 namespace ModularEncountersSystems.API {
     public static class APIs {
 
+        //Systems
+        public static MESApi MES;
+
         //WeaponCore
         public static WcApi WeaponCore = new WcApi(); //Register in BeforeStart
         public static bool WeaponCoreApiLoaded = false;
@@ -31,6 +34,9 @@ namespace ModularEncountersSystems.API {
         public static bool DragApiLoaded { get { return Drag?.Heartbeat ?? false; } }
 
         public static void RegisterAPIs(int phase = 0) {
+
+            if (MES == null && phase == 0)
+                MES = new MESApi();
 
             //Water Mod (LoadData)
             if (AddonManager.WaterMod && phase == 0) {

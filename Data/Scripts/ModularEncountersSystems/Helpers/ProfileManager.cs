@@ -34,7 +34,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, BehaviorSubclass> BehaviorTypes = new Dictionary<string, BehaviorSubclass>();
 
 		public static Dictionary<string, byte[]> ActionObjectTemplates = new Dictionary<string, byte[]>();
-		public static Dictionary<string, byte[]> AutopilotObjectTemplates = new Dictionary<string, byte[]>();
+		//public static Dictionary<string, byte[]> AutopilotObjectTemplates = new Dictionary<string, byte[]>();
 		public static Dictionary<string, byte[]> ChatObjectTemplates = new Dictionary<string, byte[]>();
 		public static Dictionary<string, byte[]> ConditionObjectTemplates = new Dictionary<string, byte[]>();
 		public static Dictionary<string, byte[]> SpawnerObjectTemplates = new Dictionary<string, byte[]>();
@@ -292,14 +292,12 @@ namespace ModularEncountersSystems.Helpers {
 			//Forth Phase
 			foreach (var component in DefinitionHelper.EntityComponentDefinitions) {
 
-				if (component.DescriptionText.Contains("[RivalAI Autopilot]") == true && AutopilotObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if (component.DescriptionText.Contains("[RivalAI Autopilot]") == true && AutoPilotProfiles.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var autopilotObject = new AutoPilotProfile();
 					autopilotObject.InitTags(component.DescriptionText);
 					autopilotObject.ProfileSubtypeId = component.Id.SubtypeName;
-					var autopilotBytes = MyAPIGateway.Utilities.SerializeToBinary<AutoPilotProfile>(autopilotObject);
-					//Logger.WriteLog("Trigger Profile Added: " + component.Id.SubtypeName);
-					AutopilotObjectTemplates.Add(component.Id.SubtypeName, autopilotBytes);
+					AutoPilotProfiles.Add(component.Id.SubtypeName, autopilotObject);
 					continue;
 
 				}
@@ -449,14 +447,12 @@ namespace ModularEncountersSystems.Helpers {
 
 			//TODO: Move All Of This To Dictionary Since AutoPilotProfile is ReadOnly
 
-			byte[] apBytes = null;
+			AutoPilotProfile profile = null;
 
-			if (AutopilotObjectTemplates.TryGetValue(profileSubtypeId, out apBytes)) {
+			if (AutoPilotProfiles.TryGetValue(profileSubtypeId, out profile)) {
 
-				var ap = MyAPIGateway.Utilities.SerializeFromBinary<AutoPilotProfile>(apBytes);
-
-				if (ap != null || !string.IsNullOrWhiteSpace(ap.ProfileSubtypeId))
-					return ap;
+				if (profile != null || !string.IsNullOrWhiteSpace(profile.ProfileSubtypeId))
+					return profile;
 
 			}
 
@@ -464,14 +460,10 @@ namespace ModularEncountersSystems.Helpers {
 
 			if (!string.IsNullOrWhiteSpace(defaultBehavior)) {
 
-				apBytes = null;
+				if (AutoPilotProfiles.TryGetValue("RAI-Generic-Autopilot-" + defaultBehavior, out profile)) {
 
-				if (AutopilotObjectTemplates.TryGetValue("RAI-Generic-Autopilot-" + defaultBehavior, out apBytes)) {
-
-					var ap = MyAPIGateway.Utilities.SerializeFromBinary<AutoPilotProfile>(apBytes);
-
-					if (ap != null || !string.IsNullOrWhiteSpace(ap.ProfileSubtypeId))
-						return ap;
+					if (profile != null || !string.IsNullOrWhiteSpace(profile.ProfileSubtypeId))
+						return profile;
 
 				}
 

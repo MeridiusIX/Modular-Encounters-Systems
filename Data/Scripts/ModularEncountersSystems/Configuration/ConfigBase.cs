@@ -13,6 +13,9 @@ namespace ModularEncountersSystems.Configuration {
 		public string[] SpawnTypeBlacklist;
 		public string[] SpawnTypePlanetBlacklist;
 
+		public bool UseTypeDisownTimer;
+		public int TypeDisownTimer;
+
 		public bool UseTimeout;
 		public double TimeoutRadius;
 		public int TimeoutSpawnLimit;

@@ -132,6 +132,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		[ProtoMember(41)]
 		public string PlayerKnownLocationFactionOverride;
 
+		[ProtoMember(42)]
+		public double MaxExistingTargetDistance;
+
 		public TargetProfile() {
 
 			UseCustomTargeting = false;
@@ -145,6 +148,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			TimeUntilNextEvaluation = 2;
 
 			MaxDistance = 12000;
+			MaxExistingTargetDistance = -1;
 
 			MatchAllFilters = new List<TargetFilterEnum>();
 			MatchAnyFilters = new List<TargetFilterEnum>();
@@ -483,6 +487,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					if (tag.Contains("[PlayerKnownLocationFactionOverride:") == true) {
 
 						TagParse.TagStringCheck(tag, ref PlayerKnownLocationFactionOverride);
+
+					}
+
+					//MaxExistingTargetDistance
+					if (tag.Contains("[MaxExistingTargetDistance:") == true) {
+
+						TagParse.TagDoubleCheck(tag, ref MaxExistingTargetDistance);
 
 					}
 

@@ -202,7 +202,7 @@ namespace ModularEncountersSystems.Helpers {
 			myExplosionInfo.HitEntity = ownerEntity as MyEntity;
 			myExplosionInfo.ParticleScale = 1f;
 			myExplosionInfo.OwnerEntity = ownerEntity as MyEntity;
-			myExplosionInfo.Direction = Vector3D.Forward;
+			myExplosionInfo.Direction = Vector3.Forward;
 			myExplosionInfo.VoxelExplosionCenter = coords;
 			myExplosionInfo.ExplosionFlags = (MyExplosionFlags.CREATE_DEBRIS | MyExplosionFlags.APPLY_FORCE_AND_DAMAGE | MyExplosionFlags.CREATE_DECALS | MyExplosionFlags.CREATE_PARTICLE_EFFECT | MyExplosionFlags.CREATE_SHRAPNELS | MyExplosionFlags.APPLY_DEFORMATION);
 

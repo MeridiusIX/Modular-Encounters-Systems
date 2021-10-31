@@ -151,6 +151,33 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+			if(profile.ManipulationAllowedPrefabNames.Count > 0 && !profile.ManipulationAllowedPrefabNames.Contains(prefab.OriginalPrefab?.Id.SubtypeName)) {
+
+				SpawnLogger.Write("Prefab Name Not Allowed To Use Manipulation Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+
+			if (profile.ManipulationRestrictedPrefabNames.Count > 0 && profile.ManipulationRestrictedPrefabNames.Contains(prefab.OriginalPrefab?.Id.SubtypeName)) {
+
+				SpawnLogger.Write("Prefab Name Restricted From Using Manipulation Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+
+			if (profile.ManipulationAllowedPrefabIndexes.Count > 0 && !profile.ManipulationAllowedPrefabIndexes.Contains(prefab.OriginalPrefabIndex)) {
+
+				SpawnLogger.Write("Prefab Index Not Allowed To Use Manipulation Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+
+			if (profile.ManipulationRestrictedPrefabIndexes.Count > 0 && profile.ManipulationRestrictedPrefabIndexes.Contains(prefab.OriginalPrefabIndex)) {
+
+				SpawnLogger.Write("Prefab Index Restricted From Using Manipulation Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
 
 			return true;
 
@@ -338,9 +365,13 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					if (NPCShieldManager.AddDefenseShieldsToGrid(grid, true))
+					if (!data.Attributes.HasFlag(NpcAttributes.ShieldActivation) && NPCShieldManager.AddDefenseShieldsToGrid(grid, true)) {
+
+						data.Attributes |= NpcAttributes.ShieldActivation;
 						break;
 
+					}
+			
 				}
 
 			}
@@ -468,6 +499,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 					SpawnLogger.Write("KeenAI Applied To Remote Control", SpawnerDebugEnum.Manipulation);
 					data.Attributes |= NpcAttributes.ApplyBehavior;
+
+				} else {
+
+					data.Attributes &= ~NpcAttributes.ApplyBehavior;
 
 				}
 					

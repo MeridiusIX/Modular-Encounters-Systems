@@ -169,6 +169,23 @@ namespace ModularEncountersSystems.Behavior {
 
 		}
 
+		public static IBehavior GetBehavior(long remoteControlId) {
+
+			for (int i = Behaviors.Count - 1; i >= 0; i--) {
+
+				var behavior = Behaviors[i];
+
+				if (behavior?.RemoteControl == null || remoteControlId != behavior?.RemoteControl.EntityId || !behavior.IsAIReady())
+					continue;
+
+				return behavior;
+			
+			}
+
+			return null;
+		
+		}
+
 		public static void RegisterBehaviorFromRemoteControl(IMyRemoteControl remoteControl) {
 
 			try {
@@ -230,6 +247,13 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
+			//Escort
+			if (customData.Contains("[BehaviorName:Escort]")) {
+
+				return BehaviorSubclass.Escort;
+
+			}
+
 			//Fighter
 			if (customData.Contains("[BehaviorName:Fighter]")) {
 
@@ -269,6 +293,13 @@ namespace ModularEncountersSystems.Behavior {
 			if (customData.Contains("[BehaviorName:Passive]")) {
 
 				return BehaviorSubclass.Passive;
+
+			}
+
+			//Patrol
+			if (customData.Contains("[BehaviorName:Patrol]")) {
+
+				return BehaviorSubclass.Patrol;
 
 			}
 

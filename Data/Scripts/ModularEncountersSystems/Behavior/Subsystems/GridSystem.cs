@@ -204,6 +204,32 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		
 		}
 
+		public void ChangeHighestRangeAntennas(bool enabled) {
+
+			double highestRange = 0;
+
+			foreach (var antenna in Antennas) {
+
+				if (antenna == null || antenna.MarkedForClose || antenna.Closed)
+					continue;
+
+				if (antenna.Radius > highestRange)
+					highestRange = antenna.Radius;
+
+			}
+
+			foreach (var antenna in Antennas) {
+
+				if (antenna == null || antenna.MarkedForClose || antenna.Closed)
+					continue;
+
+				if (antenna.Radius == highestRange)
+					antenna.Enabled = enabled;
+
+			}
+
+		}
+
 		public bool CheckBlockValid(IMyTerminalBlock block) {
 
 			CheckConnectedGrids();
@@ -659,7 +685,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					if (i < newColors.Count) {
 
 						if (newColors[i] != new Vector3D(-10, -10, -10))
-							grid.ColorBlocks(block.Min, block.Min, newColors[i]);
+							grid.ColorBlocks(block.Min, block.Min, (Vector3)newColors[i]);
 
 					}
 

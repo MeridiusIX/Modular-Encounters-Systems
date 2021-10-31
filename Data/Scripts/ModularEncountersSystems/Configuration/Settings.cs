@@ -314,8 +314,8 @@ namespace ModularEncountersSystems.Configuration {
 			if (type == SpawningType.BossEncounter)
 				return BossEncounters;
 
-			if (type == SpawningType.OtherNPC || type == SpawningType.None)
-				return BossEncounters;
+			if (type == SpawningType.OtherNPC || type == SpawningType.DroneEncounter || type == SpawningType.None)
+				return OtherNPCs;
 
 			return null;
 

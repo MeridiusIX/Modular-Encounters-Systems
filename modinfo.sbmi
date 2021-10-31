@@ -4,8 +4,12 @@
   <WorkshopId>0</WorkshopId>
   <WorkshopIds>
     <WorkshopId>
-      <Id>2542599100</Id>
+      <Id>1521905890</Id>
       <ServiceName>Steam</ServiceName>
+    </WorkshopId>
+    <WorkshopId>
+      <Id>750855</Id>
+      <ServiceName>mod.io</ServiceName>
     </WorkshopId>
   </WorkshopIds>
 </MyObjectBuilder_ModInfo>

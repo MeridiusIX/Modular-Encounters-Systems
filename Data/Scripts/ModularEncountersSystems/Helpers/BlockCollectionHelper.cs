@@ -47,14 +47,15 @@ namespace ModularEncountersSystems.Helpers {
 				} else {
 
 					IMyFaction faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(factionNames[i]);
+					var factOwner = FactionHelper.GetFactionOwner(faction);
 
 					if (faction != null) {
 
-						_factionData.Add(factionNames[i], faction.FounderId);
+						_factionData.Add(factionNames[i], owner);
 
 						if (!nameToOwner.ContainsKey(blockNames[i])) {
 
-							nameToOwner.Add(blockNames[i], faction.FounderId);
+							nameToOwner.Add(blockNames[i], owner);
 
 						}
 

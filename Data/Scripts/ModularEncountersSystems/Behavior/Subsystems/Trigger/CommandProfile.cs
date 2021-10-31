@@ -10,14 +10,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string CommandCode;
 
 		public bool SingleRecipient;
+		public bool ReturnToSender;
 		public bool IgnoreAntennaRequirement;
 		public double Radius;
 		public double MaxRadius;
 
 		public bool SendTargetEntityId;
 		public bool SendDamagerEntityId;
+		public bool SendSelfAsTargetEntityId;
 		public bool SendWaypoint;
 		public bool SendGridValue;
+
+		public bool RequestEscortSlot;
 
 		public CommandTransmissionType TransmissionType;
 
@@ -31,14 +35,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CommandCode = "";
 
 			SingleRecipient = false;
+			ReturnToSender = false;
 			IgnoreAntennaRequirement = false;
 			Radius = 10000;
 			MaxRadius = -1;
 
 			SendTargetEntityId = false;
 			SendDamagerEntityId = false;
+			SendSelfAsTargetEntityId = false;
 			SendWaypoint = false;
 			SendGridValue = false;
+
+			RequestEscortSlot = false;
 
 			TransmissionType = CommandTransmissionType.None;
 
@@ -70,6 +78,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
+					//ReturnToSender
+					if (tag.Contains("[ReturnToSender:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref ReturnToSender);
+
+					}
+
 					//IgnoreAntennaRequirement
 					if (tag.Contains("[IgnoreAntennaRequirement:") == true) {
 
@@ -98,6 +113,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
+					//SendSelfAsTargetEntityId
+					if (tag.Contains("[SendSelfAsTargetEntityId:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref SendSelfAsTargetEntityId);
+
+					}
+
 					//SendDamagerEntityId
 					if (tag.Contains("[SendDamagerEntityId:") == true) {
 
@@ -116,6 +138,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[SendGridValue:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref SendGridValue);
+
+					}
+
+					//RequestEscortSlot
+					if (tag.Contains("[RequestEscortSlot:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref RequestEscortSlot);
 
 					}
 

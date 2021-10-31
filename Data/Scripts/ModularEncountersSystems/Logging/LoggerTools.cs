@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.API;
 using ModularEncountersSystems.Behavior;
+using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
@@ -53,7 +54,7 @@ namespace ModularEncountersSystems.Logging {
 
 		public static void ChangeCounter(ChatMessage msg, string[] msgSplit) {
 
-			if (msgSplit.Length != 5) {
+			if (msgSplit.Length < 5) {
 
 				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
 				return;
@@ -63,8 +64,8 @@ namespace ModularEncountersSystems.Logging {
 			int existingAmount = 0;
 			int newAmount = 0;
 
-			bool amountGot = int.TryParse(msgSplit[3], out newAmount);
-			bool existingGot = MyAPIGateway.Utilities.GetVariable(msgSplit[4], out existingAmount);
+			bool amountGot = int.TryParse(msgSplit[4], out newAmount);
+			bool existingGot = MyAPIGateway.Utilities.GetVariable(msgSplit[3], out existingAmount);
 
 			if (!amountGot) {
 
@@ -198,12 +199,14 @@ namespace ModularEncountersSystems.Logging {
 
 		public static void CreateKPL(ChatMessage msg, string[] msgSplit) {
 
-			if (msgSplit.Length < 3) {
+			if (msgSplit.Length < 4) {
 
 				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
 				return;
 
 			}
+
+			// /MES.Debug.CreateKPL.Faction.Radius.Duration.Max.Min
 
 			string faction = msgSplit[3];
 			double radius = 10000;
@@ -211,20 +214,104 @@ namespace ModularEncountersSystems.Logging {
 			int maxEncounters = -1;
 			int minThreat = -1;
 
-			if (msgSplit.Length >= 4)
+			if (msgSplit.Length >= 5)
 				double.TryParse(msgSplit[4], out radius);
 
-			if (msgSplit.Length >= 5)
+			if (msgSplit.Length >= 6)
 				int.TryParse(msgSplit[5], out duration);
 
-			if (msgSplit.Length >= 6)
+			if (msgSplit.Length >= 7)
 				int.TryParse(msgSplit[6], out maxEncounters);
 
-			if (msgSplit.Length >= 7)
+			if (msgSplit.Length >= 8)
 				int.TryParse(msgSplit[7], out minThreat);
 
 			KnownPlayerLocationManager.AddKnownPlayerLocation(msg.PlayerPosition, faction, radius, duration, maxEncounters, minThreat);
 			return;
+
+		}
+
+		public static void ForceSpawnTimer(ChatMessage msg, string[] array) {
+
+			if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+				msg.ReturnMessage = "Command For Force Spawn Timer Not Entered Correctly";
+				return;
+
+			}
+				
+
+			var player = PlayerSpawnWatcher.GetWatchedPlayer(msg.PlayerId);
+
+			if (player == null) {
+
+				msg.ReturnMessage = "Command For Force Spawn Timer Could Not Find Associated Player";
+				return;
+
+			}
+
+			PlayerSpawnWatcher.Timer = Settings.General.PlayerWatcherTimerTrigger;
+
+			msg.ReturnMessage = "Attempting To Force Spawn Timer For Type: " + array[3];
+
+			if (array[3] == "SpaceCargoShip") {
+
+				
+				player.SpaceCargoShipTimer = 0;
+				return;
+			
+			}
+
+			if (array[3] == "PlanetaryCargoShip") {
+
+				player.AtmoCargoShipTimer = 0;
+				return;
+
+			}
+
+			if (array[3] == "Creature") {
+
+				player.CreatureCheckTimer = 0;
+				return;
+
+			}
+
+			if (array[3] == "RandomEncounter") {
+
+				player.RandomEncounterCheckTimer = 0;
+				player.RandomEncounterCoolDownTimer = 0;
+				player.RandomEncounterDistanceCoordCheck = Vector3D.Forward * (Settings.RandomEncounters.PlayerTravelDistance * 20) + msg.PlayerPosition;
+				return;
+
+			}
+
+			if (array[3] == "PlanetaryInstallation") {
+
+				player.PlanetaryInstallationCheckTimer = 0;
+				player.PlanetaryInstallationCooldownTimer = 0;
+				player.InstallationDistanceCoordCheck = Vector3D.Forward * (Settings.PlanetaryInstallations.PlayerDistanceSpawnTrigger * 20) + msg.PlayerPosition;
+				return;
+
+			}
+
+			if (array[3] == "BossEncounter") {
+
+				player.BossEncounterCheckTimer = 0;
+				player.BossEncounterCooldownTimer = 0;
+				player.BossEncounterActive = false;
+				return;
+
+			}
+
+			if (array[3] == "DroneEncounter") {
+
+				player.DroneEncounterTimer = 0;
+				player.DroneEncounterTimerCooldownTimer = 0;
+				return;
+
+			}
+
+			msg.ReturnMessage = "Force Spawn Timer Failed For Unknown Type: " + array[3];
 
 		}
 
@@ -242,7 +329,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(BuildKeyList("Zone", ProfileManager.ZoneProfiles.Keys));
 			sb.Append(BuildKeyList("Behavior", ProfileManager.BehaviorTemplates.Keys));
 			sb.Append(BuildKeyList("Action", ProfileManager.ActionObjectTemplates.Keys));
-			sb.Append(BuildKeyList("AutoPilot", ProfileManager.AutopilotObjectTemplates.Keys));
+			sb.Append(BuildKeyList("AutoPilot", ProfileManager.AutoPilotProfiles.Keys));
 			sb.Append(BuildKeyList("Chat", ProfileManager.ChatObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Command", ProfileManager.CommandProfiles.Keys));
 			sb.Append(BuildKeyList("Condition", ProfileManager.ConditionObjectTemplates.Keys));
@@ -388,6 +475,16 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Weapon Core / Core Systems: ").Append(APIs.WeaponCoreApiLoaded).AppendLine();
 			sb.AppendLine();
 
+			//Cleanup Settings
+			sb.Append("::: Cleanup Settings Enabled :::").AppendLine();
+			sb.Append(" - Space Cargo Ships:          ").Append(Settings.SpaceCargoShips.UseCleanupSettings).AppendLine();
+			sb.Append(" - Random Encounters:          ").Append(Settings.RandomEncounters.UseCleanupSettings).AppendLine();
+			sb.Append(" - Planetary Cargo Ships:      ").Append(Settings.PlanetaryCargoShips.UseCleanupSettings).AppendLine();
+			sb.Append(" - Planetary Installations:    ").Append(Settings.PlanetaryInstallations.UseCleanupSettings).AppendLine();
+			sb.Append(" - Boss Encounters:            ").Append(Settings.BossEncounters.UseCleanupSettings).AppendLine();
+			sb.Append(" - Other NPCs:                 ").Append(Settings.OtherNPCs.UseCleanupSettings).AppendLine();
+			sb.AppendLine();
+
 			//GESAP
 			sb.Append(GetEligibleSpawnsAtPosition(msg));
 
@@ -396,8 +493,8 @@ namespace ModularEncountersSystems.Logging {
 			foreach (var player in PlayerManager.Players) {
 
 				if (player != null)
-					sb.Append(player.ToString());
-			
+					player.GetPlayerInfo(sb);
+
 			}
 
 			//All Mods
@@ -476,6 +573,9 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Direction From World Center:     ").Append(environment.DirectionFromWorldCenter.ToString()).AppendLine();
 			sb.Append(" - Is On Planet:                    ").Append(environment.IsOnPlanet.ToString()).AppendLine();
 			sb.Append(" - Planet Name:                     ").Append(environment.IsOnPlanet ? environment.NearestPlanetName : "N/A").AppendLine();
+			sb.Append(" - Planet Entity Id:                ").Append(environment.IsOnPlanet ? environment.NearestPlanet.Planet.EntityId.ToString() : "N/A").AppendLine();
+			sb.Append(" - Planet Center Coordinates:       ").Append(environment.IsOnPlanet ? environment.NearestPlanet.Center().ToString() : "N/A").AppendLine();
+			sb.Append(" - Planet Surface Coordinates:      ").Append(environment.IsOnPlanet ? environment.SurfaceCoords.ToString() : "N/A").AppendLine();
 			sb.Append(" - Planet Diameter:                 ").Append(environment.IsOnPlanet ? environment.PlanetDiameter.ToString() : "N/A").AppendLine();
 			sb.Append(" - Oxygen At Position:              ").Append(environment.IsOnPlanet ? environment.OxygenAtPosition.ToString() : "N/A").AppendLine();
 			sb.Append(" - Atmosphere At Position:          ").Append(environment.IsOnPlanet ? environment.AtmosphereAtPosition.ToString() : "N/A").AppendLine();
@@ -605,6 +705,24 @@ namespace ModularEncountersSystems.Logging {
 			if (collection.SpawnGroups.Count > 0) {
 
 				sb.Append("::: Creature / Bot Eligible Spawns :::").AppendLine();
+
+				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
+
+					sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
+
+				}
+
+				sb.AppendLine();
+
+			}
+
+			//Drone Encounters
+			collection = new SpawnGroupCollection();
+			SpawnGroupManager.GetSpawnGroups(SpawningType.DroneEncounter, environment, "", collection);
+
+			if (collection.SpawnGroups.Count > 0) {
+
+				sb.Append("::: Drone Encounter Eligible Spawns :::").AppendLine();
 
 				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
 
@@ -781,6 +899,44 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static string GetGridData(ChatMessage message) {
+
+			var line = new LineD(message.CameraPosition, message.CameraDirection * 10000 + message.CameraPosition);
+			GridEntity thisGrid = null;
+
+			var sb = new StringBuilder();
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				if (grid.Npc == null) {
+
+					continue;
+
+				}
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				message.ReturnMessage = "Could Not Locate NPC Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return sb.ToString() ?? "No Data";
+
+			}
+
+			message.ReturnMessage = "NPC Grid Data Sent To Clipboard";
+			return thisGrid.Npc.ToString();
+
+		}
+
 		public static string GetGridMatrixInfo(ChatMessage message) {
 
 			var line = new LineD(message.CameraPosition, message.CameraDirection * 400 + message.CameraPosition);
@@ -873,6 +1029,9 @@ namespace ModularEncountersSystems.Logging {
 				if (command[4] == "CleanUp")
 					result = SpawnLogger.CleanUp.ToString();
 
+				if (command[4] == "Dev")
+					result = SpawnLogger.Dev.ToString();
+
 				if (command[4] == "Entity")
 					result = SpawnLogger.Entity.ToString();
 
@@ -896,6 +1055,9 @@ namespace ModularEncountersSystems.Logging {
 
 				if (command[4] == "Spawning")
 					result = SpawnLogger.Spawning.ToString();
+
+				if (command[4] == "SpawnRecord")
+					result = SpawnLogger.SpawnRecord.ToString();
 
 				if (command[4] == "Startup")
 					result = SpawnLogger.Startup.ToString();

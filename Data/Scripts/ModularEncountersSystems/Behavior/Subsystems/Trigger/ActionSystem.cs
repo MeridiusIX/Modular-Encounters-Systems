@@ -481,6 +481,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//AssignEscortFromCommand
+			if (actions.AssignEscortFromCommand && command != null && command.RequestEscortSlot) {
+
+				var result = _behavior.Escort.ProcessEscortRequest(command);
+				BehaviorLogger.Write(result, BehaviorDebugEnum.Action);
+			
+			}
+
 			//SwitchToBehavior
 			if (actions.SwitchToBehavior == true) {
 
@@ -682,6 +690,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.PlayParticleEffectAtRemote == true) {
 
 				EffectManager.SendParticleEffectRequest(actions.ParticleEffectId, RemoteControl.WorldMatrix, actions.ParticleEffectOffset, actions.ParticleEffectScale, actions.ParticleEffectMaxTime, actions.ParticleEffectColor);
+
+			}
+
+			if (actions.EnableHighestRangeAntennas) {
+
+				_behavior.Grid.ChangeHighestRangeAntennas(true);
+
+			}
+
+			if (actions.DisableHighestRangeAntennas) {
+
+				_behavior.Grid.ChangeHighestRangeAntennas(false);
 
 			}
 
@@ -987,7 +1007,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//Zone Related (While Inside Zone)
 			if (actions.ChangeZoneAtPosition) {
+
+				//ToggleAtPosition
+				if (actions.ZoneToggleActiveAtPosition)
+					ZoneManager.ToggleZonesAtPosition(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneToggleActiveAtPositionMode);
 
 				//Radius
 				if (actions.ZoneRadiusChangeType != ModifierEnum.None)
@@ -995,7 +1020,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				//CustomBools
 				if (actions.ZoneCustomBoolChange)
-					ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeAmount);
+					ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
 
 				//CustomCounters
 				if (actions.ZoneCustomCounterChange)
@@ -1003,10 +1028,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//Toggle Zone
+			if (actions.ZoneToggleActive)
+				ZoneManager.ToggleZones(actions.ZoneName, actions.ZoneToggleActiveMode);
+
 			//ChangeBehaviorSubclass
 			if (actions.ChangeBehaviorSubclass) {
 
-				_behavior.BehaviorSettings.ActiveBehaviorType = actions.NewBehaviorSubclass;
+				//_behavior.BehaviorSettings.ActiveBehaviorType = actions.NewBehaviorSubclass;
 				_behavior.AssignSubClassBehavior(actions.NewBehaviorSubclass);
 				//TODO: Add Custom BehaviorMode Override
 
@@ -1034,7 +1063,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						var coords = _behavior.CurrentGrid.CubeGrid.GridIntegerToWorld(cell);
 						var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
 						IMyCharacter character = null;
-						BotSpawner.SpawnBotRequest(botProfile.BotType, matrix, out character, botProfile.BotDisplayName, botProfile.UseAiEnabled, botProfile.BotBehavior, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, 0);
+						Color? color = null;
+
+						if (botProfile.Color != new Vector3I(300,300,300)) {
+
+							color = new Color((int)botProfile.Color.X, (int)botProfile.Color.Y, (int)botProfile.Color.Z);
+						
+						}
+
+						BotSpawner.SpawnBotRequest(botProfile.BotType, matrix, out character, botProfile.BotDisplayName, botProfile.UseAiEnabled, botProfile.BotBehavior, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, 0, color);
 
 						if (character != null) {
 
@@ -1075,7 +1112,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 							if (character.Physics != null && _behavior.CurrentGrid.CubeGrid.Physics != null) {
 
-								character.Physics.LinearVelocity = _behavior.CurrentGrid.CubeGrid.Physics.LinearVelocity + (RemoteControl.WorldMatrix.Down * 2);
+								character.Physics.LinearVelocity = _behavior.CurrentGrid.CubeGrid.Physics.LinearVelocity + (Vector3)(RemoteControl.WorldMatrix.Down * 2);
 
 							}
 

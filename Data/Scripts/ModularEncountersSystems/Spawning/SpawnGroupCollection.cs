@@ -245,7 +245,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.SelectedIndexes) {
+			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.RandomSelectedIndexes) {
 
 				foreach (var group in Conditions.PrefabIndexGroups.Keys) {
 
@@ -262,9 +262,10 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					if (indexToAdd >= 0 && !PrefabIndexes.Contains(indexToAdd)) {
+					if (list[indexToAdd] >= 0 && !PrefabIndexes.Contains(list[indexToAdd])) {
 
-						PrefabIndexes.Add(indexToAdd);
+						SpawnLogger.Write("Prefab Index Selected: " + list[indexToAdd], SpawnerDebugEnum.Spawning);
+						PrefabIndexes.Add(list[indexToAdd]);
 
 					}
 
@@ -281,12 +282,12 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public Vector3D SelectPrefabOffet(Vector3D originalOffset, int customIndex = -1) {
+		public Vector3 SelectPrefabOffet(Vector3 originalOffset, int customIndex = -1) {
 
 			var index = customIndex > -1 ? customIndex : SpawnedPrefabs;
 
 			if (index < Conditions.PrefabOffsetOverrides.Count)
-				return Conditions.PrefabOffsetOverrides[index];
+				return (Vector3)Conditions.PrefabOffsetOverrides[index];
 
 			return originalOffset;
 
@@ -336,7 +337,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public void SelectSpawnGroupSublist(Dictionary<string, List<ImprovedSpawnGroup>> sublists, Dictionary<string, int> modIdEligibleGroups, List<ImprovedSpawnGroup> result) {
+		public void SelectSpawnGroupSublist(Dictionary<string, List<ImprovedSpawnGroup>> sublists, Dictionary<string, int> modIdEligibleGroups, ref List<ImprovedSpawnGroup> result) {
 
 			var sublistKeys = sublists.Keys;
 
@@ -350,6 +351,8 @@ namespace ModularEncountersSystems.Spawning {
 			if (Settings.General.UseWeightedModIdSelection == true) {
 
 				var weighedKeyList = new List<string>();
+
+				//SpawnLogger.Write("Mods Using SpawnGroups: " + sublistKeys.Count, SpawnerDebugEnum.SpawnGroup);
 
 				foreach (var key in sublistKeys) {
 
@@ -400,11 +403,13 @@ namespace ModularEncountersSystems.Spawning {
 				}
 
 				var randkey = weighedKeyList[MathTools.RandomBetween(0, weighedKeyList.Count)];
+				SpawnLogger.Write(randkey + " Used For Weighted SpawnGroup Selection.", SpawnerDebugEnum.SpawnGroup);
 
 				result = sublists[randkey];
 
 			} else {
 
+				SpawnLogger.Write("Weighted SpawnGroup Selection Not In Effect", SpawnerDebugEnum.SpawnGroup);
 				var keyList = sublists.Keys.ToList();
 				var key = keyList[MathTools.RandomBetween(0, keyList.Count)];
 				result = sublists[key];

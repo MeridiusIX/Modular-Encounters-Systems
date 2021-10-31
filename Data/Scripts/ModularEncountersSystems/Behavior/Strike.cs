@@ -11,17 +11,31 @@ namespace ModularEncountersSystems.Behavior {
 
 		//Configurable
 
-		public double StrikeBeginSpaceAttackRunDistance;
-		public double StrikeBeginPlanetAttackRunDistance;
-		public double StrikeBreakawayDistance;
-		public int StrikeOffsetRecalculationTime;
-		public bool StrikeEngageUseSafePlanetPathing;
-		public bool StrikeEngageUseCollisionEvasionSpace;
-		public bool StrikeEngageUseCollisionEvasionPlanet;
+		public double StrikeBeginSpaceAttackRunDistance { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunDistanceSpace : _strikeBeginSpaceAttackRunDistance; } }
+		public double StrikeBeginPlanetAttackRunDistance { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunDistancePlanet : _strikeBeginPlanetAttackRunDistance; } }
+		public double StrikeBreakawayDistance { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunBreakawayDistance : _strikeBreakawayDistance; } }
+		public int StrikeOffsetRecalculationTime { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.OffsetRecalculationTime : _strikeOffsetRecalculationTime; } }
+		public bool StrikeEngageUseSafePlanetPathing { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunUseSafePlanetPathing : _strikeEngageUseSafePlanetPathing; } }
+		public bool StrikeEngageUseCollisionEvasionSpace { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunUseCollisionEvasionSpace : _strikeEngageUseCollisionEvasionSpace; } }
+		public bool StrikeEngageUseCollisionEvasionPlanet { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunUseCollisionEvasionPlanet : _strikeEngageUseCollisionEvasionPlanet; } }
 
-		public bool EngageOverrideWithDistanceAndTimer;
-		public int EngageOverrideTimerTrigger;
-		public double EngageOverrideDistance;
+		public bool EngageOverrideWithDistanceAndTimer { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunOverrideWithDistanceAndTimer : _engageOverrideWithDistanceAndTimer; } }
+		public int EngageOverrideTimerTrigger { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunOverrideTimerTrigger : _engageOverrideTimerTrigger; } }
+		public double EngageOverrideDistance { get { return _behavior.AutoPilot?.Data != null ? _behavior.AutoPilot.Data.AttackRunOverrideDistance : _engageOverrideDistance; } }
+
+
+		private double _strikeBeginSpaceAttackRunDistance;
+		private double _strikeBeginPlanetAttackRunDistance;
+		private double _strikeBreakawayDistance;
+		private int _strikeOffsetRecalculationTime;
+		private bool _strikeEngageUseSafePlanetPathing;
+		private bool _strikeEngageUseCollisionEvasionSpace;
+		private bool _strikeEngageUseCollisionEvasionPlanet;
+
+		private bool _engageOverrideWithDistanceAndTimer;
+		private int _engageOverrideTimerTrigger;
+		private double _engageOverrideDistance;
+
 
 		private bool _defaultCollisionSettings = false;
 
@@ -39,17 +53,17 @@ namespace ModularEncountersSystems.Behavior {
 			_subClass = BehaviorSubclass.Strike;
 			_behavior = behavior;
 
-			StrikeBeginSpaceAttackRunDistance = 75;
-			StrikeBeginPlanetAttackRunDistance = 100;
-			StrikeBreakawayDistance = 450;
-			StrikeOffsetRecalculationTime = 30;
-			StrikeEngageUseSafePlanetPathing = true;
-			StrikeEngageUseCollisionEvasionSpace = true;
-			StrikeEngageUseCollisionEvasionPlanet = false;
+			_strikeBeginSpaceAttackRunDistance = 75;
+			_strikeBeginPlanetAttackRunDistance = 100;
+			_strikeBreakawayDistance = 450;
+			_strikeOffsetRecalculationTime = 30;
+			_strikeEngageUseSafePlanetPathing = true;
+			_strikeEngageUseCollisionEvasionSpace = true;
+			_strikeEngageUseCollisionEvasionPlanet = false;
 
-			EngageOverrideWithDistanceAndTimer = true;
-			EngageOverrideTimerTrigger = 20;
-			EngageOverrideDistance = 1200;
+			_engageOverrideWithDistanceAndTimer = true;
+			_engageOverrideTimerTrigger = 20;
+			_engageOverrideDistance = 1200;
 
 			LastOffsetCalculation = MyAPIGateway.Session.GameDateTime;
 			EngageOverrideTimer = MyAPIGateway.Session.GameDateTime;
@@ -133,7 +147,7 @@ namespace ModularEncountersSystems.Behavior {
 				if (EngageOverrideWithDistanceAndTimer) {
 
 					if (_behavior.AutoPilot.DistanceToCurrentWaypoint < EngageOverrideDistance) {
-					
+
 						var time = MyAPIGateway.Session.GameDateTime - EngageOverrideTimer;
 
 						if (time.TotalSeconds > EngageOverrideTimerTrigger) {
@@ -141,6 +155,10 @@ namespace ModularEncountersSystems.Behavior {
 							engageOverride = true;
 
 						}
+
+					} else {
+
+						EngageOverrideTimer = MyAPIGateway.Session.GameDateTime;
 
 					}
 				
@@ -278,35 +296,35 @@ namespace ModularEncountersSystems.Behavior {
 					//StrikeBeginSpaceAttackRunDistance
 					if (tag.Contains("[StrikeBeginSpaceAttackRunDistance:") == true) {
 
-						TagParse.TagDoubleCheck(tag, ref this.StrikeBeginSpaceAttackRunDistance);
+						TagParse.TagDoubleCheck(tag, ref this._strikeBeginSpaceAttackRunDistance);
 
 					}
 
 					//StrikeBeginPlanetAttackRunDistance
 					if (tag.Contains("[StrikeBeginPlanetAttackRunDistance:") == true) {
 
-						TagParse.TagDoubleCheck(tag, ref this.StrikeBeginPlanetAttackRunDistance);
+						TagParse.TagDoubleCheck(tag, ref this._strikeBeginPlanetAttackRunDistance);
 
 					}
 
 					//StrikeBreakawayDistance
 					if (tag.Contains("[StrikeBreakawayDistance:") == true) {
 
-						TagParse.TagDoubleCheck(tag, ref this.StrikeBreakawayDistance);
+						TagParse.TagDoubleCheck(tag, ref this._strikeBreakawayDistance);
 
 					}
 
 					//StrikeOffsetRecalculationTime
 					if (tag.Contains("[StrikeOffsetRecalculationTime:") == true) {
 
-						TagParse.TagIntCheck(tag, ref this.StrikeOffsetRecalculationTime);
+						TagParse.TagIntCheck(tag, ref this._strikeOffsetRecalculationTime);
 
 					}
 
 					//StrikeEngageUseSafePlanetPathing
 					if (tag.Contains("[StrikeEngageUseSafePlanetPathing:") == true) {
 
-						TagParse.TagBoolCheck(tag, ref StrikeEngageUseSafePlanetPathing);
+						TagParse.TagBoolCheck(tag, ref _strikeEngageUseSafePlanetPathing);
 
 					}
 

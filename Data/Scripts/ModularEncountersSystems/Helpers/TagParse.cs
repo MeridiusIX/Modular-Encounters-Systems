@@ -225,6 +225,29 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagBotProfileListCheck(string tag, ref List<BotSpawnProfile> original) {
+
+			var tagSplit = ProcessTag(tag);
+			BotSpawnProfile profile = null;
+
+			if (tagSplit.Length == 2) {
+
+				if (!ProfileManager.BotSpawnProfiles.TryGetValue(tagSplit[1], out profile)) {
+
+					return;
+
+				}
+
+			} else {
+
+				return;
+
+			}
+
+			original.Add(profile);
+
+		}
+
 		public static void TagBroadcastTypeEnumCheck(string tag, ref List<BroadcastType> original) {
 
 			BroadcastType result = BroadcastType.None;
@@ -446,9 +469,12 @@ namespace ModularEncountersSystems.Helpers {
 
 					int number = 0;
 
-					if (int.TryParse(item, out number) == false)
+					if (int.TryParse(item, out number) == false) {
+
 						continue;
 
+					}
+		
 					result.Add(number);
 
 				}
@@ -456,6 +482,37 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			result.RemoveAll(item => item == 0);
+
+		}
+
+		public static void TagIntListCheck(string tag, bool preserveZero, ref List<int> result) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				var array = tagSplit[1].Split(',');
+
+				foreach (var item in array) {
+
+					if (string.IsNullOrWhiteSpace(item))
+						continue;
+
+					int number = 0;
+
+					if (int.TryParse(item, out number) == false) {
+
+						continue;
+
+					}
+
+					result.Add(number);
+
+				}
+
+			}
+
+			//result.RemoveAll(item => item == 0);
 
 		}
 
@@ -728,6 +785,24 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			original = result;
+
+		}
+
+		public static void TagSpawnConditionsProfileCheck(string tag, ref SpawnConditionsProfile original) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length < 2) {
+
+				return;
+
+			}
+
+			var key = tagSplit[1];
+			SpawnConditionsProfile result = null;
+
+			if (ProfileManager.SpawnConditionProfiles.TryGetValue(key, out result))
+				original = result;
 
 		}
 
@@ -1139,7 +1214,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					}
 
-					result.Add(keyVector, valVector);
+					result.Add((Vector3)keyVector, (Vector3)valVector);
 
 				}
 
@@ -1166,7 +1241,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			}
 
-			original.Add(result);
+			original.Add((Vector3)result);
 
 		}
 
@@ -1190,6 +1265,29 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			original = result;
+
+		}
+
+		public static void TagVector3ICheck(string tag, ref Vector3I original) {
+
+			Vector3D result = Vector3D.Zero;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (Vector3D.TryParse(FixVectorString(tagSplit[1]), out result) == false) {
+
+					return;
+
+				}
+
+			} else {
+
+				return;
+
+			}
+
+			original = (Vector3I)result;
 
 		}
 
@@ -1293,7 +1391,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					}
 
-					result.Add(keyVector, val);
+					result.Add((Vector3)keyVector, val);
 
 				}
 

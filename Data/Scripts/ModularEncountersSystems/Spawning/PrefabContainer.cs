@@ -13,6 +13,7 @@ namespace ModularEncountersSystems.Spawning {
 		public string PrefabSubtypeId;
 		public MyPrefabDefinition Prefab;
 		public MyPrefabDefinition OriginalPrefab;
+		public int OriginalPrefabIndex;
 		public MyObjectBuilder_PrefabDefinition PrefabBuilder;
 		public bool SpawningInProgress;
 		public List<MyObjectBuilder_CubeGrid> GridList;
@@ -49,10 +50,11 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public bool InitializePrefabForSpawn(string subtypeId) {
+		public bool InitializePrefabForSpawn(string subtypeId, int index) {
 
 			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(subtypeId);
 			OriginalPrefab = prefab;
+			OriginalPrefabIndex = index;
 
 			if (prefab?.CubeGrids == null || prefab.CubeGrids.Length == 0)
 				return false;

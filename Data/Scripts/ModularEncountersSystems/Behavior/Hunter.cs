@@ -65,7 +65,7 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void ProcessBehavior() {
 
-			if(MES_SessionCore.IsServer == false) {
+			if(MES_SessionCore.IsServer == false || _behavior == null) {
 
 				return;
 

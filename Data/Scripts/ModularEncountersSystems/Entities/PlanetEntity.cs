@@ -137,11 +137,10 @@ namespace ModularEncountersSystems.Entities {
 
 			if (Water == null) {
 
-				Water = WaterAPI.GetClosestWater(Center());
+				Water = Planet.EntityId;
 
 			}
-				
-
+		
 			return true;
 
 		}

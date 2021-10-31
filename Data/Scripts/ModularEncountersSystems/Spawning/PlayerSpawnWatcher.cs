@@ -45,6 +45,20 @@ namespace ModularEncountersSystems.Spawning {
 
         }
 
+        public static WatchedPlayer GetWatchedPlayer(long identityId) {
+
+            for (int i = Players.Count - 1; i >= 0; i--) {
+
+                var id = Players[i]?.Player?.Player?.IdentityId ?? 0;
+                if (id == identityId)
+                    return Players[i];
+            
+            }
+
+            return null;
+
+        }
+
         public static void Unload() {
 
             PlayerManager.NewPlayerDetected -= AddNewPlayer;

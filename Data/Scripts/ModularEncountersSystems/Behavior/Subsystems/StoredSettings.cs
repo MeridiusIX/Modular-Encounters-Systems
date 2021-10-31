@@ -104,6 +104,36 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		[ProtoMember(30)]
 		public BehaviorSubclass ActiveBehaviorType;
 
+		[ProtoMember(31)]
+		public int HomingWeaponRangeOverride;
+
+		[ProtoMember(32)]
+		public Vector3D PatrolOverrideLocation;
+
+		[ProtoMember(33)]
+		public List<EscortProfile> ActiveEscorts;
+
+		[ProtoMember(34)]
+		internal EscortProfile _parentEscort;
+
+		[ProtoIgnore]
+		public EscortProfile ParentEscort { get {
+
+				return _parentEscort;
+
+			}
+			set {
+
+				_parentEscort = value;
+				SpawnLogger.Write(Behavior.RemoteControl.EntityId + " Parent Escort Set Null: " + (_parentEscort == null).ToString(), SpawnerDebugEnum.Dev);
+			
+			}
+		
+		}
+
+		[ProtoIgnore]
+		public IBehavior Behavior;
+
 		public StoredSettings(){
 			
 			Mode = BehaviorMode.Init;
@@ -147,6 +177,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			SubclassBehaviorDefaultsSet = false;
 			ActiveBehaviorType = BehaviorSubclass.None;
 
+			HomingWeaponRangeOverride = -1;
+
+			PatrolOverrideLocation = Vector3D.Zero;
+
+			ActiveEscorts = new List<EscortProfile>();
+			_parentEscort = null;
+
 		}
 
 		public StoredSettings(StoredSettings oldSettings, bool preserveSettings, bool preserveTriggers, bool preserveTargetProfile) : base() {
@@ -170,6 +207,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			this.APDataMode = oldSettings.APDataMode;
 			this.DoDespawn = oldSettings.DoDespawn;
 			this.DoRetreat = oldSettings.DoRetreat;
+			this.HomingWeaponRangeOverride = oldSettings.HomingWeaponRangeOverride;
+			this.PatrolOverrideLocation = oldSettings.PatrolOverrideLocation;
+			this.ActiveEscorts = oldSettings.ActiveEscorts;
 
 			//Triggers
 			if (preserveTriggers) {

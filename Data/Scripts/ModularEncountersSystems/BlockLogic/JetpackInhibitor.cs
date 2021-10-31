@@ -28,6 +28,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void Setup(BlockEntity block) {
 
+			_tamperCheck = true;
 			base.Setup(block);
 
 			if (!_isServer) {
@@ -63,7 +64,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			foreach (var player in _playersInDampenerRange) {
 
-				if (!player.ActiveEntity() || player.IsParentEntitySeat)
+				if (player?.Player?.Character == null || !player.ActiveEntity() || player.IsParentEntitySeat)
 					continue;
 
 				if (player.Player.Character.EnabledDamping)
@@ -73,7 +74,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			foreach (var player in _playersInDisableRange) {
 
-				if (!player.ActiveEntity() || player.IsParentEntitySeat)
+				if (player?.Player?.Character == null || !player.ActiveEntity() || player.IsParentEntitySeat)
 					continue;
 
 				if (player.Player.Character.EnabledThrusts)

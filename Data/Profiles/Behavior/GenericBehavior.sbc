@@ -1,90 +1,104 @@
 <?xml version="1.0"?>
 <Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<EntityComponents>
+  <EntityComponents>
 
-		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-			<Id>
-					<TypeId>Inventory</TypeId>
-					<SubtypeId>RAI-Generic-Behavior-Fighter</SubtypeId>
-			</Id>
-			<Description>
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Behavior-Escort</SubtypeId>
+      </Id>
+      <Description>
 
-			[RivalAI Behavior]
-			[BehaviorName:Fighter]
+        [RivalAI Behavior]
+        [BehaviorName:Escort]
 
-			</Description>
-			
-		</EntityComponent>
-	
-	<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-			<Id>
-					<TypeId>Inventory</TypeId>
-					<SubtypeId>RAI-Generic-Behavior-Horsefly</SubtypeId>
-			</Id>
-			<Description>
+      </Description>
 
-			[RivalAI Behavior]
-			[BehaviorName:Horsefly]
+    </EntityComponent>
 
-			</Description>
-			
-		</EntityComponent>
-	
-	<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-			<Id>
-					<TypeId>Inventory</TypeId>
-					<SubtypeId>RAI-Generic-Behavior-HorseFighter</SubtypeId>
-			</Id>
-			<Description>
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Behavior-Fighter</SubtypeId>
+      </Id>
+      <Description>
 
-			[RivalAI Behavior]
-			[BehaviorName:HorseFighter]
+        [RivalAI Behavior]
+        [BehaviorName:Fighter]
 
-			</Description>
-			
-		</EntityComponent>
+      </Description>
 
-		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-			<Id>
-				<TypeId>Inventory</TypeId>
-				<SubtypeId>RAI-Generic-Behavior-Nautical</SubtypeId>
-			</Id>
-			<Description>
+    </EntityComponent>
 
-				[RivalAI Behavior]
-				[BehaviorName:Nautical]
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Behavior-Horsefly</SubtypeId>
+      </Id>
+      <Description>
 
-			</Description>
+        [RivalAI Behavior]
+        [BehaviorName:Horsefly]
 
-		</EntityComponent>
+      </Description>
 
-		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-			<Id>
-				<TypeId>Inventory</TypeId>
-				<SubtypeId>RAI-Generic-Behavior-Sniper</SubtypeId>
-			</Id>
-			<Description>
+    </EntityComponent>
 
-				[RivalAI Behavior]
-				[BehaviorName:Sniper]
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Behavior-HorseFighter</SubtypeId>
+      </Id>
+      <Description>
 
-			</Description>
+        [RivalAI Behavior]
+        [BehaviorName:HorseFighter]
 
-		</EntityComponent>
-	
-		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-			<Id>
-					<TypeId>Inventory</TypeId>
-					<SubtypeId>RAI-Generic-Behavior-Strike</SubtypeId>
-			</Id>
-			<Description>
+      </Description>
 
-			[RivalAI Behavior]
-			[BehaviorName:Strike]
+    </EntityComponent>
 
-			</Description>
-			
-		</EntityComponent>
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Behavior-Nautical</SubtypeId>
+      </Id>
+      <Description>
 
-	</EntityComponents>
+        [RivalAI Behavior]
+        [BehaviorName:Nautical]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Behavior-Sniper</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Behavior]
+        [BehaviorName:Sniper]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Behavior-Strike</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Behavior]
+        [BehaviorName:Strike]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
 </Definitions>

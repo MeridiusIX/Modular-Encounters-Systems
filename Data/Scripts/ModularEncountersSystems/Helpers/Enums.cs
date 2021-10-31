@@ -53,7 +53,8 @@ namespace ModularEncountersSystems.Helpers {
         Nautical,
         CargoShip,
         Escort,
-    
+        Patrol,
+
     }
 
     [Flags]

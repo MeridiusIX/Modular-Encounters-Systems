@@ -196,7 +196,7 @@ namespace ModularEncountersSystems.Spawning {
 			UseSpecificPlayers = true;
 
 			var gps = MyAPIGateway.Session.GPS.Create(Condition.BossCustomGPSLabel, "", coords, true);
-			gps.GPSColor = new Color(Condition.BossCustomGPSColor);
+			gps.GPSColor = new Color((Vector3)Condition.BossCustomGPSColor);
 
 			//SpecificPlayers
 			for (int i = PlayerManager.Players.Count - 1; i >= 0; i--) {

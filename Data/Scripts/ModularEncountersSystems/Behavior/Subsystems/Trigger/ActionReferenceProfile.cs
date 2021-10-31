@@ -259,6 +259,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeZoneAtPosition;
 		public string ZoneName;
 
+		public bool ZoneToggleActive;
+		public bool ZoneToggleActiveMode;
+
+		public bool ZoneToggleActiveAtPosition;
+		public bool ZoneToggleActiveAtPositionMode;
+
 		public ModifierEnum ZoneRadiusChangeType;
 		public double ZoneRadiusChangeAmount;
 
@@ -269,7 +275,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool ZoneCustomBoolChange;
 		public List<string> ZoneCustomBoolChangeName;
-		public List<bool> ZoneCustomBoolChangeAmount;
+		public List<bool> ZoneCustomBoolChangeValue;
 
 		public bool AddBotsToGrid;
 		public int BotCount;
@@ -282,7 +288,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeBehaviorSubclass;
 		public BehaviorSubclass NewBehaviorSubclass;
 
+		public bool EnableHighestRangeAntennas;
+		public bool DisableHighestRangeAntennas;
+
+		public bool AssignEscortFromCommand;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
+
 
 		public ActionReferenceProfile() {
 
@@ -521,6 +533,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ChangeZoneAtPosition = false;
 			ZoneName = "";
 
+			ZoneToggleActive = false;
+			ZoneToggleActiveMode = false;
+
+			ZoneToggleActiveAtPosition = false;
+			ZoneToggleActiveAtPositionMode = false;
+
 			ZoneRadiusChangeType = ModifierEnum.None;
 			ZoneRadiusChangeAmount = 0;
 
@@ -531,7 +549,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ZoneCustomBoolChange = false;
 			ZoneCustomBoolChangeName = new List<string>();
-			ZoneCustomBoolChangeAmount = new List<bool>();
+			ZoneCustomBoolChangeValue = new List<bool>();
 
 			AddBotsToGrid = false;
 			BotCount = 1;
@@ -543,6 +561,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			SetWeaponsToMinRange = false;
 			SetWeaponsToMaxRange = false;
+
+			EnableHighestRangeAntennas = false;
+			DisableHighestRangeAntennas = false;
+
+			AssignEscortFromCommand = false;
 
 			ProfileSubtypeId = "";
 
@@ -712,6 +735,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ParentGridNameRequirement", (s, o) => TagParse.TagStringCheck(s, ref ParentGridNameRequirement) },
 				{"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
 				{"ZoneName", (s, o) => TagParse.TagStringCheck(s, ref ZoneName) },
+				{"ZoneToggleActive", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActive) },
+				{"ZoneToggleActiveMode", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveMode) },
+				{"ZoneToggleActiveAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveAtPosition) },
+				{"ZoneToggleActiveAtPositionMode", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveAtPositionMode) },
 				{"ZoneRadiusChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneRadiusChangeType) },
 				{"ZoneRadiusChangeAmount", (s, o) => TagParse.TagDoubleCheck(s, ref ZoneRadiusChangeAmount) },
 				{"ZoneCustomCounterChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChange) },
@@ -720,7 +747,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ZoneCustomCounterChangeAmount", (s, o) => TagParse.TagLongCheck(s, ref ZoneCustomCounterChangeAmount) },
 				{"ZoneCustomBoolChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChange) },
 				{"ZoneCustomBoolChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomBoolChangeName) },
-				{"ZoneCustomBoolChangeAmount", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeAmount) },
+				{"ZoneCustomBoolChangeValue", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeValue) },
 				{"AddBotsToGrid", (s, o) => TagParse.TagBoolCheck(s, ref AddBotsToGrid) },
 				{"BotCount", (s, o) => TagParse.TagIntCheck(s, ref BotCount) },
 				{"BotSpawnProfileNames", (s, o) => TagParse.TagStringListCheck(s, ref BotSpawnProfileNames) },
@@ -729,7 +756,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"NewBehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref NewBehaviorSubclass) },
 				{"SetWeaponsToMinRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMinRange) },
 				{"SetWeaponsToMaxRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMaxRange) },
-				//
+				{"EnableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref EnableHighestRangeAntennas) },
+				{"DisableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref DisableHighestRangeAntennas) },
+				{"AssignEscortFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AssignEscortFromCommand) },
+				//AssignEscortFromCommand
 
 			};
 

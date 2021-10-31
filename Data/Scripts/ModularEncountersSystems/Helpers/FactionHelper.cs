@@ -33,19 +33,27 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static long GetFactionOwner(string factionTag) {
+		public static long GetFactionOwner(IMyFaction faction) {
 
-			if (string.IsNullOrWhiteSpace(factionTag) || factionTag == "Nobody")
-				return 0;
+			if (faction.FounderId != 0)
+				return faction.FounderId;
 
-			foreach (var faction in NpcFactions) {
+			long result = 0;
 
-				if (faction.Tag == factionTag)
-					return faction.FounderId;
+			foreach (var member in faction.Members.Keys) {
+
+				var factionMember = faction.Members[member];
+
+				if (IsIdentityNPC(factionMember.PlayerId)) {
+
+					result = factionMember.PlayerId;
+					break;
+
+				}
 			
 			}
 
-			return 0;
+			return result;
 
 		}
 
@@ -56,7 +64,7 @@ namespace ModularEncountersSystems.Helpers {
 				if (faction?.Tag == null || tag != faction.Tag)
 					continue;
 
-				return faction.FounderId;
+				return GetFactionOwner(faction);
 			
 			}
 

@@ -18,6 +18,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public float ManipulationThreatMaximum;
 		public int ManipulationMinBlockCount;
 		public int ManipulationMaxBlockCount;
+		public List<string> ManipulationAllowedPrefabNames;
+		public List<string> ManipulationRestrictedPrefabNames;
+		public List<int> ManipulationAllowedPrefabIndexes;
+		public List<int> ManipulationRestrictedPrefabIndexes;
 
 		public bool RandomizeWeapons;
 		public bool IgnoreWeaponRandomizerMod;
@@ -190,6 +194,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ManipulationThreatMaximum = -1;
 			ManipulationMinBlockCount = -1;
 			ManipulationMaxBlockCount = -1;
+			ManipulationAllowedPrefabNames = new List<string>();
+			ManipulationRestrictedPrefabNames = new List<string>();
+			ManipulationAllowedPrefabIndexes = new List<int>();
+			ManipulationRestrictedPrefabIndexes = new List<int>();
 
 			RandomizeWeapons = false;
 			IgnoreWeaponRandomizerMod = false;
@@ -409,6 +417,34 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ManipulationMaxBlockCount:") == true) {
 
 					TagParse.TagIntCheck(tag, ref this.ManipulationMaxBlockCount);
+
+				}
+
+				//ManipulationAllowedPrefabNames
+				if (tag.StartsWith("[ManipulationAllowedPrefabNames:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.ManipulationAllowedPrefabNames);
+
+				}
+
+				//ManipulationRestrictedPrefabNames
+				if (tag.StartsWith("[ManipulationRestrictedPrefabNames:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.ManipulationRestrictedPrefabNames);
+
+				}
+
+				//ManipulationAllowedPrefabIndexes
+				if (tag.StartsWith("[ManipulationAllowedPrefabIndexes:") == true) {
+
+					TagParse.TagIntListCheck(tag, true, ref this.ManipulationAllowedPrefabIndexes);
+
+				}
+
+				//ManipulationRestrictedPrefabIndexes
+				if (tag.StartsWith("[ManipulationRestrictedPrefabIndexes:") == true) {
+
+					TagParse.TagIntListCheck(tag, true, ref this.ManipulationRestrictedPrefabIndexes);
 
 				}
 

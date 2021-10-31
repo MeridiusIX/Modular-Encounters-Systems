@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Text;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
+using VRageMath;
 
 namespace ModularEncountersSystems.Behavior {
 
@@ -38,6 +39,7 @@ namespace ModularEncountersSystems.Behavior {
 		private DamageSystem _damage;
 		private DespawnSystem _despawn;
 		private DiagnosticSystem _diagnostic;
+		private EscortSystem _escortSystem;
 		private GridSystem _extras;
 		private OwnerSystem _owner;
 		private StoredSettings _settings;
@@ -45,17 +47,19 @@ namespace ModularEncountersSystems.Behavior {
 
 		//Behavior Subclasses
 		private IBehaviorSubClass ActiveBehavior;
+		private CargoShip _cargoship;
+		private Escort _escort;
 		private Fighter _fighter;
 		private Horsefly _horsefly;
 		private HorseFighter _horsefighter;
 		private Hunter _hunter;
-		private Strike _strike;
+		private Nautical _nautical;
 		private Passive _passive;
-		private CargoShip _cargoship;
+		private Patrol _patrol;
 		private Scout _scout;
 		private Sniper _sniper;
-		private Nautical _nautical;
-
+		private Strike _strike;
+		
 		private bool _behaviorTriggerA;
 		private bool _behaviorTriggerB;
 		private bool _behaviorTriggerC;
@@ -86,6 +90,7 @@ namespace ModularEncountersSystems.Behavior {
 		public DamageSystem Damage { get { return _damage; } set { _damage = value; } }
 		public DespawnSystem Despawn { get { return _despawn; } set { _despawn = value; } }
 		public DiagnosticSystem Diagnostic { get { return _diagnostic; } set { _diagnostic = value; } }
+		public EscortSystem Escort { get { return _escortSystem; } set { _escortSystem = value; } }
 		public GridSystem Grid { get { return _extras; } set { _extras = value; } }
 		public OwnerSystem Owner { get { return _owner; } set { _owner = value; } }
 		public StoredSettings BehaviorSettings { get { return _settings; } set { _settings = value; } }
@@ -149,6 +154,10 @@ namespace ModularEncountersSystems.Behavior {
 			} }
 		internal GridEntity _currentGrid;
 
+		internal List<Vector3D> _escortOffsets;
+
+		public List<Vector3D> EscortOffsets { get { return _escortOffsets; } set { _escortOffsets = value; } }
+
 		public List<IMyCockpit> DebugCockpits { get { return _debugCockpits; } }
 
 		public BehaviorMode PreviousMode;
@@ -180,6 +189,8 @@ namespace ModularEncountersSystems.Behavior {
 
 		public byte CoreCounter;
 
+		internal bool _firstRun;
+
 		public CoreBehavior() {
 
 			RemoteControl = null;
@@ -207,10 +218,13 @@ namespace ModularEncountersSystems.Behavior {
 			_readyToSaveSettings = false;
 			_settingsDataPending = "";
 
+			_escortOffsets = new List<Vector3D>();
+
 			IsWorking = false;
 			PhysicsValid = false;
 
 			CoreCounter = 0;
+			_firstRun = false;
 
 		}
 
@@ -325,14 +339,28 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void RunMainBehavior() {
 
+			if (!_firstRun) {
+
+				_firstRun = true;
+				FirstRun();
+
+			}
+
 			var timeDifference = MyAPIGateway.Session.GameDateTime - _behaviorRunTimer;
 
 			if (timeDifference.TotalMilliseconds <= 999)
 				return;
 
-			_behaviorRunTimer = MyAPIGateway.Session.GameDateTime;
+			_behaviorRunTimer = MyAPIGateway.Session.GameDateTime; //
+
 			MainBehavior();
 
+		}
+
+		public void FirstRun() {
+
+			Escort.InitializeEscorts();
+		
 		}
 
 		public bool IsClosed() {
@@ -542,6 +570,7 @@ namespace ModularEncountersSystems.Behavior {
 			Damage = new DamageSystem(remoteControl);
 			Despawn = new DespawnSystem(this, remoteControl);
 			Diagnostic = new DiagnosticSystem(this, remoteControl);
+			Escort = new EscortSystem(this, remoteControl);
 			Grid = new GridSystem(remoteControl);
 			Owner = new OwnerSystem(remoteControl);
 			//Spawning = new SpawningSystem(remoteControl);
@@ -593,6 +622,31 @@ namespace ModularEncountersSystems.Behavior {
 
 					}
 				
+				}
+
+				BehaviorSettings.ActiveBehaviorType = subclass;
+				return;
+
+			}
+
+			if (subclass == BehaviorSubclass.Escort) {
+
+				if (_escort == null)
+					_escort = new Escort(this);
+
+				ActiveBehavior = _escort;
+
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
+
+					Mode = BehaviorMode.Init;
+
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
+
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
+						ActiveBehavior.SetDefaultTags();
+
+					}
+
 				}
 
 				BehaviorSettings.ActiveBehaviorType = subclass;
@@ -750,6 +804,31 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
+			if (subclass == BehaviorSubclass.Patrol) {
+
+				if (_patrol == null)
+					_patrol = new Patrol(this);
+
+				ActiveBehavior = _patrol;
+
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
+
+					Mode = BehaviorMode.Init;
+
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
+
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
+						ActiveBehavior.SetDefaultTags();
+
+					}
+
+				}
+
+				BehaviorSettings.ActiveBehaviorType = subclass;
+				return;
+
+			}
+
 			/*
 			if (subclass == BehaviorSubclass.Scout) {
 
@@ -838,6 +917,7 @@ namespace ModularEncountersSystems.Behavior {
 			AutoPilot.Weapons.InitTags();
 			Damage.InitTags();
 			Despawn.InitTags();
+			Escort.InitTags();
 			Owner.InitTags();
 			Trigger.InitTags();
 
@@ -1016,6 +1096,8 @@ namespace ModularEncountersSystems.Behavior {
 				BehaviorLogger.Write(sb.ToString(), BehaviorDebugEnum.BehaviorSetup);
 
 			}
+
+			BehaviorSettings.Behavior = this;
 
 			//TODO: Refactor This Into TriggerSystem
 
@@ -1292,29 +1374,68 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			//AutoPilot
-			sb.Append("::: AutoPilot :::").AppendLine();
-			sb.Append(AutoPilot.GetAutopilotData());
+			//Behavior Structure
+			sb.Append("::: Behavior Structure :::").AppendLine();
+			sb.Append(" - Primary Autopilot:   ").Append(AutoPilot.State.PrimaryAutopilotId ?? "N/A").AppendLine();
+			sb.Append(" - Secondary Autopilot: ").Append(AutoPilot.State.SecondaryAutopilotId ?? "N/A").AppendLine();
+			sb.Append(" - Tertiary Autopilot:  ").Append(AutoPilot.State.TertiaryAutopilotId ?? "N/A").AppendLine();
+			sb.Append(" - Primary Targeting:   ").Append(AutoPilot.Targeting.NormalData?.ProfileSubtypeId ?? "N/A").AppendLine();
+			sb.Append(" - Override Targeting:  ").Append(AutoPilot.Targeting.OverrideData?.ProfileSubtypeId ?? "N/A").AppendLine();
+
+			/*
+			sb.Append(" - Triggers:            ").Append(Trigger.Triggers.Count).AppendLine();
+			sb.Append("   - Trigger:           ").Append("").AppendLine();
+			sb.Append("   - Condition:         ").Append("").AppendLine();
+			sb.Append("   - Actions:           ").Append("").AppendLine();
+			sb.Append("     - Action:          ").Append("").AppendLine();
+			sb.Append("     - Chats:           ").Append("").AppendLine();
+			sb.Append("       - Chat:          ").Append("").AppendLine();
+			sb.Append("     - Spawns:          ").Append("").AppendLine();
+			sb.Append("       - Spawn:         ").Append("").AppendLine();
+			*/
+
+			var totalTriggerCount = Trigger.Triggers.Count + Trigger.DamageTriggers.Count + Trigger.CommandTriggers.Count + Trigger.CompromisedTriggers.Count;
+
+			if (totalTriggerCount > 0) {
+
+				sb.Append(" - Triggers:            ").Append(totalTriggerCount).AppendLine();
+				BuildTriggerData(sb, Trigger.Triggers);
+				BuildTriggerData(sb, Trigger.DamageTriggers);
+				BuildTriggerData(sb, Trigger.CommandTriggers);
+				BuildTriggerData(sb, Trigger.CompromisedTriggers);
+
+			}
+
 			sb.AppendLine();
 
-			sb.Append("::: AutoPilot Flags :::").AppendLine();
-			sb.Append(" - RotateToWaypoint:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.RotateToWaypoint)).AppendLine();
-			sb.Append(" - ThrustForward:              ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.ThrustForward)).AppendLine();
-			sb.Append(" - Strafe:                     ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.Strafe)).AppendLine();
-			sb.Append(" - LevelWithGravity:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.LevelWithGravity)).AppendLine();
-			sb.Append(" - ThrustUpward:               ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.ThrustUpward)).AppendLine();
-			sb.Append(" - BarrelRoll:                 ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.BarrelRoll)).AppendLine();
-			sb.Append(" - CollisionAvoidance:         ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.CollisionAvoidance)).AppendLine();
-			sb.Append(" - PlanetaryPathing:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.PlanetaryPathing)).AppendLine();
-			sb.Append(" - WaypointFromTarget:         ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.WaypointFromTarget)).AppendLine();
-			sb.Append(" - Ram:                        ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.Ram)).AppendLine();
-			sb.Append(" - OffsetWaypoint:             ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.OffsetWaypoint)).AppendLine();
-			sb.Append(" - RotateToTarget:             ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.RotateToTarget)).AppendLine();
-			sb.Append(" - WaterNavigation:            ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.WaterNavigation)).AppendLine();
-			sb.Append(" - HeavyYaw:                   ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.HeavyYaw)).AppendLine();
-			sb.Append(" - UseFlyLevelWithGravity:     ").Append(AutoPilot.State.UseFlyLevelWithGravity).AppendLine();
-			sb.Append(" - UseFlyLevelWithGravityIdle: ").Append(AutoPilot.State.UseFlyLevelWithGravityIdle).AppendLine();
-			sb.AppendLine();
+			if (BehaviorSettings.ActiveBehaviorType != BehaviorSubclass.Passive) {
+
+
+				//AutoPilot
+				sb.Append("::: AutoPilot :::").AppendLine();
+				sb.Append(AutoPilot.GetAutopilotData());
+				sb.AppendLine();
+
+				sb.Append("::: AutoPilot Flags :::").AppendLine();
+				sb.Append(" - RotateToWaypoint:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.RotateToWaypoint)).AppendLine();
+				sb.Append(" - ThrustForward:              ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.ThrustForward)).AppendLine();
+				sb.Append(" - Strafe:                     ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.Strafe)).AppendLine();
+				sb.Append(" - LevelWithGravity:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.LevelWithGravity)).AppendLine();
+				sb.Append(" - ThrustUpward:               ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.ThrustUpward)).AppendLine();
+				sb.Append(" - BarrelRoll:                 ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.BarrelRoll)).AppendLine();
+				sb.Append(" - CollisionAvoidance:         ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.CollisionAvoidance)).AppendLine();
+				sb.Append(" - PlanetaryPathing:           ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.PlanetaryPathing)).AppendLine();
+				sb.Append(" - WaypointFromTarget:         ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.WaypointFromTarget)).AppendLine();
+				sb.Append(" - Ram:                        ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.Ram)).AppendLine();
+				sb.Append(" - OffsetWaypoint:             ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.OffsetWaypoint)).AppendLine();
+				sb.Append(" - RotateToTarget:             ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.RotateToTarget)).AppendLine();
+				sb.Append(" - WaterNavigation:            ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.WaterNavigation)).AppendLine();
+				sb.Append(" - HeavyYaw:                   ").Append(AutoPilot.State.AutoPilotFlags.HasFlag(NewAutoPilotMode.HeavyYaw)).AppendLine();
+				sb.Append(" - UseFlyLevelWithGravity:     ").Append(AutoPilot.State.UseFlyLevelWithGravity).AppendLine();
+				sb.Append(" - UseFlyLevelWithGravityIdle: ").Append(AutoPilot.State.UseFlyLevelWithGravityIdle).AppendLine();
+				sb.AppendLine();
+
+			}
 
 			//CubeGrid
 			sb.Append("::: Grid Debug Data :::").AppendLine();
@@ -1332,6 +1453,42 @@ namespace ModularEncountersSystems.Behavior {
 
 			return sb.ToString();
 		
+		}
+
+		private void BuildTriggerData(StringBuilder sb, List<TriggerProfile> triggers) {
+
+			foreach (var trigger in triggers) {
+
+				sb.Append("   - Trigger:           ").Append(trigger.ProfileSubtypeId).AppendLine();
+
+				if (!string.IsNullOrWhiteSpace(trigger.Conditions?.ProfileSubtypeId))
+					sb.Append("     - Condition:       ").Append(trigger.Conditions.ProfileSubtypeId).AppendLine();
+
+				sb.Append("     - Actions:         ").Append(trigger.Actions.Count).AppendLine();
+
+				foreach (var action in trigger.Actions) {
+
+					sb.Append("       - Action:        ").Append(action.ProfileSubtypeId).AppendLine();
+					sb.Append("       - Chats:         ").Append(action.ChatData.Count).AppendLine();
+
+					foreach (var chat in action.ChatData) {
+
+						sb.Append("         - Chat:        ").Append(chat.ProfileSubtypeId).AppendLine();
+
+					}
+
+					sb.Append("       - Spawns:        ").Append(action.Spawner.Count).AppendLine();
+
+					foreach (var spawn in action.Spawner) {
+
+						sb.Append("         - Spawn:       ").Append(spawn.ProfileSubtypeId).AppendLine();
+
+					}
+
+				}
+
+			}
+
 		}
 
 	}

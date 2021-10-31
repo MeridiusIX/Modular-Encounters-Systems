@@ -111,6 +111,9 @@ namespace ModularEncountersSystems.Configuration {
 			TimeoutRadius = 10000;
 			TimeoutSpawnLimit = 4;
 
+			UseTypeDisownTimer = true;
+			TypeDisownTimer = 1800;
+
 			EnableWaveSpawner = false;
 			UseSpecificRandomGroups = new string[]{"SomeSpawnGroupNameHere", "AnotherSpawnGroupNameHere", "EtcEtcEtc"};
 			MinWaveSpawnTime = 1980;

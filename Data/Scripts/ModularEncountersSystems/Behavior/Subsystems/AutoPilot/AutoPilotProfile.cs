@@ -10,258 +10,117 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 	public class AutoPilotProfile {
 
 		//Profile
-		[ProtoMember(1)]
 		public string ProfileSubtypeId;
 
 		//Speed Config
-		[ProtoMember(2)]
 		public float IdealMaxSpeed;
-
-		[ProtoMember(3)]
 		public float IdealMinSpeed;
-
-		[ProtoMember(4)]
 		public bool SlowDownOnWaypointApproach;
-
-		[ProtoMember(5)]
 		public double ExtraSlowDownDistance;
-
-		[ProtoMember(6)]
 		public float MaxSpeedTolerance;
 
 		//Planet Config
-		[ProtoMember(7)]
 		public bool FlyLevelWithGravity;
-
-		[ProtoMember(8)]
 		public bool LevelWithGravityWhenIdle;
-
-		[ProtoMember(9)]
 		public double MaxPlanetPathCheckDistance;
-
-		[ProtoMember(10)]
 		public double IdealPlanetAltitude;
-
-		[ProtoMember(11)]
 		public double MinimumPlanetAltitude;
-
-		[ProtoMember(12)]
 		public double AltitudeTolerance;
-
-		[ProtoMember(13)]
 		public double WaypointTolerance;
 
 		//Offset Space Config
-		[ProtoMember(14)]
 		public double OffsetSpaceMinDistFromTarget;
-
-		[ProtoMember(15)]
 		public double OffsetSpaceMaxDistFromTarget;
 
 		//Offset Planet Config
-		[ProtoMember(16)]
 		public double OffsetPlanetMinDistFromTarget;
-
-		[ProtoMember(17)]
 		public double OffsetPlanetMaxDistFromTarget;
-
-		[ProtoMember(18)]
 		public double OffsetPlanetMinTargetAltitude;
-
-		[ProtoMember(19)]
 		public double OffsetPlanetMaxTargetAltitude;
 
 		//Collision Config
-		[ProtoMember(20)]
 		public bool Unused;
-
-		[ProtoMember(21)]
 		public double CollisionEvasionWaypointDistance; //Make Space and Planet Variant - OR... Make This Based on Detection Type!
-
-		[ProtoMember(22)]
 		public double CollisionFallEvasionWaypointDistance;
-
-		[ProtoMember(23)]
 		public double CollisionEvasionResumeDistance;
-
-		[ProtoMember(24)]
 		public int CollisionEvasionResumeTime;
-
-		[ProtoMember(25)]
 		public bool CollisionEvasionWaypointCalculatedAwayFromEntity;
-
-		[ProtoMember(26)]
 		public double CollisionEvasionWaypointFromEntityMaxAngle;
 
 		//Lead Config
-
-		[ProtoMember(27)]
 		public bool UseProjectileLeadPrediction;
-
-		[ProtoMember(28)]
 		public bool UseCollisionLeadPrediction;
 
 		//Thrust Settings
-		[ProtoMember(29)]
 		public double AngleAllowedForForwardThrust;
-
-		[ProtoMember(30)]
 		public double MaxVelocityAngleForSpeedControl;
 
 		//Strafe Settings
-		[ProtoMember(31)]
 		public bool AllowStrafing;
-
-		[ProtoMember(32)]
 		public int StrafeMinDurationMs;
-
-		[ProtoMember(33)]
 		public int StrafeMaxDurationMs;
-
-		[ProtoMember(34)]
 		public int StrafeMinCooldownMs;
-
-		[ProtoMember(35)]
 		public int StrafeMaxCooldownMs;
-
-		[ProtoMember(36)]
 		public double StrafeSpeedCutOff;
-
-		[ProtoMember(37)]
 		public double StrafeDistanceCutOff;
-
-		[ProtoMember(38)]
 		public double StrafeMinimumTargetDistance;
-
-		[ProtoMember(39)]
 		public double StrafeMinimumSafeAngleFromTarget;
 
 		//Rotation Settings
-		[ProtoMember(40)]
+
 		public float RotationMultiplier;
 
-		[ProtoMember(41)]
 		public double DesiredAngleToTarget;
 
-		[ProtoMember(42)]
 		public bool DisableInertiaDampeners;
 
-		[ProtoMember(43)]
 		public bool ReverseOffsetDistAltAboveHeight;
-
-		[ProtoMember(44)]
 		public double ReverseOffsetHeight;
 
-		[ProtoMember(45)]
 		public double PadDistanceFromTarget;
 
-		[ProtoMember(46)]
 		public int BarrelRollMinDurationMs;
-
-		[ProtoMember(47)]
 		public int BarrelRollMaxDurationMs;
 
-		[ProtoMember(48)]
 		public int RamMinDurationMs;
-
-		[ProtoMember(49)]
 		public int RamMaxDurationMs;
 
-		[ProtoMember(50)]
 		public double EngageDistanceSpace;
-
-		[ProtoMember(51)]
 		public double EngageDistancePlanet;
-
-		[ProtoMember(52)]
 		public double DisengageDistanceSpace;
-
-		[ProtoMember(53)]
 		public double DisengageDistancePlanet;
 
-		[ProtoMember(54)]
 		public int WaypointWaitTimeTrigger;
-
-		[ProtoMember(55)]
 		public int WaypointAbandonTimeTrigger;
 
-		[ProtoMember(56)]
 		public double AttackRunDistanceSpace;
-
-		[ProtoMember(57)]
 		public double AttackRunDistancePlanet;
-
-		[ProtoMember(58)]
 		public double AttackRunBreakawayDistance;
-
-		[ProtoMember(59)]
 		public int OffsetRecalculationTime;
-
-		[ProtoMember(60)]
 		public bool AttackRunUseSafePlanetPathing;
-
-		[ProtoMember(61)]
 		public bool AttackRunUseCollisionEvasionSpace;
-
-		[ProtoMember(62)]
 		public bool AttackRunUseCollisionEvasionPlanet;
-
-		[ProtoMember(63)]
 		public bool AttackRunOverrideWithDistanceAndTimer;
-
-		[ProtoMember(64)]
 		public int AttackRunOverrideTimerTrigger;
-
-		[ProtoMember(65)]
 		public double AttackRunOverrideDistance;
 
-		[ProtoMember(66)]
 		public double DespawnCoordsMinDistance;
-
-		[ProtoMember(67)]
 		public double DespawnCoordsMaxDistance;
-
-		[ProtoMember(68)]
 		public double DespawnCoordsMinAltitude;
-
-		[ProtoMember(69)]
 		public double DespawnCoordsMaxAltitude;
-
-		[ProtoMember(70)]
 		public double MinAngleForLeveledDescent;
-
-		[ProtoMember(71)]
 		public double MaxAngleForLeveledAscent;
-
-		[ProtoMember(72)]
 		public bool LimitRotationSpeed;
-
-		[ProtoMember(73)]
 		public double MaxRotationMagnitude;
-
-		[ProtoMember(74)]
 		public double MinGravity;
-
-		[ProtoMember(75)]
 		public double MaxGravity;
-
-		[ProtoMember(76)]
 		public bool AvoidPlayerCollisions;
-
-		[ProtoMember(77)]
 		public bool UseSurfaceHoverThrustMode;
-
-		[ProtoMember(78)]
 		public double MaxVerticalSpeed;
-
-		[ProtoMember(79)]
 		public double HoverPathStepDistance;
-
-		[ProtoMember(80)]
 		public BoolEnum UseVelocityCollisionEvasion;
-
-		[ProtoMember(81)]
 		public bool UseVerticalRetreat;
+		public bool UseWaterPatrolMode;
 
 		public AutoPilotProfile() {
 
@@ -336,16 +195,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			WaypointWaitTimeTrigger = 5;
 			WaypointAbandonTimeTrigger = 30;
 
-			AttackRunDistanceSpace = 0;
-			AttackRunDistancePlanet = 0;
-			AttackRunBreakawayDistance = 0;
-			OffsetRecalculationTime = 0;
-			AttackRunUseSafePlanetPathing = false;
-			AttackRunUseCollisionEvasionSpace = false;
+			AttackRunDistanceSpace = 75;
+			AttackRunDistancePlanet = 100;
+			AttackRunBreakawayDistance = 450;
+			OffsetRecalculationTime = 30;
+			AttackRunUseSafePlanetPathing = true;
+			AttackRunUseCollisionEvasionSpace = true;
 			AttackRunUseCollisionEvasionPlanet = false;
-			AttackRunOverrideWithDistanceAndTimer = false;
-			AttackRunOverrideTimerTrigger = 0;
-			AttackRunOverrideDistance = 0;
+			AttackRunOverrideWithDistanceAndTimer = true;
+			AttackRunOverrideTimerTrigger = 20;
+			AttackRunOverrideDistance = 1200;
 
 			DespawnCoordsMinDistance = 8000;
 			DespawnCoordsMaxDistance = 11000;
@@ -370,6 +229,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			MaxVerticalSpeed = -1;
 
 			UseVerticalRetreat = false;
+
+			UseWaterPatrolMode = false;
 
 			UseVelocityCollisionEvasion = BoolEnum.True;
 
@@ -965,6 +826,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[UseVerticalRetreat:") == true) {
 
 				TagParse.TagBoolCheck(tag, ref UseVerticalRetreat);
+
+			}
+
+			//UseWaterPatrolMode
+			if (tag.Contains("[UseWaterPatrolMode:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref UseWaterPatrolMode);
 
 			}
 

@@ -80,7 +80,7 @@ namespace ModularEncountersSystems.API {
 		//CustomSpawnRequest
 		public static bool CustomSpawnRequest(List<string> spawnGroups, MatrixD spawningMatrix, Vector3 velocity, bool ignoreSafetyCheck, string factionOverride, string spawnProfileId) {
 
-			return SpawnRequest.CalculateSpawn(spawningMatrix.Translation, "API Request: " + spawnProfileId, SpawningType.OtherNPC, ignoreSafetyCheck, false, spawnGroups, factionOverride);
+			return SpawnRequest.CalculateSpawn(spawningMatrix.Translation, "API Request: " + spawnProfileId, SpawningType.OtherNPC, ignoreSafetyCheck, true, spawnGroups, factionOverride, spawningMatrix);
 
 		}
 

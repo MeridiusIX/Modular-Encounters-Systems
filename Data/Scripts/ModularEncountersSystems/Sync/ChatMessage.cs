@@ -18,6 +18,7 @@ using System.Text;
 using VRage;
 using VRage.Game;
 using VRage.Game.ModAPI;
+using VRage.ModAPI;
 using VRage.ObjectBuilders;
 using VRageMath;
 
@@ -220,6 +221,14 @@ namespace ModularEncountersSystems.Sync {
 
 			SpawnLogger.Write("Get Spawn Type From Chat", SpawnerDebugEnum.Settings);
 			SpawningType type = SpawningType.None;
+
+			//MES.Spawn.ForceSpawnTimer
+			if (array[2] == "ForceSpawnTimer") {
+
+				LoggerTools.ForceSpawnTimer(this, array);
+				return true;
+
+			}
 
 			if (array[2] == "WaveSpawner") {
 
@@ -551,6 +560,20 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.TestSpawnAPI
+			if (array[2] == "TestSpawnAPI") {
+
+				var list = new List<string>();
+				list.Add("Reaver-Group-Test-A");
+				var matrix = MyAPIGateway.Session.LocalHumanPlayer.Character.WorldMatrix;
+				matrix.Translation = matrix.Forward * 1000 + matrix.Translation;
+				var result = APIs.MES.CustomSpawnRequest(list, matrix, Vector3.Zero, false, null, "Debug");
+				ReturnMessage = "Test Spawn: " + result + " / " + APIs.MES.MESApiReady;
+				Mode = ChatMsgMode.ReturnMessage;
+				return true;
+			
+			}
+
 			/*
 			//MES.Debug.ToolParentEntity
 			if (array[2] == "ToolParentEntity") {
@@ -711,6 +734,15 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//GetGridData
+			if (array[2] == "GetGridData") {
+
+				ClipboardPayload = LoggerTools.GetGridData(this);
+				Mode = ChatMsgMode.ReturnMessage;
+				return true;
+
+			}
+
 			//GetGridMatrix
 			if (array[2] == "GetGridMatrix") {
 
@@ -756,7 +788,7 @@ namespace ModularEncountersSystems.Sync {
 
 				foreach (var player in PlayerManager.Players) {
 
-					player.ToString(sb);
+					player.GetPlayerInfo(sb);
 
 				}
 

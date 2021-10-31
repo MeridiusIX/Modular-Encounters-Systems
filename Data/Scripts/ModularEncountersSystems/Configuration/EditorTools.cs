@@ -10,6 +10,42 @@ namespace ModularEncountersSystems.Configuration.Editor {
 
         public static string EditSettings(string receivedCommand) {
 
+            if (receivedCommand.StartsWith("/MES.Settings.ResetAll")) {
+
+                Settings.General = new ConfigGeneral();
+                Settings.General.SaveSettings();
+
+                Settings.Grids = new ConfigGrids();
+                Settings.Grids.SaveSettings();
+
+                Settings.CustomBlocks = new ConfigCustomBlocks();
+                Settings.CustomBlocks.SaveSettings();
+
+                Settings.SpaceCargoShips = new ConfigSpaceCargoShips();
+                Settings.SpaceCargoShips.SaveSettings();
+
+                Settings.RandomEncounters = new ConfigRandomEncounters();
+                Settings.RandomEncounters.SaveSettings();
+
+                Settings.PlanetaryCargoShips = new ConfigPlanetaryCargoShips();
+                Settings.PlanetaryCargoShips.SaveSettings();
+
+                Settings.PlanetaryInstallations = new ConfigPlanetaryInstallations();
+                Settings.PlanetaryInstallations.SaveSettings();
+
+                Settings.BossEncounters = new ConfigBossEncounters();
+                Settings.BossEncounters.SaveSettings();
+
+                Settings.Creatures = new ConfigCreatures();
+                Settings.Creatures.SaveSettings();
+
+                Settings.OtherNPCs = new ConfigOtherNPCs();
+                Settings.OtherNPCs.SaveSettings();
+
+                return "All Settings Have Been Reset";
+            
+            }
+
             if (receivedCommand.StartsWith("/MES.Settings.General."))
                 return Settings.General.EditFields(receivedCommand);
 

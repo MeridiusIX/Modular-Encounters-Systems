@@ -13,7 +13,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseAiEnabled;
 		public string BotBehavior;
 		public string BotDisplayName;
-		public Vector3D Color;
+		public Vector3I Color;
 
 		public BotSpawnProfile() {
 
@@ -23,7 +23,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseAiEnabled = true;
 			BotBehavior = "Default";
 			BotDisplayName = "";
-			Color = new Vector3D();
+			Color = new Vector3I(300, 300, 300);
 
 		}
 
@@ -66,7 +66,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				if (tag.Contains("[Color:")) {
 
-					TagParse.TagVector3DCheck(tag, ref Color);
+					TagParse.TagVector3ICheck(tag, ref Color);
 					continue;
 
 				}

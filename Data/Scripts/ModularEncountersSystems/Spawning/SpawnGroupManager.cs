@@ -31,8 +31,9 @@ namespace ModularEncountersSystems.Spawning {
 
 		public static string AdminSpawnGroup = "";
 		public static string GroupInstance = "";
+		public static bool AddonDetected = false;
 
-		public static void GetSpawnGroups(SpawningType type, EnvironmentEvaluation environment, string overrideFaction, SpawnGroupCollection collection, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null) {
+		public static void GetSpawnGroups(SpawningType type, EnvironmentEvaluation environment, string overrideFaction, SpawnGroupCollection collection, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, Dictionary<string, DateTime> playerDroneTracker = null) {
 
 			//SpawnGroup Collection Logic
 
@@ -55,8 +56,42 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (collection.MustUseAllowedZoneSpawns && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
 
-					SpawnLogger.Write(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup", SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Write(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
 					continue;
+
+				}
+
+				if (spawnGroup.PersistentConditions != null) {
+
+					bool persistentCheckFailed = false;
+					SpawnLogger.Write(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Persistent Conditions [" + spawnGroup.PersistentConditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
+					
+					//Eligible Names
+					if (eligibleNames != null && eligibleNames.Count > 0 && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
+
+						SpawnLogger.Write("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup);
+						persistentCheckFailed = true;
+
+					}
+
+					//AdminSpawn
+					if (!persistentCheckFailed && spawnGroup.PersistentConditions.AdminSpawnOnly && !adminSpawn) {
+
+						SpawnLogger.Write("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup);
+						continue;
+
+					}
+
+					//Common Checks
+					if (!persistentCheckFailed && !forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, spawnGroup.PersistentConditions, collection, environment, adminSpawn, type, spawnTypes, playerDroneTracker, ref commonConditionFailure)) {
+
+						SpawnLogger.Write(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
+						persistentCheckFailed = true;
+
+					}
+
+					if (persistentCheckFailed)
+						continue;
 
 				}
 
@@ -91,7 +126,7 @@ namespace ModularEncountersSystems.Spawning {
 					}
 
 					//Common Checks
-					if (!forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, conditions, collection, environment, adminSpawn, type, spawnTypes, ref commonConditionFailure)) {
+					if (!forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, conditions, collection, environment, adminSpawn, type, spawnTypes, playerDroneTracker, ref commonConditionFailure)) {
 
 						SpawnLogger.Write(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
 						continue;
@@ -118,8 +153,8 @@ namespace ModularEncountersSystems.Spawning {
 					//Frequency
 					if (spawnGroup.Frequency > 0) {
 
-						//gger.AddMsg(spawnGroup.SpawnGroupName + ": Valid, Processing Frequency");
-						string modID = spawnGroup.SpawnGroup.Context.ModId;
+						//Logger.AddMsg(spawnGroup.SpawnGroupName + ": Valid, Processing Frequency");
+						string modID = spawnGroup.SpawnGroup.Context?.ModId;
 
 						if (string.IsNullOrEmpty(modID) == true) {
 
@@ -131,6 +166,16 @@ namespace ModularEncountersSystems.Spawning {
 						if (collection.SpawnGroupSublists.ContainsKey(modID) == false) {
 
 							collection.SpawnGroupSublists.Add(modID, new List<ImprovedSpawnGroup>());
+
+						}
+
+						if (collection.EligibleSpawnsByModId.ContainsKey(modID) == false) {
+
+							collection.EligibleSpawnsByModId.Add(modID, 1);
+
+						} else {
+
+							collection.EligibleSpawnsByModId[modID] += 1;
 
 						}
 
@@ -314,6 +359,26 @@ namespace ModularEncountersSystems.Spawning {
 
 			//Get Regular SpawnGroups
 			var regularSpawnGroups = MyDefinitionManager.Static.GetSpawnGroupDefinitions();
+
+			var val = (ulong)1401350061 + 1202120021;
+
+			foreach (var mod in MyAPIGateway.Session.Mods) {
+
+				if (mod.PublishedFileId == val) {
+
+					AddonDetected = true;
+					continue;
+
+				}
+
+				if (mod.Name != null && mod.Name.Contains(val.ToString())) {
+
+					AddonDetected = true;
+					continue;
+
+				}
+
+			}
 
 			//Get Actual SpawnGroups
 			foreach (var spawnGroup in regularSpawnGroups) {

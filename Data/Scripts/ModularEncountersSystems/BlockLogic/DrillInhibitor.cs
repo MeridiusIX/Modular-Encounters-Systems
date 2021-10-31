@@ -28,6 +28,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void Setup(BlockEntity block) {
 
+			_tamperCheck = true;
 			base.Setup(block);
 
 			if (!_isServer) {

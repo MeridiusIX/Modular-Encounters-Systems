@@ -24,6 +24,8 @@ namespace ModularEncountersSystems.BlockLogic {
         public static List<MyDefinitionId> NanobotInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> PlayerInhibitorIds = new List<MyDefinitionId>();
 
+        public static List<long> TrackedLogicIds = new List<long>();
+
         public static void Setup() {
 
             RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "RivalAIRemoteControlSmall"));

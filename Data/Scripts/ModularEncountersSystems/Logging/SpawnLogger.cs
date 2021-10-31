@@ -34,7 +34,8 @@ namespace ModularEncountersSystems.Logging {
 		Zone = 1 << 11,
 		Entity = 1 << 12,
 		PostSpawn = 1 << 13,
-		Dev = 1 << 14
+		Dev = 1 << 14,
+		SpawnRecord = 1 << 15,
 
 	}
 
@@ -56,6 +57,7 @@ namespace ModularEncountersSystems.Logging {
 		public static StringBuilder Settings = new StringBuilder();
 		public static StringBuilder SpawnGroup = new StringBuilder();
 		public static StringBuilder Spawning = new StringBuilder();
+		public static StringBuilder SpawnRecord = new StringBuilder();
 		public static StringBuilder Startup = new StringBuilder();
 		public static StringBuilder Zone = new StringBuilder();
 
@@ -75,6 +77,12 @@ namespace ModularEncountersSystems.Logging {
 			} else {
 
 				Write("Active Debug Not Found", SpawnerDebugEnum.Startup, true);
+
+			}
+
+			if (!ActiveDebug.HasFlag(SpawnerDebugEnum.SpawnRecord)) {
+
+				ActiveDebug |= SpawnerDebugEnum.SpawnRecord;
 
 			}
 		
@@ -145,6 +153,9 @@ namespace ModularEncountersSystems.Logging {
 
 			if (type == SpawnerDebugEnum.Spawning)
 				WriteToBuilder(msg, type, Spawning, forceGameLog);
+
+			if (type == SpawnerDebugEnum.SpawnRecord)
+				WriteToBuilder(msg, type, SpawnRecord, forceGameLog);
 
 			if (type == SpawnerDebugEnum.Startup)
 				WriteToBuilder(msg, type, Startup, forceGameLog);

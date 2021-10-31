@@ -91,6 +91,7 @@ namespace ModularEncountersSystems.Spawning {
 
 							}
 
+							/*
 							if (!voxel.CenterOffset) {
 
 								var center = voxelSpawn.PositionComp.WorldAABB.Center;
@@ -100,8 +101,12 @@ namespace ModularEncountersSystems.Spawning {
 								var newMatrix = MatrixD.CreateWorld(newCoords, voxelSpawn.WorldMatrix.Forward, voxelSpawn.WorldMatrix.Up);
 								voxelSpawn.SetWorldMatrix(newMatrix);
 
+							} else {
+							
+								
+							
 							}
-
+							*/
 						}
 
 					} catch (Exception e) {
@@ -135,7 +140,7 @@ namespace ModularEncountersSystems.Spawning {
 					if (!prefabContainer.Valid || prefabContainer.SpawningInProgress)
 						continue;
 
-					if (prefabContainer.InitializePrefabForSpawn(sgPrefab.SubtypeId)) {
+					if (prefabContainer.InitializePrefabForSpawn(sgPrefab.SubtypeId, spawnCollection.PrefabIndexes[i])) {
 
 						prefab = prefabContainer;
 						prefab.SpawnGroupPrefab = sgPrefab;
@@ -168,7 +173,7 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.ZoneIndex = spawnCollection.ZoneIndex;
 
 				//Calculate Coordinates
-				npcData.StartCoords = path.GetPrefabStartCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathStartAltitude);
+				npcData.StartCoords = path.GetPrefabStartCoords(spawnCollection.SelectPrefabOffet(sgPrefab.Position, i), environment, spawnCollection.Conditions.CustomPathStartAltitude);
 				npcData.EndCoords = path.GetPrefabEndCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathEndAltitude);
 				npcData.Forward = path.SpawnMatrix.Forward;
 				npcData.Up = path.SpawnMatrix.Up;
@@ -184,17 +189,17 @@ namespace ModularEncountersSystems.Spawning {
 
 						Vector3D dir = Vector3D.Normalize(npcData.EndCoords - npcData.StartCoords);
 
-						linearVelocity = dir * sgPrefab.Speed;
+						linearVelocity = (Vector3)dir * sgPrefab.Speed;
 
 						if (path.OverrideSpeed > -1) {
 
-							linearVelocity = dir * path.OverrideSpeed;
+							linearVelocity = (Vector3)dir * path.OverrideSpeed;
 
 						}
 
 						if (path.MinSpeed > linearVelocity.Length()) {
 
-							linearVelocity = dir * path.MinSpeed;
+							linearVelocity = (Vector3)dir * path.MinSpeed;
 
 						}
 
@@ -204,7 +209,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				} else {
 
-					linearVelocity = path.CustomVelocity;
+					linearVelocity = (Vector3)path.CustomVelocity;
 
 				}
 
@@ -245,7 +250,7 @@ namespace ModularEncountersSystems.Spawning {
 				try {
 
 					gridListDummy.Clear();
-					MyAPIGateway.PrefabManager.SpawnPrefab(gridListDummy, prefab.PrefabSubtypeId, npcData.StartCoords, spawnMatrix.Forward, spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner);
+					MyAPIGateway.PrefabManager.SpawnPrefab(gridListDummy, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner);
 
 				} catch (Exception exc) {
 
@@ -388,7 +393,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			var dummyList = new List<IMyCubeGrid>();
 			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + msgSplit[2] + "]", 5000, "White", msg.PlayerId);
-			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, msgSplit[3], coords, matrix.Backward, matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, msg.PlayerId);
+			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, msgSplit[3], coords, (Vector3)matrix.Backward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, msg.PlayerId);
 
 		}
 
@@ -451,7 +456,7 @@ namespace ModularEncountersSystems.Spawning {
 			matrix = MatrixD.CreateWorld(coords, Vector3D.CalculatePerpendicularVector(up), up);
 
 			var dummyList = new List<IMyCubeGrid>();
-			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, msgSplit[4], coords, matrix.Backward, matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, msg.PlayerId);
+			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, msgSplit[4], coords, (Vector3)matrix.Backward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, msg.PlayerId);
 			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + msgSplit[4] + "] As Planetary Installation", 5000, "White", msg.PlayerId);
 
 		}

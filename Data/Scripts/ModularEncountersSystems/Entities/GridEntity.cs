@@ -672,6 +672,12 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+			if (this?.Behavior?.BehaviorSettings != null) {
+
+				this.Behavior.BehaviorSettings.HomingWeaponRangeOverride = useMax ? -1 : 800;
+			
+			}
+
 		}
 
 		public override void Unload() {

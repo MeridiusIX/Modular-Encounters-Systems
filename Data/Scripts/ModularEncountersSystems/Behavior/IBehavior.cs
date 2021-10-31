@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game.ModAPI;
+using VRageMath;
 
 namespace ModularEncountersSystems.Behavior {
 	public interface IBehavior {
@@ -17,6 +18,7 @@ namespace ModularEncountersSystems.Behavior {
 		DamageSystem Damage { get; }
 		DespawnSystem Despawn { get; }
 		DiagnosticSystem Diagnostic { get; }
+		EscortSystem Escort { get; }
 		GridSystem Grid { get; }
 		OwnerSystem Owner { get; }
 		StoredSettings BehaviorSettings { get; }
@@ -46,6 +48,7 @@ namespace ModularEncountersSystems.Behavior {
 		List<IMyCockpit> DebugCockpits { get; }
 		long GridId { get; }
 		string GridName { get; }
+		List<Vector3D> EscortOffsets { get; }
 		IMyRemoteControl RemoteControl { get; set; }
 		void ChangeCoreBehaviorMode(BehaviorMode behaviorMode);
 		bool IsAIReady();

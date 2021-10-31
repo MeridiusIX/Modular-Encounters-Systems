@@ -338,6 +338,9 @@ namespace ModularEncountersSystems.World {
 				if (SpawnRequest.GetPrimarySpawningType(npc.Npc.SpawnType) != type)
 					continue;
 
+				if (npc.Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || npc.Ownership.HasFlag(GridOwnershipEnum.PlayerMinority))
+					continue;
+
 				if (npc.Distance(coords) > radius)
 					continue;
 

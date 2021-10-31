@@ -520,8 +520,8 @@ namespace ModularEncountersSystems.World {
 			//ShieldActivation
 			if (AttributeCheck(NpcAttributes.ShieldActivation)) {
 
-				NPCShieldManager.ActivateShieldsForNPC(Grid.CubeGrid);
-				AppliedAttributes |= NpcAttributes.ShieldActivation;
+				NPCShieldManager.ActivateShieldsForNPC(Grid.CubeGrid, true);
+				//AppliedAttributes |= NpcAttributes.ShieldActivation;
 
 			}
 
@@ -558,7 +558,7 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - SpawnGroupName:      ").Append(!string.IsNullOrWhiteSpace(SpawnGroupName) ? SpawnGroupName : "N/A").AppendLine();
 			sb.Append(" - ConditionIndex:      ").Append(ConditionIndex.ToString()).AppendLine();
 			sb.Append(" - ZoneIndex:           ").Append(ZoneIndex.ToString()).AppendLine();
-			sb.Append(" - ZoneCondition:       ").Append(ZoneIndex >= 0 ? (!string.IsNullOrWhiteSpace(ZoneConditions.ProfileSubtypeId) ? ZoneConditions.ProfileSubtypeId : "Profile Id Null or Empty") : "N/A").AppendLine();
+			sb.Append(" - ZoneCondition:       ").Append(ZoneIndex >= 0 ? (!string.IsNullOrWhiteSpace(ZoneConditions?.ProfileSubtypeId) ? ZoneConditions.ProfileSubtypeId : "Profile Id Null or Empty") : "N/A").AppendLine();
 			sb.Append(" - OriginalPrefabId:    ").Append(!string.IsNullOrWhiteSpace(OriginalPrefabId) ? OriginalPrefabId : "N/A").AppendLine();
 			sb.Append(" - SpawnerPrefabId:     ").Append(!string.IsNullOrWhiteSpace(SpawnerPrefabId) ? SpawnerPrefabId : "N/A").AppendLine();
 			sb.Append(" - BehaviorName:        ").Append(!string.IsNullOrWhiteSpace(BehaviorName) ? BehaviorName : "N/A").AppendLine();

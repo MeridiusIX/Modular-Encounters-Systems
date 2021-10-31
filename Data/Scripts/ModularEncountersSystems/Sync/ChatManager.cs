@@ -143,7 +143,7 @@ namespace ModularEncountersSystems.Sync {
 
         public static void ProcessReturnChat(ChatMessage chatData) {
 
-            if(string.IsNullOrWhiteSpace(chatData.ClipboardPayload) == false) {
+            if (string.IsNullOrWhiteSpace(chatData.ClipboardPayload) == false) {
 
                 VRage.Utils.MyClipboardHelper.SetClipboard(chatData.ClipboardPayload);
 

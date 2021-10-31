@@ -56,6 +56,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		RotateToTarget = 1 << 11,
 		WaterNavigation = 1 << 12,
 		HeavyYaw = 1 << 13,
+		WaypointFromEscort = 1 << 14,
 
 	}
 
@@ -516,6 +517,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			try {
 
+				//Escort
+				if (CurrentMode.HasFlag(NewAutoPilotMode.WaypointFromEscort)) {
+
+					if (_behavior.BehaviorSettings.ParentEscort != null && _behavior.BehaviorSettings.ParentEscort.Valid) {
+
+						_initialWaypoint = _behavior.BehaviorSettings.ParentEscort.GetTransformedOffset(_initialWaypoint);
+
+					}
+
+				}
+
 				CalculateCurrentWaypoint();
 				_currentWaypoint = _pendingWaypoint;
 				this.DistanceToInitialWaypoint = Vector3D.Distance(_myPosition, _initialWaypoint);
@@ -645,6 +657,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			sb.Append(" - Position:                           ").Append(_remoteControl.GetPosition().ToString()).AppendLine();
 			sb.Append(" - Initial Waypoint:                   ").Append(_initialWaypoint.ToString()).AppendLine();
 			sb.Append(" - Current Waypoint:                   ").Append(_currentWaypoint.ToString()).AppendLine();
+			sb.Append(" - Offset Waypoint:                    ").Append(_calculatedOffsetWaypoint.ToString()).AppendLine();
+			sb.Append(" - Offset Distance:                    ").Append(_offsetDistance.ToString()).AppendLine();
+			sb.Append(" - Offset Altitude:                    ").Append(_offsetAltitude.ToString()).AppendLine();
 			sb.Append(" - Distance To Initial Waypoint:       ").Append(Vector3D.Distance(_initialWaypoint, _remoteControl.GetPosition())).AppendLine();
 			sb.Append(" - Distance To Current Waypoint:       ").Append(Vector3D.Distance(_currentWaypoint, _remoteControl.GetPosition())).AppendLine();
 			sb.Append(" - Distance From Initial To Current:   ").Append(Vector3D.Distance(_currentWaypoint, _initialWaypoint)).AppendLine();
@@ -684,6 +699,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			sb.Append("   - Target Diff:                      ").Append(Math.Round(RollTargetAngleResult, 2)).AppendLine();
 			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro.RawValues.Z, 4)).AppendLine();
 			sb.Append("   - Magnitude:                        ").Append(Math.Round(ExistingRollMagnitude, 4)).AppendLine();
+
+			if (State != null) {
+
+				sb.AppendLine();
+
+				sb.Append("::: Autopilot State Data :::").AppendLine();
+				sb.Append(" - Fly Level With Gravity:             ").Append(State.UseFlyLevelWithGravity).AppendLine();
+				sb.Append(" - Fly Level With Gravity Idle:        ").Append(State.UseFlyLevelWithGravityIdle).AppendLine();
+
+			}
+
+			if (Data != null) {
+
+				sb.AppendLine();
+
+				sb.Append("::: Autopilot Profile Data :::").AppendLine();
+				sb.Append(" - Fly Level With Gravity:             ").Append(Data.FlyLevelWithGravity).AppendLine();
+				sb.Append(" - Fly Level With Gravity Idle:        ").Append(Data.LevelWithGravityWhenIdle).AppendLine();
+
+			}
 
 			return sb.ToString();
 		
@@ -850,12 +885,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (_initialWaypoint == Vector3D.Zero && State.FirstRun)
 				return;
 
-			if (CurrentPlanet == null || !CurrentPlanet.Closed)
+			if (CurrentPlanet == null || CurrentPlanet.Closed)
 				CurrentPlanet = PlanetManager.GetNearestPlanet(_myPosition);
 
 			_pendingWaypoint = _initialWaypoint;
 
-			if (CurrentPlanet.Gravity != null && CurrentPlanet.Gravity.IsPositionInRange(_myPosition)) {
+			if (CurrentPlanet != null && CurrentPlanet.Gravity != null && CurrentPlanet.Gravity.IsPositionInRange(_myPosition)) {
 
 				
 				_upDirection = CurrentPlanet.UpAtPosition(_myPosition);
@@ -1032,7 +1067,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			//BehaviorLogger.Write("Autopilot: Planet Pathing", BehaviorDebugEnum.TempDebug);
 			//PlanetPathing
-			if (CurrentMode.HasFlag(NewAutoPilotMode.PlanetaryPathing) && _gravityStrength > 0) {
+			if (InGravity() && CurrentMode.HasFlag(NewAutoPilotMode.PlanetaryPathing) && _gravityStrength > 0) {
 
 				if (!Data.UseSurfaceHoverThrustMode)
 					CalculateSafePlanetPathWaypoint(CurrentPlanet);
@@ -1050,7 +1085,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			}
 
 			//WaterNavigation
-			if (CurrentMode.HasFlag(NewAutoPilotMode.WaterNavigation) && _gravityStrength > 0) {
+			if (InGravity() && CurrentMode.HasFlag(NewAutoPilotMode.WaterNavigation) && _gravityStrength > 0) {
 
 				if (APIs.WaterModApiLoaded && WaterPath != null) {
 
@@ -1075,7 +1110,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 					gotLead = true;
 					DirectWaypointType |= WaypointModificationEnum.CollisionLeading;
-					_pendingWaypoint = VectorHelper.FirstOrderIntercept(_myPosition, MyVelocity, (float)MyVelocity.Length(), _pendingWaypoint, Targeting.Target.CurrentVelocity());
+					_pendingWaypoint = VectorHelper.FirstOrderIntercept((Vector3)_myPosition, (Vector3)MyVelocity, (float)MyVelocity.Length(), (Vector3)_pendingWaypoint, (Vector3)Targeting.Target.CurrentVelocity());
 					_calculatedWeaponPredictionWaypoint = _pendingWaypoint;
 
 				}
@@ -1238,10 +1273,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (_offsetRequiresCalculation) {
 
 				_offsetRequiresCalculation = false;
+				_offsetMatrix = MatrixD.Identity;
 
 				if (InGravity()) {
 
-					_offsetDirection = Vector3D.Normalize(MyUtils.GetRandomPerpendicularVector(_upDirection));
+					_offsetDirection = Vector3D.Normalize(MyUtils.GetRandomPerpendicularVector((Vector3)_upDirection));
 
 					bool reverseDistAlt = false;
 
@@ -1279,7 +1315,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			}
 
 			//Update Position and Matrix
-			if (Targeting.HasTarget()) {
+			if (Targeting.HasTarget() && CurrentMode.HasFlag(NewAutoPilotMode.WaypointFromTarget)) {
 
 				_offsetMatrix = Targeting.Target.GetEntity().PositionComp.WorldMatrixRef;
 
@@ -1289,22 +1325,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 					if (InGravity()) {
 
-						_offsetMatrix = MatrixD.CreateWorld(CurrentPlanet.SurfaceCoordsAtPosition(_remoteControl.WorldMatrix.Translation), Vector3D.CalculatePerpendicularVector(_upDirection), _upDirection);
+						_offsetMatrix = MatrixD.CreateWorld(CurrentPlanet.SurfaceCoordsAtPosition(_initialWaypoint), Vector3D.CalculatePerpendicularVector(_upDirection), _upDirection);
 
 					} else {
 
-						_offsetMatrix = _remoteControl.WorldMatrix;
-					
+						_offsetMatrix = MatrixD.CreateWorld(_initialWaypoint, _remoteControl.WorldMatrix.Forward, _remoteControl.WorldMatrix.Up);
+
 					}
 				
 				}
 			
 			}
 
+			var translation = _offsetMatrix.Translation;
+
 			//Get Offset Waypoint
 			if (InGravity()) {
 
-				var roughPerpendicularCoords = _offsetDistance * _offsetDirection + _offsetMatrix.Translation;
+				var roughPerpendicularCoords = _offsetDistance * _offsetDirection + translation;
 				var roughCoordsSurface = CurrentPlanet.SurfaceCoordsAtPosition(roughPerpendicularCoords);
 				var worldCenter = CurrentPlanet.Center();
 				var upAtRoughCoords = Vector3D.Normalize(roughPerpendicularCoords - worldCenter);
@@ -1336,7 +1374,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			
 			} else {
 
-				_pendingWaypoint = _offsetDirection * _offsetDistance + _offsetMatrix.Translation;
+				_pendingWaypoint = _offsetDirection * _offsetDistance + translation;
 
 			}
 

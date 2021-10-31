@@ -13,6 +13,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public string SpawnGroupName;
 		public MySpawnGroupDefinition SpawnGroup;
 
+		public SpawnConditionsProfile PersistentConditions;
+
 		public List<SpawnConditionsProfile> SpawnConditionsProfiles;
 		public List<string> SpawnConditionGroups;
 
@@ -41,6 +43,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			SpawnGroupEnabled = true;
 			SpawnGroupName = "";
 			SpawnGroup = null;
+
+			PersistentConditions = null;
 
 			SpawnConditionsProfiles = new List<SpawnConditionsProfile>();
 			SpawnConditionsProfiles.Add(new SpawnConditionsProfile());
@@ -100,6 +104,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[SpawnGroupEnabled:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.SpawnGroupEnabled);
+
+				}
+
+				//PersistentConditions
+				if (tag.StartsWith("[PersistentConditions:") == true) {
+
+					TagParse.TagSpawnConditionsProfileCheck(tag, ref improveSpawnGroup.PersistentConditions);
 
 				}
 
@@ -255,6 +266,21 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			}
 
+			if (SpawnGroupManager.AddonDetected) {
+
+				foreach (var manipulation in ManipulationProfiles) {
+
+					if (manipulation.ModulesForArmorReplacement.Count > 0 && manipulation.ReplaceArmorBlocksWithModules) {
+
+						improveSpawnGroup.SpawnGroupEnabled = false;
+						break;
+
+					}
+					
+				}
+
+			}
+				
 		}
 
 	}

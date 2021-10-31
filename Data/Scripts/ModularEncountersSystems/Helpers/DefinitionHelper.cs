@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning.Manipulation;
 using Sandbox.Definitions;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		//Blocks
 		public static List<MyCubeBlockDefinition> AllBlockDefinitions = new List<MyCubeBlockDefinition>();
+		public static Dictionary<MyDefinitionId, MyCubeBlockDefinition> AllBlockDefinitionsDictionary = new Dictionary<MyDefinitionId, MyCubeBlockDefinition>();
 		public static Dictionary<MyDefinitionId, float> BatteryMaxCapacityReference = new Dictionary<MyDefinitionId, float>();
 		public static Dictionary<MyDefinitionId, MyReactorDefinition> ReactorDefinitions = new Dictionary<MyDefinitionId, MyReactorDefinition>();
 		public static List<string> RivalAiControlModules = new List<string>();
@@ -62,7 +64,8 @@ namespace ModularEncountersSystems.Helpers {
 			SetupEntityComponents();
 
 			SetupDropPods();
-			
+
+			ArmorModuleReplacement.Setup();
 
 			//Build List of RivalAI Control Module SubtypeNames
 			RivalAiControlModules.Add("RivalAIRemoteControlSmall");
@@ -185,6 +188,9 @@ namespace ModularEncountersSystems.Helpers {
 
 						errorDebug.Append("Is Block Definition").AppendLine();
 						AllBlockDefinitions.Add(block);
+
+						if (!AllBlockDefinitionsDictionary.ContainsKey(block.Id))
+							AllBlockDefinitionsDictionary.Add(block.Id, block);
 
 						if (!BlockWeightReference.ContainsKey(block.Id)) {
 

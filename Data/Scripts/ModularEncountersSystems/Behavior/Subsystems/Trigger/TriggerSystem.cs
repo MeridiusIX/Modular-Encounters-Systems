@@ -468,7 +468,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (command.SingleRecipient && command.Recipient > 0) {
+			if (command.SingleRecipient && command.Recipient > 0 && command.Recipient != RemoteControl.EntityId) {
 
 				BehaviorLogger.Write("Code Is Single Recipient and Already Processed By Another Entity", BehaviorDebugEnum.Command);
 				return;

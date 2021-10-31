@@ -515,8 +515,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			//Distance
 			var distance = target.Distance(RemoteControl.GetPosition());
+			var maxDistance = data.MaxDistance;
 
-			if (distance > data.MaxDistance) {
+			if (data.MaxExistingTargetDistance > -1 && target == Target)
+				maxDistance = data.MaxExistingTargetDistance;
+
+			if (distance > maxDistance) {
 
 				return false;
 			

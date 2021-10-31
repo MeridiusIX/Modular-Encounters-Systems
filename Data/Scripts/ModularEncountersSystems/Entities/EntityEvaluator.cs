@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.Definitions;
+using Sandbox.Game;
 using Sandbox.Game.Entities;
 using Sandbox.Game.Weapons;
 using Sandbox.ModAPI;
@@ -608,7 +609,7 @@ namespace ModularEncountersSystems.Entities {
 			result += GetTargetValueFromBlockList(grid.Turrets, 7.5f, 4, true);
 
 			//Factor Power
-			result += grid.PowerOutput().Y / 10;
+			result += (grid.PowerOutput().Y > 0) ? (grid.PowerOutput().Y / 10) : 0;
 
 			//Factor Total Block Count
 			result += grid.AllBlocks.Count / 100;
@@ -626,9 +627,10 @@ namespace ModularEncountersSystems.Entities {
 			else
 				result *= 0.5f;
 
-			grid.ThreatScore = result;
+			grid.ThreatScore = result * 0.70f;
 			grid.LastThreatCalculationTime = MyAPIGateway.Session.GameDateTime;
-			return result * 0.70f;
+
+			return grid.ThreatScore;
 		
 		}
 
@@ -689,14 +691,17 @@ namespace ModularEncountersSystems.Entities {
 
 				if (scanInventory) {
 
-					if (block.Block.HasInventory) {
+					if (block.Block.HasInventory && block.Block.GetInventory().MaxVolume > 0) {
 
-						value *= ((float)block.Block.GetInventory().CurrentVolume / (float)block.Block.GetInventory().MaxVolume) + 1;
+						var inventoryModifier = ((float)block.Block.GetInventory().CurrentVolume / (float)block.Block.GetInventory().MaxVolume) + 1;
+
+						if (result == float.NaN)
+							value *= inventoryModifier;
 
 					}
 
 				}
-					
+
 				result += value;
 
 			}

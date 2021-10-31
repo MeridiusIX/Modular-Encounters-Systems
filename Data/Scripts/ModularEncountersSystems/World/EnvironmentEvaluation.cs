@@ -17,6 +17,7 @@ namespace ModularEncountersSystems.World {
 	public class EnvironmentEvaluation {
 
 		public Vector3D Position;
+		public Vector3D Up;
 
 		public double DistanceFromWorldCenter;
 		public Vector3D DirectionFromWorldCenter;
@@ -83,13 +84,42 @@ namespace ModularEncountersSystems.World {
 			InsideTerritories = new List<string>();
 			InsideStrictTerritories = new List<string>();
 
+			if (AddonManager.NebulaMod) {
+
+				if (APIs.NebulaApiLoaded) {
+
+					if (NebulaAPI.InsideNebula(Position)) {
+
+						InsideNebula = true;
+						NebulaDensity = NebulaAPI.GetNebulaDensity(Position);
+						NebulaMaterial = NebulaAPI.GetMaterial(Position);
+						NebulaWeather = NebulaAPI.GetWeather(Position) ?? "N/A";
+
+					} else {
+
+						InsideNebula = false;
+						NebulaDensity = 0;
+						NebulaMaterial = 0;
+						NebulaWeather = "N/A";
+
+					}
+
+				}
+
+			}
+
 			//Planet Checks
 			NearestPlanet = PlanetManager.GetNearestPlanet(coords);
 
-			if (NearestPlanet?.Planet == null || NearestPlanet.IsClosed())
+			if (NearestPlanet?.Planet == null || NearestPlanet.IsClosed()) {
+
+				SetEligibleSpawns();
 				return;
 
+			}
+	
 			var upDir = Vector3D.Normalize(coords - NearestPlanet.Center());
+			Up = upDir;
 			var downDir = upDir * -1;
 			var forward = Vector3D.CalculatePerpendicularVector(upDir);
 			var matrix = MatrixD.CreateWorld(coords, forward, upDir);
@@ -151,30 +181,6 @@ namespace ModularEncountersSystems.World {
 
 			}
 
-			if (AddonManager.NebulaMod) {
-
-				if (APIs.NebulaApiLoaded) {
-
-					if (NebulaAPI.InsideNebula(Position)) {
-
-						InsideNebula = true;
-						NebulaDensity = NebulaAPI.GetNebulaDensity(Position);
-						NebulaMaterial = NebulaAPI.GetMaterial(Position);
-						NebulaWeather = NebulaAPI.GetWeather(Position) ?? "N/A";
-
-					} else {
-
-						InsideNebula = false;
-						NebulaDensity = 0;
-						NebulaMaterial = 0;
-						NebulaWeather = "N/A";
-
-					}
-				
-				}
-			
-			}
-
 			var distToCore = NearestPlanet.DistanceToCore(Position);
 			var surfaceDistToCore = NearestPlanet.DistanceToCore(SurfaceCoords);
 			AltitudeAtPosition = distToCore - surfaceDistToCore;
@@ -196,8 +202,7 @@ namespace ModularEncountersSystems.World {
 
 			if (!IsOnPlanet) {
 
-				SpaceCargoShipsEligible = true;
-				RandomEncountersEligible = true;
+				SetEligibleSpawns();
 				return;
 
 			}
@@ -298,13 +303,28 @@ namespace ModularEncountersSystems.World {
 			
 			}
 
-			LunarCargoShipsEligible = !Gravity.IsPositionInRange(upDir * Settings.SpaceCargoShips.MinLunarSpawnHeight + Position);
-			SpaceCargoShipsEligible = LunarCargoShipsEligible || !IsOnPlanet;
-			PlanetaryCargoShipsEligible = IsOnPlanet && AltitudeAtPosition <= Settings.PlanetaryCargoShips.PlayerSurfaceAltitude;
-			GravityCargoShipsEligible = IsOnPlanet && AltitudeAtPosition > Settings.PlanetaryCargoShips.PlayerSurfaceAltitude;
-			PlanetaryInstallationEligible = IsOnPlanet && AltitudeAtPosition < Settings.PlanetaryInstallations.PlayerMaximumDistanceFromSurface;
-			WaterInstallationEligible = PlanetaryInstallationEligible && WaterInSurroundingAreaRatio > 0.15f;
+			SetEligibleSpawns();
 
+		}
+
+		public void SetEligibleSpawns() {
+
+			if (NearestPlanet != null && !NearestPlanet.IsClosed() && IsOnPlanet) {
+
+				LunarCargoShipsEligible = !Gravity.IsPositionInRange(Up * Settings.SpaceCargoShips.MinLunarSpawnHeight + Position);
+				SpaceCargoShipsEligible = LunarCargoShipsEligible || !IsOnPlanet;
+				PlanetaryCargoShipsEligible = IsOnPlanet && AltitudeAtPosition <= Settings.PlanetaryCargoShips.PlayerSurfaceAltitude;
+				GravityCargoShipsEligible = IsOnPlanet && AltitudeAtPosition > Settings.PlanetaryCargoShips.PlayerSurfaceAltitude;
+				PlanetaryInstallationEligible = IsOnPlanet && AltitudeAtPosition < Settings.PlanetaryInstallations.PlayerMaximumDistanceFromSurface;
+				WaterInstallationEligible = PlanetaryInstallationEligible && WaterInSurroundingAreaRatio > 0.15f;
+
+			} else {
+
+				SpaceCargoShipsEligible = true;
+				RandomEncountersEligible = true;
+
+			}
+		
 		}
 
 		public void GetThreat(double distance, bool includeNpc) {

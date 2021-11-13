@@ -11,6 +11,7 @@
       <Icon>Textures/GUI/Icons/Cubes/Battery1x1.dds</Icon>
       <Description>Special high energy battery only usable by NPC Owned Identities</Description>
       <CubeSize>Small</CubeSize>
+      <Public>false</Public>
       <GuiVisible>false</GuiVisible>
       <BlockTopology>TriangleMesh</BlockTopology>
       <Size x="1" y="1" z="1" />

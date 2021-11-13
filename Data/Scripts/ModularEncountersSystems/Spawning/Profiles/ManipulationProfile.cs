@@ -1238,7 +1238,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				}
 
 				//LootProfiles
-				if (tag.StartsWith("[UseLootProfiles:") == true) {
+				if (tag.StartsWith("[LootProfiles:") == true) {
 
 					TagParse.TagLootProfileCheck(tag, ref this.LootProfiles);
 

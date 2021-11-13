@@ -325,7 +325,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			bool rivalAiOverride = false;
 
-			if (data.Attributes.HasFlag(NpcAttributes.IsCargoShip) && string.IsNullOrWhiteSpace(prefab.SpawnGroupPrefab.Behaviour)) {
+			if (data.Attributes.IsCargoShip && string.IsNullOrWhiteSpace(prefab.SpawnGroupPrefab.Behaviour)) {
 
 				if (collection.SpawnGroup.UseAutoPilotInSpace || data.SpawnType.HasFlag(SpawningType.GravityCargoShip) || data.SpawnType.HasFlag(SpawningType.PlanetaryCargoShip)) {
 
@@ -339,14 +339,14 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//RivalAI
 			if (profile.UseRivalAi == true || rivalAiOverride) {
 
-				bool primaryBehaviorSet = data.Attributes.HasFlag(NpcAttributes.RivalAiBehaviorSet);
+				bool primaryBehaviorSet = data.Attributes.RivalAiBehaviorSet;
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
 					if (BehaviorBuilder.RivalAiInitialize(grid, profile, data.BehaviorName, primaryBehaviorSet, rivalAiOverride)) {
 
 						SpawnLogger.Write("RivalAI Behavior Applied To RemoteControl", SpawnerDebugEnum.Manipulation);
-						data.Attributes |= NpcAttributes.RivalAiBehaviorSet;
+						data.Attributes.RivalAiBehaviorSet = true;
 
 					}
 
@@ -361,13 +361,13 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			var spawnGroupShieldProviderEnabled = profile.AddDefenseShieldBlocks;
 			var spawnGroupShieldProviderAllowed = spawnGroupShieldProviderEnabled && MathTools.RandomBetween(0, 101) <= profile.ShieldProviderChance;
 
-			if (globalShieldProviderAllowed || spawnGroupShieldProviderAllowed) {
+			if (!data.Attributes.ShieldActivation && (globalShieldProviderAllowed || spawnGroupShieldProviderAllowed)) {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					if (!data.Attributes.HasFlag(NpcAttributes.ShieldActivation) && NPCShieldManager.AddDefenseShieldsToGrid(grid, true)) {
+					if (!data.Attributes.ShieldActivation && NPCShieldManager.AddDefenseShieldsToGrid(grid, true)) {
 
-						data.Attributes |= NpcAttributes.ShieldActivation;
+						data.Attributes.ShieldActivation = true;
 						break;
 
 					}
@@ -394,10 +394,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					WeaponRandomizer.RandomWeaponReplacing(grid, collection, prefab, profile);
+					WeaponRandomizer.RandomWeaponReplacing(grid, collection, prefab, collection.SpawnGroup.WeaponRandomizationOverrideProfile != null ? collection.SpawnGroup.WeaponRandomizationOverrideProfile : profile);
 
-					if(!data.Attributes.HasFlag(NpcAttributes.WeaponRandomizationAdjustments))
-						data.Attributes |= NpcAttributes.WeaponRandomizationAdjustments;
+					if (!data.Attributes.WeaponRandomizationAdjustments)
+						data.Attributes.WeaponRandomizationAdjustments = true;
 
 				}
 
@@ -495,14 +495,14 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//Add NpcData to Prefab
 			if(prefab.Prefab.CubeGrids.Length > 0){
 
-				if (!data.Attributes.HasFlag(NpcAttributes.RivalAiBehaviorSet) && !string.IsNullOrWhiteSpace(data.BehaviorName)) {
+				if (!data.Attributes.RivalAiBehaviorSet && !string.IsNullOrWhiteSpace(data.BehaviorName)) {
 
 					SpawnLogger.Write("KeenAI Applied To Remote Control", SpawnerDebugEnum.Manipulation);
-					data.Attributes |= NpcAttributes.ApplyBehavior;
+					data.Attributes.ApplyBehavior = true;
 
 				} else {
 
-					data.Attributes &= ~NpcAttributes.ApplyBehavior;
+					data.Attributes.ApplyBehavior = false;
 
 				}
 					

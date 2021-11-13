@@ -97,6 +97,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			_restrictedFlags.Add(WaypointModificationEnum.PlanetPathing);
 			_restrictedFlags.Add(WaypointModificationEnum.PlanetPathingAscend);
 			_restrictedFlags.Add(WaypointModificationEnum.WaterPathing);
+			_restrictedFlags.Add(WaypointModificationEnum.EscortPathing);
 
 			StaticWeapons = new List<IWeapon>();
 			Turrets = new List<IWeapon>();

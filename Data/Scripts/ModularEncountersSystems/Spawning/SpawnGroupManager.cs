@@ -288,6 +288,8 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
+					break;
+
 				}
 
 			}

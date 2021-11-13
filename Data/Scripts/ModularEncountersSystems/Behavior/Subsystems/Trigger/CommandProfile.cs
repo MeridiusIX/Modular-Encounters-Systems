@@ -12,6 +12,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SingleRecipient;
 		public bool ReturnToSender;
 		public bool IgnoreAntennaRequirement;
+		public bool IgnoreReceiverAntennaRequirement;
 		public double Radius;
 		public double MaxRadius;
 
@@ -37,6 +38,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SingleRecipient = false;
 			ReturnToSender = false;
 			IgnoreAntennaRequirement = false;
+			IgnoreReceiverAntennaRequirement = false;
 			Radius = 10000;
 			MaxRadius = -1;
 
@@ -89,6 +91,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[IgnoreAntennaRequirement:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref IgnoreAntennaRequirement);
+
+					}
+
+					//IgnoreReceiverAntennaRequirement
+					if (tag.Contains("[IgnoreReceiverAntennaRequirement:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref IgnoreReceiverAntennaRequirement);
 
 					}
 

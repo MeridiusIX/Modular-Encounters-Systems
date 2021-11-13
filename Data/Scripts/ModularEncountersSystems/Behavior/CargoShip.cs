@@ -108,7 +108,7 @@ namespace ModularEncountersSystems.Behavior {
 				SelectNextWaypoint();
 				_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitAtWaypoint);
 
-				if (GetSpeedFromSpawnGroup && _behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.Attributes.HasFlag(NpcAttributes.IsCargoShip)) {
+				if (GetSpeedFromSpawnGroup && _behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.Attributes.IsCargoShip) {
 
 					_behavior.BehaviorSettings.State.MaxSpeedOverride = _behavior.CurrentGrid.Npc.PrefabSpeed;
 

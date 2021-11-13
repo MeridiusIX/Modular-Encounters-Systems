@@ -179,7 +179,7 @@ namespace ModularEncountersSystems.API {
 			if (npcGrid?.Npc == null)
 				return false;
 
-			npcGrid.Npc.Attributes |= NpcAttributes.IgnoreCleanup;
+			npcGrid.Npc.Attributes.IgnoreCleanup = true;
 			npcGrid.Npc.Update();
 			return true;
 

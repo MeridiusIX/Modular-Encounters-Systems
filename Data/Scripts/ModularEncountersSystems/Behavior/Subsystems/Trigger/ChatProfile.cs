@@ -172,11 +172,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			float thisVolume = 1;
 			BroadcastType thisType = BroadcastType.None;
 
+			BehaviorLogger.Write(" - Counts For Chat/Audio/Broadcast/Avatar/Volume: " + ChatMessages.Count + "/" + ChatAudio.Count + "/" + BroadcastChatType.Count + "/" + ChatAvatar.Count + "/" + ChatVolumeMultiplier.Count, BehaviorDebugEnum.Chat);
+
 			GetChatAndSoundFromLists(ref thisMsg, ref thisSound, ref thisType, ref thisAvatar, ref thisVolume);
 
-			if (string.IsNullOrWhiteSpace(thisMsg) == true || thisType == BroadcastType.None) {
+			if (string.IsNullOrWhiteSpace(thisMsg) == true) {
 
-				BehaviorLogger.Write(" - Message Null or Broadcast None", BehaviorDebugEnum.Chat);
+				BehaviorLogger.Write(" - Message Null", BehaviorDebugEnum.Chat);
+				return false;
+
+			}
+
+			if (thisType == BroadcastType.None) {
+
+				BehaviorLogger.Write(" - Broadcast None", BehaviorDebugEnum.Chat);
 				return false;
 
 			}
@@ -254,21 +263,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					//ChatMessages
 					if (tag.Contains("[ChatMessages:") == true) {
 
-						TagParse.TagStringListCheck(tag, ref ChatMessages);
+						TagParse.TagStringListCheck(tag, false, ref ChatMessages);
 
 					}
 
 					//ChatAudio
 					if (tag.Contains("[ChatAudio:") == true) {
 
-						TagParse.TagStringListCheck(tag, ref ChatAudio);
+						TagParse.TagStringListCheck(tag, false, ref ChatAudio);
 
 					}
 
 					//ChatAvatar
 					if (tag.Contains("[ChatAvatar:") == true) {
 
-						TagParse.TagStringListCheck(tag, ref ChatAvatar);
+						TagParse.TagStringListCheck(tag, false, ref ChatAvatar);
 
 					}
 

@@ -523,6 +523,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					if (_behavior.BehaviorSettings.ParentEscort != null && _behavior.BehaviorSettings.ParentEscort.Valid) {
 
 						_initialWaypoint = _behavior.BehaviorSettings.ParentEscort.GetTransformedOffset(_initialWaypoint);
+						IndirectWaypointType |= WaypointModificationEnum.EscortPathing;
 
 					}
 

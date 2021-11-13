@@ -27,7 +27,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		//TargetNear
 		public bool CheckTargetNear(TriggerProfile trigger) {
 
-			return _behavior.AutoPilot.Targeting.HasTarget() && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.Targeting.TargetLastKnownCoords) < trigger.TargetDistance;
+			bool hasTarget = _behavior.AutoPilot.Targeting.HasTarget();
+			return (hasTarget && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.Targeting.TargetLastKnownCoords) < trigger.TargetDistance) || (!hasTarget && trigger.AllowTargetFarWithoutTarget);
 
 		}
 

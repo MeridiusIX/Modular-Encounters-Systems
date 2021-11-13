@@ -153,6 +153,9 @@ namespace ModularEncountersSystems.Sync {
 			if (Message.StartsWith("/MES.SC"))
 				Message = Message.Replace("/MES.SC", "/MES.Spawn.Creature");
 
+			if (Message.StartsWith("/MES.SDE"))
+				Message = Message.Replace("/MES.SDE", "/MES.Spawn.DroneEncounter");
+
 			if (Message.StartsWith("/MES.SSE"))
 				Message = Message.Replace("/MES.SSE", "/MES.Spawn.StaticEncounter");
 
@@ -179,6 +182,9 @@ namespace ModularEncountersSystems.Sync {
 
 			if (Message.StartsWith("/MES.IGLBD"))
 				Message = Message.Replace("/MES.IGLBD", "/MES.Info.GetLogging.BehaviorDebug");
+
+			if (Message.StartsWith("/MES.IGBD"))
+				Message = Message.Replace("/MES.IGBD", "/MES.Info.GetBehaviorData");
 
 		}
 
@@ -307,6 +313,9 @@ namespace ModularEncountersSystems.Sync {
 
 			if (array[2] == "Creature")
 				type = SpawningType.Creature;
+
+			if (array[2] == "DroneEncounter")
+				type = SpawningType.DroneEncounter;
 
 
 			if (type == SpawningType.None) {

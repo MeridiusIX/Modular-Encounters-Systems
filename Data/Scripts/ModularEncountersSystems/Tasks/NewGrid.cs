@@ -57,7 +57,7 @@ namespace ModularEncountersSystems.Tasks {
                 NpcManager.ActiveNpcs.Add(_grid);
                 _grid.OwnershipMajorityChange += NpcManager.OwnershipMajorityChange;
 
-                if (_grid.Npc.Attributes.HasFlag((NpcAttributes.IsCargoShip)))
+                if (_grid.Npc.Attributes.IsCargoShip)
                     CargoShipWatcher.CargoShips.Add(_grid);
 
             }

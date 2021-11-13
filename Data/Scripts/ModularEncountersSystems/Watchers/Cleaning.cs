@@ -221,7 +221,7 @@ namespace ModularEncountersSystems.Watchers {
 				//Check Ignore Flag
 				if (linkedGrid.Npc != null) {
 
-					if (linkedGrid.Npc.Attributes.HasFlag(NpcAttributes.IgnoreCleanup)) {
+					if (linkedGrid.Npc.Attributes.IgnoreCleanup) {
 
 						SpawnLogger.Write(linkedGrid.CubeGrid.CustomName + " Fails Basic Cleanup. Has IgnoreCleanup Flag", SpawnerDebugEnum.CleanUp);
 						return false;

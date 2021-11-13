@@ -217,7 +217,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (spawnCollection.Conditions.ForceExactPositionAndOrientation) {
 
-					npcData.Attributes |= NpcAttributes.SetMatrixPostSpawn;
+					npcData.Attributes.SetMatrixPostSpawn = true;
 
 					if (!options.HasFlag(SpawningOptions.UseGridOrigin))
 						options |= SpawningOptions.UseGridOrigin;

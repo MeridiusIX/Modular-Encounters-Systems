@@ -47,7 +47,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				var thrustProfile = new ThrustSettings(profile);
 				var thrustProfileString = thrustProfile.ConvertToString();
 				StorageTools.ApplyCustomGridStorage(cubeGrid, StorageTools.NpcThrusterDataKey, thrustProfileString);
-				data.Attributes |= NpcAttributes.CustomThrustDataUsed;
+				data.Attributes.CustomThrustDataUsed = true;
 
 			}
 

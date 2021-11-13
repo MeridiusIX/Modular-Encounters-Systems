@@ -293,6 +293,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool AssignEscortFromCommand;
 
+		public bool UseCurrentPositionAsPatrolReference;
+		public bool ClearCustomPatrolReference;
+
+		public bool SetGridToStatic;
+		public bool SetGridToDynamic;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -567,6 +573,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			AssignEscortFromCommand = false;
 
+			UseCurrentPositionAsPatrolReference = false;
+			ClearCustomPatrolReference = false;
+
+			SetGridToStatic = false;
+			SetGridToDynamic = false;
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -759,7 +771,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"EnableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref EnableHighestRangeAntennas) },
 				{"DisableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref DisableHighestRangeAntennas) },
 				{"AssignEscortFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AssignEscortFromCommand) },
-				//AssignEscortFromCommand
+				{"UseCurrentPositionAsPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref UseCurrentPositionAsPatrolReference) },
+				{"ClearCustomPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref ClearCustomPatrolReference) },
+				{"SetGridToStatic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToStatic) },
+				{"SetGridToDynamic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToDynamic) },
+				//UseCurrentPositionAsPatrolReference
 
 			};
 

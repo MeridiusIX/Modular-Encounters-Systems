@@ -127,7 +127,7 @@ namespace ModularEncountersSystems.Tasks {
 			
 			if (_grid.Npc != null) {
 
-				_grid.Npc.AppliedAttributes |= World.NpcAttributes.WeaponRandomizationAggression;
+				_grid.Npc.AppliedAttributes.WeaponRandomizationAggression = true;
 				_grid.Npc.Update();
 
 			}

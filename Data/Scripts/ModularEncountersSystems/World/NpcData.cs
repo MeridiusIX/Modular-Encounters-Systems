@@ -45,14 +45,123 @@ namespace ModularEncountersSystems.World {
 	}
 
 	[ProtoContract]
+	public class NewNpcAttributes {
+
+		[ProtoMember(1)] public bool DigAirTightVoxels;
+		[ProtoMember(2)] public bool ReplenishSystems;
+		[ProtoMember(3)] public bool IgnoreCleanup;
+		[ProtoMember(4)] public bool ForceStatic;
+		[ProtoMember(5)] public bool IsCargoShip;
+		[ProtoMember(6)] public bool FixSubparts;
+		[ProtoMember(7)] public bool InitEconomyBlocks;
+		[ProtoMember(8)] public bool NonPhysicalAmmo;
+		[ProtoMember(9)] public bool ClearInventory;
+		[ProtoMember(10)] public bool ShieldActivation;
+		[ProtoMember(11)] public bool WeaponRandomizationAdjustments;
+		[ProtoMember(12)] public bool ApplyBehavior;
+		[ProtoMember(13)] public bool ReleasePrefab;
+		[ProtoMember(14)] public bool WeaponsRandomized;
+		[ProtoMember(15)] public bool RivalAiBehaviorSet;
+		[ProtoMember(16)] public bool RegisterRemoteControlCode;
+		[ProtoMember(17)] public bool CustomThrustDataUsed;
+		[ProtoMember(18)] public bool SetMatrixPostSpawn;
+		[ProtoMember(19)] public bool WeaponRandomizationAggression;
+		[ProtoMember(20)] public bool OldFlagsProcessed;
+
+		public NewNpcAttributes() {
+
+			DigAirTightVoxels = false;
+			ReplenishSystems = false;
+			IgnoreCleanup = false;
+			ForceStatic = false;
+			IsCargoShip = false;
+			FixSubparts = false;
+			InitEconomyBlocks = false;
+			NonPhysicalAmmo = false;
+			ClearInventory = false;
+			ShieldActivation = false;
+			WeaponRandomizationAdjustments = false;
+			ApplyBehavior = false;
+			ReleasePrefab = false;
+			WeaponsRandomized = false;
+			RivalAiBehaviorSet = false;
+			RegisterRemoteControlCode = false;
+			CustomThrustDataUsed = false;
+			SetMatrixPostSpawn = false;
+			WeaponRandomizationAggression = false;
+			OldFlagsProcessed = false;
+
+		}
+
+		public void ApplyAttributesFromFlags(NpcAttributes flags) {
+
+			if (flags.HasFlag(NpcAttributes.DigAirTightVoxels))
+				DigAirTightVoxels = true;
+
+			if (flags.HasFlag(NpcAttributes.ReplenishSystems))
+				ReplenishSystems = true;
+
+			if (flags.HasFlag(NpcAttributes.IgnoreCleanup))
+				IgnoreCleanup = true;
+
+			if (flags.HasFlag(NpcAttributes.ForceStatic))
+				ForceStatic = true;
+
+			if (flags.HasFlag(NpcAttributes.IsCargoShip))
+				IsCargoShip = true;
+
+			if (flags.HasFlag(NpcAttributes.FixSubparts))
+				FixSubparts = true;
+
+			if (flags.HasFlag(NpcAttributes.NonPhysicalAmmo))
+				NonPhysicalAmmo = true;
+
+			if (flags.HasFlag(NpcAttributes.ClearInventory))
+				ClearInventory = true;
+
+			if (flags.HasFlag(NpcAttributes.ShieldActivation))
+				ShieldActivation = true;
+
+			if (flags.HasFlag(NpcAttributes.WeaponRandomizationAdjustments))
+				WeaponRandomizationAdjustments = true;
+
+			if (flags.HasFlag(NpcAttributes.ApplyBehavior))
+				ApplyBehavior = true;
+
+			if (flags.HasFlag(NpcAttributes.ReleasePrefab))
+				ReleasePrefab = true;
+
+			if (flags.HasFlag(NpcAttributes.WeaponsRandomized))
+				WeaponsRandomized = true;
+
+			if (flags.HasFlag(NpcAttributes.RivalAiBehaviorSet))
+				RivalAiBehaviorSet = true;
+
+			if (flags.HasFlag(NpcAttributes.RegisterRemoteControlCode))
+				RegisterRemoteControlCode = true;
+
+			if (flags.HasFlag(NpcAttributes.CustomThrustDataUsed))
+				CustomThrustDataUsed = true;
+
+			if (flags.HasFlag(NpcAttributes.SetMatrixPostSpawn))
+				SetMatrixPostSpawn = true;
+
+			if (flags.HasFlag(NpcAttributes.WeaponRandomizationAggression))
+				WeaponRandomizationAggression = true;
+
+		}
+
+	}
+
+	[ProtoContract]
 	public class NpcData {
 
 		//Serialized Data
 		[ProtoMember(1)]
-		public NpcAttributes Attributes;
+		public NpcAttributes OldAttributes;
 
 		[ProtoMember(2)]
-		public NpcAttributes AppliedAttributes;
+		public NpcAttributes OldAppliedAttributes;
 
 		[ProtoMember(3)]
 		public SpawningType SpawnType;
@@ -122,6 +231,12 @@ namespace ModularEncountersSystems.World {
 
 		[ProtoMember(25)]
 		public DateTime LastChangeToData;
+
+		[ProtoMember(26)]
+		public NewNpcAttributes Attributes;
+
+		[ProtoMember(27)]
+		public NewNpcAttributes AppliedAttributes;
 
 		//Non-Serialized Data
 
@@ -258,16 +373,17 @@ namespace ModularEncountersSystems.World {
 			AssignAttributes(SpawnGroup, SpawnType);
 
 			//CleanUp
-			if (legacyActiveNPC.CleanupIgnore && !Attributes.HasFlag(NpcAttributes.IgnoreCleanup))
-				Attributes |= NpcAttributes.IgnoreCleanup;
+			if (legacyActiveNPC.CleanupIgnore && !Attributes.IgnoreCleanup)
+				Attributes.IgnoreCleanup = true;
 
 		}
 
 		private void SetDefaults() {
 
-			Attributes = NpcAttributes.None;
-			Attributes |= NpcAttributes.FixSubparts;
-			AppliedAttributes = NpcAttributes.None;
+			Attributes = new NewNpcAttributes();
+			AppliedAttributes = new NewNpcAttributes();
+
+			Attributes.FixSubparts = true;
 			SpawnType = SpawningType.None;
 			SpawnGroupName = "";
 			OriginalPrefabId = "";
@@ -299,30 +415,30 @@ namespace ModularEncountersSystems.World {
 		public void AssignAttributes(ImprovedSpawnGroup spawnGroup, SpawningType type) {
 			
 			if(SpawnRequest.IsCargoShip(type))
-				Attributes |= NpcAttributes.IsCargoShip;
+				Attributes.IsCargoShip = true;
 
 			if (spawnGroup.SpawnConditionsProfiles[ConditionIndex].CutVoxelsAtAirtightCells)
-				Attributes |= NpcAttributes.DigAirTightVoxels;
+				Attributes.DigAirTightVoxels = true;
 
 			if (spawnGroup.ReplenishSystems)
-				Attributes |= NpcAttributes.ReplenishSystems;
+				Attributes.ReplenishSystems = true;
 
 			if (spawnGroup.IgnoreCleanupRules)
-				Attributes |= NpcAttributes.IgnoreCleanup;
+				Attributes.IgnoreCleanup = true;
 
-			if(spawnGroup.SpawnConditionsProfiles[ConditionIndex].ForceStaticGrid)
-				Attributes |= NpcAttributes.ForceStatic;
+			if (spawnGroup.SpawnConditionsProfiles[ConditionIndex].ForceStaticGrid)
+				Attributes.ForceStatic = true;
 
 			if (spawnGroup.InitializeStoreBlocks)
-				Attributes |= NpcAttributes.InitEconomyBlocks;
+				Attributes.InitEconomyBlocks = true;
 
 			if (spawnGroup.UseNonPhysicalAmmo || Settings.Grids.UseNonPhysicalAmmoForNPCs)
-				Attributes |= NpcAttributes.NonPhysicalAmmo;
+				Attributes.NonPhysicalAmmo = true;
 
 			if (Settings.Grids.RemoveContainerInventoryFromNPCs)
-				Attributes |= NpcAttributes.ClearInventory;
+				Attributes.ClearInventory = true;
 
-			Attributes |= NpcAttributes.ReleasePrefab;
+			Attributes.ReleasePrefab = true;
 
 		}
 
@@ -331,22 +447,30 @@ namespace ModularEncountersSystems.World {
 			if (Grid == null || !Grid.ActiveEntity())
 				return;
 
-			var updateSettings  = true;
+			var updateSettings = true;
 			FirstAttributesCheck = true;
+
+			if (!AppliedAttributes.OldFlagsProcessed) {
+
+				AppliedAttributes.OldFlagsProcessed = true;
+				Attributes.ApplyAttributesFromFlags(OldAttributes);
+				AppliedAttributes.ApplyAttributesFromFlags(OldAppliedAttributes);
+			
+			}
 
 			SpawnLogger.Write("Processing Primary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
 			//ForceStatic
-			if (AttributeCheck(NpcAttributes.ForceStatic)) {
+			if (AttributeCheck(Attributes.ForceStatic, AppliedAttributes.ForceStatic)) {
 
 				Grid.CubeGrid.IsStatic = true;
 				SpawnLogger.Write(Grid.CubeGrid.CustomName + " Forced To Static Grid After Spawn.", SpawnerDebugEnum.Spawning);
-				AppliedAttributes |= NpcAttributes.ForceStatic;
+				AppliedAttributes.ForceStatic = true;
 
 			}
 
 			//ReleasePrefab
-			if (AttributeCheck(NpcAttributes.ReleasePrefab)) {
+			if (AttributeCheck(Attributes.ReleasePrefab, AppliedAttributes.ReleasePrefab)) {
 
 				foreach (var prefab in PrefabSpawner.Prefabs) {
 
@@ -359,7 +483,7 @@ namespace ModularEncountersSystems.World {
 
 				}
 
-				AppliedAttributes |= NpcAttributes.ReleasePrefab;
+				AppliedAttributes.ReleasePrefab = true;
 
 			}
 
@@ -382,16 +506,16 @@ namespace ModularEncountersSystems.World {
 
 			SpawnLogger.Write("Processing Secondary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
-			if (AttributeCheck(NpcAttributes.ForceStatic, true)) {
+			if (AttributeCheck(Attributes.ForceStatic, AppliedAttributes.ForceStatic, true)) {
 
 				Grid.CubeGrid.IsStatic = true;
 				SpawnLogger.Write(Grid.CubeGrid.CustomName + " Forced To Static Grid After Spawn (Secondary Check).", SpawnerDebugEnum.Spawning);
-				AppliedAttributes |= NpcAttributes.ForceStatic;
+				AppliedAttributes.ForceStatic = true;
 
 			}
 
 			//SetMatrixPostSpawn
-			if (AttributeCheck(NpcAttributes.SetMatrixPostSpawn)) {
+			if (AttributeCheck(Attributes.SetMatrixPostSpawn, AppliedAttributes.SetMatrixPostSpawn)) {
 				/*
 				SpawnLogger.Write("Setting Matrix Post Spawn", SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Translation:    " + Grid.CubeGrid.WorldMatrix.Translation, SpawnerDebugEnum.Spawning);
@@ -413,26 +537,26 @@ namespace ModularEncountersSystems.World {
 				SpawnLogger.Write("Final Matrix Forward:        " + Grid.CubeGrid.WorldMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Final Matrix Up:             " + Grid.CubeGrid.WorldMatrix.Up, SpawnerDebugEnum.Spawning);
 				*/
-				AppliedAttributes |= NpcAttributes.SetMatrixPostSpawn;
+				AppliedAttributes.SetMatrixPostSpawn = true;
 
 			}
 
 			//ReplenishSystems
-			if (AttributeCheck(NpcAttributes.ReplenishSystems)) {
+			if (AttributeCheck(Attributes.ReplenishSystems, AppliedAttributes.ReplenishSystems)) {
 
 				InventoryHelper.ReplenishGridSystems(Grid.CubeGrid, SpawnGroup);
-				AppliedAttributes |= NpcAttributes.ReplenishSystems;
+				AppliedAttributes.ReplenishSystems = true;
 
 			}
 
 			//IgnoreCleanup
-			if (!Attributes.HasFlag(NpcAttributes.IgnoreCleanup) && !string.IsNullOrWhiteSpace(Grid.CubeGrid.CustomName) && Grid.CubeGrid.CustomName.Contains("[NPC-IGNORE]"))
-				Attributes |= NpcAttributes.IgnoreCleanup;
+			if (!Attributes.IgnoreCleanup && !string.IsNullOrWhiteSpace(Grid.CubeGrid.CustomName) && Grid.CubeGrid.CustomName.Contains("[NPC-IGNORE]"))
+				Attributes.IgnoreCleanup = true;
 
 			//FixSubparts
-			if (Attributes.HasFlag(NpcAttributes.FixSubparts)) {
+			if (Attributes.FixSubparts) {
 
-				AppliedAttributes |= NpcAttributes.FixSubparts;
+				AppliedAttributes.FixSubparts = true;
 
 				foreach (var block in Grid.AllTerminalBlocks) {
 
@@ -455,17 +579,17 @@ namespace ModularEncountersSystems.World {
 			}
 
 			//WeaponRandomizationAdjustments
-			if (AttributeCheck(NpcAttributes.WeaponRandomizationAdjustments, true) && !AppliedAttributes.HasFlag(NpcAttributes.WeaponRandomizationAggression)) {
+			if (AttributeCheck(Attributes.WeaponRandomizationAdjustments, AppliedAttributes.WeaponRandomizationAdjustments, true) && !AppliedAttributes.WeaponRandomizationAggression) {
 
 				TaskProcessor.Tasks.Add(new WeaponRandomizedGrids(Grid));
-				AppliedAttributes |= NpcAttributes.WeaponRandomizationAdjustments;
+				AppliedAttributes.WeaponRandomizationAdjustments = true;
 
 			}
 
 			//ApplyBehavior
-			if (AttributeCheck(NpcAttributes.ApplyBehavior)) {
+			if (AttributeCheck(Attributes.ApplyBehavior, AppliedAttributes.ApplyBehavior)) {
 
-				AppliedAttributes |= NpcAttributes.ApplyBehavior;
+				AppliedAttributes.ApplyBehavior = true;
 
 				if (string.IsNullOrEmpty(Grid.CubeGrid.Name) == true) {
 
@@ -494,31 +618,31 @@ namespace ModularEncountersSystems.World {
 			SpawnLogger.Write("Processing Tertiary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
 			//DigAirTightVoxels
-			if (AttributeCheck(NpcAttributes.DigAirTightVoxels)) {
+			if (AttributeCheck(Attributes.DigAirTightVoxels, AppliedAttributes.DigAirTightVoxels)) {
 
 				TaskProcessor.Tasks.Add(new CutVoxels(Grid, SpawnGroup?.SpawnConditionsProfiles[ConditionIndex].CutVoxelSize ?? 2.7));
-				AppliedAttributes |= NpcAttributes.DigAirTightVoxels;
+				AppliedAttributes.DigAirTightVoxels = true;
 
 			}
 
 			//InitEconomyBlocks
-			if (AttributeCheck(NpcAttributes.InitEconomyBlocks)) {
+			if (AttributeCheck(Attributes.InitEconomyBlocks, AppliedAttributes.InitEconomyBlocks)) {
 
-				AppliedAttributes |= NpcAttributes.InitEconomyBlocks;
+				AppliedAttributes.InitEconomyBlocks = true;
 				EconomyHelper.InitNpcStoreBlock(Grid.CubeGrid, SpawnGroup);
 
 			}
 
 			//NonPhysicalAmmo
-			if (AttributeCheck(NpcAttributes.NonPhysicalAmmo)) {
+			if (AttributeCheck(Attributes.NonPhysicalAmmo, AppliedAttributes.NonPhysicalAmmo)) {
 
-				AppliedAttributes |= NpcAttributes.NonPhysicalAmmo;
+				AppliedAttributes.NonPhysicalAmmo = true;
 				InventoryHelper.NonPhysicalAmmoProcessing(Grid.CubeGrid);
 
 			}
 
 			//ShieldActivation
-			if (AttributeCheck(NpcAttributes.ShieldActivation)) {
+			if (AttributeCheck(Attributes.ShieldActivation, AppliedAttributes.ShieldActivation)) {
 
 				NPCShieldManager.ActivateShieldsForNPC(Grid.CubeGrid, true);
 				//AppliedAttributes |= NpcAttributes.ShieldActivation;
@@ -530,19 +654,18 @@ namespace ModularEncountersSystems.World {
 
 		}
 
-		private bool AttributeCheck(NpcAttributes attribute, bool force = false) {
+		private bool AttributeCheck(bool attribute, bool appliedAttribute, bool force = false) {
 
-			return Attributes.HasFlag(attribute) && (!AppliedAttributes.HasFlag(attribute) || force);
+			return attribute && (!appliedAttribute || force);
 
 		}
 
 		public void Update() {
 
-			if (Grid != null && Grid.ActiveEntity() && Grid.Npc == this) {
+			if (Grid != null && MyAPIGateway.Session != null && Grid.ActiveEntity() && Grid.Npc == this) {
 
-				//ThisIsBreakingShit;
 				LastChangeToData = MyAPIGateway.Session.GameDateTime;
-				SerializationHelper.SaveDataToEntity<NpcData>(Grid.CubeGrid, this, StorageTools.NpcDataKey);
+				SerializationHelper.SaveDataToEntity<NpcData>(Grid?.CubeGrid, this, StorageTools.NpcDataKey);
 
 			}
 

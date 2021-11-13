@@ -1,15 +1,8 @@
-using Sandbox.ModAPI;
-using VRageMath;
-using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
-using System.Collections.Generic;
-using ModularEncountersSystems.Behavior.Subsystems.Trigger;
-using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Core;
-using ModularEncountersSystems.World;
-using ModularEncountersSystems.Entities;
-using ModularEncountersSystems.Spawning;
-using ModularEncountersSystems.Configuration;
+using ModularEncountersSystems.Helpers;
+using Sandbox.ModAPI;
+using System;
 using System.Text;
 
 namespace ModularEncountersSystems.Behavior {
@@ -22,6 +15,8 @@ namespace ModularEncountersSystems.Behavior {
 		private BehaviorSubclass _subClass;
 
 		private NewAutoPilotMode WaterNav { get { return (_behavior.AutoPilot.Data.UseWaterPatrolMode ? NewAutoPilotMode.WaterNavigation : NewAutoPilotMode.None); } }
+
+		private DateTime _waitForParent;
 
 		public Escort(IBehavior behavior){
 
@@ -42,6 +37,7 @@ namespace ModularEncountersSystems.Behavior {
 			if (_behavior.Mode == BehaviorMode.Init) {
 
 				_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitingForTarget);
+				_waitForParent = MyAPIGateway.Session.GameDateTime;
 
 			}
 
@@ -51,7 +47,19 @@ namespace ModularEncountersSystems.Behavior {
 				if (_behavior.BehaviorSettings.ParentEscort != null && _behavior.BehaviorSettings.ParentEscort.ValidationCheck()) {
 
 					_behavior.AutoPilot.ActivateAutoPilot(_behavior.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.WaypointFromEscort | NewAutoPilotMode.PlanetaryPathing | WaterNav, CheckEnum.Yes, CheckEnum.No);
-					_behavior.ChangeCoreBehaviorMode(BehaviorMode.ApproachTarget);
+					_behavior.ChangeCoreBehaviorMode(BehaviorMode.ApproachWaypoint);
+					_behavior.BehaviorTriggerA = true;
+
+				} else {
+
+					var timeSpan = MyAPIGateway.Session.GameDateTime - _waitForParent;
+
+					if (timeSpan.TotalSeconds > _behavior.AutoPilot.Data.WaypointWaitTimeTrigger) {
+
+						_behavior.ChangeCoreBehaviorMode(BehaviorMode.Retreat);
+						_behavior.AutoPilot.ActivateAutoPilot(_behavior.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing | WaterNav, CheckEnum.Yes, CheckEnum.No);
+
+					}
 
 				}
 
@@ -64,24 +72,36 @@ namespace ModularEncountersSystems.Behavior {
 
 					_behavior.AutoPilot.ActivateAutoPilot(_behavior.RemoteControl.GetPosition(), NewAutoPilotMode.None, CheckEnum.No, CheckEnum.Yes);
 					_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitingForTarget);
+					_behavior.BehaviorTriggerB = true;
+					_waitForParent = MyAPIGateway.Session.GameDateTime;
 
 				} else {
 
-					if (_behavior.AutoPilot.DistanceToInitialWaypoint < 25) {
+					if (_behavior.AutoPilot.DistanceToInitialWaypoint < _behavior.AutoPilot.Data.EscortSpeedMatchMaxDistance) {
 
 						var shipSpeed = _behavior.BehaviorSettings.ParentEscort.ParentBehavior.RemoteControl.GetShipSpeed();
 
-						if (_behavior.AutoPilot.State.MaxSpeedOverride == -1 || MathTools.WithinTolerance(shipSpeed, _behavior.AutoPilot.State.MaxSpeedOverride, 5))
+						if (shipSpeed < _behavior.AutoPilot.Data.IdealMaxSpeed) {
+
+							var lerpedDistance = MathTools.LerpToMultiplier(_behavior.AutoPilot.Data.EscortSpeedMatchMinDistance, _behavior.AutoPilot.Data.EscortSpeedMatchMaxDistance, _behavior.AutoPilot.DistanceToInitialWaypoint);
+							var lerpedSpeed = MathTools.LerpToValue(shipSpeed, _behavior.AutoPilot.Data.IdealMaxSpeed, lerpedDistance);
 							_behavior.AutoPilot.State.MaxSpeedOverride = shipSpeed;
 
+						} else {
+
+							if (_behavior.AutoPilot.State.MaxSpeedOverride != -1)
+								_behavior.AutoPilot.State.MaxSpeedOverride = -1;
+
+						}
+						
 					} else {
 
 						if (_behavior.AutoPilot.State.MaxSpeedOverride != -1)
-							_behavior.AutoPilot.State.MaxSpeedOverride = 0;
+							_behavior.AutoPilot.State.MaxSpeedOverride = -1;
 
 
 					}
-				
+
 				}
 
 			}

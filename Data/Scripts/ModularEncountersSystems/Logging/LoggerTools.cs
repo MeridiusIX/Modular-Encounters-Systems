@@ -289,7 +289,15 @@ namespace ModularEncountersSystems.Logging {
 
 				player.PlanetaryInstallationCheckTimer = 0;
 				player.PlanetaryInstallationCooldownTimer = 0;
-				player.InstallationDistanceCoordCheck = Vector3D.Forward * (Settings.PlanetaryInstallations.PlayerDistanceSpawnTrigger * 20) + msg.PlayerPosition;
+				var planet = PlanetManager.GetNearestPlanet(msg.PlayerPosition);
+
+				if (planet != null) {
+
+					var up = planet.UpAtPosition(msg.PlayerPosition);
+					player.InstallationDistanceCoordCheck = VectorHelper.RandomPerpendicular(up) * (Settings.PlanetaryInstallations.PlayerDistanceSpawnTrigger * 1.5) + msg.PlayerPosition;
+
+				}
+				
 				return;
 
 			}

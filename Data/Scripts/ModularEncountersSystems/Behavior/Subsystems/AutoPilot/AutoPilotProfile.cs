@@ -122,6 +122,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public bool UseVerticalRetreat;
 		public bool UseWaterPatrolMode;
 
+		public double EscortSpeedMatchMinDistance;
+		public double EscortSpeedMatchMaxDistance;
+
 		public AutoPilotProfile() {
 
 			ProfileSubtypeId = "";
@@ -231,6 +234,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			UseVerticalRetreat = false;
 
 			UseWaterPatrolMode = false;
+
+			EscortSpeedMatchMinDistance = 25;
+			EscortSpeedMatchMaxDistance = 150;
 
 			UseVelocityCollisionEvasion = BoolEnum.True;
 

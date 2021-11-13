@@ -68,7 +68,7 @@ namespace ModularEncountersSystems.BlockLogic {
 					
 					}
 
-					if (grid.Npc.Attributes.HasFlag(NpcAttributes.IsCargoShip)) {
+					if (grid.Npc.Attributes.IsCargoShip) {
 
 						_isCargoShip = true;
 						break;

@@ -667,6 +667,24 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagManipulationProfileCheck(string tag, ref ManipulationProfile original) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length < 2) {
+
+				return;
+
+			}
+
+			var key = tagSplit[1];
+			ManipulationProfile result = null;
+
+			if (ProfileManager.ManipulationProfiles.TryGetValue(key, out result))
+				original = result;
+
+		}
+
 		public static void TagManipulationProfileCheck(string tag, ref List<ManipulationProfile> original) {
 
 			var tagSplit = ProcessTag(tag);
@@ -918,6 +936,44 @@ namespace ModularEncountersSystems.Helpers {
 					}
 
 					result.Add(item);
+
+				}
+
+			}
+
+		}
+
+		public static void TagStringListCheck(string tag, bool useCommaSplit, ref List<string> result) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (useCommaSplit) {
+
+					var array = tagSplit[1].Split(',');
+
+					foreach (var item in array) {
+
+						if (string.IsNullOrWhiteSpace(item)) {
+
+							continue;
+
+						}
+
+						result.Add(item);
+
+					}
+
+				} else {
+
+					if (string.IsNullOrWhiteSpace(tagSplit[1])) {
+
+						return;
+
+					}
+
+					result.Add(tagSplit[1]);
 
 				}
 

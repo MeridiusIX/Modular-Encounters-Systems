@@ -327,7 +327,8 @@ namespace ModularEncountersSystems.Helpers {
         TargetIsInitialWaypoint = 1 << 5,
         PlanetPathingAscend = 1 << 6,
         TargetPadding = 1 << 7,
-        WaterPathing = 1 << 8
+        WaterPathing = 1 << 8,
+        EscortPathing = 1 << 9
 
 
     }

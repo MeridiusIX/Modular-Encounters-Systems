@@ -528,6 +528,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 							if (!IsWeaponSizeAllowed(blockDefinition.Size, weaponProfile.BlockDefinition.Size, profile.RandomWeaponSizeVariance)) {
 
 								errorDebugging.Append(" - Weapon Size Variance Outside Limit").AppendLine();
+								continue;
 
 							}
 

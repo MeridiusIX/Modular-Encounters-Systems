@@ -1121,8 +1121,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			} catch (Exception e) {
 
-				BehaviorLogger.Write("Target Profile Exception: " + NewTargetProfileName, BehaviorDebugEnum.Target);
-				BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Target);
+				BehaviorLogger.Write("Target Profile Exception: " + NewTargetProfileName, BehaviorDebugEnum.Error, true);
+				BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Error, true);
 
 			}
 

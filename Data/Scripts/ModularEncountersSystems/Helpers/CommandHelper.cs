@@ -45,6 +45,8 @@ namespace ModularEncountersSystems.Helpers {
 
         public bool IgnoreAntennaRequirement;
 
+        public bool IgnoreReceiverAntennaRequirement;
+
         public long TargetEntityId;
 
         public IMyEntity TargetEntity;
@@ -79,6 +81,8 @@ namespace ModularEncountersSystems.Helpers {
 
         public bool RequestEscortSlot;
 
+        
+
 
         public Command() {
 
@@ -94,6 +98,7 @@ namespace ModularEncountersSystems.Helpers {
             Character = null;
             Radius = 0;
             IgnoreAntennaRequirement = false;
+            IgnoreReceiverAntennaRequirement = false;
             TargetEntityId = 0;
             TargetEntity = null;
             Position = Vector3D.Zero;
@@ -109,6 +114,7 @@ namespace ModularEncountersSystems.Helpers {
             TransmissionType = CommandTransmissionType.None;
             Behavior = null;
             RequestEscortSlot = false;
+            
 
         }
 
@@ -118,6 +124,7 @@ namespace ModularEncountersSystems.Helpers {
             this.CommandCode = profile.CommandCode;
             this.SingleRecipient = profile.SingleRecipient;
             this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
+            this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
             this.MatchSenderReceiverOwners = profile.MatchSenderReceiverOwners;
             RemoteControl = behavior.RemoteControl;
             CommandOwnerId = behavior.RemoteControl.OwnerId;

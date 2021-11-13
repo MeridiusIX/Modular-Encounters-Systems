@@ -41,8 +41,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			var matrix = ParentBehavior?.RemoteControl?.WorldMatrix ?? MatrixD.Identity;
 
-			if (matrix == MatrixD.Identity)
+			if (matrix == MatrixD.Identity) {
+
+				Valid = false;
 				return existingCoords;
+
+			}
+			
 
 			return Vector3D.Transform(Offset, matrix);
 		

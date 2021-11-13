@@ -227,6 +227,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(70)]
 		public float CompareCommandGridValueSelfMultiplier;
 
+		[ProtoMember(71)]
+		public bool UseFailCondition;
+
 		[ProtoIgnore]
 		private IMyRemoteControl _remoteControl;
 
@@ -360,6 +363,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CompareCommandGridValue = false;
 			CompareCommandGridValueMode = CounterCompareEnum.GreaterOrEqual;
 			CompareCommandGridValueSelfMultiplier = 1;
+
+			UseFailCondition = false;
 
 			ProfileSubtypeId = "";
 
@@ -966,14 +971,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				bool result = satisfiedConditions >= usedConditions;
 				BehaviorLogger.Write(ProfileSubtypeId + ": All Condition Satisfied: " + result.ToString(), BehaviorDebugEnum.Condition);
 				BehaviorLogger.Write(string.Format("Used Conditions: {0} // Satisfied Conditions: {1}", usedConditions, satisfiedConditions), BehaviorDebugEnum.Condition);
-				return result;
+				return !UseFailCondition ? result : !result;
 
 			} else {
 
 				bool result = satisfiedConditions > 0;
 				BehaviorLogger.Write(ProfileSubtypeId + ": Any Condition(s) Satisfied: " + result.ToString(), BehaviorDebugEnum.Condition);
 				BehaviorLogger.Write(string.Format("Used Conditions: {0} // Satisfied Conditions: {1}", usedConditions, satisfiedConditions), BehaviorDebugEnum.Condition);
-				return result;
+				return !UseFailCondition ? result : !result;
 
 			}
 
@@ -1679,6 +1684,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[CompareCommandGridValueSelfMultiplier:") == true) {
 
 						TagParse.TagFloatCheck(tag, ref CompareCommandGridValueSelfMultiplier);
+
+					}
+
+					//UseFailCondition
+					if (tag.Contains("[UseFailCondition:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref UseFailCondition);
 
 					}
 

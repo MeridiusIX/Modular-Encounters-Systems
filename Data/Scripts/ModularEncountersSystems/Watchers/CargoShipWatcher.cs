@@ -31,7 +31,7 @@ namespace ModularEncountersSystems.Watchers {
 
 				var cargoShip = CargoShips[i];
 
-				if (!cargoShip.ActiveEntity() || cargoShip.Npc == null || !cargoShip.Npc.Attributes.HasFlag(NpcAttributes.IsCargoShip)) {
+				if (!cargoShip.ActiveEntity() || cargoShip.Npc == null || !cargoShip.Npc.Attributes.IsCargoShip) {
 
 					SpawnLogger.Write("Drifting Cargo Ship Entity Not Valid, No Longer NPC, or is Missing Cargo Ship Attribute. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
 

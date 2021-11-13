@@ -638,8 +638,13 @@ namespace ModularEncountersSystems.Spawning {
 			if (spawnTypes.HasFlag(SpawningType.GravityCargoShip) && spawnGroup.GravityCargoShipChance < spawnGroup.ChanceCeiling)
 				return MathTools.RandomChance(spawnGroup.GravityCargoShipChance, spawnGroup.ChanceCeiling);
 
-			if ((spawnTypes.HasFlag(SpawningType.PlanetaryInstallation) || spawnTypes.HasFlag(SpawningType.WaterSurfaceStation) || spawnTypes.HasFlag(SpawningType.UnderWaterStation)) && spawnGroup.PlanetaryInstallationChance < spawnGroup.ChanceCeiling)
+			if ((spawnTypes.HasFlag(SpawningType.PlanetaryInstallation) || spawnTypes.HasFlag(SpawningType.DryLandInstallation) || spawnTypes.HasFlag(SpawningType.WaterSurfaceStation) || spawnTypes.HasFlag(SpawningType.UnderWaterStation)) && spawnGroup.PlanetaryInstallationChance < spawnGroup.ChanceCeiling) {
+
+				SpawnLogger.Write("Attempting Random Chance", SpawnerDebugEnum.SpawnGroup);
 				return MathTools.RandomChance(spawnGroup.PlanetaryInstallationChance, spawnGroup.ChanceCeiling);
+
+			}
+				
 
 			if ((spawnTypes.HasFlag(SpawningType.BossAtmo) || spawnTypes.HasFlag(SpawningType.BossGravity) || spawnTypes.HasFlag(SpawningType.BossSpace)) && spawnGroup.BossEncounterChance < spawnGroup.ChanceCeiling)
 				return MathTools.RandomChance(spawnGroup.BossEncounterChance, spawnGroup.ChanceCeiling);

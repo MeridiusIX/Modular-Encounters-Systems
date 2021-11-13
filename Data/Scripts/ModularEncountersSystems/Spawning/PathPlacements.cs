@@ -1098,10 +1098,10 @@ namespace ModularEncountersSystems.Spawning {
 					var randDir = VectorHelper.RandomDirection();
 					var roughCoords = randDir * randDist + coords;
 
-					if (environment.NearestPlanet.IsPositionInGravity(roughCoords))
+					if (environment.NearestPlanet?.IsPositionInGravity(roughCoords) ?? false)
 						roughCoords = -randDir * randDist + coords;
 
-					if (environment.NearestPlanet.IsPositionInGravity(roughCoords))
+					if (environment.NearestPlanet?.IsPositionInGravity(roughCoords) ?? false)
 						continue;
 
 					path.StartCoords = roughCoords;

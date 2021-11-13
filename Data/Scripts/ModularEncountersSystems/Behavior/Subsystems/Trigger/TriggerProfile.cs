@@ -137,6 +137,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(39)]
 		public string ZoneName;
 
+		[ProtoMember(40)]
+		public bool AllowTargetFarWithoutTarget;
+
 		[ProtoIgnore]
 		public GridEntity JumpedGrid;
 
@@ -200,6 +203,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			WeatherTypes = new List<string>();
 
 			ZoneName = "";
+
+			AllowTargetFarWithoutTarget = false;
 
 			ProfileSubtypeId = "";
 
@@ -609,6 +614,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[ZoneName:") == true) {
 
 						TagParse.TagStringCheck(tag, ref ZoneName);
+
+					}
+
+					//AllowTargetFarWithoutTarget
+					if (tag.Contains("[AllowTargetFarWithoutTarget:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref AllowTargetFarWithoutTarget);
 
 					}
 

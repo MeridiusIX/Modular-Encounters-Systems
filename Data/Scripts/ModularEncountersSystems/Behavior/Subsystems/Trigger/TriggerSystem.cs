@@ -479,7 +479,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (!command.UseTriggerTargetDistance) {
 
-				if (!command.IgnoreAntennaRequirement) {
+				if (!command.IgnoreAntennaRequirement && !command.IgnoreReceiverAntennaRequirement) {
 
 					var antenna = _behavior.Grid.GetActiveAntenna();
 

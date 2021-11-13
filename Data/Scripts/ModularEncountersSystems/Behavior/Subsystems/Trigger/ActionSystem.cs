@@ -113,7 +113,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (tBlock != null) {
 
-						tBlock.SpeedLimit = actions.NewAutopilotSpeed;
+						tBlock.SpeedLimit = actions.NewAutopilotSpeed >= 0 ? actions.NewAutopilotSpeed : 100;
 
 					}
 
@@ -1147,6 +1147,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (_behavior.CurrentGrid != null)
 					_behavior.CurrentGrid.SetAutomatedWeaponRanges(true);
+
+			}
+
+			if (actions.UseCurrentPositionAsPatrolReference) {
+
+				_behavior.BehaviorSettings.PatrolOverrideLocation = _behavior.RemoteControl.GetPosition();
+			
+			}
+
+			if (actions.ClearCustomPatrolReference) {
+
+				_behavior.BehaviorSettings.PatrolOverrideLocation = Vector3D.Zero;
+
+			}
+
+			if (actions.SetGridToStatic) {
+
+				_behavior.RemoteControl.SlimBlock.CubeGrid.IsStatic = true;
+			
+			}
+
+			if (actions.SetGridToDynamic) {
+
+				_behavior.RemoteControl.SlimBlock.CubeGrid.IsStatic = false;
 
 			}
 

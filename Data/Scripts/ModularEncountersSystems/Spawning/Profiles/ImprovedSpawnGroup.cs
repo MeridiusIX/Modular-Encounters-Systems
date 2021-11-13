@@ -32,6 +32,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public List<ManipulationProfile> ManipulationProfiles;
 		public List<string> ManipulationGroups;
+		public ManipulationProfile WeaponRandomizationOverrideProfile; //Doc
 
 		public bool UseAutoPilotInSpace;
 		public double PauseAutopilotAtPlayerDistance;
@@ -66,6 +67,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			ManipulationProfiles = new List<ManipulationProfile>();
 			ManipulationProfiles.Add(new ManipulationProfile());
+			WeaponRandomizationOverrideProfile = null;
 
 			ManipulationGroups = new List<string>();
 
@@ -205,6 +207,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ManipulationGroups:") == true) {
 
 					TagParse.TagStringListCheck(tag, ref improveSpawnGroup.ManipulationGroups);
+
+				}
+
+				//WeaponRandomizationOverrideProfile
+				if (tag.StartsWith("[WeaponRandomizationOverrideProfile:") == true) {
+
+					TagParse.TagManipulationProfileCheck(tag, ref improveSpawnGroup.WeaponRandomizationOverrideProfile);
 
 				}
 

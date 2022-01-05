@@ -1,4 +1,4 @@
-﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.API;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Helpers;
@@ -446,7 +446,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
-			//Random Name Generator
+            		//Random Name Generator
 			if (profile.UseRandomNameGenerator && profile.RandomGridNamePattern.Count > 0) {
 
 				//TODO: Review for possible crash
@@ -466,18 +466,28 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 						for (int i = 0; i < grid.CubeBlocks.Count; i++) {
 
-							var antenna = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
+                          				//Check for Antenna on grid
+							var broadcastBlock = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
 
-							if (antenna == null) {
+							if (broadcastBlock == null) {
+
+								continue;
+
+							}
+                            
+                            				//Check for Beacon on grid
+                            				var broadcastBlock = grid.CubeBlocks[i] as MyObjectBuilder_Beacon;
+
+							if (broadcastBlock == null) {
 
 								continue;
 
 							}
 
-							var antennaName = antenna.CustomName.ToUpper();
+							var broadcastBlockName = broadcastBlock.CustomName.ToUpper();
 							var replaceName = profile.ReplaceAntennaNameWithRandomizedName.ToUpper();
 
-							if (antennaName.Contains(replaceName) && string.IsNullOrWhiteSpace(replaceName) == false) {
+							if (broadcastBlockName.Contains(replaceName) && string.IsNullOrWhiteSpace(replaceName) == false) {
 
 								(grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
 								break;

@@ -446,7 +446,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
-            		//Random Name Generator
+			//Random Name Generator
 			if (profile.UseRandomNameGenerator && profile.RandomGridNamePattern.Count > 0) {
 
 				//TODO: Review for possible crash
@@ -458,6 +458,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				string newGridName = RandomNameGenerator.CreateRandomNameFromPattern(pattern);
 				string newRandomName = profile.RandomGridNamePrefix + newGridName;
 
+
 				if (prefab.Prefab.CubeGrids.Length > 0) {
 
 					prefab.Prefab.CubeGrids[0].DisplayName = newRandomName;
@@ -466,37 +467,57 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 						for (int i = 0; i < grid.CubeBlocks.Count; i++) {
 
-                          				//Check for Antenna on grid
-							var broadcastBlock = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
+							//Check for Antenna on grid
+							var antenna = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
 
-							if (broadcastBlock == null) {
-
-								continue;
-
-							}
-                            
-                            				//Check for Beacon on grid
-                            				var broadcastBlock = grid.CubeBlocks[i] as MyObjectBuilder_Beacon;
-
-							if (broadcastBlock == null) {
+							if (antenna == null) {
 
 								continue;
-
+								
 							}
 
-							var broadcastBlockName = broadcastBlock.CustomName.ToUpper();
+							var antennaOldName = antenna.CustomName;
+							var antennaName = antenna.CustomName.ToUpper();
 							var replaceName = profile.ReplaceAntennaNameWithRandomizedName.ToUpper();
 
-							if (broadcastBlockName.Contains(replaceName) && string.IsNullOrWhiteSpace(replaceName) == false) {
+							if (antennaName.Contains(replaceName) && string.IsNullOrWhiteSpace(replaceName) == false) {
 
-								(grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
+								(grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;							
+								SpawnLogger.Write(" - Name Randomizer: Antenna with name [" + antennaOldName + "] -> replaced with [" + (grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName + "]", SpawnerDebugEnum.Manipulation);
+
 								break;
 
 							}
 
 						}
 
-					}
+						for (int i = 0; i < grid.CubeBlocks.Count; i++) {
+
+							//Check for Beacon on grid
+							var beacon = grid.CubeBlocks[i] as MyObjectBuilder_Beacon;
+
+							if (beacon == null) {
+
+								continue;
+
+							}
+
+							var beaconOldName = beacon.CustomName;
+							var beaconName = beacon.CustomName.ToUpper();
+							var replaceName = profile.ReplaceAntennaNameWithRandomizedName.ToUpper();
+
+							if (beaconName.Contains(replaceName) && string.IsNullOrWhiteSpace(replaceName) == false) {
+								
+								(grid.CubeBlocks[i] as MyObjectBuilder_Beacon).CustomName = newGridName;
+								SpawnLogger.Write(" - Name Randomizer: Beacon with name [" + beaconOldName + "] -> replaced with [" + (grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName + "]", SpawnerDebugEnum.Manipulation);														
+								
+								break;
+
+							}
+
+						}
+
+					}			
 
 				}
 

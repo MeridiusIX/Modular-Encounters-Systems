@@ -32,6 +32,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public bool SpaceRandomEncounter;
 		public bool AlignVoxelsToSpawnMatrix;
+		public bool UseOptimizedVoxelSpawning;
+		public List<string> CustomVoxelMaterial;
 
 		public bool PlanetaryInstallation;
 		public string PlanetaryInstallationType;
@@ -196,6 +198,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int PCUMinimum;
 		public int PCUMaximum;
 
+		public bool UseDifficulty; //Doc
+		public int MinDifficulty; //Doc
+		public int MaxDifficulty; //Doc
+
 		public bool UsePlayerCredits;
 		public bool IncludeAllPlayersInRadius;
 		public bool IncludeFactionBalance;
@@ -209,8 +215,15 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int MinimumReputation;
 		public int MaximumReputation;
 
-		public bool ChargeNpcFactionForSpawn; //Implement / Doc
-		public long ChargeForSpawning; //Implement / Doc
+		public bool UseSignalRequirement; //Doc
+		public double MinSignalRadius; //Doc
+		public double MaxSignalRadius; //Doc
+		public bool AllowNpcSignals; //Doc
+		public bool UseOnlySelfOwnedSignals; //Doc
+		public string MatchSignalName; //Doc
+
+		public bool ChargeNpcFactionForSpawn; //Doc
+		public long ChargeForSpawning; //Doc
 
 		public bool UseSandboxCounterCosts;
 		public List<string> SandboxCounterCostNames;
@@ -241,6 +254,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public List<ZoneConditionsProfile> ZoneConditions; //Doc
 
+		public List<string> CustomApiConditions; //Doc
+
 		public bool BossCustomAnnounceEnable;
 		public string BossCustomAnnounceAuthor;
 		public string BossCustomAnnounceMessage;
@@ -261,6 +276,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseGridOrigin;
 
 		public PrefabSpawnMode PrefabSpawningMode;
+		public bool AllowPrefabIndexReuse;
 		public List<int> PrefabIndexes;
 		public Dictionary<string, List<int>> PrefabIndexGroups;
 		public List<string> PrefabIndexGroupNames;
@@ -283,6 +299,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			SpaceRandomEncounter = false;
 			AlignVoxelsToSpawnMatrix = false;
+			UseOptimizedVoxelSpawning = false;
+			CustomVoxelMaterial = new List<string>();
 
 			PlanetaryInstallation = false;
 			PlanetaryInstallationType = "Small";
@@ -375,7 +393,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			SandboxVariables = new List<string>();
 			FalseSandboxVariables = new List<string>();
 
-
 			MinSpawnFromWorldCenter = -1;
 			MaxSpawnFromWorldCenter = -1;
 			CustomWorldCenter = Vector3D.Zero;
@@ -428,6 +445,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PCUMinimum = -1;
 			PCUMaximum = -1;
 
+			UseDifficulty = false;
+			MinDifficulty = -1;
+			MaxDifficulty = -1;
+
 			UsePlayerCredits = false;
 			IncludeAllPlayersInRadius = false;
 			IncludeFactionBalance = false;
@@ -440,6 +461,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			CheckReputationAgainstOtherNPCFaction = "";
 			MinimumReputation = -1501;
 			MaximumReputation = 1501;
+
+			UseSignalRequirement = false;
+			MinSignalRadius = -1;
+			MaxSignalRadius = -1;
+			AllowNpcSignals = false;
+			UseOnlySelfOwnedSignals = false;
+			MatchSignalName = null;
 
 			ChargeNpcFactionForSpawn = false;
 			ChargeForSpawning = 0;
@@ -471,6 +499,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ZoneConditions = new List<ZoneConditionsProfile>();
 			ZoneConditions.Add(new ZoneConditionsProfile());
 
+			CustomApiConditions = new List<string>();
+
 			BossCustomAnnounceEnable = false;
 			BossCustomAnnounceAuthor = "";
 			BossCustomAnnounceMessage = "";
@@ -491,6 +521,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseGridOrigin = false;
 
 			PrefabSpawningMode = PrefabSpawnMode.All;
+			AllowPrefabIndexReuse = false;
 			PrefabIndexes = new List<int>();
 			PrefabIndexGroups = new Dictionary<string, List<int>>();
 			PrefabIndexGroupNames = new List<string>();
@@ -583,6 +614,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[AlignVoxelsToSpawnMatrix:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.AlignVoxelsToSpawnMatrix);
+
+				}
+
+				//UseOptimizedVoxelSpawning
+				if (tag.StartsWith("[UseOptimizedVoxelSpawning:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseOptimizedVoxelSpawning);
+
+				}
+
+				//CustomVoxelMaterial
+				if (tag.StartsWith("[CustomVoxelMaterial:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.CustomVoxelMaterial);
 
 				}
 
@@ -1399,6 +1444,27 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//UseDifficulty
+				if (tag.StartsWith("[UseDifficulty:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseDifficulty);
+
+				}
+
+				//MinDifficulty
+				if (tag.StartsWith("[MinDifficulty:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.MinDifficulty);
+
+				}
+
+				//MaxDifficulty
+				if (tag.StartsWith("[MaxDifficulty:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.MaxDifficulty);
+
+				}
+
 				//UsePlayerCredits
 				if (tag.StartsWith("[UsePlayerCredits:") == true) {
 
@@ -1473,6 +1539,48 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[MaximumReputation:") == true) {
 
 					TagParse.TagIntCheck(tag, ref this.MaximumReputation);
+
+				}
+
+				//UseSignalRequirement 
+				if (tag.StartsWith("[UseSignalRequirement:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseSignalRequirement);
+
+				}
+
+				//MinSignalRadius 
+				if (tag.StartsWith("[MinSignalRadius:") == true) {
+
+					TagParse.TagDoubleCheck(tag, ref this.MinSignalRadius);
+
+				}
+
+				//MaxSignalRadius 
+				if (tag.StartsWith("[MaxSignalRadius:") == true) {
+
+					TagParse.TagDoubleCheck(tag, ref this.MaxSignalRadius);
+
+				}
+
+				//AllowNpcSignals  
+				if (tag.StartsWith("[AllowNpcSignals:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.AllowNpcSignals);
+
+				}
+
+				//UseOnlySelfOwnedSignals  
+				if (tag.StartsWith("[UseOnlySelfOwnedSignals:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseOnlySelfOwnedSignals);
+
+				}
+
+				//MatchSignalName  
+				if (tag.StartsWith("[MatchSignalName:") == true) {
+
+					TagParse.TagStringCheck(tag, ref this.MatchSignalName);
 
 				}
 
@@ -1616,6 +1724,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//CustomApiConditions
+				if (tag.StartsWith("[CustomApiConditions:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.CustomApiConditions);
+
+				}
+
 				//Territory
 				if (tag.StartsWith("[Territory:") == true) {
 
@@ -1749,6 +1864,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[PrefabSpawningMode:") == true) {
 
 					TagParse.TagPrefabSpawnModeEnumCheck(tag, ref this.PrefabSpawningMode);
+
+				}
+
+				//AllowPrefabIndexReuse
+				if (tag.StartsWith("[AllowPrefabIndexReuse:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.AllowPrefabIndexReuse);
 
 				}
 

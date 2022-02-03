@@ -351,8 +351,13 @@ namespace ModularEncountersSystems.Behavior {
 
 			_behavior.AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-CargoShip");
 			_behavior.Despawn.UseNoTargetTimer = false;
-			_behavior.AutoPilot.Weapons.UseStaticGuns = false;
 			_behavior.AutoPilot.Data.DisableInertiaDampeners = false;
+
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericPassive";
+
+			}
 
 		}
 

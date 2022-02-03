@@ -336,9 +336,14 @@ namespace ModularEncountersSystems.Behavior {
 
 
 			_behavior.Despawn.UseNoTargetTimer = false;
-			_behavior.AutoPilot.Weapons.UseStaticGuns = true;
 			_behavior.AutoPilot.AssignAutoPilotDataMode("RAI-Generic-Autopilot-Hunter-A", AutoPilotDataMode.Primary);
 			_behavior.AutoPilot.AssignAutoPilotDataMode("RAI-Generic-Autopilot-Hunter-B", AutoPilotDataMode.Secondary);
+
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+
+			}
 
 		}
 

@@ -27,6 +27,7 @@ namespace ModularEncountersSystems.Entities {
 		Controllers,
 		Gravity,
 		Guns,
+		Inhibitors,
 		JumpDrives,
 		Mechanical,
 		Medical,
@@ -39,7 +40,8 @@ namespace ModularEncountersSystems.Entities {
 		Shields,
 		Thrusters,
 		Tools,
-		Turrets
+		Turrets,
+		TurretControllers
 
 	}
 
@@ -432,7 +434,7 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public static double GridBroadcastRange(GridEntity grid, bool onlyAntenna = false) {
+		public static double GridBroadcastRange(GridEntity grid, bool onlyAntenna = false, bool allowNpcSignals = false, string matchFaction = null, string matchName = null) {
 
 			double result = 0;
 
@@ -444,6 +446,21 @@ namespace ModularEncountersSystems.Entities {
 				var antennaBlock = antenna.Block as IMyRadioAntenna;
 
 				if (antennaBlock == null || !antennaBlock.IsBroadcasting)
+					continue;
+
+				if (!allowNpcSignals && matchFaction == null && FactionHelper.IsIdentityNPC(antennaBlock.OwnerId))
+					continue;
+
+				if (matchFaction != null) {
+
+					var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(antennaBlock.OwnerId);
+
+					if (faction?.Tag != matchFaction)
+						continue;
+				
+				}
+
+				if (matchName != null && matchName != antennaBlock.CustomName)
 					continue;
 
 				if (antennaBlock.Radius > result)
@@ -462,6 +479,21 @@ namespace ModularEncountersSystems.Entities {
 				var beaconBlock = beacon.Block as IMyBeacon;
 
 				if (beaconBlock == null)
+					continue;
+
+				if (!allowNpcSignals && matchFaction == null && FactionHelper.IsIdentityNPC(beaconBlock.OwnerId))
+					continue;
+
+				if (matchFaction != null) {
+
+					var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(beaconBlock.OwnerId);
+
+					if (faction?.Tag != matchFaction)
+						continue;
+
+				}
+
+				if (matchName != null && matchName != beaconBlock.CustomName)
 					continue;
 
 				if (beaconBlock.Radius > result)
@@ -588,7 +620,7 @@ namespace ModularEncountersSystems.Entities {
 
 			float result = 0;
 
-			if (grid.IsClosed())
+			if (grid.IsClosed() || grid.AllBlocks.Count <= 1)
 				return result;
 
 			result += GetTargetValueFromBlockList(grid.Antennas, 4, 2);

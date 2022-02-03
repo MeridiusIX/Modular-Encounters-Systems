@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
@@ -75,6 +76,16 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public static void ItemConsumedEvent(IMyCharacter character, MyDefinitionId id) {
+
+			foreach (var player in Players) {
+
+				player.ItemConsumedEvent(character, id);
+			
+			}
+		
+		}
+
 		public static void PlayerConnectEvent(long playerId) {
 
 			MyAPIGateway.Utilities.InvokeOnGameThread(() => { RefreshAllPlayers(true); });
@@ -86,47 +97,53 @@ namespace ModularEncountersSystems.Entities {
 			if (!forceCheck)
 				return;
 
-			ActivePlayers.Clear();
-			MyAPIGateway.Players.GetPlayers(ActivePlayers);
+			lock (ActivePlayers) {
 
-			foreach (var player in ActivePlayers) {
+				ActivePlayers.Clear();
+				MyAPIGateway.Players.GetPlayers(ActivePlayers);
 
-				if (string.IsNullOrWhiteSpace(player.DisplayName))
-					continue;
+				foreach (var player in ActivePlayers) {
 
-				bool foundExisting = false;
-
-				foreach (var playerEnt in Players) {
-
-					if (playerEnt.Player == null)
+					if (string.IsNullOrWhiteSpace(player.DisplayName))
 						continue;
 
-					if (playerEnt.Player.SteamUserId == player.SteamUserId) {
+					bool foundExisting = false;
 
-						foundExisting = true;
+					for (int i = Players.Count - 1; i >= 0; i--) {
 
-						if (playerEnt.Player.IdentityId != player.IdentityId) {
+						var playerEnt = Players[i];
 
-							playerEnt.Player = player;
+						if (playerEnt.Player == null)
+							continue;
+
+						if (playerEnt.Player.SteamUserId == player.SteamUserId) {
+
+							foundExisting = true;
+
+							if (playerEnt.Player.IdentityId != player.IdentityId) {
+
+								playerEnt.Player = player;
+
+							}
 
 						}
-					
+
 					}
-				
+
+					if (foundExisting)
+						continue;
+
+					if (!player.IsBot && player.SteamUserId > 0) {
+
+						var playerEntity = new PlayerEntity(player);
+						UnloadEntities += playerEntity.Unload;
+						Players.Add(playerEntity);
+						NewPlayerDetected?.Invoke(playerEntity);
+
+					}
+
 				}
 
-				if (foundExisting)
-					continue;
-
-				if (!player.IsBot && player.SteamUserId > 0) {
-
-					var playerEntity = new PlayerEntity(player);
-					UnloadEntities += playerEntity.Unload;
-					Players.Add(playerEntity);
-					NewPlayerDetected?.Invoke(playerEntity);
-
-				}
-			
 			}
 
 		}

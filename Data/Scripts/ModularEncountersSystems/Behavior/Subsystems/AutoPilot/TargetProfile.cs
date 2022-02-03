@@ -135,6 +135,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		[ProtoMember(42)]
 		public double MaxExistingTargetDistance;
 
+		[ProtoMember(43)]
+		public bool UseVanillaTargetLocking;
+
+		[ProtoMember(44)]
+		public int TimeUntilTargetLockingRefresh;
+
+		[ProtoMember(45)]
+		public double MaxTargetLockingDistance;
+
+		[ProtoMember(46)]
+		public TargetSortEnum GetTargetLockBy;
+
+		[ProtoMember(47)]
+		public bool ManualTargetLockOnly;
+
+		[ProtoMember(48)]
+		public bool ActivateTargetLockAfterPlayerDamage;
+
 		public TargetProfile() {
 
 			UseCustomTargeting = false;
@@ -197,6 +215,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			MaxUnderWaterDepth = -1;
 
 			PlayerKnownLocationFactionOverride = "";
+
+			UseVanillaTargetLocking = false;
+			TimeUntilTargetLockingRefresh = 5;
+			MaxTargetLockingDistance = 2000;
+			GetTargetLockBy = TargetSortEnum.ClosestDistance;
+			ManualTargetLockOnly = false;
+			ActivateTargetLockAfterPlayerDamage = false;
 
 			ProfileSubtypeId = "";
 
@@ -494,6 +519,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					if (tag.Contains("[MaxExistingTargetDistance:") == true) {
 
 						TagParse.TagDoubleCheck(tag, ref MaxExistingTargetDistance);
+
+					}
+
+					//UseVanillaTargetLocking
+					if (tag.Contains("[UseVanillaTargetLocking:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref UseVanillaTargetLocking);
+
+					}
+
+					//TimeUntilTargetLockingRefresh
+					if (tag.Contains("[TimeUntilTargetLockingRefresh:") == true) {
+
+						TagParse.TagIntCheck(tag, ref TimeUntilTargetLockingRefresh);
+
+					}
+
+					//MaxTargetLockingDistance
+					if (tag.Contains("[MaxTargetLockingDistance:") == true) {
+
+						TagParse.TagDoubleCheck(tag, ref MaxTargetLockingDistance);
+
+					}
+
+					//GetTargetLockBy
+					if (tag.Contains("[GetTargetLockBy:") == true) {
+
+						TagParse.TagTargetSortEnumCheck(tag, ref GetTargetLockBy);
+
+					}
+
+					//ManualTargetLockOnly
+					if (tag.Contains("[ManualTargetLockOnly:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref ManualTargetLockOnly);
+
+					}
+
+					//ActivateTargetLockAfterPlayerDamage
+					if (tag.Contains("[ActivateTargetLockAfterPlayerDamage:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref ActivateTargetLockAfterPlayerDamage);
 
 					}
 

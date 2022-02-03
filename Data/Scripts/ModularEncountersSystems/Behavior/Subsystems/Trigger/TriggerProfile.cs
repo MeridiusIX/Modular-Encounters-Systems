@@ -140,6 +140,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(40)]
 		public bool AllowTargetFarWithoutTarget;
 
+		[ProtoMember(41)]
+		public string ToggleWithTriggerProfile;
+
+		[ProtoMember(42)]
+		public bool ToggledProfileResetsCooldown;
+
+		[ProtoMember(43)]
+		public bool UseFailCondition;
+
+		[ProtoMember(44)]
+		public bool UseElseActions;
+
+		[ProtoMember(45)]
+		public List<ActionProfile> ElseActions;
+
+		[ProtoMember(46)]
+		public bool LastRunFailed;
+
+		[ProtoMember(47)]
+		public string EnableNamedTriggerOnSuccess;
+
+		[ProtoMember(48)]
+		public string DisableNamedTriggerOnSuccess;
+
+		[ProtoMember(49)]
+		public double JumpedGridActivationDistance;
+
+		[ProtoMember(50)]
+		public bool JumpedGridsCanBeNonHostile;
+
+		[ProtoMember(51)]
+		public bool DetectSelfAsJumpedGrid;
+
 		[ProtoIgnore]
 		public GridEntity JumpedGrid;
 
@@ -148,6 +181,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		[ProtoIgnore]
 		public Vector3D JumpEnd;
+
+		[ProtoIgnore]
+		public bool SessionTriggerActivated;
 
 		[ProtoIgnore]
 		public Random Rnd;
@@ -206,6 +242,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			AllowTargetFarWithoutTarget = false;
 
+			ToggleWithTriggerProfile = null;
+			ToggledProfileResetsCooldown = false;
+
+			UseFailCondition = false;
+			UseElseActions = false;
+			ElseActions = new List<ActionProfile>();
+			LastRunFailed = false;
+
+			SessionTriggerActivated = false;
+
+			JumpedGridActivationDistance = 15000;
+			JumpedGridsCanBeNonHostile = false;
+			DetectSelfAsJumpedGrid = false;
+
 			ProfileSubtypeId = "";
 
 
@@ -229,15 +279,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if ((this.StartsReady && this.TriggerCount == 0) || duration.TotalMilliseconds >= CooldownTime) {
 
-					if (mainTriggerCheck != null && !InvokeTriggerTypeCondition(mainTriggerCheck)) {
+					bool mainTriggerPass = (mainTriggerCheck == null) || (mainTriggerCheck != null && InvokeTriggerTypeCondition(mainTriggerCheck));
 
+					if ((!mainTriggerPass && !UseFailCondition) || (mainTriggerPass && UseFailCondition)) {
+
+						LastRunFailed = true;
 						return;
 
 					}
 
-					if (Conditions.UseConditions == true) {
+					if ((Conditions.ConditionReference?.UseConditions ?? false) == true) {
 
-						if (Conditions.AreConditionsMets()) {
+						var conditionsMet = Conditions.AreConditionsMets();
+
+						if (conditionsMet || (!conditionsMet == UseFailCondition)) {
 
 							BehaviorLogger.Write(ProfileSubtypeId + ": Trigger Cooldown & Conditions Satisfied. Trigger Activated: " + Type, BehaviorDebugEnum.Trigger);
 							Triggered = true;
@@ -252,6 +307,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if (!Triggered) {
 
 							BehaviorLogger.Write(ProfileSubtypeId + ": Condition Profile Not Satisfied", BehaviorDebugEnum.Trigger);
+							LastRunFailed = true;
 
 						}
 
@@ -266,15 +322,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			} else {
 
-				if (mainTriggerCheck != null && !InvokeTriggerTypeCondition(mainTriggerCheck)) {
+				bool mainTriggerPass = (mainTriggerCheck == null) || mainTriggerCheck != null && InvokeTriggerTypeCondition(mainTriggerCheck);
 
+				if ((!mainTriggerPass && !UseFailCondition) || (mainTriggerPass && UseFailCondition)) {
+
+					LastRunFailed = true;
 					return;
 
 				}
 
-				if (Conditions.UseConditions == true) {
+				if ((Conditions.ConditionReference?.UseConditions ?? false) == true) {
 
-					if (Conditions.AreConditionsMets()) {
+					var conditionsMet = Conditions.AreConditionsMets();
+
+					if (conditionsMet || (!conditionsMet == UseFailCondition)) {
 
 						BehaviorLogger.Write(ProfileSubtypeId + ": Trigger Conditions Satisfied. Trigger Activated: " + Type, BehaviorDebugEnum.Trigger);
 						Triggered = true;
@@ -283,6 +344,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (!Triggered) {
 
+						LastRunFailed = true;
 						BehaviorLogger.Write(ProfileSubtypeId + ": Condition Profile Not Satisfied", BehaviorDebugEnum.Trigger);
 
 					}
@@ -476,7 +538,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if (!gotAction)
 							ProfileManager.ReportProfileError(tempValue, "Could Not Load Action Profile From Trigger: " + ProfileSubtypeId);
 
-
 					}
 
 					//DamageTypes
@@ -621,6 +682,101 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[AllowTargetFarWithoutTarget:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref AllowTargetFarWithoutTarget);
+
+					}
+
+					//ToggleWithTriggerProfile
+					if (tag.Contains("[ToggleWithTriggerProfile:") == true) {
+
+						TagParse.TagStringCheck(tag, ref ToggleWithTriggerProfile);
+
+					}
+
+					//ToggledProfileResetsCooldown
+					if (tag.Contains("[ToggledProfileResetsCooldown:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref ToggledProfileResetsCooldown);
+
+					}
+
+					//UseFailCondition
+					if (tag.Contains("[UseFailCondition:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref UseFailCondition);
+
+					}
+
+					//ElseActions
+					if (tag.Contains("[ElseActions:") == true) {
+
+						string tempValue = "";
+						TagParse.TagStringCheck(tag, ref tempValue);
+						bool gotAction = false;
+
+						if (string.IsNullOrWhiteSpace(tempValue) == false) {
+
+							byte[] byteData = { };
+
+							if (ProfileManager.ActionObjectTemplates.TryGetValue(tempValue, out byteData) == true) {
+
+								try {
+
+									var profile = MyAPIGateway.Utilities.SerializeFromBinary<ActionProfile>(byteData);
+
+									if (profile != null) {
+
+										Actions.Add(profile);
+										gotAction = true;
+
+									}
+
+								} catch (Exception) {
+
+
+
+								}
+
+							}
+
+						}
+
+						if (!gotAction)
+							ProfileManager.ReportProfileError(tempValue, "Could Not Load Else Action Profile From Trigger: " + ProfileSubtypeId);
+
+					}
+
+					//EnableNamedTriggerOnSuccess
+					if (tag.Contains("[EnableNamedTriggerOnSuccess:") == true) {
+
+						TagParse.TagStringCheck(tag, ref EnableNamedTriggerOnSuccess);
+
+					}
+
+					//DisableNamedTriggerOnSuccess
+					if (tag.Contains("[DisableNamedTriggerOnSuccess:") == true) {
+
+						TagParse.TagStringCheck(tag, ref DisableNamedTriggerOnSuccess);
+
+					}
+
+					//JumpedGridActivationDistance
+					if (tag.Contains("[JumpedGridActivationDistance:") == true) {
+
+						TagParse.TagDoubleCheck(tag, ref JumpedGridActivationDistance);
+
+					}
+
+					//JumpedGridsCanBeNonHostile
+					if (tag.Contains("[JumpedGridsCanBeNonHostile:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref JumpedGridsCanBeNonHostile);
+
+					}
+
+					//DetectSelfAsJumpedGrid
+					if (tag.Contains("[DetectSelfAsJumpedGrid:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref DetectSelfAsJumpedGrid);
 
 					}
 

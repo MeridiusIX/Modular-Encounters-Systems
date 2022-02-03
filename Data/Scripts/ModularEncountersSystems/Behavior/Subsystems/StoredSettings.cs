@@ -116,6 +116,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		[ProtoMember(34)]
 		internal EscortProfile _parentEscort;
 
+		[ProtoMember(35)]
+		public string WeaponsSystemProfile;
+
 		[ProtoIgnore]
 		public EscortProfile ParentEscort { get {
 
@@ -183,6 +186,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			ActiveEscorts = new List<EscortProfile>();
 			_parentEscort = null;
+
+			WeaponsSystemProfile = "";
 
 		}
 

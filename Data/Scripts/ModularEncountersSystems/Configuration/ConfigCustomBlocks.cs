@@ -75,6 +75,9 @@ namespace ModularEncountersSystems.Configuration{
 		public float DisposableBeaconRemovalTimerMinutes;
 
 		[XmlIgnore]
+		public bool ConfigLoaded;
+
+		[XmlIgnore]
 		public Dictionary<string, Func<string, object, bool>> EditorReference;
 
 
@@ -101,7 +104,7 @@ namespace ModularEncountersSystems.Configuration{
 
 		}
 
-		public ConfigCustomBlocks LoadSettings(){
+		public ConfigCustomBlocks LoadSettings(string phase) {
 			
 			if(MyAPIGateway.Utilities.FileExistsInWorldStorage("Config-CustomBlocks.xml", typeof(ConfigCustomBlocks)) == true){
 				
@@ -111,19 +114,24 @@ namespace ModularEncountersSystems.Configuration{
 					var reader = MyAPIGateway.Utilities.ReadFileInWorldStorage("Config-CustomBlocks.xml", typeof(ConfigCustomBlocks));
 					string configcontents = reader.ReadToEnd();
 					config = MyAPIGateway.Utilities.SerializeFromXML<ConfigCustomBlocks>(configcontents);
-					SpawnLogger.Write("Loaded Existing Settings From Config-CustomBlocks.xml", SpawnerDebugEnum.Startup);
+					config.ConfigLoaded = true;
+					SpawnLogger.Write("Loaded Existing Settings From Config-CustomBlocks.xml. Phase: " + phase, SpawnerDebugEnum.Startup, true);
 					return config;
 					
 				}catch(Exception exc){
 					
-					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-CustomBlocks.xml. Using Default Configuration.", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-CustomBlocks.xml. Using Default Configuration. Phase: " + phase, SpawnerDebugEnum.Error, true);
 					var defaultSettings = new ConfigCustomBlocks();
 					return defaultSettings;
 					
 				}
-				
+
+			} else {
+
+				SpawnLogger.Write("Config-CustomBlocks.xml Doesn't Exist. Creating Default Configuration. Phase: " + phase, SpawnerDebugEnum.Startup, true);
+
 			}
-			
+
 			var settings = new ConfigCustomBlocks();
 			
 			try{
@@ -136,7 +144,7 @@ namespace ModularEncountersSystems.Configuration{
 				
 			}catch(Exception exc){
 				
-				SpawnLogger.Write("ERROR: Could Not Create Config-CustomBlocks.xml. Default Settings Will Be Used.", SpawnerDebugEnum.Startup);
+				SpawnLogger.Write("ERROR: Could Not Create Config-CustomBlocks.xml. Default Settings Will Be Used. Phase: " + phase, SpawnerDebugEnum.Error, true);
 				
 			}
 			

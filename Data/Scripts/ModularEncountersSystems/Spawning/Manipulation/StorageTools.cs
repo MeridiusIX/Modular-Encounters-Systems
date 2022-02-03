@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
+using VRage.Game.ModAPI;
 using VRage.Game.ObjectBuilders.ComponentSystem;
+using VRage.ModAPI;
 using VRage.Serialization;
 
 namespace ModularEncountersSystems.Spawning.Manipulation {
@@ -16,6 +18,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static Guid LegacyNpcDataKey = new Guid("AD4DBD09-359D-48F5-9F48-54D352B59171");
 		public static Guid NpcGyroDataKey = new Guid("864E2D34-5AD7-49AC-A3AA-E20D879471A8");
 		public static Guid NpcThrusterDataKey = new Guid("BF529D66-9AA1-4419-B5D3-A65BA21306CE");
+		public static Guid MesTurretControllerKey = new Guid("438AA687-C800-4784-948F-B731C46D4F18");
+		public static Guid MesTemporaryPlanetKey = new Guid("8823361C-E6A4-4BD6-8F1D-3C935D9D4AA7");
+
 
 		public static List<Guid> CustomStorageKeys = new List<Guid>();
 
@@ -175,5 +180,15 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		
 		}
 
+		public static bool HasStorageKey(IMyEntity entity, Guid guid) {
+
+			if (entity?.Storage == null)
+				return false;
+
+			return entity.Storage.ContainsKey(guid);
+		
+		}
+
 	}
+
 }

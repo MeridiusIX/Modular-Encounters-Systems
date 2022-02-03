@@ -15,6 +15,12 @@ namespace ModularEncountersSystems.Tasks {
 
         }
 
+        public virtual void Invalidate() {
+
+            _isValid = false;
+        
+        }
+
         public bool Timer() {
 
             _tickCounter++;

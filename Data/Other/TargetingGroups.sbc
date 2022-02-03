@@ -1,0 +1,37 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <TargetingGroups>
+
+    <TargetingGroup xsi:type="MyObjectBuilder_TargetingGroupDefinition">
+      <Id>
+        <TypeId>TargetingGroupDefinition</TypeId>
+        <SubtypeId>MES-TargetingGroup-Communications</SubtypeId>
+      </Id>
+      <DisplayName>Communications</DisplayName>
+      <SortOrder>5</SortOrder>
+      <Icon>Textures\GUI\Icons\Actions\SubsystemTargeting_None.dds</Icon>
+      <DefaultBlockTypes>
+        <TypeId>RadioAntenna</TypeId>
+        <TypeId>Beacon</TypeId>
+        <TypeId>LaserAntenna</TypeId>
+      </DefaultBlockTypes>
+    </TargetingGroup>
+
+    <TargetingGroup xsi:type="MyObjectBuilder_TargetingGroupDefinition">
+      <Id>
+        <TypeId>TargetingGroupDefinition</TypeId>
+        <SubtypeId>MES-TargetingGroup-Production</SubtypeId>
+      </Id>
+      <DisplayName>Production</DisplayName>
+      <SortOrder>5</SortOrder>
+      <Icon>Textures\GUI\Icons\Actions\SubsystemTargeting_None.dds</Icon>
+      <DefaultBlockTypes>
+        <TypeId>Refinery</TypeId>
+        <TypeId>OxygenGenerator</TypeId>
+        <TypeId>Assembler</TypeId>
+        <TypeId>UpgradeModule</TypeId>
+      </DefaultBlockTypes>
+    </TargetingGroup>
+
+  </TargetingGroups>
+</Definitions>

@@ -224,6 +224,17 @@ namespace ModularEncountersSystems.Behavior {
 			
 			}
 
+			//Retreat
+			if (_behavior.Mode == BehaviorMode.Retreat) {
+
+				if (_behavior.Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
+
+					_behavior.AutoPilot.SetInitialWaypoint(_behavior.Despawn.GetRetreatCoords());
+
+				}
+
+			}
+
 		}
 
 		public void ChangeCoreBehaviorMode(BehaviorMode newMode) {
@@ -274,8 +285,14 @@ namespace ModularEncountersSystems.Behavior {
 			//Behavior Specific Defaults
 			_behavior.AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-Strike");
 			_behavior.Despawn.UseNoTargetTimer = true;
-			_behavior.AutoPilot.Weapons.UseStaticGuns = true;
+			
 			_behavior.AutoPilot.Collision.CollisionTimeTrigger = 5;
+
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+
+			}
 
 		}
 

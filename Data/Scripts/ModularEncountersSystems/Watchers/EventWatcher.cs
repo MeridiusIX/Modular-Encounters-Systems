@@ -37,6 +37,7 @@ namespace ModularEncountersSystems.Watchers {
 
 			}
 
+			//MyVisualScriptLogicProvider.ShowNotificationToAll("Jump: " + grid.CubeGrid.CustomName, 3000);
 			JumpRequested?.Invoke(grid, grid.GetPosition());
 			TaskProcessor.Tasks.Add(new GridJumpTracker(grid));
 

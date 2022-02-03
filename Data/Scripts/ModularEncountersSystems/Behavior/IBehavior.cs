@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using Sandbox.ModAPI;
@@ -42,9 +43,16 @@ namespace ModularEncountersSystems.Behavior {
 		bool BehaviorActionG { get; set; }
 		bool BehaviorActionH { get; set; }
 
+		JetpackInhibitor JetpackInhibitorLogic { get; set; }
+		DrillInhibitor DrillInhibitorLogic { get; set; }
+		NanobotInhibitor NanobotInhibitorLogic { get; set; }
+		JumpDriveInhibitor JumpInhibitorLogic { get; set; }
+		PlayerInhibitor PlayerInhibitorLogic { get; set; }
+
 		void BehaviorInit(IMyRemoteControl remoteControl);
 		//List<IMyCubeGrid> CurrentGrids { get; }
 		GridEntity CurrentGrid { get; }
+		BlockEntity RemoteControlBlockEntity { get; }
 		List<IMyCockpit> DebugCockpits { get; }
 		long GridId { get; }
 		string GridName { get; }

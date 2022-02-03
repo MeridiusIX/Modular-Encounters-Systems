@@ -45,20 +45,12 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void RunTick100() {
 
-			if (!_isWorking || !Active)
+			if (!Active)
 				return;
 
 			if (Settings.CustomBlocks.UseDisposableBeaconInactivity == true) {
 
-				if (IsWorking == false) {
-
-					TicksSinceWorking += 100;
-
-				} else {
-
-					TicksSinceWorking = 0;
-
-				}
+				TicksSinceWorking += 100;
 
 				if ((TicksSinceWorking / 60) / 60 >= Settings.CustomBlocks.DisposableBeaconRemovalTimerMinutes) {
 

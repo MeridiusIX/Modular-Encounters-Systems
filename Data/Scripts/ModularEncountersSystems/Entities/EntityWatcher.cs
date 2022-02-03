@@ -19,6 +19,8 @@ namespace ModularEncountersSystems.Entities {
 		public static bool NewPlayerConnected = false;
 		public static bool EntityWatcherRegistered = false;
 
+		public static List<IMyCubeGrid> GridsOnLoad = new List<IMyCubeGrid>();
+
 		public static Action UnloadEntities;
 
 		public static void RegisterWatcher() {
@@ -28,11 +30,15 @@ namespace ModularEncountersSystems.Entities {
 
 			foreach (var entity in entityList) {
 
+				if(entity as IMyCubeGrid != null)
+					GridsOnLoad.Add(entity as IMyCubeGrid);
+
 				NewEntityDetected(entity);
 
 			}
 
 			MyVisualScriptLogicProvider.PlayerConnected += PlayerManager.PlayerConnectEvent;
+			MyAPIGateway.Players.ItemConsumed += PlayerManager.ItemConsumedEvent;
 			PlayerManager.RefreshAllPlayers(true);
 
 			UnloadEntities += GridManager.UnloadEntities;
@@ -93,6 +99,7 @@ namespace ModularEncountersSystems.Entities {
 		public static void UnregisterWatcher() {
 
 			MyAPIGateway.Entities.OnEntityAdd -= NewEntityDetected;
+			MyAPIGateway.Players.ItemConsumed -= PlayerManager.ItemConsumedEvent;
 
 			UnloadEntities?.Invoke();
 

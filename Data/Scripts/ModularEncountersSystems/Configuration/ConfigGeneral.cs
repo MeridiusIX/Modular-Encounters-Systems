@@ -81,6 +81,11 @@ namespace ModularEncountersSystems.Configuration {
 		public bool UseEconomyBuyingReputationIncrease;
 		public long EconomyBuyingReputationCostAmount;
 
+		public int Difficulty;
+
+		[XmlIgnore]
+		public bool ConfigLoaded;
+
 		[XmlIgnore]
 		public Dictionary<string, Func<string, object, bool>> EditorReference;
 
@@ -117,6 +122,7 @@ namespace ModularEncountersSystems.Configuration {
 			NpcSpawnGroupBlacklist = new string[]{"BlackList_SpawnGroup_Here", "BlackList_SpawnGroup_Here"};
 			UseEconomyBuyingReputationIncrease = true;
 			EconomyBuyingReputationCostAmount = 500000;
+			Difficulty = 1;
 
 			EditorReference = new Dictionary<string, Func<string, object, bool>> {
 
@@ -149,13 +155,14 @@ namespace ModularEncountersSystems.Configuration {
 				{"NpcGridNameBlacklist", (s, o) => EditorTools.SetCommandValueStringArray(s, ref NpcGridNameBlacklist) },
 				{"NpcSpawnGroupBlacklist", (s, o) => EditorTools.SetCommandValueStringArray(s, ref NpcSpawnGroupBlacklist) },
 				{"UseEconomyBuyingReputationIncrease", (s, o) => EditorTools.SetCommandValueBool(s, ref UseEconomyBuyingReputationIncrease) },
-				{"EconomyBuyingReputationCostAmount", (s, o) => EditorTools.SetCommandValueLong(s, ref EconomyBuyingReputationCostAmount) }
+				{"EconomyBuyingReputationCostAmount", (s, o) => EditorTools.SetCommandValueLong(s, ref EconomyBuyingReputationCostAmount) },
+				{"Difficulty", (s, o) => EditorTools.SetCommandValueInt(s, ref Difficulty) },
 
 			};
 
 		}
 		
-		public ConfigGeneral LoadSettings(){
+		public ConfigGeneral LoadSettings(string phase) {
 			
 			if(MyAPIGateway.Utilities.FileExistsInWorldStorage("Config-General.xml", typeof(ConfigGeneral)) == true){
 				
@@ -165,19 +172,24 @@ namespace ModularEncountersSystems.Configuration {
 					var reader = MyAPIGateway.Utilities.ReadFileInWorldStorage("Config-General.xml", typeof(ConfigGeneral));
 					string configcontents = reader.ReadToEnd();
 					config = MyAPIGateway.Utilities.SerializeFromXML<ConfigGeneral>(configcontents);
-					SpawnLogger.Write("Loaded Existing Settings From Config-General.xml", SpawnerDebugEnum.Startup);
+					config.ConfigLoaded = true;
+					SpawnLogger.Write("Loaded Existing Settings From Config-General.xml. Phase: " + phase, SpawnerDebugEnum.Startup, true);
 					return config;
 					
 				}catch(Exception exc){
 					
-					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-General.xml. Using Default Configuration.", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-General.xml. Using Default Configuration. Phase: " + phase, SpawnerDebugEnum.Error, true);
 					var defaultSettings = new ConfigGeneral();
 					return defaultSettings;
 					
 				}
-				
+
+			} else {
+
+				SpawnLogger.Write("Config-General.xml Doesn't Exist. Creating Default Configuration. Phase: " + phase, SpawnerDebugEnum.Startup, true);
+
 			}
-			
+
 			var settings = new ConfigGeneral();
 			
 			try{
@@ -190,7 +202,7 @@ namespace ModularEncountersSystems.Configuration {
 				
 			}catch(Exception exc){
 				
-				SpawnLogger.Write("ERROR: Could Not Create Config-General.xml. Default Settings Will Be Used.", SpawnerDebugEnum.Startup);
+				SpawnLogger.Write("ERROR: Could Not Create Config-General.xml. Default Settings Will Be Used. Phase: " + phase, SpawnerDebugEnum.Error, true);
 				
 			}
 			

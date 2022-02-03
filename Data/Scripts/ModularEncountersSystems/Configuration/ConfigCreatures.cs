@@ -72,6 +72,9 @@ namespace ModularEncountersSystems.Configuration {
 		public double PlayerClusterDistance;
 
 		[XmlIgnore]
+		public bool ConfigLoaded;
+
+		[XmlIgnore]
 		public Dictionary<string, Func<string, object, bool>> EditorReference;
 
 		public ConfigCreatures(){
@@ -131,7 +134,7 @@ namespace ModularEncountersSystems.Configuration {
 
 		}
 
-		public ConfigCreatures LoadSettings(){
+		public ConfigCreatures LoadSettings(string phase) {
 			
 			if(MyAPIGateway.Utilities.FileExistsInWorldStorage("Config-Creatures.xml", typeof(ConfigCreatures)) == true){
 				
@@ -141,19 +144,24 @@ namespace ModularEncountersSystems.Configuration {
 					var reader = MyAPIGateway.Utilities.ReadFileInWorldStorage("Config-Creatures.xml", typeof(ConfigCreatures));
 					string configcontents = reader.ReadToEnd();
 					config = MyAPIGateway.Utilities.SerializeFromXML<ConfigCreatures>(configcontents);
-					SpawnLogger.Write("Loaded Existing Settings From Config-Creatures.xml", SpawnerDebugEnum.Startup);
+					config.ConfigLoaded = true;
+					SpawnLogger.Write("Loaded Existing Settings From Config-Creatures.xml. Phase: " + phase, SpawnerDebugEnum.Startup, true);
 					return config;
 					
 				}catch(Exception exc){
 					
-					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-Creatures.xml. Using Default Configuration.", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-Creatures.xml. Using Default Configuration. Phase: " + phase, SpawnerDebugEnum.Error, true);
 					var defaultSettings = new ConfigCreatures();
 					return defaultSettings;
 					
 				}
-				
+
+			} else {
+
+				SpawnLogger.Write("Config-Creatures.xml Doesn't Exist. Creating Default Configuration. Phase: " + phase, SpawnerDebugEnum.Startup, true);
+
 			}
-			
+
 			var settings = new ConfigCreatures();
 			
 			try{
@@ -166,7 +174,7 @@ namespace ModularEncountersSystems.Configuration {
 				
 			}catch(Exception exc){
 				
-				SpawnLogger.Write("ERROR: Could Not Create Config-Creatures.xml. Default Settings Will Be Used.", SpawnerDebugEnum.Startup);
+				SpawnLogger.Write("ERROR: Could Not Create Config-Creatures.xml. Default Settings Will Be Used. Phase: " + phase, SpawnerDebugEnum.Error, true);
 				
 			}
 			

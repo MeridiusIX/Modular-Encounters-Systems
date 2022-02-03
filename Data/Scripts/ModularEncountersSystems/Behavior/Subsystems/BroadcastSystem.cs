@@ -65,6 +65,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		//Non-Configurable
 		public IMyRemoteControl RemoteControl;
+		private IBehavior _behavior;
 		public string LastChatMessageSent;
 		public List<IMyRadioAntenna> AntennaList;
 		public double HighestRadius;
@@ -73,7 +74,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public Random Rnd;
 
 
-		public BroadcastSystem(IMyRemoteControl remoteControl = null) {
+		public BroadcastSystem(IBehavior behavior, IMyRemoteControl remoteControl = null) {
 
 			UseChatSystem = false;
 			UseNotificationSystem = false;
@@ -85,6 +86,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			ChatControlReference = new List<ChatProfile>();
 
 			RemoteControl = null;
+			_behavior = behavior;
 			LastChatMessageSent = "";
 			AntennaList = new List<IMyRadioAntenna>();
 			HighestRadius = 0;
@@ -118,6 +120,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			float volume = 1;
 			var broadcastType = BroadcastType.None;
 
+			if (!chat.CheckForCustomNames) {
+
+				chat.CheckForCustomNames = true;
+
+				if (_behavior?.CurrentGrid?.Npc?.ChatAuthorName != null)
+					chat.Author = _behavior.CurrentGrid.Npc.ChatAuthorName;
+
+
+			}
+
 			if (chat.Chance < 100) {
 
 				var roll = Rnd.Next(0, 101);
@@ -139,7 +151,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
-			if(this.LastChatMessageSent == message || string.IsNullOrWhiteSpace(message)) {
+			if((this.LastChatMessageSent == message || string.IsNullOrWhiteSpace(message)) && !chat.AllowDuplicatedMessages) {
 
 				BehaviorLogger.Write(chat.ProfileSubtypeId + ": Last Message Same", BehaviorDebugEnum.Chat);
 				return;

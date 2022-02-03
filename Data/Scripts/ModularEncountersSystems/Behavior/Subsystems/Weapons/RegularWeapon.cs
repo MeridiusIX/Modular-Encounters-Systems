@@ -62,7 +62,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			} else {
 
-				BehaviorLogger.Write(_block.CustomName + " Is Neither Gun Or Turret?", BehaviorDebugEnum.Weapon);
+				BehaviorLogger.Write(_block.CustomName + " Is Neither Gun Or Turret?", BehaviorDebugEnum.BehaviorSetup);
 				_isValid = false;
 				return;
 			
@@ -79,8 +79,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (!DefinitionHelper.WeaponBlockReferences.TryGetValue(weapon.SlimBlock.BlockDefinition.Id, out weaponBlockDef)) {
 
-				BehaviorLogger.Write("No Weapon Definition Found For: " + weapon.SlimBlock.BlockDefinition.Id.ToString(), BehaviorDebugEnum.Weapon);
-				//return;
+				BehaviorLogger.Write("No Weapon Definition Found For: " + weapon.SlimBlock.BlockDefinition.Id.ToString(), BehaviorDebugEnum.BehaviorSetup);
+				return;
 
 			}
 
@@ -88,7 +88,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (!MyDefinitionManager.Static.TryGetWeaponDefinition(weaponBlockDef.WeaponDefinitionId, out weaponDef)) {
 
-				BehaviorLogger.Write("Weapon Def Null", BehaviorDebugEnum.Weapon);
+				BehaviorLogger.Write("Weapon Def Null", BehaviorDebugEnum.BehaviorSetup);
 				return;
 
 			}
@@ -116,7 +116,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (_inventory.Empty() && _gunBase.GunBase.CurrentAmmo == 0) {
 
-				if (_weaponSystem.UseAmmoReplenish && _ammoRefills < _weaponSystem.MaxAmmoReplenishments) {
+				if (_weaponSystem.Data.UseAmmoReplenish && _ammoRefills < _weaponSystem.Data.MaxAmmoReplenishments) {
 
 					_pendingAmmoRefill = true;
 
@@ -182,6 +182,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		//IsActive()
 		//IsValid()
 
+		public bool CanLockOnGrid(IMyCubeGrid target) {
+
+			if (_isStatic)
+				return false;
+
+			if (target == null || _block == null)
+				return false;
+
+			if (target.Closed || _block.Closed)
+				return false;
+
+			//Ammo Firing Range Check
+			if (Vector3D.Distance(target.GetPosition(), _block.GetPosition()) > MaxAmmoTrajectory())
+				return false;
+
+			//LOS Check
+			if (!TurretHasLOS(target.GetPosition(), _block.GetPosition(), _behavior.CurrentGrid?.LinkedGrids))
+				return false;
+
+			return true;
+
+		}
+
 		public IMyEntity CurrentTarget() {
 
 			if (_isTurret) {
@@ -194,7 +217,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		
 		}
 
-		public void DetermineWeaponReadiness() {
+		public void DetermineWeaponReadiness(bool usingTurretController = false) {
 
 			//BehaviorLogger.Write(string.Format("{0} Weapon Ready Check", _block?.CustomName ?? "N/A"), BehaviorDebugEnum.Weapon);
 			_readyToFire = true;
@@ -217,7 +240,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			
 			}
 
-			if (_isStatic) {
+			if (_isStatic && !_usesTurretController) {
 
 				StaticWeaponReadiness();
 
@@ -247,9 +270,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				_checkBarrageWeapon = true;
 
-				if (_isStatic && _weaponSystem.UseBarrageFire && _weaponDefinition != null) {
+				if (_isStatic && _weaponSystem.Data.UseBarrageFire && _weaponDefinition != null) {
 
-					_isBarrageWeapon = _rateOfFire < _weaponSystem.MaxFireRateForBarrageWeapons;
+					_isBarrageWeapon = _rateOfFire < _weaponSystem.Data.MaxFireRateForBarrageWeapons;
 
 				}
 
@@ -259,7 +282,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		}
 
-		
+		public override float MaxAmmoTrajectory() {
+
+			if (_ammoMaxTrajectory <= 0)
+				GetAmmoDetails();
+
+			return _ammoMaxTrajectory;
+
+		}
+
+		public void SetLockOnTarget() {
+
+			PendingLockOn = false;
+
+			if (!IsValid())
+				return;
+
+			_turret.TrackTarget(LockOnTarget);
+
+		}
 
 		public void SetTarget(IMyEntity entity) {
 

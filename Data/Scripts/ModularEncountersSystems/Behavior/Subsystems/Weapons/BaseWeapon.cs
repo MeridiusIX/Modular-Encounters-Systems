@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.Game;
@@ -16,6 +17,19 @@ using VRageMath;
 namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 	public abstract class BaseWeapon {
 
+		public List<IWeapon> SubWeapons { get { return _subWeapons; } }
+		public bool PendingAmmoRefill { get { return _pendingAmmoRefill; } }
+		public bool IsWeaponCore { get { return _isWeaponCore; } }
+		public bool ReadyToFire { get { return _readyToFire; } set { _readyToFire = value; } }
+		public bool PendingLockOn { get { return _pendingLockOn; } set { _pendingLockOn = value; } }
+		public bool HasLockOn { get { return _hasLockOn; } set { _hasLockOn = value; } }
+		public IMyCubeGrid LockOnTarget { get { return _lockOnTarget; } set { _lockOnTarget = value; } }
+
+		public bool UsesTurretController { get { return _usesTurretController; } set { _usesTurretController = value; } }
+
+		internal List<IWeapon> _subWeapons;
+		internal List<IMyFunctionalBlock> _subWeaponBlocks;
+
 		internal IMyFunctionalBlock _block;
 		internal IMyRemoteControl _remoteControl;
 
@@ -27,6 +41,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		internal bool _isWeaponCore;
 		internal bool _isBarrageWeapon;
 		internal bool _isOnSubgrid;
+		internal bool _usesTurretController;
 
 		internal Direction _direction;
 
@@ -44,6 +59,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		internal bool _pendingAmmoRefill;
 		internal int _ammoRefills;
+
+		internal bool _pendingLockOn;
+		internal bool _hasLockOn;
+		internal IMyCubeGrid _lockOnTarget;
 
 		internal bool _closed;
 		internal bool _functional;
@@ -64,6 +83,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (_block == null)
 				return;
 
+			_subWeapons = new List<IWeapon>();
+			_subWeaponBlocks = new List<IMyFunctionalBlock>();
+
 			_remoteControl = remoteControl;
 			_behavior = behavior;
 			_weaponSystem = behavior.AutoPilot.Weapons;
@@ -72,6 +94,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			_isTurret = false;
 			_isWeaponCore = false;
 			_isBarrageWeapon = false;
+			_usesTurretController = false;
 			_isOnSubgrid = _block.CubeGrid != _remoteControl.CubeGrid;
 
 			_direction = Direction.None;
@@ -142,7 +165,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			bool canShootTarget = false;
 			bool canShootCollision = false;
 
-			var trajectory = _weaponSystem.MaxStaticWeaponRange > -1 ? MathHelper.Clamp(_ammoMaxTrajectory, 0, _weaponSystem.MaxStaticWeaponRange) : _ammoMaxTrajectory;
+			var trajectory = _weaponSystem.Data.MaxStaticWeaponRange > -1 ? MathHelper.Clamp(_ammoMaxTrajectory, 0, _weaponSystem.Data.MaxStaticWeaponRange) : _ammoMaxTrajectory;
 
 			//Waypoint Details
 			if (isWaypointTarget) {
@@ -232,12 +255,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		public bool StaticDistanceAndAngleCheck(Vector3D coords, double trajectory) {
 
 			var directionToTarget = Vector3D.Normalize(coords - _block.GetPosition());
-			var allowedAngle = VectorHelper.GetAngleBetweenDirections(directionToTarget, _block.WorldMatrix.Forward) <= _weaponSystem.WeaponMaxAngleFromTarget;
+			var allowedAngle = VectorHelper.GetAngleBetweenDirections(directionToTarget, _block.WorldMatrix.Forward) <= _weaponSystem.Data.WeaponMaxAngleFromTarget;
 			var dist = _weaponSystem.IndirectWaypointTargetDistance > -1 ? _weaponSystem.IndirectWaypointTargetDistance : Vector3D.Distance(_block.GetPosition(), coords);
 			var reqTrajectory = dist > trajectory ? trajectory : trajectory - (trajectory - dist);
 			var distFromMaxTrajectory = Vector3D.Distance(coords, _block.WorldMatrix.Forward * reqTrajectory + _block.GetPosition());
 
-			if (allowedAngle && distFromMaxTrajectory < _weaponSystem.WeaponMaxBaseDistanceTarget && dist < trajectory) {
+			if (allowedAngle && distFromMaxTrajectory < _weaponSystem.Data.WeaponMaxBaseDistanceTarget && dist < trajectory) {
 
 				return true;
 
@@ -345,13 +368,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		}
 
-		public float MaxAmmoTrajectory() {
+		public virtual float MaxAmmoTrajectory() {
 
 			return _ammoMaxTrajectory;
 		
 		}
 
-		public void ReplenishAmmo() {
+		public virtual void ReplenishAmmo() {
 
 			if (!_pendingAmmoRefill)
 				return;
@@ -359,7 +382,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			_pendingAmmoRefill = false;
 
 			BehaviorLogger.Write("Sending Replenish Request For Weapon: " + _block?.SlimBlock?.BlockDefinition?.Id ?? "Null", BehaviorDebugEnum.Weapon);
-			InventoryHelper.AddItemsToInventory(_inventory, _currentAmmoMagazine, _weaponSystem.AmmoReplenishClipAmount);
+			InventoryHelper.AddItemsToInventory(_inventory, _currentAmmoMagazine, _weaponSystem.Data.AmmoReplenishClipAmount);
 			_ammoRefills++;
 
 		}
@@ -368,6 +391,54 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			_direction = direction;
 
+		}
+
+		internal bool TurretHasLOS(Vector3D pos, Vector3D blockPos, List<GridEntity> grids, bool ignoreOwnGrid = false) {
+
+			if (_block?.SlimBlock?.CubeGrid == null || _block.MarkedForClose || _block.Closed)
+				return false;
+
+			var line = VectorHelper.GetLineThroughBox(blockPos, pos, _block.SlimBlock.CubeGrid.WorldAABB);
+
+			try {
+
+				foreach (var grid in grids) {
+
+					if (!grid.ActiveEntity())
+						continue;
+
+					if (ignoreOwnGrid && _block.SlimBlock.CubeGrid == grid)
+						continue;
+
+					var list = new List<Vector3I>();
+					_block.SlimBlock.CubeGrid.RayCastCells(line.From, line.To, list);
+
+					int hits = 0;
+
+					foreach (var cell in list) {
+
+						var slim = grid.CubeGrid.GetCubeBlock(cell);
+
+						if (slim == null || slim == _block.SlimBlock)
+							continue;
+
+						hits++;
+
+					}
+
+					if (hits >= 5)
+						return false;
+
+				}
+
+			} catch (Exception e) {
+
+				return false;
+			
+			}
+
+			return true;
+		
 		}
 
 	}

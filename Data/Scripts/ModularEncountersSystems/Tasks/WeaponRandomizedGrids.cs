@@ -16,34 +16,32 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.Tasks {
-	public class WeaponRandomizedGrids : TaskItem, ITaskItem {
+	public class WeaponRandomizedGrids : GridDamageWatcher, ITaskItem {
 
-		private GridEntity _grid;
-		private bool _notUsingShields;
-		private MyEntity _shield;
-		private List<MyTuple<long, float, uint>> _lastAttackers;
-		private bool _initialNerf;
 
-		public WeaponRandomizedGrids(GridEntity grid) {
 
-			_tickTrigger = 180;
-			_grid = grid;
-			_lastAttackers = new List<MyTuple<long, float, uint>>();
-			DamageHelper.DamageRelay += DamageHandler;
+		public WeaponRandomizedGrids(GridEntity grid) : base(grid) {
+
+
 
 		}
 
-		public override void Run() {
+		internal override void FirstRun() {
 
-			if (!_initialNerf) {
+			_grid.SetAutomatedWeaponRanges(false);
 
-				SpawnLogger.Write("Setting 800m Initial Range For Weapon Randomized Grid" + _grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
-				_initialNerf = true;
-				_grid.SetAutomatedWeaponRanges(false);
+		}
+
+		internal override void DamageDetect() {
+
+			_grid.SetAutomatedWeaponRanges(true);
+
+			if (_grid.Npc != null) {
+
+				_grid.Npc.AppliedAttributes.WeaponRandomizationAggression = true;
+				_grid.Npc.Update();
 
 			}
-
-			ShieldValidator();
 
 		}
 
@@ -79,7 +77,7 @@ namespace ModularEncountersSystems.Tasks {
 					break;
 
 				}
-			
+
 			}
 
 		}
@@ -99,7 +97,7 @@ namespace ModularEncountersSystems.Tasks {
 				DamageHelper.DamageRelay -= DamageHandler;
 				_isValid = false;
 				return;
-			
+
 			}
 
 			if (!_grid.CubeGrid.IsSameConstructAs(block.CubeGrid))
@@ -124,14 +122,14 @@ namespace ModularEncountersSystems.Tasks {
 		private void ApplyMaxRange() {
 
 			_grid.SetAutomatedWeaponRanges(true);
-			
+
 			if (_grid.Npc != null) {
 
 				_grid.Npc.AppliedAttributes.WeaponRandomizationAggression = true;
 				_grid.Npc.Update();
 
 			}
-			
+
 		}
 
 	}

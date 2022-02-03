@@ -92,6 +92,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public string RandomGridNamePrefix;
 		public List<string> RandomGridNamePattern;
 		public string ReplaceAntennaNameWithRandomizedName;
+		public bool ProcessBlocksForCustomGridName;
+
+		public string CustomChatAuthorName;
+		public bool ProcessCustomChatAuthorAsRandom;
 
 		public bool UseBlockNameReplacer;
 		public Dictionary<string, string> BlockNameReplacerReference;
@@ -259,6 +263,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RandomGridNamePrefix = "";
 			RandomGridNamePattern = new List<string>();
 			ReplaceAntennaNameWithRandomizedName = "";
+			ProcessBlocksForCustomGridName = false;
+
+			CustomChatAuthorName = null;
+			ProcessCustomChatAuthorAsRandom = false;
 
 			UseBlockNameReplacer = false;
 			BlockNameReplacerReference = new Dictionary<string, string>();
@@ -770,6 +778,27 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ReplaceAntennaNameWithRandomizedName:") == true) {
 
 					TagParse.TagStringCheck(tag, ref this.ReplaceAntennaNameWithRandomizedName);
+
+				}
+
+				//CustomChatAuthorName
+				if (tag.StartsWith("[CustomChatAuthorName:") == true) {
+
+					TagParse.TagStringCheck(tag, ref this.CustomChatAuthorName);
+
+				}
+
+				//ProcessCustomChatAuthorAsRandom
+				if (tag.StartsWith("[ProcessCustomChatAuthorAsRandom:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.ProcessCustomChatAuthorAsRandom);
+
+				}
+
+				//ProcessBlocksForCustomGridName
+				if (tag.StartsWith("[ProcessBlocksForCustomGridName:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.ProcessBlocksForCustomGridName);
 
 				}
 

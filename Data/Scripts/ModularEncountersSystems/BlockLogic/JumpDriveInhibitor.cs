@@ -13,6 +13,7 @@ namespace ModularEncountersSystems.BlockLogic {
 	public class JumpDriveInhibitor : BaseBlockLogic, IBlockLogic {
 
 		internal IMyRadioAntenna _antenna;
+		internal IMyTerminalBlock _block;
 
 		internal double _disableRange;
 		internal double _antennaRange;
@@ -49,11 +50,22 @@ namespace ModularEncountersSystems.BlockLogic {
 			BlockManager.BlockAdded += GetNewBlock;
 
 			_antenna = block.Block as IMyRadioAntenna;
-			_antenna.Radius = 10000;
+
+			if (_antenna != null) {
+
+				_antenna.Radius = 10000;
+				_antenna.CustomName = "[Jump Drive Inhibitor Field]";
+				_antenna.CustomNameChanged += NameChange;
+
+			} else {
+
+				_disableRange = 10000;
+				_antennaRange = 10000;
+
+			}
+
 			_logicType = "Jump Drive Inhibitor";
 			_useTick100 = true;
-			_antenna.CustomName = "[Jump Drive Inhibitor Field]";
-			_antenna.CustomNameChanged += NameChange;
 
 		}
 
@@ -117,7 +129,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			if (!_isWorking || !Active)
 				return;
 
-			if (_antenna.Radius != _antennaRange) {
+			if (_antenna != null && _antenna.Radius != _antennaRange) {
 
 				_antennaRange = _antenna.Radius;
 				_disableRange = _antenna.Radius;
@@ -135,7 +147,7 @@ namespace ModularEncountersSystems.BlockLogic {
 				
 				}
 
-				if (player.Distance(_antenna.GetPosition()) < _disableRange) {
+				if (player.Distance(Entity.GetPosition()) < _disableRange) {
 
 					if (!_playersInRange.Contains(player)) {
 
@@ -169,7 +181,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				}
 
-				if (block.Distance(_antenna.GetPosition()) < _disableRange) {
+				if (block.Distance(Entity.GetPosition()) < _disableRange) {
 
 					if (!_blocksInRange.Contains(block)) {
 

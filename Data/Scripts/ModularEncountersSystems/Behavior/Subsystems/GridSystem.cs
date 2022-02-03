@@ -372,6 +372,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
+		public bool JumpToCoords(Vector3D coords) {
+
+			if (RemoteControl?.SlimBlock?.CubeGrid?.JumpSystem == null)
+				return false;
+
+			var jumpSystem = RemoteControl.SlimBlock.CubeGrid.JumpSystem;
+			var safeCoords = RemoteControl.SlimBlock.CubeGrid.JumpSystem.FindSuitableJumpLocation(coords);
+			var result = false;
+
+			if (safeCoords.HasValue) {
+
+				jumpSystem.Jump(safeCoords.Value, RemoteControl.OwnerId, 10);
+				result = jumpSystem.IsJumping;
+
+			}
+
+			if (result)
+				return result;
+
+			var offset = new Vector3D(2000, 2000, 2000);
+			var box = new BoundingBoxD(coords - offset, coords + offset);
+
+			foreach (var corner in box.GetCorners()) {
+
+				safeCoords = RemoteControl.SlimBlock.CubeGrid.JumpSystem.FindSuitableJumpLocation(corner);
+
+				if (safeCoords.HasValue) {
+
+					jumpSystem.Jump(safeCoords.Value, RemoteControl.OwnerId, 10);
+					result = jumpSystem.IsJumping;
+
+					if (result)
+						break;
+
+				}
+
+			}
+
+			return result;
+
+		}
+
 		public void ToggleBlocksOfType(List<SerializableDefinitionId> types, List<SwitchEnum> toggles) {
 
 			int maxIndex = types.Count <= toggles.Count ? types.Count : toggles.Count;

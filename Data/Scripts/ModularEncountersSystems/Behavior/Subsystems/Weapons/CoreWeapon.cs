@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
 using static ModularEncountersSystems.API.WcApiDef;
@@ -43,6 +44,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			_weaponDefinition = weaponDefinition;
 			_weaponId = weaponId;
+			_isWeaponCore = true;
 
 			//Rate Of Fire
 			_rateOfFire = _weaponDefinition.HardPoint.Loading.RateOfFire;
@@ -76,12 +78,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		private void StaticWeaponReadiness() {
 
 			//BehaviorLogger.Write("WC Check Static ", BehaviorDebugEnum.Weapon);
-			var trajectory = _weaponSystem.MaxStaticWeaponRange > -1 ? MathHelper.Clamp(_ammoMaxTrajectory, 0, _weaponSystem.MaxStaticWeaponRange) : _ammoMaxTrajectory;
+			var trajectory = _weaponSystem.Data.MaxStaticWeaponRange > -1 ? MathHelper.Clamp(_ammoMaxTrajectory, 0, _weaponSystem.Data.MaxStaticWeaponRange) : _ammoMaxTrajectory;
 
 			//Homing Weapon
 			if (_homingAmmo) {
 
-				if (_weaponSystem.AllowHomingWeaponMultiTargeting) {
+				if (_weaponSystem.Data.AllowHomingWeaponMultiTargeting) {
 				
 					//TODO: Later Date
 				
@@ -146,7 +148,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			//Flare Weapon
 			if (_flareAmmo) {
 
-				if (!_weaponSystem.UseAntiSmartWeapons || !_weaponSystem.IncomingHomingProjectiles) {
+				if (!_weaponSystem.Data.UseAntiSmartWeapons || !_weaponSystem.IncomingHomingProjectiles) {
 
 					//BehaviorLogger.Write(" - No Incoming Homing Weapons For Firing Flares", BehaviorDebugEnum.Weapon);
 					_readyToFire = false;
@@ -168,6 +170,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		}
 
+		public bool CanLockOnGrid(IMyCubeGrid target) {
+
+			if (_isStatic && !_homingAmmo)
+				return false;
+
+			if (target == null || _block == null)
+				return false;
+
+			if (target.Closed || _block.Closed)
+				return false;
+
+			//Ammo Firing Range Check
+			if (Vector3D.Distance(target.GetPosition(), _block.GetPosition()) > MaxAmmoTrajectory())
+				return false;
+
+			//LOS Check
+			if (!TurretHasLOS(target.GetPosition(), _block.GetPosition(), _behavior.CurrentGrid?.LinkedGrids))
+				return false;
+
+			return true;
+
+		}
+
 		public bool HasAmmo() {
 
 			bool gotAmmoDetails = false;
@@ -185,7 +210,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (_inventory.GetItemAmount(_currentAmmoMagazine) == 0) {
 
-				if (_weaponSystem.UseAmmoReplenish && _ammoRefills < _weaponSystem.MaxAmmoReplenishments) {
+				if (_weaponSystem.Data.UseAmmoReplenish && _ammoRefills < _weaponSystem.Data.MaxAmmoReplenishments) {
 
 					_pendingAmmoRefill = true;
 
@@ -262,7 +287,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		}
 
-		public void DetermineWeaponReadiness() {
+		public void DetermineWeaponReadiness(bool usingTurretController = false) {
 
 			BehaviorLogger.Write(_block.CustomName + " WC Check Readiness", BehaviorDebugEnum.Weapon);
 
@@ -287,7 +312,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			}
 
 			//WeaponCoreReadyFireCheck
-			if (_isStatic)
+			if (_isStatic && !usingTurretController)
 				StaticWeaponReadiness();
 
 		}
@@ -312,15 +337,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				_checkBarrageWeapon = true;
 
-				if (_isStatic && _weaponSystem.UseBarrageFire) {
+				if (_isStatic && _weaponSystem.Data.UseBarrageFire) {
 
-					_isBarrageWeapon = _rateOfFire < _weaponSystem.MaxFireRateForBarrageWeapons;
+					_isBarrageWeapon = _rateOfFire < _weaponSystem.Data.MaxFireRateForBarrageWeapons;
 
 				}
 
 			}
 
 			return _isBarrageWeapon;
+
+		}
+
+		public void SetLockOnTarget() {
+
+			PendingLockOn = false;
+
+			if (!IsValid())
+				return;
+
+			APIs.WeaponCore.SetAiFocus(_block, LockOnTarget);
 
 		}
 

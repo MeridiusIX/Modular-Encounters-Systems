@@ -201,6 +201,15 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static LineD GetLineThroughBox(Vector3D start, Vector3D end, BoundingBoxD box) {
+
+			var line = new LineD(start, end);
+			var result = new LineD(start, end);
+			box.Intersect(ref line, out result);
+			return result;
+		
+		}
+
 		//GetThrustDirectionsAwayFromPosition
 		public static Vector3I GetThrustDirectionsAwayFromDirection(MatrixD myMatrix, Vector3D targetPosition) {
 

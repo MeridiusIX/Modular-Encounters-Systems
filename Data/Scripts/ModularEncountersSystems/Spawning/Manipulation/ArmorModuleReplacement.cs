@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Profiles;
+using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
 using System;
@@ -77,7 +78,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
-		public static void ProcessGridForModules(MyObjectBuilder_CubeGrid[] grids, ImprovedSpawnGroup spawnGroup, ManipulationProfile profile) {
+		public static void ProcessGridForModules(MyObjectBuilder_CubeGrid[] grids, ImprovedSpawnGroup spawnGroup, ManipulationProfile profile, NpcData data) {
 
 			if (!_setupComplete)
 				Setup();
@@ -121,7 +122,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				var armorIndex = availableArmor.Count == 1 ? 0 : _rnd.Next(0, availableArmor.Count);
 
-				if (usedModules.Contains(profile.ModulesForArmorReplacement[i]) || !allowedModules.Contains(profile.ModulesForArmorReplacement[i]) || !ReplaceArmorWithModule(availableArmor[armorIndex].Blocks, availableArmor[armorIndex].Block, profile.ModulesForArmorReplacement[i])) {
+				if (usedModules.Contains(profile.ModulesForArmorReplacement[i]) || !allowedModules.Contains(profile.ModulesForArmorReplacement[i]) || !ReplaceArmorWithModule(availableArmor[armorIndex].Blocks, availableArmor[armorIndex].Block, profile.ModulesForArmorReplacement[i], data)) {
 
 					continue;
 
@@ -134,7 +135,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
-		public static bool ReplaceArmorWithModule(List<MyObjectBuilder_CubeBlock> blocks, MyObjectBuilder_CubeBlock oldBlock, SerializableDefinitionId newBlockId) {
+		public static bool ReplaceArmorWithModule(List<MyObjectBuilder_CubeBlock> blocks, MyObjectBuilder_CubeBlock oldBlock, SerializableDefinitionId newBlockId, NpcData data) {
 
 			var newBlock = MyObjectBuilderSerializer.CreateNewObject(newBlockId) as MyObjectBuilder_CubeBlock;
 
@@ -153,42 +154,53 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			blocks.Remove(oldBlock);
 			blocks.Add(newBlock);
 
-			SetDefaultInhibitorRanges(newBlock);
+			SetDefaultInhibitorRanges(newBlock, data);
 
 			return true;
 
 		}
 
-		public static void SetDefaultInhibitorRanges(MyObjectBuilder_CubeBlock block) {
+		public static void SetDefaultInhibitorRanges(MyObjectBuilder_CubeBlock block, NpcData data) {
 
 			var antenna = block as MyObjectBuilder_RadioAntenna;
 
 			if (antenna == null)
 				return;
 
-			if (antenna.SubtypeName == "MES-Suppressor-Nanobots-Large")
-				antenna.BroadcastRadius = 1000;
+			if (antenna.SubtypeName.StartsWith("MES-Suppressor-Nanobots-")) {
 
-			if (antenna.SubtypeName == "MES-Suppressor-JumpDrive-Large")
+				antenna.BroadcastRadius = 1000;
+				data.Attributes.UseNanobotDisable = true;
+
+			}
+
+			if (antenna.SubtypeName.StartsWith("MES-Suppressor-JumpDrive-")) {
+
 				antenna.BroadcastRadius = 6000;
+				data.Attributes.UseJumpDisable = true;
 
-			if (antenna.SubtypeName == "MES-Suppressor-Jetpack-Large")
+			}
+
+			if (antenna.SubtypeName.StartsWith("MES-Suppressor-Jetpack-")) {
+
 				antenna.BroadcastRadius = 1000;
+				data.Attributes.UseJetpackDisable = true;
 
-			if (antenna.SubtypeName == "MES-Suppressor-Drill-Large")
+			}
+
+			if (antenna.SubtypeName.StartsWith("MES-Suppressor-Drill-")) {
+
 				antenna.BroadcastRadius = 500;
+				data.Attributes.UseDrillDisable = true;
 
-			if (antenna.SubtypeName == "MES-Suppressor-Nanobots-Small")
+			}
+
+			if (antenna.SubtypeName.StartsWith("MES-Suppressor-Player-")) {
+
 				antenna.BroadcastRadius = 1000;
+				data.Attributes.UsePlayerDisable = true;
 
-			if (antenna.SubtypeName == "MES-Suppressor-JumpDrive-Small")
-				antenna.BroadcastRadius = 6000;
-
-			if (antenna.SubtypeName == "MES-Suppressor-Jetpack-Small")
-				antenna.BroadcastRadius = 1000;
-
-			if (antenna.SubtypeName == "MES-Suppressor-Drill-Small")
-				antenna.BroadcastRadius = 500;
+			}
 
 		}
 

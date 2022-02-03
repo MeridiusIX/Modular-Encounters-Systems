@@ -22,6 +22,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<MyDefinitionId, float> BatteryMaxCapacityReference = new Dictionary<MyDefinitionId, float>();
 		public static Dictionary<MyDefinitionId, MyReactorDefinition> ReactorDefinitions = new Dictionary<MyDefinitionId, MyReactorDefinition>();
 		public static List<string> RivalAiControlModules = new List<string>();
+		public static float HighestAntennaRange = 0;
 
 		public static Dictionary<MyDefinitionId, MyWeaponBlockDefinition> WeaponBlockReferences = new Dictionary<MyDefinitionId, MyWeaponBlockDefinition>();
 		public static List<MyDefinitionId> WeaponBlockIDs = new List<MyDefinitionId>();
@@ -224,6 +225,30 @@ namespace ModularEncountersSystems.Helpers {
 								BatteryMaxCapacityReference.Add(battery.Id, battery.MaxStoredPower);
 
 							errorDebug.Append("Done Getting Battery Data").AppendLine();
+							continue;
+
+						}
+
+						//Antenna
+						var antenna = block as MyRadioAntennaDefinition;
+
+						if (antenna != null) {
+
+							if (antenna.MaxBroadcastRadius > HighestAntennaRange)
+								HighestAntennaRange = antenna.MaxBroadcastRadius;
+
+							continue;
+
+						}
+
+						//Beacon
+						var beacon = block as MyBeaconDefinition;
+
+						if (beacon != null) {
+
+							if (beacon.MaxBroadcastRadius > HighestAntennaRange)
+								HighestAntennaRange = beacon.MaxBroadcastRadius;
+
 							continue;
 
 						}

@@ -40,7 +40,7 @@ namespace ModularEncountersSystems.Spawning {
 			var spawnTypes = SpawnConditions.AllowedSpawningTypes(type, environment);
 
 			collection.MustUseStrictZone = ZoneManager.PositionInsideStrictZone(environment.Position);
-			ZoneManager.GetAllowedSpawns(environment.Position, collection.AllowedZoneSpawns, collection.AllowedZoneFactions);
+			ZoneManager.GetAllowedSpawns(environment.Position, collection);
 			collection.MustUseAllowedZoneSpawns = collection.AllowedZoneSpawns.Count > 0;
 
 			if (ZoneManager.InsideNoSpawnZone(environment.Position)) {
@@ -54,9 +54,16 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write("Checking SpawnGroups For Spawn Request: " + type, SpawnerDebugEnum.SpawnGroup);
 				string commonConditionFailure = "";
 
-				if (collection.MustUseAllowedZoneSpawns && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
+				if (collection.OnlyAllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName) && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
 
 					SpawnLogger.Write(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					continue;
+
+				}
+
+				if (collection.RestrictedZoneSpawnGroups.Contains(spawnGroup.SpawnGroupName)) {
+
+					SpawnLogger.Write(" - Zone(s) SpawnGroup Blacklist Contains SpawnGroup: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
 					continue;
 
 				}
@@ -134,7 +141,7 @@ namespace ModularEncountersSystems.Spawning {
 					}
 
 					//Factions
-					var validFactionsList = SpawnConditions.ValidNpcFactions(spawnGroup, conditions, environment.Position, overrideFaction, forceSpawn);
+					var validFactionsList = SpawnConditions.ValidNpcFactions(spawnGroup, conditions, environment.Position, overrideFaction, forceSpawn, collection);
 
 					if (validFactionsList.Count == 0) {
 
@@ -333,7 +340,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (prefab.PlaceToGridOrigin == true) {
+			if (prefab.PlaceToGridOrigin == true || spawnGroup.UseGridOrigin) {
 
 				SpawnLogger.Write("Added Internal Spawning Option: PlaceToGridOrigin", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.UseGridOrigin;
@@ -544,6 +551,8 @@ namespace ModularEncountersSystems.Spawning {
 			if (spawnGroup.IsPirate == false && spawnGroup.IsEncounter == true) {
 
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceRandomEncounter = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].UseGridOrigin = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].RotateFirstCockpitToForward = false;
 				thisSpawnGroup.SpawnConditionsProfiles[0].ReactorsOn = false;
 				thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = "Nobody";
 
@@ -552,6 +561,8 @@ namespace ModularEncountersSystems.Spawning {
 			if (spawnGroup.IsPirate == true && spawnGroup.IsEncounter == true) {
 
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceRandomEncounter = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].UseGridOrigin = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].RotateFirstCockpitToForward = false;
 				thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPRT";
 
 			}

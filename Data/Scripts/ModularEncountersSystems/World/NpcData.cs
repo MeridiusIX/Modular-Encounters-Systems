@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Configuration;
+﻿using ModularEncountersSystems.BlockLogic;
+using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -10,9 +11,11 @@ using ProtoBuf;
 using Sandbox.Game;
 using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
+using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRageMath;
 
@@ -67,6 +70,13 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(18)] public bool SetMatrixPostSpawn;
 		[ProtoMember(19)] public bool WeaponRandomizationAggression;
 		[ProtoMember(20)] public bool OldFlagsProcessed;
+		[ProtoMember(21)] public bool UseJetpackDisable;
+		[ProtoMember(22)] public bool UseDrillDisable;
+		[ProtoMember(23)] public bool UsePlayerDisable;
+		[ProtoMember(24)] public bool UseNanobotDisable;
+		[ProtoMember(25)] public bool UseJumpDisable;
+		[ProtoMember(26)] public bool ConfigureTurretControllers;
+		[ProtoMember(27)] public bool ReceivedPlayerDamage;
 
 		public NewNpcAttributes() {
 
@@ -90,6 +100,99 @@ namespace ModularEncountersSystems.World {
 			SetMatrixPostSpawn = false;
 			WeaponRandomizationAggression = false;
 			OldFlagsProcessed = false;
+			UseJetpackDisable = false;
+			UseDrillDisable = false;
+			UsePlayerDisable = false;
+			UseNanobotDisable = false;
+			UseJumpDisable = false;
+			ConfigureTurretControllers = false;
+			ReceivedPlayerDamage = false;
+
+		}
+
+		public override string ToString() {
+
+			var sb = new StringBuilder();
+
+			if (DigAirTightVoxels)
+				sb.Append("DigAirTightVoxels").Append(", ");
+
+			if (ReplenishSystems)
+				sb.Append("ReplenishSystems").Append(", ");
+
+			if (IgnoreCleanup)
+				sb.Append("IgnoreCleanup").Append(", ");
+
+			if (ForceStatic)
+				sb.Append("ForceStatic").Append(", ");
+
+			if (IsCargoShip)
+				sb.Append("IsCargoShip").Append(", ");
+
+			if (FixSubparts)
+				sb.Append("FixSubparts").Append(", ");
+
+			if (InitEconomyBlocks)
+				sb.Append("InitEconomyBlocks").Append(", ");
+
+			if (NonPhysicalAmmo)
+				sb.Append("NonPhysicalAmmo").Append(", ");
+
+			if (ClearInventory)
+				sb.Append("ClearInventory").Append(", ");
+
+			if (ShieldActivation)
+				sb.Append("ShieldActivation").Append(", ");
+
+			if (WeaponRandomizationAdjustments)
+				sb.Append("WeaponRandomizationAdjustments").Append(", ");
+
+			if (ApplyBehavior)
+				sb.Append("ApplyBehavior").Append(", ");
+
+			if (ReleasePrefab)
+				sb.Append("ReleasePrefab").Append(", ");
+
+			if (WeaponsRandomized)
+				sb.Append("WeaponsRandomized").Append(", ");
+
+			if (RivalAiBehaviorSet)
+				sb.Append("RivalAiBehaviorSet").Append(", ");
+
+			if (RegisterRemoteControlCode)
+				sb.Append("RegisterRemoteControlCode").Append(", ");
+
+			if (CustomThrustDataUsed)
+				sb.Append("CustomThrustDataUsed").Append(", ");
+
+			if (SetMatrixPostSpawn)
+				sb.Append("SetMatrixPostSpawn").Append(", ");
+
+			if (WeaponRandomizationAggression)
+				sb.Append("WeaponRandomizationAggression").Append(", ");
+
+			if(UseJetpackDisable)
+				sb.Append("UseJetpackDisable").Append(", ");
+
+			if (UseDrillDisable)
+				sb.Append("UseDrillDisable").Append(", ");
+
+			if (UsePlayerDisable)
+				sb.Append("UsePlayerDisable").Append(", ");
+
+			if (UseNanobotDisable)
+				sb.Append("UseNanobotDisable").Append(", ");
+
+			if (UseJumpDisable)
+				sb.Append("UseJumpDisable").Append(", ");
+
+			if (ConfigureTurretControllers)
+				sb.Append("ConfigureTurretControllers").Append(", ");
+
+			if (OldFlagsProcessed)
+				sb.Append("OldFlagsProcessed").Append(", ");
+
+			return sb.ToString();
 
 		}
 
@@ -237,6 +340,15 @@ namespace ModularEncountersSystems.World {
 
 		[ProtoMember(27)]
 		public NewNpcAttributes AppliedAttributes;
+
+		[ProtoMember(28)]
+		public string UniqueSpawnIdentifier;
+
+		[ProtoMember(29)]
+		public string FriendlyName;
+
+		[ProtoMember(30)]
+		public string ChatAuthorName;
 
 		//Non-Serialized Data
 
@@ -402,6 +514,7 @@ namespace ModularEncountersSystems.World {
 			PrimaryRemoteControlId = 0;
 			Forward = Vector3D.Forward;
 			Up = Vector3D.Up;
+			UniqueSpawnIdentifier = "";
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -566,9 +679,9 @@ namespace ModularEncountersSystems.World {
 
 							var color = block.Block.SlimBlock.ColorMaskHSV;
 							Grid.CubeGrid.ColorBlocks(block.Block.Min, block.Block.Min, new Vector3(42, 41, 40));
-							block.Block.SlimBlock.UpdateVisual();
+							SafeVisualUpdate(block.Block.SlimBlock);
 							Grid.CubeGrid.ColorBlocks(block.Block.Min, block.Block.Min, color);
-							block.Block.SlimBlock.UpdateVisual();
+							SafeVisualUpdate(block.Block.SlimBlock);
 
 						}
 
@@ -605,6 +718,24 @@ namespace ModularEncountersSystems.World {
 			if (updateSettings)
 				Update();
 
+		}
+
+		private void SafeVisualUpdate(IMySlimBlock block) {
+
+			if (block == null)
+				return;
+
+			try {
+
+				block.UpdateVisual();
+			
+			} catch (Exception e) {
+
+				SpawnLogger.Write("Block Failed To Update Visuals using IMySlimBlock.UpdateVisual(): " + block?.BlockDefinition?.Id.ToString() ?? "null definition", SpawnerDebugEnum.Error, true);
+				SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error, true);
+
+			}
+		
 		}
 
 		public void ProcessTertiaryAttributes() {
@@ -649,8 +780,197 @@ namespace ModularEncountersSystems.World {
 
 			}
 
+			//ConfigureTurretControllers
+			if (AttributeCheck(Attributes.ConfigureTurretControllers, AppliedAttributes.ConfigureTurretControllers)) {
+
+				AppliedAttributes.ConfigureTurretControllers = true;
+				SpawnLogger.Write("Starting Turret Controller Config For Vanilla Weapons", SpawnerDebugEnum.PostSpawn);
+				var turretControllers = new List<BlockEntity>();
+				var tools = new List<BlockEntity>();
+				Grid.GetBlocksOfType<IMyTurretControlBlock>(turretControllers, false);
+				Grid.GetBlocksOfType<IMyUserControllableGun>(tools, false);
+				Grid.GetBlocksOfType<IMyShipToolBase>(tools, false);
+				SpawnLogger.Write(string.Format("[Controllers : {0}] [Weapons/Tools : {1}]", turretControllers.Count, tools.Count), SpawnerDebugEnum.PostSpawn);
+
+				foreach (var controller in turretControllers) {
+
+					string key = "";
+
+					if (controller?.Block?.Storage == null || !controller.Block.Storage.TryGetValue(StorageTools.MesTurretControllerKey, out key)) {
+
+						//SpawnLogger.Write("Controller Key Not Found", SpawnerDebugEnum.PostSpawn);
+						continue;
+
+					}
+						
+					var controllerBlock = controller.Block as IMyTurretControlBlock;
+
+					if (controllerBlock == null) {
+
+						//SpawnLogger.Write("Controller Block Null", SpawnerDebugEnum.PostSpawn);
+						continue;
+
+					}
+						
+					for (int i = tools.Count - 1; i >= 0; i--) {
+
+						string blockKey = "";
+
+						if (tools[i]?.Block?.Storage == null || !tools[i].Block.Storage.TryGetValue(StorageTools.MesTurretControllerKey, out blockKey)) {
+
+							//SpawnLogger.Write("Block Key Not Found", SpawnerDebugEnum.PostSpawn);
+							continue;
+
+						}
+
+						if (blockKey == key) {
+
+							SpawnLogger.Write(string.Format("[Controller : {0}] [Linked Tool : {1}]", controllerBlock.CustomName, tools[i].Block.CustomName), SpawnerDebugEnum.PostSpawn);
+							controllerBlock.AddTool(tools[i].FunctionalBlock);
+							tools.RemoveAt(i);
+
+						} else {
+
+							//SpawnLogger.Write(string.Format("Keys Not Matched: [{0}] [{1}]", controllerBlock.CustomName, tools[i].Block.CustomName), SpawnerDebugEnum.PostSpawn);
+
+						}
+					
+					}
+
+				}
+
+			}
+
+			Grid.RefreshSubGrids();
+
+			//InhibitorActivation
+			if (Attributes.UseJetpackDisable && !AppliedAttributes.UseJetpackDisable && !HasInhibitor("Jetpack")) {
+
+				var randBlock = Grid.RandomTerminalBlock();
+
+				if (randBlock.ActiveEntity()) {
+
+					var inhibitorLogic = new JetpackInhibitor(randBlock);
+					Grid.Inhibitors.Add(randBlock);
+
+				}
+				
+			} else {
+
+				AppliedAttributes.UseJetpackDisable = true;
+
+			}
+
+			if (Attributes.UseDrillDisable && !AppliedAttributes.UseDrillDisable && !HasInhibitor("Drill")) {
+
+				var randBlock = Grid.RandomTerminalBlock();
+
+				if (randBlock.ActiveEntity()) {
+
+					var inhibitorLogic = new DrillInhibitor(randBlock);
+					Grid.Inhibitors.Add(randBlock);
+
+				}
+
+			} else {
+
+				AppliedAttributes.UseDrillDisable = true;
+
+			}
+
+			if (Attributes.UseJumpDisable && !AppliedAttributes.UseJumpDisable && !HasInhibitor("JumpDrive")) {
+
+				var randBlock = Grid.RandomTerminalBlock();
+
+				if (randBlock.ActiveEntity()) {
+
+					var inhibitorLogic = new JumpDriveInhibitor(randBlock);
+					Grid.Inhibitors.Add(randBlock);
+
+				}
+
+			} else {
+
+				AppliedAttributes.UseJumpDisable = true;
+
+			}
+
+			if (Attributes.UseNanobotDisable && !AppliedAttributes.UseNanobotDisable && !HasInhibitor("Nanobot")) {
+
+				var randBlock = Grid.RandomTerminalBlock();
+
+				if (randBlock.ActiveEntity()) {
+
+					var inhibitorLogic = new NanobotInhibitor(randBlock);
+					Grid.Inhibitors.Add(randBlock);
+
+				}
+
+			} else {
+
+				AppliedAttributes.UseNanobotDisable = true;
+
+			}
+
+			if (Attributes.UsePlayerDisable && !AppliedAttributes.UsePlayerDisable && !HasInhibitor("Player")) {
+
+				var randBlock = Grid.RandomTerminalBlock();
+
+				if (randBlock.ActiveEntity()) {
+
+					var inhibitorLogic = new PlayerInhibitor(randBlock);
+					Grid.Inhibitors.Add(randBlock);
+
+				}
+
+			} else {
+
+				AppliedAttributes.UsePlayerDisable = true;
+
+			}
+
 			if (updateSettings)
 				Update();
+
+		}
+
+		public bool HasInhibitor(string type) {
+
+			for (int i = Grid.LinkedGrids.Count - 1; i >= 0; i--) {
+
+				if (!Grid.LinkedGrids[i].ActiveEntity())
+					continue;
+
+				for (int j = Grid.LinkedGrids[i].Inhibitors.Count - 1; j >= 0; j--) {
+
+					var block = Grid.LinkedGrids[i].Inhibitors[j];
+
+					if (block == null || !block.ActiveEntity())
+						continue;
+
+					if (!block.Block.SlimBlock.BlockDefinition.Id.SubtypeName.Contains(type))
+						continue;
+
+					var entity = block.Block as MyEntity;
+
+					if (entity.GameLogic != null) {
+
+						if (entity.GameLogic.GetType().ToString().ToUpper().Contains("INHIBITOR")) {
+
+							Grid.LinkedGrids[i].CubeGrid.RemoveBlock(block.Block.SlimBlock);
+							continue;
+
+						}
+
+					}
+
+					return true;
+
+				}
+
+			}
+
+			return false;
 
 		}
 

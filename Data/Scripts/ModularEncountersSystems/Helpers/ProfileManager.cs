@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Behavior.Subsystems.Weapons;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
@@ -23,6 +24,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, LootProfile> LootProfiles = new Dictionary<string, LootProfile>();
 		public static Dictionary<string, ManipulationGroup> ManipulationGroups = new Dictionary<string, ManipulationGroup>();
 		public static Dictionary<string, ManipulationProfile> ManipulationProfiles = new Dictionary<string, ManipulationProfile>();
+		public static Dictionary<string, PrefabDataProfile> PrefabDataProfiles = new Dictionary<string, PrefabDataProfile>();
 		public static Dictionary<string, SpawnConditionsGroup> SpawnConditionGroups = new Dictionary<string, SpawnConditionsGroup>();
 		public static Dictionary<string, SpawnConditionsProfile> SpawnConditionProfiles = new Dictionary<string, SpawnConditionsProfile>();
 		public static Dictionary<string, StaticEncounter> StaticEncounters = new Dictionary<string, StaticEncounter>();
@@ -44,9 +46,11 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static Dictionary<string, AutoPilotProfile> AutoPilotProfiles = new Dictionary<string, AutoPilotProfile>();
 		public static Dictionary<string, ActionReferenceProfile> ActionReferenceProfiles = new Dictionary<string, ActionReferenceProfile>();
+		public static Dictionary<string, ConditionReferenceProfile> ConditionReferenceProfiles = new Dictionary<string, ConditionReferenceProfile>();
 		public static Dictionary<string, CommandProfile> CommandProfiles = new Dictionary<string, CommandProfile>();
 		public static Dictionary<string, TargetProfile> TargetProfiles = new Dictionary<string, TargetProfile>();
 		public static Dictionary<string, WaypointProfile> WaypointProfiles = new Dictionary<string, WaypointProfile>();
+		public static Dictionary<string, WeaponSystemReference> WeaponProfiles = new Dictionary<string, WeaponSystemReference>();
 
 		public static Dictionary<string, MyDefinitionBase> DatapadTemplates = new Dictionary<string, MyDefinitionBase>();
 
@@ -232,9 +236,15 @@ namespace ModularEncountersSystems.Helpers {
 					var conditionObject = new ConditionProfile();
 					conditionObject.InitTags(component.DescriptionText);
 					conditionObject.ProfileSubtypeId = component.Id.SubtypeName;
+
+					var conditionReference = new ConditionReferenceProfile();
+					conditionReference.InitTags(component.DescriptionText);
+					conditionReference.ProfileSubtypeId = component.Id.SubtypeName;
+
 					var conditionBytes = MyAPIGateway.Utilities.SerializeToBinary<ConditionProfile>(conditionObject);
 					//Logger.WriteLog("Condition Profile Added: " + component.Id.SubtypeName);
 					ConditionObjectTemplates.Add(component.Id.SubtypeName, conditionBytes);
+					ConditionReferenceProfiles.Add(component.Id.SubtypeName, conditionReference);
 					continue;
 
 				}
@@ -292,6 +302,16 @@ namespace ModularEncountersSystems.Helpers {
 			//Forth Phase
 			foreach (var component in DefinitionHelper.EntityComponentDefinitions) {
 
+				if (!SpawnConditionGroups.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Prefab Data]")) {
+
+					var profile = new PrefabDataProfile();
+					profile.InitTags(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					PrefabDataProfiles.Add(component.Id.SubtypeName, profile);
+					continue;
+
+				}
+
 				if (component.DescriptionText.Contains("[RivalAI Autopilot]") == true && AutoPilotProfiles.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var autopilotObject = new AutoPilotProfile();
@@ -320,6 +340,16 @@ namespace ModularEncountersSystems.Helpers {
 					waypoint.InitTags(component.DescriptionText);
 					waypoint.ProfileSubtypeId = component.Id.SubtypeName;
 					WaypointProfiles.Add(component.Id.SubtypeName, waypoint);
+					continue;
+
+				}
+
+				if (component.DescriptionText.Contains("[RivalAI Weapons]") == true && WeaponProfiles.ContainsKey(component.Id.SubtypeName) == false) {
+
+					var weapons = new WeaponSystemReference();
+					weapons.InitTags(component.DescriptionText);
+					weapons.ProfileSubtypeId = component.Id.SubtypeName;
+					WeaponProfiles.Add(component.Id.SubtypeName, weapons);
 					continue;
 
 				}

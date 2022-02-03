@@ -72,6 +72,9 @@ namespace ModularEncountersSystems.Configuration {
 		public string[] GlobalReplenishmentProfiles;
 
 		[XmlIgnore]
+		public bool ConfigLoaded;
+
+		[XmlIgnore]
 		public Dictionary<string, Func<string, object, bool>> EditorReference;
 
 		public ConfigGrids(){
@@ -130,7 +133,7 @@ namespace ModularEncountersSystems.Configuration {
 
 		}
 		
-		public ConfigGrids LoadSettings(){
+		public ConfigGrids LoadSettings(string phase) {
 			
 			if(MyAPIGateway.Utilities.FileExistsInWorldStorage("Config-Grids.xml", typeof(ConfigGrids)) == true){
 				
@@ -140,19 +143,24 @@ namespace ModularEncountersSystems.Configuration {
 					var reader = MyAPIGateway.Utilities.ReadFileInWorldStorage("Config-Grids.xml", typeof(ConfigGrids));
 					string configcontents = reader.ReadToEnd();
 					config = MyAPIGateway.Utilities.SerializeFromXML<ConfigGrids>(configcontents);
-					SpawnLogger.Write("Loaded Existing Settings From Config-Grids.xml", SpawnerDebugEnum.Startup);
+					config.ConfigLoaded = true;
+					SpawnLogger.Write("Loaded Existing Settings From Config-Grids.xml. Phase: " + phase, SpawnerDebugEnum.Startup, true);
 					return config;
 					
 				}catch(Exception exc){
 					
-					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-Grids.xml. Using Default Configuration.", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-Grids.xml. Using Default Configuration. Phase: " + phase, SpawnerDebugEnum.Error, true);
 					var defaultSettings = new ConfigGrids();
 					return defaultSettings;
 					
 				}
-				
+
+			} else {
+
+				SpawnLogger.Write("Config-Grids.xml Doesn't Exist. Creating Default Configuration. Phase: " + phase, SpawnerDebugEnum.Startup, true);
+
 			}
-			
+
 			var settings = new ConfigGrids();
 			
 			try{
@@ -165,7 +173,7 @@ namespace ModularEncountersSystems.Configuration {
 				
 			}catch(Exception exc){
 				
-				SpawnLogger.Write("ERROR: Could Not Create Config-Grids.xml. Default Settings Will Be Used.", SpawnerDebugEnum.Startup);
+				SpawnLogger.Write("ERROR: Could Not Create Config-Grids.xml. Default Settings Will Be Used. Phase: " + phase, SpawnerDebugEnum.Error, true);
 				
 			}
 			

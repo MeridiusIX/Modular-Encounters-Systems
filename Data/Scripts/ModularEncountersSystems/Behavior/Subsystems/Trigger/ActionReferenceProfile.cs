@@ -37,9 +37,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool SwitchToReceivedTarget;
 
-		public bool SwitchToBehavior;
-		public string NewBehavior;
-		public bool PreserveSettingsOnBehaviorSwitch;
+		public bool SwitchToBehavior; //OBSOLETE
+		public string NewBehavior; //OBSOLETE
+		public bool PreserveSettingsOnBehaviorSwitch; //OBSOLETE
 
 		public bool RefreshTarget;
 
@@ -111,8 +111,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeTargetProfile;
 		public string NewTargetProfileId; //Implement
 
-		public bool PreserveTriggersOnBehaviorSwitch;
-		public bool PreserveTargetDataOnBehaviorSwitch;
+		public bool PreserveTriggersOnBehaviorSwitch; //OBSOLETE
+		public bool PreserveTargetDataOnBehaviorSwitch; //OBSOLETE
 
 		public bool ChangeBlockNames;
 		public List<string> ChangeBlockNamesFrom;
@@ -291,13 +291,42 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool EnableHighestRangeAntennas;
 		public bool DisableHighestRangeAntennas;
 
-		public bool AssignEscortFromCommand;
+		public bool AssignEscortFromCommand; //Doc
 
-		public bool UseCurrentPositionAsPatrolReference;
-		public bool ClearCustomPatrolReference;
+		public bool UseCurrentPositionAsPatrolReference; //Doc
+		public bool ClearCustomPatrolReference; //Doc
 
 		public bool SetGridToStatic;
 		public bool SetGridToDynamic;
+
+		public BoolEnum UseJetpackInhibitorEffect; //Doc
+		public BoolEnum UseDrillInhibitorEffect; //Doc
+		public BoolEnum UseNanobotInhibitorEffect; //Doc
+		public BoolEnum UseJumpInhibitorEffect; //Doc
+		public BoolEnum UsePlayerInhibitorEffect; //Doc
+
+		public bool ChangeTurretTargetingParameters;
+		public string TurretTargetType;
+		public List<string> TurretTypesForTargetChanges;
+		public List<string> TurretSubtypesForTargetChange;
+
+		public bool JumpToTarget; //Doc
+		public bool JumpToJumpedEntity; //Doc
+		public bool JumpedEntityMustBeTarget; //Doc
+
+		public bool SetGridCleanupExempt; //Doc
+		public int GridCleanupExemptDuration; //Doc
+
+		public bool PlaySoundAtPosition; //Doc
+		public string SoundAtPosition; //Doc
+
+		public bool SpawnPlanet; //Doc
+		public string PlanetName; //Doc
+		public float PlanetSize; //Doc
+		public bool PlanetIgnoreSafeLocation; //Doc
+		public string PlanetWaypointProfile; //Doc
+		public bool TemporaryPlanet; //Doc
+		public int PlanetTimeLimit; //Doc
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -325,11 +354,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SwitchToReceivedTarget = false;
 			SwitchTargetToDamager = false;
 
-			SwitchToBehavior = false;
-			NewBehavior = "";
-			PreserveSettingsOnBehaviorSwitch = false;
-			PreserveTriggersOnBehaviorSwitch = false;
-			PreserveTargetDataOnBehaviorSwitch = false;
+			SwitchToBehavior = false; //OBSOLETE
+			NewBehavior = ""; //OBSOLETE
+			PreserveSettingsOnBehaviorSwitch = false; //OBSOLETE
+			PreserveTriggersOnBehaviorSwitch = false; //OBSOLETE
+			PreserveTargetDataOnBehaviorSwitch = false; //OBSOLETE
 
 			RefreshTarget = false;
 
@@ -579,6 +608,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SetGridToStatic = false;
 			SetGridToDynamic = false;
 
+			UseJetpackInhibitorEffect = BoolEnum.None;
+			UseDrillInhibitorEffect = BoolEnum.None;
+			UseNanobotInhibitorEffect = BoolEnum.None;
+			UseJumpInhibitorEffect = BoolEnum.None;
+			UsePlayerInhibitorEffect = BoolEnum.None;
+
+			ChangeTurretTargetingParameters = false;
+			TurretTargetType = "";
+			TurretTypesForTargetChanges = new List<string>();
+			TurretSubtypesForTargetChange = new List<string>();
+
+			JumpToTarget = false;
+			JumpToJumpedEntity = false;
+
+			SetGridCleanupExempt = false;
+			GridCleanupExemptDuration = 30;
+
+			PlaySoundAtPosition = false;
+			SoundAtPosition = "";
+
+			SpawnPlanet = false;
+			PlanetName = "";
+			PlanetSize = 120000;
+			PlanetIgnoreSafeLocation = false;
+			PlanetWaypointProfile = "";
+			TemporaryPlanet = false;
+			PlanetTimeLimit = 10;
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -775,7 +832,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ClearCustomPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref ClearCustomPatrolReference) },
 				{"SetGridToStatic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToStatic) },
 				{"SetGridToDynamic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToDynamic) },
-				//UseCurrentPositionAsPatrolReference
+				{"UseJetpackInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseJetpackInhibitorEffect) },
+				{"UseDrillInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseDrillInhibitorEffect) },
+				{"UseNanobotInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseNanobotInhibitorEffect) },
+				{"UseJumpInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseJumpInhibitorEffect) },
+				{"UsePlayerInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UsePlayerInhibitorEffect) },
+				{"ChangeTurretTargetingParameters", (s, o) => TagParse.TagBoolCheck(s, ref ChangeTurretTargetingParameters) },
+				{"TurretTargetType", (s, o) => TagParse.TagStringCheck(s, ref TurretTargetType) },
+				{"TurretTypesForTargetChanges", (s, o) => TagParse.TagStringListCheck(s, ref TurretTypesForTargetChanges) },
+				{"TurretSubtypesForTargetChange", (s, o) => TagParse.TagStringListCheck(s, ref TurretSubtypesForTargetChange) },
+				{"JumpToTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpToTarget) },
+				{"JumpToJumpedEntity", (s, o) => TagParse.TagBoolCheck(s, ref JumpToJumpedEntity) },
+				{"SetGridCleanupExempt", (s, o) => TagParse.TagBoolCheck(s, ref SetGridCleanupExempt) },
+				{"GridCleanupExemptDuration", (s, o) => TagParse.TagIntCheck(s, ref GridCleanupExemptDuration) },
+				{"PlaySoundAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref PlaySoundAtPosition) },
+				{"SoundAtPosition", (s, o) => TagParse.TagStringCheck(s, ref SoundAtPosition) },
+
+				{"SpawnPlanet", (s, o) => TagParse.TagBoolCheck(s, ref SpawnPlanet) },
+				{"PlanetName", (s, o) => TagParse.TagStringCheck(s, ref PlanetName) },
+				{"PlanetSize", (s, o) => TagParse.TagFloatCheck(s, ref PlanetSize) },
+				{"PlanetIgnoreSafeLocation", (s, o) => TagParse.TagBoolCheck(s, ref PlanetIgnoreSafeLocation) },
+				{"PlanetWaypointProfile", (s, o) => TagParse.TagStringCheck(s, ref PlanetWaypointProfile) },
+				{"TemporaryPlanet", (s, o) => TagParse.TagBoolCheck(s, ref TemporaryPlanet) },
+				{"PlanetTimeLimit", (s, o) => TagParse.TagIntCheck(s, ref PlanetTimeLimit) },
+				//SetGridCleanupExempt
 
 			};
 

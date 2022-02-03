@@ -126,6 +126,12 @@ namespace ModularEncountersSystems.Behavior {
 			_behavior.Despawn.UseNoTargetTimer = false;
 			_behavior.AutoPilot.Data.DisableInertiaDampeners = false;
 
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+
+			}
+
 		}
 
 		public void InitTags() {

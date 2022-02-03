@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Weapons-GenericStandard</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Weapons]
+
+        [UseStaticGuns:true]
+        [UseTurrets:true]
+
+        [MaxStaticWeaponRange:5000]
+        [WeaponMaxAngleFromTarget:6]
+        [WeaponMaxBaseDistanceTarget:20]
+
+        [UseBarrageFire:false]
+        [MaxFireRateForBarrageWeapons:200]
+
+        [UseAmmoReplenish:true]
+        [AmmoReplenishClipAmount:15]
+        [MaxAmmoReplenishments:10]
+
+      </Description>
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Weapons-GenericPassive</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Weapons]
+
+        [UseStaticGuns:false]
+        [UseTurrets:true]
+
+        [MaxStaticWeaponRange:5000]
+        [WeaponMaxAngleFromTarget:6]
+        [WeaponMaxBaseDistanceTarget:20]
+
+        [UseBarrageFire:false]
+        [MaxFireRateForBarrageWeapons:200]
+
+        [UseAmmoReplenish:true]
+        [AmmoReplenishClipAmount:15]
+        [MaxAmmoReplenishments:10]
+
+      </Description>
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

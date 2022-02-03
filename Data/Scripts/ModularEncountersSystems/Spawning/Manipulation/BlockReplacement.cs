@@ -116,6 +116,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				newBlockBuilder.Min = block.Min;
 				newBlockBuilder.ColorMaskHSV = block.ColorMaskHSV;
 				newBlockBuilder.Owner = block.Owner;
+				newBlockBuilder.EntityId = block.EntityId;
 
 				SpecialBlockSettings(newBlockDef, newBlockBuilder);
 

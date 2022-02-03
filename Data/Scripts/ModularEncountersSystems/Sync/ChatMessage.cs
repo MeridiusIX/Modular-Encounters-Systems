@@ -163,7 +163,7 @@ namespace ModularEncountersSystems.Sync {
 				Message = Message.Replace("/MES.SP", "/MES.Spawn.Prefab");
 
 			if (Message.StartsWith("/MES.SSP"))
-				Message = Message.Replace("/MES.SSP", "/MES.Spawn.StationPrefab");
+				Message = Message.Replace("/MES.SSP", "/MES.Spawn.PrefabStation");
 
 			if (Message.StartsWith("/MES.GTS"))
 				Message = Message.Replace("/MES.GTS", "/MES.Info.GetThreatScore");
@@ -448,6 +448,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.ChangeBool
+			if (array[2] == "ChangeBool") {
+
+				LoggerTools.ChangeBool(this, array);
+				return true;
+
+			}
+
 			//MES.Debug.ChangeCounter
 			if (array[2] == "ChangeCounter") {
 
@@ -521,6 +529,89 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.CreatePlanet
+			if (array[2] == "CreatePlanet") {
+
+				var name = array.Length >= 4 ? array[3] : "EarthLike";
+				float size = 120000;
+
+				if (array.Length >= 5) {
+
+					float.TryParse(array[4], out size);
+
+				}
+
+				var pos = this.CameraDirection * (size * 2) + this.CameraPosition;
+				var pos2 = (size * 1.89186136208056666) * new Vector3D(-0.577350269189626, -0.577350269189626, -0.577350269189626) + pos;
+
+				MyAPIGateway.Session.VoxelMaps.SpawnPlanet(name, size, MathTools.RandomBetween(1000000, 10000000), pos2);
+
+				return true;
+
+			}
+
+			//MES.Debug.CreatePredeterminedVoxel
+			if (array[2] == "CreatePredeterminedVoxel") {
+
+				var name = array.Length >= 4 ? array[3] : "Barths_moon_base";
+				float size = 120000;
+
+				var pos = this.CameraDirection * 1000 + this.CameraPosition;
+
+				MyAPIGateway.Session.VoxelMaps.CreatePredefinedVoxelMap(name, null, MatrixD.CreateWorld(pos, MatrixD.Identity.Forward, MatrixD.Identity.Up), false);
+
+				return true;
+
+			}
+
+			//MES.Debug.CreateProceduralVoxelMap
+			if (array[2] == "CreateProceduralVoxelMap") {
+
+				float size = 512;
+
+				var pos = this.CameraDirection * 1000 + this.CameraPosition;
+
+				MyAPIGateway.Session.VoxelMaps.CreateProceduralVoxelMap(MathTools.RandomBetween(1000000, 10000000), size, MatrixD.CreateWorld(pos, MatrixD.Identity.Forward, MatrixD.Identity.Up));
+
+				return true;
+
+			}
+
+			//MES.Debug.GetPlanetData
+			if (array[2] == "GetPlanetData") {
+
+				var planet = PlanetManager.GetNearestPlanet(this.CameraPosition);
+
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Checking Planet Null", 3000);
+				if (planet != null) {
+
+					var voxel = planet.Planet as IMyVoxelBase;
+
+					if (voxel != null) {
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Getting Details From Planet", 3000);
+
+						var dist = Vector3D.Distance(planet.Center(), voxel.PositionLeftBottomCorner);
+						var diameter = planet.Planet.AverageRadius * 2;
+						var dir = Vector3D.Normalize(voxel.PositionLeftBottomCorner - planet.Center());
+
+						var sb = new StringBuilder();
+						sb.Append("Distance:  ").Append(dist).AppendLine();
+						sb.Append("Diameter:  ").Append(diameter).AppendLine();
+						sb.Append("Direction: ").Append(dir.ToString()).AppendLine();
+						this.ClipboardPayload = sb.ToString();
+						this.ReturnMessage = "Planet Details Saved To Clipboard";
+						this.Mode = ChatMsgMode.ReturnMessage;
+
+					}
+				
+				}
+
+				return true;
+
+			}
+
+
 			//MES.Debug.RemoveAllNpcs
 			if (array[2] == "RemoveAllNpcs") {
 
@@ -565,6 +656,23 @@ namespace ModularEncountersSystems.Sync {
 				var entity = MyAPIGateway.Entities.CreateFromObjectBuilderAndAdd(meteor);
 				MyVisualScriptLogicProvider.ShowNotificationToAll("Spiders!", 2000);
 
+				return true;
+
+			}
+
+			//TestAsteroidSpawns
+			if (array[2] == "TestAsteroidSpawns") {
+
+				var matrix = MatrixD.CreateWorld(CameraPosition, CameraDirection, VectorHelper.RandomPerpendicular(CameraDirection));
+
+				var oldcoords = Vector3D.Transform(new Vector3D(-300, 0, 800), matrix);
+				var newMatrix = MatrixD.CreateWorld(Vector3D.Transform(new Vector3D(300, 0, 800), matrix), Vector3D.Forward, Vector3D.Up);
+
+				var voxelSpawnA = MyAPIGateway.Session.VoxelMaps.CreateVoxelMapFromStorageName("Nearby_Station_7", "Nearby_Station_7", oldcoords);
+				var voxelSpawnB = MyAPIGateway.Session.VoxelMaps.CreatePredefinedVoxelMap("Nearby_Station_7", null, newMatrix, true);
+
+				ReturnMessage = "Test Spawn Asteroids:";
+				Mode = ChatMsgMode.ReturnMessage;
 				return true;
 
 			}

@@ -2,8 +2,10 @@
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Tasks;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
+using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -23,6 +25,7 @@ namespace ModularEncountersSystems.BlockLogic {
         public static List<MyDefinitionId> JumpInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> NanobotInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> PlayerInhibitorIds = new List<MyDefinitionId>();
+        public static List<MyDefinitionId> TurretControllers = new List<MyDefinitionId>();
 
         public static List<long> TrackedLogicIds = new List<long>();
 
@@ -83,6 +86,10 @@ namespace ModularEncountersSystems.BlockLogic {
             JumpInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large"));
             PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Small"));
             PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
+
+            TurretControllers.Add(new MyDefinitionId(typeof(MyObjectBuilder_TurretControlBlock), "MES-NpcSmallTurretControlBlock"));
+            TurretControllers.Add(new MyDefinitionId(typeof(MyObjectBuilder_TurretControlBlock), "MES-NpcLargeTurretControlBlock"));
+
             MES_SessionCore.UnloadActions += Unload;
         
         }
@@ -115,12 +122,14 @@ namespace ModularEncountersSystems.BlockLogic {
 
                 }
 
+                TaskProcessor.Tasks.Add(new BehaviorRegister(remoteControl));
+                /*
                 MyAPIGateway.Parallel.Start(() => {
 
                     BehaviorManager.RegisterBehaviorFromRemoteControl(remoteControl);
 
                 });
-
+                */
                 return;
 
             }
@@ -184,6 +193,13 @@ namespace ModularEncountersSystems.BlockLogic {
             if (block.Block as IMyGyro != null) {
 
                 LogicBlocks.Add(block.Block.EntityId, new NpcGyro(block));
+                return;
+
+            }
+
+            if (block.Block as IMyTurretControlBlock != null && TurretControllers.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
+
+                LogicBlocks.Add(block.Block.EntityId, new NpcTurretController(block));
                 return;
 
             }

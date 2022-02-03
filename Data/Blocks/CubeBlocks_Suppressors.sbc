@@ -6,6 +6,124 @@
     <Definition xsi:type="MyObjectBuilder_RadioAntennaDefinition">
       <Id>
         <TypeId>RadioAntenna</TypeId>
+        <SubtypeId>MES-Suppressor-Player-Small</SubtypeId>
+      </Id>
+      <DisplayName>Nanobot Suppression Field</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\ArtificialMass.dds</Icon>
+      <Description>This block generates a field that suppresses the presence of players by applying an increasing amount of damage the closer they get.</Description>
+      <CubeSize>Small</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <Public>false</Public>
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Small\VirtualMassBlock.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="3" />
+        <Component Subtype="Superconductor" Count="2" />
+        <Component Subtype="Construction" Count="3" />
+        <Component Subtype="Computer" Count="2" />
+        <Component Subtype="GravityGenerator" Count="1" />
+        <Component Subtype="RadioCommunication" Count="2" />
+        <Component Subtype="InhibitorChip" Count="1">
+          <DeconstructId>
+            <TypeId>Ore</TypeId>
+            <SubtypeId>Scrap</SubtypeId>
+          </DeconstructId>
+        </Component>
+        <Component Subtype="SteelPlate" Count="6" />
+      </Components>
+      <CriticalComponent Subtype="InhibitorChip" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Left" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+        <MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Small\VirtualMassBlockConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Small\VirtualMassBlockConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Small\VirtualMassBlockConstruction_3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>PlayerSuppressionField</BlockPairName>
+      <EdgeType>Light</EdgeType>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <BuildTimeSeconds>40</BuildTimeSeconds>
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+      <DamagedSound>ParticleElectrical</DamagedSound>
+      <EmissiveColorPreset>GravityBlock</EmissiveColorPreset>
+      <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <MaxBroadcastRadius>800</MaxBroadcastRadius>
+      <PCU>250</PCU>
+      <IsAirTight>true</IsAirTight>
+    </Definition>
+
+    <Definition xsi:type="MyObjectBuilder_RadioAntennaDefinition">
+      <Id>
+        <TypeId>RadioAntenna</TypeId>
+        <SubtypeId>MES-Suppressor-Player-Large</SubtypeId>
+      </Id>
+      <DisplayName>Nanobot Suppression Field</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\ArtificialMass.dds</Icon>
+      <Description>This block generates a field that suppresses the presence of players by applying an increasing amount of damage the closer they get.</Description>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <Public>false</Public>
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Large\VirtualMassBlock.mwm</Model>
+      <Components>
+        <Component Subtype="SteelPlate" Count="30" />
+        <Component Subtype="Superconductor" Count="20" />
+        <Component Subtype="Construction" Count="30" />
+        <Component Subtype="Computer" Count="20" />
+        <Component Subtype="GravityGenerator" Count="9" />
+        <Component Subtype="RadioCommunication" Count="20" />
+        <Component Subtype="InhibitorChip" Count="1">
+          <DeconstructId>
+            <TypeId>Ore</TypeId>
+            <SubtypeId>Scrap</SubtypeId>
+          </DeconstructId>
+        </Component>
+        <Component Subtype="SteelPlate" Count="60" />
+      </Components>
+      <CriticalComponent Subtype="InhibitorChip" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Left" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+        <MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\VirtualMassBlockConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\VirtualMassBlockConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\VirtualMassBlockConstruction_3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>PlayerSuppressionField</BlockPairName>
+      <EdgeType>Light</EdgeType>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <BuildTimeSeconds>40</BuildTimeSeconds>
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+      <DamagedSound>ParticleElectrical</DamagedSound>
+      <EmissiveColorPreset>GravityBlock</EmissiveColorPreset>
+      <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <MaxBroadcastRadius>800</MaxBroadcastRadius>
+      <PCU>250</PCU>
+      <IsAirTight>true</IsAirTight>
+    </Definition>
+
+    <Definition xsi:type="MyObjectBuilder_RadioAntennaDefinition">
+      <Id>
+        <TypeId>RadioAntenna</TypeId>
         <SubtypeId>MES-Suppressor-Nanobots-Small</SubtypeId>
       </Id>
       <DisplayName>Nanobot Suppression Field</DisplayName>

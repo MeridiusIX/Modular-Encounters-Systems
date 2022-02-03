@@ -12,6 +12,7 @@ namespace ModularEncountersSystems.BlockLogic {
 	public class DrillInhibitor : BaseBlockLogic, IBlockLogic {
 
 		internal IMyRadioAntenna _antenna;
+		internal IMyTerminalBlock _block;
 
 		internal double _disableRange;
 		internal double _antennaRange;
@@ -41,12 +42,25 @@ namespace ModularEncountersSystems.BlockLogic {
 			_playersInDisableRange = new Dictionary<PlayerEntity, DateTime>();
 			_toolbarIndexes = new Dictionary<PlayerEntity, int>();
 			_antenna = block.Block as IMyRadioAntenna;
-			_antenna.Radius = 500;
+			_block = block.Block as IMyTerminalBlock;
+
+			if (_antenna != null) {
+
+				_antenna.Radius = 500;
+				_antenna.CustomName = "[HandDrill Inhibitor Field]";
+				_antenna.CustomNameChanged += NameChange;
+
+			} else {
+
+				_disableRange = 500;
+				_antennaRange = 500;
+
+			}
+
 			_logicType = "HandDrill Inhibitor";
 			_useTick10 = true;
 			_useTick100 = true;
-			_antenna.CustomName = "[HandDrill Inhibitor Field]";
-			_antenna.CustomNameChanged += NameChange;
+			
 			MyVisualScriptLogicProvider.ToolbarItemChanged += ToolbarItemChanged;
 
 		}
@@ -72,7 +86,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			if (!_isWorking || !Active)
 				return;
 
-			if (_antenna.Radius != _antennaRange) {
+			if (_antenna != null && _antenna.Radius != _antennaRange) {
 
 				_antennaRange = _antenna.Radius;
 				_disableRange = _antenna.Radius;
@@ -89,7 +103,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				}
 
-				var distance = player.Distance(_antenna.GetPosition());
+				var distance = player.Distance(Entity.GetPosition());
 
 				if (distance > _disableRange) {
 

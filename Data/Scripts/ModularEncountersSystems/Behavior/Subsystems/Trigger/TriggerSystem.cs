@@ -3,6 +3,7 @@ using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -354,6 +355,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+				//Session
+				if (trigger.Type == "Session") {
+
+					trigger.ActivateTrigger(CheckSession);
+					continue;
+
+				}
+
 			}
 
 			_behavior.BehaviorTriggerA = false;
@@ -604,6 +613,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (trigger.UseTrigger == true && trigger.Type == "JumpRequested") {
 
+					if (RemoteControl?.SlimBlock?.CubeGrid == null)
+						continue;
+
+					bool isSelfGrid = grid.CubeGrid == RemoteControl.SlimBlock.CubeGrid;
+
+					if (!trigger.DetectSelfAsJumpedGrid && isSelfGrid)
+						continue;
+
+					if (trigger.DetectSelfAsJumpedGrid && !isSelfGrid)
+						continue;
+
+					if (Vector3D.Distance(RemoteControl.GetPosition(), coords) > trigger.JumpedGridActivationDistance)
+						continue;
+
+					if (!trigger.DetectSelfAsJumpedGrid && !trigger.JumpedGridsCanBeNonHostile && !grid.RelationTypes(RemoteControl.OwnerId).HasFlag(RelationTypeEnum.Enemy))
+						continue;
+
 					trigger.JumpedGrid = grid;
 					trigger.JumpStart = coords;
 					trigger.JumpEnd = coords;
@@ -628,6 +654,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				var trigger = Triggers[i];
 
 				if (trigger.UseTrigger == true && trigger.Type == "JumpCompleted") {
+
+					if (RemoteControl?.SlimBlock?.CubeGrid == null) {
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Self Grid Null", 3000);
+						continue;
+
+					}
+						
+
+					bool isSelfGrid = grid.CubeGrid == RemoteControl.SlimBlock.CubeGrid;
+
+					if (!trigger.DetectSelfAsJumpedGrid && isSelfGrid) {
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Is Self Grid", 3000);
+						continue;
+
+					}
+						
+
+					if (trigger.DetectSelfAsJumpedGrid && !isSelfGrid) {
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Not Self Grid", 3000);
+						continue;
+
+					}
+						
+
+					if (!trigger.DetectSelfAsJumpedGrid && Vector3D.Distance(RemoteControl.GetPosition(), startCoords) > trigger.JumpedGridActivationDistance) {
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Jump Distance Fail", 3000);
+						continue;
+
+					}
+						
+
+					if (!trigger.DetectSelfAsJumpedGrid && !trigger.JumpedGridsCanBeNonHostile && !grid.RelationTypes(RemoteControl.OwnerId).HasFlag(RelationTypeEnum.Enemy)) {
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Jump Relation Fail", 3000);
+						continue;
+
+					}
+						
 
 					trigger.JumpedGrid = grid;
 					trigger.JumpStart = startCoords;
@@ -729,10 +797,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (RemoteControl?.SlimBlock?.CubeGrid == null)
 				return;
 
+			var actionList = trigger.Actions;
+
 			if (trigger.Triggered == false || trigger.Actions == null || trigger.Actions.Count == 0) {
 
-				return;
+				if (trigger.LastRunFailed && trigger.UseElseActions && trigger.ElseActions != null && trigger.ElseActions.Count > 0) {
 
+					trigger.Triggered = true;
+					actionList = trigger.ElseActions;
+
+				} else {
+
+					trigger.LastRunFailed = false;
+					return;
+
+				}
+		
 			}
 
 			long detectedEntity = attackerEntityId;
@@ -745,13 +825,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			trigger.DetectedEntityId = 0;
 			trigger.Triggered = false;
+			trigger.SessionTriggerActivated = true;
 			trigger.CooldownTime = trigger.Rnd.Next((int)trigger.MinCooldownMs, (int)trigger.MaxCooldownMs);
 			trigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
 			trigger.TriggerCount++;
 
+			if (!string.IsNullOrWhiteSpace(trigger.ToggleWithTriggerProfile)) {
+
+				trigger.UseTrigger = false;
+				ToggleTriggers(trigger.ToggleWithTriggerProfile, CheckEnum.Yes, trigger.ToggledProfileResetsCooldown ? CheckEnum.Yes : CheckEnum.Ignore);
+			
+			}
+
+			if (!string.IsNullOrWhiteSpace(trigger.EnableNamedTriggerOnSuccess)) {
+
+				ToggleTriggers(trigger.EnableNamedTriggerOnSuccess, CheckEnum.Yes, CheckEnum.Ignore);
+
+			}
+
+			if (!string.IsNullOrWhiteSpace(trigger.DisableNamedTriggerOnSuccess)) {
+
+				ToggleTriggers(trigger.DisableNamedTriggerOnSuccess, CheckEnum.No, CheckEnum.Ignore);
+
+			}
+
+			//Action Execution
 			if (trigger.ActionExecution == ActionExecutionEnum.All) {
 
-				foreach (var actions in trigger.Actions) {
+				foreach (var actions in actionList) {
 
 					ProcessAction(trigger, actions, attackerEntityId, detectedEntity, command);
 
@@ -761,25 +862,77 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (trigger.ActionExecution == ActionExecutionEnum.Sequential) {
 
-				if (trigger.NextActionIndex >= trigger.Actions.Count)
+				if (trigger.NextActionIndex >= actionList.Count)
 					trigger.NextActionIndex = 0;
 
-				ProcessAction(trigger, trigger.Actions[trigger.NextActionIndex], attackerEntityId, detectedEntity, command);
+				ProcessAction(trigger, actionList[trigger.NextActionIndex], attackerEntityId, detectedEntity, command);
 				trigger.NextActionIndex++;
 
 			}
 
 			if (trigger.ActionExecution == ActionExecutionEnum.Random) {
 
-				if (trigger.Actions.Count == 1) {
+				if (actionList.Count == 1) {
 
-					ProcessAction(trigger, trigger.Actions[0], attackerEntityId, detectedEntity, command);
+					ProcessAction(trigger, actionList[0], attackerEntityId, detectedEntity, command);
 
 				} else {
 
-					ProcessAction(trigger, trigger.Actions[MathTools.RandomBetween(0, trigger.Actions.Count)], attackerEntityId, detectedEntity, command);
+					ProcessAction(trigger, actionList[MathTools.RandomBetween(0, actionList.Count)], attackerEntityId, detectedEntity, command);
 
 				}
+
+			}
+
+		}
+
+		public void ToggleTriggers(List<string> names, CheckEnum toggle, CheckEnum reset) {
+
+			if (names == null)
+				return;
+
+			foreach (var name in names) {
+
+				ToggleTriggers(name, toggle, reset);
+
+			}
+		
+		}
+
+		public void ToggleTriggers(string triggerName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore) {
+
+			foreach (var resetTrigger in Triggers) {
+
+				if (triggerName == resetTrigger.ProfileSubtypeId) {
+
+					if(toggleMode != CheckEnum.Ignore)
+						resetTrigger.UseTrigger = (toggleMode == CheckEnum.Yes);
+
+					if (resetCooldown == CheckEnum.Yes)
+						resetTrigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+
+				}
+
+			}
+
+			foreach (var resetTrigger in DamageTriggers) {
+
+				if (triggerName == resetTrigger.ProfileSubtypeId)
+					resetTrigger.UseTrigger = true;
+
+			}
+
+			foreach (var resetTrigger in CommandTriggers) {
+
+				if (triggerName == resetTrigger.ProfileSubtypeId)
+					resetTrigger.UseTrigger = true;
+
+			}
+
+			foreach (var resetTrigger in CompromisedTriggers) {
+
+				if (triggerName == resetTrigger.ProfileSubtypeId)
+					resetTrigger.UseTrigger = true;
 
 			}
 

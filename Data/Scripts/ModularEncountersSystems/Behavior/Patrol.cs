@@ -129,7 +129,12 @@ namespace ModularEncountersSystems.Behavior {
 			//Behavior Specific Defaults
 			_behavior.AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-Patrol");
 			_behavior.Despawn.UseNoTargetTimer = false;
-			_behavior.AutoPilot.Weapons.UseStaticGuns = true;
+			
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+
+			}
 
 		}
 

@@ -6,7 +6,9 @@ using ModularEncountersSystems.Behavior.Subsystems.Profiles;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning.Manipulation;
 using Sandbox.ModAPI;
+using SpaceEngineers.Game.ModAPI;
 using VRage;
 using VRage.Game;
 using VRage.Game.ModAPI;
@@ -17,34 +19,38 @@ using static ModularEncountersSystems.API.WcApiDef;
 namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 	public class WeaponSystem {
 
-		//Configurable - Enabled Weapons
-		public bool UseStaticGuns;
-		public bool UseTurrets;
+		public string ProfileSubtypeId { get { return _behavior.BehaviorSettings.WeaponsSystemProfile; } set { _behavior.BehaviorSettings.WeaponsSystemProfile = value; } }
 
-		//Configurable - Static Weapons
-		public double MaxStaticWeaponRange;
-		public double WeaponMaxAngleFromTarget;
-		public double WeaponMaxBaseDistanceTarget;
+		public WeaponSystemReference Data { 
+			get {
 
-		//Configurable - Barrage Fire
-		public bool UseBarrageFire;
-		public int MaxFireRateForBarrageWeapons;
+				if (ProfileSubtypeId != _data?.ProfileSubtypeId) {
 
-		//Configurable - Ammo Replenish
-		public bool UseAmmoReplenish;
-		public int AmmoReplenishClipAmount;
-		public int MaxAmmoReplenishments;
+					if (!string.IsNullOrWhiteSpace(ProfileSubtypeId) && ProfileManager.WeaponProfiles.TryGetValue(ProfileSubtypeId, out _data))
+						return _data;
 
-		//Configurable - WeaponCore
-		public bool UseAntiSmartWeapons;
-		public bool AllowHomingWeaponMultiTargeting;
-		public int MultiTargetCheckCooldown;
+					ProfileSubtypeId = "MES-Weapons-GenericStandard";
+
+					if (ProfileManager.WeaponProfiles.TryGetValue(ProfileSubtypeId, out _data))
+						return _data;
+
+					BehaviorLogger.Write("Behavior Could Not Find Weapon Profile or Backup Weapon Profile. Behavior May Critically Fail", BehaviorDebugEnum.Error, true);
+
+				}
+
+				return _data;
+			
+			}
+		}
+		private WeaponSystemReference _data;
 
 		//Non-Configurable
 		private IMyRemoteControl _remoteControl;
 
 		private IBehavior _behavior;
 
+		public List<IWeapon> AllWeapons;
+		public List<IWeapon> TurretControllers;
 		public List<IWeapon> StaticWeapons;
 		public List<IWeapon> Turrets;
 
@@ -66,26 +72,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		public DateTime LastHomingTargetCheck;
 		public bool GetRandomHomingTarget;
 
+		public bool PendingTargetLockOn;
+
 		public WeaponSystem(IMyRemoteControl remoteControl, IBehavior behavior) {
 
-			UseStaticGuns = false;
-			UseTurrets = true;
+			_behavior = behavior;
 
-			MaxStaticWeaponRange = 5000;
-			WeaponMaxAngleFromTarget = 6;
-			WeaponMaxBaseDistanceTarget = 20;
+			if (remoteControl == null || !MyAPIGateway.Entities.Exist(remoteControl?.SlimBlock?.CubeGrid))
+				return;
 
-			UseBarrageFire = false;
-			MaxFireRateForBarrageWeapons = 200;
-
-			UseAmmoReplenish = true;
-			AmmoReplenishClipAmount = 15;
-			MaxAmmoReplenishments = 10;
-
-			UseAntiSmartWeapons = false;
-			AllowHomingWeaponMultiTargeting = false;
-			MultiTargetCheckCooldown = 5;
-
+			_remoteControl = remoteControl;
+			
 			_allowedFlags = new List<WaypointModificationEnum>();
 			_allowedFlags.Add(WaypointModificationEnum.TargetIsInitialWaypoint);
 			_allowedFlags.Add(WaypointModificationEnum.WeaponLeading);
@@ -99,6 +96,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			_restrictedFlags.Add(WaypointModificationEnum.WaterPathing);
 			_restrictedFlags.Add(WaypointModificationEnum.EscortPathing);
 
+			AllWeapons = new List<IWeapon>();
+			TurretControllers = new List<IWeapon>();
 			StaticWeapons = new List<IWeapon>();
 			Turrets = new List<IWeapon>();
 
@@ -119,18 +118,38 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			LastHomingTargetCheck = DateTime.MinValue;
 			GetRandomHomingTarget = false;
 
-			if (remoteControl == null || !MyAPIGateway.Entities.Exist(remoteControl?.SlimBlock?.CubeGrid))
-				return;
+			PendingTargetLockOn = false;
 
-			_remoteControl = remoteControl;
-			_behavior = behavior;
+		}
+
+		public void InitTags() {
+
+			if (string.IsNullOrWhiteSpace(_remoteControl?.CustomData) == false) {
+
+				var descSplit = _remoteControl.CustomData.Split('\n');
+
+				foreach (var tag in descSplit) {
+
+					//WeaponsSystem
+					if (tag.Contains("[WeaponsSystem:") || tag.Contains("[WeaponSystem:")) {
+
+						TagParse.TagStringCheck(tag, ref _behavior.BehaviorSettings.WeaponsSystemProfile);
+
+					}
+
+				}
+
+			}
 
 		}
 
 		public void Setup() {
 
 			var blocks = new List<IMySlimBlock>();
-			GridManager.GetBlocksFromGrid<IMyTerminalBlock>(_remoteControl.SlimBlock.CubeGrid, blocks);
+			var grids = new List<IMyCubeGrid>();
+			MyAPIGateway.GridGroups.GetGroup(_remoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical, grids);
+			GridManager.GetBlocksFromGrid<IMyTerminalBlock>(_remoteControl.SlimBlock.CubeGrid, blocks, true);
+			//BehaviorLogger.Write("Weapon Scan Linked Grids: " + grids.Count, BehaviorDebugEnum.BehaviorSetup);
 			//BehaviorLogger.Write("WCAPI Ready: " + APIs.WeaponCore.IsReady.ToString(), BehaviorDebugEnum.Weapon);
 			//BehaviorLogger.Write(string.Format("All WC: {0} /// All WCS: {1} /// All WCT: {2}", Utilities.AllWeaponCoreBlocks.Count, Utilities.AllWeaponCoreGuns.Count, Utilities.AllWeaponCoreTurrets.Count), BehaviorDebugEnum.Weapon);
 
@@ -140,6 +159,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				var block = slimBlock.FatBlock as IMyTerminalBlock;
 
 				//BehaviorLogger.Write(block.CustomName + " Has Core Weapon: " + APIs.WeaponCore.HasCoreWeapon(block).ToString(), BehaviorDebugEnum.Weapon);
+
+				if (block as IMyTurretControlBlock != null) {
+
+					weapon = new ControllerWeapon(block, _remoteControl, _behavior);
+					AllWeapons.Add(weapon);
+					TurretControllers.Add(weapon);
+					continue;
+
+				}
 
 				if (APIs.WeaponCoreApiLoaded && BlockManager.AllWeaponCoreBlocks.Contains(block.SlimBlock.BlockDefinition.Id)) {
 
@@ -175,10 +203,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 						if (weapon.IsStaticGun()) {
 
+							AllWeapons.Add(weapon);
 							StaticWeapons.Add(weapon);
 
 						} else {
 
+							AllWeapons.Add(weapon);
 							Turrets.Add(weapon);
 
 						}
@@ -212,128 +242,61 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				if (weapon.IsStaticGun()) {
 
+					AllWeapons.Add(weapon);
 					StaticWeapons.Add(weapon);
 
 				} else {
 
+					AllWeapons.Add(weapon);
 					Turrets.Add(weapon);
 
 				}
 
 			}
 
-			BehaviorLogger.Write(string.Format("{0}: Weapons Registered - Static: {1} - Turret: {2}", _remoteControl.CubeGrid.CustomName, StaticWeapons.Count, Turrets.Count), BehaviorDebugEnum.BehaviorSetup);
+			foreach (var weapon in TurretControllers) {
+
+				var block = weapon.Block() as IMyTurretControlBlock;
+
+				if (block == null)
+					continue;
+
+				string key = "";
+
+				if (block.Storage == null || !block.Storage.TryGetValue(StorageTools.MesTurretControllerKey, out key))
+					continue;
+
+				for (int i = StaticWeapons.Count - 1; i >= 0; i--) {
+
+					var storage = StaticWeapons[i]?.Block()?.Storage;
+
+					if (storage == null)
+						continue;
+
+					var toolKey = "";
+
+					if (!storage.TryGetValue(StorageTools.MesTurretControllerKey, out toolKey))
+						continue;
+
+					if (key != toolKey)
+						continue;
+
+					weapon.SubWeapons.Add(StaticWeapons[i]);
+					StaticWeapons.RemoveAt(i);
+
+				}
+
+				BehaviorLogger.Write("Turret Controller [" + block.CustomName + "] Sub-Weapons: " + weapon.SubWeapons.Count, BehaviorDebugEnum.BehaviorSetup);
+
+			}
+
+			BehaviorLogger.Write(string.Format("{0}: Weapons Registered - Static: {1} - Turret: {2} - Controller: {3}", _remoteControl.CubeGrid.CustomName, StaticWeapons.Count, Turrets.Count, TurretControllers.Count), BehaviorDebugEnum.BehaviorSetup);
 
 		}
 
 		public void SetupReferences(IBehavior behavior) {
 
 			_behavior = behavior;
-
-		}
-
-		public void InitTags() {
-
-			if (string.IsNullOrWhiteSpace(_remoteControl.CustomData) == false) {
-
-				var descSplit = _remoteControl.CustomData.Split('\n');
-
-				foreach (var tag in descSplit) {
-
-					//UseStaticGuns
-					if (tag.Contains("[UseStaticGuns:") == true) {
-
-						TagParse.TagBoolCheck(tag, ref UseStaticGuns);
-
-					}
-
-					//UseTurrets
-					if (tag.Contains("[UseTurrets:") == true) {
-
-						TagParse.TagBoolCheck(tag, ref UseTurrets);
-
-					}
-
-					//MaxStaticWeaponRange
-					if (tag.Contains("[MaxStaticWeaponRange:") == true) {
-
-						TagParse.TagDoubleCheck(tag, ref MaxStaticWeaponRange);
-
-					}
-
-					//WeaponMaxAngleFromTarget
-					if (tag.Contains("[WeaponMaxAngleFromTarget:") == true) {
-
-						TagParse.TagDoubleCheck(tag, ref WeaponMaxAngleFromTarget);
-
-					}
-
-					//WeaponMaxBaseDistanceTarget
-					if (tag.Contains("[WeaponMaxBaseDistanceTarget:") == true) {
-
-						TagParse.TagDoubleCheck(tag, ref WeaponMaxBaseDistanceTarget);
-
-					}
-
-					//UseBarrageFire
-					if (tag.Contains("[UseBarrageFire:") == true) {
-
-						TagParse.TagBoolCheck(tag, ref UseBarrageFire);
-
-					}
-
-					//MaxFireRateForBarrageWeapons
-					if (tag.Contains("[MaxFireRateForBarrageWeapons:") == true) {
-
-						TagParse.TagIntCheck(tag, ref MaxFireRateForBarrageWeapons);
-
-					}
-
-					//UseAmmoReplenish
-					if (tag.Contains("[UseAmmoReplenish:") == true) {
-
-						TagParse.TagBoolCheck(tag, ref UseAmmoReplenish);
-
-					}
-
-					//AmmoReplenishClipAmount
-					if (tag.Contains("[AmmoReplenishClipAmount:") == true) {
-
-						TagParse.TagIntCheck(tag, ref AmmoReplenishClipAmount);
-
-					}
-
-					//MaxAmmoReplenishments
-					if (tag.Contains("[MaxAmmoReplenishments:") == true) {
-
-						TagParse.TagIntCheck(tag, ref MaxAmmoReplenishments);
-
-					}
-
-					//UseAntiSmartWeapons
-					if (tag.Contains("[UseAntiSmartWeapons:") == true) {
-
-						TagParse.TagBoolCheck(tag, ref UseAntiSmartWeapons);
-
-					}
-
-					//AllowHomingWeaponMultiTargeting
-					if (tag.Contains("[AllowHomingWeaponMultiTargeting:") == true) {
-
-						TagParse.TagBoolCheck(tag, ref AllowHomingWeaponMultiTargeting);
-
-					}
-
-					//MultiTargetCheckCooldown
-					if (tag.Contains("[MultiTargetCheckCooldown:") == true) {
-
-						TagParse.TagIntCheck(tag, ref MultiTargetCheckCooldown);
-
-					}
-
-				}
-
-			}
 
 		}
 
@@ -365,7 +328,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
+				foreach (var controller in TurretControllers) {
+
+					controller.DetermineWeaponReadiness();
+
+				}
+
 				RefreshMaxStaticRangeReferences();
+				PrepareWeaponLockOn();
 
 			} catch (Exception e) {
 
@@ -390,7 +360,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				weapon.ReplenishAmmo();
 
 			}
-		
+
+			foreach (var weapon in TurretControllers) {
+
+				weapon.ReplenishAmmo();
+
+			}
+
 		}
 
 		public void CheckIfWaypointIsTarget() {
@@ -407,7 +383,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 						var dirFromTargetToNpc = Vector3D.Normalize(_behavior.AutoPilot.RefBlockMatrixRotation.Translation - _behavior.AutoPilot.Targeting.TargetLastKnownCoords);
 						var angleToWaypoint = VectorHelper.GetAngleBetweenDirections(dirFromTargetToWaypoint, dirFromTargetToNpc);
 
-						if (angleToWaypoint <= WeaponMaxAngleFromTarget) {
+						if (angleToWaypoint <= Data.WeaponMaxAngleFromTarget) {
 
 							//BehaviorLogger.Write("Invalid Waypoint Lines Up With Target", BehaviorDebugEnum.Weapon);
 							IndirectWaypointTargetDistance = Vector3D.Distance(_behavior.AutoPilot.RefBlockMatrixRotation.Translation, _behavior.AutoPilot.Targeting.TargetLastKnownCoords);
@@ -442,7 +418,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		public void CheckForIncomingHomingProjectiles() {
 
-			if (!UseAntiSmartWeapons || !APIs.WeaponCoreApiLoaded)
+			if (!Data.UseAntiSmartWeapons || !APIs.WeaponCoreApiLoaded)
 				return;
 
 			IncomingHomingProjectiles = APIs.WeaponCore.GetProjectilesLockedOn(_remoteControl).Item1;
@@ -451,12 +427,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		public void CheckForPotentialHomingTargets() {
 
-			if (!AllowHomingWeaponMultiTargeting || !APIs.WeaponCoreApiLoaded)
+			if (!Data.AllowHomingWeaponMultiTargeting || !APIs.WeaponCoreApiLoaded)
 				return;
 
 			var timeSpan = MyAPIGateway.Session.GameDateTime - LastHomingTargetCheck;
 
-			if (timeSpan.TotalSeconds < MultiTargetCheckCooldown) {
+			if (timeSpan.TotalSeconds < Data.MultiTargetCheckCooldown) {
 
 				GetRandomHomingTarget = false;
 				return;
@@ -555,7 +531,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			double range = 0;
 			MaxStaticRangesPerDirection.TryGetValue(direction, out range);
 
-			return (range > MaxStaticWeaponRange) ? MaxStaticWeaponRange : range;
+			return (range > Data.MaxStaticWeaponRange) ? Data.MaxStaticWeaponRange : range;
 
 		}
 
@@ -733,6 +709,51 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			
 			}
 
+		}
+
+		public void PrepareWeaponLockOn() {
+
+			if (!PendingTargetLockOn || _behavior.AutoPilot.Targeting.LockOnTarget == null || !_behavior.AutoPilot.Targeting.LockOnTarget.ActiveEntity())
+				return;
+
+			var grid = _behavior.AutoPilot.Targeting.LockOnTarget.GetEntity() as IMyCubeGrid;
+
+			if (grid == null) {
+
+				PendingTargetLockOn = false;
+				return;
+
+			}
+
+			foreach (var weapon in AllWeapons) {
+
+				if (weapon.CanLockOnGrid(grid)) {
+
+					weapon.LockOnTarget = grid;
+					weapon.PendingLockOn = true;
+				
+				}
+			
+			}
+
+		}
+
+		public void ProcessWeaponLockOn() {
+
+			if (!PendingTargetLockOn)
+				return;
+
+			PendingTargetLockOn = false;
+
+			foreach (var weapon in AllWeapons) {
+
+				if (!weapon.PendingLockOn || weapon.LockOnTarget == null)
+					continue;
+
+				weapon.SetLockOnTarget();
+			
+			}
+		
 		}
 
 	}

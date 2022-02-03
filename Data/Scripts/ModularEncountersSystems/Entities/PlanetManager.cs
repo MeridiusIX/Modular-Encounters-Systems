@@ -11,6 +11,7 @@ namespace ModularEncountersSystems.Entities {
         public static PlanetEntity GetNearestPlanet(Vector3D coords) {
 
             PlanetEntity planet = null;
+            bool inGravity = false;
             double distance = -1;
 
             foreach (var planetEnt in Planets) {
@@ -21,8 +22,12 @@ namespace ModularEncountersSystems.Entities {
                 if (planetEnt.IsPositionInGravity(coords)) {
 
                     planet = planetEnt;
-                    break;
+                    inGravity = true;
 
+                } else if (inGravity) {
+
+                    continue;
+                
                 }
 
                 var thisDist = Vector3D.Distance(planetEnt.Center(), coords);

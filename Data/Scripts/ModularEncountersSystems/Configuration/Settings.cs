@@ -22,21 +22,41 @@ namespace ModularEncountersSystems.Configuration {
 		public static ConfigCustomBlocks CustomBlocks = new ConfigCustomBlocks();
 		public static ConfigCreatures Creatures = new ConfigCreatures();
 
-		public static void InitSettings() {
+		public static void InitSettings(string phase) {
 
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
 
-			General = General.LoadSettings();
-			Grids = Grids.LoadSettings();
-			SpaceCargoShips = SpaceCargoShips.LoadSettings();
-			PlanetaryCargoShips = PlanetaryCargoShips.LoadSettings();
-			RandomEncounters = RandomEncounters.LoadSettings();
-			PlanetaryInstallations = PlanetaryInstallations.LoadSettings();
-			BossEncounters = BossEncounters.LoadSettings();
-			OtherNPCs = OtherNPCs.LoadSettings();
-			CustomBlocks = CustomBlocks.LoadSettings();
-			Creatures = Creatures.LoadSettings();
+			if(!General.ConfigLoaded)
+				General = General.LoadSettings(phase);
+
+			if (!Grids.ConfigLoaded)
+				Grids = Grids.LoadSettings(phase);
+
+			if (!SpaceCargoShips.ConfigLoaded)
+				SpaceCargoShips = SpaceCargoShips.LoadSettings(phase);
+
+			if (!PlanetaryCargoShips.ConfigLoaded)
+				PlanetaryCargoShips = PlanetaryCargoShips.LoadSettings(phase);
+
+			if (!RandomEncounters.ConfigLoaded)
+				RandomEncounters = RandomEncounters.LoadSettings(phase);
+
+			if (!PlanetaryInstallations.ConfigLoaded)
+				PlanetaryInstallations = PlanetaryInstallations.LoadSettings(phase);
+
+			if (!BossEncounters.ConfigLoaded)
+				BossEncounters = BossEncounters.LoadSettings(phase);
+
+			if (!OtherNPCs.ConfigLoaded)
+				OtherNPCs = OtherNPCs.LoadSettings(phase);
+
+			if (!CustomBlocks.ConfigLoaded)
+				CustomBlocks = CustomBlocks.LoadSettings(phase);
+
+			if (!Creatures.ConfigLoaded)
+				Creatures = Creatures.LoadSettings(phase);
+
 			CheckGlobalEvents();
 
 			SpaceCargoShips.InitDefinitionDisableList();

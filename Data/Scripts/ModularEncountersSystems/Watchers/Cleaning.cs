@@ -14,6 +14,8 @@ namespace ModularEncountersSystems.Watchers {
 
 	public static class Cleaning {
 
+		public static List<GridCleanupExemption> ExemptGrids = new List<GridCleanupExemption>();
+
 		public static bool PendingGridsForRemoval = false;
 		public static List<GridEntity> FlaggedForRemoval = new List<GridEntity>();
 
@@ -74,6 +76,30 @@ namespace ModularEncountersSystems.Watchers {
 
 				}
 
+				//Exemption Check
+				bool gotExemptGrid = false;
+
+				for (int j = ExemptGrids.Count - 1; j >= 0; j--) {
+
+					if ((MyAPIGateway.Session.GameDateTime - ExemptGrids[j].StartTime).TotalSeconds >= ExemptGrids[j].Duration) {
+
+						ExemptGrids.RemoveAt(j);
+						continue;
+
+					}
+
+					if (grid == ExemptGrids[j].Grid) {
+
+						gotExemptGrid = true;
+						break;
+
+					}
+				
+				}
+
+				if (gotExemptGrid)
+					continue;
+
 				//Get Config and Cleanup Data
 				var type = grid.GetSpawningTypeFromLinkedGrids();
 				
@@ -104,6 +130,14 @@ namespace ModularEncountersSystems.Watchers {
 
 					continue;
 				
+				}
+
+				//MES Grids Only
+				if (config.OnlyCleanNpcsFromMes && !grid.Npc.SpawnedByMES) {
+
+					GridCleanupData.RemoveData(grid);
+					continue;
+
 				}
 
 				//Unowned Filtering

@@ -384,7 +384,7 @@ namespace ModularEncountersSystems.Spawning {
 			SpawnLogger.Write("Start Pathing", SpawnerDebugEnum.Spawning);
 			//Determine Path or Placement
 			var spawnTypes = SpawnConditions.AllowedSpawningTypes(type, environment);
-			var path = PathPlacements.GetSpawnPlacement(type, spawnTypes, spawnGroupCollection, environment, spawnMatrix);
+			var path = PathPlacements.GetSpawnPlacement(type, ref spawnTypes, spawnGroupCollection, environment, spawnMatrix);
 
 			SpawnLogger.Write("End Pathing", SpawnerDebugEnum.Spawning);
 			if (!path.ValidPath) {
@@ -406,6 +406,7 @@ namespace ModularEncountersSystems.Spawning {
 				var bossEncounter = new StaticEncounter();
 				bossEncounter.InitBossEncounter(spawnGroupCollection.SpawnGroup.SpawnGroupName, spawnGroupCollection.ConditionsIndex, path.StartCoords, spawnGroupCollection.SelectRandomFaction(), spawnTypes);
 				NpcManager.StaticEncounters.Add(bossEncounter);
+				NpcManager.UpdateStaticEncounters();
 				return true;
 			
 			}

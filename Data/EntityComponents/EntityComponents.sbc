@@ -80,6 +80,26 @@
 				<guid>FF814A67-AEC3-4DF0-ADC4-A9B239FA954F</guid>
 			</RegisteredStorageGuids>
 		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>MesTurretControllerKey</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>438AA687-C800-4784-948F-B731C46D4F18</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>MesTemporaryPlanetKey</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>8823361C-E6A4-4BD6-8F1D-3C935D9D4AA7</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
 		
 	</EntityComponents>
 </Definitions>

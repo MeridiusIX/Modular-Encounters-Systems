@@ -24,7 +24,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.22";
+		public static string ModVersion = "2.1.27";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -50,7 +50,7 @@ namespace ModularEncountersSystems.Core {
 			SyncManager.Setup(); //Register Network and Chat Handlers
 			DefinitionHelper.Setup();
 			EconomyHelper.Setup();
-			Settings.InitSettings(); //Get Existing Settings From XML or Create New
+			Settings.InitSettings("LoadData"); //Get Existing Settings From XML or Create New
 			AddonManager.DetectAddons(); //Check Add-on Mods
 			ProfileManager.Setup();
 			SpawnGroupManager.CreateSpawnLists();
@@ -83,6 +83,7 @@ namespace ModularEncountersSystems.Core {
 			if (!ModEnabled)
 				return;
 
+			Settings.InitSettings("BeforeStart"); //Get Existing Settings From XML or Create New
 			BlockLogicManager.Setup();
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();

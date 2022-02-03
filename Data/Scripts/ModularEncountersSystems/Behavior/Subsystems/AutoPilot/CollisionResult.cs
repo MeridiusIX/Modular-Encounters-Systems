@@ -108,12 +108,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (defaultDistance > weaponDist)
 				return defaultDistance;
 
-			if (weaponDist > _collisionSystem.AutoPilot.Weapons.MaxStaticWeaponRange && _collisionSystem.AutoPilot.Weapons.MaxStaticWeaponRange > 0) {
+			if (weaponDist > _collisionSystem.AutoPilot.Weapons.Data.MaxStaticWeaponRange && _collisionSystem.AutoPilot.Weapons.Data.MaxStaticWeaponRange > 0) {
 
-				if (defaultDistance > _collisionSystem.AutoPilot.Weapons.MaxStaticWeaponRange)
+				if (defaultDistance > _collisionSystem.AutoPilot.Weapons.Data.MaxStaticWeaponRange)
 					return defaultDistance;
 				else
-					return _collisionSystem.AutoPilot.Weapons.MaxStaticWeaponRange;
+					return _collisionSystem.AutoPilot.Weapons.Data.MaxStaticWeaponRange;
 
 			}
 

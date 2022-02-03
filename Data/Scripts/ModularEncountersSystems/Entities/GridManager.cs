@@ -32,6 +32,7 @@ namespace ModularEncountersSystems.Entities {
 
 						cubeGrid.RefreshSubGrids();
 
+						//BehaviorLogger.Write("Linked Grids Weapon Scan: " + cubeGrid.LinkedGrids.Count, BehaviorDebugEnum.BehaviorSetup);
 						lock (cubeGrid.LinkedGrids) {
 
 							foreach (var linkedGrid in cubeGrid.LinkedGrids)
@@ -106,6 +107,22 @@ namespace ModularEncountersSystems.Entities {
 
 			return null;
 
+		}
+
+		public static GridEntity GetSafeGridFromIndex(int index) {
+
+			try {
+
+				return Grids[index];
+			
+			} catch (Exception e) {
+			
+			
+			
+			}
+
+			return null;
+		
 		}
 
 		public static bool ProcessBlock(IMySlimBlock block) {

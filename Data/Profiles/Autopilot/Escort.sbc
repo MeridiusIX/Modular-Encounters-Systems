@@ -1,0 +1,38 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RAI-Generic-Autopilot-Patrol</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Autopilot]
+
+        [DisableInertiaDampeners:false]
+        [SlowDownOnWaypointApproach:true]
+        [FlyLevelWithGravity:false]
+        [MinimumPlanetAltitude:75]
+        [IdealPlanetAltitude:150]
+        [WaypointTolerance:5]
+        [UseVelocityCollisionEvasion:true]
+        [WaypointWaitTimeTrigger:20]
+
+        [IdealMinSpeed:12]
+        [IdealMaxSpeed:100]
+        [MaxSpeedTolerance:3]
+
+        [LimitRotationSpeed:true]
+        [MaxRotationMagnitude:0.75]
+
+        [EscortSpeedMatchMinDistance:5]
+
+      </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

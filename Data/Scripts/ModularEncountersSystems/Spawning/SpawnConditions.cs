@@ -820,9 +820,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (!ZoneValidation(spawnGroup, conditions, collection, environment.Position)) {
+			if (!ZoneValidation(spawnGroup, conditions, collection, environment.Position, ref failReason)) {
 
-				failReason = "   - Zone Check Failed";
 				return false;
 
 			}
@@ -951,6 +950,24 @@ namespace ModularEncountersSystems.Spawning {
 				if (pcuLevel > (float)conditions.PCUMaximum && (float)conditions.PCUMaximum > 0) {
 
 					failReason = "   - Maximum PCU Check Failed";
+					return false;
+
+				}
+
+			}
+
+			if (conditions.UseDifficulty) {
+				
+				if (Settings.General.Difficulty < conditions.MinDifficulty && conditions.MinDifficulty > 0) {
+
+					failReason = "   - Minimum Difficulty Check Failed";
+					return false;
+
+				}
+
+				if (Settings.General.Difficulty > conditions.MaxDifficulty && conditions.MaxDifficulty > 0) {
+
+					failReason = "   - Maximum Difficulty Check Failed";
 					return false;
 
 				}
@@ -1091,6 +1108,37 @@ namespace ModularEncountersSystems.Spawning {
 				failReason = "   - Required Mods Check Failed";
 				return false;
 
+			}
+
+			if (conditions.CustomApiConditions.Count > 0) {
+
+				bool result = true;
+
+				foreach (var methodName in conditions.CustomApiConditions) {
+
+					Func<string, string, string, Vector3D, bool> action;
+
+					if (!LocalApi.SpawnCustomConditions.TryGetValue(methodName, out action)) {
+
+						result = false;
+						failReason = "   - Custom API Spawn Condition Required, But Not Found: " + methodName;
+						break;
+
+					}
+
+					if (action?.Invoke(spawnGroup.SpawnGroupName, conditions.ProfileSubtypeId, type.ToString(), environment.Position) ?? false == false) {
+
+						result = false;
+						failReason = "   - Custom API Spawn Condition Not Satisfied: " + methodName;
+						break;
+
+					}
+				
+				}
+
+				if (!result)
+					return false;
+			
 			}
 
 			//Logger.Write(spawnGroup.SpawnGroupName + " Passed Common Conditions", true);
@@ -1261,7 +1309,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position){
+		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position, ref string failReason){
 
 			bool zoneRequirement = false;
 
@@ -1277,6 +1325,9 @@ namespace ModularEncountersSystems.Spawning {
 					var zone = ZoneManager.ActiveZones[j];
 
 					if (!zone.Persistent || !zone.Active || string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
+						continue;
+
+					if (!zone.SandboxBoolCheck())
 						continue;
 
 					if (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && zone.PublicName != zoneCondition.ZoneName)
@@ -1373,21 +1424,35 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			//Check Against Rules For Strict and Faction Only
-			if (collection.MustUseStrictZone)
+			if (collection.MustUseStrictZone) {
+
+				failReason = "   - Zone Check Failed: Strict Zone";
 				return false;
 
-			if (zoneRequirement)
+			}
+				
+
+			if (zoneRequirement) {
+
+				failReason = "   - Zone Check Failed: Spawn Conditions Requires Specific Zone";
 				return false;
 
-			if (collection.AllowedZoneFactions.Count > 0)
+			}
+				
+
+			if (collection.AllowedZoneFactions.Count > 0) {
+
+				failReason = "   - Zone Check Failed: Allowed Zone Factions Not Satisfied";
 				return false;
+
+			}	
 
 			return true;
-			
+
 		}
 
 
-		public static List<string> ValidNpcFactions(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile condition, Vector3D coords, string factionOverride = "", bool forceSpawn = false) {
+		public static List<string> ValidNpcFactions(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile condition, Vector3D coords, string factionOverride = "", bool forceSpawn = false, SpawnGroupCollection collection = null) {
 
 			var resultList = new List<string>();
 			var factionList = new List<IMyFaction>();
@@ -1484,6 +1549,21 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
+						if (faction?.Tag != null && !collection.AllowedZoneFactions.Contains(faction.Tag)) {
+
+							factionList.Remove(faction);
+
+							if (specificFactionCheck == true) {
+
+								factionList.Clear();
+								break;
+
+							}
+
+							continue;
+
+						}
+
 						foreach (var player in PlayerManager.Players) {
 
 							if (!player.Online)
@@ -1563,6 +1643,38 @@ namespace ModularEncountersSystems.Spawning {
 						var costResult = faction.TryGetBalanceInfo(out cost);
 
 						if (cost > 0 && cost < condition.ChargeForSpawning) {
+
+							factionList.RemoveAt(i);
+							continue;
+
+						}
+
+					}
+
+				}
+
+				if (condition.UseSignalRequirement) {
+
+					for (int i = factionList.Count - 1; i >= 0; i--) {
+
+						bool foundValidSignal = false;
+						var faction = factionList[i];
+
+						for (int j = GridManager.Grids.Count - 1; j >= 0; j--) {
+
+							if (!GridManager.Grids[j].ActiveEntity() || GridManager.Grids[j].Distance(coords) < DefinitionHelper.HighestAntennaRange)
+								continue;
+
+							var range = EntityEvaluator.GridBroadcastRange(GridManager.Grids[j]);
+
+							if ((condition.MinSignalRadius > -1 && range < condition.MinSignalRadius) || (condition.MaxSignalRadius > -1 && range > condition.MaxSignalRadius))
+								continue;
+
+							foundValidSignal = true;
+						
+						}
+
+						if (!foundValidSignal) {
 
 							factionList.RemoveAt(i);
 							continue;

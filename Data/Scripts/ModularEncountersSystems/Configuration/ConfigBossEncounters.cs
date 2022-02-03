@@ -142,27 +142,32 @@ namespace ModularEncountersSystems.Configuration {
 
 		}
 		
-		public ConfigBossEncounters LoadSettings(){
-			
-			if(MyAPIGateway.Utilities.FileExistsInWorldStorage("Config-BossEncounters.xml", typeof(ConfigBossEncounters)) == true){
-				
-				try{
-					
+		public ConfigBossEncounters LoadSettings(string phase){
+
+			if (MyAPIGateway.Utilities.FileExistsInWorldStorage("Config-BossEncounters.xml", typeof(ConfigBossEncounters)) == true) {
+
+				try {
+
 					ConfigBossEncounters config = null;
 					var reader = MyAPIGateway.Utilities.ReadFileInWorldStorage("Config-BossEncounters.xml", typeof(ConfigBossEncounters));
 					string configcontents = reader.ReadToEnd();
 					config = MyAPIGateway.Utilities.SerializeFromXML<ConfigBossEncounters>(configcontents);
-					SpawnLogger.Write("Loaded Existing Settings From Config-BossEncounters.xml", SpawnerDebugEnum.Startup);
+					config.ConfigLoaded = true;
+					SpawnLogger.Write("Loaded Existing Settings From Config-BossEncounters.xml. Phase: " + phase, SpawnerDebugEnum.Startup, true);
 					return config;
-					
-				}catch(Exception exc){
-					
-					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-BossEncounters.xml. Using Default Configuration.", SpawnerDebugEnum.Startup);
+
+				} catch (Exception exc) {
+
+					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-BossEncounters.xml. Using Default Configuration. Phase: " + phase, SpawnerDebugEnum.Error, true);
 					var defaultSettings = new ConfigBossEncounters();
 					return defaultSettings;
-					
+
 				}
-				
+
+			} else {
+
+				SpawnLogger.Write("Config-BossEncounters.xml Doesn't Exist. Creating Default Configuration. Phase: " + phase, SpawnerDebugEnum.Startup, true);
+
 			}
 			
 			var settings = new ConfigBossEncounters();
@@ -177,7 +182,7 @@ namespace ModularEncountersSystems.Configuration {
 				
 			}catch(Exception exc){
 				
-				SpawnLogger.Write("ERROR: Could Not Create Config-BossEncounters.xml. Default Settings Will Be Used.", SpawnerDebugEnum.Startup);
+				SpawnLogger.Write("ERROR: Could Not Create Config-BossEncounters.xml. Default Settings Will Be Used. Phase: " + phase, SpawnerDebugEnum.Error, true);
 				
 			}
 			

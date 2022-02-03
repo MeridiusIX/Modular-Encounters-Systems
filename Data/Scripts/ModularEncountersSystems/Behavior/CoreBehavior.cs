@@ -3,6 +3,7 @@ using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.Behavior.Subsystems;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -78,12 +79,18 @@ namespace ModularEncountersSystems.Behavior {
 		private bool _behaviorActionG;
 		private bool _behaviorActionH;
 
-
+		private JetpackInhibitor _jetpackInhibitorLogic;
+		private DrillInhibitor _drillInhibitorLogic;
+		private NanobotInhibitor _nanobotInhibitorLogic;
+		private JumpDriveInhibitor _jumpInhibitorLogic;
+		private PlayerInhibitor _playerInhibitorLogic;
 
 		private List<IMyCubeGrid> _currentGrids;
 		private List<IMyCockpit> _debugCockpits;
 
 		private IMyRemoteControl _remoteControl;
+
+		internal string _debugString;
 
 		public AutoPilotSystem AutoPilot { get { return _newAutoPilot; } set { _newAutoPilot = value; } }
 		public BroadcastSystem Broadcast { get { return _broadcast; } set { _broadcast = value; } }
@@ -135,6 +142,32 @@ namespace ModularEncountersSystems.Behavior {
 		public bool BehaviorActionG { get { return _behaviorActionG; } set { _behaviorActionG = value; } }
 		public bool BehaviorActionH { get { return _behaviorActionH; } set { _behaviorActionH = value; } }
 
+		public JetpackInhibitor JetpackInhibitorLogic { get { return _jetpackInhibitorLogic; } set { _jetpackInhibitorLogic = value; } }
+		public DrillInhibitor DrillInhibitorLogic { get { return _drillInhibitorLogic; } set { _drillInhibitorLogic = value; } }
+		public NanobotInhibitor NanobotInhibitorLogic { get { return _nanobotInhibitorLogic; } set { _nanobotInhibitorLogic = value; } }
+		public JumpDriveInhibitor JumpInhibitorLogic { get { return _jumpInhibitorLogic; } set { _jumpInhibitorLogic = value; } }
+		public PlayerInhibitor PlayerInhibitorLogic { get { return _playerInhibitorLogic; } set { _playerInhibitorLogic = value; } }
+
+		public BlockEntity RemoteControlBlockEntity { 
+			
+			get {
+
+				if (CurrentGrid == null)
+					return null;
+
+				foreach (var remote in CurrentGrid.RivalAi) {
+
+					if (remote.ActiveEntity() || remote.Block.EntityId == RemoteControl.EntityId)
+						return remote;
+				
+				}
+
+				return null;
+			
+			} 
+		
+		}
+
 		public long GridId { get { return RemoteControl?.SlimBlock?.CubeGrid == null ? 0 : RemoteControl.SlimBlock.CubeGrid.EntityId; } }
 		public string GridName { get { return RemoteControl?.SlimBlock?.CubeGrid?.CustomName == null ? "N/A" : RemoteControl.SlimBlock.CubeGrid.CustomName; } }
 
@@ -159,6 +192,8 @@ namespace ModularEncountersSystems.Behavior {
 		public List<Vector3D> EscortOffsets { get { return _escortOffsets; } set { _escortOffsets = value; } }
 
 		public List<IMyCockpit> DebugCockpits { get { return _debugCockpits; } }
+
+		public string DebugString { get { return _debugString; } set { _debugString = value; } }
 
 		public BehaviorMode PreviousMode;
 
@@ -253,6 +288,7 @@ namespace ModularEncountersSystems.Behavior {
 		public void ProcessTargetingChecks() {
 
 			AutoPilot.Targeting.CheckForTarget();
+			AutoPilot.Targeting.PrepareTargetLockOn();
 
 		}
 
@@ -277,7 +313,8 @@ namespace ModularEncountersSystems.Behavior {
 		}
 
 		public void EngageAutoPilot() {
-		
+
+			AutoPilot.Targeting.ProcessTargetLockOn();
 			AutoPilot.EngageAutoPilot();
 
 		}
@@ -566,7 +603,7 @@ namespace ModularEncountersSystems.Behavior {
 			BehaviorLogger.Write("Setting Up Subsystems", BehaviorDebugEnum.BehaviorSetup);
 			BehaviorSettings = new StoredSettings();
 			AutoPilot = new AutoPilotSystem(remoteControl, this);
-			Broadcast = new BroadcastSystem(remoteControl);
+			Broadcast = new BroadcastSystem(this, remoteControl);
 			Damage = new DamageSystem(remoteControl);
 			Despawn = new DespawnSystem(this, remoteControl);
 			Diagnostic = new DiagnosticSystem(this, remoteControl);
@@ -914,7 +951,10 @@ namespace ModularEncountersSystems.Behavior {
 
 			CoreTags();
 			AutoPilot.InitTags();
-			AutoPilot.Weapons.InitTags();
+
+			if(string.IsNullOrWhiteSpace(BehaviorSettings.WeaponsSystemProfile))
+				AutoPilot.Weapons.InitTags();
+
 			Damage.InitTags();
 			Despawn.InitTags();
 			Escort.InitTags();
@@ -1228,8 +1268,9 @@ namespace ModularEncountersSystems.Behavior {
 
 			//NewAutoPilot.OnComplete += Trigger.ProcessTriggerWatchers;
 			Trigger.OnComplete += CheckDespawnConditions;
+			EventWatcher.JumpRequested += Trigger.ProcessJumpRequestTriggers;
+			EventWatcher.JumpCompleted += Trigger.ProcessJumpCompletedTriggers;
 
-		
 		}
 
 		public void SaveData() {
@@ -1459,7 +1500,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			foreach (var trigger in triggers) {
 
-				sb.Append("   - Trigger:           ").Append(trigger.ProfileSubtypeId).AppendLine();
+				sb.Append("   - Trigger:           ").Append(trigger.ProfileSubtypeId).Append(" :: ").Append(trigger.UseTrigger ? "Enabled" : "Disabled").Append(" :: ").Append(trigger.TriggerCount).Append(" / ").Append(trigger.MaxActions).AppendLine();
 
 				if (!string.IsNullOrWhiteSpace(trigger.Conditions?.ProfileSubtypeId))
 					sb.Append("     - Condition:       ").Append(trigger.Conditions.ProfileSubtypeId).AppendLine();

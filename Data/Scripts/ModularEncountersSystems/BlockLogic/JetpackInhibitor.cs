@@ -1,16 +1,20 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Tasks;
 using Sandbox.Game;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game.Entity;
 using VRage.ModAPI;
 
 namespace ModularEncountersSystems.BlockLogic {
 	public class JetpackInhibitor : BaseBlockLogic, IBlockLogic {
 
 		internal IMyRadioAntenna _antenna;
+		internal IMyTerminalBlock _block;
 
 		internal double _dampenerRange;
 		internal double _disableRange;
@@ -41,12 +45,26 @@ namespace ModularEncountersSystems.BlockLogic {
 			_playersInDampenerRange = new List<PlayerEntity>();
 			_playersInDisableRange = new List<PlayerEntity>();
 			_antenna = block.Block as IMyRadioAntenna;
-			_antenna.Radius = 1000;
+			_block = block.Block as IMyTerminalBlock;
+
+			if (_antenna != null) {
+
+				_antenna.Radius = 1000;
+				_antenna.CustomName = "[Jetpack Inhibitor Field]";
+				_antenna.CustomNameChanged += NameChange;
+
+			} else {
+
+				_antennaRange = 1000;
+				_dampenerRange = 1000;
+				_disableRange = _dampenerRange / 3;
+
+
+			}
+
 			_logicType = "Jetpack Inhibitor";
 			_useTick1 = true;
 			_useTick100 = true;
-			_antenna.CustomName = "[Jetpack Inhibitor Field]";
-			_antenna.CustomNameChanged += NameChange;
 
 		}
 
@@ -91,7 +109,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			if (!_isWorking || !Active)
 				return;
 
-			if (_antenna.Radius != _antennaRange) {
+			if (_antenna != null && _antenna.Radius != _antennaRange) {
 
 				_antennaRange = _antenna.Radius;
 				_dampenerRange = _antenna.Radius;
@@ -109,7 +127,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				}
 
-				var distance = player.Distance(_antenna.GetPosition());
+				var distance = player.Distance(Entity.GetPosition());
 
 				if (distance > _dampenerRange) {
 

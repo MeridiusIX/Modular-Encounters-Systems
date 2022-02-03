@@ -130,6 +130,25 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagBehaviorModeEnumCheck(string tag, ref List<BehaviorMode> original) {
+
+			BehaviorMode result = BehaviorMode.Init;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (BehaviorMode.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original.Add(result);
+
+		}
+
 		public static void TagBehaviorSubclassEnumCheck(string tag, ref BehaviorSubclass original) {
 
 			BehaviorSubclass result = BehaviorSubclass.None;
@@ -1228,6 +1247,29 @@ namespace ModularEncountersSystems.Helpers {
 				}
 
 			}
+
+		}
+
+		public static void TagUintCheck(string tag, ref uint original) {
+
+			uint result = 0;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (uint.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			} else {
+
+				return;
+
+			}
+
+			original = result;
 
 		}
 

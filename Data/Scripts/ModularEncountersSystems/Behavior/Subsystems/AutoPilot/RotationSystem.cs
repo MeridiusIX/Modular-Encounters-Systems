@@ -182,6 +182,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		public float LimitSpeed(float proposedSpeed, double actualSpeed) {
 
+			if (proposedSpeed == float.NaN || actualSpeed == double.NaN)
+				return 0;
+
 			if (proposedSpeed == 0 || Math.Sign(proposedSpeed) != Math.Sign(actualSpeed))
 				return proposedSpeed;
 

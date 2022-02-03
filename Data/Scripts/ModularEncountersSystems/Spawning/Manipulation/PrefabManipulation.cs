@@ -41,6 +41,29 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+			foreach (var prefabDataName in ProfileManager.PrefabDataProfiles.Keys) {
+
+				var prefabData = ProfileManager.PrefabDataProfiles[prefabDataName];
+
+				if (!prefabData.Prefabs.Contains(prefab.OriginalPrefab.Id.SubtypeName))
+					continue;
+
+				foreach (var profile in prefabData.ManipulationProfiles) {
+
+					//Conditions
+					if (!ProcessConditions(prefab, collection, environment, profile, data)) {
+
+						continue;
+
+					}
+
+					//Manipulations
+					ProcessManipulations(prefab, collection, profile, environment, data);
+
+				}
+
+			}
+
 			foreach (var profile in collection.SpawnGroup.ManipulationProfiles) {
 
 				//Conditions
@@ -50,6 +73,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				}
 
+				//Manipulations
 				ProcessManipulations(prefab, collection, profile, environment, data);
 
 			}
@@ -379,7 +403,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//Armor Modules
 			if (profile.ReplaceArmorBlocksWithModules) {
 
-				ArmorModuleReplacement.ProcessGridForModules(prefab.Prefab.CubeGrids, collection.SpawnGroup, profile);
+				ArmorModuleReplacement.ProcessGridForModules(prefab.Prefab.CubeGrids, collection.SpawnGroup, profile, data);
 
 			}
 
@@ -390,14 +414,65 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			var spawnGroupRandomizationEnabled = profile.RandomizeWeapons;
 			var spawnGroupRandomizationAllowed = spawnGroupRandomizationEnabled && MathTools.RandomBetween(0, 101) <= profile.RandomWeaponChance;
 
-			if (globalRandomizationAllowed || spawnGroupRandomizationAllowed) {
+			if (!data.Attributes.WeaponRandomizationAdjustments && (globalRandomizationAllowed || spawnGroupRandomizationAllowed)) {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
 					WeaponRandomizer.RandomWeaponReplacing(grid, collection, prefab, collection.SpawnGroup.WeaponRandomizationOverrideProfile != null ? collection.SpawnGroup.WeaponRandomizationOverrideProfile : profile);
+					data.Attributes.ConfigureTurretControllers = true;
+
+					if (!data.Attributes.ReplenishSystems)
+						data.Attributes.ReplenishSystems = true;
 
 					if (!data.Attributes.WeaponRandomizationAdjustments)
 						data.Attributes.WeaponRandomizationAdjustments = true;
+
+				}
+
+			}
+
+			//Turret Controller Preparations
+			if (data.Attributes.ConfigureTurretControllers) {
+
+				var controllers = new List<MyObjectBuilder_TurretControlBlock>();
+				var blocks = new List<MyObjectBuilder_TerminalBlock>();
+
+				foreach (var grid in prefab.Prefab.CubeGrids) {
+
+					if (grid?.CubeBlocks == null)
+						continue;
+
+					foreach (var block in grid.CubeBlocks) {
+
+						if (block as MyObjectBuilder_TurretControlBlock != null) {
+
+							controllers.Add(block as MyObjectBuilder_TurretControlBlock);
+							continue;
+
+						}
+
+						if(block as MyObjectBuilder_TerminalBlock != null)
+							blocks.Add(block as MyObjectBuilder_TerminalBlock);
+
+					}
+
+				}
+
+				foreach (var controller in controllers) {
+
+					StorageTools.ApplyCustomBlockStorage(controller, StorageTools.MesTurretControllerKey, controller.EntityId.ToString());
+
+					foreach (var block in blocks) {
+
+						if (controller.ToolIds.Contains(block.EntityId)) {
+
+							StorageTools.ApplyCustomBlockStorage(block, StorageTools.MesTurretControllerKey, controller.EntityId.ToString());
+
+						}
+					
+					}
+
+					controller.ToolIds.Clear();
 
 				}
 
@@ -456,6 +531,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				var pattern = profile.RandomGridNamePattern.Count == 1 ? profile.RandomGridNamePattern[0] : profile.RandomGridNamePattern[MathTools.RandomBetween(0, profile.RandomGridNamePattern.Count)];
 
 				string newGridName = RandomNameGenerator.CreateRandomNameFromPattern(pattern);
+				data.FriendlyName = newGridName;
 				string newRandomName = profile.RandomGridNamePrefix + newGridName;
 
 				if (prefab.Prefab.CubeGrids.Length > 0) {
@@ -465,6 +541,19 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					foreach (var grid in prefab.Prefab.CubeGrids) {
 
 						for (int i = 0; i < grid.CubeBlocks.Count; i++) {
+
+							if (profile.ProcessBlocksForCustomGridName) {
+
+								if (grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock != null) {
+
+									var termBlock = grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock;
+
+									if (!string.IsNullOrWhiteSpace(termBlock.CustomName) && termBlock.CustomName.Contains("{GridName}"))
+										termBlock.CustomName = termBlock.CustomName.Replace("{GridName}", newGridName);
+
+								}
+							
+							}
 
 							var antenna = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
 
@@ -489,6 +578,15 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					}
 
 				}
+
+			}
+
+			if(profile.CustomChatAuthorName != null) {
+
+				data.ChatAuthorName = profile.CustomChatAuthorName;
+
+				if (profile.ProcessCustomChatAuthorAsRandom)
+					data.ChatAuthorName = RandomNameGenerator.CreateRandomNameFromPattern(profile.CustomChatAuthorName);
 
 			}
 

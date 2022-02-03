@@ -9,7 +9,6 @@ namespace ModularEncountersSystems.Configuration {
 
 	public abstract class ConfigBase {
 
-
 		public string[] SpawnTypeBlacklist;
 		public string[] SpawnTypePlanetBlacklist;
 
@@ -22,6 +21,7 @@ namespace ModularEncountersSystems.Configuration {
 		public int TimeoutDuration;
 
 		public bool UseCleanupSettings;
+		public bool OnlyCleanNpcsFromMes;
 		public bool CleanupUseDistance;
 		public bool CleanupUseTimer;
 		public bool CleanupUseBlockLimit;
@@ -40,6 +40,9 @@ namespace ModularEncountersSystems.Configuration {
 		public string[] DisableBlocksByDefinitionId;
 
 		[XmlIgnore]
+		public bool ConfigLoaded;
+
+		[XmlIgnore]
 		public Dictionary<string, Func<string, object, bool>> EditorBaseReference;
 
 		[XmlIgnore]
@@ -56,6 +59,7 @@ namespace ModularEncountersSystems.Configuration {
 			TimeoutSpawnLimit = 4;
 
 			UseCleanupSettings = true;
+			OnlyCleanNpcsFromMes = true;
 			CleanupUseDistance = true;
 			CleanupUseTimer = false;
 			CleanupUseBlockLimit = false;
@@ -73,6 +77,8 @@ namespace ModularEncountersSystems.Configuration {
 			UseBlockDisable = false;
 			DisableBlocksByType = new string[] { "ObjectBuilderTypeHere", "AnotherObjectBuilderTypeHere" };
 			DisableBlocksByDefinitionId = new string[] { "DefinitionIdHere", "AnotherDefinitionIdHere" };
+
+			ConfigLoaded = false;
 
 			EditorBaseReference = new Dictionary<string, Func<string, object, bool>> {
 

@@ -70,6 +70,9 @@ namespace ModularEncountersSystems.Zones {
 
 		[ProtoMember(42)] public long PlanetId; //Planet Entity Id (used internally)
 
+		[ProtoMember(43)] public string RequiredSandboxBool; //Sandbox Bool Name That Must Be True To Use Zone. Not Used if Null
+		[ProtoMember(44)] public string RequiredFalseSandboxBool; //Sandbox Bool Name That Must Be False To Use Zone. Not Used if Null
+
 		[ProtoIgnore]
 		public BoundingSphereD Sphere { 
 			get {
@@ -284,6 +287,29 @@ namespace ModularEncountersSystems.Zones {
 
 			return sb.ToString();
 
+		}
+
+		public bool SandboxBoolCheck() {
+
+			bool trueResult = true;
+			bool falseResult = true;
+
+			if (!string.IsNullOrWhiteSpace(RequiredSandboxBool)) {
+
+				if (!MyAPIGateway.Utilities.GetVariable<bool>(RequiredSandboxBool, out trueResult))
+					trueResult = false;
+
+			}
+
+			if (!string.IsNullOrWhiteSpace(RequiredFalseSandboxBool)) {
+
+				if (!MyAPIGateway.Utilities.GetVariable<bool>(RequiredFalseSandboxBool, out falseResult))
+					falseResult = false;
+
+			}
+
+			return trueResult && falseResult;
+		
 		}
 
 		public void InitTags(string data = null) {
@@ -511,6 +537,20 @@ namespace ModularEncountersSystems.Zones {
 				if (tag.StartsWith("[FlashZoneRadius:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.FlashZoneRadius);
+
+				}
+
+				//RequiredSandboxBool
+				if (tag.StartsWith("[RequiredSandboxBool:") == true) {
+
+					TagParse.TagStringCheck(tag, ref this.RequiredSandboxBool);
+
+				}
+
+				//RequiredFalseSandboxBool
+				if (tag.StartsWith("[RequiredFalseSandboxBool:") == true) {
+
+					TagParse.TagStringCheck(tag, ref this.RequiredFalseSandboxBool);
 
 				}
 

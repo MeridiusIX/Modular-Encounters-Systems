@@ -46,6 +46,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> Controllers;
 		public List<BlockEntity> Gravity;
 		public List<BlockEntity> Guns;
+		public List<BlockEntity> Inhibitors;
 		public List<BlockEntity> JumpDrives;
 		public List<BlockEntity> Mechanical;
 		public List<BlockEntity> Medical;
@@ -59,6 +60,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> Thrusters;
 		public List<BlockEntity> Tools;
 		public List<BlockEntity> Turrets;
+		public List<BlockEntity> TurretControllers;
 
 		public List<IMySlimBlock> AllBlocks;
 
@@ -81,6 +83,8 @@ namespace ModularEncountersSystems.Entities {
 
 		public StringBuilder DebugData;
 
+		public object NpcWatcher { get; private set; }
+
 		public GridEntity(IMyEntity entity) : base(entity) {
 
 			DebugData = new StringBuilder();
@@ -97,6 +101,7 @@ namespace ModularEncountersSystems.Entities {
 			Controllers = new List<BlockEntity>();
 			Gravity = new List<BlockEntity>();
 			Guns = new List<BlockEntity>();
+			Inhibitors = new List<BlockEntity>();
 			JumpDrives = new List<BlockEntity>();
 			Mechanical = new List<BlockEntity>();
 			Medical = new List<BlockEntity>();
@@ -110,6 +115,7 @@ namespace ModularEncountersSystems.Entities {
 			Thrusters = new List<BlockEntity>();
 			Tools = new List<BlockEntity>();
 			Turrets = new List<BlockEntity>();
+			TurretControllers = new List<BlockEntity>();
 
 			AllBlocks = new List<IMySlimBlock>();
 
@@ -121,6 +127,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.Controllers, Controllers);
 			BlockListReference.Add(BlockTypeEnum.Gravity, Gravity);
 			BlockListReference.Add(BlockTypeEnum.Guns, Guns);
+			BlockListReference.Add(BlockTypeEnum.Inhibitors, Inhibitors);
 			BlockListReference.Add(BlockTypeEnum.JumpDrives, JumpDrives);
 			BlockListReference.Add(BlockTypeEnum.Mechanical, Mechanical);
 			BlockListReference.Add(BlockTypeEnum.Medical, Medical);
@@ -134,6 +141,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.Thrusters, Thrusters);
 			BlockListReference.Add(BlockTypeEnum.Tools, Tools);
 			BlockListReference.Add(BlockTypeEnum.Turrets, Turrets);
+			BlockListReference.Add(BlockTypeEnum.TurretControllers, TurretControllers);
 
 			LastThreatCalculationTime = DateTime.MinValue;
 
@@ -224,6 +232,33 @@ namespace ModularEncountersSystems.Entities {
 			DebugData.Append(" - Checking if NPC Data Conditions Resolve as Null.").AppendLine();
 			Npc = data.Conditions != null ? data : null;
 			DebugData.Append(" - NPC Data Conditions: ").Append(Npc == null ? "Null" : "OK").AppendLine();
+
+			if (!EntityWatcher.GridsOnLoad.Contains(CubeGrid)) {
+
+				bool gotData = false;
+
+				lock (NpcManager.SpawnedNpcData) {
+
+					for (int i = NpcManager.SpawnedNpcData.Count - 1; i >= 0; i--) {
+
+						var spawnedData = NpcManager.SpawnedNpcData[i];
+
+						if (spawnedData.UniqueSpawnIdentifier == data.UniqueSpawnIdentifier) {
+
+							gotData = true;
+							Npc = spawnedData;
+							break;
+						
+						}
+
+					}
+
+				}
+
+				if (!gotData)
+					Npc = null;
+			
+			}
 
 		}
 
@@ -347,6 +382,13 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+			//TurretControllers
+			if (terminalBlock as IMyTurretControlBlock != null) {
+
+				assignedBlock = AddBlock(terminalBlock, TurretControllers);
+
+			}
+
 			//Weapon Sections
 			if (BlockManager.AllWeaponCoreBlocks.Contains(block.BlockDefinition.Id)) {
 
@@ -373,6 +415,13 @@ namespace ModularEncountersSystems.Entities {
 					assignedBlock = AddBlock(terminalBlock, Guns);
 
 				}
+
+			}
+
+			//Inhibitors
+			if (ArmorModuleReplacement.SmallModules.Contains(block.BlockDefinition.Id) || ArmorModuleReplacement.LargeModules.Contains(block.BlockDefinition.Id)) {
+
+				assignedBlock = AddBlock(terminalBlock, Inhibitors);
 
 			}
 
@@ -493,6 +542,31 @@ namespace ModularEncountersSystems.Entities {
 		
 		}
 
+		public void GetBlocksOfType<T>(List<BlockEntity> blocks, bool clearList = true) where T : class {
+
+			RefreshSubGrids();
+
+			if(clearList)
+				blocks.Clear();
+
+			for (int i = LinkedGrids.Count - 1; i >= 0; i--) {
+
+				var blockList = LinkedGrids[i].AllTerminalBlocks;
+
+				for (int j = blockList.Count - 1; j >= 0; j--) {
+
+					if (blockList[j]?.Block as T != null && blockList[j].ActiveEntity()) {
+
+						blocks.Add(blockList[j]);
+
+					}
+					
+				}
+			
+			}
+		
+		}
+
 		public SpawningType GetSpawningTypeFromLinkedGrids() {
 
 			var result = SpawningType.None;
@@ -564,6 +638,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(Controllers);
 				CleanBlockList(Gravity);
 				CleanBlockList(Guns);
+				CleanBlockList(Inhibitors);
 				CleanBlockList(JumpDrives);
 				CleanBlockList(Mechanical);
 				CleanBlockList(Medical);
@@ -576,6 +651,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(Thrusters);
 				CleanBlockList(Tools);
 				CleanBlockList(Turrets);
+				CleanBlockList(TurretControllers);
 
 			} catch (Exception e) {
 
@@ -626,6 +702,17 @@ namespace ModularEncountersSystems.Entities {
 
 			HasPhysics = entity.Physics != null ? true : false;
 
+		}
+
+		public BlockEntity RandomTerminalBlock() {
+
+			if (AllTerminalBlocks.Count == 0)
+				return null;
+
+			if (AllTerminalBlocks.Count == 1)
+				return AllTerminalBlocks[0];
+
+			return AllTerminalBlocks[MathTools.RandomBetween(0, AllTerminalBlocks.Count)];
 		}
 
 		public void RefreshSubGrids() {

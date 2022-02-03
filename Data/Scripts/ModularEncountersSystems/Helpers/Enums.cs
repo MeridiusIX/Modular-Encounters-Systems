@@ -54,6 +54,7 @@ namespace ModularEncountersSystems.Helpers {
         CargoShip,
         Escort,
         Patrol,
+        Tunneller,
 
     }
 

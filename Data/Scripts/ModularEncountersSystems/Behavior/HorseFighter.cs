@@ -236,7 +236,12 @@ namespace ModularEncountersSystems.Behavior {
 			//Behavior Specific Defaults
 			_behavior.AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-HorseFighter");
 			_behavior.Despawn.UseNoTargetTimer = true;
-			_behavior.AutoPilot.Weapons.UseStaticGuns = true;
+
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+
+			}
 
 
 		}

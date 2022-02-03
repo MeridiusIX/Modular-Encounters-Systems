@@ -173,7 +173,7 @@ namespace ModularEncountersSystems.Configuration {
 
 		}
 		
-		public ConfigSpaceCargoShips LoadSettings(){
+		public ConfigSpaceCargoShips LoadSettings(string phase) {
 			
 			if(MyAPIGateway.Utilities.FileExistsInWorldStorage("Config-SpaceCargoShips.xml", typeof(ConfigSpaceCargoShips)) == true){
 				
@@ -183,19 +183,24 @@ namespace ModularEncountersSystems.Configuration {
 					var reader = MyAPIGateway.Utilities.ReadFileInWorldStorage("Config-SpaceCargoShips.xml", typeof(ConfigSpaceCargoShips));
 					string configcontents = reader.ReadToEnd();
 					config = MyAPIGateway.Utilities.SerializeFromXML<ConfigSpaceCargoShips>(configcontents);
-					SpawnLogger.Write("Loaded Existing Settings From Config-SpaceCargoShips.xml", SpawnerDebugEnum.Startup);
+					config.ConfigLoaded = true;
+					SpawnLogger.Write("Loaded Existing Settings From Config-SpaceCargoShips.xml. Phase: " + phase, SpawnerDebugEnum.Startup, true);
 					return config;
 					
 				}catch(Exception exc){
 					
-					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-SpaceCargoShips.xml. Using Default Configuration.", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("ERROR: Could Not Load Settings From Config-SpaceCargoShips.xml. Using Default Configuration. Phase: " + phase, SpawnerDebugEnum.Error, true);
 					var defaultSettings = new ConfigSpaceCargoShips();
 					return defaultSettings;
 					
 				}
-				
+
+			} else {
+
+				SpawnLogger.Write("Config-SpaceCargoShips.xml Doesn't Exist. Creating Default Configuration. Phase: " + phase, SpawnerDebugEnum.Startup, true);
+
 			}
-			
+
 			var settings = new ConfigSpaceCargoShips();
 			
 			try{
@@ -208,7 +213,7 @@ namespace ModularEncountersSystems.Configuration {
 				
 			}catch(Exception exc){
 				
-				SpawnLogger.Write("ERROR: Could Not Create Config-SpaceCargoShips.xml. Default Settings Will Be Used.", SpawnerDebugEnum.Startup);
+				SpawnLogger.Write("ERROR: Could Not Create Config-SpaceCargoShips.xml. Default Settings Will Be Used. Phase: " + phase, SpawnerDebugEnum.Error, true);
 				
 			}
 			

@@ -464,7 +464,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				}
 
 				Targeting.InitTags();
-				Weapons.InitTags();
 
 			}
 

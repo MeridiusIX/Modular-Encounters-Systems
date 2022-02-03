@@ -20,6 +20,10 @@ namespace ModularEncountersSystems.World {
 		public static List<StaticEncounter> StaticEncounters = new List<StaticEncounter>();
 		public static List<string> UniqueGroupsSpawned = new List<string>();
 
+		public static List<NpcData> SpawnedNpcData = new List<NpcData>();
+		public static int SpawnIncrement { get { _spawnIncrement++; return _spawnIncrement; } }
+		private static int _spawnIncrement = 0;
+
 		public static Dictionary<IMyRemoteControl, string> RemoteControlCodes = new Dictionary<IMyRemoteControl, string>();
 
 		public static Action<IMyCubeGrid, string> DespawnSource;

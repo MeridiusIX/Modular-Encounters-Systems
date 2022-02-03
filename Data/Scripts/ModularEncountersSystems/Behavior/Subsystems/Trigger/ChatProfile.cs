@@ -1,32 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Definitions;
-using Sandbox.Game;
-using Sandbox.Game.Entities;
-using Sandbox.Game.EntityComponents;
-using Sandbox.Game.GameSystems;
-using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.ModAPI.Weapons;
-using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
-using VRage.Game;
-using VRage.Game.Components;
-using VRage.Game.Entity;
-using VRage.Game.ModAPI;
-using VRage.ModAPI;
-using VRage.ObjectBuilders;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Utils;
-using VRageMath;
-using ModularEncountersSystems.Helpers;
+﻿using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ProtoBuf;
+using Sandbox.ModAPI;
+using System;
+using System.Collections.Generic;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -105,8 +82,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(24)]
 		public List<float> ChatVolumeMultiplier;
 
+		[ProtoMember(25)]
+		public bool AllowDuplicatedMessages;
+
 		[ProtoIgnore]
 		public Random Rnd;
+
+		[ProtoIgnore]
+		public bool CheckForCustomNames;
 
 		public ChatProfile() {
 
@@ -130,6 +113,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SendToAllOnlinePlayers = false;
 			GPSLabel = "";
 			ChatVolumeMultiplier = new List<float>();
+			AllowDuplicatedMessages = false;
 
 			SecondsUntilChat = 0;
 			ChatSentCount = 0;
@@ -341,6 +325,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[ChatVolumeMultiplier:") == true) {
 
 						TagParse.TagFloatCheck(tag, ref ChatVolumeMultiplier);
+
+					}
+
+					//AllowDuplicatedMessages
+					if (tag.Contains("[AllowDuplicatedMessages:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref AllowDuplicatedMessages);
 
 					}
 

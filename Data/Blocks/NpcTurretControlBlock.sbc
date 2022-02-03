@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CubeBlocks>
+   
+    <Definition xsi:type="MyObjectBuilder_TurretControlBlockDefinition">
+      <Id>
+        <TypeId>TurretControlBlock</TypeId>
+        <SubtypeId>MES-NpcLargeTurretControlBlock</SubtypeId>
+      </Id>
+      <Public>false</Public>
+      <GuiVisible>false</GuiVisible>
+      <DisplayName>Npc Turret Control Block</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\TurretControlBlockLarge.dds</Icon>
+      <Description>Description_TurretControlBlock</Description>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Large\TurretControlBlock.mwm</Model>
+      <Components>
+        <Component Subtype="InteriorPlate" Count="20" />
+        <Component Subtype="Construction" Count="30" />
+        <Component Subtype="Detector" Count="20" />
+        <Component Subtype="Motor" Count="4" />
+        <Component Subtype="Display" Count="6" />
+        <Component Subtype="Computer" Count="20" />
+        <Component Subtype="ProprietaryTech" Count="1">
+          <DeconstructId>
+            <TypeId>Ore</TypeId>
+            <SubtypeId>Scrap</SubtypeId>
+          </DeconstructId>
+        </Component>
+        <Component Subtype="SteelPlate" Count="20" />
+      </Components>
+      <CriticalComponent Subtype="Computer" Index="0" />
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\TurretControlBlockConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\TurretControlBlockConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\TurretControlBlockConstruction_3.mwm" />
+      </BuildProgressModels>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>24</BuildTimeSeconds>
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+        <MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="0.1" />
+        <MountPoint Side="Back" StartX="0" StartY="0.9" EndX="1" EndY="1" />
+        <MountPoint Side="Right" StartX="0.3" StartY="0" EndX="1" EndY="0.5" />
+        <MountPoint Side="Right" StartX="0" StartY="0.9" EndX="1" EndY="1" />
+        <MountPoint Side="Left" StartX="0" StartY="0" EndX="0.7" EndY="0.5" />
+        <MountPoint Side="Left" StartX="0" StartY="0.9" EndX="1" EndY="1" />
+        <MountPoint Side="Top" StartX="0" StartY="0.9" EndX="1" EndY="1" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="0.1" />
+        <MountPoint Side="Top" StartX="0" StartY="0.1" EndX="0.1" EndY="0.9" />
+        <MountPoint Side="Top" StartX="0.9" StartY="0.1" EndX="1" EndY="0.9" />
+      </MountPoints>
+      <BlockPairName>MES-NpcTurretControlBlock</BlockPairName>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+      <DamagedSound>ParticleElectrical</DamagedSound>
+      <EmissiveColorPreset>Default</EmissiveColorPreset>
+      <DestroyEffect>BlockDestroyedExplosion_Tiny</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PlayerInputDivider>50</PlayerInputDivider>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <PowerInputIdle>0.0005</PowerInputIdle>
+      <PCU>100</PCU>
+      <MaxRangeMeters>20000</MaxRangeMeters>
+      <ScreenAreas>
+        <ScreenArea Name="CockpitScreen_01" DisplayName="Top panel" />
+        <ScreenArea Name="CockpitScreen_02" DisplayName="Bottom panel" />
+        <ScreenArea Name="CockpitScreen_03" DisplayName="Bottom panel 2" />
+        <ScreenArea Name="CockpitScreen_04" DisplayName="Bottom panel 3" />
+      </ScreenAreas>
+    </Definition>
+
+    <Definition xsi:type="MyObjectBuilder_TurretControlBlockDefinition">
+      <Id>
+        <TypeId>TurretControlBlock</TypeId>
+        <SubtypeId>MES-NpcSmallTurretControlBlock</SubtypeId>
+      </Id>
+      <Public>true</Public>
+      <DisplayName>Npc Turret Control Block</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\TurretControlBlockSmall.dds</Icon>
+      <Description>Description_TurretControlBlock</Description>
+      <CubeSize>Small</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="2" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Small\TurretControlBlock.mwm</Model>
+      <Components>
+        <Component Subtype="InteriorPlate" Count="4" />
+        <Component Subtype="Construction" Count="10" />
+        <Component Subtype="Detector" Count="4" />
+        <Component Subtype="Motor" Count="2" />
+        <Component Subtype="Display" Count="1" />
+        <Component Subtype="Computer" Count="10" />
+        <Component Subtype="SteelPlate" Count="4" />
+      </Components>
+      <CriticalComponent Subtype="Computer" Index="0" />
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.50" File="Models\Cubes\Small\TurretControlBlockConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Small\TurretControlBlockConstruction_2.mwm" />
+      </BuildProgressModels>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>10</BuildTimeSeconds>
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="2" Default="true" />
+        <MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" />
+        <MountPoint Side="Right" StartX="0" StartY="0" EndX="2" EndY="1" />
+        <MountPoint Side="Left" StartX="0" StartY="0" EndX="2" EndY="1" />
+        <MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="2" />
+      </MountPoints>
+      <BlockPairName>MES-NpcTurretControlBlock</BlockPairName>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+      <DamagedSound>ParticleElectrical</DamagedSound>
+      <EmissiveColorPreset>Default</EmissiveColorPreset>
+      <DestroyEffect>BlockDestroyedExplosion_Tiny</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PlayerInputDivider>50</PlayerInputDivider>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <PowerInputIdle>0.0005</PowerInputIdle>
+      <PCU>100</PCU>
+      <MaxRangeMeters>20000</MaxRangeMeters>
+      <IsAirTight>true</IsAirTight>
+      <ScreenAreas>
+        <ScreenArea Name="CockpitScreen_01" DisplayName="Top panel" />
+      </ScreenAreas>
+    </Definition>
+
+  </CubeBlocks>
+</Definitions>

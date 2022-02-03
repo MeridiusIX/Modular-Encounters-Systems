@@ -51,6 +51,13 @@ namespace ModularEncountersSystems.Spawning {
 				string name = null;
 				bool useAiEnabled = false;
 				Color? color = null;
+				collection.Faction = collection.SelectRandomFaction();
+				long owner = FactionHelper.GetFactionMemberIdFromTag(collection.Faction);
+				var coords = path.CreatureCoords[i];
+				//Logger.Write("Bot Coords: " + coords);
+				var up = environment.NearestPlanet.UpAtPosition(coords);
+				var forward = VectorHelper.RandomPerpendicular(up);
+				var matrix = MatrixD.CreateWorld(coords, forward, up);
 
 				if (collection.Conditions.BotProfiles.Count > 0) {
 
@@ -64,13 +71,10 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					botType = profile.BotType;
-					role = profile.BotBehavior;
-					name = profile.BotDisplayName;
-					useAiEnabled = true;
 
-					if (profile.Color != new Vector3I(300, 300, 300))
-						color = new Color((int)profile.Color.X, (int)profile.Color.Y, (int)profile.Color.Z);
+					IMyCharacter character = null;
+					SpawnBotRequest(profile.SerializedData, matrix, out character, null, owner);
+					spawnedBot = true;
 
 				} else {
 
@@ -87,24 +91,15 @@ namespace ModularEncountersSystems.Spawning {
 					role = collection.Conditions.AiEnabledRole;
 					useAiEnabled = collection.Conditions.AiEnabledModBots;
 
+					if (string.IsNullOrWhiteSpace(botType))
+						continue;
+
+					IMyCharacter character = null;
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Faction Owner: " + collection.Faction, 3000);
+					SpawnBotRequest(botType, matrix, out character, name, useAiEnabled, role, null, owner, color);
+					spawnedBot = true;
+
 				}
-
-				
-
-				if (string.IsNullOrWhiteSpace(botType))
-					continue;
-
-				var coords = path.CreatureCoords[i];
-				//Logger.Write("Bot Coords: " + coords);
-				var up = environment.NearestPlanet.UpAtPosition(coords);
-				var forward = VectorHelper.RandomPerpendicular(up);
-				var matrix = MatrixD.CreateWorld(coords, forward, up);
-				IMyCharacter character = null;
-				collection.Faction = collection.SelectRandomFaction();
-				long owner = FactionHelper.GetFactionMemberIdFromTag(collection.Faction);
-				//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Faction Owner: " + collection.Faction, 3000);
-				SpawnBotRequest(botType, matrix, out character, name, useAiEnabled, role, null, owner, color);
-				spawnedBot = true;
 
 			}
 
@@ -122,15 +117,18 @@ namespace ModularEncountersSystems.Spawning {
 
 					//Logger.Write("API for AiEnabled Detected");
 					var position = new MyPositionAndOrientation(coords);
-					character = APIs.AiEnabled.SpawnBot(botId, name, position, grid, role, 0, color);
+					APIs.AiEnabled.SpawnBotQueued(botId, name, position, grid, role, owner, color);
 
 					if (character != null) {
 
 						SpawnLogger.Write(string.Format("AiEnabled Character Spawning: {0}", botId), SpawnerDebugEnum.Spawning);
+
+						/*
 						var botIdentity = character?.ControllerInfo?.ControllingIdentityId ?? 0;
 
 						if (botIdentity != 0 && owner.HasValue) {
 
+							
 							var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction((long)owner.Value);
 
 							if (faction != null) {
@@ -149,6 +147,7 @@ namespace ModularEncountersSystems.Spawning {
 							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Identity or Owner is 0", 3000);
 
 						}
+						*/
 
 					} else {
 
@@ -169,6 +168,57 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 		
+		}
+
+		public static void SpawnBotRequest(byte[] data, MatrixD coords, out IMyCharacter character, MyCubeGrid grid = null, long? owner = null) {
+
+			character = null;
+
+			if (APIs.AiEnabledApiLoaded) {
+
+				//Logger.Write("API for AiEnabled Detected");
+				var position = new MyPositionAndOrientation(coords);
+				APIs.AiEnabled.SpawnBotQueued(position, data, grid, owner);
+
+				if (character != null) {
+
+					//SpawnLogger.Write(string.Format("AiEnabled Character Spawning: {0}", botId), SpawnerDebugEnum.Spawning);
+					var botIdentity = character?.ControllerInfo?.ControllingIdentityId ?? 0;
+
+					if (botIdentity != 0 && owner.HasValue) {
+
+						var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction((long)owner.Value);
+
+						if (faction != null) {
+
+							var result = MyVisualScriptLogicProvider.SetPlayersFaction(botIdentity, faction?.Tag ?? "");
+							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Adding To Faction: " + result, 3000);
+
+						} else {
+
+							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Faction Not Found", 3000);
+
+						}
+
+					} else {
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Identity or Owner is 0", 3000);
+
+					}
+
+				} else {
+
+					//SpawnLogger.Write(string.Format("AiEnabled Spawn Failed For: {0}", botId), SpawnerDebugEnum.Spawning);
+
+				}
+
+			} else {
+
+				SpawnLogger.Write("AiEnabled API Not Loaded", SpawnerDebugEnum.Spawning);
+
+			}
+
+
 		}
 
 		public static void BotSpawnFromAction() {

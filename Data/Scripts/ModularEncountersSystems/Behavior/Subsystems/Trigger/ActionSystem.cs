@@ -1,14 +1,19 @@
 ﻿using ModularEncountersSystems.API;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Sync;
+using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.Zones;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using System;
@@ -70,6 +75,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+			}
+
+			//PlaySoundAtPosition
+			if (actions.PlaySoundAtPosition && !string.IsNullOrWhiteSpace(actions.SoundAtPosition)) {
+
+				MyVisualScriptLogicProvider.PlaySingleSoundAtPosition(actions.SoundAtPosition, RemoteControl.GetPosition());
+			
 			}
 
 			//BarrellRoll
@@ -708,26 +720,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//ResetCooldownTimeOfTriggers
 			if (actions.ResetCooldownTimeOfTriggers) {
 
-				foreach (var resetTrigger in Triggers) {
-
-					if (actions.ResetTriggerCooldownNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
-
-				}
-
-				foreach (var resetTrigger in DamageTriggers) {
-
-					if (actions.ResetTriggerCooldownNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
-
-				}
-
-				foreach (var resetTrigger in CommandTriggers) {
-
-					if (actions.ResetTriggerCooldownNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
-
-				}
+				ToggleTriggers(actions.ResetTriggerCooldownNames, CheckEnum.Ignore, CheckEnum.Yes);
 
 			}
 
@@ -735,27 +728,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.EnableTriggers) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Enable " + actions.EnableTriggerNames.Count + " Triggers.", BehaviorDebugEnum.Action);
-
-				foreach (var resetTrigger in Triggers) {
-
-					if (actions.EnableTriggerNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.UseTrigger = true;
-
-				}
-
-				foreach (var resetTrigger in DamageTriggers) {
-
-					if (actions.EnableTriggerNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.UseTrigger = true;
-
-				}
-
-				foreach (var resetTrigger in CommandTriggers) {
-
-					if (actions.EnableTriggerNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.UseTrigger = true;
-
-				}
+				ToggleTriggers(actions.EnableTriggerNames, CheckEnum.Yes, CheckEnum.Ignore);
 
 			}
 
@@ -763,28 +736,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.DisableTriggers) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Disable Triggers.", BehaviorDebugEnum.Action);
-
-				foreach (var resetTrigger in Triggers) {
-
-					if (actions.DisableTriggerNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.UseTrigger = false;
-
-				}
-
-				foreach (var resetTrigger in DamageTriggers) {
-
-					if (actions.DisableTriggerNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.UseTrigger = false;
-
-				}
-
-				foreach (var resetTrigger in CommandTriggers) {
-
-					if (actions.DisableTriggerNames.Contains(resetTrigger.ProfileSubtypeId))
-						resetTrigger.UseTrigger = false;
-
-				}
-
+				ToggleTriggers(actions.DisableTriggerNames, CheckEnum.No, CheckEnum.Ignore);
 			}
 
 			//ManuallyActivateTrigger
@@ -1045,7 +997,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				//MyVisualScriptLogicProvider.ShowNotificationToAll("Attempting To Add Bots", 3000);
 
-				var list = APIs.AiEnabled.GetAvailableGridNodes(_behavior.CurrentGrid.CubeGrid as MyCubeGrid, actions.BotCount, RemoteControl.WorldMatrix.Up, actions.OnlySpawnBotsInPressurizedRooms);
+				List<Vector3D> list = new List<Vector3D>();
+				APIs.AiEnabled.GetAvailableGridNodes(_behavior.CurrentGrid.CubeGrid as MyCubeGrid, actions.BotCount, list, RemoteControl.WorldMatrix.Up, actions.OnlySpawnBotsInPressurizedRooms);
+				//var list = APIs.AiEnabled.GetAvailableGridNodes(_behavior.CurrentGrid.CubeGrid as MyCubeGrid, actions.BotCount, RemoteControl.WorldMatrix.Up, actions.OnlySpawnBotsInPressurizedRooms);
 
 				//MyVisualScriptLogicProvider.ShowNotificationToAll("Node Count: " + list.Count, 3000);
 
@@ -1060,26 +1014,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (ProfileManager.BotSpawnProfiles.TryGetValue(botProfileName, out botProfile)) {
 
-						var coords = _behavior.CurrentGrid.CubeGrid.GridIntegerToWorld(cell);
+						var coords = cell;
 						var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
 						IMyCharacter character = null;
-						Color? color = null;
-
-						if (botProfile.Color != new Vector3I(300,300,300)) {
-
-							color = new Color((int)botProfile.Color.X, (int)botProfile.Color.Y, (int)botProfile.Color.Z);
 						
-						}
-
-						BotSpawner.SpawnBotRequest(botProfile.BotType, matrix, out character, botProfile.BotDisplayName, botProfile.UseAiEnabled, botProfile.BotBehavior, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, 0, color);
+						BotSpawner.SpawnBotRequest(botProfile.SerializedData, matrix, out character, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, 0);
 
 						if (character != null) {
 
 							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Added To Grid", 3000);
 
+							/*
 							var botIdentity = character?.ControllerInfo?.ControllingIdentityId ?? 0;
 							
-
 							if (botIdentity != 0) {
 
 								var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(RemoteControl.OwnerId);
@@ -1109,6 +1056,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Doesn't Have Identity Id in [character.ControllerInfo.ControllingIdentityId]", 3000);
 
 							}
+							*/
 
 							if (character.Physics != null && _behavior.CurrentGrid.CubeGrid.Physics != null) {
 
@@ -1148,6 +1096,221 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (_behavior.CurrentGrid != null)
 					_behavior.CurrentGrid.SetAutomatedWeaponRanges(true);
 
+			}
+
+			//UseJetpackInhibitorEffect
+			if (actions.UseJetpackInhibitorEffect != BoolEnum.None) {
+
+				if (actions.UseJetpackInhibitorEffect == BoolEnum.True) {
+
+					var remoteEntity = _behavior.RemoteControlBlockEntity;
+
+					if (_behavior.JetpackInhibitorLogic == null && remoteEntity != null) {
+
+						_behavior.JetpackInhibitorLogic = new JetpackInhibitor(remoteEntity);
+
+					}
+
+				} else {
+
+					if (_behavior.JetpackInhibitorLogic != null) {
+
+						_behavior.JetpackInhibitorLogic.Invalidate();
+						_behavior.JetpackInhibitorLogic = null;
+
+					}
+				
+				}
+			
+			}
+
+			//UseDrillInhibitorEffect
+			if (actions.UseDrillInhibitorEffect != BoolEnum.None) {
+
+				if (actions.UseDrillInhibitorEffect == BoolEnum.True) {
+
+					var remoteEntity = _behavior.RemoteControlBlockEntity;
+
+					if (_behavior.DrillInhibitorLogic == null && remoteEntity != null) {
+
+						_behavior.DrillInhibitorLogic = new DrillInhibitor(remoteEntity);
+
+					}
+
+				} else {
+
+					if (_behavior.DrillInhibitorLogic != null) {
+
+						_behavior.DrillInhibitorLogic.Invalidate();
+						_behavior.DrillInhibitorLogic = null;
+
+					}
+
+				}
+
+			}
+
+			//UseNanobotInhibitorEffect
+			if (actions.UseNanobotInhibitorEffect != BoolEnum.None) {
+
+				if (actions.UseNanobotInhibitorEffect == BoolEnum.True) {
+
+					var remoteEntity = _behavior.RemoteControlBlockEntity;
+
+					if (_behavior.NanobotInhibitorLogic == null && remoteEntity != null) {
+
+						_behavior.NanobotInhibitorLogic = new NanobotInhibitor(remoteEntity);
+
+					}
+
+				} else {
+
+					if (_behavior.NanobotInhibitorLogic != null) {
+
+						_behavior.NanobotInhibitorLogic.Invalidate();
+						_behavior.NanobotInhibitorLogic = null;
+
+					}
+
+				}
+
+			}
+
+			//UseJumpInhibitorEffect
+			if (actions.UseJumpInhibitorEffect != BoolEnum.None) {
+
+				if (actions.UseJumpInhibitorEffect == BoolEnum.True) {
+
+					var remoteEntity = _behavior.RemoteControlBlockEntity;
+
+					if (_behavior.JumpInhibitorLogic == null && remoteEntity != null) {
+
+						_behavior.JumpInhibitorLogic = new JumpDriveInhibitor(remoteEntity);
+
+					}
+
+				} else {
+
+					if (_behavior.JumpInhibitorLogic != null) {
+
+						_behavior.JumpInhibitorLogic.Invalidate();
+						_behavior.JumpInhibitorLogic = null;
+
+					}
+
+				}
+
+			}
+
+			//UsePlayerInhibitorEffect
+			if (actions.UsePlayerInhibitorEffect != BoolEnum.None) {
+
+				if (actions.UsePlayerInhibitorEffect == BoolEnum.True) {
+
+					var remoteEntity = _behavior.RemoteControlBlockEntity;
+
+					if (_behavior.PlayerInhibitorLogic == null && remoteEntity != null) {
+
+						_behavior.PlayerInhibitorLogic = new PlayerInhibitor(remoteEntity);
+
+					}
+
+				} else {
+
+					if (_behavior.PlayerInhibitorLogic != null) {
+
+						_behavior.PlayerInhibitorLogic.Invalidate();
+						_behavior.PlayerInhibitorLogic = null;
+
+					}
+
+				}
+
+			}
+
+			//SetGridCleanupExempt
+			if (actions.SetGridCleanupExempt && _behavior.CurrentGrid != null) {
+
+				Cleaning.ExemptGrids.Add(new GridCleanupExemption(_behavior.CurrentGrid, actions.GridCleanupExemptDuration));
+			
+			}
+
+			//JumpToTarget
+			if (actions.JumpToTarget && _behavior.CurrentGrid != null && _behavior.AutoPilot.Targeting.HasTarget()) {
+
+				var jumpResult = _behavior.Grid.JumpToCoords(_behavior.AutoPilot.Targeting.TargetLastKnownCoords);
+
+				if (jumpResult) {
+
+					EventWatcher.GridJumped(0, "", RemoteControl.SlimBlock.CubeGrid.EntityId);
+				
+				}
+
+				BehaviorLogger.Write("Attempt Jump To Target Entity Result: " + jumpResult, BehaviorDebugEnum.Action);
+
+			}
+
+			//JumpToJumpedEntity
+			if (actions.JumpToJumpedEntity && trigger.JumpedGrid != null) {
+
+				var jumpResult = _behavior.Grid.JumpToCoords(trigger.JumpedGrid.GetPosition());
+
+				if (jumpResult) {
+
+					EventWatcher.GridJumped(0, "", RemoteControl.SlimBlock.CubeGrid.EntityId);
+
+				}
+
+				BehaviorLogger.Write("Attempt Jump To Jumped Entity Result: " + jumpResult, BehaviorDebugEnum.Action);
+
+			}
+
+			//SpawnPlanet
+			if (actions.SpawnPlanet) {
+
+				WaypointProfile waypoint = null;
+
+				if (ProfileManager.WaypointProfiles.TryGetValue(actions.PlanetWaypointProfile, out waypoint)) {
+
+					var coords = waypoint.GenerateEncounterWaypoint(RemoteControl);
+					var pos = coords.GetCoords();
+					var pos2 = (actions.PlanetSize * 1.89186136208056666) * new Vector3D(-0.577350269189626, -0.577350269189626, -0.577350269189626) + pos;
+					var planet = MyAPIGateway.Session.VoxelMaps.SpawnPlanet(actions.PlanetName, actions.PlanetSize, MathTools.RandomBetween(1000000, 10000000), pos2);
+					BehaviorLogger.Write("Planet Created From Action", BehaviorDebugEnum.Action);
+
+					if (actions.TemporaryPlanet && planet != null) {
+
+						var planetEntity = PlanetManager.GetPlanetWithId(planet.EntityId);
+
+						if (planetEntity != null) {
+
+							var time = MyAPIGateway.Session.GameDateTime + TimeSpan.FromSeconds(actions.PlanetTimeLimit);
+							var data = MyAPIGateway.Utilities.SerializeToBinary<DateTime>(time);
+							var strData = Convert.ToBase64String(data);
+							var entity = planet as IMyEntity;
+
+							if (entity.Storage == null)
+								entity.Storage = new MyModStorageComponent();
+
+							if (entity.Storage.ContainsKey(StorageTools.MesTemporaryPlanetKey))
+								entity.Storage.Add(StorageTools.MesTemporaryPlanetKey, strData);
+							else
+								entity.Storage[StorageTools.MesTemporaryPlanetKey] = strData;
+
+							TaskProcessor.Tasks.Add(new TimedAction(actions.PlanetTimeLimit, planetEntity.DeletePlanet));
+
+							BehaviorLogger.Write("Temporary Planet Timer and Action Created", BehaviorDebugEnum.Action);
+
+						} else {
+
+							BehaviorLogger.Write("Temporary Planet Timer Could Not Be Created. PlanetEntity Object May Not Be Init Yet.", BehaviorDebugEnum.Action);
+
+						}
+					
+					}
+
+				}
+			
 			}
 
 			if (actions.UseCurrentPositionAsPatrolReference) {

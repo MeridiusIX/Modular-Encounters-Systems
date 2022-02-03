@@ -2,12 +2,14 @@
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Zones;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
 
@@ -99,7 +101,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				return _allUniqueFilters;
 
-
 			}
 		
 		}
@@ -125,6 +126,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public DateTime LastAcquisitionTime;
 		public DateTime LastRefreshTime;
 		public DateTime LastEvaluationTime;
+		public DateTime LastTargetLockOnTime;
 
 		public Vector3D TargetLastKnownCoords;
 
@@ -135,6 +137,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public bool UseNewTargetProfile;
 		public bool ResetTimerOnProfileChange;
 		public string NewTargetProfileName;
+
+		public List<ITarget> PotentialLockOnTargets;
+		public ITarget LockOnTarget;
+		public bool LockOnActive;
+		public bool LockOnOverride;
+		public bool ManualLockOnRequest;
+		public bool ApplyLockOn;
+		public bool ClearLockOn;
+		public GridDamageWatcher DamageWatcher;
 
 		public TargetingSystem(IMyRemoteControl remoteControl = null) {
 
@@ -149,6 +160,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			LastAcquisitionTime = MyAPIGateway.Session.GameDateTime;
 			LastRefreshTime = MyAPIGateway.Session.GameDateTime;
 			LastEvaluationTime = MyAPIGateway.Session.GameDateTime;
+			LastTargetLockOnTime = MyAPIGateway.Session.GameDateTime;
 
 			TargetLastKnownCoords = Vector3D.Zero;
 
@@ -158,6 +170,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			UseNewTargetProfile = false;
 			ResetTimerOnProfileChange = false;
 			NewTargetProfileName = "";
+
+			PotentialLockOnTargets = new List<ITarget>();
+			LockOnTarget = null;
+			LockOnActive = false;
+			LockOnOverride = false;
+			ManualLockOnRequest = false;
+			ApplyLockOn = false;
+			ClearLockOn = false;
 
 			_currentTargetDataName = "";
 			_allUniqueFilters = new List<TargetFilterEnum>();
@@ -1004,6 +1024,215 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			return null;
 		
+		}
+
+		public void PrepareTargetLockOn() {
+
+			if (!Data.UseVanillaTargetLocking && !ManualLockOnRequest) {
+
+				if (LockOnActive) {
+
+					ClearLockOn = true;
+				
+				}
+
+				return;
+			
+			}
+
+			if (Data.ActivateTargetLockAfterPlayerDamage) {
+
+				if (_behavior?.CurrentGrid?.Npc == null)
+					return;
+
+				if (!_behavior.CurrentGrid.Npc.AppliedAttributes.ReceivedPlayerDamage) {
+
+					if (DamageWatcher == null || !DamageWatcher.Valid())
+						DamageWatcher = new GridDamageWatcher(_behavior.CurrentGrid);
+
+					return;
+				
+				}
+			
+			}
+
+			var time = MyAPIGateway.Session.GameDateTime - LastTargetLockOnTime;
+
+			if (time.TotalSeconds < Data.TimeUntilTargetLockingRefresh && !ManualLockOnRequest)
+				return;
+
+			LastTargetLockOnTime = MyAPIGateway.Session.GameDateTime;
+			PotentialLockOnTargets.Clear();
+
+			if (LockOnOverride) {
+
+				if (TargetEligibleForLockOn(LockOnTarget)) {
+
+					return;
+
+				} else {
+
+					LockOnOverride = false;
+					LockOnTarget = null;
+
+				}
+
+			}
+
+			for (int i = GridManager.Grids.Count - 1; i >= 0; i--) {
+
+				var grid = GridManager.GetSafeGridFromIndex(i);
+
+				if (grid == null)
+					continue;
+
+				if (!TargetEligibleForLockOn(grid))
+					continue;
+
+				if (PotentialLockOnTargets.Contains(grid))
+					continue;
+
+				PotentialLockOnTargets.Add(grid);
+			}
+
+			if (PotentialLockOnTargets.Count == 0) {
+
+				LockOnTarget = null;
+				ClearLockOn = true;
+				return;
+			
+			}
+
+			ApplyLockOn = true;
+
+			//Select Target
+			if (Data.GetTargetLockBy == TargetSortEnum.Random) {
+
+				LockOnTarget = PotentialLockOnTargets[MathTools.RandomBetween(0, PotentialLockOnTargets.Count)];
+
+			}
+
+			if (Data.GetTargetLockBy == TargetSortEnum.ClosestDistance) {
+
+				double closestDist = -1;
+
+				foreach (var target in PotentialLockOnTargets) {
+
+					var dist = target.Distance(RemoteControl.GetPosition());
+
+					if (closestDist == -1 || dist < closestDist) {
+
+						closestDist = dist;
+						LockOnTarget = target;
+					
+					}
+				
+				}
+
+			}
+
+			if (Data.GetTargetLockBy == TargetSortEnum.FurthestDistance) {
+
+				double closestDist = -1;
+
+				foreach (var target in PotentialLockOnTargets) {
+
+					var dist = target.Distance(RemoteControl.GetPosition());
+
+					if (closestDist == -1 || dist > closestDist) {
+
+						closestDist = dist;
+						LockOnTarget = target;
+
+					}
+
+				}
+
+			}
+
+			if (Data.GetTargetLockBy == TargetSortEnum.HighestTargetValue) {
+
+				float bestThreat = -1;
+
+				foreach (var target in PotentialLockOnTargets) {
+
+					var threat = target.TargetValue();
+
+					if (bestThreat == -1 || threat > bestThreat) {
+
+						bestThreat = threat;
+						LockOnTarget = target;
+
+					}
+
+				}
+
+			}
+
+			if (Data.GetTargetLockBy == TargetSortEnum.LowestTargetValue) {
+
+				float bestThreat = -1;
+
+				foreach (var target in PotentialLockOnTargets) {
+
+					var threat = target.TargetValue();
+
+					if (bestThreat == -1 || threat < bestThreat) {
+
+						bestThreat = threat;
+						LockOnTarget = target;
+
+					}
+
+				}
+
+			}
+
+			//TODO: Prepare Weapons in WeaponSystem - Probably set some values and have WeaponSystem prepare during its regular run
+			_behavior.AutoPilot.Weapons.PendingTargetLockOn = true;
+
+		}
+
+		public void ProcessTargetLockOn() {
+
+			if (ClearLockOn) {
+
+				RemoteControl.SetLockedTarget(null);
+				ClearLockOn = false;
+
+			}
+
+			if (ApplyLockOn) {
+
+				if (LockOnTarget.ActiveEntity()) {
+
+					RemoteControl.SetLockedTarget(LockOnTarget.GetParentEntity() as IMyCubeGrid);
+
+				} else {
+
+					LockOnTarget = null;
+
+				}
+
+				ApplyLockOn = false;
+
+			}
+		
+		}
+
+		public bool TargetEligibleForLockOn(ITarget target, double overrideDistance = -1) {
+
+			if (target == null || !target.ActiveEntity() || target.GetEntityType() != EntityType.Grid)
+				return false;
+
+			if (target.Distance(RemoteControl.GetPosition()) > (overrideDistance > -1 ? overrideDistance : Data.MaxTargetLockingDistance))
+				return false;
+
+			if (!target.RelationTypes(RemoteControl.OwnerId, true).HasFlag(RelationTypeEnum.Enemy))
+				return true;
+
+			return true;
+
 		}
 
 		public bool HasTarget() {

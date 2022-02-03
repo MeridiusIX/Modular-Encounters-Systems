@@ -12,12 +12,14 @@ namespace ModularEncountersSystems.Behavior {
 		//Configurable
 		public double MaxDistanceFromTarget;
 		public bool RotateToTargetWithinRange;
+		public IBehavior _behavior;
 
 		public byte Counter;
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
-		public Scout() : base() {
+		public Scout(IBehavior behavior) : base() {
 
+			_behavior = behavior;
 			_subClass = BehaviorSubclass.Scout;
 			//_behaviorType = "Scout";
 			MaxDistanceFromTarget = 1500;
@@ -157,8 +159,13 @@ namespace ModularEncountersSystems.Behavior {
 			//Behavior Specific Defaults
 			AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-Scout");
 			Despawn.UseNoTargetTimer = true;
-			AutoPilot.Weapons.UseStaticGuns = true;
+			
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+
+			}
+			
 			//Get Settings From Custom Data
 			InitCoreTags();
 			InitTags();

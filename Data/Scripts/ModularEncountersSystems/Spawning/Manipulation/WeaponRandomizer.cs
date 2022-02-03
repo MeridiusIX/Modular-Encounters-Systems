@@ -432,6 +432,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 						var oldColor = (Vector3)weaponBlock.ColorMaskHSV;
 						var oldLocalForward = GetLocalGridDirection(weaponBlock.BlockOrientation.Forward);
 						var oldLocalUp = GetLocalGridDirection(weaponBlock.BlockOrientation.Up);
+						var oldEntityId = weaponBlock.EntityId;
 
 						var oldMatrix = new MatrixI(ref likelyMountingCell, ref oldLocalForward, ref oldLocalUp);
 
@@ -633,7 +634,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 								errorDebugging.Append(" - Weapon is vanilla turret").AppendLine();
 								var turretBuilder = newBlockBuilder as MyObjectBuilder_TurretBase;
-								turretBuilder.EntityId = 0;
+								turretBuilder.EntityId = oldEntityId;
 								turretBuilder.SubtypeName = weaponProfile.BlockDefinition.Id.SubtypeName;
 								turretBuilder.Min = estimatedMin;
 								turretBuilder.BlockOrientation = oldOrientation;
@@ -686,7 +687,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 								errorDebugging.Append(" - Weapon is vanilla gun or weaponcore").AppendLine();
 								var gunBuilder = newBlockBuilder as MyObjectBuilder_CubeBlock;
-								gunBuilder.EntityId = 0;
+								gunBuilder.EntityId = oldEntityId;
 								gunBuilder.SubtypeName = weaponProfile.BlockDefinition.Id.SubtypeName;
 								gunBuilder.Min = estimatedMin;
 								gunBuilder.BlockOrientation = oldOrientation;

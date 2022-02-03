@@ -13,6 +13,7 @@ namespace ModularEncountersSystems.BlockLogic {
 	public class PlayerInhibitor : BaseBlockLogic, IBlockLogic {
 
 		internal IMyRadioAntenna _antenna;
+		internal IMyTerminalBlock _block;
 
 		internal double _antennaRange;
 
@@ -41,12 +42,23 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_playersInBlockRange = new List<PlayerEntity>();
 			_antenna = block.Block as IMyRadioAntenna;
-			_antenna.Radius = 1000;
+			_block = block.Block as IMyTerminalBlock;
+
+			if (_antenna != null) {
+
+				_antenna.Radius = 1000;
+				_antenna.CustomName = "[Player Inhibitor Field]";
+				_antenna.CustomNameChanged += NameChange;
+
+			} else {
+
+				_antennaRange = 1000;
+
+			}
+
 			_logicType = "Player Inhibitor";
 			_useTick60 = true;
 			_useTick100 = true;
-			_antenna.CustomName = "[Player Inhibitor Field]";
-			_antenna.CustomNameChanged += NameChange;
 
 		}
 
@@ -67,9 +79,9 @@ namespace ModularEncountersSystems.BlockLogic {
 				if (!player.ActiveEntity() || player.IsParentEntitySeat)
 					continue;
 
-				float distanceRatio = 1 - (float)(Vector3D.Distance(player.GetPosition(), _antenna.GetPosition()) / _antennaRange);
+				float distanceRatio = 1 - (float)(Vector3D.Distance(player.GetPosition(), Entity.GetPosition()) / _antennaRange);
 
-				player.Player.Character.DoDamage(_damageAtZeroDistance * distanceRatio, MyStringHash.GetOrCompute("Radiation"), true, null, _antenna.EntityId);
+				player.Player.Character.DoDamage(_damageAtZeroDistance * distanceRatio, MyStringHash.GetOrCompute("Radiation"), true, null, Entity.EntityId);
 
 			}
 
@@ -80,7 +92,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			if (!_isWorking || !Active)
 				return;
 
-			if (_antenna.Radius != _antennaRange) {
+			if (_antenna != null && _antenna.Radius != _antennaRange) {
 
 				_antennaRange = _antenna.Radius;
 
@@ -96,7 +108,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				}
 
-				var distance = player.Distance(_antenna.GetPosition());
+				var distance = player.Distance(Entity.GetPosition());
 
 				if (distance > _antennaRange) {
 

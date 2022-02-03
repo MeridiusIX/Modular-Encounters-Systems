@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Tasks;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
@@ -42,6 +43,10 @@ namespace ModularEncountersSystems.BlockLogic {
 		public IMyEntity Entity;
 		public bool FunctionalOverride;
 
+		internal bool _registeredOwnershipCheck = false;
+		internal bool _invalidOwnership = false;
+
+
 		internal virtual void Setup(BlockEntity block) {
 
 			_createTime = MyAPIGateway.Session.GameDateTime;
@@ -77,6 +82,13 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		}
 
+		internal virtual void RegisterOwnershipWatcher() {
+
+			_registeredOwnershipCheck = true;
+			Block.Block.OwnershipChanged += NpcOwnerChanged;
+		
+		}
+
 		internal virtual void PhysicsChanged(IMyEntity entity = null) {
 
 			if (Block?.Block?.SlimBlock?.CubeGrid?.Physics != null) {
@@ -99,13 +111,31 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			if (Block?.Block != null)
 				_isWorking = Block.Block.IsFunctional && Block.Block.IsWorking;
+			else
+				return;
+
+			if (_invalidOwnership && Block.FunctionalBlock != null) {
+
+				_isWorking = false;
+				Block.FunctionalBlock.Enabled = false;
+
+			}
 
 		}
 
-		internal void OwnerChanged() {
-		
+		internal void NpcOwnerChanged(IMyTerminalBlock block) {
+
+			if (!Block.ActiveEntity()) {
+
+				_invalidOwnership = true;
+				return;
 			
-		
+			}
+
+			_invalidOwnership = FactionHelper.IsIdentityPlayer(Block.Block.OwnerId);
+			WorkingChanged();
+
+
 		}
 
 		public override void Run() {
@@ -171,8 +201,16 @@ namespace ModularEncountersSystems.BlockLogic {
 			if (TaskProcessor.Tick100?.Tasks != null)
 				TaskProcessor.Tick100.Tasks -= RunTick100;
 
-			if (Block?.Block != null)
+			if (Block?.Block != null) {
+
 				Block.Block.IsWorkingChanged -= WorkingChanged;
+
+				if (_registeredOwnershipCheck)
+					Block.Block.OwnershipChanged -= NpcOwnerChanged;
+
+			}
+				
+
 
 		}
 

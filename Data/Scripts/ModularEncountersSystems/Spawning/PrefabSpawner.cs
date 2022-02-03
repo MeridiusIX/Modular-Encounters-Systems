@@ -73,14 +73,28 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (spawnCollection.SpawnGroup.SpawnGroup.Voxels.Count > 0) {
 
-				foreach (var voxel in spawnCollection.SpawnGroup.SpawnGroup.Voxels) {
+				for (int i = 0; i < spawnCollection.SpawnGroup.SpawnGroup.Voxels.Count; i++) {
 
-					Vector3D coords = Vector3D.Transform(voxel.Offset, path.SpawnMatrix);
+					var voxel = spawnCollection.SpawnGroup.SpawnGroup.Voxels[i];
+					Vector3D coords = path.SpawnMatrix.Translation + voxel.Offset; //Was Transform
+					MatrixD matrixVoxel = MatrixD.CreateWorld(coords);
 					IMyVoxelMap voxelSpawn = null;
+					string material = null;
+
+					if (spawnCollection.Conditions.CustomVoxelMaterial.Count > i)
+						material = spawnCollection.Conditions.CustomVoxelMaterial[i];
 
 					try {
 
-						voxelSpawn = MyAPIGateway.Session.VoxelMaps.CreateVoxelMapFromStorageName(voxel.StorageName, voxel.StorageName, coords);
+						if (!voxel.CenterOffset) {
+
+							voxelSpawn = MyAPIGateway.Session.VoxelMaps.CreateVoxelMapFromStorageName(voxel.StorageName, voxel.StorageName, coords);
+
+						} else {
+
+							voxelSpawn = MyAPIGateway.Session.VoxelMaps.CreatePredefinedVoxelMap(voxel.StorageName, material, matrixVoxel, false);
+						
+						}
 
 						if (voxelSpawn != null) {
 
@@ -91,22 +105,6 @@ namespace ModularEncountersSystems.Spawning {
 
 							}
 
-							/*
-							if (!voxel.CenterOffset) {
-
-								var center = voxelSpawn.PositionComp.WorldAABB.Center;
-								var corner = voxelSpawn.PositionLeftBottomCorner;
-								var dir = Vector3D.Normalize(corner - center);
-								var newCoords = dir * Vector3D.Distance(corner, center) + corner;
-								var newMatrix = MatrixD.CreateWorld(newCoords, voxelSpawn.WorldMatrix.Forward, voxelSpawn.WorldMatrix.Up);
-								voxelSpawn.SetWorldMatrix(newMatrix);
-
-							} else {
-							
-								
-							
-							}
-							*/
 						}
 
 					} catch (Exception e) {
@@ -171,6 +169,7 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.SpawnedByMES = true;
 				npcData.ConditionIndex = spawnCollection.ConditionsIndex;
 				npcData.ZoneIndex = spawnCollection.ZoneIndex;
+				npcData.UniqueSpawnIdentifier = MyAPIGateway.Session.GameDateTime.ToString("yyyyMMddhhmmssfff-") + NpcManager.SpawnIncrement;
 
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(spawnCollection.SelectPrefabOffet(sgPrefab.Position, i), environment, spawnCollection.Conditions.CustomPathStartAltitude);
@@ -250,6 +249,7 @@ namespace ModularEncountersSystems.Spawning {
 				try {
 
 					gridListDummy.Clear();
+					NpcManager.SpawnedNpcData.Add(npcData);
 					MyAPIGateway.PrefabManager.SpawnPrefab(gridListDummy, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner);
 
 				} catch (Exception exc) {

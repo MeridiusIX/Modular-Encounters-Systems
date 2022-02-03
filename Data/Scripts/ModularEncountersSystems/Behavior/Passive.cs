@@ -39,6 +39,11 @@ namespace ModularEncountersSystems.Behavior {
 			_behavior.Despawn.UsePlayerDistanceTimer = false;
 			_behavior.AutoPilot.Targeting.Data.UseCustomTargeting = false;
 
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericPAssive";
+
+			}
 		}
 
 		public void ProcessBehavior() {

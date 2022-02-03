@@ -1,7 +1,10 @@
 ﻿using ModularEncountersSystems.API;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Tasks;
 using Sandbox.Game.Entities;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,13 +24,24 @@ namespace ModularEncountersSystems.Entities {
 
 		public MyGravityProviderComponent Gravity;
 
-		
+
 		public PlanetEntity(IMyEntity entity) : base(entity) {
 
 			Planet = entity as MyPlanet;
 			HasGravity = entity.Components.TryGet<MyGravityProviderComponent>(out Gravity);
 			HasAtmosphere = Planet.HasAtmosphere;
 			HasOxygen = Planet.GetOxygenForPosition(GetPosition()) > 0 ? true : false;
+
+			var storage = "";
+
+			if (entity?.Storage != null && entity.Storage.TryGetValue(StorageTools.MesTemporaryPlanetKey, out storage)) {
+
+				var data = Convert.FromBase64String(storage);
+				var dateTime = MyAPIGateway.Utilities.SerializeFromBinary<DateTime>(data);
+				var timeSpan = dateTime - MyAPIGateway.Session.GameDateTime;
+				TaskProcessor.Tasks.Add(new TimedAction((int)timeSpan.TotalSeconds, DeletePlanet));
+
+			}
 
 		}
 
@@ -50,7 +64,7 @@ namespace ModularEncountersSystems.Entities {
 				var coordsCore = DistanceToCore(coords);
 				var surfaceCore = DistanceToCore(surface);
 				return coordsCore - surfaceCore;
-			
+
 			}
 
 			return 0;
@@ -67,6 +81,16 @@ namespace ModularEncountersSystems.Entities {
 
 			base.CloseEntity(entity);
 			IsValidEntity = false;
+
+		}
+
+		public void DeletePlanet() {
+
+			if (Planet == null)
+				return;
+
+			Planet.Close();
+			CloseEntity(Planet);
 
 		}
 

@@ -237,6 +237,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+		//CheckSession
+		public bool CheckSession(TriggerProfile trigger) {
+
+			return !trigger.SessionTriggerActivated;
+
+		}
+
 	}
 
 }

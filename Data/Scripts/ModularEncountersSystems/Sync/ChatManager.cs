@@ -127,8 +127,6 @@ namespace ModularEncountersSystems.Sync {
             if (!MyAPIGateway.Entities.TryGetEntityById(newChatData.PlayerEntity, out playerEntity))
                 return;
 
-            //TODO: Uncomment When RAI is integrated
-            /*
             var command = new Command();
             command.CommandCode = newChatData.Message;
             command.Type = CommandType.PlayerChat;
@@ -137,7 +135,6 @@ namespace ModularEncountersSystems.Sync {
             command.Position = newChatData.PlayerPosition;
             command.PlayerIdentity = newChatData.PlayerId;
             CommandHelper.CommandTrigger?.Invoke(command);
-            */
 
         }
 

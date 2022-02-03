@@ -52,6 +52,35 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void ChangeBool(ChatMessage msg, string[] msgSplit) {
+
+			if (msgSplit.Length < 5) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			bool newBool = false;
+			bool existingBool = false;
+
+			bool boolValid = bool.TryParse(msgSplit[4], out newBool);
+			bool existingGot = MyAPIGateway.Utilities.GetVariable(msgSplit[3], out existingBool);
+
+			if (!newBool) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Could not parse amount to modify bool", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			MyVisualScriptLogicProvider.ShowNotification("Value for Bool: " + msgSplit[3] + " ::: " + newBool, 5000, "White", msg.PlayerId);
+
+			MyAPIGateway.Utilities.SetVariable(msgSplit[3], newBool);
+			return;
+
+		}
+
 		public static void ChangeCounter(ChatMessage msg, string[] msgSplit) {
 
 			if (msgSplit.Length < 5) {
@@ -520,6 +549,21 @@ namespace ModularEncountersSystems.Logging {
 
 			}
 
+			//Plugins
+			if (MyAPIGateway.Utilities.ConfigDedicated?.Plugins != null && MyAPIGateway.Utilities.ConfigDedicated.Plugins.Count > 0) {
+
+				sb.Append("::: All Server Plugins :::").AppendLine();
+
+				foreach (var plugin in MyAPIGateway.Utilities.ConfigDedicated.Plugins) {
+
+					sb.Append(" - ").Append(plugin).AppendLine();
+
+				}
+
+				sb.AppendLine();
+
+			}
+
 			//Errors
 			var errors = SpawnLogger.Error.ToString();
 
@@ -819,6 +863,15 @@ namespace ModularEncountersSystems.Logging {
 				sb.Append("::: Timeout Zones In Range :::").AppendLine();
 
 				foreach (var timeout in TimeoutManagement.Timeouts) {
+
+					var timeoutRemaining = timeout.TimeoutLength();
+
+					if (timeoutRemaining.X >= timeoutRemaining.Y) {
+
+						timeout.Remove = true;
+						continue;
+					
+					}
 
 					sb.Append(timeout.GetInfo(environment.Position)).AppendLine();
 

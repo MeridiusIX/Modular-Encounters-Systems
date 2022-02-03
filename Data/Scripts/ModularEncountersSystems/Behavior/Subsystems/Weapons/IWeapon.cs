@@ -3,17 +3,27 @@ using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 	public interface IWeapon {
 
+		bool IsWeaponCore { get; }
+		bool PendingAmmoRefill { get; }
+		bool ReadyToFire { get; set; }
+		List<IWeapon> SubWeapons { get; }
+		bool UsesTurretController { get; set; }
+		bool PendingLockOn { get; set; }
+		bool HasLockOn { get; set; }
+		IMyCubeGrid LockOnTarget { get; set; }
 		double AmmoAcceleration();
 		double AmmoInitialVelocity();
 		double AmmoVelocity();
 		IMyFunctionalBlock Block();
+		bool CanLockOnGrid(IMyCubeGrid cubeGrid);
 		IMyEntity CurrentTarget();
-		void DetermineWeaponReadiness();
+		void DetermineWeaponReadiness(bool usingTurretController = false);
 		void FireOnce(); //Fires The Weapon Once
 		Direction GetDirection();
 		bool HasAmmo();
@@ -26,6 +36,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		float MaxAmmoTrajectory();
 		void ReplenishAmmo();
 		void SetDirection(Direction direction);
+		void SetLockOnTarget();
 		void SetTarget(IMyEntity entity);
 		void ToggleFire();
 		

@@ -52,7 +52,9 @@ namespace ModularEncountersSystems.Spawning {
 		public bool MustUseStrictZone;
 		public bool MustUseAllowedZoneSpawns;
 		public List<string> AllowedZoneSpawns;
+		public List<string> OnlyAllowedZoneSpawns;
 		public List<string> AllowedZoneFactions;
+		public List<string> RestrictedZoneSpawnGroups;
 
 		public SpawnGroupCollection() {
 
@@ -85,7 +87,9 @@ namespace ModularEncountersSystems.Spawning {
 			MustUseStrictZone = false;
 			MustUseAllowedZoneSpawns = false;
 			AllowedZoneSpawns = new List<string>();
+			OnlyAllowedZoneSpawns = new List<string>();
 			AllowedZoneFactions = new List<string>();
+			RestrictedZoneSpawnGroups = new List<string>();
 
 		}
 
@@ -190,9 +194,13 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnGroup = SpawnGroups[MathTools.RandomBetween(0, SpawnGroups.Count)];
 
-				if (!ActiveConditions.TryGetValue(SpawnGroup.SpawnGroupName, out ConditionsIndex))
+				if (!ActiveConditions.TryGetValue(SpawnGroup.SpawnGroupName, out ConditionsIndex)) {
+
+					SpawnLogger.Write("Failed To Get SpawnConditionProfile Index At Spawn Selection. Using Index 0", SpawnerDebugEnum.Spawning);
 					ConditionsIndex = 0;
 
+				}
+				
 				Conditions = SpawnGroup.SpawnConditionsProfiles[ConditionsIndex];
 				SelectPrefabIndexes();
 				return true;
@@ -238,7 +246,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				for (int i = 0; i < Conditions.PrefabIndexes.Count; i++) {
 
-					if (!PrefabIndexes.Contains(Conditions.PrefabIndexes[i]))
+					if (!PrefabIndexes.Contains(Conditions.PrefabIndexes[i]) || Conditions.AllowPrefabIndexReuse)
 						PrefabIndexes.Add(Conditions.PrefabIndexes[i]);
 
 				}
@@ -262,7 +270,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					if (list[indexToAdd] >= 0 && !PrefabIndexes.Contains(list[indexToAdd])) {
+					if (list[indexToAdd] >= 0 && (!PrefabIndexes.Contains(list[indexToAdd]) || Conditions.AllowPrefabIndexReuse)) {
 
 						SpawnLogger.Write("Prefab Index Selected: " + list[indexToAdd], SpawnerDebugEnum.Spawning);
 						PrefabIndexes.Add(list[indexToAdd]);

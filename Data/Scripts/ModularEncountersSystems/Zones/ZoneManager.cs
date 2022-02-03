@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Tasks;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -239,19 +240,33 @@ namespace ModularEncountersSystems.Zones {
 		
 		}
 
-		public static void GetAllowedSpawns(Vector3D coords, List<string> allowedSpawns, List<string> allowedFactions) {
+		public static void GetAllowedSpawns(Vector3D coords, SpawnGroupCollection collection) {
 
 			foreach (var zone in ActiveZones) {
 
-				if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+				if (!zone.Active)
+					continue;
+
+				if (zone.UseAllowedSpawnGroups) {
+
+					foreach (var spawn in zone.AllowedSpawnGroups) {
+
+						if (!string.IsNullOrWhiteSpace(spawn) && !collection.OnlyAllowedZoneSpawns.Contains(spawn))
+							collection.OnlyAllowedZoneSpawns.Add(spawn);
+
+					}
+
+				}
+
+				if (Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
 					continue;
 
 				if (zone.Persistent && zone.AllowedSpawnGroups.Count > 0) {
 
 					foreach (var spawn in zone.AllowedSpawnGroups) {
 
-						if(!string.IsNullOrWhiteSpace(spawn) && !allowedSpawns.Contains(spawn))
-							allowedSpawns.Add(spawn);
+						if(!string.IsNullOrWhiteSpace(spawn) && !collection.AllowedZoneSpawns.Contains(spawn))
+							collection.AllowedZoneSpawns.Add(spawn);
 
 					}
 				
@@ -261,8 +276,19 @@ namespace ModularEncountersSystems.Zones {
 
 					foreach (var faction in zone.Factions) {
 
-						if (!string.IsNullOrWhiteSpace(faction) && !allowedFactions.Contains(faction))
-							allowedFactions.Add(faction);
+						if (!string.IsNullOrWhiteSpace(faction) && !collection.AllowedZoneFactions.Contains(faction))
+							collection.AllowedZoneFactions.Add(faction);
+
+					}
+
+				}
+
+				if (zone.Persistent && zone.UseRestrictedSpawnGroups && zone.RestrictedSpawnGroups.Count > 0) {
+
+					foreach (var spawn in zone.RestrictedSpawnGroups) {
+
+						if (!string.IsNullOrWhiteSpace(spawn) && !collection.RestrictedZoneSpawnGroups.Contains(spawn))
+							collection.RestrictedZoneSpawnGroups.Add(spawn);
 
 					}
 

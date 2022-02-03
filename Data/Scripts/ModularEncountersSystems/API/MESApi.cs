@@ -27,6 +27,7 @@ namespace ModularEncountersSystems.API {
 		private Func<IMyCubeGrid, Vector3D> _getNpcEndCoordinates;
 		private Action<bool, string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>> _registerBehaviorCustomTrigger;
 		private Action<bool, Action<IMyRemoteControl, IMyCubeGrid>> _registerCompromisedRemoteWatcher;
+		private Action<bool, string, Func<string, string, string, Vector3D, bool>> _registerCustomSpawnCondition;
 		private Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool> _registerDespawnWatcher;
 		private Action<IMyRemoteControl, string> _registerRemoteControlCode;
 		private Action<Vector3D, string, bool> _removeKnownPlayerLocation;
@@ -167,6 +168,21 @@ namespace ModularEncountersSystems.API {
 		public void RegisterCompromisedRemoteWatcher(bool register, Action<IMyRemoteControl, IMyCubeGrid> action) => _registerCompromisedRemoteWatcher?.Invoke(register, action);
 
 		/// <summary>
+		/// Allows you to register a method that is invoked when a Behavior Trigger is checked. The Trigger will pass or fail depending on the bool output of your provided method.
+		/// </summary>
+		/// <param name="register">If true, the method provided will be registered. If false, the provided method will be deregistered.</param>
+		/// <param name="methodIdentifier">A unique name that is used to link your method to a Trigger Profile</param>
+		/// <param name="func">The method you want invoked when Trigger is activated.</param>
+		/*
+			Func Parameters:
+			IMyRemoteControl:  The remote control the behavior is attached to
+			string:            The Trigger Profile SubtypeId that is being checked
+			IMyEntity:         The current Targeted Entity the behavior has. Null if no current target.
+			Vector3D:          The current waypoint the behavior is using.
+		*/
+		public void RegisterCustomSpawnCondition(bool register, string methodIdentifier, Func<string, string, string, Vector3D, bool> func) => _registerCustomSpawnCondition?.Invoke(register, methodIdentifier, func);
+
+		/// <summary>
 		/// Allows you to provide an action that will be invoked when the spawner despawns a grid.
 		/// The action provided has parameters for the targeted cubegrid and a string that identifies what sort of despawn occured (CleanUp or EndPath)
 		/// </summary>
@@ -273,6 +289,7 @@ namespace ModularEncountersSystems.API {
 				_getNpcEndCoordinates = (Func<IMyCubeGrid, Vector3D>)dict["GetNpcEndCoordinates"];
 				_registerCompromisedRemoteWatcher = (Action<bool, Action<IMyRemoteControl, IMyCubeGrid>>)dict["RegisterCompromisedRemoteWatcher"];
 				_registerBehaviorCustomTrigger = (Action<bool, string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>>)dict["RegisterBehaviorCustomTrigger"];
+				_registerCustomSpawnCondition = (Action<bool, string, Func<string, string, string, Vector3D, bool>>)dict["RegisterCustomSpawnCondition"];
 				_registerDespawnWatcher = (Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool>)dict["RegisterDespawnWatcher"];
 				_registerRemoteControlCode = (Action<IMyRemoteControl, string>)dict["RegisterRemoteControlCode"];
 				_removeKnownPlayerLocation = (Action<Vector3D, string, bool>)dict["RemoveKnownPlayerLocation"];

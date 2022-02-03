@@ -15,6 +15,8 @@ namespace ModularEncountersSystems.Entities {
 		public IMyTerminalBlock Block;
 		public IMyFunctionalBlock FunctionalBlock;
 
+		public string BlockType;
+
 		public bool Enabled;		//Block Is Turned On (If It Can Be)
 		public bool Functional;		//Built & Undamaged
 		public bool Modded;			//Is From a Mod
@@ -33,6 +35,8 @@ namespace ModularEncountersSystems.Entities {
 			Block = entity as IMyTerminalBlock;
 			IsValidEntity = true;
 			RefreshSubGrids();
+
+			BlockType = Block.SlimBlock.BlockDefinition.Id.TypeId.ToString();
 
 			Block.IsWorkingChanged += WorkingChanged;
 			WorkingChanged(Block);

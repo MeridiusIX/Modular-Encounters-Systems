@@ -74,7 +74,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 						var block = eligibleCargoContainers[containerIndex];
 						block.ContainerType = lootProfile.ContainerTypes[MathTools.RandomBetween(0, lootProfile.ContainerTypes.Count)];
 
-						if (lootProfile.AppendNameToBlock == !block.CustomName.Contains(lootProfile.AppendedName))
+						if (!string.IsNullOrWhiteSpace(block.CustomName) && lootProfile.AppendNameToBlock == !block.CustomName.Contains(lootProfile.AppendedName))
 							block.CustomName += lootProfile.AppendedName;
 
 						eligibleCargoContainers.RemoveAt(containerIndex);

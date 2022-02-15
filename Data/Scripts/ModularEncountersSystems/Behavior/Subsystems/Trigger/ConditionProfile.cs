@@ -600,7 +600,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					BehaviorLogger.Write("Altitude Check Failed, Not On Planet", BehaviorDebugEnum.Condition);
 
 				}
-					
+				
+			}
+
+			if (ConditionReference.CheckHorizonAngle) {
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.InGravity() && _behavior.RemoteControl != null) {
+
+					var result = Math.Abs(VectorHelper.GetAngleBetweenDirections(_behavior.AutoPilot.UpDirectionFromPlanet, _behavior.RemoteControl.WorldMatrix.Forward) - 90);
+
+					if ((ConditionReference.MinHorizonAngle == -1 || _behavior.AutoPilot.MyAltitude > ConditionReference.MinHorizonAngle) && (ConditionReference.MaxHorizonAngle == -1 || _behavior.AutoPilot.MyAltitude < ConditionReference.MaxHorizonAngle))
+						satisfiedConditions++;
+				
+				}
 
 			}
 

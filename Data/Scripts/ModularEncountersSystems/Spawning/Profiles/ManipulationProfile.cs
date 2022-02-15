@@ -22,6 +22,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> ManipulationRestrictedPrefabNames;
 		public List<int> ManipulationAllowedPrefabIndexes;
 		public List<int> ManipulationRestrictedPrefabIndexes;
+		public int ManipulationMinDifficulty;
+		public int ManipulationMaxDifficulty;
 
 		public bool RandomizeWeapons;
 		public bool IgnoreWeaponRandomizerMod;
@@ -202,6 +204,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ManipulationRestrictedPrefabNames = new List<string>();
 			ManipulationAllowedPrefabIndexes = new List<int>();
 			ManipulationRestrictedPrefabIndexes = new List<int>();
+			ManipulationMinDifficulty = -1;
+			ManipulationMaxDifficulty = -1;
 
 			RandomizeWeapons = false;
 			IgnoreWeaponRandomizerMod = false;
@@ -453,6 +457,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ManipulationRestrictedPrefabIndexes:") == true) {
 
 					TagParse.TagIntListCheck(tag, true, ref this.ManipulationRestrictedPrefabIndexes);
+
+				}
+
+				//ManipulationMinDifficulty
+				if (tag.StartsWith("[ManipulationMinDifficulty:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.ManipulationMinDifficulty);
+
+				}
+
+				//ManipulationMaxDifficulty
+				if (tag.StartsWith("[ManipulationMaxDifficulty:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.ManipulationMaxDifficulty);
 
 				}
 

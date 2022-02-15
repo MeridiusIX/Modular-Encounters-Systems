@@ -168,17 +168,17 @@ namespace ModularEncountersSystems.API {
 		public void RegisterCompromisedRemoteWatcher(bool register, Action<IMyRemoteControl, IMyCubeGrid> action) => _registerCompromisedRemoteWatcher?.Invoke(register, action);
 
 		/// <summary>
-		/// Allows you to register a method that is invoked when a Behavior Trigger is checked. The Trigger will pass or fail depending on the bool output of your provided method.
+		/// Allows you to register a method that is invoked when a SpawnGroup's Conditions are being evaluated. The SpawnGroup eligiblity will pass or fail depending on the bool output of your provided method.
 		/// </summary>
 		/// <param name="register">If true, the method provided will be registered. If false, the provided method will be deregistered.</param>
-		/// <param name="methodIdentifier">A unique name that is used to link your method to a Trigger Profile</param>
-		/// <param name="func">The method you want invoked when Trigger is activated.</param>
+		/// <param name="methodIdentifier">A unique name that is used to link your method to a SpawnCondition</param>
+		/// <param name="func">The method you want invoked when Spawning is requested.</param>
 		/*
 			Func Parameters:
-			IMyRemoteControl:  The remote control the behavior is attached to
-			string:            The Trigger Profile SubtypeId that is being checked
-			IMyEntity:         The current Targeted Entity the behavior has. Null if no current target.
-			Vector3D:          The current waypoint the behavior is using.
+			string:            The SpawnGroup SubtypeID
+			string:            The SpawnConditions Profile SubtypeID
+			string:            The type of spawn requested.
+			Vector3D:          The location of the entity where spawning will take place (eg: player, drone, etc).
 		*/
 		public void RegisterCustomSpawnCondition(bool register, string methodIdentifier, Func<string, string, string, Vector3D, bool> func) => _registerCustomSpawnCondition?.Invoke(register, methodIdentifier, func);
 

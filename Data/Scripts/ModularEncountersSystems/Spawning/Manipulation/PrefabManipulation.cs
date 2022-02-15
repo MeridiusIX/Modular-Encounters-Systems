@@ -203,6 +203,20 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+			if (profile.ManipulationMinDifficulty > -1 && Settings.General.Difficulty < profile.ManipulationMinDifficulty) {
+
+				SpawnLogger.Write("Minimum Difficulty Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+
+			if (profile.ManipulationMaxDifficulty > -1 && Settings.General.Difficulty > profile.ManipulationMaxDifficulty) {
+
+				SpawnLogger.Write("Maximum Difficulty Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+				return false;
+
+			}
+
 			return true;
 
 		}
@@ -557,7 +571,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 							var antenna = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
 
-							if (antenna == null) {
+							if (antenna?.CustomName == null) {
 
 								continue;
 
@@ -566,7 +580,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 							var antennaName = antenna.CustomName.ToUpper();
 							var replaceName = profile.ReplaceAntennaNameWithRandomizedName.ToUpper();
 
-							if (antennaName.Contains(replaceName) && string.IsNullOrWhiteSpace(replaceName) == false) {
+							if (antennaName.Contains(replaceName) && !string.IsNullOrWhiteSpace(replaceName)) {
 
 								(grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
 								break;

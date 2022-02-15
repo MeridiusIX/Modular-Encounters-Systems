@@ -99,6 +99,8 @@ namespace ModularEncountersSystems.Behavior {
 			//Init
 			if (_behavior.Mode == BehaviorMode.Init) {
 
+				_behavior.AutoPilot.State.CargoShipWaypoints.Clear();
+
 				foreach (var waypoint in CustomWaypoints) {
 
 					_behavior.AutoPilot.State.CargoShipWaypoints.Add(new EncounterWaypoint(waypoint));
@@ -310,12 +312,12 @@ namespace ModularEncountersSystems.Behavior {
 				//BehaviorLogger.Write("Current Grid Null: " + (_behavior.CurrentGrid == null), BehaviorDebugEnum.Dev);
 				//BehaviorLogger.Write("NPC Data Null: " + (_behavior.CurrentGrid.Npc == null), BehaviorDebugEnum.Dev);
 
-				if (_behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.EndCoords != Vector3D.Zero)
+				if (_behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.EndCoords != Vector3D.Zero && _behavior.CurrentGrid.Npc.StartCoords != _behavior.CurrentGrid.Npc.EndCoords)
 					despawnCoords = _behavior.CurrentGrid.Npc.EndCoords;
 
 				if (despawnCoords == Vector3D.Zero) {
 
-					BehaviorLogger.Write("Could Not Get From MES. Creating Manual Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
+					BehaviorLogger.Write("Could Not Get From MES, or Start/End are the Same. Creating Manual Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
 					despawnCoords = _behavior.AutoPilot.CalculateDespawnCoords(_behavior.RemoteControl.GetPosition());
 
 				}

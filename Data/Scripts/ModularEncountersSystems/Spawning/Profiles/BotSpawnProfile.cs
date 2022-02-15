@@ -40,6 +40,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool LeadTargets;
 		public string ToolSubtypeId;
 
+		public string LootContainerSubtypeId;
+
 		public BotSpawnProfile() {
 
 			ProfileSubtypeId = "";
@@ -71,6 +73,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ShotDeviationAngle = 1.5f;
 			LeadTargets = false;
 			ToolSubtypeId = null;
+
+			LootContainerSubtypeId = "";
 
 		}
 
@@ -230,6 +234,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				
+				if (tag.Contains("[LootContainerSubtypeId:")) {
+
+					TagParse.TagStringCheck(tag, ref LootContainerSubtypeId);
+					continue;
+
+				}
+
 			}
 
 			Data.BotSubtype = this.BotType;
@@ -255,6 +267,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			Data.ShotDeviationAngle = this.ShotDeviationAngle;
 			Data.LeadTargets = this.LeadTargets;
 			Data.ToolSubtypeId = this.ToolSubtypeId;
+			Data.LootContainerSubtypeId = this.LootContainerSubtypeId;
 			SerializedData = MyAPIGateway.Utilities.SerializeToBinary<SpawnData>(Data);
 
 		}

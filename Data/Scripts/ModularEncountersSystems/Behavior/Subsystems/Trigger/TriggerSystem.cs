@@ -440,7 +440,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void ProcessCommandReceiveTriggerWatcher(Command command) {
 
-			if (!_behavior.IsAIReady()) {
+			if (_behavior == null || !_behavior.IsAIReady()) {
 
 				BehaviorLogger.Write("Behavior AI That Received Command Not Active. It Will Be Unregistered.", BehaviorDebugEnum.Command);
 				UnregisterCommandListener();
@@ -484,7 +484,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			var dist = Vector3D.Distance(RemoteControl.GetPosition(), command.RemoteControl.GetPosition());
+			var dist = Vector3D.Distance(RemoteControl.GetPosition(), command.SenderEntity.GetPosition());
 
 			if (!command.UseTriggerTargetDistance) {
 
@@ -531,6 +531,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					continue;
 
 				if (command.UseTriggerTargetDistance && dist > trigger.TargetDistance)
+					continue;
+
+				if (string.IsNullOrWhiteSpace(command.CommandCode))
 					continue;
 
 				bool commandCodePass = !trigger.AllowCommandCodePartialMatch ? (command.CommandCode.ToLower() == trigger.CommandReceiveCode.ToLower()) : (command.CommandCode.ToLower().Contains(trigger.CommandReceiveCode.ToLower()));

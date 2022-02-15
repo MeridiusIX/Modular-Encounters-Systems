@@ -32,7 +32,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public List<ManipulationProfile> ManipulationProfiles;
 		public List<string> ManipulationGroups;
-		public ManipulationProfile WeaponRandomizationOverrideProfile; //Doc
+		public ManipulationProfile WeaponRandomizationOverrideProfile;
 
 		public bool UseAutoPilotInSpace;
 		public double PauseAutopilotAtPlayerDistance;

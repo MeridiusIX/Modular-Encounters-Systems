@@ -156,7 +156,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<ActionProfile> ElseActions;
 
 		[ProtoMember(46)]
-		public bool LastRunFailed;
+		public bool LastRunFailed; //Non Configurable
 
 		[ProtoMember(47)]
 		public string EnableNamedTriggerOnSuccess;

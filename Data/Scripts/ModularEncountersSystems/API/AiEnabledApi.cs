@@ -1,6 +1,4 @@
-﻿
-using ProtoBuf;
-using Sandbox.Game.Entities;
+﻿using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 
 using System;
@@ -9,8 +7,10 @@ using System.Collections.Generic;
 using VRage;
 using VRage.Game;
 using VRage.Game.ModAPI;
-using VRage.Utils;
+
 using VRageMath;
+using ProtoBuf;
+using VRage.Utils;
 
 namespace ModularEncountersSystems.API {
     public class RemoteBotAPI {
@@ -142,6 +142,13 @@ namespace ModularEncountersSystems.API {
             /// If the bot is unable to use the specified type, the default type will be used instead.
             /// </summary>
             [ProtoMember(20)] public string ToolSubtypeId;
+
+            /// <summary>
+            /// Bots will receive the loot from the specified loot container, provided the subtype is valid.
+            /// If not, the bot will receive its default loot.
+            /// This is an SBC definition, so you can create your own custom loot containers and use those.
+            /// </summary>
+            [ProtoMember(21)] public string LootContainerSubtypeId;
         }
 
         /////////////////////////////////////////////
@@ -290,6 +297,15 @@ namespace ModularEncountersSystems.API {
         public bool SetBotTarget(long botEntityId, object target) => _setBotTarget?.Invoke(botEntityId, target) ?? false;
 
         /// <summary>
+        /// Assigns a patrol route to the Bot. In patrol mode, the bot will attack any enemies that come near its route, but will not hunt outside of its current map.
+        /// You must call <see cref="ResetBotTargeting(long)"/> for it to resume normal functions
+        /// </summary>
+        /// <param name="botEntityId">The EntityId of the Bot's Character</param>
+        /// <param name="waypoints">A list of world coordinates for the bot to patrol</param>
+        /// <returns>true if the route is assigned successfully, otherwise false</returns>
+        public bool SetBotPatrol(long botEntityId, List<Vector3D> waypoints) => _setBotPatrol?.Invoke(botEntityId, waypoints) ?? false;
+
+        /// <summary>
         /// Clears the Bot's current target and re-enables autonomous targeting
         /// </summary>
         /// <param name="botEntityId">The EntityId of the Bot's Character</param>
@@ -387,6 +403,14 @@ namespace ModularEncountersSystems.API {
         /// <param name="phrase">The name of the phrase (leave null to use a random phrase)</param>
         public void Speak(long botEntityId, string phrase = null) => _speak?.Invoke(botEntityId, phrase);
 
+        /// <summary>
+        /// Determins if the bot role is allowed to use a given tool type
+        /// </summary>
+        /// <param name="botRole">the BotRole to check (ie SoldierBot, GrinderBot, etc)</param>
+        /// <param name="toolSubtype">the SubtypeId of the weapon or tool</param>
+        /// <returns>true if the role is allowed to use the item, otherwise false</returns>
+        public bool CanRoleUseTool(string botRole, string toolSubtype) => _canBotUseTool?.Invoke(botRole, toolSubtype) ?? false;
+
         /////////////////////////////////////////////
         //API Methods End
         /////////////////////////////////////////////
@@ -415,7 +439,9 @@ namespace ModularEncountersSystems.API {
         private Action<long, string> _perform;
         private Action<long, string> _speak;
         private Func<long, bool> _isBot;
+        private Func<long, List<Vector3D>, bool> _setBotPatrol;
         private Func<long, long, MyRelationsBetweenPlayerAndBlock> _getRelationshipBetween;
+        private Func<string, string, bool> _canBotUseTool;
         private Action<string, string, MyPositionAndOrientation, MyCubeGrid, string, long?, Color?, Action<IMyCharacter>> _spawnBotQueued;
         private Action<MyPositionAndOrientation, byte[], MyCubeGrid, long?, Action<IMyCharacter>> _spawnBotCustomQueued;
         private GetClosestNodeDelegate _getClosestValidNode;
@@ -460,6 +486,8 @@ namespace ModularEncountersSystems.API {
                 _getBotAndRelationTo = dict["GetBotAndRelationTo"] as GetBotAndRelationTo;
                 _spawnBotQueued = dict["SpawnBotQueued"] as Action<string, string, MyPositionAndOrientation, MyCubeGrid, string, long?, Color?, Action<IMyCharacter>>;
                 _spawnBotCustomQueued = dict["SpawnBotCustomQueued"] as Action<MyPositionAndOrientation, byte[], MyCubeGrid, long?, Action<IMyCharacter>>;
+                _setBotPatrol = dict["SetBotPatrol"] as Func<long, List<Vector3D>, bool>;
+                _canBotUseTool = dict["CanRoleUseTool"] as Func<string, string, bool>;
 
             } catch {
 

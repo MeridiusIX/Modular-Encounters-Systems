@@ -148,10 +148,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public double MinSpawnFromWorldCenter;
 		public double MaxSpawnFromWorldCenter;
-		public Vector3D CustomWorldCenter; //Doc
-		public List<Vector3D> DirectionFromWorldCenter; //Doc
-		public double MinAngleFromDirection; //Doc
-		public double MaxAngleFromDirection; //Doc
+		public Vector3D CustomWorldCenter;
+		public List<Vector3D> DirectionFromWorldCenter;
+		public double MinAngleFromDirection;
+		public double MaxAngleFromDirection;
 
 		public List<Vector3D> DirectionFromPlanetCenter;
 		public double MinAngleFromPlanetCenterDirection;
@@ -198,9 +198,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int PCUMinimum;
 		public int PCUMaximum;
 
-		public bool UseDifficulty; //Doc
-		public int MinDifficulty; //Doc
-		public int MaxDifficulty; //Doc
+		public bool UseDifficulty;
+		public int MinDifficulty;
+		public int MaxDifficulty;
 
 		public bool UsePlayerCredits;
 		public bool IncludeAllPlayersInRadius;
@@ -215,15 +215,15 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int MinimumReputation;
 		public int MaximumReputation;
 
-		public bool UseSignalRequirement; //Doc
-		public double MinSignalRadius; //Doc
-		public double MaxSignalRadius; //Doc
-		public bool AllowNpcSignals; //Doc
-		public bool UseOnlySelfOwnedSignals; //Doc
-		public string MatchSignalName; //Doc
+		public bool UseSignalRequirement;
+		public double MinSignalRadius;
+		public double MaxSignalRadius;
+		public bool AllowNpcSignals;
+		public bool UseOnlySelfOwnedSignals;
+		public string MatchSignalName; //Implement //Doc
 
-		public bool ChargeNpcFactionForSpawn; //Doc
-		public long ChargeForSpawning; //Doc
+		public bool ChargeNpcFactionForSpawn;
+		public long ChargeForSpawning;
 
 		public bool UseSandboxCounterCosts;
 		public List<string> SandboxCounterCostNames;
@@ -252,19 +252,19 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int KnownPlayerLocationMinSpawnedEncounters;
 		public int KnownPlayerLocationMaxSpawnedEncounters;
 
-		public List<ZoneConditionsProfile> ZoneConditions; //Doc
+		public List<ZoneConditionsProfile> ZoneConditions;
 
-		public List<string> CustomApiConditions; //Doc
+		public List<string> CustomApiConditions;
 
 		public bool BossCustomAnnounceEnable;
 		public string BossCustomAnnounceAuthor;
 		public string BossCustomAnnounceMessage;
 		public string BossCustomGPSLabel;
-		public Vector3D BossCustomGPSColor; //Doc
-		public string BossMusicId; //Doc
+		public Vector3D BossCustomGPSColor;
+		public string BossMusicId; //Implement //Doc
 
-		public bool PlaySoundAtSpawnTriggerPosition; //Doc
-		public string SpawnTriggerPositionSoundId; //Doc
+		public bool PlaySoundAtSpawnTriggerPosition;
+		public string SpawnTriggerPositionSoundId;
 
 		public bool RotateFirstCockpitToForward;
 		public bool PositionAtFirstCockpit;

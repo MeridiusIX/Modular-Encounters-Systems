@@ -95,6 +95,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MinAltitude;
 		public double MaxAltitude;
 
+		public bool CheckHorizonAngle;
+		public double MinHorizonAngle;
+		public double MaxHorizonAngle;
+
 		public bool CheckIfDamagerIsPlayer;
 		public bool CheckIfDamagerIsNpc;
 		public bool CheckIfTargetIsPlayerOwned;
@@ -111,6 +115,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool CheckForBlocksOfType;
 		public List<string> BlocksOfType = new List<string>();
+
+		public bool CheckForSpawnCondition;
+		public List<string> RequiredSpawnCondition;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -192,6 +199,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MinAltitude = -1;
 			MaxAltitude = -1;
 
+			CheckHorizonAngle = false;
+			MinHorizonAngle = -1;
+			MaxHorizonAngle = -1;
+
 			CheckIfDamagerIsPlayer = false;
 			CheckIfDamagerIsNpc = false;
 
@@ -210,6 +221,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CompareCommandGridValueSelfMultiplier = 1;
 
 			UseFailCondition = false;
+
+			CheckForSpawnCondition = false;
+			RequiredSpawnCondition = new List<string>();
 
 			ProfileSubtypeId = "";
 
@@ -274,6 +288,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref AltitudeCheck) },
 				{"MinAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinAltitude) },
 				{"MaxAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAltitude) },
+				{"CheckHorizonAngle", (s, o) => TagParse.TagBoolCheck(s, ref CheckHorizonAngle) },
+				{"MinHorizonAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinHorizonAngle) },
+				{"MaxHorizonAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxHorizonAngle) },
 				{"CheckIfDamagerIsPlayer", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfDamagerIsPlayer) },
 				{"CheckIfDamagerIsNpc", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfDamagerIsNpc) },
 				{"CheckIfTargetIsPlayerOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsPlayerOwned) },
@@ -287,6 +304,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },
 				{"CheckForBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref CheckForBlocksOfType) },
 				{"BlocksOfType", (s, o) => TagParse.TagStringListCheck(s, ref BlocksOfType) },
+				{"CheckForSpawnCondition", (s, o) => TagParse.TagBoolCheck(s, ref CheckForSpawnCondition) },
+				{"RequiredSpawnCondition", (s, o) => TagParse.TagStringListCheck(s, ref RequiredSpawnCondition) },
 
 			};
 

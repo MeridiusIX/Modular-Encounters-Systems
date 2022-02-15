@@ -67,9 +67,9 @@ namespace ModularEncountersSystems.Logging {
 			bool boolValid = bool.TryParse(msgSplit[4], out newBool);
 			bool existingGot = MyAPIGateway.Utilities.GetVariable(msgSplit[3], out existingBool);
 
-			if (!newBool) {
+			if (!boolValid) {
 
-				MyVisualScriptLogicProvider.ShowNotification("Could not parse amount to modify bool", 5000, "White", msg.PlayerId);
+				MyVisualScriptLogicProvider.ShowNotification("Could not parse value to modify bool", 5000, "White", msg.PlayerId);
 				return;
 
 			}

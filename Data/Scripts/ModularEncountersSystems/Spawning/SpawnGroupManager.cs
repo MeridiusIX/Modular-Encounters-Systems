@@ -54,9 +54,16 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write("Checking SpawnGroups For Spawn Request: " + type, SpawnerDebugEnum.SpawnGroup);
 				string commonConditionFailure = "";
 
-				if (collection.OnlyAllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName) && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
+				if (collection.AllowedZoneSpawns.Count > 0 && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
 
-					SpawnLogger.Write(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					//Inside Zone
+					SpawnLogger.Write(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup While Inside Zone: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					continue;
+
+				} else if (collection.OnlyAllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName) && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
+
+					//Outside Zone
+					SpawnLogger.Write(" - Zone(s) Whitelisted SpawnGroup Cannot Spawn While Outside Zone: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
 					continue;
 
 				}

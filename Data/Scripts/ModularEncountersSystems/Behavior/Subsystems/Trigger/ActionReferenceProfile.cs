@@ -291,42 +291,42 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool EnableHighestRangeAntennas;
 		public bool DisableHighestRangeAntennas;
 
-		public bool AssignEscortFromCommand; //Doc
+		public bool AssignEscortFromCommand; 
 
-		public bool UseCurrentPositionAsPatrolReference; //Doc
-		public bool ClearCustomPatrolReference; //Doc
+		public bool UseCurrentPositionAsPatrolReference;
+		public bool ClearCustomPatrolReference;
 
 		public bool SetGridToStatic;
 		public bool SetGridToDynamic;
 
-		public BoolEnum UseJetpackInhibitorEffect; //Doc
-		public BoolEnum UseDrillInhibitorEffect; //Doc
-		public BoolEnum UseNanobotInhibitorEffect; //Doc
-		public BoolEnum UseJumpInhibitorEffect; //Doc
-		public BoolEnum UsePlayerInhibitorEffect; //Doc
+		public BoolEnum UseJetpackInhibitorEffect; 
+		public BoolEnum UseDrillInhibitorEffect; 
+		public BoolEnum UseNanobotInhibitorEffect; 
+		public BoolEnum UseJumpInhibitorEffect; 
+		public BoolEnum UsePlayerInhibitorEffect;
 
-		public bool ChangeTurretTargetingParameters;
-		public string TurretTargetType;
-		public List<string> TurretTypesForTargetChanges;
-		public List<string> TurretSubtypesForTargetChange;
+		public bool ChangeTurretTargetingParameters; //Implement
+		public string TurretTargetType; //Implement
+		public List<string> TurretTypesForTargetChanges; //Implement
+		public List<string> TurretSubtypesForTargetChange; //Implement
 
-		public bool JumpToTarget; //Doc
-		public bool JumpToJumpedEntity; //Doc
-		public bool JumpedEntityMustBeTarget; //Doc
+		public bool JumpToTarget; 
+		public bool JumpToJumpedEntity; 
+		public bool JumpedEntityMustBeTarget; 
 
-		public bool SetGridCleanupExempt; //Doc
-		public int GridCleanupExemptDuration; //Doc
+		public bool SetGridCleanupExempt; 
+		public int GridCleanupExemptDuration; 
 
-		public bool PlaySoundAtPosition; //Doc
-		public string SoundAtPosition; //Doc
+		public bool PlaySoundAtPosition; 
+		public string SoundAtPosition; 
 
-		public bool SpawnPlanet; //Doc
-		public string PlanetName; //Doc
-		public float PlanetSize; //Doc
-		public bool PlanetIgnoreSafeLocation; //Doc
-		public string PlanetWaypointProfile; //Doc
-		public bool TemporaryPlanet; //Doc
-		public int PlanetTimeLimit; //Doc
+		public bool SpawnPlanet; 
+		public string PlanetName; 
+		public float PlanetSize; 
+		public bool PlanetIgnoreSafeLocation; //Implement //Doc
+		public string PlanetWaypointProfile; 
+		public bool TemporaryPlanet; 
+		public int PlanetTimeLimit;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 

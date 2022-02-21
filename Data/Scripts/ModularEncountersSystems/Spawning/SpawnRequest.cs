@@ -348,6 +348,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			//Get SpawnGroups and Valid Factions
 			var spawnGroupCollection = new SpawnGroupCollection();
+			SpawnLogger.SpawnGroup.Clear();
 			SpawnGroupManager.GetSpawnGroups(type, environment, factionOverride, spawnGroupCollection, forceSpawn, adminSpawn, eligibleNames, dronePlayerTracker);
 
 			//Select By ModID
@@ -480,6 +481,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				var spawnNames = new List<string>();
 				spawnNames.Add(encounter.SpawnGroupName);
+				SpawnLogger.SpawnGroup.Clear();
 				SpawnGroupManager.GetSpawnGroups(type, environment, encounter.Faction, spawnGroupCollection, false, true, spawnNames);
 
 				if (spawnGroupCollection.SpawnGroups.Count == 0) {

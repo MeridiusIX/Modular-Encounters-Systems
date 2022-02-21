@@ -17,12 +17,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool CheckCustomZoneCounters;
 		public List<string> CustomZoneCounterName;
 		public List<int> CustomZoneCounterValue;
-		public Dictionary<string, int> CustomZoneCounterReference; //TODO: Build After Init Tags
+		public Dictionary<string, int> CustomZoneCounterReference;
 
 		public bool CheckCustomZoneBools;
 		public List<string> CustomZoneBoolName;
 		public List<bool> CustomZoneBoolValue;
-		public Dictionary<string, bool> CustomZoneBoolReference;  //TODO: Build After Init Tags
+		public Dictionary<string, bool> CustomZoneBoolReference;
 
 		public int MinSpawnedZoneEncounters;
 		public int MaxSpawnedZoneEncounters;
@@ -138,6 +138,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 					TagParse.TagIntCheck(tag, ref this.MaxSpawnedZoneEncounters);
 
 				}
+
+			}
+
+			for (int i = 0; i < CustomZoneCounterName.Count && i < CustomZoneCounterValue.Count; i++) {
+
+				if (!CustomZoneCounterReference.ContainsKey(CustomZoneCounterName[i]))
+					CustomZoneCounterReference.Add(CustomZoneCounterName[i], CustomZoneCounterValue[i]);
+
+			}
+
+			for (int i = 0; i < CustomZoneBoolName.Count && i < CustomZoneBoolValue.Count; i++) {
+
+				if (!CustomZoneBoolReference.ContainsKey(CustomZoneBoolName[i]))
+					CustomZoneBoolReference.Add(CustomZoneBoolName[i], CustomZoneBoolValue[i]);
 
 			}
 

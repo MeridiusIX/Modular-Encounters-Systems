@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using Sandbox.Definitions;
 using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;

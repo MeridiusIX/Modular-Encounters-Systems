@@ -20,6 +20,23 @@ using VRage.Game.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.Logging {
+
+	public struct LoggerQueue {
+
+		public string message;
+		public SpawnerDebugEnum type;
+		public bool forceSpawn;
+
+		public LoggerQueue(string msg, SpawnerDebugEnum spawntype, bool force = false) {
+
+			message = msg;
+			type = spawntype;
+			forceSpawn = force;
+		
+		}
+
+	}
+
 	public static class LoggerTools {
 
 		public static void AppendDateAndTime(StringBuilder sb) {
@@ -659,6 +676,8 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Water Installation Eligible:     ").Append(environment.WaterInstallationEligible).AppendLine();
 
 			sb.AppendLine();
+
+			SpawnLogger.SpawnGroup.Clear();
 
 			//Space Cargo
 			collection = new SpawnGroupCollection();

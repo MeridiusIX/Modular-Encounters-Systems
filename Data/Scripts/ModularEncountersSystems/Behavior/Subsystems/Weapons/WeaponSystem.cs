@@ -64,6 +64,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		private List<WaypointModificationEnum> _restrictedFlags;
 
 		public Dictionary<Direction, double> MaxStaticRangesPerDirection;
+
+		//WeaponLead Stuff
+
+		public IWeapon PrimaryStaticWeapon;
+		
 		
 		public bool WaypointIsTarget;
 		public double IndirectWaypointTargetDistance;
@@ -461,7 +466,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				var remMatrix = _remoteControl.WorldMatrix;
 				var wepMatrix = weapon.Block().WorldMatrix;
 
-				if (wepMatrix.Forward == remMatrix.Forward || VectorHelper.GetAngleBetweenDirections(remMatrix.Forward, wepMatrix.Forward) < 1) {
+				if (wepMatrix.Forward == remMatrix.Forward || VectorHelper.GetAngleBetweenDirections(remMatrix.Forward, wepMatrix.Forward) < 2) {
 
 					weapon.SetDirection(Direction.Forward);
 
@@ -470,7 +475,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Backward == remMatrix.Backward || VectorHelper.GetAngleBetweenDirections(remMatrix.Backward, wepMatrix.Backward) < 1) {
+				if (wepMatrix.Backward == remMatrix.Backward || VectorHelper.GetAngleBetweenDirections(remMatrix.Backward, wepMatrix.Backward) < 2) {
 
 					weapon.SetDirection(Direction.Backward);
 
@@ -479,7 +484,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Up == remMatrix.Up || VectorHelper.GetAngleBetweenDirections(remMatrix.Up, wepMatrix.Up) < 1) {
+				if (wepMatrix.Up == remMatrix.Up || VectorHelper.GetAngleBetweenDirections(remMatrix.Up, wepMatrix.Up) < 2) {
 
 					weapon.SetDirection(Direction.Up);
 
@@ -488,7 +493,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Down == remMatrix.Down || VectorHelper.GetAngleBetweenDirections(remMatrix.Down, wepMatrix.Down) < 1) {
+				if (wepMatrix.Down == remMatrix.Down || VectorHelper.GetAngleBetweenDirections(remMatrix.Down, wepMatrix.Down) < 2) {
 
 					weapon.SetDirection(Direction.Down);
 
@@ -497,7 +502,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Left == remMatrix.Left || VectorHelper.GetAngleBetweenDirections(remMatrix.Left, wepMatrix.Left) < 1) {
+				if (wepMatrix.Left == remMatrix.Left || VectorHelper.GetAngleBetweenDirections(remMatrix.Left, wepMatrix.Left) < 2) {
 
 					weapon.SetDirection(Direction.Left);
 
@@ -506,7 +511,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Right == remMatrix.Right || VectorHelper.GetAngleBetweenDirections(remMatrix.Right, wepMatrix.Right) < 1) {
+				if (wepMatrix.Right == remMatrix.Right || VectorHelper.GetAngleBetweenDirections(remMatrix.Right, wepMatrix.Right) < 2) {
 
 					weapon.SetDirection(Direction.Right);
 
@@ -533,6 +538,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			return (range > Data.MaxStaticWeaponRange) ? Data.MaxStaticWeaponRange : range;
 
+		}
+
+		public void DeterminePrimaryStaticWeapon() {
+
+
+
+			foreach (var weapon in StaticWeapons) {
+
+				if (weapon.GetDirection() != Direction.Forward)
+					continue;
+			
+			}
+		
 		}
 
 		public void FireWeapons() {

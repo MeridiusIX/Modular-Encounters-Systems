@@ -61,6 +61,8 @@ namespace ModularEncountersSystems.Logging {
 		public static StringBuilder Startup = new StringBuilder();
 		public static StringBuilder Zone = new StringBuilder();
 
+		public static List<LoggerQueue> QueuedItems = new List<LoggerQueue>();
+
 		//Behavior Debugs
 
 		public static SpawnerDebugEnum ActiveDebug = SpawnerDebugEnum.None;
@@ -84,6 +86,29 @@ namespace ModularEncountersSystems.Logging {
 
 				ActiveDebug |= SpawnerDebugEnum.SpawnRecord;
 
+			}
+		
+		}
+
+		public static void Queue(string msg, SpawnerDebugEnum type, bool force = false) {
+
+			QueuedItems.Add(new LoggerQueue(msg, type, force));
+		
+		}
+
+		public static void ProcessQueue() {
+
+			lock (QueuedItems) {
+
+				for (int i = 0; i < QueuedItems.Count; i++) {
+
+					var item = QueuedItems[i];
+					Write(item.message, item.type, item.forceSpawn);
+
+				}
+
+				QueuedItems.Clear();
+			
 			}
 		
 		}

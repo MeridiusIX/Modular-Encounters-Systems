@@ -82,6 +82,23 @@ namespace ModularEncountersSystems.Entities {
 
         }
 
+        public static Vector3 GetTotalNaturalGravity(Vector3D coords) {
+
+            Vector3 gravity = Vector3.Zero;
+
+            foreach (var planet in Planets) {
+
+                if (planet == null || planet.Planet.Closed || planet.IsPositionInGravity(coords))
+                    continue;
+
+                gravity += planet.Gravity.GetWorldGravity(coords);
+            
+            }
+
+            return gravity;
+        
+        }
+
     }
 
 }

@@ -49,28 +49,29 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			SpawnLogger.Write("Checking SpawnGroups For Spawn Request: " + type, SpawnerDebugEnum.SpawnGroup);
+
 			foreach (var spawnGroup in SpawnGroups) {
 
-				SpawnLogger.Write("Checking SpawnGroups For Spawn Request: " + type, SpawnerDebugEnum.SpawnGroup);
 				string commonConditionFailure = "";
 
 				if (collection.AllowedZoneSpawns.Count > 0 && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
 
 					//Inside Zone
-					SpawnLogger.Write(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup While Inside Zone: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Queue(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup While Inside Zone: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
 					continue;
 
 				} else if (collection.OnlyAllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName) && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
 
 					//Outside Zone
-					SpawnLogger.Write(" - Zone(s) Whitelisted SpawnGroup Cannot Spawn While Outside Zone: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Queue(" - Zone(s) Whitelisted SpawnGroup Cannot Spawn While Outside Zone: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
 					continue;
 
 				}
 
 				if (collection.RestrictedZoneSpawnGroups.Contains(spawnGroup.SpawnGroupName)) {
 
-					SpawnLogger.Write(" - Zone(s) SpawnGroup Blacklist Contains SpawnGroup: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Queue(" - Zone(s) SpawnGroup Blacklist Contains SpawnGroup: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
 					continue;
 
 				}
@@ -78,12 +79,12 @@ namespace ModularEncountersSystems.Spawning {
 				if (spawnGroup.PersistentConditions != null) {
 
 					bool persistentCheckFailed = false;
-					SpawnLogger.Write(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Persistent Conditions [" + spawnGroup.PersistentConditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Queue(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Persistent Conditions [" + spawnGroup.PersistentConditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
 					
 					//Eligible Names
 					if (eligibleNames != null && eligibleNames.Count > 0 && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
 
-						SpawnLogger.Write("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup);
 						persistentCheckFailed = true;
 
 					}
@@ -91,7 +92,7 @@ namespace ModularEncountersSystems.Spawning {
 					//AdminSpawn
 					if (!persistentCheckFailed && spawnGroup.PersistentConditions.AdminSpawnOnly && !adminSpawn) {
 
-						SpawnLogger.Write("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup);
 						continue;
 
 					}
@@ -99,7 +100,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Common Checks
 					if (!persistentCheckFailed && !forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, spawnGroup.PersistentConditions, collection, environment, adminSpawn, type, spawnTypes, playerDroneTracker, ref commonConditionFailure)) {
 
-						SpawnLogger.Write(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
 						persistentCheckFailed = true;
 
 					}
@@ -109,16 +110,18 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
+				int conditionsFailedBySpawnType = 0;
+
 				for (int c = 0; c < spawnGroup.SpawnConditionsProfiles.Count; c++) {
 
 					var conditions = spawnGroup.SpawnConditionsProfiles[c];
 
-					SpawnLogger.Write(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Conditions [" + conditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Queue(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Conditions [" + conditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
 
 					//Eligible Names
 					if (eligibleNames != null && eligibleNames.Count > 0 && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
 
-						SpawnLogger.Write("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup);
 						continue;
 
 					}
@@ -126,7 +129,7 @@ namespace ModularEncountersSystems.Spawning {
 					//AdminSpawn
 					if (conditions.AdminSpawnOnly && !adminSpawn) {
 
-						SpawnLogger.Write("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup);
 						continue;
 
 					}
@@ -134,7 +137,8 @@ namespace ModularEncountersSystems.Spawning {
 					//Match SpawnTypes
 					if (!SpawnConditions.SpawningTypeAllowedForGroup(spawnTypes, conditions)) {
 
-						SpawnLogger.Write("   - SpawnGroup SpawnType(s) Not Matched.", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup SpawnType(s) Not Matched.", SpawnerDebugEnum.SpawnGroup);
+						conditionsFailedBySpawnType++;
 						continue;
 
 					}
@@ -142,7 +146,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Common Checks
 					if (!forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, conditions, collection, environment, adminSpawn, type, spawnTypes, playerDroneTracker, ref commonConditionFailure)) {
 
-						SpawnLogger.Write(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
 						continue;
 
 					}
@@ -152,7 +156,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					if (validFactionsList.Count == 0) {
 
-						SpawnLogger.Write("   - Could Not Get Valid NPC Faction.", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - Could Not Get Valid NPC Faction.", SpawnerDebugEnum.SpawnGroup);
 						continue;
 
 					}
@@ -266,7 +270,7 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
-						SpawnLogger.Write("   - SpawnGroup OK", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup OK", SpawnerDebugEnum.SpawnGroup);
 
 						for (int i = 0; i < spawnGroup.Frequency; i++) {
 
@@ -304,6 +308,16 @@ namespace ModularEncountersSystems.Spawning {
 
 					break;
 
+				}
+
+				if (spawnGroup.SpawnConditionsProfiles.Count == conditionsFailedBySpawnType) {
+
+					SpawnLogger.QueuedItems.Clear();
+
+				} else {
+
+					SpawnLogger.ProcessQueue();
+				
 				}
 
 			}

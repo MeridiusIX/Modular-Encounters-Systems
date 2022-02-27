@@ -199,7 +199,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-				if (tag.Contains("[IdleSounds:")) {
+				if (tag.Contains("[IdleSounds:") || tag.Contains("[Taunts:")) {
 
 					TagParse.TagStringListCheck(tag, ref IdleSounds);
 					continue;

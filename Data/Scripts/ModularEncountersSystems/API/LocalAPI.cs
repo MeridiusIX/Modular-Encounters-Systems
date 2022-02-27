@@ -17,6 +17,7 @@ namespace ModularEncountersSystems.API {
 
 		public static Action<IMyRemoteControl, string, string, IMyEntity, Vector3D> BehaviorTriggerWatcher;
 		public static Action<IMyRemoteControl, IMyCubeGrid> CompromisedRemoteEvent;
+		public static Action<IMyCubeGrid> SuccessfulSpawnEvent;
 		public static Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>> BehaviorCustomTriggers = new Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>>();
 		public static Dictionary<string, Func<string, string, string, Vector3D, bool>> SpawnCustomConditions = new Dictionary<string, Func<string, string, string, Vector3D, bool>>();
 
@@ -48,6 +49,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("RegisterCustomSpawnCondition", new Action<bool, string, Func<string, string, string, Vector3D, bool>>(RegisterCustomSpawnCondition));
 			dict.Add("RegisterDespawnWatcher", new Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool>(RegisterDespawnWatcher));
 			dict.Add("RegisterRemoteControlCode", new Action<IMyRemoteControl, string>(RegisterRemoteControlCode));
+			dict.Add("RegisterSuccessfulSpawnAction", new Action<Action<IMyCubeGrid>, bool>(RegisterSuccessfulSpawnAction));
 			dict.Add("RemoveKnownPlayerLocation", new Action<Vector3D, string, bool>(KnownPlayerLocationManager.RemoveLocation));
 			dict.Add("SetSpawnerIgnoreForDespawn", new Func<IMyCubeGrid, bool, bool>(SetSpawnerIgnoreForDespawn));
 			dict.Add("SpawnBossEncounter", new Func<Vector3D, List<string>, bool>(SpawnBossEncounter));
@@ -94,11 +96,23 @@ namespace ModularEncountersSystems.API {
 
 		}
 
+		public static void RegisterSuccessfulSpawnAction(Action<IMyCubeGrid> action, bool register) {
+
+			if (action != null) {
+
+				if (register)
+					SuccessfulSpawnEvent += action;
+				else
+					SuccessfulSpawnEvent -= action;
+						
+			}
+		
+		}
 
 		//CustomSpawnRequest
 		public static bool CustomSpawnRequest(List<string> spawnGroups, MatrixD spawningMatrix, Vector3 velocity, bool ignoreSafetyCheck, string factionOverride, string spawnProfileId) {
 
-			return SpawnRequest.CalculateSpawn(spawningMatrix.Translation, "API Request: " + spawnProfileId, SpawningType.OtherNPC, ignoreSafetyCheck, true, spawnGroups, factionOverride, spawningMatrix);
+			return SpawnRequest.CalculateSpawn(spawningMatrix.Translation, "API Request: " + spawnProfileId, SpawningType.OtherNPC, ignoreSafetyCheck, true, spawnGroups, factionOverride, spawningMatrix, velocity);
 
 		}
 

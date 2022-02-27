@@ -848,9 +848,8 @@ namespace ModularEncountersSystems.Spawning {
 			var voxelList = new List<MyVoxelBase>();
 			var voxelSphere = new BoundingSphereD(environment.Position, 20000);
 			MyGamePruningStructure.GetAllVoxelMapsInSphere(ref voxelSphere, voxelList);
-			var planetGravitySphere = environment.NearestPlanet.GetGravitySphere(0.05);
 
-			for (int i = 0; i < Settings.OtherNPCs.MaxSpawnAttempts; i++) {
+			for (int i = 0; i < Settings.DroneEncounters.MaxSpawnAttempts; i++) {
 
 				//Setup Path
 
@@ -901,7 +900,7 @@ namespace ModularEncountersSystems.Spawning {
 					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
 					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 
-					obstructed = IsGridWithinMinDistance(path.StartCoords, Settings.OtherNPCs.MinDistanceFromOtherEntities, collection.Conditions.SkipGridSpawnChecks) && IsVoxelIntersecting(voxelList, path.StartCoords + new Vector3D(-300, -300, -300), path.StartCoords + new Vector3D(300, 300, 300), -1, collection.Conditions.SkipVoxelSpawnChecks);
+					obstructed = IsGridWithinMinDistance(path.StartCoords, Settings.DroneEncounters.MinDistanceFromOtherEntities, collection.Conditions.SkipGridSpawnChecks) && IsVoxelIntersecting(voxelList, path.StartCoords + new Vector3D(-300, -300, -300), path.StartCoords + new Vector3D(300, 300, 300), -1, collection.Conditions.SkipVoxelSpawnChecks);
 
 					if (obstructed)
 						break;
@@ -1339,6 +1338,10 @@ namespace ModularEncountersSystems.Spawning {
 
 			path.SpawnMatrix = spawnMatrix;
 			path.StartCoords = spawnMatrix.Translation;
+
+			if (path.SpawnMatrix.Forward == path.SpawnMatrix.Up || !VectorHelper.IsPerpendicular(path.SpawnMatrix.Forward, path.SpawnMatrix.Up))
+				path.SpawnMatrix = MatrixD.CreateWorld(path.StartCoords, Vector3D.Forward, Vector3D.Up);
+
 			bool badCoords = false;
 
 			for (int j = 0; j < collection.PrefabIndexes.Count; j++) {

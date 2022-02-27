@@ -1268,6 +1268,9 @@ namespace ModularEncountersSystems.Logging {
 				if (!Cleaning.BasicCleanupChecks(npc))
 					continue;
 
+				if (npc.CubeGrid.IsStatic && Cleaning.IsKeenEconomyStation(npc))
+					continue;
+
 				if (npc.Ownership.HasFlag(GridOwnershipEnum.NpcMajority))
 					Cleaning.RemoveGrid(npc);
 

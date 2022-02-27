@@ -715,6 +715,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			
 			}
 
+			if (ConditionReference.CheckForSpawnConditions) {
+
+				usedConditions++;
+				var thisCondition = _behavior?.CurrentGrid?.Npc?.Conditions?.ProfileSubtypeId;
+
+				if (thisCondition != null) {
+
+					foreach (var spawnCondition in ConditionReference.RequiredSpawnConditions) {
+
+						if (spawnCondition == thisCondition) {
+
+							satisfiedConditions++;
+							break;
+						
+						}
+
+					}
+
+				}
+
+			}
+
 			if (ConditionReference.MatchAnyCondition == false) {
 
 				bool result = satisfiedConditions >= usedConditions;

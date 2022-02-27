@@ -19,6 +19,7 @@ namespace ModularEncountersSystems.Configuration {
 		public static ConfigPlanetaryInstallations PlanetaryInstallations = new ConfigPlanetaryInstallations();
 		public static ConfigBossEncounters BossEncounters = new ConfigBossEncounters();
 		public static ConfigOtherNPCs OtherNPCs = new ConfigOtherNPCs();
+		public static ConfigDroneEncounters DroneEncounters = new ConfigDroneEncounters();
 		public static ConfigCustomBlocks CustomBlocks = new ConfigCustomBlocks();
 		public static ConfigCreatures Creatures = new ConfigCreatures();
 
@@ -47,6 +48,9 @@ namespace ModularEncountersSystems.Configuration {
 
 			if (!BossEncounters.ConfigLoaded)
 				BossEncounters = BossEncounters.LoadSettings(phase);
+
+			if (!DroneEncounters.ConfigLoaded)
+				DroneEncounters = DroneEncounters.LoadSettings(phase);
 
 			if (!OtherNPCs.ConfigLoaded)
 				OtherNPCs = OtherNPCs.LoadSettings(phase);
@@ -334,7 +338,10 @@ namespace ModularEncountersSystems.Configuration {
 			if (type == SpawningType.BossEncounter)
 				return BossEncounters;
 
-			if (type == SpawningType.OtherNPC || type == SpawningType.DroneEncounter || type == SpawningType.None)
+			if (type == SpawningType.DroneEncounter)
+				return DroneEncounters;
+
+			if (type == SpawningType.OtherNPC || type == SpawningType.None)
 				return OtherNPCs;
 
 			return null;

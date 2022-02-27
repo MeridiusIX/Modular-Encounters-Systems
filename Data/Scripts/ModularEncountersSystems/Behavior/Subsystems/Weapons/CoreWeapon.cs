@@ -172,7 +172,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		public bool CanLockOnGrid(IMyCubeGrid target) {
 
-			if (_isStatic && !_homingAmmo)
+			if (_isStatic)
 				return false;
 
 			if (target == null || _block == null)
@@ -186,7 +186,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				return false;
 
 			//LOS Check
-			if (!TurretHasLOS(target.GetPosition(), _block.GetPosition(), _behavior.CurrentGrid?.LinkedGrids))
+			if (!_homingAmmo && !TurretHasLOS(target.GetPosition(), _block.GetPosition(), _behavior.CurrentGrid?.LinkedGrids))
 				return false;
 
 			return true;

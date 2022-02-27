@@ -716,7 +716,7 @@ namespace ModularEncountersSystems.Entities {
 
 			foreach (var block in blockList) {
 
-				if (block.IsClosed() || !block.Working || !block.Functional)
+				if (block.IsClosed() || !block.Functional)
 					continue;
 
 				var value = threatValue * (block.Modded ? modMultiplier : 1);

@@ -123,28 +123,29 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int CreatureChance;
 		public int DroneEncounterChance; //Doc
 
-		public bool SettingsAutoHeal;
-		public bool SettingsAutoRespawn;
-		public bool SettingsBountyContracts;
-		public bool SettingsDestructibleBlocks;
-		public bool SettingsCopyPaste;
-		public bool SettingsContainerDrops;
-		public bool SettingsEconomy;
-		public bool SettingsEnableDrones;
-		public bool SettingsIngameScripts;
-		public bool SettingsJetpack;
-		public bool SettingsOxygen;
-		public bool SettingsResearch;
-		public bool SettingsSpawnWithTools;
-		public bool SettingsSpiders;
-		public bool SettingsSubgridDamage;
-		public bool SettingsSunRotation;
-		public bool SettingsSupergridding;
-		public bool SettingsThrusterDamage;
-		public bool SettingsVoxelDestruction;
-		public bool SettingsWeaponsEnabled;
-		public bool SettingsWeather;
-		public bool SettingsWolves;
+		public bool UseSettingsCheck; //Doc
+		public BoolEnum SettingsAutoHeal; //Doc
+		public BoolEnum SettingsAutoRespawn; //Doc
+		public BoolEnum SettingsBountyContracts; //Doc
+		public BoolEnum SettingsDestructibleBlocks; //Doc
+		public BoolEnum SettingsCopyPaste; //Doc
+		public BoolEnum SettingsContainerDrops; //Doc
+		public BoolEnum SettingsEconomy; //Doc
+		public BoolEnum SettingsEnableDrones; //Doc
+		public BoolEnum SettingsIngameScripts; //Doc
+		public BoolEnum SettingsJetpack; //Doc
+		public BoolEnum SettingsOxygen; //Doc
+		public BoolEnum SettingsResearch; //Doc
+		public BoolEnum SettingsSpawnWithTools; //Doc
+		public BoolEnum SettingsSpiders; //Doc
+		public BoolEnum SettingsSubgridDamage; //Doc
+		public BoolEnum SettingsSunRotation; //Doc
+		public BoolEnum SettingsSupergridding; //Doc
+		public BoolEnum SettingsThrusterDamage; //Doc
+		public BoolEnum SettingsVoxelDestruction; //Doc
+		public BoolEnum SettingsWeaponsEnabled; //Doc
+		public BoolEnum SettingsWeather; //Doc
+		public BoolEnum SettingsWolves; //Doc
 
 		public double MinSpawnFromWorldCenter;
 		public double MaxSpawnFromWorldCenter;
@@ -283,6 +284,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<int> PrefabIndexGroupValues;
 		public List<Vector3D> PrefabOffsetOverrides;
 
+		public Dictionary<string, Action<string, object>> EditorReference;
+
+
 		public SpawnConditionsProfile() {
 
 			ProfileSubtypeId = "";
@@ -389,6 +393,30 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			BossEncounterChance = 100;
 			CreatureChance = 100;
 			DroneEncounterChance = 100;
+
+			UseSettingsCheck = false;
+			SettingsAutoHeal = BoolEnum.None;
+			SettingsAutoRespawn = BoolEnum.None;
+			SettingsBountyContracts = BoolEnum.None;
+			SettingsDestructibleBlocks = BoolEnum.None;
+			SettingsCopyPaste = BoolEnum.None;
+			SettingsContainerDrops = BoolEnum.None;
+			SettingsEconomy = BoolEnum.None;
+			SettingsEnableDrones = BoolEnum.None;
+			SettingsIngameScripts = BoolEnum.None;
+			SettingsJetpack = BoolEnum.None;
+			SettingsOxygen = BoolEnum.None;
+			SettingsResearch = BoolEnum.None;
+			SettingsSpawnWithTools = BoolEnum.None;
+			SettingsSpiders = BoolEnum.None;
+			SettingsSubgridDamage = BoolEnum.None;
+			SettingsSunRotation = BoolEnum.None;
+			SettingsSupergridding = BoolEnum.None;
+			SettingsThrusterDamage = BoolEnum.None;
+			SettingsVoxelDestruction = BoolEnum.None;
+			SettingsWeaponsEnabled = BoolEnum.None;
+			SettingsWeather = BoolEnum.None;
+			SettingsWolves = BoolEnum.None;
 
 			SandboxVariables = new List<string>();
 			FalseSandboxVariables = new List<string>();
@@ -528,1421 +556,304 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PrefabIndexGroupValues = new List<int>();
 			PrefabOffsetOverrides = new List<Vector3D>();
 
+			EditorReference = new Dictionary<string, Action<string, object>> {
+
+				{"SpaceCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref SpaceCargoShip) },
+				{"LunarCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref LunarCargoShip) },
+				{"AtmosphericCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref AtmosphericCargoShip) },
+				{"GravityCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref GravityCargoShip) },
+				{"SkipAirDensityCheck", (s, o) => TagParse.TagBoolCheck(s, ref SkipAirDensityCheck) },
+				{"CargoShipTerrainPath", (s, o) => TagParse.TagBoolCheck(s, ref CargoShipTerrainPath) },
+				{"CustomPathStartAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref CustomPathStartAltitude) },
+				{"CustomPathEndAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref CustomPathEndAltitude) },
+				{"SpaceRandomEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpaceRandomEncounter) },
+				{"AlignVoxelsToSpawnMatrix", (s, o) => TagParse.TagBoolCheck(s, ref AlignVoxelsToSpawnMatrix) },
+				{"UseOptimizedVoxelSpawning", (s, o) => TagParse.TagBoolCheck(s, ref UseOptimizedVoxelSpawning) },
+				{"CustomVoxelMaterial", (s, o) => TagParse.TagStringListCheck(s, ref CustomVoxelMaterial) },
+				{"PlanetaryInstallation", (s, o) => TagParse.TagBoolCheck(s, ref PlanetaryInstallation) },
+				{"SkipTerrainCheck", (s, o) => TagParse.TagBoolCheck(s, ref SkipTerrainCheck) },
+				{"RotateInstallations", (s, o) => TagParse.TagVector3DListCheck(s, ref RotateInstallations) },
+				{"ReverseForwardDirections", (s, o) => TagParse.TagBoolListCheck(s, ref ReverseForwardDirections) },
+				{"InstallationTerrainValidation", (s, o) => TagParse.TagBoolCheck(s, ref InstallationTerrainValidation) },
+				{"InstallationSpawnsOnDryLand", (s, o) => TagParse.TagBoolCheck(s, ref InstallationSpawnsOnDryLand) },
+				{"InstallationSpawnsUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref InstallationSpawnsUnderwater) },
+				{"InstallationSpawnsOnWaterSurface", (s, o) => TagParse.TagBoolCheck(s, ref InstallationSpawnsOnWaterSurface) },
+				{"CutVoxelsAtAirtightCells", (s, o) => TagParse.TagBoolCheck(s, ref CutVoxelsAtAirtightCells) },
+				{"CutVoxelSize", (s, o) => TagParse.TagDoubleCheck(s, ref CutVoxelSize) },
+				{"BossEncounterSpace", (s, o) => TagParse.TagBoolCheck(s, ref BossEncounterSpace) },
+				{"BossEncounterAtmo", (s, o) => TagParse.TagBoolCheck(s, ref BossEncounterAtmo) },
+				{"BossEncounterAny", (s, o) => TagParse.TagBoolCheck(s, ref BossEncounterAny) },
+				{"RivalAiSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiSpawn) },
+				{"RivalAiSpaceSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiSpaceSpawn) },
+				{"RivalAiAtmosphericSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiAtmosphericSpawn) },
+				{"RivalAiAnySpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiAnySpawn) },
+				{"DroneEncounter", (s, o) => TagParse.TagBoolCheck(s, ref DroneEncounter) },
+				{"MinimumPlayerTime", (s, o) => TagParse.TagIntCheck(s, ref MinimumPlayerTime) },
+				{"MaximumPlayerTime", (s, o) => TagParse.TagIntCheck(s, ref MaximumPlayerTime) },
+				{"FailedDroneSpawnResetsPlayerTime", (s, o) => TagParse.TagBoolCheck(s, ref FailedDroneSpawnResetsPlayerTime) },
+				{"MinDroneDistance", (s, o) => TagParse.TagDoubleCheck(s, ref MinDroneDistance) },
+				{"MaxDroneDistance", (s, o) => TagParse.TagDoubleCheck(s, ref MaxDroneDistance) },
+				{"MinDroneAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinDroneAltitude) },
+				{"MaxDroneAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxDroneAltitude) },
+				{"DroneInheritsSourceAltitude", (s, o) => TagParse.TagBoolCheck(s, ref DroneInheritsSourceAltitude) },
+				{"SkipVoxelSpawnChecks", (s, o) => TagParse.TagBoolCheck(s, ref SkipVoxelSpawnChecks) },
+				{"SkipGridSpawnChecks", (s, o) => TagParse.TagBoolCheck(s, ref SkipGridSpawnChecks) },
+				{"CreatureSpawn", (s, o) => TagParse.TagBoolCheck(s, ref CreatureSpawn) },
+				{"CreatureIds", (s, o) => TagParse.TagStringListCheck(s, ref CreatureIds) },
+				{"BotProfiles", (s, o) => TagParse.TagBotProfileListCheck(s, ref BotProfiles) },
+				{"AiEnabledReady", (s, o) => TagParse.TagBoolCheck(s, ref AiEnabledReady) },
+				{"AiEnabledModBots", (s, o) => TagParse.TagBoolCheck(s, ref AiEnabledModBots) },
+				{"AiEnabledRole", (s, o) => TagParse.TagStringCheck(s, ref AiEnabledRole) },
+				{"MinCreatureCount", (s, o) => TagParse.TagIntCheck(s, ref MinCreatureCount) },
+				{"MaxCreatureCount", (s, o) => TagParse.TagIntCheck(s, ref MaxCreatureCount) },
+				{"MinCreatureDistance", (s, o) => TagParse.TagIntCheck(s, ref MinCreatureDistance) },
+				{"MaxCreatureDistance", (s, o) => TagParse.TagIntCheck(s, ref MaxCreatureDistance) },
+				{"RegisterCreatureToPlanetGenerators", (s, o) => TagParse.TagBoolCheck(s, ref RegisterCreatureToPlanetGenerators) },
+				{"MinDistFromOtherCreaturesInGroup", (s, o) => TagParse.TagIntCheck(s, ref MinDistFromOtherCreaturesInGroup) },
+				{"CanSpawnUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref CanSpawnUnderwater) },
+				{"MustSpawnUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref MustSpawnUnderwater) },
+				{"MinWaterDepth", (s, o) => TagParse.TagDoubleCheck(s, ref MinWaterDepth) },
+				{"StaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref StaticEncounter) },
+				{"UniqueEncounter", (s, o) => TagParse.TagBoolCheck(s, ref UniqueEncounter) },
+				{"TriggerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TriggerCoords) },
+				{"TriggerRadius", (s, o) => TagParse.TagDoubleCheck(s, ref TriggerRadius) },
+				{"StaticEncounterCoords", (s, o) => TagParse.TagVector3DCheck(s, ref StaticEncounterCoords) },
+				{"StaticEncounterForward", (s, o) => TagParse.TagVector3DCheck(s, ref StaticEncounterForward) },
+				{"StaticEncounterUp", (s, o) => TagParse.TagVector3DCheck(s, ref StaticEncounterUp) },
+				{"StaticEncounterUsePlanetDirectionAndAltitude", (s, o) => TagParse.TagBoolCheck(s, ref StaticEncounterUsePlanetDirectionAndAltitude) },
+				{"StaticEncounterPlanet", (s, o) => TagParse.TagStringCheck(s, ref StaticEncounterPlanet) },
+				{"StaticEncounterPlanetDirection", (s, o) => TagParse.TagVector3DCheck(s, ref StaticEncounterPlanetDirection) },
+				{"StaticEncounterPlanetAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref StaticEncounterPlanetAltitude) },
+				{"ForceStaticGrid", (s, o) => TagParse.TagBoolCheck(s, ref ForceStaticGrid) },
+				{"ForceExactPositionAndOrientation", (s, o) => TagParse.TagBoolCheck(s, ref ForceExactPositionAndOrientation) },
+				{"AdminSpawnOnly", (s, o) => TagParse.TagBoolCheck(s, ref AdminSpawnOnly) },
+				{"FactionOwner", (s, o) => TagParse.TagStringCheck(s, ref FactionOwner) },
+				{"UseRandomMinerFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomMinerFaction) },
+				{"UseRandomBuilderFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomBuilderFaction) },
+				{"UseRandomTraderFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomTraderFaction) },
+				{"RandomNumberRoll", (s, o) => TagParse.TagIntCheck(s, ref RandomNumberRoll) },
+				{"ChanceCeiling", (s, o) => TagParse.TagIntCheck(s, ref ChanceCeiling) },
+				{"SpaceCargoShipChance", (s, o) => TagParse.TagIntCheck(s, ref SpaceCargoShipChance) },
+				{"LunarCargoShipChance", (s, o) => TagParse.TagIntCheck(s, ref LunarCargoShipChance) },
+				{"AtmosphericCargoShipChance", (s, o) => TagParse.TagIntCheck(s, ref AtmosphericCargoShipChance) },
+				{"GravityCargoShipChance", (s, o) => TagParse.TagIntCheck(s, ref GravityCargoShipChance) },
+				{"RandomEncounterChance", (s, o) => TagParse.TagIntCheck(s, ref RandomEncounterChance) },
+				{"PlanetaryInstallationChance", (s, o) => TagParse.TagIntCheck(s, ref PlanetaryInstallationChance) },
+				{"BossEncounterChance", (s, o) => TagParse.TagIntCheck(s, ref BossEncounterChance) },
+				{"CreatureChance", (s, o) => TagParse.TagIntCheck(s, ref CreatureChance) },
+				{"DroneEncounterChance", (s, o) => TagParse.TagIntCheck(s, ref DroneEncounterChance) },
+				{"UseSettingsCheck", (s, o) => TagParse.TagBoolCheck(s, ref UseSettingsCheck) },
+				{"SettingsAutoHeal", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsAutoHeal) },
+				{"SettingsAutoRespawn", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsAutoRespawn) },
+				{"SettingsBountyContracts", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsBountyContracts) },
+				{"SettingsDestructibleBlocks", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsDestructibleBlocks) },
+				{"SettingsCopyPaste", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsCopyPaste) },
+				{"SettingsContainerDrops", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsContainerDrops) },
+				{"SettingsEconomy", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsEconomy) },
+				{"SettingsEnableDrones", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsEnableDrones) },
+				{"SettingsIngameScripts", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsIngameScripts) },
+				{"SettingsJetpack", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsJetpack) },
+				{"SettingsOxygen", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsOxygen) },
+				{"SettingsResearch", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsResearch) },
+				{"SettingsSpawnWithTools", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsSpawnWithTools) },
+				{"SettingsSpiders", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsSpiders) },
+				{"SettingsSubgridDamage", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsSubgridDamage) },
+				{"SettingsSunRotation", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsSunRotation) },
+				{"SettingsSupergridding", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsSupergridding) },
+				{"SettingsThrusterDamage", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsThrusterDamage) },
+				{"SettingsVoxelDestruction", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsVoxelDestruction) },
+				{"SettingsWeaponsEnabled", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWeaponsEnabled) },
+				{"SettingsWeather", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWeather) },
+				{"SettingsWolves", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWolves) },
+				{"MinSpawnFromWorldCenter", (s, o) => TagParse.TagDoubleCheck(s, ref MinSpawnFromWorldCenter) },
+				{"MaxSpawnFromWorldCenter", (s, o) => TagParse.TagDoubleCheck(s, ref MaxSpawnFromWorldCenter) },
+				{"CustomWorldCenter", (s, o) => TagParse.TagVector3DCheck(s, ref CustomWorldCenter) },
+				{"DirectionFromWorldCenter", (s, o) => TagParse.TagVector3DListCheck(s, ref DirectionFromWorldCenter) },
+				{"MinAngleFromDirection", (s, o) => TagParse.TagDoubleCheck(s, ref MinAngleFromDirection) },
+				{"MaxAngleFromDirection", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAngleFromDirection) },
+				{"DirectionFromPlanetCenter", (s, o) => TagParse.TagVector3DListCheck(s, ref DirectionFromPlanetCenter) },
+				{"MinAngleFromPlanetCenterDirection", (s, o) => TagParse.TagDoubleCheck(s, ref MinAngleFromPlanetCenterDirection) },
+				{"MaxAngleFromPlanetCenterDirection", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAngleFromPlanetCenterDirection) },
+				{"MinSpawnFromPlanetSurface", (s, o) => TagParse.TagDoubleCheck(s, ref MinSpawnFromPlanetSurface) },
+				{"MaxSpawnFromPlanetSurface", (s, o) => TagParse.TagDoubleCheck(s, ref MaxSpawnFromPlanetSurface) },
+				{"UseDayOrNightOnly", (s, o) => TagParse.TagBoolCheck(s, ref UseDayOrNightOnly) },
+				{"SpawnOnlyAtNight", (s, o) => TagParse.TagBoolCheck(s, ref SpawnOnlyAtNight) },
+				{"UseWeatherSpawning", (s, o) => TagParse.TagBoolCheck(s, ref UseWeatherSpawning) },
+				{"AllowedWeatherSystems", (s, o) => TagParse.TagStringListCheck(s, ref AllowedWeatherSystems) },
+				{"UseTerrainTypeValidation", (s, o) => TagParse.TagBoolCheck(s, ref UseTerrainTypeValidation) },
+				{"AllowedTerrainTypes", (s, o) => TagParse.TagStringListCheck(s, ref AllowedTerrainTypes) },
+				{"MinAirDensity", (s, o) => TagParse.TagDoubleCheck(s, ref MinAirDensity) },
+				{"MaxAirDensity", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAirDensity) },
+				{"MinGravity", (s, o) => TagParse.TagDoubleCheck(s, ref MinGravity) },
+				{"MaxGravity", (s, o) => TagParse.TagDoubleCheck(s, ref MaxGravity) },
+				{"PlanetBlacklist", (s, o) => TagParse.TagStringListCheck(s, ref PlanetBlacklist) },
+				{"PlanetWhitelist", (s, o) => TagParse.TagStringListCheck(s, ref PlanetWhitelist) },
+				{"PlanetRequiresVacuum", (s, o) => TagParse.TagBoolCheck(s, ref PlanetRequiresVacuum) },
+				{"PlanetRequiresAtmo", (s, o) => TagParse.TagBoolCheck(s, ref PlanetRequiresAtmo) },
+				{"PlanetRequiresOxygen", (s, o) => TagParse.TagBoolCheck(s, ref PlanetRequiresOxygen) },
+				{"PlanetMinimumSize", (s, o) => TagParse.TagDoubleCheck(s, ref PlanetMinimumSize) },
+				{"PlanetMaximumSize", (s, o) => TagParse.TagDoubleCheck(s, ref PlanetMaximumSize) },
+				{"UsePlayerCountCheck", (s, o) => TagParse.TagBoolCheck(s, ref UsePlayerCountCheck) },
+				{"PlayerCountCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PlayerCountCheckRadius) },
+				{"MinimumPlayers", (s, o) => TagParse.TagIntCheck(s, ref MinimumPlayers) },
+				{"MaximumPlayers", (s, o) => TagParse.TagIntCheck(s, ref MaximumPlayers) },
+				{"UseThreatLevelCheck", (s, o) => TagParse.TagBoolCheck(s, ref UseThreatLevelCheck) },
+				{"ThreatLevelCheckRange", (s, o) => TagParse.TagDoubleCheck(s, ref ThreatLevelCheckRange) },
+				{"ThreatIncludeOtherNpcOwners", (s, o) => TagParse.TagBoolCheck(s, ref ThreatIncludeOtherNpcOwners) },
+				{"ThreatScoreMinimum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMinimum) },
+				{"ThreatScoreMaximum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMaximum) },
+				{"UsePCUCheck", (s, o) => TagParse.TagBoolCheck(s, ref UsePCUCheck) },
+				{"PCUCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PCUCheckRadius) },
+				{"PCUMinimum", (s, o) => TagParse.TagIntCheck(s, ref PCUMinimum) },
+				{"PCUMaximum", (s, o) => TagParse.TagIntCheck(s, ref PCUMaximum) },
+				{"UseDifficulty", (s, o) => TagParse.TagBoolCheck(s, ref UseDifficulty) },
+				{"MinDifficulty", (s, o) => TagParse.TagIntCheck(s, ref MinDifficulty) },
+				{"MaxDifficulty", (s, o) => TagParse.TagIntCheck(s, ref MaxDifficulty) },
+				{"UsePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref UsePlayerCredits) },
+				{"IncludeAllPlayersInRadius", (s, o) => TagParse.TagBoolCheck(s, ref IncludeAllPlayersInRadius) },
+				{"IncludeFactionBalance", (s, o) => TagParse.TagBoolCheck(s, ref IncludeFactionBalance) },
+				{"PlayerCreditsCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PlayerCreditsCheckRadius) },
+				{"MinimumPlayerCredits", (s, o) => TagParse.TagIntCheck(s, ref MinimumPlayerCredits) },
+				{"MaximumPlayerCredits", (s, o) => TagParse.TagIntCheck(s, ref MaximumPlayerCredits) },
+				{"UsePlayerFactionReputation", (s, o) => TagParse.TagBoolCheck(s, ref UsePlayerFactionReputation) },
+				{"PlayerReputationCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PlayerReputationCheckRadius) },
+				{"CheckReputationAgainstOtherNPCFaction", (s, o) => TagParse.TagStringCheck(s, ref CheckReputationAgainstOtherNPCFaction) },
+				{"MinimumReputation", (s, o) => TagParse.TagIntCheck(s, ref MinimumReputation) },
+				{"MaximumReputation", (s, o) => TagParse.TagIntCheck(s, ref MaximumReputation) },
+				{"UseSignalRequirement", (s, o) => TagParse.TagBoolCheck(s, ref UseSignalRequirement) },
+				{"MinSignalRadius", (s, o) => TagParse.TagDoubleCheck(s, ref MinSignalRadius) },
+				{"MaxSignalRadius", (s, o) => TagParse.TagDoubleCheck(s, ref MaxSignalRadius) },
+				{"AllowNpcSignals", (s, o) => TagParse.TagBoolCheck(s, ref AllowNpcSignals) },
+				{"UseOnlySelfOwnedSignals", (s, o) => TagParse.TagBoolCheck(s, ref UseOnlySelfOwnedSignals) },
+				{"MatchSignalName", (s, o) => TagParse.TagStringCheck(s, ref MatchSignalName) },
+				{"ChargeNpcFactionForSpawn", (s, o) => TagParse.TagBoolCheck(s, ref ChargeNpcFactionForSpawn) },
+				{"ChargeForSpawning", (s, o) => TagParse.TagLongCheck(s, ref ChargeForSpawning) },
+				{"UseSandboxCounterCosts", (s, o) => TagParse.TagBoolCheck(s, ref UseSandboxCounterCosts) },
+				{"SandboxCounterCostNames", (s, o) => TagParse.TagStringListCheck(s, ref SandboxCounterCostNames) },
+				{"SandboxCounterCostAmounts", (s, o) => TagParse.TagIntListCheck(s, ref SandboxCounterCostAmounts) },
+				{"SandboxVariables", (s, o) => TagParse.TagStringListCheck(s, ref SandboxVariables) },
+				{"FalseSandboxVariables", (s, o) => TagParse.TagStringListCheck(s, ref FalseSandboxVariables) },
+				{"UseRemoteControlCodeRestrictions", (s, o) => TagParse.TagBoolCheck(s, ref UseRemoteControlCodeRestrictions) },
+				{"RemoteControlCode", (s, o) => TagParse.TagStringCheck(s, ref RemoteControlCode) },
+				{"RemoteControlCodeMinDistance", (s, o) => TagParse.TagDoubleCheck(s, ref RemoteControlCodeMinDistance) },
+				{"RemoteControlCodeMaxDistance", (s, o) => TagParse.TagDoubleCheck(s, ref RemoteControlCodeMaxDistance) },
+				{"RequireAllMods", (s, o) => TagParse.TagUlongListCheck(s, ref RequireAllMods) },
+				{"RequireAnyMods", (s, o) => TagParse.TagUlongListCheck(s, ref RequireAnyMods) },
+				{"ExcludeAllMods", (s, o) => TagParse.TagUlongListCheck(s, ref ExcludeAllMods) },
+				{"ExcludeAnyMods", (s, o) => TagParse.TagUlongListCheck(s, ref ExcludeAnyMods) },
+				{"ModBlockExists", (s, o) => TagParse.TagStringListCheck(s, ref ModBlockExists) },
+				{"RequiredPlayersOnline", (s, o) => TagParse.TagUlongListCheck(s, ref RequiredPlayersOnline) },
+				{"RequiredAnyPlayersOnline", (s, o) => TagParse.TagUlongListCheck(s, ref RequiredAnyPlayersOnline) },
+				{"UseKnownPlayerLocations", (s, o) => TagParse.TagBoolCheck(s, ref UseKnownPlayerLocations) },
+				{"KnownPlayerLocationMustMatchFaction", (s, o) => TagParse.TagBoolCheck(s, ref KnownPlayerLocationMustMatchFaction) },
+				{"KnownPlayerLocationMinSpawnedEncounters", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerLocationMinSpawnedEncounters) },
+				{"KnownPlayerLocationMaxSpawnedEncounters", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerLocationMaxSpawnedEncounters) },
+				{"ZoneConditions", (s, o) => TagParse.TagZoneConditionsProfileCheck(s, ref ZoneConditions) },
+				{"CustomApiConditions", (s, o) => TagParse.TagStringListCheck(s, ref CustomApiConditions) },
+				{"BossCustomAnnounceEnable", (s, o) => TagParse.TagBoolCheck(s, ref BossCustomAnnounceEnable) },
+				{"BossCustomAnnounceAuthor", (s, o) => TagParse.TagStringCheck(s, ref BossCustomAnnounceAuthor) },
+				{"BossCustomAnnounceMessage", (s, o) => TagParse.TagStringCheck(s, ref BossCustomAnnounceMessage) },
+				{"BossCustomGPSLabel", (s, o) => TagParse.TagStringCheck(s, ref BossCustomGPSLabel) },
+				{"BossCustomGPSColor", (s, o) => TagParse.TagVector3DCheck(s, ref BossCustomGPSColor) },
+				{"BossMusicId", (s, o) => TagParse.TagStringCheck(s, ref BossMusicId) },
+				{"PlaySoundAtSpawnTriggerPosition", (s, o) => TagParse.TagBoolCheck(s, ref PlaySoundAtSpawnTriggerPosition) },
+				{"SpawnTriggerPositionSoundId", (s, o) => TagParse.TagStringCheck(s, ref SpawnTriggerPositionSoundId) },
+				{"RotateFirstCockpitToForward", (s, o) => TagParse.TagBoolCheck(s, ref RotateFirstCockpitToForward) },
+				{"PositionAtFirstCockpit", (s, o) => TagParse.TagBoolCheck(s, ref PositionAtFirstCockpit) },
+				{"SpawnRandomCargo", (s, o) => TagParse.TagBoolCheck(s, ref SpawnRandomCargo) },
+				{"DisableDampeners", (s, o) => TagParse.TagBoolCheck(s, ref DisableDampeners) },
+				{"ReactorsOn", (s, o) => TagParse.TagBoolCheck(s, ref ReactorsOn) },
+				{"UseBoundingBoxCheck", (s, o) => TagParse.TagBoolCheck(s, ref UseBoundingBoxCheck) },
+				{"RemoveVoxelsIfGridRemoved", (s, o) => TagParse.TagBoolCheck(s, ref RemoveVoxelsIfGridRemoved) },
+				{"UseGridOrigin", (s, o) => TagParse.TagBoolCheck(s, ref UseGridOrigin) },
+				{"PrefabSpawningMode", (s, o) => TagParse.TagPrefabSpawnModeEnumCheck(s, ref PrefabSpawningMode) },
+				{"AllowPrefabIndexReuse", (s, o) => TagParse.TagBoolCheck(s, ref AllowPrefabIndexReuse) },
+				{"PrefabIndexes", (s, o) => TagParse.TagIntListCheck(s, ref PrefabIndexes) },
+				{"PrefabIndexGroupNames", (s, o) => TagParse.TagStringListCheck(s, ref PrefabIndexGroupNames) },
+				{"PrefabIndexGroupValues", (s, o) => TagParse.TagIntListCheck(s, ref PrefabIndexGroupValues) },
+				{"PrefabOffsetOverrides", (s, o) => TagParse.TagVector3DListCheck(s, ref PrefabOffsetOverrides) },
+
+			};
+
 		}
 
-		public void InitTags(string data = null) {
+		public void EditValue(string receivedValue) {
 
-			if (string.IsNullOrWhiteSpace(data))
+			var processedTag = TagParse.ProcessTag(receivedValue);
+
+			if (processedTag.Length < 2)
 				return;
 
-			var descSplit = data.Split('\n');
+			Action<string, object> referenceMethod = null;
 
-			bool setDampeners = false;
-			bool setAtmoRequired = false;
-			bool setForceStatic = false;
+			if (!EditorReference.TryGetValue(processedTag[0], out referenceMethod))
+				//TODO: Notes About Value Not Found
+				return;
 
-			ZoneConditions[0].ProfileSubtypeId = ProfileSubtypeId;
+			referenceMethod?.Invoke(receivedValue, null);
 
-			foreach (var tagRaw in descSplit) {
+		}
 
-				var tag = tagRaw.Trim();
+		public void InitTags(string customData) {
 
-				//SpaceCargoShip
-				if (tag.StartsWith("[SpaceCargoShip:") == true) {
+			if (string.IsNullOrWhiteSpace(customData) == false) {
 
-					TagParse.TagBoolCheck(tag, ref this.SpaceCargoShip);
+				bool setDampeners = false;
+				bool setAtmoRequired = false;
+				bool setForceStatic = false;
 
-				}
-
-				//LunarCargoShip
-				if (tag.StartsWith("[LunarCargoShip:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.LunarCargoShip);
-
-				}
-
-				//AtmosphericCargoShip
-				if (tag.StartsWith("[AtmosphericCargoShip:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.AtmosphericCargoShip);
-
-				}
-
-				//GravityCargoShip
-				if (tag.StartsWith("[GravityCargoShip:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.GravityCargoShip);
-
-				}
-
-				//SkipAirDensityCheck
-				if (tag.StartsWith("[SkipAirDensityCheck:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.SkipAirDensityCheck);
-
-				}
-
-				//CargoShipTerrainPath
-				if (tag.StartsWith("[CargoShipTerrainPath:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.CargoShipTerrainPath);
-
-				}
-
-				//CustomPathStartAltitude
-				if (tag.StartsWith("[CustomPathStartAltitude:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.CustomPathStartAltitude);
-
-				}
-
-				//CustomPathEndAltitude
-				if (tag.StartsWith("[CustomPathEndAltitude:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.CustomPathEndAltitude);
-
-				}
-
-				//SpaceRandomEncounter
-				if (tag.StartsWith("[SpaceRandomEncounter:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.SpaceRandomEncounter);
-
-				}
-
-				//AlignVoxelsToSpawnMatrix
-				if (tag.StartsWith("[AlignVoxelsToSpawnMatrix:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.AlignVoxelsToSpawnMatrix);
-
-				}
-
-				//UseOptimizedVoxelSpawning
-				if (tag.StartsWith("[UseOptimizedVoxelSpawning:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseOptimizedVoxelSpawning);
-
-				}
-
-				//CustomVoxelMaterial
-				if (tag.StartsWith("[CustomVoxelMaterial:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.CustomVoxelMaterial);
-
-				}
-
-				//PlanetaryInstallation
-				if (tag.StartsWith("[PlanetaryInstallation:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.PlanetaryInstallation);
-
-				}
-
-				//PlanetaryInstallationType
-				if (tag.StartsWith("[PlanetaryInstallationType:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.PlanetaryInstallationType);
-
-					if (this.PlanetaryInstallationType == "") {
-
-						this.PlanetaryInstallationType = "Small";
-
-					}
-
-				}
-
-				//SkipTerrainCheck
-				if (tag.StartsWith("[SkipTerrainCheck:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.SkipTerrainCheck);
-
-				}
-
-				//RotateInstallations
-				if (tag.StartsWith("[RotateInstallations:") == true) {
-
-					TagParse.TagVector3DListCheck(tag, ref this.RotateInstallations);
-
-				}
-
-				//InstallationTerrainValidation
-				if (tag.StartsWith("[InstallationTerrainValidation:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.InstallationTerrainValidation);
-
-				}
-
-				//InstallationSpawnsOnDryLand
-				if (tag.StartsWith("[InstallationSpawnsOnDryLand:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.InstallationSpawnsOnDryLand);
-
-				}
-
-				//InstallationSpawnsUnderwater
-				if (tag.StartsWith("[InstallationSpawnsUnderwater:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.InstallationSpawnsUnderwater);
-
-				}
-
-				//InstallationSpawnsOnWaterSurface
-				if (tag.StartsWith("[InstallationSpawnsOnWaterSurface:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.InstallationSpawnsOnWaterSurface);
-
-				}
-
-				//ReverseForwardDirections
-				if (tag.StartsWith("[ReverseForwardDirections:") == true) {
-
-					TagParse.TagBoolListCheck(tag, ref this.ReverseForwardDirections);
-
-				}
-
-				//CutVoxelsAtAirtightCells
-				if (tag.StartsWith("[CutVoxelsAtAirtightCells:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.CutVoxelsAtAirtightCells);
-
-				}
-
-				//CutVoxelSize
-				if (tag.StartsWith("[CutVoxelSize:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.CutVoxelSize);
-
-				}
-
-				//BossEncounterSpace
-				if (tag.StartsWith("[BossEncounterSpace:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.BossEncounterSpace);
-
-				}
-
-				//BossEncounterAtmo
-				if (tag.StartsWith("[BossEncounterAtmo:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.BossEncounterAtmo);
-
-				}
-
-				//BossEncounterAny
-				if (tag.StartsWith("[BossEncounterAny:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.BossEncounterAny);
-
-				}
-
-				//RivalAiSpawn
-				if (tag.StartsWith("[RivalAiSpawn:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.RivalAiAnySpawn);
-
-				}
-
-				//RivalAiSpaceSpawn
-				if (tag.StartsWith("[RivalAiSpaceSpawn:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.RivalAiSpaceSpawn);
-
-				}
-
-				//RivalAiAtmosphericSpawn
-				if (tag.StartsWith("[RivalAiAtmosphericSpawn:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.RivalAiAtmosphericSpawn);
-
-				}
-
-				//RivalAiAnySpawn
-				if (tag.StartsWith("[RivalAiAnySpawn:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.RivalAiAnySpawn);
-
-				}
-
-				//DroneEncounter
-				if (tag.StartsWith("[DroneEncounter:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.DroneEncounter);
-
-				}
-
-				//MinimumPlayerTime
-				if (tag.StartsWith("[MinimumPlayerTime:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MinimumPlayerTime);
-
-				}
-
-				//MaximumPlayerTime
-				if (tag.StartsWith("[MaximumPlayerTime:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaximumPlayerTime);
-
-				}
-
-				//FailedDroneSpawnResetsPlayerTime
-				if (tag.StartsWith("[FailedDroneSpawnResetsPlayerTime:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.FailedDroneSpawnResetsPlayerTime);
-
-				}
-
-				//MinDroneDistance
-				if (tag.StartsWith("[MinDroneDistance:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinDroneDistance);
-
-				}
-
-				//MaxDroneDistance
-				if (tag.StartsWith("[MaxDroneDistance:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxDroneDistance);
-
-				}
-
-				//MinDroneAltitude
-				if (tag.StartsWith("[MinDroneAltitude:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinDroneAltitude);
-
-				}
-
-				//MaxDroneAltitude
-				if (tag.StartsWith("[MaxDroneAltitude:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxDroneAltitude);
-
-				}
-
-				//DroneInheritsSourceAltitude
-				if (tag.StartsWith("[DroneInheritsSourceAltitude:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.DroneInheritsSourceAltitude);
-
-				}
-
-				//SkipVoxelSpawnChecks
-				if (tag.StartsWith("[SkipVoxelSpawnChecks:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.SkipVoxelSpawnChecks);
-
-				}
-
-				//SkipGridSpawnChecks
-				if (tag.StartsWith("[SkipGridSpawnChecks:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.SkipGridSpawnChecks);
-
-				}
-
-				//CreatureSpawn
-				if (tag.StartsWith("[CreatureSpawn:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.CreatureSpawn);
-
-				}
-
-				//CreatureIds
-				if (tag.StartsWith("[CreatureIds:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.CreatureIds);
-
-				}
-
-				//BotProfiles
-				if (tag.StartsWith("[BotProfiles:") == true) {
-
-					TagParse.TagBotProfileListCheck(tag, ref this.BotProfiles);
-
-				}
-
-				//AiEnabledModBots
-				if (tag.StartsWith("[AiEnabledModBots:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.AiEnabledModBots);
-
-				}
-
-				//AiEnabledReady
-				if (tag.StartsWith("[AiEnabledReady:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.AiEnabledReady);
-
-				}
-
-				//AiEnabledRole
-				if (tag.StartsWith("[AiEnabledRole:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.AiEnabledRole);
-
-				}
-
-				//MinCreatureCount
-				if (tag.StartsWith("[MinCreatureCount:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MinCreatureCount);
-
-				}
-
-				//MaxCreatureCount
-				if (tag.StartsWith("[MaxCreatureCount:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaxCreatureCount);
-
-				}
-
-				//MinCreatureDistance
-				if (tag.StartsWith("[MinCreatureDistance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MinCreatureDistance);
-
-				}
-
-				//MaxCreatureDistance
-				if (tag.StartsWith("[MaxCreatureDistance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaxCreatureDistance);
-
-				}
-
-				//MinDistFromOtherCreaturesInGroup
-				if (tag.StartsWith("[MaxCreatureDistance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaxCreatureDistance);
-
-				}
-
-				//CanSpawnUnderwater
-				if (tag.StartsWith("[CanSpawnUnderwater:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.CanSpawnUnderwater);
-
-				}
-
-				//MinWaterDepth
-				if (tag.StartsWith("[MinWaterDepth:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinWaterDepth);
-
-				}
-
-				//StaticEncounter
-				if (tag.StartsWith("[StaticEncounter:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.StaticEncounter);
-
-				}
-
-				//UniqueEncounter
-				if (tag.StartsWith("[UniqueEncounter:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UniqueEncounter);
-
-				}
-
-				//TriggerCoords
-				if (tag.StartsWith("[TriggerCoords:") == true) {
-
-					TagParse.TagVector3DCheck(tag, ref this.TriggerCoords);
-
-				}
-
-				//TriggerRadius
-				if (tag.StartsWith("[TriggerRadius:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.TriggerRadius);
-
-				}
-
-				//StaticEncounterCoords
-				if (tag.StartsWith("[StaticEncounterCoords:") == true) {
-
-					TagParse.TagVector3DCheck(tag, ref this.StaticEncounterCoords);
-
-				}
-
-				//StaticEncounterForward
-				if (tag.StartsWith("[StaticEncounterForward:") == true) {
-
-					TagParse.TagVector3DCheck(tag, ref this.StaticEncounterForward);
-
-				}
-
-				//StaticEncounterUp
-				if (tag.StartsWith("[StaticEncounterUp:") == true) {
-
-					TagParse.TagVector3DCheck(tag, ref this.StaticEncounterUp);
-
-				}
-
-				//StaticEncounterUsePlanetDirectionAndAltitude
-				if (tag.StartsWith("[StaticEncounterUsePlanetDirectionAndAltitude:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.StaticEncounterUsePlanetDirectionAndAltitude);
-
-				}
-
-				//StaticEncounterPlanet
-				if (tag.StartsWith("[StaticEncounterPlanet:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.StaticEncounterPlanet);
-
-				}
-
-				//StaticEncounterPlanetDirection
-				if (tag.StartsWith("[StaticEncounterPlanetDirection:") == true) {
-
-					TagParse.TagVector3DCheck(tag, ref this.StaticEncounterPlanetDirection);
-
-				}
-
-				//StaticEncounterPlanetAltitude
-				if (tag.StartsWith("[StaticEncounterPlanetAltitude:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.StaticEncounterPlanetAltitude);
-
-				}
-
-				//ForceStaticGrid
-				if (tag.StartsWith("[ForceStaticGrid:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.ForceStaticGrid);
-					setForceStatic = true;
-
-				}
-
-				//ForceExactPositionAndOrientation
-				if (tag.StartsWith("[ForceExactPositionAndOrientation:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.ForceExactPositionAndOrientation);
-
-				}
-
-				//AdminSpawnOnly
-				if (tag.StartsWith("[AdminSpawnOnly:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.AdminSpawnOnly);
-
-				}
-
-
-				//SandboxVariables
-				if (tag.StartsWith("[SandboxVariables:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.SandboxVariables);
-
-				}
-
-				//FalseSandboxVariables
-				if (tag.StartsWith("[FalseSandboxVariables:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.FalseSandboxVariables);
-
-				}
-
-				//RandomNumberRoll
-				if (tag.StartsWith("[RandomNumberRoll:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.RandomNumberRoll);
-
-				}
-
-				//FactionOwner
-				if (tag.StartsWith("[FactionOwner:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.FactionOwner);
-
-					if (this.FactionOwner == "") {
-
-						this.FactionOwner = "SPRT";
-
-					}
-
-				}
-
-				//UseRandomMinerFaction
-				if (tag.StartsWith("[UseRandomMinerFaction:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseRandomMinerFaction);
-
-				}
-
-				//UseRandomBuilderFaction
-				if (tag.StartsWith("[UseRandomBuilderFaction:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseRandomBuilderFaction);
-
-				}
-
-				//UseRandomTraderFaction
-				if (tag.StartsWith("[UseRandomTraderFaction:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseRandomTraderFaction);
-
-				}
-
-				//ChanceCeiling
-				if (tag.StartsWith("[ChanceCeiling:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.ChanceCeiling);
-
-				}
-
-				//SpaceCargoShipChance
-				if (tag.StartsWith("[SpaceCargoShipChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.SpaceCargoShipChance);
-
-				}
-
-				//LunarCargoShipChance
-				if (tag.StartsWith("[LunarCargoShipChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.LunarCargoShipChance);
-
-				}
-
-				//AtmosphericCargoShipChance
-				if (tag.StartsWith("[AtmosphericCargoShipChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.AtmosphericCargoShipChance);
-
-				}
-
-				//GravityCargoShipChance
-				if (tag.StartsWith("[GravityCargoShipChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.GravityCargoShipChance);
-
-				}
-
-				//RandomEncounterChance
-				if (tag.StartsWith("[RandomEncounterChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.RandomEncounterChance);
-
-				}
-
-				//PlanetaryInstallationChance
-				if (tag.StartsWith("[PlanetaryInstallationChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.PlanetaryInstallationChance);
-
-				}
-
-				//BossEncounterChance
-				if (tag.StartsWith("[BossEncounterChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.BossEncounterChance);
-
-				}
-
-				//CreatureChance
-				if (tag.StartsWith("[CreatureChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.CreatureChance);
-
-				}
-
-				//DroneEncounterChance
-				if (tag.StartsWith("[DroneEncounterChance:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.DroneEncounterChance);
-
-				}
-
-				//MinSpawnFromWorldCenter
-				if (tag.StartsWith("[MinSpawnFromWorldCenter:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinSpawnFromWorldCenter);
-
-				}
-
-				//MaxSpawnFromWorldCenter
-				if (tag.StartsWith("[MaxSpawnFromWorldCenter:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxSpawnFromWorldCenter);
-
-				}
-
-				//CustomWorldCenter
-				if (tag.StartsWith("[CustomWorldCenter:") == true) {
-
-					TagParse.TagVector3DCheck(tag, ref this.CustomWorldCenter);
-
-				}
-
-				//DirectionFromWorldCenter
-				if (tag.StartsWith("[DirectionFromWorldCenter:") == true) {
-
-					TagParse.TagVector3DListCheck(tag, ref this.DirectionFromWorldCenter);
-
-				}
-
-				//MinAngleFromDirection
-				if (tag.StartsWith("[MinAngleFromDirection:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinAngleFromDirection);
-
-				}
-
-				//MaxAngleFromDirection
-				if (tag.StartsWith("[MaxAngleFromDirection:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxAngleFromDirection);
-
-				}
-
-				//DirectionFromPlanetCenter
-				if (tag.StartsWith("[DirectionFromPlanetCenter:") == true) {
-
-					TagParse.TagVector3DListCheck(tag, ref this.DirectionFromPlanetCenter);
-
-				}
-
-				//MinAngleFromPlanetCenterDirection
-				if (tag.StartsWith("[MinAngleFromPlanetCenterDirection:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinAngleFromPlanetCenterDirection);
-
-				}
-
-				//MaxAngleFromPlanetCenterDirection
-				if (tag.StartsWith("[MaxAngleFromPlanetCenterDirection:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxAngleFromPlanetCenterDirection);
-
-				}
-
-				//MinSpawnFromPlanetSurface
-				if (tag.StartsWith("[MinSpawnFromPlanetSurface:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinSpawnFromPlanetSurface);
-
-				}
-
-				//MaxSpawnFromPlanetSurface
-				if (tag.StartsWith("[MaxSpawnFromPlanetSurface:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxSpawnFromPlanetSurface);
-
-				}
-
-				//UseDayOrNightOnly
-				if (tag.StartsWith("[UseDayOrNightOnly:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseDayOrNightOnly);
-
-				}
-
-				//SpawnOnlyAtNight
-				if (tag.StartsWith("[SpawnOnlyAtNight:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.SpawnOnlyAtNight);
-
-				}
-
-				//UseWeatherSpawning
-				if (tag.StartsWith("[UseWeatherSpawning:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseWeatherSpawning);
-
-				}
-
-				//AllowedWeatherSystems
-				if (tag.StartsWith("[AllowedWeatherSystems:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.AllowedWeatherSystems);
-
-				}
-
-				//UseTerrainTypeValidation
-				if (tag.StartsWith("[UseTerrainTypeValidation:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseTerrainTypeValidation);
-
-				}
-
-				//AllowedTerrainTypes
-				if (tag.StartsWith("[AllowedTerrainTypes:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.AllowedTerrainTypes);
-
-				}
-
-				//MinAirDensity
-				if (tag.StartsWith("[MinAirDensity:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinAirDensity);
-
-				}
-
-				//MaxAirDensity
-				if (tag.StartsWith("[MaxAirDensity:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxAirDensity);
-
-				}
-
-				//MinGravity
-				if (tag.StartsWith("[MinGravity:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinGravity);
-
-				}
-
-				//MaxGravity
-				if (tag.StartsWith("[MaxGravity:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxGravity);
-
-				}
-
-				//PlanetBlacklist
-				if (tag.StartsWith("[PlanetBlacklist:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.PlanetBlacklist);
-
-				}
-
-				//PlanetWhitelist
-				if (tag.StartsWith("[PlanetWhitelist:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.PlanetWhitelist);
-
-				}
-
-				//PlanetRequiresVacuum
-				if (tag.StartsWith("[PlanetRequiresVacuum:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.PlanetRequiresVacuum);
-
-				}
-
-				//PlanetRequiresAtmo
-				if (tag.StartsWith("[PlanetRequiresAtmo:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.PlanetRequiresAtmo);
-					setAtmoRequired = true;
-
-				}
-
-				//PlanetRequiresOxygen
-				if (tag.StartsWith("[PlanetRequiresOxygen:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.PlanetRequiresOxygen);
-
-				}
-
-				//PlanetMinimumSize
-				if (tag.StartsWith("[PlanetMinimumSize:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.PlanetMinimumSize);
-
-				}
-
-				//PlanetMaximumSize
-				if (tag.StartsWith("[PlanetMaximumSize:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.PlanetMaximumSize);
-
-				}
-
-				//UsePlayerCountCheck
-				if (tag.StartsWith("[UsePlayerCountCheck:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UsePlayerCountCheck);
-
-				}
-
-				//PlayerCountCheckRadius
-				if (tag.StartsWith("[PlayerCountCheckRadius:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.PlayerCountCheckRadius);
-
-				}
-
-				//MinimumPlayers
-				if (tag.StartsWith("[MinimumPlayers:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MinimumPlayers);
-
-				}
-
-				//MaximumPlayers
-				if (tag.StartsWith("[MaximumPlayers:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaximumPlayers);
-
-				}
-
-				//UseThreatLevelCheck
-				if (tag.StartsWith("[UseThreatLevelCheck:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseThreatLevelCheck);
-
-				}
-
-				//ThreatLevelCheckRange
-				if (tag.StartsWith("[ThreatLevelCheckRange:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.ThreatLevelCheckRange);
-
-				}
-
-				//ThreatIncludeOtherNpcOwners
-				if (tag.StartsWith("[ThreatIncludeOtherNpcOwners:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.ThreatIncludeOtherNpcOwners);
-
-				}
-
-				//ThreatScoreMinimum
-				if (tag.StartsWith("[ThreatScoreMinimum:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.ThreatScoreMinimum);
-
-				}
-
-				//ThreatScoreMaximum
-				if (tag.StartsWith("[ThreatScoreMaximum:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.ThreatScoreMaximum);
-
-				}
-
-				//UsePCUCheck
-				if (tag.StartsWith("[UsePCUCheck:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UsePCUCheck);
-
-				}
-
-				//PCUCheckRadius
-				if (tag.StartsWith("[PCUCheckRadius:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.PCUCheckRadius);
-
-				}
-
-				//PCUMinimum
-				if (tag.StartsWith("[PCUMinimum:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.PCUMinimum);
+				ZoneConditions[0].ProfileSubtypeId = ProfileSubtypeId;
 
-				}
-
-				//PCUMaximum
-				if (tag.StartsWith("[PCUMaximum:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.PCUMaximum);
-
-				}
-
-				//UseDifficulty
-				if (tag.StartsWith("[UseDifficulty:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseDifficulty);
-
-				}
-
-				//MinDifficulty
-				if (tag.StartsWith("[MinDifficulty:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MinDifficulty);
-
-				}
-
-				//MaxDifficulty
-				if (tag.StartsWith("[MaxDifficulty:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaxDifficulty);
-
-				}
-
-				//UsePlayerCredits
-				if (tag.StartsWith("[UsePlayerCredits:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UsePlayerCredits);
-
-				}
-
-				//IncludeAllPlayersInRadius
-				if (tag.StartsWith("[IncludeAllPlayersInRadius:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.IncludeAllPlayersInRadius);
-
-				}
-
-				//IncludeFactionBalance
-				if (tag.StartsWith("[IncludeFactionBalance:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.IncludeFactionBalance);
-
-				}
-
-				//PlayerCreditsCheckRadius
-				if (tag.StartsWith("[PlayerCreditsCheckRadius:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.PlayerCreditsCheckRadius);
-
-				}
-
-				//MinimumPlayerCredits
-				if (tag.StartsWith("[MinimumPlayerCredits:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MinimumPlayerCredits);
-
-				}
-
-				//MaximumPlayerCredits
-				if (tag.StartsWith("[MaximumPlayerCredits:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaximumPlayerCredits);
-
-				}
-
-				//UsePlayerFactionReputation
-				if (tag.StartsWith("[UsePlayerFactionReputation:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UsePlayerFactionReputation);
-
-				}
-
-				//PlayerReputationCheckRadius
-				if (tag.StartsWith("[PlayerReputationCheckRadius:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.PlayerReputationCheckRadius);
-
-				}
-
-				//CheckReputationAgainstOtherNPCFaction
-				if (tag.StartsWith("[CheckReputationAgainstOtherNPCFaction:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.CheckReputationAgainstOtherNPCFaction);
-
-				}
-
-				//MinimumReputation
-				if (tag.StartsWith("[MinimumReputation:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MinimumReputation);
-
-				}
-
-				//MaximumReputation
-				if (tag.StartsWith("[MaximumReputation:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaximumReputation);
-
-				}
-
-				//UseSignalRequirement 
-				if (tag.StartsWith("[UseSignalRequirement:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseSignalRequirement);
-
-				}
-
-				//MinSignalRadius 
-				if (tag.StartsWith("[MinSignalRadius:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MinSignalRadius);
-
-				}
-
-				//MaxSignalRadius 
-				if (tag.StartsWith("[MaxSignalRadius:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.MaxSignalRadius);
-
-				}
-
-				//AllowNpcSignals  
-				if (tag.StartsWith("[AllowNpcSignals:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.AllowNpcSignals);
-
-				}
-
-				//UseOnlySelfOwnedSignals  
-				if (tag.StartsWith("[UseOnlySelfOwnedSignals:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseOnlySelfOwnedSignals);
-
-				}
-
-				//MatchSignalName  
-				if (tag.StartsWith("[MatchSignalName:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.MatchSignalName);
-
-				}
-
-				//ChargeNpcFactionForSpawn
-				if (tag.StartsWith("[ChargeNpcFactionForSpawn:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.ChargeNpcFactionForSpawn);
-
-				}
-
-				//ChargeForSpawning
-				if (tag.StartsWith("[ChargeForSpawning:") == true) {
-
-					TagParse.TagLongCheck(tag, ref this.ChargeForSpawning);
-
-				}
-
-				//UseSandboxCounterCosts
-				if (tag.StartsWith("[UseSandboxCounterCosts:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseSandboxCounterCosts);
-
-				}
-
-				//SandboxCounterCostNames
-				if (tag.StartsWith("[SandboxCounterCostNames:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.SandboxCounterCostNames);
-
-				}
-
-				//SandboxCounterCostAmounts
-				if (tag.StartsWith("[SandboxCounterCostAmounts:") == true) {
-
-					TagParse.TagIntListCheck(tag, ref this.SandboxCounterCostAmounts);
-
-				}
-
-				//UseRemoteControlCodeRestrictions
-				if (tag.StartsWith("[UseRemoteControlCodeRestrictions:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseRemoteControlCodeRestrictions);
-
-				}
-
-				//RemoteControlCode
-				if (tag.StartsWith("[RemoteControlCode:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.RemoteControlCode);
-
-				}
-
-				//RemoteControlCodeMinDistance
-				if (tag.StartsWith("[RemoteControlCodeMinDistance:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.RemoteControlCodeMinDistance);
-
-				}
-
-				//RemoteControlCodeMaxDistance
-				if (tag.StartsWith("[RemoteControlCodeMaxDistance:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.RemoteControlCodeMaxDistance);
-
-				}
-
-				//RequireAllMods
-				if (tag.StartsWith("[RequiredMods:") == true || tag.StartsWith("[RequireAllMods") == true) {
-
-					TagParse.TagUlongListCheck(tag, ref this.RequireAllMods);
-
-				}
-
-				//ExcludeAnyMods
-				if (tag.StartsWith("[ExcludedMods:") == true || tag.StartsWith("[ExcludeAnyMods") == true) {
-
-					TagParse.TagUlongListCheck(tag, ref this.ExcludeAnyMods);
-
-				}
-
-				//RequireAnyMods
-				if (tag.StartsWith("[RequireAnyMods:") == true) {
-
-					TagParse.TagUlongListCheck(tag, ref this.RequireAnyMods);
-
-				}
-
-				//ExcludeAllMods
-				if (tag.StartsWith("[ExcludeAllMods:") == true) {
-
-					TagParse.TagUlongListCheck(tag, ref this.ExcludeAllMods);
-
-				}
-
-				//RequiredPlayersOnline
-				if (tag.StartsWith("[RequiredPlayersOnline:") == true) {
-
-					TagParse.TagUlongListCheck(tag, ref this.RequiredPlayersOnline);
-
-				}
-
-				//RequiredAnyPlayersOnline
-				if (tag.StartsWith("[RequiredAnyPlayersOnline:") == true) {
-
-					TagParse.TagUlongListCheck(tag, ref this.RequiredAnyPlayersOnline);
-
-				}
-
-				//UseKnownPlayerLocations
-				if (tag.StartsWith("[UseKnownPlayerLocations:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseKnownPlayerLocations);
-
-				}
-
-				//KnownPlayerLocationMustMatchFaction
-				if (tag.StartsWith("[KnownPlayerLocationMustMatchFaction:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.KnownPlayerLocationMustMatchFaction);
-
-				}
-
-				//KnownPlayerLocationMinSpawnedEncounters
-				if (tag.StartsWith("[KnownPlayerLocationMinSpawnedEncounters:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.KnownPlayerLocationMinSpawnedEncounters);
-
-				}
-
-				//KnownPlayerLocationMaxSpawnedEncounters
-				if (tag.StartsWith("[KnownPlayerLocationMaxSpawnedEncounters:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.KnownPlayerLocationMaxSpawnedEncounters);
-
-				}
-
-				//ZoneConditions
-				if (tag.StartsWith("[ZoneConditions:") == true) {
-
-					TagParse.TagZoneConditionsProfileCheck(tag, ref this.ZoneConditions);
-
-				}
-
-				//CustomApiConditions
-				if (tag.StartsWith("[CustomApiConditions:") == true) {
-
-					TagParse.TagStringListCheck(tag, ref this.CustomApiConditions);
-
-				}
-
-				//Territory
-				if (tag.StartsWith("[Territory:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.ZoneConditions[0].ZoneName);
-
-				}
-
-				//MinDistanceFromTerritoryCenter
-				if (tag.StartsWith("[MinDistanceFromTerritoryCenter:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.ZoneConditions[0].MinDistanceFromZoneCenter);
-
-				}
-
-				//MaxDistanceFromTerritoryCenter
-				if (tag.StartsWith("[MaxDistanceFromTerritoryCenter:") == true) {
-
-					TagParse.TagDoubleCheck(tag, ref this.ZoneConditions[0].MaxDistanceFromZoneCenter);
-
-				}
-
-
-				//BossCustomAnnounceEnable
-				if (tag.StartsWith("[BossCustomAnnounceEnable:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.BossCustomAnnounceEnable);
-
-				}
-
-				//BossCustomAnnounceAuthor
-				if (tag.StartsWith("[BossCustomAnnounceAuthor:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.BossCustomAnnounceAuthor);
-
-				}
-
-				//BossCustomAnnounceMessage
-				if (tag.StartsWith("[BossCustomAnnounceMessage:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.BossCustomAnnounceMessage);
+				var descSplit = customData.Split('\n');
 
-				}
-
-				//BossCustomGPSLabel
-				if (tag.StartsWith("[BossCustomGPSLabel:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.BossCustomGPSLabel);
-
-				}
-
-				//BossCustomGPSColor
-				if (tag.StartsWith("[BossCustomGPSColor:") == true) {
-
-					TagParse.TagVector3DCheck(tag, ref this.BossCustomGPSColor);
-
-				}
-
-				//BossMusicId
-				if (tag.StartsWith("[BossMusicId:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.BossMusicId);
-
-				}
-
-				//PlaySoundAtSpawnTriggerPosition
-				if (tag.StartsWith("[PlaySoundAtSpawnTriggerPosition:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.PlaySoundAtSpawnTriggerPosition);
-
-				}
-
-				//SpawnTriggerPositionSoundId
-				if (tag.StartsWith("[SpawnTriggerPositionSoundId:") == true) {
-
-					TagParse.TagStringCheck(tag, ref this.SpawnTriggerPositionSoundId);
-
-				}
-
-				//DisableDampeners
-				if (tag.StartsWith("[DisableDampeners:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.DisableDampeners);
-					setDampeners = true;
-
-				}
-
-
-				//RotateFirstCockpitToForward
-				if (tag.StartsWith("[RotateFirstCockpitToForward:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.RotateFirstCockpitToForward);
-
-				}
-
-				//PositionAtFirstCockpit
-				if (tag.StartsWith("[PositionAtFirstCockpit:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.PositionAtFirstCockpit);
+				foreach (var tag in descSplit) {
 
-				}
-
-				//SpawnRandomCargo
-				if (tag.StartsWith("[SpawnRandomCargo:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.SpawnRandomCargo);
-
-				}
-
-				//ReactorsOn
-				if (tag.StartsWith("[ReactorsOn:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.ReactorsOn);
-
-				}
-
-				//RemoveVoxelsIfGridRemoved
-				if (tag.StartsWith("[RemoveVoxelsIfGridRemoved:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.RemoveVoxelsIfGridRemoved);
-
-				}
-
-				//UseGridOrigin
-				if (tag.StartsWith("[UseGridOrigin:") == true) {
-
-					TagParse.TagBoolCheck(tag, ref this.UseGridOrigin);
-
-				}
-
-				//PrefabSpawningMode
-				if (tag.StartsWith("[PrefabSpawningMode:") == true) {
-
-					TagParse.TagPrefabSpawnModeEnumCheck(tag, ref this.PrefabSpawningMode);
-
-				}
-
-				//AllowPrefabIndexReuse
-				if (tag.StartsWith("[AllowPrefabIndexReuse:") == true) {
+					EditValue(tag);
 
-					TagParse.TagBoolCheck(tag, ref this.AllowPrefabIndexReuse);
-
 				}
-
-				//PrefabIndexes
-				if (tag.StartsWith("[PrefabIndexes:") == true) {
 
-					TagParse.TagIntListCheck(tag, true, ref this.PrefabIndexes);
 
-				}
-
-				//PrefabIndexGroupNames
-				if (tag.StartsWith("[PrefabIndexGroupNames:") == true) {
+				if (this.SpaceCargoShip == true && setDampeners == false) {
 
-					TagParse.TagStringListCheck(tag, ref this.PrefabIndexGroupNames);
+					this.DisableDampeners = true;
 
 				}
 
-				//PrefabIndexGroupValues
-				if (tag.StartsWith("[PrefabIndexGroupValues:") == true) {
+				if (this.AtmosphericCargoShip == true && setAtmoRequired == false) {
 
-					TagParse.TagIntListCheck(tag, true, ref this.PrefabIndexGroupValues);
+					if (!this.SkipAirDensityCheck)
+						this.PlanetRequiresAtmo = true;
 
 				}
 
-				//PrefabOffsetOverrides
-				if (tag.StartsWith("[PrefabOffsetOverrides:") == true) {
+				if (this.PlanetaryInstallation == true && !this.InstallationSpawnsOnWaterSurface && setForceStatic == false) {
 
-					TagParse.TagVector3DListCheck(tag, ref this.PrefabOffsetOverrides);
+					this.ForceStaticGrid = true;
 
 				}
-
-			}
-
-			if (this.SpaceCargoShip == true && setDampeners == false) {
-
-				this.DisableDampeners = true;
-
-			}
-
-			if (this.AtmosphericCargoShip == true && setAtmoRequired == false) {
-
-				if (!this.SkipAirDensityCheck)
-					this.PlanetRequiresAtmo = true;
-
-			}
 
-			if (this.PlanetaryInstallation == true && !this.InstallationSpawnsOnWaterSurface && setForceStatic == false) {
+				for (int i = 0; i < this.PrefabIndexGroupNames.Count; i++) {
 
-				this.ForceStaticGrid = true;
+					if (i >= this.PrefabIndexGroupValues.Count)
+						break;
 
-			}
+					if (PrefabIndexGroups.ContainsKey(this.PrefabIndexGroupNames[i])) {
 
-			for (int i = 0; i < this.PrefabIndexGroupNames.Count; i++) {
+						if (!PrefabIndexGroups[this.PrefabIndexGroupNames[i]].Contains(this.PrefabIndexGroupValues[i])) {
 
-				if (i >= this.PrefabIndexGroupValues.Count)
-					break;
+							PrefabIndexGroups[this.PrefabIndexGroupNames[i]].Add(this.PrefabIndexGroupValues[i]);
 
-				if (PrefabIndexGroups.ContainsKey(this.PrefabIndexGroupNames[i])) {
+						}
 
-					if (!PrefabIndexGroups[this.PrefabIndexGroupNames[i]].Contains(this.PrefabIndexGroupValues[i])) {
+					} else {
 
+						PrefabIndexGroups.Add(this.PrefabIndexGroupNames[i], new List<int>());
 						PrefabIndexGroups[this.PrefabIndexGroupNames[i]].Add(this.PrefabIndexGroupValues[i]);
 
 					}
-				
-				} else {
-
-					PrefabIndexGroups.Add(this.PrefabIndexGroupNames[i], new List<int>());
-					PrefabIndexGroups[this.PrefabIndexGroupNames[i]].Add(this.PrefabIndexGroupValues[i]);
 
 				}
-			
+
 			}
 
 		}

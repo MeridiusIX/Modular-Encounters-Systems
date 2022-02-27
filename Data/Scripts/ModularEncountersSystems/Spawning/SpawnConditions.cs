@@ -15,11 +15,13 @@ using System.Text;
 using VRage.Game.ModAPI;
 using VRageMath;
 using ModularEncountersSystems.Spawning.Profiles;
+using VRage.Game;
 
 namespace ModularEncountersSystems.Spawning {
 	public static class SpawnConditions {
 
 		public static Dictionary<string, int> SandboxVariableCache = new Dictionary<string, int>();
+		public static MyObjectBuilder_SessionSettings SessionSettings = null;
 
 		public static SpawningType AllowedSpawningTypes(SpawningType type, EnvironmentEvaluation environment) {
 
@@ -754,6 +756,13 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			if (conditions.UseSettingsCheck && !CheckSessionConditions(conditions)) {
+
+				failReason = "   - World Settings Check Failed.";
+				return false;
+
+			}
+
 			if (DistanceFromCenterCheck(conditions, environment) == false) {
 
 				failReason = "   - Dist From Center Check Failed";
@@ -1221,6 +1230,93 @@ namespace ModularEncountersSystems.Spawning {
 					
 
 			}
+
+			return true;
+
+		}
+
+		public static bool CheckSessionConditions(SpawnConditionsProfile conditions) {
+
+			if (SessionSettings == null)
+				SessionSettings = MyAPIGateway.Session.SessionSettings;
+
+			if (!SessionSettingCheck(SessionSettings.AutoHealing, conditions.SettingsAutoHeal))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableBountyContracts, conditions.SettingsBountyContracts))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableContainerDrops, conditions.SettingsContainerDrops))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableCopyPaste, conditions.SettingsCopyPaste))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.DestructibleBlocks, conditions.SettingsDestructibleBlocks))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableEconomy, conditions.SettingsEconomy))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableDrones, conditions.SettingsEnableDrones))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableIngameScripts, conditions.SettingsIngameScripts))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableJetpack, conditions.SettingsJetpack))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableOxygen, conditions.SettingsOxygen))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableResearch, conditions.SettingsResearch))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.SpawnWithTools, conditions.SettingsSpawnWithTools))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableSpiders, conditions.SettingsSpiders))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableSubgridDamage, conditions.SettingsSubgridDamage))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableSunRotation, conditions.SettingsSunRotation))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableSupergridding, conditions.SettingsSupergridding))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.ThrusterDamage, conditions.SettingsThrusterDamage))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableVoxelDestruction, conditions.SettingsVoxelDestruction))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.WeaponsEnabled, conditions.SettingsWeaponsEnabled))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.WeatherSystem, conditions.SettingsWeather))
+				return false;
+
+			if (!SessionSettingCheck(SessionSettings.EnableWolfs, conditions.SettingsWolves))
+				return false;
+
+			return true;
+		
+		}
+
+		private static bool SessionSettingCheck(bool setting, BoolEnum condition) {
+
+			if (condition == BoolEnum.None)
+				return true;
+
+			if (!setting && condition == BoolEnum.True)
+				return false;
+
+			if (setting && condition == BoolEnum.False)
+				return false;
 
 			return true;
 

@@ -91,7 +91,7 @@ namespace ModularEncountersSystems.Configuration {
 
 			CoordsAttemptsPerCreature = 10;
 
-			SpawnTypeBlacklist = new string[] { "BotSubtypeIdHere", "AnotherBotSubtypeId" };
+			SpawnTypeBlacklist = new string[] { "SpawnGroupSubtypeIdHere", "SpawnGroupSubtypeIdHere" };
 			SpawnTypePlanetBlacklist = new string[] { "PlanetSubtypeIdHere", "AnotherPlanetSubtypeId" };
 
 			UseTimeout = true;

@@ -175,7 +175,7 @@ namespace ModularEncountersSystems.Spawning {
             }
 
             //Drone Encounters
-            if (Settings.OtherNPCs.EnableDroneEncounters) {
+            if (Settings.DroneEncounters.EnableSpawns) {
 
                 if (DroneEncounterTimerCooldownTimer > 0)
                     ApplyDecrement(ref DroneEncounterTimerCooldownTimer);
@@ -187,7 +187,7 @@ namespace ModularEncountersSystems.Spawning {
                     var result = SpawnRequest.CalculateSpawn(Player.GetPosition(), "Player Triggered: " + Player.Player.DisplayName, SpawningType.DroneEncounter);
 
                     if (result)
-                        DroneEncounterTimerCooldownTimer = Settings.OtherNPCs.PlayerSpawnCooldown;
+                        DroneEncounterTimerCooldownTimer = Settings.DroneEncounters.PlayerSpawnCooldown;
 
                 }
 
@@ -285,7 +285,7 @@ namespace ModularEncountersSystems.Spawning {
                 CreatureCheckTimer = MathTools.RandomBetween(Settings.Creatures.MinCreatureSpawnTime, Settings.Creatures.MaxCreatureSpawnTime);
 
             if (spawnType == SpawningType.DroneEncounter && DroneEncounterTimer <= 0)
-                DroneEncounterTimer = Settings.OtherNPCs.SpawnTimerTrigger;
+                DroneEncounterTimer = Settings.DroneEncounters.SpawnTimerTrigger;
 
         }
 

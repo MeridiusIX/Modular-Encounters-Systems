@@ -30,6 +30,7 @@ namespace ModularEncountersSystems.API {
 		private Action<bool, string, Func<string, string, string, Vector3D, bool>> _registerCustomSpawnCondition;
 		private Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool> _registerDespawnWatcher;
 		private Action<IMyRemoteControl, string> _registerRemoteControlCode;
+		private Action<Action<IMyCubeGrid>, bool> _registerSuccessfulSpawnAction;
 		private Action<Vector3D, string, bool> _removeKnownPlayerLocation;
 		private Action<IMyCubeGrid, bool> _setCargoShipOverride;
 		private Func<IMyCubeGrid, bool, bool> _setSpawnerIgnoreForDespawn;
@@ -198,6 +199,8 @@ namespace ModularEncountersSystems.API {
 		/// <param name="code">Code associated with Remote Control (this is used in the spawngroup)</param>
 		public void RegisterRemoteControlCode(IMyRemoteControl remoteControl, string code) => _registerRemoteControlCode?.Invoke(remoteControl, code);
 
+		public void RegisterSuccessfulSpawnAction(Action<IMyCubeGrid> action, bool register) => _registerSuccessfulSpawnAction.Invoke(action, register);
+
 		/// <summary>
 		/// Allows you to remove a Known Player Location at a set of coordinates
 		/// </summary>
@@ -292,6 +295,7 @@ namespace ModularEncountersSystems.API {
 				_registerCustomSpawnCondition = (Action<bool, string, Func<string, string, string, Vector3D, bool>>)dict["RegisterCustomSpawnCondition"];
 				_registerDespawnWatcher = (Func<IMyCubeGrid, Action<IMyCubeGrid, string>, bool>)dict["RegisterDespawnWatcher"];
 				_registerRemoteControlCode = (Action<IMyRemoteControl, string>)dict["RegisterRemoteControlCode"];
+				_registerSuccessfulSpawnAction = (Action<Action<IMyCubeGrid>, bool>)dict["RegisterSuccessfulSpawnAction"];
 				_removeKnownPlayerLocation = (Action<Vector3D, string, bool>)dict["RemoveKnownPlayerLocation"];
 				_setSpawnerIgnoreForDespawn = (Func<IMyCubeGrid, bool, bool>)dict["SetSpawnerIgnoreForDespawn"];
 				_spawnBossEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnBossEncounter"];

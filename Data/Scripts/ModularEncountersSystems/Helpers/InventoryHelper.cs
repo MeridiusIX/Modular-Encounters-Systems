@@ -108,6 +108,9 @@ namespace ModularEncountersSystems.Helpers {
 
 			foreach (var item in items) {
 
+				if (item.SubtypeName == "NATO_5p56x45mm")
+					continue;
+
 				var amount = GetMaxAddCountForReplenish(block, inventory, item, spawnGroup.ReplenishProfiles, spawnGroup.IgnoreGlobalReplenishProfiles, cap);
 				AddItemsToInventory(inventory, item, (float)amount);
 				break;

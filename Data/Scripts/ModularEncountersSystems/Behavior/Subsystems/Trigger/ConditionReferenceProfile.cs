@@ -116,8 +116,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckForBlocksOfType;
 		public List<string> BlocksOfType = new List<string>();
 
-		public bool CheckForSpawnCondition;
-		public List<string> RequiredSpawnCondition;
+		public bool CheckForSpawnConditions;
+		public List<string> RequiredSpawnConditions;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -222,8 +222,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			UseFailCondition = false;
 
-			CheckForSpawnCondition = false;
-			RequiredSpawnCondition = new List<string>();
+			CheckForSpawnConditions = false;
+			RequiredSpawnConditions = new List<string>();
 
 			ProfileSubtypeId = "";
 
@@ -304,8 +304,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },
 				{"CheckForBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref CheckForBlocksOfType) },
 				{"BlocksOfType", (s, o) => TagParse.TagStringListCheck(s, ref BlocksOfType) },
-				{"CheckForSpawnCondition", (s, o) => TagParse.TagBoolCheck(s, ref CheckForSpawnCondition) },
-				{"RequiredSpawnCondition", (s, o) => TagParse.TagStringListCheck(s, ref RequiredSpawnCondition) },
+				{"CheckForSpawnConditions", (s, o) => TagParse.TagBoolCheck(s, ref CheckForSpawnConditions) },
+				{"RequiredSpawnConditions", (s, o) => TagParse.TagStringListCheck(s, ref RequiredSpawnConditions) },
 
 			};
 

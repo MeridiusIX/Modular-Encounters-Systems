@@ -67,12 +67,6 @@ namespace ModularEncountersSystems.Configuration{
 		public string ModVersion;
 		public double DespawnDistanceFromPlayer;
 
-		public bool EnableDroneEncounters;
-		public int PlayerSpawnCooldown;
-		public int SpawnTimerTrigger;
-		public int MaxSpawnAttempts;
-		public double MinDistanceFromOtherEntities;
-
 		[XmlIgnore]
 		public Dictionary<string, Func<string, object, bool>> EditorReference;
 
@@ -80,12 +74,6 @@ namespace ModularEncountersSystems.Configuration{
 			
 			ModVersion = MES_SessionCore.ModVersion;
 			DespawnDistanceFromPlayer = 1000;
-
-			EnableDroneEncounters = true;
-			PlayerSpawnCooldown = 0;
-			SpawnTimerTrigger = 30;
-			MaxSpawnAttempts = 5;
-			MinDistanceFromOtherEntities = 800;
 
 			UseTimeout = false;
 			TimeoutDuration = 900;

@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.BlockLogic;
+﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
@@ -77,6 +78,7 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(25)] public bool UseJumpDisable;
 		[ProtoMember(26)] public bool ConfigureTurretControllers;
 		[ProtoMember(27)] public bool ReceivedPlayerDamage;
+		[ProtoMember(28)] public bool AnnounceSpawnInApi;
 
 		public NewNpcAttributes() {
 
@@ -107,6 +109,7 @@ namespace ModularEncountersSystems.World {
 			UseJumpDisable = false;
 			ConfigureTurretControllers = false;
 			ReceivedPlayerDamage = false;
+			AnnounceSpawnInApi = false;
 
 		}
 
@@ -188,6 +191,9 @@ namespace ModularEncountersSystems.World {
 
 			if (ConfigureTurretControllers)
 				sb.Append("ConfigureTurretControllers").Append(", ");
+
+			if(AnnounceSpawnInApi)
+				sb.Append("AnnounceSpawnInApi").Append(", ");
 
 			if (OldFlagsProcessed)
 				sb.Append("OldFlagsProcessed").Append(", ");
@@ -683,6 +689,13 @@ namespace ModularEncountersSystems.World {
 							Grid.CubeGrid.ColorBlocks(block.Block.Min, block.Block.Min, color);
 							SafeVisualUpdate(block.Block.SlimBlock);
 
+							if (block.Block as IMyLargeTurretBase != null && !BlockManager.AllWeaponCoreBlocks.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
+
+								var turret = block.Block as IMyLargeTurretBase;
+								turret.TrackTarget(block.Block.CubeGrid);
+
+							}
+
 						}
 
 					}
@@ -712,6 +725,14 @@ namespace ModularEncountersSystems.World {
 
 				BehaviorLogger.Write("Keen Behavior Initialized", BehaviorDebugEnum.BehaviorSetup);
 				MyVisualScriptLogicProvider.SetDroneBehaviourFull(Grid.CubeGrid.EntityId.ToString(), this.BehaviorName, true, false, null, false, null, 10, this.BehaviorTriggerDist);
+
+			}
+
+			//AnnounceSpawnInApi
+			if (AttributeCheck(true, AppliedAttributes.AnnounceSpawnInApi)) {
+
+				AppliedAttributes.AnnounceSpawnInApi = true;
+				LocalApi.SuccessfulSpawnEvent?.Invoke(Grid?.CubeGrid);
 
 			}
 

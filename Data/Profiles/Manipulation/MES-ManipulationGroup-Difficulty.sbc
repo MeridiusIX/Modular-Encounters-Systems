@@ -1,0 +1,182 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-ManipulationGroup-Difficulty</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation Group]
+
+        [ManipulationProfiles:MES-Manipulation-Difficulty-2]
+        [ManipulationProfiles:MES-Manipulation-Difficulty-3]
+        [ManipulationProfiles:MES-Manipulation-Difficulty-4]
+        [ManipulationProfiles:MES-Manipulation-Difficulty-5]
+        [ManipulationProfiles:MES-Manipulation-Difficulty-6]
+        [ManipulationProfiles:MES-Manipulation-Difficulty-7]
+        [ManipulationProfiles:MES-Manipulation-Difficulty-8]
+        [ManipulationProfiles:MES-Manipulation-Difficulty-9]
+        [ManipulationProfiles:MES-Manipulation-Difficulty-10]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-2</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:2]
+        [ManipulationMaxDifficulty:2]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-3</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:3]
+        [ManipulationMaxDifficulty:3]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-4</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:4]
+        [ManipulationMaxDifficulty:4]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-5</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:5]
+        [ManipulationMaxDifficulty:5]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-6</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:6]
+        [ManipulationMaxDifficulty:6]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-7</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:7]
+        [ManipulationMaxDifficulty:7]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-8</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:8]
+        [ManipulationMaxDifficulty:8]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-9</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:9]
+        [ManipulationMaxDifficulty:9]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-Difficulty-10</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [ManipulationMinDifficulty:10]
+        [ManipulationMaxDifficulty:10]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

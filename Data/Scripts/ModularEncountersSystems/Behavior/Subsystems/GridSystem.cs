@@ -147,6 +147,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			int builtBlocks = 0;
 
+			if (maxBlocksToBuild <= 0)
+				return;
+
 			foreach(var projector in Projectors) {
 
 				if (projector == null || projector.MarkedForClose) 
@@ -157,7 +160,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				var projectedBlocks = new List<IMySlimBlock>();
 
-				while (maxBlocksToBuild > 0 || builtBlocks < maxBlocksToBuild) {
+				while (builtBlocks < maxBlocksToBuild) {
 
 					if (projector.ProjectedGrid == null)
 						break;
@@ -170,7 +173,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 					bool restartLoop = false;
 
-					while (projectedBlocks.Count > 0) {
+					while (projectedBlocks.Count > 0 && builtBlocks < maxBlocksToBuild) {
 
 						int randomIndex = 0;
 

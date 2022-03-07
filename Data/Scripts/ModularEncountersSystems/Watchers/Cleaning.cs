@@ -386,16 +386,19 @@ namespace ModularEncountersSystems.Watchers {
 
 		public static void RemoveGrid(GridEntity grid) {
 
-			if (!FlaggedForRemoval.Contains(grid))
-				FlaggedForRemoval.Add(grid);
+			foreach (var gridEntity in grid.LinkedGrids) {
 
-			if (!PendingGridsForRemoval) {
+				if (!PendingGridsForRemoval) {
 
-				PendingGridsForRemoval = true;
-				TaskProcessor.Tasks.Add(new GridCleanup());
-			
+					PendingGridsForRemoval = true;
+					TaskProcessor.Tasks.Add(new GridCleanup());
+
+				}
+
+				if (!FlaggedForRemoval.Contains(gridEntity))
+					FlaggedForRemoval.Add(gridEntity);
+
 			}
-
 
 		}
 

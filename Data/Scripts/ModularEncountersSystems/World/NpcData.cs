@@ -11,6 +11,7 @@ using ModularEncountersSystems.Tasks;
 using ProtoBuf;
 using Sandbox.Game;
 using Sandbox.Game.EntityComponents;
+using Sandbox.Game.Weapons;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using System;
@@ -689,10 +690,9 @@ namespace ModularEncountersSystems.World {
 							Grid.CubeGrid.ColorBlocks(block.Block.Min, block.Block.Min, color);
 							SafeVisualUpdate(block.Block.SlimBlock);
 
-							if (block.Block as IMyLargeTurretBase != null && !BlockManager.AllWeaponCoreBlocks.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
+							if (MyAPIGateway.Utilities.IsDedicated && block.Block as IMyLargeTurretBase != null && !BlockManager.AllWeaponCoreBlocks.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
 
-								var turret = block.Block as IMyLargeTurretBase;
-								turret.TrackTarget(block.Block.CubeGrid);
+								DebugHelper.FireTurretInSafeDirection(block.Block as IMyLargeTurretBase);
 
 							}
 

@@ -13,8 +13,12 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static void ChangeBlockOwnership(IMyCubeGrid cubeGrid, List<string> blockNames, List<string> factionNames) {
 
-			if (blockNames.Count != factionNames.Count)
+			if (blockNames.Count != factionNames.Count) {
+
 				return;
+
+			}
+				
 
 			Dictionary<string, long> nameToOwner = new Dictionary<string, long>();
 
@@ -88,15 +92,18 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMySlimBlock> GetAllBlocks(IMyCubeGrid cubeGrid) {
 
 			List<IMySlimBlock> totalList = new List<IMySlimBlock>();
+			List<IMySlimBlock> blockList = new List<IMySlimBlock>();
 			//cubeGrid.GetBlocks(totalList);
 			var gridGroup = MyAPIGateway.GridGroups.GetGroup(cubeGrid, GridLinkTypeEnum.Physical);
 
 			foreach(var grid in gridGroup) {
 
-				List<IMySlimBlock> blockList = new List<IMySlimBlock>();
+				blockList.Clear();
 				grid.GetBlocks(blockList);
-				//blockList = new List<IMySlimBlock>(blockList.Except(totalList).ToList());
-				totalList = new List<IMySlimBlock>(blockList.Concat(totalList).ToList());
+
+				foreach (var block in blockList)
+					if (!totalList.Contains(block))
+						totalList.Add(block);
 
 			}
 
@@ -202,7 +209,6 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMyRadioAntenna> GetGridAntennas(IMyCubeGrid cubeGrid) {
 
 			var resultList = new List<IMyRadioAntenna>();
-
 			var blockList = GetAllBlocks(cubeGrid);
 
 			foreach(var block in blockList.Where(x => x.FatBlock != null)) {

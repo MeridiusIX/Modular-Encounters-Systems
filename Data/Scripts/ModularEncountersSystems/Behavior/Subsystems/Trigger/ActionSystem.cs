@@ -669,7 +669,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//ChangeAntennaOwnership
 			if (actions.ChangeAntennaOwnership == true) {
 
-				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna Ownership Change", BehaviorDebugEnum.Action);
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna Ownership Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
 				OwnershipHelper.ChangeAntennaBlockOwnership(AntennaList, actions.AntennaFactionOwner);
 
 			}
@@ -844,8 +844,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//ChangeBlockOwnership
 			if (actions.ChangeBlockOwnership) {
 
-				BlockCollectionHelper.ChangeBlockOwnership(RemoteControl.SlimBlock.CubeGrid, actions.OwnershipBlockNames, actions.OwnershipBlockFactions);
-
+				if(actions.OwnershipBlockNames.Count == actions.OwnershipBlockFactions.Count)
+					BlockCollectionHelper.ChangeBlockOwnership(RemoteControl.SlimBlock.CubeGrid, actions.OwnershipBlockNames, actions.OwnershipBlockFactions);
+				else
+					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Change Block Ownership Failed. Block Name List and Faction List Count Mismatch.", BehaviorDebugEnum.Action);
+				
 			}
 
 			//RazeBlocks

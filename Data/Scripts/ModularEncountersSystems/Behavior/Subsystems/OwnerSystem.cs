@@ -183,7 +183,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//TODO: Maybe Update This To Include Factionless NPCs?
-			BehaviorLogger.Write("Owner Check: Not NPC Faction", BehaviorDebugEnum.Owner);
+			var gridName = block?.SlimBlock?.CubeGrid?.CustomName ?? "Unnamed Grid";
+			BehaviorLogger.Write("Owner Check: " + gridName + " Not NPC Faction", BehaviorDebugEnum.Owner);
 			this.Faction = null;
 			this.FactionId = 0;
 			this.NpcOwned = false;

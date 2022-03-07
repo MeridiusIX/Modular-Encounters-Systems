@@ -586,7 +586,17 @@ namespace ModularEncountersSystems.Logging {
 
 			if (!string.IsNullOrWhiteSpace(errors)) {
 
-				sb.Append("::: Detected Errors :::").AppendLine();
+				sb.Append("::: Detected Spawner Errors :::").AppendLine();
+				sb.Append(errors).AppendLine();
+				sb.AppendLine();
+
+			}
+
+			errors = BehaviorLogger.Error.ToString();
+
+			if (!string.IsNullOrWhiteSpace(errors)) {
+
+				sb.Append("::: Detected Behavior Errors :::").AppendLine();
 				sb.Append(errors).AppendLine();
 				sb.AppendLine();
 

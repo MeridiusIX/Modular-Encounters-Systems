@@ -310,15 +310,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				if (spawnGroup.SpawnConditionsProfiles.Count == conditionsFailedBySpawnType) {
-
-					SpawnLogger.QueuedItems.Clear();
-
-				} else {
-
-					SpawnLogger.ProcessQueue();
-				
-				}
+				SpawnLogger.ProcessQueue();
 
 			}
 

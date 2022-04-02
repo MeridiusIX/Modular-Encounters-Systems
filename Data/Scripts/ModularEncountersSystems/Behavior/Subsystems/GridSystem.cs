@@ -338,6 +338,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 		
 		}
+		
+		public void SetBlockCustomData(string name, string CustomData)
+        {
+
+			for (int i = AllFunctionalBlocks.Count - 1; i >= 0; i--)
+			{
+				var block = AllFunctionalBlocks[i];
+				if (block.CustomName ==  name) {
+					block.CustomData = CustomData;
+				}
+
+			}
+
+		}
+
 
 		public void EnableBlocksInGroup(string groupName, SwitchEnum state) {
 

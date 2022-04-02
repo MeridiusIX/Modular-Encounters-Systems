@@ -1378,14 +1378,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			//IncreaseSandboxCounters
 			foreach (var variable in actions.IncreaseSandboxCounters)
-				SetSandboxCounter(variable, 1);
+				SetSandboxCounter(variable, Math.Abs(actions.IncreaseSandboxCountersAmount));
 
 			//DecreaseSandboxCounters
 			foreach (var variable in actions.DecreaseSandboxCounters)
-				SetSandboxCounter(variable, -1);
+				SetSandboxCounter(variable, -Math.Abs(actions.DecreaseSandboxCountersAmount));
 
 			//ResetSandboxCounters
-			foreach (var variable in actions.ResetSandboxCounters)
+			foreach (var variable in actions.ResetSandboxCounters) 
 				SetSandboxCounter(variable, 0);
 
 			//SetSandboxCounters

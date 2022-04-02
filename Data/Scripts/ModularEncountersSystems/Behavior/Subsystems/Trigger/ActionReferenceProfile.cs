@@ -84,6 +84,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> SetSandboxBooleansFalse;
 		public List<string> IncreaseSandboxCounters;
 		public List<string> DecreaseSandboxCounters;
+		public int IncreaseSandboxCountersAmount;      //CPT
+		public int DecreaseSandboxCountersAmount;      //CPT
+
 		public List<string> ResetSandboxCounters;
 
 		public bool ChangeAttackerReputation;
@@ -414,6 +417,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SetSandboxCounters = new List<string>();
 			SetSandboxCountersValues = new List<int>();
 
+			//CPT
+			IncreaseSandboxCountersAmount = 1;
+			DecreaseSandboxCountersAmount = -1;
+
+
 			BroadcastGenericCommand = false;
 
 			BehaviorSpecificEventA = false;
@@ -695,6 +703,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"SetSandboxBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansFalse) },
 				{"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
 				{"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
+				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) }, //CPT
+				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) }, //CPT
 				{"ResetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetSandboxCounters) },
 				{"ChangeAttackerReputation", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackerReputation) },
 				{"ChangeAttackerReputationFaction", (s, o) => TagParse.TagStringListCheck(s, ref ChangeAttackerReputationFaction) },

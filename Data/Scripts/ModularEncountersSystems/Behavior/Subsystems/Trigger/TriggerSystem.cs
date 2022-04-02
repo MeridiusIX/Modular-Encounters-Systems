@@ -960,6 +960,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			MyAPIGateway.Utilities.GetVariable(counterName, out existingCounter);
 
+			//This is for ResetSandboxCounters
 			if (amount == 0) {
 
 				MyAPIGateway.Utilities.SetVariable(counterName, 0);
@@ -967,22 +968,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (amount == 1) {
-
-				existingCounter++;
+            else
+            {
+				existingCounter += amount;
 				MyAPIGateway.Utilities.SetVariable(counterName, existingCounter);
 				return;
 
 			}
-
-			if (amount == -1) {
-
-				existingCounter--;
-				MyAPIGateway.Utilities.SetVariable(counterName, existingCounter < 0 ? 0 : existingCounter);
-				return;
-
-			}
-
 
 		}
 

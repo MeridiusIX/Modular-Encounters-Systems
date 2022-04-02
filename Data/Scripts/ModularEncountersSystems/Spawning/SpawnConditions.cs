@@ -1220,13 +1220,14 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			/*
 			if (conditions.UseDateTimeDaysOfWeek && !conditions.DateTimeDaysOfWeek.Contains(environment.ServerTime.DayOfWeek)) {
 
 				failReason = "   - DateTime Day Of Week Check Failed";
 				return false;
 
 			}
-
+			*/
 			return true;
 		
 		}

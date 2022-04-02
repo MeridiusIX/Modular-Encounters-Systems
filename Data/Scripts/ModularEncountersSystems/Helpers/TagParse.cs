@@ -361,7 +361,7 @@ namespace ModularEncountersSystems.Helpers {
 			original.Add(result);
 
 		}
-
+		/*
 		public static void TagDayOfWeekEnumCheck(string tag, ref List<DayOfWeek> original) {
 
 			DayOfWeek result = DayOfWeek.Monday;
@@ -380,7 +380,7 @@ namespace ModularEncountersSystems.Helpers {
 			original.Add(result);
 
 		}
-
+		*/
 		public static void TagDirectionEnumCheck(string tag, ref Direction original) {
 
 			Direction result = Direction.None;

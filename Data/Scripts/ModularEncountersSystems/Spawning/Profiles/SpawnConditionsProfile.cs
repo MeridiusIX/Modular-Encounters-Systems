@@ -168,7 +168,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int MaxDateTimeMinute;
 
 		public bool UseDateTimeDaysOfWeek;
-		public List<DayOfWeek> DateTimeDaysOfWeek;
+		//public List<DayOfWeek> DateTimeDaysOfWeek;
 
 		public double MinSpawnFromWorldCenter;
 		public double MaxSpawnFromWorldCenter;
@@ -462,7 +462,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			MaxDateTimeMinute = -1;
 
 			UseDateTimeDaysOfWeek = false;
-			DateTimeDaysOfWeek = new List<DayOfWeek>();
+			//DateTimeDaysOfWeek = new List<DayOfWeek>();
 
 			SandboxVariables = new List<string>();
 			FalseSandboxVariables = new List<string>();
@@ -727,7 +727,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"MinDateTimeMinute", (s, o) => TagParse.TagIntCheck(s, ref MinDateTimeMinute) },
 				{"MaxDateTimeMinute", (s, o) => TagParse.TagIntCheck(s, ref MaxDateTimeMinute) },
 				{"UseDateTimeDaysOfWeek", (s, o) => TagParse.TagBoolCheck(s, ref UseDateTimeDaysOfWeek) },
-				{"DateTimeDaysOfWeek", (s, o) => TagParse.TagDayOfWeekEnumCheck(s, ref DateTimeDaysOfWeek) },
+				//{"DateTimeDaysOfWeek", (s, o) => TagParse.TagDayOfWeekEnumCheck(s, ref DateTimeDaysOfWeek) },
 				{"MinSpawnFromWorldCenter", (s, o) => TagParse.TagDoubleCheck(s, ref MinSpawnFromWorldCenter) },
 				{"MaxSpawnFromWorldCenter", (s, o) => TagParse.TagDoubleCheck(s, ref MaxSpawnFromWorldCenter) },
 				{"CustomWorldCenter", (s, o) => TagParse.TagVector3DCheck(s, ref CustomWorldCenter) },

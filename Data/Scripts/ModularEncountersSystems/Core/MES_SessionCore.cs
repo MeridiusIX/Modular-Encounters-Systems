@@ -24,7 +24,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.37";
+		public static string ModVersion = "2.1.38";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;

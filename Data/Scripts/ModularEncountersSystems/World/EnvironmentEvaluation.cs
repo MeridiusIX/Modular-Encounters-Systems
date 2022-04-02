@@ -66,6 +66,8 @@ namespace ModularEncountersSystems.World {
 		public float ThreatScore;
 		public double ThreatScoreCheckDistance;
 
+		public DateTime ServerTime;
+
 		public EnvironmentEvaluation() {
 
 			WeatherAtPosition = "";
@@ -80,6 +82,8 @@ namespace ModularEncountersSystems.World {
 			Position = coords;
 			DistanceFromWorldCenter = Vector3D.Distance(Vector3D.Zero, coords);
 			DirectionFromWorldCenter = Vector3D.Normalize(coords);
+
+			ServerTime = DateTime.Now;
 
 			InsideTerritories = new List<string>();
 			InsideStrictTerritories = new List<string>();

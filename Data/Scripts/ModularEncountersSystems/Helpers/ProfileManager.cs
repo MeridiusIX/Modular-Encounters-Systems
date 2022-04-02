@@ -6,7 +6,9 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Zones;
+using Sandbox.Game;
 using Sandbox.ModAPI;
+using Scripts.ModularEncountersSystems.Files;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -53,6 +55,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, WeaponSystemReference> WeaponProfiles = new Dictionary<string, WeaponSystemReference>();
 
 		public static Dictionary<string, MyDefinitionBase> DatapadTemplates = new Dictionary<string, MyDefinitionBase>();
+		public static Dictionary<string, TextTemplate> TextTemplates = new Dictionary<string, TextTemplate>();
 
 		public static List<string> ErrorProfiles = new List<string>();
 
@@ -502,6 +505,50 @@ namespace ModularEncountersSystems.Helpers {
 			BehaviorLogger.Write("Warning: Backup Autopilot Profile for " + defaultBehavior + " Not Found!", BehaviorDebugEnum.BehaviorSetup);
 
 			return new AutoPilotProfile();
+
+		}
+
+		public static TextTemplate GetTextTemplate(string name) {
+
+			TextTemplate template = null;
+
+			if (TextTemplates.TryGetValue(name, out template))
+				return template;
+
+			string path = "Data\\TextTemplates\\" + name;
+
+			foreach (var mod in MyAPIGateway.Session.Mods) {
+
+				if (!MyAPIGateway.Utilities.FileExistsInModLocation(path, mod)) {
+
+					continue;
+				
+				}
+
+				MyVisualScriptLogicProvider.ShowNotificationToAll("File Exists", 4000);
+
+				try {
+
+					var reader = MyAPIGateway.Utilities.ReadFileInModLocation(path, mod);
+					string configcontents = reader.ReadToEnd();
+					template = MyAPIGateway.Utilities.SerializeFromXML<TextTemplate>(configcontents);
+
+				} catch (Exception exc) {
+
+					continue;
+
+				}
+
+				if (template != null)
+					break;
+
+			}
+
+			if (template == null)
+				return null;
+
+			TextTemplates[name] = template;
+			return template;
 
 		}
 

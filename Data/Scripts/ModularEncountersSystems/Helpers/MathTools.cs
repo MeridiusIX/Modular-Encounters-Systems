@@ -356,6 +356,20 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static bool WithinMultiplierTolerance(double number, double multiplier, double target) {
+
+            var check = target *= multiplier;
+
+            if (number > check + target)
+                return false;
+
+            if (number < target - check)
+                return false;
+
+            return true;
+
+        }
+
         public static bool WithinTolerance(double number, double target, double tolerance) {
 
             return !UnderTolerance(number, target, tolerance) && !OverTolerance(number, target, tolerance);
@@ -364,13 +378,13 @@ namespace ModularEncountersSystems.Helpers {
 
         public static bool UnderTolerance(double number, double target, double tolerance) {
 
-            return number - tolerance < target;
+            return (number - tolerance) < target;
 
         }
 
         public static bool OverTolerance(double number, double target, double tolerance) {
 
-            return number + tolerance > target;
+            return (number + tolerance) > target;
 
         }
 
@@ -450,6 +464,60 @@ namespace ModularEncountersSystems.Helpers {
             var multiplier = gravityMultiplier / maxGravity;
             var distanceMultiplier = Math.Pow(multiplier, 1 / -falloff);
             return maxRadius * distanceMultiplier;
+
+        }
+
+        public static bool CloserToZero(int value, int target) {
+
+            if (target >= 0)
+                return value <= target;
+            else
+                return value >= target;
+        
+        }
+
+        public static bool CloserToZero(float value, float target) {
+
+            if (target >= 0)
+                return value <= target;
+            else
+                return value >= target;
+
+        }
+
+        public static bool CloserToZero(double value, double target) {
+
+            if (target >= 0)
+                return value <= target;
+            else
+                return value >= target;
+
+        }
+
+        public static bool FurtherFromZero(int value, int target) {
+
+            if (target >= 0)
+                return value >= target;
+            else
+                return value <= target;
+
+        }
+
+        public static bool FurtherFromZero(float value, float target) {
+
+            if (target >= 0)
+                return value >= target;
+            else
+                return value <= target;
+
+        }
+
+        public static bool FurtherFromZero(double value, double target) {
+
+            if (target >= 0)
+                return value >= target;
+            else
+                return value <= target;
 
         }
 

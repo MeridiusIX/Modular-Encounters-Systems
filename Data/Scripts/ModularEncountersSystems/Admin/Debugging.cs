@@ -50,7 +50,6 @@ namespace ModularEncountersSystems.Admin {
 		PathCalculations,
 		PrefabManipulation,
 		SpawnGroupSelection,
-		
 	
 	}
 

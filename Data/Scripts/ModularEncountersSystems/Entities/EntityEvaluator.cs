@@ -27,6 +27,7 @@ namespace ModularEncountersSystems.Entities {
 		Controllers,
 		Gravity,
 		Guns,
+		Gyros,
 		Inhibitors,
 		JumpDrives,
 		Mechanical,

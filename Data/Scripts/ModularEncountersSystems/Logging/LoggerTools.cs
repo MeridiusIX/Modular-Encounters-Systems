@@ -6,6 +6,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Sync;
+using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
@@ -273,6 +274,148 @@ namespace ModularEncountersSystems.Logging {
 				int.TryParse(msgSplit[7], out minThreat);
 
 			KnownPlayerLocationManager.AddKnownPlayerLocation(msg.PlayerPosition, faction, radius, duration, maxEncounters, minThreat);
+			return;
+
+		}
+
+		public static void DebugAutoPilot(ChatMessage msg) {
+
+			var line = new LineD(msg.CameraPosition, msg.CameraDirection * 10000 + msg.CameraPosition);
+			GridEntity thisGrid = null;
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				if (grid.Behavior == null) {
+
+					foreach (var behavior in BehaviorManager.Behaviors) {
+
+						if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+							grid.Behavior = behavior;
+							break;
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						foreach (var behavior in BehaviorManager.TerminatedBehaviors) {
+
+							if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+								grid.Behavior = behavior;
+								break;
+
+							}
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						continue;
+
+					}
+
+
+					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);
+					//return "";
+
+				}
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				msg.ReturnMessage = "Could Not Locate NPC Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return;
+
+			}
+
+			msg.ReturnMessage = "Autopilot Debug Activated";
+			//thisGrid.Behavior.AutoPilot.Debug = true;
+			return;
+
+		}
+
+		public static void DebugClearThrust(ChatMessage msg) {
+
+			var line = new LineD(msg.CameraPosition, msg.CameraDirection * 10000 + msg.CameraPosition);
+			GridEntity thisGrid = null;
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				if (grid.Behavior == null) {
+
+					foreach (var behavior in BehaviorManager.Behaviors) {
+
+						if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+							grid.Behavior = behavior;
+							break;
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						foreach (var behavior in BehaviorManager.TerminatedBehaviors) {
+
+							if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+								grid.Behavior = behavior;
+								break;
+
+							}
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						continue;
+
+					}
+
+
+					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);
+					//return "";
+
+				}
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				msg.ReturnMessage = "Could Not Locate NPC Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return;
+
+			}
+
+			msg.ReturnMessage = "Cleared Thrust";
+			thisGrid.Behavior.AutoPilot.StopAllThrust();
 			return;
 
 		}
@@ -1306,10 +1449,37 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void RotationData(ChatMessage msg, string[] msgSplit) {
 
-		//
+			// /MES.Debug.RotationData.RotationMulti
+			if (msgSplit.Length < 4) {
 
-		//
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			float rotation = 0;
+
+			if (!float.TryParse(msgSplit[3], out rotation)) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Couldn't Parse " + msgSplit[3] + " To A Number.", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
+
+			if (grid == null) {
+
+				MyVisualScriptLogicProvider.ShowNotification("No Grid Detected In Direction", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			TaskProcessor.Tasks.Add(new DebugRotationData(grid, rotation, msg));
+
+		}
 
 	}
 

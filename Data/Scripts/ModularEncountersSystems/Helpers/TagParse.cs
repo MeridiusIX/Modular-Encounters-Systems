@@ -362,6 +362,25 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagDayOfWeekEnumCheck(string tag, ref List<DayOfWeek> original) {
+
+			DayOfWeek result = DayOfWeek.Monday;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (DayOfWeek.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original.Add(result);
+
+		}
+
 		public static void TagDirectionEnumCheck(string tag, ref Direction original) {
 
 			Direction result = Direction.None;

@@ -147,6 +147,29 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public BoolEnum SettingsWeather; //Doc
 		public BoolEnum SettingsWolves; //Doc
 
+		public bool UseDateTimeYearRange;
+		public int MinDateTimeYear;
+		public int MaxDateTimeYear;
+
+		public bool UseDateTimeMonthRange;
+		public int MinDateTimeMonth;
+		public int MaxDateTimeMonth;
+
+		public bool UseDateTimeDayRange;
+		public int MinDateTimeDay;
+		public int MaxDateTimeDay;
+
+		public bool UseDateTimeHourRange;
+		public int MinDateTimeHour;
+		public int MaxDateTimeHour;
+
+		public bool UseDateTimeMinuteRange;
+		public int MinDateTimeMinute;
+		public int MaxDateTimeMinute;
+
+		public bool UseDateTimeDaysOfWeek;
+		public List<DayOfWeek> DateTimeDaysOfWeek;
+
 		public double MinSpawnFromWorldCenter;
 		public double MaxSpawnFromWorldCenter;
 		public Vector3D CustomWorldCenter;
@@ -418,6 +441,29 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			SettingsWeather = BoolEnum.None;
 			SettingsWolves = BoolEnum.None;
 
+			UseDateTimeYearRange = false;
+			MinDateTimeYear = -1;
+			MaxDateTimeYear = -1;
+
+			UseDateTimeMonthRange = false;
+			MinDateTimeMonth = -1;
+			MaxDateTimeMonth = -1;
+
+			UseDateTimeDayRange = false;
+			MinDateTimeDay = -1;
+			MaxDateTimeDay = -1;
+
+			UseDateTimeHourRange = false;
+			MinDateTimeHour = -1;
+			MaxDateTimeHour = -1;
+
+			UseDateTimeMinuteRange = false;
+			MinDateTimeMinute = -1;
+			MaxDateTimeMinute = -1;
+
+			UseDateTimeDaysOfWeek = false;
+			DateTimeDaysOfWeek = new List<DayOfWeek>();
+
 			SandboxVariables = new List<string>();
 			FalseSandboxVariables = new List<string>();
 
@@ -665,6 +711,23 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"SettingsWeaponsEnabled", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWeaponsEnabled) },
 				{"SettingsWeather", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWeather) },
 				{"SettingsWolves", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWolves) },
+				{"UseDateTimeYearRange", (s, o) => TagParse.TagBoolCheck(s, ref UseDateTimeYearRange) },
+				{"MinDateTimeYear", (s, o) => TagParse.TagIntCheck(s, ref MinDateTimeYear) },
+				{"MaxDateTimeYear", (s, o) => TagParse.TagIntCheck(s, ref MaxDateTimeYear) },
+				{"UseDateTimeMonthRange", (s, o) => TagParse.TagBoolCheck(s, ref UseDateTimeMonthRange) },
+				{"MinDateTimeMonth", (s, o) => TagParse.TagIntCheck(s, ref MinDateTimeMonth) },
+				{"MaxDateTimeMonth", (s, o) => TagParse.TagIntCheck(s, ref MaxDateTimeMonth) },
+				{"UseDateTimeDayRange", (s, o) => TagParse.TagBoolCheck(s, ref UseDateTimeDayRange) },
+				{"MinDateTimeDay", (s, o) => TagParse.TagIntCheck(s, ref MinDateTimeDay) },
+				{"MaxDateTimeDay", (s, o) => TagParse.TagIntCheck(s, ref MaxDateTimeDay) },
+				{"UseDateTimeHourRange", (s, o) => TagParse.TagBoolCheck(s, ref UseDateTimeHourRange) },
+				{"MinDateTimeHour", (s, o) => TagParse.TagIntCheck(s, ref MinDateTimeHour) },
+				{"MaxDateTimeHour", (s, o) => TagParse.TagIntCheck(s, ref MaxDateTimeHour) },
+				{"UseDateTimeMinuteRange", (s, o) => TagParse.TagBoolCheck(s, ref UseDateTimeMinuteRange) },
+				{"MinDateTimeMinute", (s, o) => TagParse.TagIntCheck(s, ref MinDateTimeMinute) },
+				{"MaxDateTimeMinute", (s, o) => TagParse.TagIntCheck(s, ref MaxDateTimeMinute) },
+				{"UseDateTimeDaysOfWeek", (s, o) => TagParse.TagBoolCheck(s, ref UseDateTimeDaysOfWeek) },
+				{"DateTimeDaysOfWeek", (s, o) => TagParse.TagDayOfWeekEnumCheck(s, ref DateTimeDaysOfWeek) },
 				{"MinSpawnFromWorldCenter", (s, o) => TagParse.TagDoubleCheck(s, ref MinSpawnFromWorldCenter) },
 				{"MaxSpawnFromWorldCenter", (s, o) => TagParse.TagDoubleCheck(s, ref MaxSpawnFromWorldCenter) },
 				{"CustomWorldCenter", (s, o) => TagParse.TagVector3DCheck(s, ref CustomWorldCenter) },

@@ -38,6 +38,9 @@
         [ManipulationMinDifficulty:2]
         [ManipulationMaxDifficulty:2]
 
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.92]
+
       </Description>
 
     </EntityComponent>
@@ -54,6 +57,9 @@
 
         [ManipulationMinDifficulty:3]
         [ManipulationMaxDifficulty:3]
+
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.84]
 
       </Description>
 
@@ -72,6 +78,9 @@
         [ManipulationMinDifficulty:4]
         [ManipulationMaxDifficulty:4]
 
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.76]
+
       </Description>
 
     </EntityComponent>
@@ -88,6 +97,9 @@
 
         [ManipulationMinDifficulty:5]
         [ManipulationMaxDifficulty:5]
+
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.68]
 
       </Description>
 
@@ -106,6 +118,9 @@
         [ManipulationMinDifficulty:6]
         [ManipulationMaxDifficulty:6]
 
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.60]
+
       </Description>
 
     </EntityComponent>
@@ -122,6 +137,9 @@
 
         [ManipulationMinDifficulty:7]
         [ManipulationMaxDifficulty:7]
+
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.52]
 
       </Description>
 
@@ -140,6 +158,9 @@
         [ManipulationMinDifficulty:8]
         [ManipulationMaxDifficulty:8]
 
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.44]
+
       </Description>
 
     </EntityComponent>
@@ -157,6 +178,9 @@
         [ManipulationMinDifficulty:9]
         [ManipulationMaxDifficulty:9]
 
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.36]
+
       </Description>
 
     </EntityComponent>
@@ -172,7 +196,9 @@
         [MES Manipulation]
 
         [ManipulationMinDifficulty:10]
-        [ManipulationMaxDifficulty:10]
+
+        [OverrideBlockDamageModifier:true]
+        [BlockDamageModifier:0.28]
 
       </Description>
 

@@ -33,6 +33,11 @@ namespace ModularEncountersSystems.API {
         public static RemoteDragSettings Drag;
         public static bool DragApiLoaded { get { return Drag?.Heartbeat ?? false; } }
 
+        //Text Hud
+        public static HudAPIv2 TextHud;
+        public static bool TextHudApiLoaded { get { return TextHud?.Heartbeat ?? false; } }
+        public static HudAPIv2.HUDMessage HudMessage = null;
+
         public static void RegisterAPIs(int phase = 0) {
 
             if (MES == null && phase == 0)

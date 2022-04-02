@@ -1,4 +1,5 @@
-﻿using Sandbox.Game.Entities;
+﻿using ModularEncountersSystems.Logging;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +29,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (!nameToOwner.ContainsKey(blockNames[i])) {
 
+						BehaviorLogger.Write(" - Owner Collection 1: " + blockNames[i] + " / " + 0, BehaviorDebugEnum.Action);
 						nameToOwner.Add(blockNames[i], 0);
 
 					}
@@ -42,6 +44,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (!nameToOwner.ContainsKey(blockNames[i])) {
 
+						BehaviorLogger.Write(" - Owner Collection 2: " + blockNames[i] + " / " + owner, BehaviorDebugEnum.Action);
 						nameToOwner.Add(blockNames[i], owner);
 
 					}
@@ -55,11 +58,12 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (faction != null) {
 
-						_factionData.Add(factionNames[i], owner);
+						_factionData.Add(factionNames[i], factOwner);
 
 						if (!nameToOwner.ContainsKey(blockNames[i])) {
 
-							nameToOwner.Add(blockNames[i], owner);
+							BehaviorLogger.Write(" - Owner Collection 3: " + blockNames[i] + " / " + factOwner, BehaviorDebugEnum.Action);
+							nameToOwner.Add(blockNames[i], factOwner);
 
 						}
 
@@ -81,7 +85,8 @@ namespace ModularEncountersSystems.Helpers {
 				if (nameToOwner.TryGetValue(block.CustomName, out owner)) {
 
 					var cubeBlock = block as MyCubeBlock;
-					cubeBlock.ChangeBlockOwnerRequest(owner, cubeBlock.IDModule.ShareMode);
+					cubeBlock.ChangeOwner(owner, MyOwnershipShareModeEnum.Faction);
+					cubeBlock.ChangeBlockOwnerRequest(owner, MyOwnershipShareModeEnum.Faction);
 				
 				}
 			

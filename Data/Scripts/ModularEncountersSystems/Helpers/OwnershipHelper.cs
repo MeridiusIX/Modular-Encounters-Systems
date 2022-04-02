@@ -1,4 +1,5 @@
-﻿using Sandbox.Game.Entities;
+﻿using ModularEncountersSystems.Logging;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,13 @@ namespace ModularEncountersSystems.Helpers {
 
 			if (faction != null)
 				owner = FactionHelper.GetFactionOwner(faction);
-			else
+			else {
+
+				BehaviorLogger.Write("   - Antenna Ownership Change Fail. Faction Not Found", BehaviorDebugEnum.Action);
 				return;
+
+			}
+				
 
 			foreach (var block in blocks) {
 
@@ -26,6 +32,12 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 
 				var cubeBlock = block as MyCubeBlock;
+				//var cubeGrid = block.SlimBlock.CubeGrid as MyCubeGrid;
+				BehaviorLogger.Write(" - Antenna Ownership Changed From/To: " + block.OwnerId + " / " + owner, BehaviorDebugEnum.Action);
+				//cubeGrid.ChangeOwnerRequest(cubeGrid, cubeBlock, owner, MyOwnershipShareModeEnum.Faction);
+
+				//var cubeBlock = block as MyCubeBlock;
+				cubeBlock.ChangeOwner(owner, MyOwnershipShareModeEnum.Faction);
 				cubeBlock.ChangeBlockOwnerRequest(owner, MyOwnershipShareModeEnum.Faction);
 
 			}

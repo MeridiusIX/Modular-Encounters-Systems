@@ -439,12 +439,14 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
+				/*
 				if (spawnGroup.MinWaterDepth > 0 && environment.NearestPlanet.WaterDepthAtPosition(environment.SurfaceCoords) < spawnGroup.MinWaterDepth) {
 
 					failReason = "   - Water Depth Check Failed";
 					return false;
 
 				}
+				*/
 
 			}
 
@@ -761,6 +763,12 @@ namespace ModularEncountersSystems.Spawning {
 				failReason = "   - World Settings Check Failed.";
 				return false;
 
+			}
+
+			if (!CheckDateTime(conditions, environment, ref failReason)) {
+
+				return false;
+			
 			}
 
 			if (DistanceFromCenterCheck(conditions, environment) == false) {
@@ -1153,6 +1161,74 @@ namespace ModularEncountersSystems.Spawning {
 			//Logger.Write(spawnGroup.SpawnGroupName + " Passed Common Conditions", true);
 			return true;
 
+		}
+
+		public static bool CheckDateTime(SpawnConditionsProfile conditions, EnvironmentEvaluation environment, ref string failReason) {
+
+			if (conditions.UseDateTimeYearRange) {
+
+				if ((conditions.MinDateTimeYear > -1 && environment.ServerTime.Year < conditions.MinDateTimeYear) || (conditions.MaxDateTimeYear > -1 && environment.ServerTime.Year > conditions.MaxDateTimeYear)) {
+
+					failReason = "   - DateTime Year Check Failed";
+					return false;
+
+				}
+			
+			}
+
+			if (conditions.UseDateTimeMonthRange) {
+
+				if ((conditions.MinDateTimeMonth > -1 && environment.ServerTime.Month < conditions.MinDateTimeMonth) || (conditions.MaxDateTimeMonth > -1 && environment.ServerTime.Month > conditions.MaxDateTimeMonth)) {
+
+					failReason = "   - DateTime Month Check Failed";
+					return false;
+
+				}
+
+			}
+
+			if (conditions.UseDateTimeDayRange) {
+
+				if ((conditions.MinDateTimeDay > -1 && environment.ServerTime.Day < conditions.MinDateTimeDay) || (conditions.MaxDateTimeDay > -1 && environment.ServerTime.Day > conditions.MaxDateTimeDay)) {
+
+					failReason = "   - DateTime Day Check Failed";
+					return false;
+
+				}
+
+			}
+
+			if (conditions.UseDateTimeHourRange) {
+
+				if ((conditions.MinDateTimeHour > -1 && environment.ServerTime.Hour < conditions.MinDateTimeHour) || (conditions.MaxDateTimeHour > -1 && environment.ServerTime.Hour > conditions.MaxDateTimeHour)) {
+
+					failReason = "   - DateTime Hour Check Failed";
+					return false;
+
+				}
+
+			}
+
+			if (conditions.UseDateTimeMinuteRange) {
+
+				if ((conditions.MinDateTimeMinute > -1 && environment.ServerTime.Minute < conditions.MinDateTimeMinute) || (conditions.MaxDateTimeMinute > -1 && environment.ServerTime.Minute > conditions.MaxDateTimeMinute)) {
+
+					failReason = "   - DateTime Minute Check Failed";
+					return false;
+
+				}
+
+			}
+
+			if (conditions.UseDateTimeDaysOfWeek && !conditions.DateTimeDaysOfWeek.Contains(environment.ServerTime.DayOfWeek)) {
+
+				failReason = "   - DateTime Day Of Week Check Failed";
+				return false;
+
+			}
+
+			return true;
+		
 		}
 
 		public static bool CheckSandboxVariables(List<string> variableNames, List<string> falseVariableNames) {

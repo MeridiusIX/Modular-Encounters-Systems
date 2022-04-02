@@ -46,6 +46,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> Controllers;
 		public List<BlockEntity> Gravity;
 		public List<BlockEntity> Guns;
+		public List<BlockEntity> Gyros;
 		public List<BlockEntity> Inhibitors;
 		public List<BlockEntity> JumpDrives;
 		public List<BlockEntity> Mechanical;
@@ -101,6 +102,7 @@ namespace ModularEncountersSystems.Entities {
 			Controllers = new List<BlockEntity>();
 			Gravity = new List<BlockEntity>();
 			Guns = new List<BlockEntity>();
+			Gyros = new List<BlockEntity>();
 			Inhibitors = new List<BlockEntity>();
 			JumpDrives = new List<BlockEntity>();
 			Mechanical = new List<BlockEntity>();
@@ -127,6 +129,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.Controllers, Controllers);
 			BlockListReference.Add(BlockTypeEnum.Gravity, Gravity);
 			BlockListReference.Add(BlockTypeEnum.Guns, Guns);
+			BlockListReference.Add(BlockTypeEnum.Gyros, Gyros);
 			BlockListReference.Add(BlockTypeEnum.Inhibitors, Inhibitors);
 			BlockListReference.Add(BlockTypeEnum.JumpDrives, JumpDrives);
 			BlockListReference.Add(BlockTypeEnum.Mechanical, Mechanical);
@@ -316,6 +319,13 @@ namespace ModularEncountersSystems.Entities {
 			if (terminalBlock as IMyGravityGeneratorBase != null || terminalBlock as IMyVirtualMass != null) {
 
 				assignedBlock = AddBlock(terminalBlock, Gravity);
+
+			}
+
+			//Gyros
+			if (terminalBlock as IMyGyro != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Gyros);
 
 			}
 
@@ -638,6 +648,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(Controllers);
 				CleanBlockList(Gravity);
 				CleanBlockList(Guns);
+				CleanBlockList(Gyros);
 				CleanBlockList(Inhibitors);
 				CleanBlockList(JumpDrives);
 				CleanBlockList(Mechanical);

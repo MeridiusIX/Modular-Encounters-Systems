@@ -193,6 +193,14 @@ namespace ModularEncountersSystems.Helpers {
     
     }
 
+    public enum RotationEnum {
+    
+        Pitch,
+        Yaw,
+        Roll,
+    
+    }
+
     public enum SwitchEnum {
     
         Off,
@@ -282,6 +290,14 @@ namespace ModularEncountersSystems.Helpers {
 
     }
 
+    public enum Tolerence {
+    
+        None,
+        Lower,
+        Within,
+        Higher
+    
+    }
 
     [Flags]
     public enum TriggerAction {

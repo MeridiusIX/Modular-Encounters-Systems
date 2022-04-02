@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
+using VRageMath;
 
 namespace ModularEncountersSystems.Entities {
 	public static class GridManager {
@@ -76,6 +77,26 @@ namespace ModularEncountersSystems.Entities {
 				}
 
 			}
+
+		}
+
+		public static GridEntity GetClosestGridInDirection(MatrixD cameraMatrix, double distance) {
+
+			var line = new LineD(cameraMatrix.Translation, cameraMatrix.Forward * distance + cameraMatrix.Translation);
+
+			for (int i = Grids.Count - 1; i >= 0; i--) {
+
+				var grid = GetSafeGridFromIndex(i);
+
+				if (grid == null || !grid.ActiveEntity())
+					continue;
+
+				if (grid.CubeGrid.WorldAABB.Contains(cameraMatrix.Translation) == ContainmentType.Contains || grid.CubeGrid.WorldAABB.Intersects(ref line))
+					return grid;
+
+			}
+
+			return null;
 
 		}
 

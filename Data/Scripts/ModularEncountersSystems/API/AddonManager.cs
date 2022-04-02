@@ -86,6 +86,10 @@ namespace ModularEncountersSystems.API {
         public static bool AerodynamicDrag = false;
         public static ulong _aerodynamicDragSteamId = 571920453;
 
+        //TextHUDAPI
+        public static bool TextHudApi = false;
+        private static ulong _textHudApiSteamId = 758597413;
+
         public static void DetectAddons() {
 
             ConfigInstance = MyAPIGateway.Utilities.GamePaths.ModScopeName;
@@ -233,6 +237,15 @@ namespace ModularEncountersSystems.API {
 
                     SpawnLogger.Write("Aerodynamic Drag Mod Detected", SpawnerDebugEnum.Startup);
                     AerodynamicDrag = true;
+                    continue;
+
+                }
+
+                //TextHudAPI
+                if (id == _textHudApiSteamId) {
+
+                    SpawnLogger.Write("TextHudAPI Mod Detected", SpawnerDebugEnum.Startup);
+                    TextHudApi = true;
                     continue;
 
                 }

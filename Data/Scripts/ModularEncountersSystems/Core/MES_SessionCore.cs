@@ -24,7 +24,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.36";
+		public static string ModVersion = "2.1.37";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -74,7 +74,7 @@ namespace ModularEncountersSystems.Core {
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
 
-			
+			APIs.TextHud = new HudAPIv2();
 
 		}
 

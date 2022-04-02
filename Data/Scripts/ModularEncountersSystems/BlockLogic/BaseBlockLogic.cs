@@ -86,7 +86,9 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_registeredOwnershipCheck = true;
 			Block.Block.OwnershipChanged += NpcOwnerChanged;
-		
+			NpcOwnerChanged(null);
+
+
 		}
 
 		internal virtual void PhysicsChanged(IMyEntity entity = null) {

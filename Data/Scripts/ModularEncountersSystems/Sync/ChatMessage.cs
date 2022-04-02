@@ -448,6 +448,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.Autopilot
+			if (array[2] == "Autopilot") {
+
+				LoggerTools.DebugAutoPilot(this);
+				return true;
+
+			}
+
 			//MES.Debug.ChangeBool
 			if (array[2] == "ChangeBool") {
 
@@ -490,6 +498,13 @@ namespace ModularEncountersSystems.Sync {
 				}
 
 				NpcManager.UpdateStaticEncounters();
+				return true;
+
+			}
+
+			if (array[2] == "ClearThrust") {
+
+				LoggerTools.DebugClearThrust(this);
 				return true;
 
 			}
@@ -628,6 +643,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.RotationData
+			if (array[2] == "RotationData") {
+
+				LoggerTools.RotationData(this, array);
+				return true;
+
+			}
+
 			//MES.Debug.Meteor
 			if (array[2] == "Meteor") {
 
@@ -691,6 +714,25 @@ namespace ModularEncountersSystems.Sync {
 			
 			}
 
+			//MES.Debug.TextTest
+			if (array[2] == "TextTest") {
+
+				var textText = ProfileManager.GetTextTemplate("MES-TextTemplate-Example.xml");
+
+				if (textText == null) {
+
+					ReturnMessage = "Could Not Find TextTemplate";
+					Mode = ChatMsgMode.ReturnMessage;
+					return true;
+				
+				}
+
+				ReturnMessage = "Found TextTemplate";
+				Mode = ChatMsgMode.ReturnMessage;
+				return true;
+
+			}
+
 			/*
 			//MES.Debug.ToolParentEntity
 			if (array[2] == "ToolParentEntity") {
@@ -721,7 +763,7 @@ namespace ModularEncountersSystems.Sync {
 			*/
 
 			//MES.Debug.UnlockAdminBlocks
-			if (array[2] == "UnlockNpcBlocks") {
+			if (array[2] == "UnlockNpcBlocks" || array[2] == "UnlockAdminBlocks") {
 
 				Mode = ChatMsgMode.ReturnMessage;
 				ReturnMessage = "NPC-Only Blocks Have Been Unlocked For This Session.";

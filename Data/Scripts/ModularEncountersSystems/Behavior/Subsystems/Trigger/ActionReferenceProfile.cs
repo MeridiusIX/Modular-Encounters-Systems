@@ -193,6 +193,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> EnableBlockNames;
 		public List<SwitchEnum> EnableBlockStates;
 
+
+		//CPT
+		public bool SetBlockCustomData;
+		public string SetBlockCustomDataNames;
+		public string SetBlockCustomDataXML;
+
 		public bool ChangeAutopilotProfile;
 		public AutoPilotDataMode AutopilotProfile;
 
@@ -503,6 +509,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			EnableBlockNames = new List<string>();
 			EnableBlockStates = new List<SwitchEnum>();
 
+			//CPT
+			SetBlockCustomData = false;
+			SetBlockCustomDataNames = "";
+			SetBlockCustomDataXML = "";
+
+			
 			ChangeAutopilotProfile = false;
 			AutopilotProfile = AutoPilotDataMode.Primary;
 
@@ -755,6 +767,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"EnableBlocks", (s, o) => TagParse.TagBoolCheck(s, ref EnableBlocks) },
 				{"EnableBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableBlockNames) },
 				{"EnableBlockStates", (s, o) => TagParse.TagSwitchEnumCheck(s, ref EnableBlockStates) },
+				
+			//CPT
+				{"SetBlockCustomData", (s, o) => TagParse.TagBoolCheck(s, ref SetBlockCustomData) },
+				{"SetBlockCustomDataNames", (s, o) => TagParse.TagStringCheck(s, ref SetBlockCustomDataNames) },
+				{"SetBlockCustomDataXML", (s, o) => TagParse.TagStringCheck(s, ref SetBlockCustomDataXML) },
+
 				{"ChangeAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotProfile) },
 				{"AutopilotProfile", (s, o) => TagParse.TagAutoPilotProfileModeCheck(s, ref AutopilotProfile) },
 				{"Ramming", (s, o) => TagParse.TagBoolCheck(s, ref Ramming) },

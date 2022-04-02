@@ -834,6 +834,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//SetBlockCustomData CPT
+			if (actions.SetBlockCustomData)
+            {
+				_behavior.Grid.SetBlockCustomData(actions.SetBlockCustomDataNames, actions.SetBlockCustomDataXML);
+
+				BehaviorLogger.Write("Attempting to change Block Custom Data with " + actions.SetBlockCustomDataNames + "  &&  " + actions.SetBlockCustomDataXML, BehaviorDebugEnum.Action);
+			}
+
 			//BuildProjectedBlocks
 			if (actions.BuildProjectedBlocks) {
 

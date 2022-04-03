@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
@@ -1170,6 +1171,48 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			original = result;
+
+		}
+
+		public static void TagTextTemplateCheck(string tag, ref TextTemplate original) {
+
+			TextTemplate result = null;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				result = ProfileManager.GetTextTemplate(tagSplit[1]);
+
+				if (result == null) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
+		public static void TagTextTemplateCheck(string tag, ref List<TextTemplate> original) {
+
+			TextTemplate result = null;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				result = ProfileManager.GetTextTemplate(tagSplit[1]);
+
+				if (result == null) {
+
+					return;
+
+				}
+
+			}
+
+			original.Add(result);
 
 		}
 

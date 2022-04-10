@@ -1,0 +1,52 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Loot-BasicContainers</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Loot]
+
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/SmallBlockMediumContainer]
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/SmallBlockLargeContainer]
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/LargeBlockSmallContainer]
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/LargeBlockLargeContainer]
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/LargeBlockLargeIndustrialContainer]
+
+        [ContainerTypes:MES-ContainerTypes-BasicAmmo-1]
+        [ContainerTypes:MES-ContainerTypes-BasicAmmo-1]
+        [ContainerTypes:MES-ContainerTypes-BasicAmmo-2]
+
+        [ContainerTypes:MES-ContainerTypes-BasicComponents-1]
+        [ContainerTypes:MES-ContainerTypes-BasicComponents-1]
+        [ContainerTypes:MES-ContainerTypes-BasicComponents-2]
+
+        [ContainerTypes:MES-ContainerTypes-BasicIngots-1]
+        [ContainerTypes:MES-ContainerTypes-BasicIngots-1]
+        [ContainerTypes:MES-ContainerTypes-BasicIngots-2]
+
+        [ContainerTypes:MES-ContainerTypes-BasicOres-1]
+        [ContainerTypes:MES-ContainerTypes-BasicOres-1]
+        [ContainerTypes:MES-ContainerTypes-BasicOres-2]
+
+        [ContainerTypes:MES-ContainerTypes-Credits-2]
+        [ContainerTypes:MES-ContainerTypes-Credits-2]
+        [ContainerTypes:MES-ContainerTypes-Credits-3]
+
+        [ContainerTypes:MES-ContainerTypes-Explosives-1]
+        [ContainerTypes:MES-ContainerTypes-Explosives-2]
+        [ContainerTypes:MES-ContainerTypes-Explosives-3]
+
+        [MinBlocks:3]
+        [MaxBlocks:5]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

@@ -555,6 +555,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		public void FireWeapons() {
 
+			if (APIs.WeaponCoreApiLoaded) {
+
+				if (_behavior.AutoPilot.Targeting.HasTarget()) {
+
+					if (_behavior.AutoPilot.Targeting.Target?.GetEntity() != APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid)) {
+
+						APIs.WeaponCore.SetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid, _behavior.AutoPilot.Targeting.Target?.GetEntity());
+
+					}
+				
+				}
+			
+			}
+
 			if (_pendingBarrageTrigger) {
 
 				BehaviorLogger.Write("Pending Parallel For Barrage", BehaviorDebugEnum.Weapon);
@@ -562,6 +576,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				FireBarrageWeapons();
 
 			}
+
+			ProcessWeaponLockOn();
 
 			foreach (var weapon in StaticWeapons) {
 

@@ -150,13 +150,13 @@ namespace ModularEncountersSystems.Configuration{
 			
 		}
 		
-		public string SaveSettings(ConfigOtherNPCs settings){
+		public override string SaveSettings(){
 			
 			try{
 				
 				using (var writer = MyAPIGateway.Utilities.WriteFileInWorldStorage("Config-OtherNPCs.xml", typeof(ConfigOtherNPCs))){
 					
-					writer.Write(MyAPIGateway.Utilities.SerializeToXML<ConfigOtherNPCs>(settings));
+					writer.Write(MyAPIGateway.Utilities.SerializeToXML<ConfigOtherNPCs>(this));
 				
 				}
 				

@@ -8,6 +8,7 @@ using VRage.Game;
 using VRage.ObjectBuilders;
 using VRageMath;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Files;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -331,6 +332,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool TemporaryPlanet; 
 		public int PlanetTimeLimit;
 
+		public bool AddCustomDataToBlocks;
+		public List<string> CustomDataBlockNames;
+		public List<TextTemplate> CustomDataFiles;
+
+		public bool ApplyContainerTypeToInventoryBlock;
+		public List<string> ContainerTypeBlockNames;
+		public List<string> ContainerTypeSubtypeIds;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -644,6 +653,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			TemporaryPlanet = false;
 			PlanetTimeLimit = 10;
 
+			AddCustomDataToBlocks = false;
+			CustomDataBlockNames = new List<string>();
+			CustomDataFiles = new List<TextTemplate>();
+
+			ApplyContainerTypeToInventoryBlock = false;
+			ContainerTypeBlockNames = new List<string>();
+			ContainerTypeSubtypeIds = new List<string>();
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -865,6 +882,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"PlanetWaypointProfile", (s, o) => TagParse.TagStringCheck(s, ref PlanetWaypointProfile) },
 				{"TemporaryPlanet", (s, o) => TagParse.TagBoolCheck(s, ref TemporaryPlanet) },
 				{"PlanetTimeLimit", (s, o) => TagParse.TagIntCheck(s, ref PlanetTimeLimit) },
+				{"AddCustomDataToBlocks", (s, o) => TagParse.TagBoolCheck(s, ref AddCustomDataToBlocks) },
+				{"CustomDataBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref CustomDataBlockNames) },
+				{"CustomDataFiles", (s, o) => TagParse.TagTextTemplateCheck(s, ref CustomDataFiles) },
+				{"ApplyContainerTypeToInventoryBlock", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContainerTypeToInventoryBlock) },
+				{"ContainerTypeBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeBlockNames) },
+				{"ContainerTypeSubtypeIds", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeSubtypeIds) },
 				//SetGridCleanupExempt
 
 			};

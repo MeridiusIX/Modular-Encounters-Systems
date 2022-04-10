@@ -52,6 +52,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("RegisterSuccessfulSpawnAction", new Action<Action<IMyCubeGrid>, bool>(RegisterSuccessfulSpawnAction));
 			dict.Add("RemoveKnownPlayerLocation", new Action<Vector3D, string, bool>(KnownPlayerLocationManager.RemoveLocation));
 			dict.Add("SetSpawnerIgnoreForDespawn", new Func<IMyCubeGrid, bool, bool>(SetSpawnerIgnoreForDespawn));
+			dict.Add("SetZoneEnabled", new Action<string, bool, Vector3D?>(SetZoneEnabled));
 			dict.Add("SpawnBossEncounter", new Func<Vector3D, List<string>, bool>(SpawnBossEncounter));
 			dict.Add("SpawnPlanetaryCargoShip", new Func<Vector3D, List<string>, bool>(SpawnPlanetaryCargoShip));
 			dict.Add("SpawnPlanetaryInstallation", new Func<Vector3D, List<string>, bool>(SpawnPlanetaryInstallation));
@@ -214,6 +215,13 @@ namespace ModularEncountersSystems.API {
 			npcGrid.Npc.Attributes.IgnoreCleanup = true;
 			npcGrid.Npc.Update();
 			return true;
+
+		}
+
+		public static void SetZoneEnabled(string zoneName, bool enabled, Vector3D? zoneCoords) {
+
+			ZoneManager.ToggleZones(zoneName, enabled, zoneCoords);
+
 
 		}
 

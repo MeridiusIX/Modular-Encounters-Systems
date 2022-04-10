@@ -536,6 +536,8 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(BuildKeyList("Trigger", ProfileManager.TriggerObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Trigger Group", ProfileManager.TriggerGroupObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Waypoint", ProfileManager.WaypointProfiles.Keys));
+			sb.Append(BuildKeyList("Loot", ProfileManager.LootProfiles.Keys));
+			sb.Append(BuildKeyList("Loot Group", ProfileManager.LootGroups.Keys));
 			sb.Append(BuildKeyList("Error", ProfileManager.ErrorProfiles));
 
 			return sb.ToString();

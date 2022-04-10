@@ -1,6 +1,8 @@
-﻿using ModularEncountersSystems.Helpers;
+﻿using ModularEncountersSystems.Files;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
@@ -9,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using VRage.Game;
+using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.ObjectBuilders;
 using VRageMath;
@@ -140,6 +143,60 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			if ((block.FatBlock as IMyWarhead) != null)
 				Warheads.Add(block.FatBlock as IMyWarhead);
+
+		}
+
+		public void AddCustomData(List<string> blockNames, List<TextTemplate> files) {
+
+			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i++) {
+
+				var block = AllTerminalBlocks[i];
+
+				if (block?.CustomName == null)
+					continue;
+
+				for (int j = 0; j < blockNames.Count && j < files.Count; j++) {
+
+					if (block.CustomName == blockNames[j] && files[j]?.CustomData != null) {
+
+						block.CustomData = files[j].CustomData;
+						break;
+
+					}
+
+				}
+
+			}
+
+		}
+
+		public void ApplyContainerTypes(List<string> blockNames, List<string> ids) {
+
+			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i++) {
+
+				var block = AllTerminalBlocks[i] as MyEntity;
+
+				if (block?.GetInventory() == null)
+					continue;
+
+				for (int j = 0; j < blockNames.Count && j < ids.Count; j++) {
+
+					if (AllTerminalBlocks[i].CustomName == blockNames[j] && ids[j] != null) {
+
+						var containerType = MyDefinitionManager.Static.GetContainerTypeDefinition(ids[j]);
+
+						if (containerType != null) {
+
+							block.GetInventory().GenerateContent(containerType);
+							break;
+
+						}
+						
+					}
+
+				}
+
+			}
 
 		}
 

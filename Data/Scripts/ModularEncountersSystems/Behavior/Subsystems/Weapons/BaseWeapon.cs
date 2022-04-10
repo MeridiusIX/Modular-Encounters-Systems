@@ -26,6 +26,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		public IMyCubeGrid LockOnTarget { get { return _lockOnTarget; } set { _lockOnTarget = value; } }
 
 		public bool UsesTurretController { get { return _usesTurretController; } set { _usesTurretController = value; } }
+		public bool IsHoming { get { return _homingAmmo; } set { _homingAmmo = value; } }
 
 		internal List<IWeapon> _subWeapons;
 		internal List<IMyFunctionalBlock> _subWeaponBlocks;
@@ -54,6 +55,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		internal float _ammoInitialVelocity;
 		internal float _ammoAcceleration;
 		internal float _ammoMaxVelocity;
+
+		internal bool _homingAmmo;
 
 		internal bool _checkBarrageWeapon;
 

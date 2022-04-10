@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Profiles;
 using System;
 using System.Collections.Generic;
@@ -13,10 +14,12 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static void ApplyLootProfiles(PrefabContainer prefab, ManipulationProfile profile) {
 
 			List<MyObjectBuilder_CargoContainer> eligibleCargoContainers = new List<MyObjectBuilder_CargoContainer>();
+			List<MyObjectBuilder_CubeBlock> eligibleBlocks = new List<MyObjectBuilder_CubeBlock>();
 
 			foreach (var lootProfile in profile.LootProfiles) {
 
 				eligibleCargoContainers.Clear();
+				eligibleBlocks.Clear();
 
 				if (lootProfile.Chance < 100 && !MathTools.RandomChance(lootProfile.Chance, 100))
 					continue;
@@ -39,47 +42,84 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 						var container = block as MyObjectBuilder_CargoContainer;
 
-						if (container == null)
-							continue;
+						if (container != null) {
 
-						if (!string.IsNullOrWhiteSpace(container.ContainerType)) {
+							if (!string.IsNullOrWhiteSpace(container.ContainerType)) {
 
-							if (prefab.ClearedContainerTypes || !profile.ClearExistingContainerTypes)
+								if (prefab.ClearedContainerTypes || !profile.ClearExistingContainerTypes)
+									continue;
+								else
+									container.ContainerType = "";
+
+							}
+
+							if (lootProfile.MatchBlocksContainingName && (string.IsNullOrWhiteSpace(container.CustomName) || !container.CustomName.Contains(lootProfile.MatchedName)))
 								continue;
-							else
-								container.ContainerType = "";
+
+							eligibleCargoContainers.Add(container);
+							eligibleBlocks.Add(block);
+							
+
+						} else {
+
+							var existingContainerType = StorageTools.GetContainerStorage(block.ComponentContainer, StorageTools.MesContainerTypeKey);
+
+							if (!string.IsNullOrWhiteSpace(existingContainerType)) {
+
+								if (prefab.ClearedContainerTypes || !profile.ClearExistingContainerTypes)
+									continue;
+								else
+									StorageTools.ApplyCustomBlockStorage(block, StorageTools.MesContainerTypeKey, "");
+
+							}
+
+							var termBlock = block as MyObjectBuilder_TerminalBlock;
+
+							if (lootProfile.MatchBlocksContainingName && (string.IsNullOrWhiteSpace(termBlock?.CustomName) || !termBlock.CustomName.Contains(lootProfile.MatchedName)))
+								continue;
+
+							eligibleBlocks.Add(block);
 
 						}
 							
-
-						if (lootProfile.MatchBlocksContainingName && (string.IsNullOrWhiteSpace(container.CustomName) || !container.CustomName.Contains(lootProfile.MatchedName)))
-							continue;
-
-						eligibleCargoContainers.Add(container);
-
 					}
 
 				}
 
+				//TODO: Add Logging
+				SpawnLogger.Write(string.Format("{0} Loot Profile Results: Containers = {1} // Blocks = {2}", lootProfile.ProfileSubtypeId, eligibleCargoContainers.Count, eligibleBlocks.Count), SpawnerDebugEnum.Manipulation);
+
 				if (!prefab.ClearedContainerTypes || profile.ClearExistingContainerTypes)
 					prefab.ClearedContainerTypes = true;
 
-				if (eligibleCargoContainers.Count > 0) {
+				if (eligibleBlocks.Count > 0) {
 
 					int affectedBlocks = MathTools.RandomBetween(lootProfile.MinBlocks, lootProfile.MaxBlocks);
 
 					for (int i = 0; i < affectedBlocks; i++) {
 
-						var containerIndex = MathTools.RandomBetween(0, eligibleCargoContainers.Count);
-						var block = eligibleCargoContainers[containerIndex];
-						block.ContainerType = lootProfile.ContainerTypes[MathTools.RandomBetween(0, lootProfile.ContainerTypes.Count)];
+						var containerIndex = MathTools.RandomBetween(0, eligibleBlocks.Count);
+						var block = eligibleBlocks[containerIndex];
 
-						if (!string.IsNullOrWhiteSpace(block.CustomName) && lootProfile.AppendNameToBlock == !block.CustomName.Contains(lootProfile.AppendedName))
-							block.CustomName += lootProfile.AppendedName;
+						if (eligibleCargoContainers.Contains(block as MyObjectBuilder_CargoContainer)) {
 
-						eligibleCargoContainers.RemoveAt(containerIndex);
+							((MyObjectBuilder_CargoContainer)block).ContainerType = lootProfile.ContainerTypes[MathTools.RandomBetween(0, lootProfile.ContainerTypes.Count)];
+							SpawnLogger.Write("Applying Container Type to Container Block", SpawnerDebugEnum.Manipulation);
 
-						if (eligibleCargoContainers.Count == 0)
+						} else {
+
+							StorageTools.ApplyCustomBlockStorage(block, StorageTools.MesContainerTypeKey, lootProfile.ContainerTypes[MathTools.RandomBetween(0, lootProfile.ContainerTypes.Count)]);
+							SpawnLogger.Write("Applying ModStorage Container Type to Non-Container Block", SpawnerDebugEnum.Manipulation);
+
+						}
+
+						var termBlock = block as MyObjectBuilder_TerminalBlock;
+						if (!string.IsNullOrWhiteSpace(termBlock?.CustomName) && lootProfile.AppendNameToBlock && !termBlock.CustomName.Contains(lootProfile.AppendedName))
+							termBlock.CustomName += lootProfile.AppendedName;
+
+						eligibleBlocks.RemoveAt(containerIndex);
+
+						if (eligibleBlocks.Count == 0)
 							break;
 					
 					}

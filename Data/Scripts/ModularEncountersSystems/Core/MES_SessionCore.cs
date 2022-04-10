@@ -3,6 +3,7 @@ using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
@@ -24,16 +25,20 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.38";
+		public static string ModVersion = "2.1.42";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
 		public static bool IsDedicated;
 		public static DateTime SessionStartTime;
 
+		public static bool AreaTestStart;
+
 		public static Action UnloadActions;
 
 		public override void LoadData() {
+
+			Instance = this;
 
 			IsServer = MyAPIGateway.Multiplayer.IsServer;
 			IsDedicated = MyAPIGateway.Utilities.IsDedicated;
@@ -41,8 +46,6 @@ namespace ModularEncountersSystems.Core {
 
 			if (!ModEnabled)
 				return;
-
-			Instance = this;
 
 			SpawnLogger.Setup();
 			BehaviorLogger.Setup();
@@ -143,23 +146,27 @@ namespace ModularEncountersSystems.Core {
 
 			}
 
-			/*
-			if (MES_SessionCore.Instance.ModContext?.ModId != null && MES_SessionCore.Instance.ModContext.ModId.Contains(".sbm")) {
+			if (MES_SessionCore.Instance?.ModContext?.ModId != null && MES_SessionCore.Instance.ModContext.ModId.Contains(".sbm")) {
 
 				foreach (var mod in MyAPIGateway.Session.Mods) {
 
-					if (mod.PublishedFileId < 10 && !string.IsNullOrWhiteSpace(mod.FriendlyName) && mod.FriendlyName.StartsWith("Modular Encounters Systems")) {
+					var context = mod.GetModContext();
 
-						SpawnLogger.Write("Detected Offline / Local Version of MES loaded with Workshop Version of MES. Disabling Workshop Version", SpawnerDebugEnum.Error);
-						ModEnabled = false;
-						return false;
+					if (context != null && MES_SessionCore.Instance.ModContext.ModItem.PublishedFileId != mod.PublishedFileId && !context.ModId.Contains(".sbm")) {
 
+						if (MyAPIGateway.Utilities.FileExistsInModLocation("ModularEncountersSystemsMod.txt", mod)) {
+
+							SpawnLogger.Write("Detected Offline / Local Version of MES loaded with Workshop Version of MES. Disabling Workshop Version", SpawnerDebugEnum.Startup, true);
+							ModEnabled = false;
+							return false;
+
+						}
+						
 					}
 
 				}
 
 			}
-			*/
 
 			return true;
 		

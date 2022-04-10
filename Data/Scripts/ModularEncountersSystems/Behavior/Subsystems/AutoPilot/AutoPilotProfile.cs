@@ -93,6 +93,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public int WaypointWaitTimeTrigger;
 		public int WaypointAbandonTimeTrigger;
 
+		public int TargetApproachTimer;
+		public int TargetEngageTimer;
+
+		public int TimeBetweenNewTargetChecks;
+		public int LostTargetTimerTrigger;
+		public double DistanceToCheckEngagableTarget;
+
+		public bool EngageOnCameraDetection;
+		public bool EngageOnWeaponActivation;
+		public bool EngageOnTargetLineOfSight;
+
+		public double CameraDetectionMaxRange;
+
+		public bool RotateTowardsTargetWhileAtPosition;
+
 		public double AttackRunDistanceSpace;
 		public double AttackRunDistancePlanet;
 		public double AttackRunBreakawayDistance;
@@ -197,6 +212,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			WaypointWaitTimeTrigger = 5;
 			WaypointAbandonTimeTrigger = 30;
+
+			TargetApproachTimer = 30;
+			TargetEngageTimer = 10;
+
+			TimeBetweenNewTargetChecks = 15;
+			LostTargetTimerTrigger = 30;
+			DistanceToCheckEngagableTarget = 1200;
+
+			EngageOnCameraDetection = false;
+			EngageOnWeaponActivation = false;
+			EngageOnTargetLineOfSight = false;
+
+			CameraDetectionMaxRange = 1800;
+
+			RotateTowardsTargetWhileAtPosition = false;
 
 			AttackRunDistanceSpace = 75;
 			AttackRunDistancePlanet = 100;
@@ -646,10 +676,80 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
+			//TargetApproachTimer
+			if (tag.Contains("[TargetApproachTimer:") == true) {
+
+				TagParse.TagIntCheck(tag, ref this.TargetApproachTimer);
+
+			}
+
+			//TargetEngageTimer
+			if (tag.Contains("[TargetEngageTimer:") == true) {
+
+				TagParse.TagIntCheck(tag, ref this.TargetEngageTimer);
+
+			}
+
+			//TimeBetweenNewTargetChecks
+			if (tag.Contains("[TimeBetweenNewTargetChecks:") == true) {
+
+				TagParse.TagIntCheck(tag, ref this.TimeBetweenNewTargetChecks);
+
+			}
+
+			//LostTargetTimerTrigger
+			if (tag.Contains("[LostTargetTimerTrigger:") == true) {
+
+				TagParse.TagIntCheck(tag, ref this.LostTargetTimerTrigger);
+
+			}
+
+			//DistanceToCheckEngagableTarget
+			if (tag.Contains("[DistanceToCheckEngagableTarget:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.DistanceToCheckEngagableTarget);
+
+			}
+
+			//EngageOnCameraDetection
+			if (tag.Contains("[EngageOnCameraDetection:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.EngageOnCameraDetection);
+
+			}
+
+			//EngageOnWeaponActivation
+			if (tag.Contains("[EngageOnWeaponActivation:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.EngageOnWeaponActivation);
+
+			}
+
+			//EngageOnTargetLineOfSight
+			if (tag.Contains("[EngageOnTargetLineOfSight:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.EngageOnTargetLineOfSight);
+
+			}
+
+			//CameraDetectionMaxRange
+			if (tag.Contains("[CameraDetectionMaxRange:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.CameraDetectionMaxRange);
+
+			}
+
 			//WaypointAbandonTimeTrigger
 			if (tag.Contains("[WaypointAbandonTimeTrigger:") == true) {
 
 				TagParse.TagIntCheck(tag, ref this.WaypointAbandonTimeTrigger);
+
+			}
+
+			//RotateTowardsTargetWhileAtPosition
+			if (tag.Contains("[RotateTowardsTargetWhileAtPosition:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.RotateTowardsTargetWhileAtPosition);
 
 			}
 

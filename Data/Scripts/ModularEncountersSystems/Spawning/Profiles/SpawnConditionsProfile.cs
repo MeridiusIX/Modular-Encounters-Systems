@@ -617,6 +617,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"UseOptimizedVoxelSpawning", (s, o) => TagParse.TagBoolCheck(s, ref UseOptimizedVoxelSpawning) },
 				{"CustomVoxelMaterial", (s, o) => TagParse.TagStringListCheck(s, ref CustomVoxelMaterial) },
 				{"PlanetaryInstallation", (s, o) => TagParse.TagBoolCheck(s, ref PlanetaryInstallation) },
+				{"PlanetaryInstallationType", (s, o) => TagParse.TagStringCheck(s, ref PlanetaryInstallationType) },
 				{"SkipTerrainCheck", (s, o) => TagParse.TagBoolCheck(s, ref SkipTerrainCheck) },
 				{"RotateInstallations", (s, o) => TagParse.TagVector3DListCheck(s, ref RotateInstallations) },
 				{"ReverseForwardDirections", (s, o) => TagParse.TagBoolListCheck(s, ref ReverseForwardDirections) },
@@ -831,9 +832,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"UseGridOrigin", (s, o) => TagParse.TagBoolCheck(s, ref UseGridOrigin) },
 				{"PrefabSpawningMode", (s, o) => TagParse.TagPrefabSpawnModeEnumCheck(s, ref PrefabSpawningMode) },
 				{"AllowPrefabIndexReuse", (s, o) => TagParse.TagBoolCheck(s, ref AllowPrefabIndexReuse) },
-				{"PrefabIndexes", (s, o) => TagParse.TagIntListCheck(s, ref PrefabIndexes) },
+				{"PrefabIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref PrefabIndexes) },
 				{"PrefabIndexGroupNames", (s, o) => TagParse.TagStringListCheck(s, ref PrefabIndexGroupNames) },
-				{"PrefabIndexGroupValues", (s, o) => TagParse.TagIntListCheck(s, ref PrefabIndexGroupValues) },
+				{"PrefabIndexGroupValues", (s, o) => TagParse.TagIntListCheck(s, true, ref PrefabIndexGroupValues) },
 				{"PrefabOffsetOverrides", (s, o) => TagParse.TagVector3DListCheck(s, ref PrefabOffsetOverrides) },
 
 			};

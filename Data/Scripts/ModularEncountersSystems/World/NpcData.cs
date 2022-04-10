@@ -80,6 +80,7 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(26)] public bool ConfigureTurretControllers;
 		[ProtoMember(27)] public bool ReceivedPlayerDamage;
 		[ProtoMember(28)] public bool AnnounceSpawnInApi;
+		[ProtoMember(29)] public bool ApplyContainerTypes;
 
 		public NewNpcAttributes() {
 
@@ -111,6 +112,7 @@ namespace ModularEncountersSystems.World {
 			ConfigureTurretControllers = false;
 			ReceivedPlayerDamage = false;
 			AnnounceSpawnInApi = false;
+			ApplyContainerTypes = false;
 
 		}
 
@@ -195,6 +197,9 @@ namespace ModularEncountersSystems.World {
 
 			if(AnnounceSpawnInApi)
 				sb.Append("AnnounceSpawnInApi").Append(", ");
+
+			if (ApplyContainerTypes)
+				sb.Append("ApplyContainerTypes").Append(", ");
 
 			if (OldFlagsProcessed)
 				sb.Append("OldFlagsProcessed").Append(", ");
@@ -356,6 +361,9 @@ namespace ModularEncountersSystems.World {
 
 		[ProtoMember(30)]
 		public string ChatAuthorName;
+
+		[ProtoMember(31)]
+		public List<string> CustomTags;
 
 		//Non-Serialized Data
 
@@ -522,6 +530,7 @@ namespace ModularEncountersSystems.World {
 			Forward = Vector3D.Forward;
 			Up = Vector3D.Up;
 			UniqueSpawnIdentifier = "";
+			CustomTags = new List<string>();
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -641,7 +650,7 @@ namespace ModularEncountersSystems.World {
 				SpawnLogger.Write("Start Matrix Translation:    " + Grid.CubeGrid.WorldMatrix.Translation, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Forward:        " + Grid.CubeGrid.WorldMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Up:             " + Grid.CubeGrid.WorldMatrix.Up, SpawnerDebugEnum.Spawning);
-				*/
+				
 
 				var newMatrix = MatrixD.CreateWorld(StartCoords, Forward, Up);
 				Grid.CubeGrid.IsStatic = false;
@@ -649,7 +658,7 @@ namespace ModularEncountersSystems.World {
 				Grid.CubeGrid.IsStatic = true;
 				//MyVisualScriptLogicProvider.ShowNotificationToAll("Fix MAtrix", 1000);
 
-				/*
+				
 				SpawnLogger.Write("Provided Matrix Translation: " + newMatrix.Translation, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Provided Matrix Forward:     " + newMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Provided Matrix Up:          " + newMatrix.Up, SpawnerDebugEnum.Spawning);
@@ -798,6 +807,14 @@ namespace ModularEncountersSystems.World {
 
 				NPCShieldManager.ActivateShieldsForNPC(Grid.CubeGrid, true);
 				//AppliedAttributes |= NpcAttributes.ShieldActivation;
+
+			}
+
+			//ApplyContainerTypes
+			if (AttributeCheck(Attributes.ApplyContainerTypes, AppliedAttributes.ApplyContainerTypes)) {
+
+				AppliedAttributes.ApplyContainerTypes = true;
+				InventoryHelper.ApplyContainerTypes(Grid);
 
 			}
 

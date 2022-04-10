@@ -34,7 +34,7 @@
 				<Component Subtype="Construction" Count="1" />
 				<Component Subtype="SteelPlate" Count="1" />
 			</Components>
-			<CriticalComponent Subtype="Thrust" Index="0" />
+			<CriticalComponent Subtype="MESThrust" Index="0" />
 			<MountPoints>
 				<MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
 				<MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
@@ -134,7 +134,7 @@
 				<Component Subtype="Construction" Count="1" />
 				<Component Subtype="SteelPlate" Count="4" />
 			</Components>
-			<CriticalComponent Subtype="Thrust" Index="0" />
+			<CriticalComponent Subtype="MESThrust" Index="0" />
 			<MountPoints>
 				<MountPoint Side="Back" StartX="0" StartY="0" EndX="3" EndY="2" Default="true" />
 				<MountPoint Side="Top" StartX="0" StartY="0" EndX="3" EndY="2" />
@@ -235,7 +235,7 @@
 				<Component Subtype="Construction" Count="20" />
 				<Component Subtype="SteelPlate" Count="10" />
 			</Components>
-			<CriticalComponent Subtype="Thrust" Index="0" />
+			<CriticalComponent Subtype="MESThrust" Index="0" />
 			<MountPoints>
 				<MountPoint Side="Back" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
 				<MountPoint Side="Top" StartX="0" StartY="0" EndX="1" EndY="1" />
@@ -335,7 +335,7 @@
 				<Component Subtype="Construction" Count="30" />
 				<Component Subtype="SteelPlate" Count="50" />
 			</Components>
-			<CriticalComponent Subtype="Thrust" Index="0" />
+			<CriticalComponent Subtype="MESThrust" Index="0" />
 			<MountPoints>
 				<MountPoint Side="Back" StartX="0" StartY="0" EndX="3" EndY="2" Default="true" />
 				<MountPoint Side="Top" StartX="0" StartY="0" EndX="3" EndY="2" />

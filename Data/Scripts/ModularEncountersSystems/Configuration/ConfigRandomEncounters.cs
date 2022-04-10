@@ -168,13 +168,13 @@ namespace ModularEncountersSystems.Configuration {
 			
 		}
 		
-		public string SaveSettings(ConfigRandomEncounters settings){
+		public override string SaveSettings(){
 			
 			try{
 				
 				using (var writer = MyAPIGateway.Utilities.WriteFileInWorldStorage("Config-RandomEncounters.xml", typeof(ConfigRandomEncounters))){
 					
-					writer.Write(MyAPIGateway.Utilities.SerializeToXML<ConfigRandomEncounters>(settings));
+					writer.Write(MyAPIGateway.Utilities.SerializeToXML<ConfigRandomEncounters>(this));
 				
 				}
 				

@@ -1021,57 +1021,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
 						IMyCharacter character = null;
 						
-						BotSpawner.SpawnBotRequest(botProfile.SerializedData, matrix, out character, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, 0);
-
-						if (character != null) {
-
-							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Added To Grid", 3000);
-
-							/*
-							var botIdentity = character?.ControllerInfo?.ControllingIdentityId ?? 0;
-							
-							if (botIdentity != 0) {
-
-								var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(RemoteControl.OwnerId);
-
-								if (faction != null) {
-
-									var result = MyVisualScriptLogicProvider.SetPlayersFaction(botIdentity, faction?.Tag ?? "");
-
-									if (result) {
-									
-										//NA				
-									
-									} else {
-
-										//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Adding To Grid Faction Has Failed", 3000);
-
-									}
-
-								} else {
-
-									//MyVisualScriptLogicProvider.ShowNotificationToAll("Grid Does Not Have Faction", 3000);
-
-								}
-
-							} else {
-
-								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Doesn't Have Identity Id in [character.ControllerInfo.ControllingIdentityId]", 3000);
-
-							}
-							*/
-
-							if (character.Physics != null && _behavior.CurrentGrid.CubeGrid.Physics != null) {
-
-								character.Physics.LinearVelocity = _behavior.CurrentGrid.CubeGrid.Physics.LinearVelocity + (Vector3)(RemoteControl.WorldMatrix.Down * 2);
-
-							}
-
-						} else {
-
-							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Failed", 3000);
-
-						}
+						BotSpawner.SpawnBotRequest(botProfile.SerializedData, matrix, out character, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, RemoteControl.OwnerId);
 
 					} else {
 
@@ -1314,6 +1264,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 			
+			}
+
+			if (actions.AddCustomDataToBlocks) {
+
+				_behavior.Grid.AddCustomData(actions.CustomDataBlockNames, actions.CustomDataFiles);
+			
+			}
+
+			if (actions.ApplyContainerTypeToInventoryBlock) {
+
+				_behavior.Grid.ApplyContainerTypes(actions.ContainerTypeBlockNames, actions.ContainerTypeSubtypeIds);
+
 			}
 
 			if (actions.UseCurrentPositionAsPatrolReference) {

@@ -221,6 +221,9 @@ namespace ModularEncountersSystems.Spawning {
 					if (!options.HasFlag(SpawningOptions.UseGridOrigin))
 						options |= SpawningOptions.UseGridOrigin;
 
+					if (!options.HasFlag(SpawningOptions.UseOnlyWorldMatrix))
+						options |= SpawningOptions.UseOnlyWorldMatrix;
+
 					if (options.HasFlag(SpawningOptions.RotateFirstCockpitTowardsDirection))
 						options &= ~SpawningOptions.RotateFirstCockpitTowardsDirection;
 

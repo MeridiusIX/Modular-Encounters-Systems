@@ -76,6 +76,9 @@ namespace ModularEncountersSystems.Configuration.Editor {
             if (receivedCommand.StartsWith("/MES.Settings.Creatures."))
                 return Settings.Creatures.EditFields(receivedCommand);
 
+            if (receivedCommand.StartsWith("/MES.Settings.DroneEncounters."))
+                return Settings.DroneEncounters.EditFields(receivedCommand);
+
             return "Command Not Recognized";
         
         }

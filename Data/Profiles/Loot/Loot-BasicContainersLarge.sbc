@@ -1,0 +1,45 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Loot-BasicContainersLarge</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Loot]
+
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/LargeBlockLargeContainer]
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/LargeBlockLargeIndustrialContainer]
+
+        [ContainerTypes:MES-ContainerTypes-BasicAmmo-3]
+        [ContainerTypes:MES-ContainerTypes-BasicAmmo-2]
+
+        [ContainerTypes:MES-ContainerTypes-BasicComponents-3]
+        [ContainerTypes:MES-ContainerTypes-BasicComponents-4]
+
+        [ContainerTypes:MES-ContainerTypes-BasicIngots-2]
+        [ContainerTypes:MES-ContainerTypes-BasicIngots-3]
+
+        [ContainerTypes:MES-ContainerTypes-BasicOres-2]
+        [ContainerTypes:MES-ContainerTypes-BasicOres-3]
+
+        [ContainerTypes:MES-ContainerTypes-Credits-3]
+        [ContainerTypes:MES-ContainerTypes-Credits-3]
+        [ContainerTypes:MES-ContainerTypes-Credits-4]
+
+        [ContainerTypes:MES-ContainerTypes-Explosives-2]
+        [ContainerTypes:MES-ContainerTypes-Explosives-3]
+        [ContainerTypes:MES-ContainerTypes-Explosives-4]
+
+        [MinBlocks:1]
+        [MaxBlocks:2]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

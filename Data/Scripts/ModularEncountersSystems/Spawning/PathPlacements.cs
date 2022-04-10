@@ -711,8 +711,12 @@ namespace ModularEncountersSystems.Spawning {
 			double extraDistance = 0;
 			double terrainVarianceCheckTarget = Settings.PlanetaryInstallations.SmallTerrainCheckDistance;
 
+			SpawnLogger.Write("Installation Spawning With Condition: " + collection.Conditions.ProfileSubtypeId, SpawnerDebugEnum.Pathing);
+			SpawnLogger.Write("Installation Size: " + collection.Conditions.PlanetaryInstallationType ?? "Null", SpawnerDebugEnum.Pathing);
+
 			if (collection.Conditions.PlanetaryInstallationType == "Medium") {
 
+				SpawnLogger.Write("Applying MediumSpawnDistanceIncrement of: " + Settings.PlanetaryInstallations.MediumSpawnDistanceIncrement, SpawnerDebugEnum.Pathing);
 				extraDistance = Settings.PlanetaryInstallations.MediumSpawnDistanceIncrement;
 				terrainVarianceCheckTarget = Settings.PlanetaryInstallations.MediumTerrainCheckDistance;
 
@@ -720,6 +724,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (collection.Conditions.PlanetaryInstallationType == "Large") {
 
+				SpawnLogger.Write("Applying LargeSpawnDistanceIncrement of: " + Settings.PlanetaryInstallations.LargeSpawnDistanceIncrement, SpawnerDebugEnum.Pathing);
 				extraDistance = Settings.PlanetaryInstallations.LargeSpawnDistanceIncrement;
 				terrainVarianceCheckTarget = Settings.PlanetaryInstallations.LargeTerrainCheckDistance;
 

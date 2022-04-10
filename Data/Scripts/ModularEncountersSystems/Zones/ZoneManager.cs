@@ -500,7 +500,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ToggleZones(string zoneName = null, bool mode = false) {
+		public static void ToggleZones(string zoneName = null, bool mode = false, Vector3D? coords = null) {
 
 			bool updateZones = false;
 
@@ -509,6 +509,9 @@ namespace ModularEncountersSystems.Zones {
 				var zone = ActiveZones[i];
 
 				if (zoneName != null && zone.PublicName != zoneName)
+					continue;
+
+				if (coords != null && !zone.PositionInsideZone(coords.Value))
 					continue;
 
 				zone.Active = mode;

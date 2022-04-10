@@ -517,6 +517,26 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public void GetAllFatBlocks(List<IMySlimBlock> blocks, bool clearList = false) {
+
+			if (clearList)
+				blocks.Clear();
+
+			for (int i = LinkedGrids.Count - 1; i >= 0; i--) {
+
+				var blockList = LinkedGrids[i].AllBlocks;
+
+				for (int j = blockList.Count - 1; j >= 0; j--) {
+
+					if(blockList[j].FatBlock != null)
+						blocks.Add(blockList[j]);
+
+				}
+
+			}
+
+		}
+
 		public void GetBlocks(List<ITarget> targetList, List<BlockTypeEnum> types) {
 
 			if (types.Contains(BlockTypeEnum.All)) {

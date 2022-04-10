@@ -35,6 +35,18 @@
         [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeThrustSciFi]
         [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IonSciFi-LargeGrid-Large]
 
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallModularThruster]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-WarfareIon-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeModularThruster]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-WarfareIon-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallModularThruster]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-WarfareIon-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeModularThruster]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-WarfareIon-LargeGrid-Large]
+
       </Description>
 
     </EntityComponent>
@@ -96,6 +108,18 @@
 
         [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeHydrogenThrust]
         [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-Hydro-LargeGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallHydrogenThrustIndustrial]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IndustryHydro-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeHydrogenThrustIndustrial]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IndustryHydro-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallHydrogenThrustIndustrial]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IndustryHydro-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeHydrogenThrustIndustrial]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IndustryHydro-LargeGrid-Large]
 
       </Description>
 

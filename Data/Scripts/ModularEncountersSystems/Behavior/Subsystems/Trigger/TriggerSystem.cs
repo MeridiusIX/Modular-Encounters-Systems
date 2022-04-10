@@ -904,38 +904,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void ToggleTriggers(string triggerName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore) {
 
-			foreach (var resetTrigger in Triggers) {
+			ToggleTriggers(Triggers, triggerName, toggleMode, resetCooldown);
+			ToggleTriggers(DamageTriggers, triggerName, toggleMode, resetCooldown);
+			ToggleTriggers(CommandTriggers, triggerName, toggleMode, resetCooldown);
+			ToggleTriggers(CompromisedTriggers, triggerName, toggleMode, resetCooldown);
+			
+		}
+
+		public void ToggleTriggers(List<TriggerProfile> triggers, string triggerName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore) {
+
+			foreach (var resetTrigger in triggers) {
 
 				if (triggerName == resetTrigger.ProfileSubtypeId) {
 
-					if(toggleMode != CheckEnum.Ignore)
+					if (toggleMode != CheckEnum.Ignore)
 						resetTrigger.UseTrigger = (toggleMode == CheckEnum.Yes);
 
 					if (resetCooldown == CheckEnum.Yes)
 						resetTrigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
 
 				}
-
-			}
-
-			foreach (var resetTrigger in DamageTriggers) {
-
-				if (triggerName == resetTrigger.ProfileSubtypeId)
-					resetTrigger.UseTrigger = true;
-
-			}
-
-			foreach (var resetTrigger in CommandTriggers) {
-
-				if (triggerName == resetTrigger.ProfileSubtypeId)
-					resetTrigger.UseTrigger = true;
-
-			}
-
-			foreach (var resetTrigger in CompromisedTriggers) {
-
-				if (triggerName == resetTrigger.ProfileSubtypeId)
-					resetTrigger.UseTrigger = true;
 
 			}
 
@@ -968,8 +956,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-            else
-            {
+			else
+			{
 				existingCounter += amount;
 				MyAPIGateway.Utilities.SetVariable(counterName, existingCounter);
 				return;

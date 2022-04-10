@@ -19,8 +19,11 @@ namespace ModularEncountersSystems.Behavior {
 		public int HorseFighterWaypointWaitTimeTrigger;
 		public int HorseFighterWaypointAbandonTimeTrigger;
 
-		public int HorseFighterTimeApproaching;
-		public int HorseFighterTimeEngaging;
+		public int HorseFighterTimeApproaching { get { return _horseFighterTimeApproaching != 0 ? _horseFighterTimeApproaching : _behavior.AutoPilot.Data.TargetApproachTimer; } }
+		public int HorseFighterTimeEngaging { get { return _horseFighterTimeEngaging != 0 ? _horseFighterTimeEngaging : _behavior.AutoPilot.Data.TargetEngageTimer; } }
+
+		private int _horseFighterTimeApproaching;
+		private int _horseFighterTimeEngaging;
 
 		public DateTime HorseFighterWaypointWaitTime;
 		public DateTime HorseFighterWaypointAbandonTime;
@@ -49,8 +52,8 @@ namespace ModularEncountersSystems.Behavior {
 			HorseFighterWaypointWaitTimeTrigger = 5;
 			HorseFighterWaypointAbandonTimeTrigger = 30;
 
-			HorseFighterTimeApproaching = 30;
-			HorseFighterTimeEngaging = 10;
+			_horseFighterTimeApproaching = 0;
+			_horseFighterTimeEngaging = 0;
 
 			HorseFighterWaypointWaitTime = MyAPIGateway.Session.GameDateTime;
 			HorseFighterWaypointAbandonTime = MyAPIGateway.Session.GameDateTime;
@@ -305,14 +308,14 @@ namespace ModularEncountersSystems.Behavior {
 					//HorseFighterTimeApproaching
 					if (tag.Contains("[HorseFighterTimeApproaching:") == true) {
 
-						TagParse.TagIntCheck(tag, ref this.HorseFighterTimeApproaching);
+						TagParse.TagIntCheck(tag, ref this._horseFighterTimeApproaching);
 
 					}
 
 					//HorseFighterTimeEngaging
 					if (tag.Contains("[HorseFighterTimeEngaging:") == true) {
 
-						TagParse.TagIntCheck(tag, ref this.HorseFighterTimeEngaging);
+						TagParse.TagIntCheck(tag, ref this._horseFighterTimeEngaging);
 
 					}
 

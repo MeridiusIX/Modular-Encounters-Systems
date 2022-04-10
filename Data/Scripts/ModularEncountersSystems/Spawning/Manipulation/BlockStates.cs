@@ -76,6 +76,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			PartialBuiltAllowedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "SmallHeavyBlockArmorInvCorner2Base"));
 			PartialBuiltAllowedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "SmallBlockArmorInvCorner2Tip"));
 			PartialBuiltAllowedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "SmallHeavyBlockArmorInvCorner2Tip"));
+
 			PartialBuiltAllowedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "ArmorCenter"));
 			PartialBuiltAllowedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "ArmorCorner"));
 			PartialBuiltAllowedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "ArmorInvCorner"));

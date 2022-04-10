@@ -18,6 +18,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public float ManipulationThreatMaximum;
 		public int ManipulationMinBlockCount;
 		public int ManipulationMaxBlockCount;
+		public List<string> ManipulationRequiredCustomTags;
 		public List<string> ManipulationAllowedPrefabNames;
 		public List<string> ManipulationRestrictedPrefabNames;
 		public List<int> ManipulationAllowedPrefabIndexes;
@@ -200,6 +201,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ManipulationThreatMaximum = -1;
 			ManipulationMinBlockCount = -1;
 			ManipulationMaxBlockCount = -1;
+			ManipulationRequiredCustomTags = new List<string>();
 			ManipulationAllowedPrefabNames = new List<string>();
 			ManipulationRestrictedPrefabNames = new List<string>();
 			ManipulationAllowedPrefabIndexes = new List<int>();
@@ -429,6 +431,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ManipulationMaxBlockCount:") == true) {
 
 					TagParse.TagIntCheck(tag, ref this.ManipulationMaxBlockCount);
+
+				}
+
+				//ManipulationRequiredCustomTags
+				if (tag.StartsWith("[ManipulationRequiredCustomTags:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.ManipulationRequiredCustomTags);
 
 				}
 

@@ -404,7 +404,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					}
 
 					//MaxGravity
-					if (tag.Contains("[MaxGravityVacuum:") == true) {
+					if (tag.Contains("[MaxGravity:") == true) {
 
 						TagParse.TagDoubleCheck(tag, ref MaxGravity);
 

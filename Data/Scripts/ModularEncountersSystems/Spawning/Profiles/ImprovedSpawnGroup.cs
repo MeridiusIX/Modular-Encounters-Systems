@@ -143,6 +143,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//FactionOverride
+				if (tag.StartsWith("[FactionOverride:") == true) {
+
+					TagParse.TagStringCheck(tag, ref improveSpawnGroup.FactionOverride);
+
+				}
+
 				//Frequency
 				improveSpawnGroup.Frequency = (int)Math.Round((double)spawnGroup.Frequency * 10);
 

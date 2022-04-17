@@ -380,7 +380,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (spawnGroup.MaxGravity != -1 && environment.GravityAtPosition > spawnGroup.MaxGravity) {
 
-				failReason = "   - MaxGravityVacuum Check Failed";
+				failReason = "   - MaxGravity Check Failed";
 				return false;
 
 			}

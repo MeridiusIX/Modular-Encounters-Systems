@@ -49,8 +49,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public Action OnComplete;
 		public Action<IMyCubeGrid, string> DespawnFromMES;
-
-
+		
 		public TriggerSystem(IMyRemoteControl remoteControl) {
 
 			RemoteControl = null;
@@ -359,6 +358,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (trigger.Type == "Session") {
 
 					trigger.ActivateTrigger(CheckSession);
+					continue;
+
+				}
+
+				//ButtonPress
+				if (trigger.Type == "ButtonPress") {
+
+					trigger.ActivateTrigger(ButtonPress);
 					continue;
 
 				}

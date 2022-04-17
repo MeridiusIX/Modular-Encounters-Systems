@@ -14,9 +14,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public MySpawnGroupDefinition SpawnGroup;
 
 		public SpawnConditionsProfile PersistentConditions;
+		public bool UseFirstConditionsAsPersistent;
 
 		public List<SpawnConditionsProfile> SpawnConditionsProfiles;
 		public List<string> SpawnConditionGroups;
+
+		public string FactionOverride;
 
 		public int Frequency;
 		public bool IgnoreCleanupRules;
@@ -46,11 +49,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			SpawnGroup = null;
 
 			PersistentConditions = null;
+			UseFirstConditionsAsPersistent = false;
 
 			SpawnConditionsProfiles = new List<SpawnConditionsProfile>();
 			SpawnConditionsProfiles.Add(new SpawnConditionsProfile());
 
 			SpawnConditionGroups = new List<string>();
+
+			FactionOverride = "";
 
 			Frequency = 0;
 
@@ -113,6 +119,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[PersistentConditions:") == true) {
 
 					TagParse.TagSpawnConditionsProfileCheck(tag, ref improveSpawnGroup.PersistentConditions);
+
+				}
+
+				//UseFirstConditionsAsPersistent
+				if (tag.StartsWith("[UseFirstConditionsAsPersistent:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.UseFirstConditionsAsPersistent);
 
 				}
 

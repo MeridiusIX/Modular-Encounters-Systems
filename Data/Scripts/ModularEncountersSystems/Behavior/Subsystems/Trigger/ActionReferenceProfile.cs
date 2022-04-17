@@ -882,9 +882,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"PlanetWaypointProfile", (s, o) => TagParse.TagStringCheck(s, ref PlanetWaypointProfile) },
 				{"TemporaryPlanet", (s, o) => TagParse.TagBoolCheck(s, ref TemporaryPlanet) },
 				{"PlanetTimeLimit", (s, o) => TagParse.TagIntCheck(s, ref PlanetTimeLimit) },
+
 				{"AddCustomDataToBlocks", (s, o) => TagParse.TagBoolCheck(s, ref AddCustomDataToBlocks) },
 				{"CustomDataBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref CustomDataBlockNames) },
 				{"CustomDataFiles", (s, o) => TagParse.TagTextTemplateCheck(s, ref CustomDataFiles) },
+
 				{"ApplyContainerTypeToInventoryBlock", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContainerTypeToInventoryBlock) },
 				{"ContainerTypeBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeBlockNames) },
 				{"ContainerTypeSubtypeIds", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeSubtypeIds) },

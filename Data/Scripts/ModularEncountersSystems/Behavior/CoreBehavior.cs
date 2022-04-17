@@ -12,6 +12,7 @@ using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
+using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -208,6 +209,8 @@ namespace ModularEncountersSystems.Behavior {
 		private int _settingSaveCounter;
 		private int _settingSaveCounterTrigger;
 
+		private long _mainBehaviorRunCount;
+
 		private Guid _triggerStorageKey;
 		private Guid _settingsStorageKey;
 
@@ -243,6 +246,8 @@ namespace ModularEncountersSystems.Behavior {
 
 			_settingSaveCounter = 0;
 			_settingSaveCounterTrigger = 5;
+
+			_mainBehaviorRunCount = 0;
 
 			_currentGrids = new List<IMyCubeGrid>();
 			_debugCockpits = new List<IMyCockpit>();
@@ -537,8 +542,17 @@ namespace ModularEncountersSystems.Behavior {
 
 				AssignSubClassBehavior(BehaviorSettings.ActiveBehaviorType);
 
-				if (ActiveBehavior != null)
+				if (ActiveBehavior != null) {
+
+					_mainBehaviorRunCount++;
 					ActiveBehavior.ProcessBehavior();
+
+				}else {
+
+					BehaviorLogger.Write("NPC Active Behavior Null. Terminating Core Behavior", BehaviorDebugEnum.BehaviorSetup, true);
+					this.BehaviorTerminated = true;
+
+				}
 
 			}
 
@@ -1152,6 +1166,30 @@ namespace ModularEncountersSystems.Behavior {
 				if(!foundStoredSettings)
 					trigger.ResetTime();
 
+				if (trigger.Type == "ButtonPress") {
+
+					trigger.Behavior = this;
+
+					foreach (var grid in CurrentGrid.LinkedGrids) {
+
+						foreach (var button in grid.Buttons) {
+
+							if (button.ActiveEntity() && button.Block.CustomName == trigger.ButtonPanelName) {
+
+								trigger.ButtonPanel = button.Block as IMyButtonPanel;
+								trigger.ButtonPanel.ButtonPressed += trigger.ButtonPressed;
+
+							}
+						
+						}
+
+						if (trigger.ButtonPanel != null)
+							break;
+					
+					}
+				
+				}
+
 			}
 
 
@@ -1391,16 +1429,24 @@ namespace ModularEncountersSystems.Behavior {
 		public override string ToString() {
 
 			var sb = new StringBuilder();
+			var timeDifference = MyAPIGateway.Session.GameDateTime - _behaviorRunTimer;
 
 			//CoreBehavior
 			sb.Append("::: NPC Core Behavior :::").AppendLine();
 			sb.Append(" - Grid Name:          ").Append(RemoteControl.SlimBlock.CubeGrid.CustomName).AppendLine();
 			sb.Append(" - Grid Static:        ").Append(RemoteControl.SlimBlock.CubeGrid.IsStatic).AppendLine();
+			sb.Append(" - Block Working:      ").Append(IsWorking).AppendLine();
+			sb.Append(" - Physics Valid:      ").Append(PhysicsValid).AppendLine();
+			sb.Append(" - NPC Owned:          ").Append(Owner.NpcOwned).AppendLine();
+			sb.Append(" - Behavior Setup:     ").Append(SetupCompleted).AppendLine();
 			sb.Append(" - Marked For Close:   ").Append(RemoteControl.SlimBlock.CubeGrid.MarkedForClose).AppendLine();
 			sb.Append(" - Behavior Name:      ").Append(CurrentGrid?.Npc?.BehaviorName != null ? CurrentGrid.Npc.BehaviorName : "(null)").AppendLine(); //SeeWhyThisIsntPopulated
 			sb.Append(" - Behavior Subclass:  ").Append(BehaviorSettings.ActiveBehaviorType).AppendLine();
 			sb.Append(" - Behavior Mode:      ").Append(Mode).AppendLine();
+			sb.Append(" - Active Behavior:    ").Append(ActiveBehavior != null ? ActiveBehavior.SubClass.ToString() : "(null)").AppendLine();
+			sb.Append(" - Behavior Run Count: ").Append(_mainBehaviorRunCount.ToString()).AppendLine();
 			sb.Append(" - Terminated:         ").Append(BehaviorTerminated).AppendLine();
+			sb.Append(" - Next Run Time:      ").Append(timeDifference.TotalMilliseconds).AppendLine();
 			sb.Append(" - Vanilla Autopilot:  ").Append(RemoteControl.IsAutoPilotEnabled).AppendLine();
 			sb.Append(" - Cargo Ship Watcher: ").Append(CargoShipWatcher.CargoShips.Contains(CurrentGrid)).AppendLine();
 			sb.Append(" - Legacy Cargo Ship:  ").Append(CargoShipWatcher.LegacyAutopilot.Contains(CurrentGrid)).AppendLine();

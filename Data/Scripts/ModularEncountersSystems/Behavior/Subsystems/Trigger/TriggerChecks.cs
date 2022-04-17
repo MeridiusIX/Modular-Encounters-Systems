@@ -244,6 +244,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+		//ButtonPress
+		public bool ButtonPress(TriggerProfile trigger) {
+
+			if (trigger.ButtonPressedSuccess) {
+
+				trigger.ButtonPressedSuccess = false;
+				return true;
+
+			}
+
+			return false;
+
+		}
+
 	}
 
 }

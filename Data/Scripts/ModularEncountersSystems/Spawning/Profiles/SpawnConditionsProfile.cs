@@ -749,7 +749,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"MinAirDensity", (s, o) => TagParse.TagDoubleCheck(s, ref MinAirDensity) },
 				{"MaxAirDensity", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAirDensity) },
 				{"MinGravity", (s, o) => TagParse.TagDoubleCheck(s, ref MinGravity) },
-				{"MaxGravity", (s, o) => TagParse.TagDoubleCheck(s, ref MaxGravity) },
+				{"MaxGravityVacuum", (s, o) => TagParse.TagDoubleCheck(s, ref MaxGravity) },
 				{"PlanetBlacklist", (s, o) => TagParse.TagStringListCheck(s, ref PlanetBlacklist) },
 				{"PlanetWhitelist", (s, o) => TagParse.TagStringListCheck(s, ref PlanetWhitelist) },
 				{"PlanetRequiresVacuum", (s, o) => TagParse.TagBoolCheck(s, ref PlanetRequiresVacuum) },

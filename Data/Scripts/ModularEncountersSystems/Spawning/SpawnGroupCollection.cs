@@ -218,6 +218,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			var spawnGroup = SpawnGroup.SpawnGroup;
 
+			SpawnLogger.Write("Prefab Spawning Mode: " + Conditions.PrefabSpawningMode, SpawnerDebugEnum.Spawning);
+
 			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.All) {
 
 				for (int i = 0; i < spawnGroup.Prefabs.Count; i++) {

@@ -25,7 +25,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.42";
+		public static string ModVersion = "2.1.45";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -58,11 +58,11 @@ namespace ModularEncountersSystems.Core {
 			ProfileManager.Setup();
 			SpawnGroupManager.CreateSpawnLists();
 			BotSpawner.Setup();
+			APIs.RegisterAPIs(0); //Register Any Applicable APIs
 
 			if (!IsServer)
 				return;
 
-			APIs.RegisterAPIs(0); //Register Any Applicable APIs
 			BlockManager.Setup(); //Build Lists of Special Blocks
 			PlayerSpawnWatcher.Setup();
 			PrefabSpawner.Setup();
@@ -90,12 +90,12 @@ namespace ModularEncountersSystems.Core {
 			BlockLogicManager.Setup();
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();
+			APIs.RegisterAPIs(2); //Register Any Applicable APIs
 
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
 
 			LocalApi.SendApiToMods();
-			APIs.RegisterAPIs(2); //Register Any Applicable APIs
 			FactionHelper.PopulateNpcFactionLists();
 			EventWatcher.Setup();
 			NpcManager.Setup();
@@ -152,7 +152,7 @@ namespace ModularEncountersSystems.Core {
 
 					var context = mod.GetModContext();
 
-					if (context != null && MES_SessionCore.Instance.ModContext.ModItem.PublishedFileId != mod.PublishedFileId && !context.ModId.Contains(".sbm")) {
+					if (context != null  && !context.ModId.Contains(".sbm")) {
 
 						if (MyAPIGateway.Utilities.FileExistsInModLocation("ModularEncountersSystemsMod.txt", mod)) {
 

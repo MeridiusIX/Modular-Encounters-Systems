@@ -5,7 +5,7 @@
     <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
       <Id>
         <TypeId>Inventory</TypeId>
-        <SubtypeId>MES-Loot-MixedContainers</SubtypeId>
+        <SubtypeId>MES-Loot-AdvancedContainers</SubtypeId>
       </Id>
       <Description>
 
@@ -39,8 +39,8 @@
         [ContainerTypes:MES-ContainerTypes-Explosives-2]
         [ContainerTypes:MES-ContainerTypes-Explosives-3]
 
-        [MinBlocks:1]
-        [MaxBlocks:3]
+        [MinBlocks:2]
+        [MaxBlocks:4]
 
       </Description>
 

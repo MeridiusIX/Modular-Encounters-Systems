@@ -49,15 +49,15 @@ namespace ModularEncountersSystems.Behavior {
 			_subClass = BehaviorSubclass.Hunter;
 			_behavior = behavior;
 
-			_timeBetweenNewTargetChecks = 15;
-			_lostTargetTimerTrigger = 30;
-			_distanceToCheckEngagableTarget = 1200;
+			_timeBetweenNewTargetChecks = 0;
+			_lostTargetTimerTrigger = 0;
+			_distanceToCheckEngagableTarget = 0;
 
 			_engageOnCameraDetection = false;
 			_engageOnWeaponActivation = false;
 			_engageOnTargetLineOfSight = false;
 
-			_cameraDetectionMaxRange = 1800;
+			_cameraDetectionMaxRange = 0;
 
 			_checkActiveTargetTimer = MyAPIGateway.Session.GameDateTime;
 			_lostTargetTimer = MyAPIGateway.Session.GameDateTime;

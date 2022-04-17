@@ -533,6 +533,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(BuildKeyList("Datapad", ProfileManager.DatapadTemplates.Keys));
 			sb.Append(BuildKeyList("Spawner", ProfileManager.SpawnerObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Target", ProfileManager.TargetObjectTemplates.Keys));
+			sb.Append(BuildKeyList("TextTemplate", ProfileManager.TextTemplates.Keys));
 			sb.Append(BuildKeyList("Trigger", ProfileManager.TriggerObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Trigger Group", ProfileManager.TriggerGroupObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Waypoint", ProfileManager.WaypointProfiles.Keys));
@@ -1408,6 +1409,29 @@ namespace ModularEncountersSystems.Logging {
 			msg.ClipboardPayload = sb.ToString();
 			msg.Mode = ChatMsgMode.ReturnMessage;
 			msg.ReturnMessage = "Zone Data Copied To Clipboard";
+		
+		}
+
+		public static void ProcessPrefabs(ChatMessage msg, string[] array) {
+
+			if (MyAPIGateway.Session.LocalHumanPlayer == null || MyAPIGateway.Utilities.IsDedicated) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "Command Must Be Run in Offline World";
+				return;
+
+			}
+
+			if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "No Mod Name Found In Chat Command";
+				return;
+
+			}
+
+			var prefabProcess = new PrefabDiagnosticsTask(array[3]);
+			TaskProcessor.Tasks.Add(prefabProcess);
 		
 		}
 

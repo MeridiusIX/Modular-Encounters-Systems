@@ -365,6 +365,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(31)]
 		public List<string> CustomTags;
 
+		[ProtoMember(32)]
+		public SpawningType OriginalSpawnType;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -531,6 +534,7 @@ namespace ModularEncountersSystems.World {
 			Up = Vector3D.Up;
 			UniqueSpawnIdentifier = "";
 			CustomTags = new List<string>();
+			OriginalSpawnType = SpawningType.None;
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -1036,6 +1040,7 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - Attributes:          ").Append(Attributes.ToString()).AppendLine();
 			sb.Append(" - AppliedAttributes:   ").Append(AppliedAttributes.ToString()).AppendLine();
 			sb.Append(" - SpawnType:           ").Append(SpawnType.ToString()).AppendLine();
+			sb.Append(" - OriginalSpawnType:   ").Append(OriginalSpawnType.ToString()).AppendLine();
 			sb.Append(" - SpawnGroupName:      ").Append(!string.IsNullOrWhiteSpace(SpawnGroupName) ? SpawnGroupName : "N/A").AppendLine();
 			sb.Append(" - ConditionIndex:      ").Append(ConditionIndex.ToString()).AppendLine();
 			sb.Append(" - ZoneIndex:           ").Append(ZoneIndex.ToString()).AppendLine();

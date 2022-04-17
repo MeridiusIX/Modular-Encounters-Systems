@@ -42,6 +42,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> AllTerminalBlocks;
 		public List<BlockEntity> Antennas;
 		public List<BlockEntity> Beacons;
+		public List<BlockEntity> Buttons;
 		public List<BlockEntity> Containers;
 		public List<BlockEntity> Controllers;
 		public List<BlockEntity> Gravity;
@@ -98,6 +99,7 @@ namespace ModularEncountersSystems.Entities {
 			AllTerminalBlocks = new List<BlockEntity>();
 			Antennas = new List<BlockEntity>();
 			Beacons = new List<BlockEntity>();
+			Buttons = new List<BlockEntity>();
 			Containers = new List<BlockEntity>();
 			Controllers = new List<BlockEntity>();
 			Gravity = new List<BlockEntity>();
@@ -125,6 +127,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.All, AllTerminalBlocks);
 			BlockListReference.Add(BlockTypeEnum.Antennas, Antennas);
 			BlockListReference.Add(BlockTypeEnum.Beacons, Beacons);
+			BlockListReference.Add(BlockTypeEnum.Buttons, Buttons);
 			BlockListReference.Add(BlockTypeEnum.Containers, Containers);
 			BlockListReference.Add(BlockTypeEnum.Controllers, Controllers);
 			BlockListReference.Add(BlockTypeEnum.Gravity, Gravity);
@@ -297,6 +300,13 @@ namespace ModularEncountersSystems.Entities {
 			if (terminalBlock as IMyBeacon != null) {
 
 				assignedBlock = AddBlock(terminalBlock, Beacons);
+
+			}
+
+			//Button
+			if (terminalBlock as IMyButtonPanel != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Buttons);
 
 			}
 
@@ -664,6 +674,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(AllTerminalBlocks);
 				CleanBlockList(Antennas);
 				CleanBlockList(Beacons);
+				CleanBlockList(Buttons);
 				CleanBlockList(Containers);
 				CleanBlockList(Controllers);
 				CleanBlockList(Gravity);

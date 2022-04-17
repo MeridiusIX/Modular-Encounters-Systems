@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Entities;
+using SpaceEngineers.Game.ModAPI;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -173,6 +174,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(51)]
 		public bool DetectSelfAsJumpedGrid;
 
+		[ProtoMember(52)]
+		public string ButtonPanelName;
+
+		[ProtoMember(53)]
+		public int ButtonPanelIndex;
+
+		[ProtoMember(54)]
+		public bool CameraDetectGrid;
+
+		[ProtoIgnore]
+		public IBehavior Behavior;
+
+		[ProtoIgnore]
+		public IMyButtonPanel ButtonPanel;
+
+		[ProtoIgnore]
+		public Action<int> ButtonPress;
+
+		[ProtoIgnore]
+		public bool ButtonPressedSuccess;
+
 		[ProtoIgnore]
 		public GridEntity JumpedGrid;
 
@@ -255,6 +277,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			JumpedGridActivationDistance = 15000;
 			JumpedGridsCanBeNonHostile = false;
 			DetectSelfAsJumpedGrid = false;
+
+			ButtonPanelName = "";
+			ButtonPanelIndex = 0;
 
 			ProfileSubtypeId = "";
 
@@ -383,6 +408,33 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			return true;
 
+		}
+
+		public void ButtonPressed(int index) {
+
+			if (Behavior?.RemoteControl == null || !Behavior.IsAIReady()) {
+
+				if (ButtonPanel != null)
+					ButtonPanel.ButtonPressed -= ButtonPressed;
+
+				return;
+
+			}
+
+			if (ButtonPanel.SlimBlock.CubeGrid != Behavior.RemoteControl.SlimBlock.CubeGrid && ButtonPanel.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(Behavior.RemoteControl.SlimBlock.CubeGrid)) {
+
+				if (ButtonPanel != null)
+					ButtonPanel.ButtonPressed -= ButtonPressed;
+
+				return;
+
+			}
+
+			if (index != ButtonPanelIndex)
+				return;
+
+			ButtonPressedSuccess = true;
+		
 		}
 
 		public void ResetTime() {
@@ -777,6 +829,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[DetectSelfAsJumpedGrid:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref DetectSelfAsJumpedGrid);
+
+					}
+
+					//ButtonPanelName
+					if (tag.Contains("[ButtonPanelName:") == true) {
+
+						TagParse.TagStringCheck(tag, ref ButtonPanelName);
+
+					}
+
+					//ButtonPanelIndex
+					if (tag.Contains("[ButtonPanelIndex:") == true) {
+
+						TagParse.TagIntCheck(tag, ref ButtonPanelIndex);
 
 					}
 

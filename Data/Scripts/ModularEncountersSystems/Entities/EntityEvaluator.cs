@@ -23,6 +23,7 @@ namespace ModularEncountersSystems.Entities {
 		All,
 		Antennas,
 		Beacons,
+		Buttons,
 		Containers,
 		Controllers,
 		Gravity,

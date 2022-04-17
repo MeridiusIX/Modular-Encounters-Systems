@@ -188,6 +188,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<LootProfile> LootProfiles;
 		public List<string> LootGroups;
 		public bool ClearExistingContainerTypes;
+		public bool OverrideLootChance;
+		public int LootChanceOverride;
 
 		public ManipulationProfile(string data = null) {
 
@@ -362,6 +364,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			LootProfiles = new List<LootProfile>();
 			LootGroups = new List<string>();
 			ClearExistingContainerTypes = false;
+			OverrideLootChance = false;
+			LootChanceOverride = 100;
 
 			InitTags(data);
 
@@ -1311,6 +1315,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ClearExistingContainerTypes:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.ClearExistingContainerTypes);
+
+				}
+
+				//OverrideLootChance
+				if (tag.StartsWith("[OverrideLootChance:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.OverrideLootChance);
+
+				}
+
+				//LootChanceOverride
+				if (tag.StartsWith("[LootChanceOverride:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.LootChanceOverride);
 
 				}
 

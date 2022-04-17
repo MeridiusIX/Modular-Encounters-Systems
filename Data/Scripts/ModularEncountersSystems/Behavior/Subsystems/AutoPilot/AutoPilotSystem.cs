@@ -885,8 +885,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (_initialWaypoint == Vector3D.Zero && State.FirstRun)
 				return;
 
-			if (CurrentPlanet == null || CurrentPlanet.Closed)
+			if (CurrentPlanet == null || CurrentPlanet.Closed || PlanetManager.InGravity(_myPosition))
 				CurrentPlanet = PlanetManager.GetNearestPlanet(_myPosition);
+			else
+				CurrentPlanet = null;
 
 			_pendingWaypoint = _initialWaypoint;
 

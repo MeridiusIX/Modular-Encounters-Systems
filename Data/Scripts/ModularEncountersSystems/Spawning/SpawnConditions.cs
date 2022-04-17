@@ -380,7 +380,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (spawnGroup.MaxGravity != -1 && environment.GravityAtPosition > spawnGroup.MaxGravity) {
 
-				failReason = "   - MaxGravity Check Failed";
+				failReason = "   - MaxGravityVacuum Check Failed";
 				return false;
 
 			}
@@ -1629,7 +1629,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			var resultList = new List<string>();
 			var factionList = new List<IMyFaction>();
-			var initialFactionTag = !string.IsNullOrWhiteSpace(factionOverride) ? factionOverride : condition.FactionOwner;
+			var initialFactionTag = !string.IsNullOrWhiteSpace(factionOverride) ? factionOverride : (!string.IsNullOrWhiteSpace(spawnGroup.FactionOverride) ? spawnGroup.FactionOverride : condition.FactionOwner);
 
 			if (!string.IsNullOrWhiteSpace(factionOverride) || (condition.UseRandomBuilderFaction == false && condition.UseRandomMinerFaction == false && condition.UseRandomTraderFaction == false)) {
 

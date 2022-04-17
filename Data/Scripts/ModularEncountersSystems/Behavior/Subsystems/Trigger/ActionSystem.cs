@@ -1268,6 +1268,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (actions.AddCustomDataToBlocks) {
 
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Custom Data To Blocks. [Block Names: " + actions.CustomDataBlockNames.Count + "] [CustomData TextTemplates: " + actions.CustomDataFiles.Count + "]", BehaviorDebugEnum.Action);
 				_behavior.Grid.AddCustomData(actions.CustomDataBlockNames, actions.CustomDataFiles);
 			
 			}

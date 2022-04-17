@@ -159,6 +159,7 @@ namespace ModularEncountersSystems.Spawning {
 				var npcData = new NpcData();
 				npcData.AssignAttributes(spawnCollection.SpawnGroup, path.SpawnType);
 				npcData.SpawnType = path.SpawnType;
+				npcData.OriginalSpawnType = path.SpawnType;
 				npcData.SpawnGroupName = spawnCollection.SpawnGroup.SpawnGroupName;
 				npcData.OriginalPrefabId = sgPrefab.SubtypeId;
 				npcData.SpawnerPrefabId = prefab.PrefabSubtypeId;
@@ -397,6 +398,32 @@ namespace ModularEncountersSystems.Spawning {
 			var dummyList = new List<IMyCubeGrid>();
 			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + msgSplit[2] + "]", 5000, "White", msg.PlayerId);
 			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, msgSplit[3], coords, (Vector3)matrix.Backward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, msg.PlayerId);
+
+		}
+
+		public static void PrefabSpawnDebug(long playerId, string prefabId) {
+
+			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(prefabId);
+
+			if (prefab == null) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Could Not Find Prefab With Name: " + prefabId, 5000, "White", playerId);
+				return;
+
+			}
+
+			var matrix = MatrixD.Identity;
+			var player = PlayerManager.GetPlayerWithIdentityId(playerId);
+
+			if (player?.Player?.Character != null)
+				matrix = player.Player.Character.WorldMatrix;
+
+			Vector3D coords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
+
+			var dummyList = new List<IMyCubeGrid>();
+			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + prefabId + "]", 5000, "White", playerId);
+			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, prefabId, coords, (Vector3)matrix.Backward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, playerId);
+
 
 		}
 

@@ -626,6 +626,13 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.ProcessPrefabs
+			if (array[2] == "ProcessPrefabs") {
+
+				LoggerTools.ProcessPrefabs(this, array);
+				return true;
+
+			}
 
 			//MES.Debug.RemoveAllNpcs
 			if (array[2] == "RemoveAllNpcs") {

@@ -525,7 +525,7 @@ namespace ModularEncountersSystems.Helpers {
 				
 				}
 
-				MyVisualScriptLogicProvider.ShowNotificationToAll("File Exists", 4000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("File Exists", 4000);
 
 				try {
 

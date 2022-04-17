@@ -148,7 +148,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public void AddCustomData(List<string> blockNames, List<TextTemplate> files) {
 
-			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i++) {
+			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
 
 				var block = AllTerminalBlocks[i];
 
@@ -157,7 +157,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				for (int j = 0; j < blockNames.Count && j < files.Count; j++) {
 
-					if (block.CustomName == blockNames[j] && files[j]?.CustomData != null) {
+					if (block.CustomName.Contains(blockNames[j]) && files[j]?.CustomData != null) {
 
 						block.CustomData = files[j].CustomData;
 						break;
@@ -172,7 +172,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public void ApplyContainerTypes(List<string> blockNames, List<string> ids) {
 
-			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i++) {
+			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
 
 				var block = AllTerminalBlocks[i] as MyEntity;
 

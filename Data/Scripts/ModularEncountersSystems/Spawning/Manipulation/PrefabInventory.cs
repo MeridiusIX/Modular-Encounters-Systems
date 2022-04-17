@@ -21,7 +21,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				eligibleCargoContainers.Clear();
 				eligibleBlocks.Clear();
 
-				if (lootProfile.Chance < 100 && !MathTools.RandomChance(lootProfile.Chance, 100))
+				var chance = profile.OverrideLootChance ? profile.LootChanceOverride : lootProfile.Chance;
+
+				if (chance < 100 && !MathTools.RandomChance(chance, 100))
 					continue;
 
 				if (lootProfile.ContainerTypes.Count == 0)

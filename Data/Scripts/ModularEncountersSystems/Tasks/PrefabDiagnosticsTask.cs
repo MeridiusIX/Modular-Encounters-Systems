@@ -19,891 +19,992 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.Tasks {
-    public class PrefabDiagnosticsTask : TaskItem, ITaskItem {
+	public class PrefabDiagnosticsTask : TaskItem, ITaskItem {
 
-        internal int _spawnTicks; //Amount of ticks to wait after spawning
-        internal int _testTicks; //Amount of ticks to wait for thrust test to complete
+		internal int _spawnTicks; //Amount of ticks to wait after spawning
+		internal int _testTicks; //Amount of ticks to wait for thrust test to complete
 
-        internal string _modId;
-        internal List<MyPrefabDefinition> _prefabs;
-        internal int _currentPrefabIndex;
-        internal StringBuilder _text;
+		internal string _modId;
+		internal List<MyPrefabDefinition> _prefabs;
+		internal int _currentPrefabIndex;
+		internal StringBuilder _text;
 
-        internal bool _setup;
+		internal bool _setup;
 
-        internal bool _nextGrid;
+		internal bool _nextGrid;
 
-        internal bool _spawningGrid;
-        internal bool _detectedGrid;
-        internal int _spawningGridTicks;
+		internal bool _spawningGrid;
+		internal bool _detectedGrid;
+		internal int _spawningGridTicks;
 
-        internal bool _checkingSystems;
-        internal int _thrusterTestTicks;
+		internal bool _checkingSystems;
+		internal int _thrusterTestTicks;
 
-        internal List<PrefabDiagnostics> _grids;
-        internal List<IMyCubeGrid> _dummyList;
+		internal List<PrefabDiagnostics> _grids;
+		internal List<IMyCubeGrid> _dummyList;
 
-        internal bool _finalize;
+		internal bool _finalize;
 
-        public PrefabDiagnosticsTask(string modID) {
+		public PrefabDiagnosticsTask(string modID) {
 
-            _isValid = true;
-            _tickTrigger = 5;
+			_isValid = true;
+			_tickTrigger = 5;
 
-            _spawnTicks = 60;
-            _testTicks = 150;
+			_spawnTicks = 60;
+			_testTicks = 150;
 
-            _setup = true;
-            _modId = modID;
-            _prefabs = new List<MyPrefabDefinition>();
-            _currentPrefabIndex = -1;
-            _text = new StringBuilder();
+			_setup = true;
+			_modId = modID;
+			_prefabs = new List<MyPrefabDefinition>();
+			_currentPrefabIndex = -1;
+			_text = new StringBuilder();
 
-            _grids = new List<PrefabDiagnostics>();
+			_grids = new List<PrefabDiagnostics>();
 
-            _finalize = false;
+			_finalize = false;
 
-        }
+		}
 
-        public override void Run() {
+		public override void Run() {
 
-            if (_finalize) {
+			if (_finalize) {
 
-                Finalize();
-                return;
-            
-            }
+				Finalize();
+				return;
+			
+			}
 
-            if (_setup)
-                Setup();
+			if (_setup)
+				Setup();
 
-            if (_nextGrid) {
+			if (_nextGrid) {
 
-                NextGrid();
-                return;
+				NextGrid();
+				return;
 
-            }
+			}
 
-            if (_spawningGridTicks >= _spawnTicks) {
+			if (_spawningGridTicks >= _spawnTicks) {
 
-                _detectedGrid = false;
-                _spawningGrid = false;
-                _checkingSystems = true;
-                _spawningGridTicks = 0;
-                _thrusterTestTicks = 0;
+				_detectedGrid = false;
+				_spawningGrid = false;
+				_checkingSystems = true;
+				_spawningGridTicks = 0;
+				_thrusterTestTicks = 0;
 
-                foreach (var grid in _grids)
-                    grid.ProcessGrid();
+				foreach (var grid in _grids)
+					grid.ProcessGrid();
 
-                return;
+				return;
 
-            } else if(_spawningGrid && _detectedGrid) {
+			} else if(_spawningGrid && _detectedGrid) {
 
-                _spawningGridTicks += _tickTrigger;
-                return;
+				_spawningGridTicks += _tickTrigger;
+				return;
 
-            }
+			}
 
-            if (_thrusterTestTicks >= _testTicks) {
+			if (_thrusterTestTicks >= _testTicks) {
 
-                _checkingSystems = false;
-                _thrusterTestTicks = 0;
-                ClearGrids();
-                _nextGrid = true;
-            
-            } else if(_checkingSystems) {
+				_checkingSystems = false;
+				_thrusterTestTicks = 0;
+				ClearGrids();
+				_nextGrid = true;
+			
+			} else if(_checkingSystems) {
 
-                _thrusterTestTicks += _tickTrigger;
-                return;
+				_thrusterTestTicks += _tickTrigger;
+				return;
 
-            }
-               
-        }
+			}
+			   
+		}
 
-        public void Setup() {
+		public void Setup() {
 
-            _setup = false;
+			_setup = false;
 
-            //Delete Grids
-            ClearGrids();
+			//Delete Grids
+			ClearGrids();
 
-            //Register Watcher
-            DamageHelper.DamageRelay += DamageHandler;
-            MyAPIGateway.Entities.OnEntityAdd += OnEntityAdd;
+			//Register Watcher
+			DamageHelper.DamageRelay += DamageHandler;
+			MyAPIGateway.Entities.OnEntityAdd += OnEntityAdd;
 
-            //Collect Prefabs
-            var allPrefabs = MyDefinitionManager.Static.GetPrefabDefinitions();
+			//Collect Prefabs
+			var allPrefabs = MyDefinitionManager.Static.GetPrefabDefinitions();
 
-            foreach (var prefab in allPrefabs.Keys) {
+			foreach (var prefab in allPrefabs.Keys) {
 
-                if (prefab == null)
-                    continue;
+				if (prefab == null)
+					continue;
 
-                if (!string.IsNullOrWhiteSpace(allPrefabs[prefab]?.Context?.ModName) && allPrefabs[prefab].Context.ModName.Contains(_modId))
-                    _prefabs.Add(allPrefabs[prefab]);
-            
-            }
+				if (!string.IsNullOrWhiteSpace(allPrefabs[prefab]?.Context?.ModName) && allPrefabs[prefab].Context.ModName.Contains(_modId))
+					_prefabs.Add(allPrefabs[prefab]);
+			
+			}
 
-            //Prefill StringBuilder
-            _text.Append("PrefabName").Append(",");
-            _text.Append("GridName").Append(",");
-            _text.Append("PhysicalGrid").Append(",");
+			//Prefill StringBuilder
+			_text.Append("PrefabName").Append(",");
+			_text.Append("GridName").Append(",");
+			_text.Append("PhysicalGrid").Append(",");
 
-            _text.Append("BlockCount").Append(",");
+			_text.Append("BlockCount").Append(",");
 
-            _text.Append("AttachedToOtherGrids").Append(",");
+			_text.Append("AttachedToOtherGrids").Append(",");
 
-            _text.Append("ControllerCount").Append(",");
-            _text.Append("HasMainCockpit").Append(",");
-            _text.Append("HasRemoteControl").Append(",");
-            _text.Append("RemoteControlGridPivotCorrect").Append(",");
+			_text.Append("ControllerCount").Append(",");
+			_text.Append("HasMainCockpit").Append(",");
+			_text.Append("HasRemoteControl").Append(",");
+			_text.Append("RemoteControlGridPivotCorrect").Append(",");
 
-            _text.Append("ThrustCount").Append(",");
-            _text.Append("HydroThrust").Append(",");
-            _text.Append("IonThrust").Append(",");
-            _text.Append("AtmoThrust").Append(",");
-            _text.Append("ThrustInAllDirections").Append(",");
-            _text.Append("DownwardThrust").Append(",");
-            _text.Append("ThrustDamageSameGrid").Append(",");
-            _text.Append("ThrustDamageAttachedGrid").Append(",");
-            _text.Append("ThrustDamageOtherGrid").Append(",");
-            _text.Append("MaxGravityAtmo").Append(",");
-            _text.Append("MaxGravityVacuum").Append(",");
+			_text.Append("ThrustCount").Append(",");
+			_text.Append("HydroThrust").Append(",");
+			_text.Append("IonThrust").Append(",");
+			_text.Append("AtmoThrust").Append(",");
+			_text.Append("ThrustInAllDirections").Append(",");
+			_text.Append("DownwardThrust").Append(",");
+			_text.Append("ThrustDamageSameGrid").Append(",");
+			_text.Append("ThrustDamageAttachedGrid").Append(",");
+			_text.Append("ThrustDamageOtherGrid").Append(",");
+			_text.Append("MaxGravityAtmo").Append(",");
+			_text.Append("MaxGravityVacuum").Append(",");
 
-            _text.Append("GyroCount").Append(",");
+			_text.Append("GyroCount").Append(",");
 
-            _text.Append("GravityGenerators").Append(",");
+			_text.Append("GravityGenerators").Append(",");
 
-            _text.Append("PowerState").Append(",");
-            _text.Append("Reactors").Append(",");
-            _text.Append("Batteries").Append(",");
-            _text.Append("Generators").Append(",");
-            _text.Append("Renewables").Append(",");
+			_text.Append("PowerState").Append(",");
+			_text.Append("Reactors").Append(",");
+			_text.Append("Batteries").Append(",");
+			_text.Append("Generators").Append(",");
+			_text.Append("Renewables").Append(",");
 
-            _text.Append("Wheels").Append(",");
+			_text.Append("Wheels").Append(",");
 
-            _text.Append("LightArmor").Append(",");
-            _text.Append("HeavyArmor").Append(",");
+			_text.Append("LightArmor").Append(",");
+			_text.Append("HeavyArmor").Append(",");
 
-            _text.Append("ProgrammableBlocksWithScripts").Append(",");
-            _text.Append("Sensors").Append(",");
-            _text.Append("Timers").Append(",");
-            _text.Append("Lcds").Append(",");
+			_text.Append("ProgrammableBlocksWithScripts").Append(",");
+			_text.Append("Sensors").Append(",");
+			_text.Append("Timers").Append(",");
+			_text.Append("Lcds").Append(",");
 
-            _text.Append("ContainersWithCargo").Append(",");
+			_text.Append("ContainersWithCargo").Append(",");
 
-            _text.Append("Antennas").Append(",");
-            _text.Append("Beacons").Append(",");
-            _text.Append("ActiveSignals").Append(",");
-            _text.Append("HighestRangeActiveAntenna").Append(",");
-            _text.Append("HighestRangeActiveBeacon").Append(",");
+			_text.Append("Antennas").Append(",");
+			_text.Append("Beacons").Append(",");
+			_text.Append("ActiveSignals").Append(",");
+			_text.Append("HighestRangeActiveAntenna").Append(",");
+			_text.Append("HighestRangeActiveBeacon").Append(",");
 
-            _text.Append("Turrets").Append(",");
-            _text.Append("Guns").Append(",");
-            _text.Append("Warheads").Append(",");
+			_text.Append("Turrets").Append(",");
+			_text.Append("Guns").Append(",");
+			_text.Append("Warheads").Append(",");
 
-            _text.Append("-----").Append(",");
+			_text.Append("-----").Append(",");
 
-            _text.Append("DamageThrusters").Append(",");
+			_text.Append("DamageThrusters").Append(",");
 
-            _text.AppendLine();
+			_text.AppendLine();
 
-            //Start Process
-            _nextGrid = true;
+			//Start Process
+			_nextGrid = true;
 
-        }
+		}
 
-        public void ClearGrids() {
+		public void ClearGrids() {
 
-            HashSet<IMyEntity> entities = new HashSet<IMyEntity>();
-            MyAPIGateway.Entities.GetEntities(entities);
+			HashSet<IMyEntity> entities = new HashSet<IMyEntity>();
+			MyAPIGateway.Entities.GetEntities(entities);
 
-            foreach (var entity in entities)
-                if (entity as IMyCubeGrid != null)
-                    entity.Close();
+			foreach (var entity in entities)
+				if (entity as IMyCubeGrid != null)
+					entity.Close();
 
-        }
+		}
 
-        public void NextGrid() {
+		public void NextGrid() {
 
-            foreach (var grid in _grids)
-                _text.Append(grid.GetCSV()).AppendLine();
+			foreach (var grid in _grids)
+				_text.Append(grid.GetCSV()).AppendLine();
 
-            _nextGrid = false;
-            _currentPrefabIndex++;
+			_nextGrid = false;
+			_currentPrefabIndex++;
 
-            if (_currentPrefabIndex >= _prefabs.Count) {
+			if (_currentPrefabIndex >= _prefabs.Count) {
 
-                _finalize = true;
-                return;
-            
-            }
+				_finalize = true;
+				return;
+			
+			}
 
-            _spawningGrid = true;
-            _spawningGridTicks = 0;
-            _grids.Clear();
-            PrefabSpawner.PrefabSpawnDebug(MyAPIGateway.Session.LocalHumanPlayer.IdentityId, _prefabs[_currentPrefabIndex].Id.SubtypeName);
+			_spawningGrid = true;
+			_spawningGridTicks = 0;
+			_grids.Clear();
+			PrefabSpawner.PrefabSpawnDebug(MyAPIGateway.Session.LocalHumanPlayer.IdentityId, _prefabs[_currentPrefabIndex].Id.SubtypeName);
 
-        }
+		}
 
-        public void OnEntityAdd(IMyEntity entity) {
+		public void OnEntityAdd(IMyEntity entity) {
 
-            if (!_spawningGrid || entity as IMyCubeGrid == null)
-                return;
+			if (!_spawningGrid || entity as IMyCubeGrid == null)
+				return;
 
-            var diagnostics = new PrefabDiagnostics();
-            diagnostics.PrefabName = _prefabs[_currentPrefabIndex].Id.SubtypeName;
-            diagnostics.CubeGrid = entity as IMyCubeGrid;
-            diagnostics.GridName = diagnostics.CubeGrid?.CustomName ?? "Null";
-            _grids.Add(diagnostics);
-            _detectedGrid = true;
-            _spawningGridTicks = 0;
+			var diagnostics = new PrefabDiagnostics();
+			diagnostics.PrefabName = _prefabs[_currentPrefabIndex].Id.SubtypeName;
+			diagnostics.CubeGrid = entity as IMyCubeGrid;
+			diagnostics.GridName = diagnostics.CubeGrid?.CustomName ?? "Null";
+			_grids.Add(diagnostics);
+			_detectedGrid = true;
+			_spawningGridTicks = 0;
 
-        }
+		}
 
-        public void Finalize() {
+		public void Finalize() {
 
-            MyAPIGateway.Entities.OnEntityAdd -= OnEntityAdd;
-            DamageHelper.DamageRelay -= DamageHandler;
+			MyAPIGateway.Entities.OnEntityAdd -= OnEntityAdd;
+			DamageHelper.DamageRelay -= DamageHandler;
 
-            VRage.Utils.MyClipboardHelper.SetClipboard(_text.ToString());
-            MyVisualScriptLogicProvider.ShowNotificationToAll("Prefab Processing Complete On Prefab Count: " + _prefabs.Count, 4000, "Green");
-            MyVisualScriptLogicProvider.ShowNotificationToAll("CSV Data Saved To Clipboard", 4000, "Green");
+			VRage.Utils.MyClipboardHelper.SetClipboard(_text.ToString());
+			MyVisualScriptLogicProvider.ShowNotificationToAll("Prefab Processing Complete On Prefab Count: " + _prefabs.Count, 4000, "Green");
+			MyVisualScriptLogicProvider.ShowNotificationToAll("CSV Data Saved To Clipboard", 4000, "Green");
 
-            _isValid = false;
+			_isValid = false;
 
-        }
+		}
 
-        public void DamageHandler(object damagedObject, MyDamageInformation info) {
+		public void DamageHandler(object damagedObject, MyDamageInformation info) {
 
-            IMyEntity entity = null;
+			IMyEntity entity = null;
 
-            if (!MyAPIGateway.Entities.TryGetEntityById(info.AttackerId, out entity))
-                return;
+			if (!MyAPIGateway.Entities.TryGetEntityById(info.AttackerId, out entity))
+				return;
 
-            if (entity as IMyThrust == null || damagedObject as IMySlimBlock == null)
-                return;
+			if (entity as IMyThrust == null || damagedObject as IMySlimBlock == null)
+				return;
 
-            var thrust = entity as IMyThrust;
-            var hit = damagedObject as IMySlimBlock;
+			var thrust = entity as IMyThrust;
+			var hit = damagedObject as IMySlimBlock;
 
-            for (int i = 0; i < _grids.Count; i++) {
+			for (int i = 0; i < _grids.Count; i++) {
 
-                if (_grids[i].CubeGrid == thrust.SlimBlock.CubeGrid && !_grids[i].DamageThrusts.Contains(thrust)) {
+				if (_grids[i].CubeGrid == thrust.SlimBlock.CubeGrid && !_grids[i].DamageThrusts.Contains(thrust)) {
 
-                    _grids[i].DamageThrusts.Add(thrust);
-                    break;
+					_grids[i].DamageThrusts.Add(thrust);
+					break;
 
-                }
+				}
 
-            }
+			}
 
-            if (hit.CubeGrid == thrust.SlimBlock.CubeGrid) {
+			if (hit.CubeGrid == thrust.SlimBlock.CubeGrid) {
 
-                for (int i = 0; i < _grids.Count; i++) {
+				for (int i = 0; i < _grids.Count; i++) {
 
-                    if (_grids[i].CubeGrid == thrust.SlimBlock.CubeGrid) {
+					if (_grids[i].CubeGrid == thrust.SlimBlock.CubeGrid) {
 
-                        _grids[i].ThrustDamageSameGrid = true;
-                        return;
+						_grids[i].ThrustDamageSameGrid = true;
+						return;
 
-                    }
-                
-                }
+					}
+				
+				}
 
-                return;
-            
-            }
+				return;
+			
+			}
 
-            if (MyAPIGateway.GridGroups.HasConnection(hit.CubeGrid, thrust.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical) || MyAPIGateway.GridGroups.HasConnection(hit.CubeGrid, thrust.SlimBlock.CubeGrid, GridLinkTypeEnum.NoContactDamage)) {
+			if (MyAPIGateway.GridGroups.HasConnection(hit.CubeGrid, thrust.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical) || MyAPIGateway.GridGroups.HasConnection(hit.CubeGrid, thrust.SlimBlock.CubeGrid, GridLinkTypeEnum.NoContactDamage)) {
 
-                for (int i = 0; i < _grids.Count; i++) {
+				for (int i = 0; i < _grids.Count; i++) {
 
-                    if (_grids[i].CubeGrid == thrust.SlimBlock.CubeGrid) {
+					if (_grids[i].CubeGrid == thrust.SlimBlock.CubeGrid) {
 
-                        _grids[i].ThrustDamageAttachedGrid = true;
-                        return;
+						_grids[i].ThrustDamageAttachedGrid = true;
+						return;
 
-                    }
+					}
 
-                }
+				}
 
-                return;
+				return;
 
-            }
+			}
 
-            for (int i = 0; i < _grids.Count; i++) {
+			for (int i = 0; i < _grids.Count; i++) {
 
-                if (_grids[i].CubeGrid == thrust.SlimBlock.CubeGrid) {
+				if (_grids[i].CubeGrid == thrust.SlimBlock.CubeGrid) {
 
-                    _grids[i].ThrustDamageOtherGrid = true;
-                    return;
+					_grids[i].ThrustDamageOtherGrid = true;
+					return;
 
-                }
+				}
 
-            }
+			}
 
-        }
+		}
 
-    }
+	}
 
-    public class PrefabDiagnostics {
+	public class PrefabThrustDirections {
 
-        public IMyCubeGrid CubeGrid;
+		public bool HasThrust;
 
-        public string PrefabName;
-        public string GridName;
-        public bool Physics;
+		public bool Left;
+		public bool Right;
+		public bool Up;
+		public bool Down;
+		public bool Forward;
+		public bool Backward;
 
-        public int BlockCount;
+		public PrefabThrustDirections() {
+		
+			
+		
+		}
 
-        public bool AttachedToOtherGrids;
+		public override string ToString() {
 
-        public int ControllerCount;
-        public bool HasMainCockpit;
-        public bool HasRemoteControl;
-        public bool RemoteControlGridPivotCorrect;
+			string dirs = "";
 
-        public int ThrustCount;
-        public bool IonThrust;
-        public bool AtmoThrust;
-        public bool HydroThrust;
-        public bool ThrustInAllDirections;
-        public bool ThrustDamageSameGrid;
-        public bool ThrustDamageAttachedGrid;
-        public bool ThrustDamageOtherGrid;
-        public float MaxGravityAtmo;
-        public float MaxGravityVacuum;
+			if (Left)
+				dirs += "L-";
 
-        public int GyroCount;
+			if (Right)
+				dirs += "R-";
 
-        public int GravityGenerators;
+			if (Up)
+				dirs += "U-";
 
-        public MyResourceStateEnum PowerState;
-        public int Reactors;
-        public int Batteries;
-        public int Generators;
-        public int Renewables;
+			if (Down)
+				dirs += "D-";
 
-        public int Wheels;
+			if (Forward)
+				dirs += "F-";
 
-        public int LightArmor;
-        public int HeavyArmor;
+			if (Backward)
+				dirs += "B-";
 
-        public int ProgrammableBlocksWithScripts;
-        public int Sensors;
-        public int Timers;
-        public int Lcds;
+			return string.IsNullOrWhiteSpace(dirs) ? HasThrust.ToString() : dirs.Remove(dirs.Length - 1, 1);
 
-        public int ContainersWithCargo;
+		}
 
-        public int Antennas;
-        public int Beacons;
-        public bool ActiveSignals;
-        public float HighestRangeActiveAntenna;
-        public float HighestRangeActiveBeacon;
+	}
 
-        public int Turrets;
-        public int Guns;
-        public int Warheads;
+	public class PrefabDiagnostics {
 
-        public List<IMyThrust> DamageThrusts;
+		public IMyCubeGrid CubeGrid;
 
-        private List<IMyThrust> _downwardThrust;
-        private IMyShipController _mainController;
+		public string PrefabName;
+		public string GridName;
+		public bool Physics;
 
-        public PrefabDiagnostics(bool dummy = false) {
+		public int BlockCount;
 
-            CubeGrid = null;
+		public bool AttachedToOtherGrids;
 
-            PrefabName = "";
-            GridName = "";
-            Physics = false;
+		public int ControllerCount;
+		public bool HasMainCockpit;
+		public bool HasRemoteControl;
+		public bool RemoteControlGridPivotCorrect;
 
-            BlockCount = 0;
+		public int ThrustCount;
+		public PrefabThrustDirections IonThrust;
+		public PrefabThrustDirections AtmoThrust;
+		public PrefabThrustDirections HydroThrust;
+		public bool ThrustInAllDirections;
+		public bool ThrustDamageSameGrid;
+		public bool ThrustDamageAttachedGrid;
+		public bool ThrustDamageOtherGrid;
+		public float MaxGravityAtmo;
+		public float MaxGravityVacuum;
 
-            AttachedToOtherGrids = false;
+		public int GyroCount;
 
-            ControllerCount = 0;
-            HasMainCockpit = false;
-            HasRemoteControl = false;
-            RemoteControlGridPivotCorrect = false;
+		public int GravityGenerators;
 
-            ThrustCount = 0;
-            IonThrust = false;
-            AtmoThrust = false;
-            HydroThrust = false;
-            ThrustInAllDirections = false;
-            ThrustDamageSameGrid = false;
-            ThrustDamageAttachedGrid = false;
-            ThrustDamageOtherGrid = false;
-            MaxGravityAtmo = 0f;
-            MaxGravityVacuum = 0f;
+		public MyResourceStateEnum PowerState;
+		public int Reactors;
+		public int Batteries;
+		public int Generators;
+		public int Renewables;
 
-            GyroCount = 0;
+		public int Wheels;
 
-            Wheels = 0;
+		public int LightArmor;
+		public int HeavyArmor;
 
-            GravityGenerators = 0;
+		public int ProgrammableBlocksWithScripts;
+		public int Sensors;
+		public int Timers;
+		public int Lcds;
 
-            PowerState = MyResourceStateEnum.Disconnected;
-            Reactors = 0;
-            Batteries = 0;
-            Generators = 0;
-            Renewables = 0;
+		public int ContainersWithCargo;
 
-            LightArmor = 0;
-            HeavyArmor = 0;
+		public int Antennas;
+		public int Beacons;
+		public bool ActiveSignals;
+		public float HighestRangeActiveAntenna;
+		public float HighestRangeActiveBeacon;
 
-            ProgrammableBlocksWithScripts = 0;
-            Sensors = 0;
-            Lcds = 0;
-            Timers = 0;
+		public int Turrets;
+		public int Guns;
+		public int Warheads;
 
-            ContainersWithCargo = 0;
+		public List<IMyThrust> DamageThrusts;
 
-            Antennas = 0;
-            Beacons = 0;
-            ActiveSignals = false;
-            HighestRangeActiveAntenna = 0;
-            HighestRangeActiveBeacon = 0;
+		private List<IMyThrust> _downwardThrust;
+		private IMyShipController _mainController;
 
-            Turrets = 0;
-            Guns = 0;
-            Warheads = 0;
+		public PrefabDiagnostics(bool dummy = false) {
 
-            DamageThrusts = new List<IMyThrust>();
+			CubeGrid = null;
 
-            _downwardThrust = new List<IMyThrust>();
+			PrefabName = "";
+			GridName = "";
+			Physics = false;
 
-        }
+			BlockCount = 0;
 
-        public void ProcessGrid() {
+			AttachedToOtherGrids = false;
 
-            if (CubeGrid == null)
-                return;
+			ControllerCount = 0;
+			HasMainCockpit = false;
+			HasRemoteControl = false;
+			RemoteControlGridPivotCorrect = false;
 
-            Physics = CubeGrid.Physics != null;
+			ThrustCount = 0;
+			IonThrust = new PrefabThrustDirections();
+			AtmoThrust = new PrefabThrustDirections();
+			HydroThrust = new PrefabThrustDirections();
+			ThrustInAllDirections = false;
+			ThrustDamageSameGrid = false;
+			ThrustDamageAttachedGrid = false;
+			ThrustDamageOtherGrid = false;
+			MaxGravityAtmo = 0f;
+			MaxGravityVacuum = 0f;
 
-            var blocks = new List<IMySlimBlock>();
-            CubeGrid.GetBlocks(blocks);
+			GyroCount = 0;
 
-            BlockCount = blocks.Count;
-            var thrustDir = new List<Vector3D>();
+			Wheels = 0;
 
-            var othergrids = new List<IMyCubeGrid>();
-            MyAPIGateway.GridGroups.GetGroup(CubeGrid, GridLinkTypeEnum.Physical, othergrids);
+			GravityGenerators = 0;
 
-            if (othergrids.Count > 1) {
+			PowerState = MyResourceStateEnum.Disconnected;
+			Reactors = 0;
+			Batteries = 0;
+			Generators = 0;
+			Renewables = 0;
 
-                AttachedToOtherGrids = true;
+			LightArmor = 0;
+			HeavyArmor = 0;
 
-            } else {
+			ProgrammableBlocksWithScripts = 0;
+			Sensors = 0;
+			Lcds = 0;
+			Timers = 0;
 
-                othergrids.Clear();
-                MyAPIGateway.GridGroups.GetGroup(CubeGrid, GridLinkTypeEnum.NoContactDamage, othergrids);
-                if(othergrids.Count > 1)
-                    AttachedToOtherGrids = true;
+			ContainersWithCargo = 0;
 
-            }
-            
-            //First Run of Blocks
-            foreach (var block in blocks) {
+			Antennas = 0;
+			Beacons = 0;
+			ActiveSignals = false;
+			HighestRangeActiveAntenna = 0;
+			HighestRangeActiveBeacon = 0;
 
-                //Controller
-                if (block.FatBlock as IMyShipController != null) {
+			Turrets = 0;
+			Guns = 0;
+			Warheads = 0;
 
-                    var controller = block.FatBlock as IMyShipController;
+			DamageThrusts = new List<IMyThrust>();
 
-                    if (controller.CanControlShip) {
+			_downwardThrust = new List<IMyThrust>();
 
-                        ControllerCount++;
-                        if (_mainController == null)
-                            _mainController = controller;
+		}
 
-                    }
-                        
-                    if (controller.IsMainCockpit) {
+		public void ProcessGrid() {
 
-                        HasMainCockpit = true;
+			if (CubeGrid == null)
+				return;
 
-                        if (!_mainController.IsMainCockpit)
-                            _mainController = controller;
+			Physics = CubeGrid.Physics != null;
 
-                    }
-                        
-                    if (controller as IMyRemoteControl != null) {
+			var blocks = new List<IMySlimBlock>();
+			CubeGrid.GetBlocks(blocks);
 
-                        HasRemoteControl = true;
+			BlockCount = blocks.Count;
+			var thrustDir = new List<Vector3D>();
 
-                        if (controller.Orientation.Forward == Base6Directions.Direction.Forward && controller.Orientation.Up == Base6Directions.Direction.Up)
-                            RemoteControlGridPivotCorrect = true;
-                    
-                    }
+			var othergrids = new List<IMyCubeGrid>();
+			MyAPIGateway.GridGroups.GetGroup(CubeGrid, GridLinkTypeEnum.Physical, othergrids);
 
-                    continue;
-                
-                }
+			if (othergrids.Count > 1) {
 
-            }
+				AttachedToOtherGrids = true;
 
-            //2nd Run of Blocks
-            foreach (var block in blocks) {
+			} else {
 
-                //Armor
-                if (block.FatBlock == null) {
+				othergrids.Clear();
+				MyAPIGateway.GridGroups.GetGroup(CubeGrid, GridLinkTypeEnum.NoContactDamage, othergrids);
+				if(othergrids.Count > 1)
+					AttachedToOtherGrids = true;
 
-                    if (block.BlockDefinition.Id.TypeId == typeof(MyObjectBuilder_CubeBlock) && block.BlockDefinition.Id.SubtypeName.Contains("Armor")) {
+			}
+			
+			//First Run of Blocks
+			foreach (var block in blocks) {
 
-                        if (block.BlockDefinition.Id.SubtypeName.Contains("Heavy"))
-                            HeavyArmor++;
-                        else
-                            LightArmor++;
+				//Controller
+				if (block.FatBlock as IMyShipController != null) {
 
-                    }
+					var controller = block.FatBlock as IMyShipController;
 
-                    continue;
+					if (controller.CanControlShip) {
 
-                }
+						ControllerCount++;
+						if (_mainController == null)
+							_mainController = controller;
 
-                //Thrust
-                if (block.FatBlock as IMyThrust != null) {
+					}
+						
+					if (controller.IsMainCockpit) {
 
-                    ThrustCount++;
-                    var thrust = block.FatBlock as IMyThrust;
+						HasMainCockpit = true;
 
-                    var thrustDef = block.BlockDefinition as MyThrustDefinition;
+						if (!_mainController.IsMainCockpit)
+							_mainController = controller;
 
-                    if (thrustDef != null) {
+					}
+						
+					if (controller as IMyRemoteControl != null) {
 
-                        if (thrustDef.ThrusterType.ToString() == "Atmospheric")
-                            AtmoThrust = true;
+						HasRemoteControl = true;
 
-                        if (thrustDef.ThrusterType.ToString() == "Hydrogen")
-                            HydroThrust = true;
+						if (controller.Orientation.Forward == Base6Directions.Direction.Forward && controller.Orientation.Up == Base6Directions.Direction.Up)
+							RemoteControlGridPivotCorrect = true;
+					
+					}
 
-                        if (thrustDef.ThrusterType.ToString() == "Ion")
-                            IonThrust = true;
+					continue;
+				
+				}
 
-                    }
+			}
 
-                    var myThrust = thrust as MyThrust;
+			//2nd Run of Blocks
+			foreach (var block in blocks) {
 
-                    if (!thrustDir.Contains(thrust.WorldMatrix.Forward)) {
+				//Armor
+				if (block.FatBlock == null) {
 
-                        if (thrust.IsFunctional && myThrust.IsPowered && thrust.Enabled)
-                            thrustDir.Add(thrust.WorldMatrix.Forward);
+					if (block.BlockDefinition.Id.TypeId == typeof(MyObjectBuilder_CubeBlock) && block.BlockDefinition.Id.SubtypeName.Contains("Armor")) {
 
-                    }
+						if (block.BlockDefinition.Id.SubtypeName.Contains("Heavy"))
+							HeavyArmor++;
+						else
+							LightArmor++;
 
-                    if (_mainController != null && thrust.WorldMatrix.Forward == _mainController.WorldMatrix.Down)
-                        if (thrust.IsFunctional && myThrust.IsPowered && thrust.Enabled)
-                            _downwardThrust.Add(thrust);
+					}
 
-                    thrust.ThrustOverridePercentage = 1;
+					continue;
 
-                    continue;
+				}
 
-                }
+				//Thrust
+				if (block.FatBlock as IMyThrust != null) {
 
-                if (block.FatBlock as IMyGyro != null) {
+					ThrustCount++;
+					var thrust = block.FatBlock as IMyThrust;
 
-                    GyroCount++;
-                    continue;
+					var thrustDef = block.BlockDefinition as MyThrustDefinition;
 
-                }
+					if (thrustDef == null) {
 
-                if (block.FatBlock as IMyGravityGeneratorBase != null) {
+						continue;
 
-                    GravityGenerators++;
-                    continue;
+					}
 
-                }
+					var myThrust = thrust as MyThrust;
 
-                if (block.FatBlock as IMyPowerProducer != null) {
+					if (thrustDef.ThrusterType.ToString() == "Atmospheric")
+						ThrustDirection(thrust, _mainController, AtmoThrust);
 
-                    if (block.FatBlock as IMyReactor != null) {
+					if (thrustDef.ThrusterType.ToString() == "Hydrogen")
+						ThrustDirection(thrust, _mainController, HydroThrust);
 
-                        Reactors++;
-                        continue;
+					if (thrustDef.ThrusterType.ToString() == "Ion")
+						ThrustDirection(thrust, _mainController, IonThrust);
 
-                    }
+					if (!thrustDir.Contains(thrust.WorldMatrix.Forward)) {
 
-                    if (block.FatBlock as IMySolarPanel != null) {
+						if (thrust.IsFunctional && myThrust.IsPowered && thrust.Enabled)
+							thrustDir.Add(thrust.WorldMatrix.Forward);
 
-                        Renewables++;
-                        continue;
+					}
 
-                    }
+					if (_mainController != null && thrust.WorldMatrix.Forward == _mainController.WorldMatrix.Down)
+						if (thrust.IsFunctional && myThrust.IsPowered && thrust.Enabled)
+							_downwardThrust.Add(thrust);
 
-                    if (block.FatBlock as IMyBatteryBlock != null) {
+					thrust.ThrustOverridePercentage = 1;
 
-                        Batteries++;
-                        continue;
+					continue;
 
-                    }
+				}
 
-                    if (block.BlockDefinition as MyHydrogenEngineDefinition != null) {
+				if (block.FatBlock as IMyGyro != null) {
 
-                        Generators++;
-                        continue;
+					GyroCount++;
+					continue;
 
-                    }
+				}
 
-                    //Wind
-                    Renewables++;
-                    continue;
+				if (block.FatBlock as IMyGravityGeneratorBase != null) {
 
-                }
+					GravityGenerators++;
+					continue;
 
-                if (block.FatBlock as IMyMotorSuspension != null) {
+				}
 
-                    Wheels++;
-                    continue;
+				if (block.FatBlock as IMyPowerProducer != null) {
 
-                }
+					if (block.FatBlock as IMyReactor != null) {
 
-                if (block.FatBlock as IMyProgrammableBlock != null) {
+						Reactors++;
+						continue;
 
-                    var pb = block.FatBlock as IMyProgrammableBlock;
+					}
 
-                    if (!string.IsNullOrWhiteSpace(pb.ProgramData)) {
+					if (block.FatBlock as IMySolarPanel != null) {
 
-                        ProgrammableBlocksWithScripts++;
-                        continue;
+						Renewables++;
+						continue;
 
-                    }
+					}
 
-                }
+					if (block.FatBlock as IMyBatteryBlock != null) {
 
-                if (block.FatBlock as IMySensorBlock != null) {
+						Batteries++;
+						continue;
 
-                    Sensors++;
-                    continue;
+					}
 
-                }
+					if (block.BlockDefinition as MyHydrogenEngineDefinition != null) {
 
-                if (block.FatBlock as IMyTimerBlock != null) {
+						Generators++;
+						continue;
 
-                    Timers++;
-                    continue;
+					}
 
-                }
+					//Wind
+					Renewables++;
+					continue;
 
-                if (block.FatBlock as IMyTextPanel != null) {
+				}
 
-                    Lcds++;
-                    continue;
+				if (block.FatBlock as IMyMotorSuspension != null) {
 
-                }
+					Wheels++;
+					continue;
 
-                if (block.FatBlock as IMyCargoContainer != null && !block.FatBlock.GetInventory().Empty()) {
+				}
 
-                    ContainersWithCargo++;
-                    continue;
+				if (block.FatBlock as IMyProgrammableBlock != null) {
 
-                }
+					var pb = block.FatBlock as IMyProgrammableBlock;
 
-                if (block.FatBlock as IMyRadioAntenna != null) {
+					if (!string.IsNullOrWhiteSpace(pb.ProgramData)) {
 
-                    Antennas++;
+						ProgrammableBlocksWithScripts++;
+						continue;
 
-                    var antenna = block.FatBlock as IMyRadioAntenna;
+					}
 
-                    if (antenna.IsWorking && antenna.IsFunctional && antenna.Enabled && antenna.IsBroadcasting) {
+				}
 
-                        ActiveSignals = true;
+				if (block.FatBlock as IMySensorBlock != null) {
 
-                        if (antenna.Radius > HighestRangeActiveAntenna)
-                            HighestRangeActiveAntenna = antenna.Radius;
+					Sensors++;
+					continue;
 
-                    }
+				}
 
-                    continue;
+				if (block.FatBlock as IMyTimerBlock != null) {
 
-                }
+					Timers++;
+					continue;
 
-                if (block.FatBlock as IMyBeacon != null) {
+				}
 
-                    Beacons++;
+				if (block.FatBlock as IMyTextPanel != null) {
 
-                    var antenna = block.FatBlock as IMyBeacon;
+					Lcds++;
+					continue;
 
-                    if (antenna.IsWorking && antenna.IsFunctional && antenna.Enabled) {
+				}
 
-                        ActiveSignals = true;
+				if (block.FatBlock as IMyCargoContainer != null && !block.FatBlock.GetInventory().Empty()) {
 
-                        if (antenna.Radius > HighestRangeActiveBeacon)
-                            HighestRangeActiveBeacon = antenna.Radius;
+					ContainersWithCargo++;
+					continue;
 
-                    }
+				}
 
-                    continue;
+				if (block.FatBlock as IMyRadioAntenna != null) {
 
-                }
+					Antennas++;
 
-                if (block.FatBlock as IMyUserControllableGun != null) {
+					var antenna = block.FatBlock as IMyRadioAntenna;
 
-                    if (block.FatBlock as IMyLargeTurretBase != null)
-                        Turrets++;
-                    else
-                        Guns++;
+					if (antenna.IsWorking && antenna.IsFunctional && antenna.Enabled && antenna.IsBroadcasting) {
 
-                    continue;
+						ActiveSignals = true;
 
-                }
+						if (antenna.Radius > HighestRangeActiveAntenna)
+							HighestRangeActiveAntenna = antenna.Radius;
 
-                if (block.FatBlock as IMyWarhead != null) {
+					}
 
-                    Warheads++;
-                    continue;
+					continue;
 
-                }
+				}
 
-            }
+				if (block.FatBlock as IMyBeacon != null) {
 
-            PowerState = CubeGrid.ResourceDistributor.ResourceState;
+					Beacons++;
 
-            if (thrustDir.Count >= 6)
-                ThrustInAllDirections = true;
+					var antenna = block.FatBlock as IMyBeacon;
 
-            MaxGravityAtmo = (float)Math.Round(CalculatePlanetaryThrust(), 1);
-            MaxGravityVacuum = (float)Math.Round(CalculatePlanetaryThrust(0), 1);
+					if (antenna.IsWorking && antenna.IsFunctional && antenna.Enabled) {
 
-        }
+						ActiveSignals = true;
 
-        internal float CalculatePlanetaryThrust(float airDensity = 0.7f) {
+						if (antenna.Radius > HighestRangeActiveBeacon)
+							HighestRangeActiveBeacon = antenna.Radius;
 
-            if (_mainController == null || _downwardThrust.Count == 0)
-                return 0;
+					}
 
-            float gravityMultiplier = 0;
+					continue;
 
-            while (gravityMultiplier < 20) {
+				}
 
-                gravityMultiplier += 0.1f;
-                double totalForceAvailable = 0;
+				if (block.FatBlock as IMyUserControllableGun != null) {
 
-                foreach (var thrust in _downwardThrust) {
+					if (block.FatBlock as IMyLargeTurretBase != null)
+						Turrets++;
+					else
+						Guns++;
 
-                    var thrustDef = thrust.SlimBlock.BlockDefinition as MyThrustDefinition;
+					continue;
 
-                    if (thrustDef == null)
-                        continue;
+				}
 
-                    /*
-                    if (thrustDef.ThrusterType.ToString() == "Hydrogen") {
+				if (block.FatBlock as IMyWarhead != null) {
 
-                        totalForceAvailable += thrustDef.ForceMagnitude; //TODO: see why this doesnt work
-                        continue;a
+					Warheads++;
+					continue;
 
-                    }
-                    */
+				}
 
-                    totalForceAvailable += thrustDef.ForceMagnitude * thrustForce(thrustDef, airDensity);
+			}
 
-                }
+			PowerState = CubeGrid.ResourceDistributor.ResourceState;
 
-                var liftingAccel = totalForceAvailable / _mainController.CalculateShipMass().TotalMass;
-                var gravityAccel = gravityMultiplier * 9.81;
+			if (thrustDir.Count >= 6)
+				ThrustInAllDirections = true;
 
-                if ((liftingAccel / gravityAccel) < 1.25) {
+			MaxGravityAtmo = (float)Math.Round(CalculatePlanetaryThrust(), 1);
+			MaxGravityVacuum = (float)Math.Round(CalculatePlanetaryThrust(0), 1);
 
-                    gravityMultiplier -= 0.1f;
-                    break;
+		}
 
-                }
+		internal void ThrustDirection(IMyThrust thrust, IMyShipController controller, PrefabThrustDirections directions) {
 
-            }
+			if (thrust == null)
+				return;
 
-            return gravityMultiplier;
+			directions.HasThrust = true;
 
-        }
+			if (controller == null)
+				return;
 
-        internal double thrustForce(MyThrustDefinition def, float airDensity = 0.7f) {
+			if (thrust.WorldMatrix.Forward == controller.WorldMatrix.Right) {
 
-            double minPlanetInfluence = def.MinPlanetaryInfluence;
-            double maxPlanetInfluence = def.MaxPlanetaryInfluence;
-            double effectiveAtMin = def.EffectivenessAtMinInfluence;
-            double effectiveAtMax = def.EffectivenessAtMaxInfluence;
+				directions.Left = true;
+				return;
+			
+			}
 
-            var InvDiffMinMaxPlanetaryInfluence = 1f / (maxPlanetInfluence - minPlanetInfluence);
+			if (thrust.WorldMatrix.Forward == controller.WorldMatrix.Left) {
 
-            double value = (airDensity - minPlanetInfluence) * InvDiffMinMaxPlanetaryInfluence;
-            var result = MathHelper.Lerp(effectiveAtMin, effectiveAtMax, MathHelper.Clamp(value, 0f, 1f));
-            return result;
+				directions.Right = true;
+				return;
 
-        }
+			}
 
-        public string GetCSV() {
+			if (thrust.WorldMatrix.Forward == controller.WorldMatrix.Down) {
 
-            var sb = new StringBuilder();
-            sb.Append(PrefabName).Append(",");
-            sb.Append(GridName).Append(",");
-            sb.Append(Physics).Append(",");
+				directions.Up = true;
+				return;
 
-            sb.Append(BlockCount).Append(",");
+			}
 
-            sb.Append(AttachedToOtherGrids).Append(",");
+			if (thrust.WorldMatrix.Forward == controller.WorldMatrix.Up) {
 
-            sb.Append(ControllerCount).Append(",");
-            sb.Append(HasMainCockpit).Append(",");
-            sb.Append(HasRemoteControl).Append(",");
-            sb.Append(RemoteControlGridPivotCorrect).Append(",");
+				directions.Down = true;
+				return;
 
-            sb.Append(ThrustCount).Append(",");
-            sb.Append(HydroThrust).Append(",");
-            sb.Append(IonThrust).Append(",");
-            sb.Append(AtmoThrust).Append(",");
-            sb.Append(ThrustInAllDirections).Append(",");
-            sb.Append(_downwardThrust.Count).Append(",");
-            sb.Append(ThrustDamageSameGrid).Append(",");
-            sb.Append(ThrustDamageAttachedGrid).Append(",");
-            sb.Append(ThrustDamageOtherGrid).Append(",");
-            sb.Append(MaxGravityAtmo).Append(",");
-            sb.Append(MaxGravityVacuum).Append(",");
+			}
 
-            sb.Append(GyroCount).Append(",");
+			if (thrust.WorldMatrix.Forward == controller.WorldMatrix.Backward) {
 
-            sb.Append(GravityGenerators).Append(",");
+				directions.Forward = true;
+				return;
 
-            sb.Append(PowerState.ToString()).Append(",");
-            sb.Append(Reactors).Append(",");
-            sb.Append(Batteries).Append(",");
-            sb.Append(Generators).Append(",");
-            sb.Append(Renewables).Append(",");
+			}
 
-            sb.Append(Wheels).Append(",");
+			if (thrust.WorldMatrix.Forward == controller.WorldMatrix.Forward) {
 
-            sb.Append(LightArmor).Append(",");
-            sb.Append(HeavyArmor).Append(",");
+				directions.Backward = true;
+				return;
 
-            sb.Append(ProgrammableBlocksWithScripts).Append(",");
-            sb.Append(Sensors).Append(",");
-            sb.Append(Timers).Append(",");
-            sb.Append(Lcds).Append(",");
+			}
 
-            sb.Append(ContainersWithCargo).Append(",");
+		}
 
-            sb.Append(Antennas).Append(",");
-            sb.Append(Beacons).Append(",");
-            sb.Append(ActiveSignals).Append(",");
-            sb.Append(HighestRangeActiveAntenna).Append(",");
-            sb.Append(HighestRangeActiveBeacon).Append(",");
+		internal float CalculatePlanetaryThrust(float airDensity = 0.7f) {
 
-            sb.Append(Turrets).Append(",");
-            sb.Append(Guns).Append(",");
-            sb.Append(Warheads).Append(",");
+			if (_mainController == null || _downwardThrust.Count == 0)
+				return 0;
 
-            sb.Append("-----").Append(",");
+			float gravityMultiplier = 0;
 
-            foreach (var thrust in DamageThrusts)
-                sb.Append(thrust.CustomName).Append(" - ").Append(thrust.SlimBlock.Min.ToString().Replace(',', ' ')).Append(",");
+			while (gravityMultiplier < 20) {
 
-            return sb.ToString();
-        
-        }
+				gravityMultiplier += 0.1f;
+				double totalForceAvailable = 0;
 
-    }
+				foreach (var thrust in _downwardThrust) {
+
+					var thrustDef = thrust.SlimBlock.BlockDefinition as MyThrustDefinition;
+
+					if (thrustDef == null)
+						continue;
+
+					/*
+					if (thrustDef.ThrusterType.ToString() == "Hydrogen") {
+
+						totalForceAvailable += thrustDef.ForceMagnitude; //TODO: see why this doesnt work
+						continue;a
+
+					}
+					*/
+
+					totalForceAvailable += thrustDef.ForceMagnitude * thrustForce(thrustDef, airDensity);
+
+				}
+
+				var liftingAccel = totalForceAvailable / _mainController.CalculateShipMass().TotalMass;
+				var gravityAccel = gravityMultiplier * 9.81;
+
+				if ((liftingAccel / gravityAccel) < 1.25) {
+
+					gravityMultiplier -= 0.1f;
+					break;
+
+				}
+
+			}
+
+			return gravityMultiplier;
+
+		}
+
+		internal double thrustForce(MyThrustDefinition def, float airDensity = 0.7f) {
+
+			double minPlanetInfluence = def.MinPlanetaryInfluence;
+			double maxPlanetInfluence = def.MaxPlanetaryInfluence;
+			double effectiveAtMin = def.EffectivenessAtMinInfluence;
+			double effectiveAtMax = def.EffectivenessAtMaxInfluence;
+
+			var InvDiffMinMaxPlanetaryInfluence = 1f / (maxPlanetInfluence - minPlanetInfluence);
+
+			double value = (airDensity - minPlanetInfluence) * InvDiffMinMaxPlanetaryInfluence;
+			var result = MathHelper.Lerp(effectiveAtMin, effectiveAtMax, MathHelper.Clamp(value, 0f, 1f));
+			return result;
+
+		}
+
+		public string GetCSV() {
+
+			var sb = new StringBuilder();
+			sb.Append(PrefabName).Append(",");
+			sb.Append(GridName).Append(",");
+			sb.Append(Physics).Append(",");
+
+			sb.Append(BlockCount).Append(",");
+
+			sb.Append(AttachedToOtherGrids).Append(",");
+
+			sb.Append(ControllerCount).Append(",");
+			sb.Append(HasMainCockpit).Append(",");
+			sb.Append(HasRemoteControl).Append(",");
+			sb.Append(RemoteControlGridPivotCorrect).Append(",");
+
+			sb.Append(ThrustCount).Append(",");
+			sb.Append(HydroThrust.ToString()).Append(",");
+			sb.Append(IonThrust.ToString()).Append(",");
+			sb.Append(AtmoThrust.ToString()).Append(",");
+			sb.Append(ThrustInAllDirections).Append(",");
+			sb.Append(_downwardThrust.Count).Append(",");
+			sb.Append(ThrustDamageSameGrid).Append(",");
+			sb.Append(ThrustDamageAttachedGrid).Append(",");
+			sb.Append(ThrustDamageOtherGrid).Append(",");
+			sb.Append(MaxGravityAtmo).Append(",");
+			sb.Append(MaxGravityVacuum).Append(",");
+
+			sb.Append(GyroCount).Append(",");
+
+			sb.Append(GravityGenerators).Append(",");
+
+			sb.Append(PowerState.ToString()).Append(",");
+			sb.Append(Reactors).Append(",");
+			sb.Append(Batteries).Append(",");
+			sb.Append(Generators).Append(",");
+			sb.Append(Renewables).Append(",");
+
+			sb.Append(Wheels).Append(",");
+
+			sb.Append(LightArmor).Append(",");
+			sb.Append(HeavyArmor).Append(",");
+
+			sb.Append(ProgrammableBlocksWithScripts).Append(",");
+			sb.Append(Sensors).Append(",");
+			sb.Append(Timers).Append(",");
+			sb.Append(Lcds).Append(",");
+
+			sb.Append(ContainersWithCargo).Append(",");
+
+			sb.Append(Antennas).Append(",");
+			sb.Append(Beacons).Append(",");
+			sb.Append(ActiveSignals).Append(",");
+			sb.Append(HighestRangeActiveAntenna).Append(",");
+			sb.Append(HighestRangeActiveBeacon).Append(",");
+
+			sb.Append(Turrets).Append(",");
+			sb.Append(Guns).Append(",");
+			sb.Append(Warheads).Append(",");
+
+			sb.Append("-----").Append(",");
+
+			foreach (var thrust in DamageThrusts)
+				sb.Append(thrust.CustomName).Append(" - ").Append(thrust.SlimBlock.Min.ToString().Replace(',', ' ')).Append(",");
+
+			return sb.ToString();
+		
+		}
+
+	}
 
 }

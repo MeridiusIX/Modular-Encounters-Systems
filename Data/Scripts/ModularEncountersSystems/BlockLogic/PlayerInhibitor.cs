@@ -47,7 +47,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			if (_antenna != null) {
 
 				_antenna.Radius = 1000;
-				_antenna.CustomName = "[Player Inhibitor Field]";
+				_antenna.CustomName = "[Personnel Inhibitor Field]";
 				_antenna.CustomNameChanged += NameChange;
 
 			} else {
@@ -64,8 +64,8 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal void NameChange(IMyTerminalBlock block) {
 		
-			if(_antenna.CustomName != "[Player Inhibitor Field]")
-				_antenna.CustomName = "[Player Inhibitor Field]";
+			if(_antenna.CustomName != "[Personnel Inhibitor Field]")
+				_antenna.CustomName = "[Personnel Inhibitor Field]";
 
 		}
 
@@ -121,7 +121,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 					if (!_playersInBlockRange.Contains(player)) {
 
-						MyVisualScriptLogicProvider.ShowNotification("WARNING: Prolonged Exposure To Player Inhibitor Field May Be Fatal!", 5000, "Red", player.Player.IdentityId);
+						MyVisualScriptLogicProvider.ShowNotification("WARNING: Prolonged Exposure To Personnel Inhibitor Field May Be Fatal!", 5000, "Red", player.Player.IdentityId);
 						_playersInBlockRange.Add(player);
 
 					}

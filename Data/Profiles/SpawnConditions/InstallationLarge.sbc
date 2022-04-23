@@ -1,0 +1,80 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+
+    <!--Installation Large-->
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditions-InstallationLarge-Defense</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions]
+
+        [PlanetaryInstallation:true]
+        [PlanetaryInstallationType:Large]
+        [ForceStaticGrid:true]
+
+        [PlanetaryInstallationChance:20]
+
+        [PrefabSpawningMode:SelectedIndexes]
+        [PrefabIndexes:0]
+        [PrefabIndexes:1]
+        [PrefabIndexes:2]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditions-InstallationLarge-Patrol</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions]
+
+        [PlanetaryInstallation:true]
+        [PlanetaryInstallationType:Large]
+        [ForceStaticGrid:true]
+
+        [PlanetaryInstallationChance:20]
+
+        [PrefabSpawningMode:SelectedIndexes]
+        [PrefabIndexes:0]
+        [PrefabIndexes:3]
+        [PrefabIndexes:4]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditions-InstallationLarge</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions]
+
+        [PlanetaryInstallation:true]
+        [PlanetaryInstallationType:Large]
+        [ForceStaticGrid:true]
+
+        [PrefabSpawningMode:SelectedIndexes]
+        [PrefabIndexes:0]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

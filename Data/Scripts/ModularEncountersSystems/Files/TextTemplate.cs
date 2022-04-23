@@ -4,6 +4,21 @@ using System.Text;
 using System.Xml.Serialization;
 
 namespace ModularEncountersSystems.Files {
+
+	public struct DataPadEntry {
+
+		public string DataPadTitle;
+		public string DataPadBody;
+
+		public DataPadEntry(string title, string body) {
+
+			DataPadTitle = title;
+			DataPadBody = body;
+
+		}
+	
+	}
+
 	public class TextTemplate {
 
 		public string Name;
@@ -20,6 +35,9 @@ namespace ModularEncountersSystems.Files {
 
 		[XmlArrayItem("LcdTexture")]
 		public string[] LcdTextures;
+
+		[XmlArrayItem("DataPadEntry")]
+		public string[] DataPadEntries;
 
 		[XmlArrayItem("DataPadTitle")]
 		public string[] DataPadTitles;

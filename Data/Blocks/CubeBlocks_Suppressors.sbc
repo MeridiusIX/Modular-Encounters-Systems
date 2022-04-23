@@ -8,7 +8,7 @@
         <TypeId>RadioAntenna</TypeId>
         <SubtypeId>MES-Suppressor-Player-Small</SubtypeId>
       </Id>
-      <DisplayName>Nanobot Suppression Field</DisplayName>
+      <DisplayName>Personnel Suppression Field</DisplayName>
       <Icon>Textures\GUI\Icons\Cubes\ArtificialMass.dds</Icon>
       <Description>This block generates a field that suppresses the presence of players by applying an increasing amount of damage the closer they get.</Description>
       <CubeSize>Small</CubeSize>
@@ -67,7 +67,7 @@
         <TypeId>RadioAntenna</TypeId>
         <SubtypeId>MES-Suppressor-Player-Large</SubtypeId>
       </Id>
-      <DisplayName>Nanobot Suppression Field</DisplayName>
+      <DisplayName>Personnel Suppression Field</DisplayName>
       <Icon>Textures\GUI\Icons\Cubes\ArtificialMass.dds</Icon>
       <Description>This block generates a field that suppresses the presence of players by applying an increasing amount of damage the closer they get.</Description>
       <CubeSize>Large</CubeSize>

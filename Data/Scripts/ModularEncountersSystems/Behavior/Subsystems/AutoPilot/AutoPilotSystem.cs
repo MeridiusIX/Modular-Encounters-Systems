@@ -1929,16 +1929,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (MyAPIGateway.Utilities.IsDedicated)
 				return;
 
-			//Vector4 colorRed = new Vector4(1, 0, 0, 1);
-			//Vector4 colorOrange = new Vector4(1, 0.5f, 0, 1);
-			//Vector4 colorYellow = new Vector4(1, 1, 0, 1);
-			Vector4 colorGreen = new Vector4(0, 1, 0, 1);
-			//Vector4 colorCyan = new Vector4(0, 1, 1, 1);
-			//Vector4 colorMajenta = new Vector4(1, 0, 1, 1);
+			Vector4 colorRed = ConvertColor(Color.Red);
+			Vector4 colorOrange = ConvertColor(Color.Orange);
+			Vector4 colorYellow = ConvertColor(Color.Yellow);
+			Vector4 colorGreen = ConvertColor(Color.Green);
+			Vector4 colorCyan = ConvertColor(Color.Cyan);
+			Vector4 colorMajenta = ConvertColor(Color.Magenta);
 
 			//MySimpleObjectDraw.DrawLine(_initialWaypoint, _offsetDirection * 5 + _initialWaypoint, MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
 
-			
+
 
 			if (_currentWaypoint != Vector3D.Zero) {
 
@@ -1949,25 +1949,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			
 			 if (_evadeWaypoint != Vector3D.Zero) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, _evadeWaypoint, MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
-				//MySimpleObjectDraw.DrawLine(_evadeFromWaypoint, _evadeWaypoint, MyStringId.GetOrCompute("WeaponLaser"), ref colorOrange, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition + new Vector3D(1.5, 1.5, 0), _evadeWaypoint + new Vector3D(1.5, 1.5, 0), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
+				MySimpleObjectDraw.DrawLine(_evadeFromWaypoint + new Vector3D(-1.5, -1.5, 0), _evadeWaypoint + new Vector3D(-1.5, -1.5, 0), MyStringId.GetOrCompute("WeaponLaser"), ref colorOrange, 1.1f);
 
 			}
 			if (_calculatedOffsetWaypoint != Vector3D.Zero) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, _calculatedOffsetWaypoint, MyStringId.GetOrCompute("WeaponLaser"), ref colorCyan, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition + new Vector3D(1.5, 0, 1.5), _calculatedOffsetWaypoint + new Vector3D(1.5, 0, 1.5), MyStringId.GetOrCompute("WeaponLaser"), ref colorCyan, 1.1f);
 
 			}
 
 			if (_calculatedPlanetPathWaypoint != Vector3D.Zero) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, _calculatedPlanetPathWaypoint, MyStringId.GetOrCompute("WeaponLaser"), ref colorMajenta, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition + new Vector3D(-1.5, 0, -1.5), _calculatedPlanetPathWaypoint + new Vector3D(-1.5, 0, -1.5), MyStringId.GetOrCompute("WeaponLaser"), ref colorMajenta, 1.1f);
 
 			}
 
 			if (_calculatedWeaponPredictionWaypoint != Vector3D.Zero) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, _calculatedWeaponPredictionWaypoint, MyStringId.GetOrCompute("WeaponLaser"), ref colorYellow, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition + new Vector3D(1.5, 1.5, 1.5), _calculatedWeaponPredictionWaypoint + new Vector3D(1.5, 1.5, 1.5), MyStringId.GetOrCompute("WeaponLaser"), ref colorYellow, 1.1f);
 
 			}
 
@@ -1975,40 +1975,46 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			
 			if (Collision.ForwardResult.Type != CollisionType.None) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, Collision.ForwardResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition, Collision.ForwardResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
 
 			}
 
 			if (Collision.BackwardResult.Type != CollisionType.None) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, Collision.BackwardResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition, Collision.BackwardResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
 
 			}
 
 			if (Collision.LeftResult.Type != CollisionType.None) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, Collision.LeftResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition, Collision.LeftResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
 
 			}
 
 			if (Collision.RightResult.Type != CollisionType.None) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, Collision.RightResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition, Collision.RightResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
 
 			}
 
 			if (Collision.UpResult.Type != CollisionType.None) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, Collision.UpResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition, Collision.UpResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
 
 			}
 
 			if (Collision.DownResult.Type != CollisionType.None) {
 
-				//MySimpleObjectDraw.DrawLine(_myPosition, Collision.DownResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
+				MySimpleObjectDraw.DrawLine(_myPosition, Collision.DownResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
 
 			}
 			
+		}
+
+		internal Vector4 ConvertColor(Color color) {
+
+			return new Vector4(color.X / 20, color.Y / 20, color.Z / 20, 0.1f);
+
 		}
 
 	}

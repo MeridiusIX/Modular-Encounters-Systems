@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.Configuration.Editor;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
@@ -588,6 +589,15 @@ namespace ModularEncountersSystems.Sync {
 
 				MyAPIGateway.Session.VoxelMaps.CreateProceduralVoxelMap(MathTools.RandomBetween(1000000, 10000000), size, MatrixD.CreateWorld(pos, MatrixD.Identity.Forward, MatrixD.Identity.Up));
 
+				return true;
+
+			}
+
+			//MES.Debug.DrawPaths
+			if (array[2] == "DrawPaths") {
+
+				BehaviorManager.DebugDraw = !BehaviorManager.DebugDraw;
+				this.ReturnMessage = "Path Drawing For Behaviors Active: " + BehaviorManager.DebugDraw;
 				return true;
 
 			}

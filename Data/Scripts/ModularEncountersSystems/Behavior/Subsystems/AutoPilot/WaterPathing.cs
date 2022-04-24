@@ -138,13 +138,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (_pathWaypoints.Count < 2)
 				return;
 
-			Vector4 colorCyan = new Vector4(0, 1, 1, 1);
-			
+			Vector4 colorGreen = ConvertColor(Color.Green);
+
 			for (int i = 1; i < _pathWaypoints.Count; i++) {
 
-				MySimpleObjectDraw.DrawLine(_pathWaypoints[i-1], _pathWaypoints[i], MyStringId.GetOrCompute("WeaponLaser"), ref colorCyan, 2.0f);
+				MySimpleObjectDraw.DrawLine(_pathWaypoints[i-1], _pathWaypoints[i], MyStringId.GetOrCompute("WeaponLaser"), ref colorGreen, 2.0f);
 
 			}
+
+		}
+
+		internal Vector4 ConvertColor(Color color) {
+
+			return new Vector4(color.X / 10, color.Y / 10, color.Z / 10, 0.1f);
 
 		}
 

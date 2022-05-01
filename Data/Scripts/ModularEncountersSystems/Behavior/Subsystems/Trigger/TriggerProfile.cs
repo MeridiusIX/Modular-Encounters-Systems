@@ -7,6 +7,7 @@ using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Entities;
 using SpaceEngineers.Game.ModAPI;
+using ModularEncountersSystems.Watchers;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -194,6 +195,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		[ProtoIgnore]
 		public bool ButtonPressedSuccess;
+
+		[ProtoIgnore]
+		public long ButtonPressPlayer;
 
 		[ProtoIgnore]
 		public GridEntity JumpedGrid;
@@ -408,33 +412,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			return true;
 
-		}
-
-		public void ButtonPressed(int index) {
-
-			if (Behavior?.RemoteControl == null || !Behavior.IsAIReady()) {
-
-				if (ButtonPanel != null)
-					ButtonPanel.ButtonPressed -= ButtonPressed;
-
-				return;
-
-			}
-
-			if (ButtonPanel.SlimBlock.CubeGrid != Behavior.RemoteControl.SlimBlock.CubeGrid && ButtonPanel.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(Behavior.RemoteControl.SlimBlock.CubeGrid)) {
-
-				if (ButtonPanel != null)
-					ButtonPanel.ButtonPressed -= ButtonPressed;
-
-				return;
-
-			}
-
-			if (index != ButtonPanelIndex)
-				return;
-
-			ButtonPressedSuccess = true;
-		
 		}
 
 		public void ResetTime() {

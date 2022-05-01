@@ -1302,24 +1302,24 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				if (cubeGrid == null || cubeGrid.MarkedForClose || cubeGrid.Closed)
 					return;
 
-				var blocks = BlockCollectionHelper.GetAllBlocks(cubeGrid);
+				var blocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(cubeGrid);
 				int maxRange = blocks.Count;
 
 				foreach (var block in blocks) {
 
-					if (block?.FatBlock == null)
+					if (block == null)
 						continue;
 
-					if (!BlockManager.AllWeaponCoreBlocks.Contains(block.BlockDefinition.Id))
+					if (!BlockManager.AllWeaponCoreBlocks.Contains(block.SlimBlock.BlockDefinition.Id))
 						continue;
 
-					var termBlock = block.FatBlock as IMyFunctionalBlock;
+					var termBlock = block as IMyFunctionalBlock;
 					float weaponMax = 800;
 
-					if (!DefaultRangeWC.TryGetValue(block.BlockDefinition.Id, out weaponMax)) {
+					if (!DefaultRangeWC.TryGetValue(block.SlimBlock.BlockDefinition.Id, out weaponMax)) {
 
 						weaponMax = APIs.WeaponCore.GetMaxWeaponRange(termBlock, 0);
-						DefaultRangeWC.Add(block.BlockDefinition.Id, weaponMax);
+						DefaultRangeWC.Add(block.SlimBlock.BlockDefinition.Id, weaponMax);
 
 					}
 

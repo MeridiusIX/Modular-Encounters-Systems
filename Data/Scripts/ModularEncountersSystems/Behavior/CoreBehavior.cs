@@ -1166,28 +1166,14 @@ namespace ModularEncountersSystems.Behavior {
 				if(!foundStoredSettings)
 					trigger.ResetTime();
 
-				if (trigger.Type == "ButtonPress") {
+				bool buttonTriggerSet = false;
+
+				if (!buttonTriggerSet && trigger.Type == "ButtonPress") {
 
 					trigger.Behavior = this;
+					EventWatcher.ButtonPressed += Trigger.ProcessButtonTriggers;
+					buttonTriggerSet = true;
 
-					foreach (var grid in CurrentGrid.LinkedGrids) {
-
-						foreach (var button in grid.Buttons) {
-
-							if (button.ActiveEntity() && button.Block.CustomName == trigger.ButtonPanelName) {
-
-								trigger.ButtonPanel = button.Block as IMyButtonPanel;
-								trigger.ButtonPanel.ButtonPressed += trigger.ButtonPressed;
-
-							}
-						
-						}
-
-						if (trigger.ButtonPanel != null)
-							break;
-					
-					}
-				
 				}
 
 			}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sandbox.Common.ObjectBuilders.Definitions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml.Serialization;
@@ -16,6 +17,58 @@ namespace ModularEncountersSystems.Files {
 			DataPadBody = body;
 
 		}
+
+		public MyObjectBuilder_Datapad BuildDatapad() {
+
+			MyObjectBuilder_Datapad datapad = new MyObjectBuilder_Datapad();
+			datapad.Name = GetTitle();
+			datapad.Data = GetBody();
+			datapad.SubtypeName = "Datapad";
+			return datapad;
+
+		}
+
+		public string GetTitle() {
+
+			return TextTemplate.CleanString(DataPadTitle);
+
+		}
+
+		public string GetBody() {
+
+			return TextTemplate.CleanString(DataPadBody);
+
+		}
+
+		
+
+	}
+
+	public struct LcdEntry {
+
+		public string TextSurfaceBlockName;
+		public int TextSurfaceIndex;
+
+		public bool ApplyLcdText;
+		public string LcdText;
+
+		public bool ApplyLcdImage;
+		public string[] LcdImages;
+		public float LcdImageChangeDelay;
+
+		public LcdEntry(bool dummy = false) {
+
+			TextSurfaceBlockName = "";
+			TextSurfaceIndex = -1;
+
+			ApplyLcdText = false;
+			LcdText = "";
+
+			ApplyLcdImage = false;
+			LcdImages = new string[] { };
+			LcdImageChangeDelay = 1;
+
+		}
 	
 	}
 
@@ -27,23 +80,11 @@ namespace ModularEncountersSystems.Files {
 		public string BlockName;
 		public string CustomData;
 
-		[XmlArrayItem("LcdIndex")]
-		public int[] LcdIndexes;
-
-		[XmlArrayItem("LcdText")]
-		public string[] LcdTexts;
-
-		[XmlArrayItem("LcdTexture")]
-		public string[] LcdTextures;
+		[XmlArrayItem("LcdEntry")]
+		public LcdEntry[] LcdEntries;
 
 		[XmlArrayItem("DataPadEntry")]
-		public string[] DataPadEntries;
-
-		[XmlArrayItem("DataPadTitle")]
-		public string[] DataPadTitles;
-
-		[XmlArrayItem("DataPadBody")]
-		public string[] DataPadBodies;
+		public DataPadEntry[] DataPadEntries;
 
 		public TextTemplate() {
 
@@ -52,11 +93,24 @@ namespace ModularEncountersSystems.Files {
 			Description = "";
 			BlockName = "";
 			CustomData = "";
-			LcdIndexes = new int[] { };
-			LcdTexts = new string[] { };
-			LcdTextures = new string[] { };
-			DataPadTitles = new string[] { };
-			DataPadBodies = new string[] { };
+			LcdEntries = new LcdEntry[] { };
+			DataPadEntries = new DataPadEntry[] { };
+
+		}
+
+		public static string CleanString(string str) {
+
+			var sb = new StringBuilder();
+			char[] delims = new[] { '\r', '\n' };
+			string[] strings = str.Split(delims, StringSplitOptions.RemoveEmptyEntries);
+
+			foreach (var item in strings) {
+
+				sb.Append(item?.Trim() ?? "").AppendLine();
+
+			}
+
+			return sb.ToString();
 
 		}
 

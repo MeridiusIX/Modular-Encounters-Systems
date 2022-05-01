@@ -15,6 +15,11 @@
 
         [MES Spawn Conditions]
 
+        [UsePlayerFactionReputation:true]
+        [PlayerReputationCheckRadius:15000]
+        [MinimumReputation:-1500]
+        [MaximumReputation:-1000]
+
         [PlanetaryInstallation:true]
         [PlanetaryInstallationType:Small]
         [ForceStaticGrid:true]
@@ -65,7 +70,6 @@
 
         [MES Spawn Conditions]
 
-        [FactionOwner:IMBER]
         [PlanetaryInstallation:true]
         [PlanetaryInstallationType:Small]
         [ForceStaticGrid:true]

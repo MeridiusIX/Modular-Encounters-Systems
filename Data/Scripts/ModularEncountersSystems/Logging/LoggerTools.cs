@@ -420,6 +420,28 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void DebugLinkedGrids(ChatMessage msg) {
+
+			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
+
+			if (grid == null) {
+
+				msg.ReturnMessage = "No Grid in Camera Direction";
+				return;
+
+			}
+
+			foreach (var link in grid.LinkedGrids) {
+
+				MyVisualScriptLogicProvider.ShowNotificationToAll(link.RefreshLinkedGrids + " / " + link.CubeGrid?.CustomName ?? "null", 6000);
+			
+			}
+
+			msg.ReturnMessage = "Processed Linked Grids";
+			//grid.RefreshSubGrids();
+
+		}
+
 		public static void ForceSpawnTimer(ChatMessage msg, string[] array) {
 
 			if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
@@ -1506,6 +1528,22 @@ namespace ModularEncountersSystems.Logging {
 			TaskProcessor.Tasks.Add(new DebugRotationData(grid, rotation, msg));
 
 		}
+
+		public static void SetReputation(ChatMessage msg, string[] msgSplit) {
+
+			if (msgSplit.Length != 4) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			var result = RelationManager.ResetFactionReputation(msgSplit[3]);
+			MyVisualScriptLogicProvider.ShowNotification("Faction [" + msgSplit[3] + "] Reputation Reset Result: " + result, 5000, "White", msg.PlayerId);
+			return;
+
+		}
+
 
 	}
 

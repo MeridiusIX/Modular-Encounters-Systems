@@ -90,6 +90,14 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static Command ButtonPressCommand(long playerId) {
+
+            var command = new Command();
+            command.PlayerIdentity = playerId;
+            return command;
+        
+        }
+
         public void Defaults() {
 
             CommandCode = "";

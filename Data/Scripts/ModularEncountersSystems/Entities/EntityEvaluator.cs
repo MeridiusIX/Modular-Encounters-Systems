@@ -114,6 +114,52 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public static void GetAttachedGrids(GridEntity parent) {
+
+			//SpawnLogger.Write("Method Start", SpawnerDebugEnum.Dev, true);
+
+			if (parent?.CubeGrid == null)
+				return;
+
+			//SpawnLogger.Write("Clear Lists", SpawnerDebugEnum.Dev, true);
+			parent.PhysicalLinkedGrids.Clear();
+			parent.LinkedGrids.Clear();
+
+			//SpawnLogger.Write("Get Group", SpawnerDebugEnum.Dev, true);
+			MyAPIGateway.GridGroups.GetGroup(parent.CubeGrid, GridLinkTypeEnum.Physical, parent.PhysicalLinkedGrids);
+			parent.RefreshLinkedGrids = false;
+
+			//SpawnLogger.Write("First Loop", SpawnerDebugEnum.Dev, true);
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (grid == null || grid.IsClosed() || !grid.HasPhysics)
+					continue;
+
+				if (grid.CubeGrid != null && parent.PhysicalLinkedGrids.Contains(grid.CubeGrid))
+					parent.LinkedGrids.Add(grid);
+
+			}
+
+			if (parent.LinkedGrids.Count == 0)
+				parent.LinkedGrids.Add(parent);
+
+			//SpawnLogger.Write("Second Loop", SpawnerDebugEnum.Dev, true);
+
+			for (int i = parent.LinkedGrids.Count - 1; i >= 0; i--) {
+
+				var grid = parent.LinkedGrids[i];
+
+				if (grid == null || grid == parent)
+					continue;
+
+				grid.LinkedGrids = parent.LinkedGrids;
+				grid.RefreshLinkedGrids = false;
+
+			}
+
+		}
+
 		public static GridEntity GetGridProfile(IMyCubeGrid cubeGrid) {
 
 			foreach (var grid in GridManager.Grids) {

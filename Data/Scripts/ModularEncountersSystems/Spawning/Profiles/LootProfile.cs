@@ -11,9 +11,16 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public string ProfileSubtypeId;
 
 		public List<MyDefinitionId> ContainerBlockTypes;
-		public List<string> ContainerTypes;
 		public int MinBlocks;
 		public int MaxBlocks;
+
+		public bool AddDatapads;
+		public string DatapadFileSource;
+		public int DatapadIndex;
+		public int DatapadCount;
+
+		public List<string> ContainerTypes;
+
 		public bool AppendNameToBlock;
 		public string AppendedName;
 		public bool MatchBlocksContainingName;
@@ -25,9 +32,16 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ProfileSubtypeId = "";
 
 			ContainerBlockTypes = new List<MyDefinitionId>();
-			ContainerTypes = new List<string>();
 			MinBlocks = 1;
 			MaxBlocks = 1;
+
+			AddDatapads = false;
+			DatapadFileSource = "";
+			DatapadIndex = -1;
+			DatapadCount = 1;
+
+			ContainerTypes = new List<string>();
+			
 			AppendNameToBlock = false;
 			AppendedName = "";
 			MatchBlocksContainingName = false;
@@ -73,6 +87,38 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.Contains("[MaxBlocks:")) {
 
 					TagParse.TagIntCheck(tag, ref MaxBlocks);
+					continue;
+
+				}
+
+				//AddDatapads
+				if (tag.Contains("[AddDatapads:")) {
+
+					TagParse.TagBoolCheck(tag, ref AddDatapads);
+					continue;
+
+				}
+
+				//DatapadFileSource
+				if (tag.Contains("[DatapadFileSource:")) {
+
+					TagParse.TagStringCheck(tag, ref DatapadFileSource);
+					continue;
+
+				}
+
+				//DatapadIndex
+				if (tag.Contains("[DatapadIndex:")) {
+
+					TagParse.TagIntCheck(tag, ref DatapadIndex);
+					continue;
+
+				}
+
+				//DatapadCount
+				if (tag.Contains("[DatapadCount:")) {
+
+					TagParse.TagIntCheck(tag, ref DatapadCount);
 					continue;
 
 				}

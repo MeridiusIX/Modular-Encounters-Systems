@@ -401,15 +401,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			this.AntennaList.Clear();
-			var blockList = TargetHelper.GetAllBlocks(this.RemoteControl.SlimBlock.CubeGrid);
+			var blockList = BlockCollectionHelper.GetGridAntennas(this.RemoteControl.SlimBlock.CubeGrid);
 
-			foreach(var block in blockList.Where(x => x.FatBlock != null)) {
+			foreach(var block in blockList) {
 
-				var antenna = block.FatBlock as IMyRadioAntenna;
+				if(block != null) {
 
-				if(antenna != null) {
-
-					this.AntennaList.Add(antenna);
+					this.AntennaList.Add(block);
 
 				}
 

@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Files;
+﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.Common.ObjectBuilders.Definitions;
@@ -83,7 +84,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			OverrideConnectedGridCheck = true;
 			CheckConnectedGrids();
 
-			var tempAllBlocks = TargetHelper.GetAllBlocks(this.RemoteControl.SlimBlock.CubeGrid);
+			var tempAllBlocks = BlockCollectionHelper.GetAllBlocks(GridManager.GetGridEntity(this.RemoteControl.SlimBlock.CubeGrid));
 
 			foreach (var block in tempAllBlocks) {
 

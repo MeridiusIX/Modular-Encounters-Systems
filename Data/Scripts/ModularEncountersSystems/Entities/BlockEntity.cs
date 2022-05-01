@@ -297,7 +297,14 @@ namespace ModularEncountersSystems.Entities {
 
 		public void RefreshSubGrids() {
 
-			LinkedGrids = EntityEvaluator.GetAttachedGrids(Block.SlimBlock.CubeGrid);
+			if (ParentGrid == null)
+				ParentGrid = GridManager.GetGridEntity(Block?.SlimBlock?.CubeGrid);
+
+			if (ParentGrid == null)
+				return;
+
+			EntityEvaluator.GetAttachedGrids(ParentGrid);
+			LinkedGrids = ParentGrid.LinkedGrids;
 
 		}
 

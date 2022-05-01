@@ -5,6 +5,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
@@ -37,7 +38,10 @@ namespace ModularEncountersSystems.Entities {
 		public IMyCubeGrid CubeGrid;
 		public bool HasPhysics;
 
+		public IMyGridGroupData GridGroupData;
+		public bool RefreshLinkedGrids;
 		public List<GridEntity> LinkedGrids;
+		public List<IMyCubeGrid> PhysicalLinkedGrids;
 
 		public List<BlockEntity> AllTerminalBlocks;
 		public List<BlockEntity> Antennas;
@@ -94,7 +98,10 @@ namespace ModularEncountersSystems.Entities {
 			Type = EntityType.Grid;
 			CubeGrid = entity as IMyCubeGrid;
 
+			GridGroupData = MyAPIGateway.GridGroups.GetGridGroup(GridLinkTypeEnum.Physical, CubeGrid);
+			RefreshLinkedGrids = true;
 			LinkedGrids = new List<GridEntity>();
+			PhysicalLinkedGrids = new List<IMyCubeGrid>();
 
 			AllTerminalBlocks = new List<BlockEntity>();
 			Antennas = new List<BlockEntity>();
@@ -161,6 +168,7 @@ namespace ModularEncountersSystems.Entities {
 			} else {
 
 				DebugData.Append(" - Grid Has Physics On Entity Load.").AppendLine();
+				EntityEvaluator.GetAttachedGrids(this);
 				HasPhysics = true;
 			
 			}
@@ -180,6 +188,13 @@ namespace ModularEncountersSystems.Entities {
 			CubeGrid.OnBlockRemoved += BlockRemoved;
 			CubeGrid.OnGridSplit += GridSplit;
 			CubeGrid.OnBlockOwnershipChanged += OwnershipChange;
+
+			if (GridGroupData != null) {
+
+				GridGroupData.OnGridAdded += OnSubgridChange;
+				GridGroupData.OnGridRemoved += OnSubgridChange;
+
+			}
 
 			CheckForNpcData();
 
@@ -307,6 +322,9 @@ namespace ModularEncountersSystems.Entities {
 			if (terminalBlock as IMyButtonPanel != null) {
 
 				assignedBlock = AddBlock(terminalBlock, Buttons);
+
+				if (!EventWatcher.ButtonPanels.ContainsKey(terminalBlock.EntityId))
+					EventWatcher.ButtonPanels.Add(terminalBlock.EntityId, terminalBlock as IMyButtonPanel);
 
 			}
 
@@ -703,6 +721,13 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public void OnSubgridChange(IMyGridGroupData dataA, IMyCubeGrid grid, IMyGridGroupData dataB) {
+
+			//MyVisualScriptLogicProvider.ShowNotificationToAll("Subgrid Change", 4000);
+			RefreshLinkedGrids = true;
+		
+		}
+
 		public void OwnershipChange(IMyCubeGrid cubeGrid) {
 
 			RecheckOwnershipMajority = true;
@@ -744,6 +769,9 @@ namespace ModularEncountersSystems.Entities {
 
 			HasPhysics = entity.Physics != null ? true : false;
 
+			if(HasPhysics)
+				EntityEvaluator.GetAttachedGrids(this);
+
 		}
 
 		public BlockEntity RandomTerminalBlock() {
@@ -759,8 +787,24 @@ namespace ModularEncountersSystems.Entities {
 
 		public void RefreshSubGrids() {
 
-			LinkedGrids = EntityEvaluator.GetAttachedGrids(CubeGrid);
+			if (LinkedGrids == null) {
 
+				SpawnLogger.Write("Warning: LinkedGrids collection null", SpawnerDebugEnum.Error, true);
+				return;
+			
+			}
+
+			for (int i = LinkedGrids.Count - 1; i >= 0; i--) {
+
+				if (LinkedGrids[i] != null && LinkedGrids[i].RefreshLinkedGrids) {
+
+					EntityEvaluator.GetAttachedGrids(this);
+					break;
+
+				}
+				
+			}
+			
 		}
 
 		public void SetAutomatedWeaponRanges(bool useMax = false) {
@@ -815,6 +859,14 @@ namespace ModularEncountersSystems.Entities {
 			CubeGrid.OnGridSplit -= GridSplit;
 			CubeGrid.OnBlockAdded -= NewBlockAdded;
 			CubeGrid.OnBlockRemoved -= BlockRemoved;
+
+			if (GridGroupData != null) {
+
+				GridGroupData.OnGridAdded -= OnSubgridChange;
+				GridGroupData.OnGridRemoved -= OnSubgridChange;
+
+			}
+			
 			UnloadEntities?.Invoke();
 
 		}

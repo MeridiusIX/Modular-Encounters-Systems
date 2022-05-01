@@ -16,6 +16,7 @@ using VRage.Game.ModAPI;
 using VRageMath;
 using ModularEncountersSystems.Spawning.Profiles;
 using VRage.Game;
+using Sandbox.Game;
 
 namespace ModularEncountersSystems.Spawning {
 	public static class SpawnConditions {
@@ -559,6 +560,7 @@ namespace ModularEncountersSystems.Spawning {
 			var modId = spawnGroup.SpawnGroup?.Context?.ModId ?? "N/A";
 			var spawnTypeBlacklist = Settings.GetSpawnTypeBlacklist(type);
 			var spawnTypePlanetBlacklist = Settings.GetSpawnTypePlanetBlacklist(type);
+			var planetfilter = Settings.GetPlanetFilterForType(type, environment.NearestPlanet?.Planet?.EntityId ?? 0);
 
 			//Global Blacklist SpawnGroup Name
 			if (Settings.General.NpcSpawnGroupBlacklist.Contains<string>(spawnGroup.SpawnGroupName)) {
@@ -584,6 +586,28 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			//Planet Spawn Filter
+			if (environment.IsOnPlanet && planetfilter != null && environment.NearestPlanet.Planet.EntityId == planetfilter.PlanetId) {
+
+				//Blacklist SpawnGroup Name
+				if (planetfilter.PlanetSpawnGroupBlacklist.Contains<string>(spawnGroup.SpawnGroupName)) {
+
+					failReason = "   - SpawnGroup Name Is Blacklisted For This Planet Filter: " + planetfilter.PlanetName + " - " + planetfilter.PlanetId;
+					return true;
+
+				}
+
+				//Blacklist Mod ID
+				if (planetfilter.PlanetSpawnGroupBlacklist.Contains<string>(modId)) {
+
+					failReason = "   - SpawnGroup ModID Is Blacklisted For This Planet Filter: " + planetfilter.PlanetName + " - " + planetfilter.PlanetId;
+					return true;
+
+				}
+
+			}
+
+			//SpawnGroup Planet Blacklist/Whitelist
 			if (!CheckSpawnGroupPlanetLists(conditions, environment)) {
 
 				failReason = "   - SpawnGroup Planet Blacklist/Whitelist Check Failed";
@@ -1711,6 +1735,7 @@ namespace ModularEncountersSystems.Spawning {
 
 								if (FactionHelper.NpcFactionTags.Contains(factionOvr.Tag) == false) {
 
+									//MyVisualScriptLogicProvider.ShowNotificationToAll("Npc Faction Tags Don't Include " + factionOvr.Tag, 4000);
 									continue;
 
 								}
@@ -1722,7 +1747,7 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
-						if (faction?.Tag != null && !collection.AllowedZoneFactions.Contains(faction.Tag)) {
+						if (faction?.Tag != null && collection.AllowedZoneFactions.Count > 0 && !collection.AllowedZoneFactions.Contains(faction.Tag)) {
 
 							factionList.Remove(faction);
 
@@ -1737,6 +1762,8 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Player Count " + PlayerManager.Players.Count, 4000);
+
 						foreach (var player in PlayerManager.Players) {
 
 							if (!player.Online)
@@ -1744,41 +1771,31 @@ namespace ModularEncountersSystems.Spawning {
 
 							if (player.Player.IsBot == true || player.Player.Character == null) {
 
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot or Chara Null ", 4000);
 								continue;
 
 							}
 
 							if (player.Distance(coords) > condition.PlayerReputationCheckRadius) {
 
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Radius Fail ", 4000);
 								continue;
 
 							}
 
-							//var playerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(player.IdentityId);
-
 							int rep = 0;
 							rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.Player.IdentityId, checkFaction.FactionId);
 
-							/*
-							if(playerFaction != null) {
-
-								rep = MyAPIGateway.Session.Factions.GetReputationBetweenFactions(playerFaction.FactionId, checkFaction.FactionId);
-
-							} else {
-
-								rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.IdentityId, checkFaction.FactionId);
-
-							}
-							*/
-
 							if (rep < condition.MinimumReputation && condition.MinimumReputation > -1501) {
 
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Min Rep Fail " + rep, 4000);
 								continue;
 
 							}
 
 							if (rep > condition.MaximumReputation && condition.MaximumReputation < 1501) {
 
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Rep Fail " + rep, 4000);
 								continue;
 
 							}

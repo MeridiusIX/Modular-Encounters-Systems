@@ -3,8 +3,10 @@ using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Watchers;
 using Sandbox.Game;
 using Sandbox.ModAPI;
+using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
 using VRage.Game.ModAPI;
@@ -362,13 +364,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				//ButtonPress
-				if (trigger.Type == "ButtonPress") {
-
-					trigger.ActivateTrigger(ButtonPress);
-					continue;
-
-				}
+				
 
 			}
 
@@ -715,6 +711,44 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (trigger.Triggered == true) {
 
 						ProcessTrigger(trigger);
+
+					}
+
+				}
+
+			}
+
+		}
+
+		public void ProcessButtonTriggers(IMyButtonPanel panel, int index, long playerId) {
+
+			for (int i = 0; i < Triggers.Count; i++) {
+
+				var trigger = Triggers[i];
+
+				if (trigger.UseTrigger == true && trigger.Type == "ButtonPress") {
+
+					if (_behavior?.RemoteControl == null || !_behavior.IsAIReady()) {
+
+						EventWatcher.ButtonPressed -= ProcessButtonTriggers;
+						return;
+
+					}
+
+					if (index != trigger.ButtonPanelIndex)
+						return;
+
+					if (panel.CustomName == null || panel.CustomName != trigger.ButtonPanelName)
+						return;
+
+					if (panel.SlimBlock.CubeGrid != _behavior.RemoteControl.SlimBlock.CubeGrid && panel.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(_behavior.RemoteControl.SlimBlock.CubeGrid))
+						return;
+
+					trigger.ActivateTrigger();
+
+					if (trigger.Triggered == true) {
+
+						ProcessTrigger(trigger, 0, Command.ButtonPressCommand(playerId));
 
 					}
 

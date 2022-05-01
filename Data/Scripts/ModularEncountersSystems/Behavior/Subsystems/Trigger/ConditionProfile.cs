@@ -767,40 +767,38 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				return;
 
 			_remoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplitHandler;
-			var allBlocks = TargetHelper.GetAllBlocks(_remoteControl?.SlimBlock?.CubeGrid).Where(x => x.FatBlock != null);
+			var allBlocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(_behavior.CurrentGrid);
 
 			foreach (var block in allBlocks) {
 
-				var terminalBlock = block.FatBlock as IMyTerminalBlock;
-
-				if (terminalBlock == null)
+				if (block == null)
 					continue;
 
-				BehaviorLogger.Write(" - " + terminalBlock.CustomName.Trim(), BehaviorDebugEnum.Condition);
+				BehaviorLogger.Write(" - " + block.CustomName.Trim(), BehaviorDebugEnum.Condition);
 
-				if (ConditionReference.RequiredAllFunctionalBlockNames.Contains(terminalBlock.CustomName.Trim())) {
+				if (ConditionReference.RequiredAllFunctionalBlockNames.Contains(block.CustomName.Trim())) {
 
-					BehaviorLogger.Write("Monitoring Required-All Block: " + terminalBlock.CustomName, BehaviorDebugEnum.Condition);
-					_watchedAllBlocks.Add(block.FatBlock);
-					block.FatBlock.IsWorkingChanged += CheckAllBlocks;
+					BehaviorLogger.Write("Monitoring Required-All Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+					_watchedAllBlocks.Add(block);
+					block.IsWorkingChanged += CheckAllBlocks;
 					_watchingAllBlocks = true;
 
 				}
 
-				if (ConditionReference.RequiredAnyFunctionalBlockNames.Contains(terminalBlock.CustomName.Trim())) {
+				if (ConditionReference.RequiredAnyFunctionalBlockNames.Contains(block.CustomName.Trim())) {
 
-					BehaviorLogger.Write("Monitoring Required-Any Block: " + terminalBlock.CustomName, BehaviorDebugEnum.Condition);
-					_watchedAnyBlocks.Add(block.FatBlock);
-					block.FatBlock.IsWorkingChanged += CheckAnyBlocks;
+					BehaviorLogger.Write("Monitoring Required-Any Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+					_watchedAnyBlocks.Add(block);
+					block.IsWorkingChanged += CheckAnyBlocks;
 					_watchingAnyBlocks = true;
 
 				}
 
-				if (ConditionReference.RequiredNoneFunctionalBlockNames.Contains(terminalBlock.CustomName.Trim())) {
+				if (ConditionReference.RequiredNoneFunctionalBlockNames.Contains(block.CustomName.Trim())) {
 
-					BehaviorLogger.Write("Monitoring Required-None Block: " + terminalBlock.CustomName, BehaviorDebugEnum.Condition);
-					_watchedNoneBlocks.Add(block.FatBlock);
-					block.FatBlock.IsWorkingChanged += CheckNoneBlocks;
+					BehaviorLogger.Write("Monitoring Required-None Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+					_watchedNoneBlocks.Add(block);
+					block.IsWorkingChanged += CheckNoneBlocks;
 					_watchingNoneBlocks = true;
 
 				}

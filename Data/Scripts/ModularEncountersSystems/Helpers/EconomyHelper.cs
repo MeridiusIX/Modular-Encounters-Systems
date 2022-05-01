@@ -136,6 +136,20 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (item.Id.TypeId == typeof(MyObjectBuilder_AmmoMagazine)) {
+
+					int itemPrice = 0;
+
+					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
+
+						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
+						OtherItemMinimumValues.Add(item.Id, itemPrice);
+						AddToMasterReference(item.Id, itemPrice);
+
+					}
+
+				}
+
 				if (item.Id.TypeId == typeof(MyObjectBuilder_ConsumableItem)) {
 
 					int itemPrice = 0;

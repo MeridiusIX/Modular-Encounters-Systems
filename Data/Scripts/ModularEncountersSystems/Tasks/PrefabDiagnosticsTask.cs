@@ -399,6 +399,8 @@ namespace ModularEncountersSystems.Tasks {
 		public string PrefabName;
 		public string GridName;
 		public bool Physics;
+		public bool GotGridSize;
+		public MyCubeSize GridSize;
 
 		public int BlockCount;
 
@@ -464,6 +466,8 @@ namespace ModularEncountersSystems.Tasks {
 			PrefabName = "";
 			GridName = "";
 			Physics = false;
+			GotGridSize = false;
+			GridSize = MyCubeSize.Large;
 
 			BlockCount = 0;
 

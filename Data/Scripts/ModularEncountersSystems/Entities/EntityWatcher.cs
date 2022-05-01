@@ -47,7 +47,8 @@ namespace ModularEncountersSystems.Entities {
 			MyAPIGateway.Entities.OnEntityAdd += NewEntityDetected;
 			EntityWatcherRegistered = true;
 
-
+			GridManager.LoadData();
+			UnloadEntities += GridManager.UnloadData;
 
 			MES_SessionCore.UnloadActions += UnregisterWatcher;
 

@@ -636,6 +636,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.LinkedGrids
+			if (array[2] == "LinkedGrids") {
+
+				LoggerTools.DebugLinkedGrids(this);
+				return true;
+
+			}
+
 			//MES.Debug.ProcessPrefabs
 			if (array[2] == "ProcessPrefabs") {
 
@@ -700,6 +708,22 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.SetReputation
+			if (array[2] == "SetReputation") {
+
+				//LoggerTools.SetReputation(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.SetSyncedReputation
+			if (array[2] == "SetSyncedReputation") {
+
+				//LoggerTools.SetSyncedReputation(this, array);
+				return true;
+
+			}
+
 			//TestAsteroidSpawns
 			if (array[2] == "TestAsteroidSpawns") {
 
@@ -734,7 +758,7 @@ namespace ModularEncountersSystems.Sync {
 			//MES.Debug.TextTest
 			if (array[2] == "TextTest") {
 
-				var textText = ProfileManager.GetTextTemplate("MES-TextTemplate-Example.xml");
+				var textText = ProfileManager.GetTextTemplate("Imber-TextTemplate-DatapadLore.xml");
 
 				if (textText == null) {
 
@@ -744,8 +768,19 @@ namespace ModularEncountersSystems.Sync {
 				
 				}
 
+				if (textText.DataPadEntries.Length == 0) {
+
+					ReturnMessage = "Datapad Entries Count 0";
+					Mode = ChatMsgMode.ReturnMessage;
+					return true;
+
+				}
+
 				ReturnMessage = "Found TextTemplate";
 				Mode = ChatMsgMode.ReturnMessage;
+				ClipboardPayload = textText.DataPadEntries[5].GetBody();
+				MyAPIGateway.Utilities.ShowMissionScreen(textText.DataPadEntries[5].GetTitle(), null, null, textText.DataPadEntries[5].GetBody());
+
 				return true;
 
 			}

@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Helpers;
+﻿using ModularEncountersSystems.Files;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Profiles;
 using System;
@@ -24,9 +25,6 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				var chance = profile.OverrideLootChance ? profile.LootChanceOverride : lootProfile.Chance;
 
 				if (chance < 100 && !MathTools.RandomChance(chance, 100))
-					continue;
-
-				if (lootProfile.ContainerTypes.Count == 0)
 					continue;
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
@@ -94,26 +92,44 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				if (!prefab.ClearedContainerTypes || profile.ClearExistingContainerTypes)
 					prefab.ClearedContainerTypes = true;
 
+
+
 				if (eligibleBlocks.Count > 0) {
 
 					int affectedBlocks = MathTools.RandomBetween(lootProfile.MinBlocks, lootProfile.MaxBlocks);
+					int datapadCount = 0;
+					TextTemplate dataPadSource = ProfileManager.GetTextTemplate(lootProfile.DatapadFileSource);
 
 					for (int i = 0; i < affectedBlocks; i++) {
 
 						var containerIndex = MathTools.RandomBetween(0, eligibleBlocks.Count);
 						var block = eligibleBlocks[containerIndex];
 
-						if (eligibleCargoContainers.Contains(block as MyObjectBuilder_CargoContainer)) {
+						if (lootProfile.AddDatapads && dataPadSource != null && datapadCount < lootProfile.DatapadCount) {
 
-							((MyObjectBuilder_CargoContainer)block).ContainerType = lootProfile.ContainerTypes[MathTools.RandomBetween(0, lootProfile.ContainerTypes.Count)];
-							SpawnLogger.Write("Applying Container Type to Container Block", SpawnerDebugEnum.Manipulation);
-
-						} else {
-
-							StorageTools.ApplyCustomBlockStorage(block, StorageTools.MesContainerTypeKey, lootProfile.ContainerTypes[MathTools.RandomBetween(0, lootProfile.ContainerTypes.Count)]);
-							SpawnLogger.Write("Applying ModStorage Container Type to Non-Container Block", SpawnerDebugEnum.Manipulation);
+							var entry = dataPadSource.DataPadEntries[lootProfile.DatapadIndex == -1 ? MathTools.RandomBetween(0, dataPadSource.DataPadEntries.Length) : lootProfile.DatapadIndex];
+							TryAddItemToInventory(block, entry.BuildDatapad());
+							SpawnLogger.Write("Adding Datapad To Block Inventory", SpawnerDebugEnum.Manipulation);
+							datapadCount++;
 
 						}
+
+						if (lootProfile.ContainerTypes.Count > 0) {
+
+							if (eligibleCargoContainers.Contains(block as MyObjectBuilder_CargoContainer)) {
+
+								((MyObjectBuilder_CargoContainer)block).ContainerType = lootProfile.ContainerTypes[MathTools.RandomBetween(0, lootProfile.ContainerTypes.Count)];
+								SpawnLogger.Write("Applying Container Type to Container Block", SpawnerDebugEnum.Manipulation);
+
+							} else {
+
+								StorageTools.ApplyCustomBlockStorage(block, StorageTools.MesContainerTypeKey, lootProfile.ContainerTypes[MathTools.RandomBetween(0, lootProfile.ContainerTypes.Count)]);
+								SpawnLogger.Write("Applying ModStorage Container Type to Non-Container Block", SpawnerDebugEnum.Manipulation);
+
+							}
+
+						}
+
 
 						var termBlock = block as MyObjectBuilder_TerminalBlock;
 						if (!string.IsNullOrWhiteSpace(termBlock?.CustomName) && lootProfile.AppendNameToBlock && !termBlock.CustomName.Contains(lootProfile.AppendedName))
@@ -182,6 +198,32 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			if (inventory?.Items != null)
 				inventory.Items.Clear();
+
+		}
+
+		private static void TryAddItemToInventory(MyObjectBuilder_CubeBlock block, MyObjectBuilder_PhysicalObject item) {
+
+			if (block?.ComponentContainer?.Components != null) {
+
+				foreach (var componentData in block.ComponentContainer.Components) {
+
+					var inventory = componentData?.Component as MyObjectBuilder_Inventory;
+
+					if (inventory?.Items != null) {
+
+						var invItem = new MyObjectBuilder_InventoryItem();
+						invItem.PhysicalContent = item;
+						invItem.Amount = 1;
+						invItem.ItemId = inventory.nextItemId;
+						inventory.nextItemId++;
+						inventory.Items.Add(invItem);
+						return;
+
+					}
+
+				}
+
+			}
 
 		}
 

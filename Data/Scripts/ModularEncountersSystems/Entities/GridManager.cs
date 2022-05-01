@@ -18,6 +18,13 @@ namespace ModularEncountersSystems.Entities {
 		public static List<MyDefinitionId> AllowedBlocks = new List<MyDefinitionId>();
 		public static List<MyDefinitionId> RestrictedBlocks = new List<MyDefinitionId>();
 
+		public static void LoadData() {
+
+			MyAPIGateway.GridGroups.OnGridGroupCreated += OnGridGroupChanged;
+			MyAPIGateway.GridGroups.OnGridGroupDestroyed += OnGridGroupChanged;
+		
+		}
+
 		public static void GetBlocksFromGrid<T>(IMyCubeGrid grid, List<IMySlimBlock> blocks, bool getAttachedGrids = false) where T : class {
 
 			lock(Grids) {
@@ -146,6 +153,12 @@ namespace ModularEncountersSystems.Entities {
 		
 		}
 
+		public static void OnGridGroupChanged(IMyGridGroupData data) {
+
+
+
+		}
+
 		public static bool ProcessBlock(IMySlimBlock block) {
 
 			if (block == null) {
@@ -268,6 +281,21 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 		
+		}
+
+		public static void UnloadData() {
+
+			try {
+
+				MyAPIGateway.GridGroups.OnGridGroupCreated -= OnGridGroupChanged;
+				MyAPIGateway.GridGroups.OnGridGroupDestroyed -= OnGridGroupChanged;
+
+			} catch (Exception) {
+			
+				
+			
+			}
+			
 		}
 
 	}

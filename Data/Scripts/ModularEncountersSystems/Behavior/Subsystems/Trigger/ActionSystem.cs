@@ -117,11 +117,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Changing AutoPilot Speed To: " + actions.NewAutopilotSpeed.ToString(), BehaviorDebugEnum.Action);
 				_autopilot.State.MaxSpeedOverride = actions.NewAutopilotSpeed;
-				var blockList = TargetHelper.GetAllBlocks(RemoteControl.SlimBlock.CubeGrid);
+				var blockList = BlockCollectionHelper.GetGridControllers(RemoteControl.SlimBlock.CubeGrid);
 
-				foreach (var block in blockList.Where(x => x.FatBlock != null)) {
+				foreach (var block in blockList) {
 
-					var tBlock = block.FatBlock as IMyRemoteControl;
+					var tBlock = block as IMyRemoteControl;
 
 					if (tBlock != null) {
 
@@ -171,28 +171,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.SelfDestruct == true) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting SelfDestruct", BehaviorDebugEnum.Action);
-				var blockList = TargetHelper.GetAllBlocks(RemoteControl.SlimBlock.CubeGrid);
+				var blockList = BlockCollectionHelper.GetBlocksOfType<IMyWarhead>(RemoteControl.SlimBlock.CubeGrid);
 				int totalWarheads = 0;
 
-				foreach (var block in blockList.Where(x => x.FatBlock != null)) {
+				foreach (var tblock in blockList) {
 
-					var tBlock = block.FatBlock as IMyWarhead;
+					var block = tblock as IMyWarhead;
 
-					if (tBlock != null) {
+					if (block != null) {
 
 						if (!actions.StaggerWarheadDetonation) {
 
-							tBlock.IsArmed = true;
-							tBlock.DetonationTime = 0 + actions.SelfDestructTimerPadding;
-							tBlock.Detonate();
+							block.IsArmed = true;
+							block.DetonationTime = 0 + actions.SelfDestructTimerPadding;
+							block.Detonate();
 							totalWarheads++;
 
 						} else {
 
 							totalWarheads++;
-							tBlock.IsArmed = true;
-							tBlock.DetonationTime = (totalWarheads * actions.SelfDestructTimeBetweenBlasts) + actions.SelfDestructTimerPadding;
-							tBlock.StartCountdown();
+							block.IsArmed = true;
+							block.DetonationTime = (totalWarheads * actions.SelfDestructTimeBetweenBlasts) + actions.SelfDestructTimerPadding;
+							block.StartCountdown();
 
 						}
 
@@ -460,6 +460,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						}
 
+
+					}
+
+				}
+
+			}
+
+			//ClearWaypoints
+			if (actions.ClearAllWaypoints) {
+
+				foreach (var waypoint in _behavior.AutoPilot.State.CargoShipWaypoints) {
+
+					waypoint.SetValid(false);
+				
+				}
+
+			}
+
+			//AddWaypoints
+			if (actions.AddWaypoints) {
+
+				foreach (var waypointName in actions.WaypointsToAdd) {
+
+					var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, waypointName);
+
+					if (waypoint != null && waypoint.Valid) {
+
+						_behavior.AutoPilot.State.CargoShipWaypoints.Add(waypoint);
 
 					}
 
@@ -1215,6 +1243,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 				BehaviorLogger.Write("Attempt Jump To Jumped Entity Result: " + jumpResult, BehaviorDebugEnum.Action);
+
+			}
+
+			//JumpToWaypoint
+			if (actions.JumpToWaypoint && _behavior.CurrentGrid != null) {
+
+				var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, actions.JumpWaypoint);
+				var jumpResult = _behavior.Grid.JumpToCoords(waypoint.GetCoords());
+
+				if (jumpResult) {
+
+					EventWatcher.GridJumped(0, "", RemoteControl.SlimBlock.CubeGrid.EntityId);
+
+				}
+
+				BehaviorLogger.Write("Attempt Jump To Target Entity Result: " + jumpResult, BehaviorDebugEnum.Action);
 
 			}
 

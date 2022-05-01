@@ -153,6 +153,12 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void SetReputation(long playerId, string factionTag) {
+		
+			
+		
+		}
+
 		public static void ScheduledRun() {
 
 			RunCount++;

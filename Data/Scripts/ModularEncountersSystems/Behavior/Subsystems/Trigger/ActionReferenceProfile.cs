@@ -237,9 +237,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool BroadcastCommandProfiles;
 		public List<string> CommandProfileIds;
 
-		public bool AddWaypointFromCommand;
-		public bool RecalculateDespawnCoords;
-
 		public bool AddDatapadsToSeats;
 		public List<string> DatapadNamesToAdd;
 		public int DatapadCountToAdd;
@@ -248,9 +245,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<SerializableDefinitionId> BlockTypesToToggle;
 		public List<SwitchEnum> BlockTypeToggles;
 
+		public bool ClearAllWaypoints;
+
+		public bool AddWaypoints;
+		public List<string> WaypointsToAdd;
+
+		public bool AddWaypointFromCommand;
+		public bool RecalculateDespawnCoords;
+
 		public bool CancelWaitingAtWaypoint;
 		public bool SwitchToNextWaypoint;
-
+		
 		public bool HeavyYaw;
 
 		public bool StopAllRotation;
@@ -316,7 +321,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool JumpToTarget; 
 		public bool JumpToJumpedEntity; 
-		public bool JumpedEntityMustBeTarget; 
+		public bool JumpedEntityMustBeTarget;
+
+		public bool JumpToWaypoint;
+		public string JumpWaypoint;
 
 		public bool SetGridCleanupExempt; 
 		public int GridCleanupExemptDuration; 
@@ -558,10 +566,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			BroadcastCommandProfiles = false;
 			CommandProfileIds = new List<string>();
 
-			AddWaypointFromCommand = false;
-
-			RecalculateDespawnCoords = false;
-
 			AddDatapadsToSeats = false;
 			DatapadNamesToAdd = new List<string>();
 			DatapadCountToAdd = 1;
@@ -569,6 +573,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ToggleBlocksOfType = false;
 			BlockTypesToToggle = new List<SerializableDefinitionId>();
 			BlockTypeToggles = new List<SwitchEnum>();
+
+			ClearAllWaypoints = false;
+
+			AddWaypoints = false;
+			WaypointsToAdd = new List<string>();
+
+			AddWaypointFromCommand = false;
+			RecalculateDespawnCoords = false;
 
 			CancelWaitingAtWaypoint = false;
 			SwitchToNextWaypoint = false;
@@ -638,6 +650,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			JumpToTarget = false;
 			JumpToJumpedEntity = false;
+			JumpedEntityMustBeTarget = false;
+
+			JumpToWaypoint = false;
+			JumpWaypoint = "";
 
 			SetGridCleanupExempt = false;
 			GridCleanupExemptDuration = 30;
@@ -821,6 +837,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ToggleBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref ToggleBlocksOfType) },
 				{"BlockTypesToToggle", (s, o) => TagParse.TagMyDefIdCheck(s, ref BlockTypesToToggle) },
 				{"BlockTypeToggles", (s, o) => TagParse.TagSwitchEnumCheck(s, ref BlockTypeToggles) },
+				{"ClearAllWaypoints", (s, o) => TagParse.TagBoolCheck(s, ref ClearAllWaypoints) },
+				{"AddWaypoints", (s, o) => TagParse.TagBoolCheck(s, ref AddWaypoints) },
+				{"WaypointsToAdd", (s, o) => TagParse.TagStringListCheck(s, ref WaypointsToAdd) },
 				{"CancelWaitingAtWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref CancelWaitingAtWaypoint) },
 				{"SwitchToNextWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToNextWaypoint) },
 				{"HeavyYaw", (s, o) => TagParse.TagBoolCheck(s, ref HeavyYaw) },
@@ -870,6 +889,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"TurretSubtypesForTargetChange", (s, o) => TagParse.TagStringListCheck(s, ref TurretSubtypesForTargetChange) },
 				{"JumpToTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpToTarget) },
 				{"JumpToJumpedEntity", (s, o) => TagParse.TagBoolCheck(s, ref JumpToJumpedEntity) },
+				{"JumpedEntityMustBeTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpedEntityMustBeTarget) },
+				{"JumpToWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref JumpToWaypoint) },
+				{"JumpWaypoint", (s, o) => TagParse.TagStringCheck(s, ref JumpWaypoint) },
 				{"SetGridCleanupExempt", (s, o) => TagParse.TagBoolCheck(s, ref SetGridCleanupExempt) },
 				{"GridCleanupExemptDuration", (s, o) => TagParse.TagIntCheck(s, ref GridCleanupExemptDuration) },
 				{"PlaySoundAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref PlaySoundAtPosition) },

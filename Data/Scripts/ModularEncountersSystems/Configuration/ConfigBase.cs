@@ -7,10 +7,38 @@ using VRage.Game;
 
 namespace ModularEncountersSystems.Configuration {
 
+	public class PlanetSpawnFilter {
+
+		public string PlanetName;
+		public long PlanetId;
+
+		[XmlArrayItem("SpawnGroup")]
+		public string[] PlanetSpawnGroupBlacklist;
+
+
+		public PlanetSpawnFilter() {
+
+			PlanetSpawnGroupBlacklist = new string[] { "AddSpawnGroupIdHere", "AddAnotherSpawnGroupIdHere" };
+
+		}
+
+		public PlanetSpawnFilter(string name, long id) {
+
+			PlanetName = name;
+			PlanetId = Math.Abs(id);
+			PlanetSpawnGroupBlacklist = new string[] { "AddSpawnGroupIdHere", "AddAnotherSpawnGroupIdHere" };
+		
+		}
+
+	}
+
 	public abstract class ConfigBase {
 
 		public string[] SpawnTypeBlacklist;
 		public string[] SpawnTypePlanetBlacklist;
+
+		[XmlArrayItem("PlanetSpawnFilter")]
+		public PlanetSpawnFilter[] PlanetSpawnFilters;
 
 		public bool UseTypeDisownTimer;
 		public int TypeDisownTimer;
@@ -48,10 +76,14 @@ namespace ModularEncountersSystems.Configuration {
 		[XmlIgnore]
 		public List<MyDefinitionId> DisableBlocksDefinitionList;
 
+		[XmlIgnore]
+		public List<PlanetSpawnFilter> PlanetSpawnFilterList;
+
 		public ConfigBase() {
 
 			SpawnTypeBlacklist = new string[]{ "AddSpawnGroupIdHere", "AddAnotherSpawnGroupIdHere" };
 			SpawnTypePlanetBlacklist = new string[] { "AddPlanetIdHere", "AddAnotherPlanetIdHere" };
+			PlanetSpawnFilters = new PlanetSpawnFilter[] { };
 
 			UseTimeout = true;
 			TimeoutDuration = 900;
@@ -84,6 +116,7 @@ namespace ModularEncountersSystems.Configuration {
 
 				{"SpawnTypeBlacklist", (s, o) => EditorTools.SetCommandValueStringArray(s, ref SpawnTypeBlacklist) },
 				{"SpawnTypePlanetBlacklist", (s, o) => EditorTools.SetCommandValueStringArray(s, ref SpawnTypePlanetBlacklist) },
+				{"PlanetSpawnFilters", (s, o) => EditorTools.SetCommandValuePlanetFilter(s, ref PlanetSpawnFilters) },
 
 				{"UseTimeout", (s, o) => EditorTools.SetCommandValueBool(s, ref UseTimeout) },
 				{"TimeoutRadius", (s, o) => EditorTools.SetCommandValueDouble(s, ref TimeoutRadius) },
@@ -111,7 +144,27 @@ namespace ModularEncountersSystems.Configuration {
 
 			};
 
+			PlanetSpawnFilterList = new List<PlanetSpawnFilter>();
 			DisableBlocksDefinitionList = new List<MyDefinitionId>();
+
+		}
+
+		public PlanetSpawnFilter GetPlanetSpawnFilter(long entityId) {
+
+			foreach (var filter in PlanetSpawnFilters)
+				if (filter.PlanetId == entityId)
+					return filter;
+
+			return null;
+		
+		}
+
+		public void AddPlanetSpawnFilter(PlanetSpawnFilter filter) {
+
+			PlanetSpawnFilterList.Clear();
+			PlanetSpawnFilterList.AddArray<PlanetSpawnFilter>(PlanetSpawnFilters);
+			PlanetSpawnFilterList.Add(filter);
+			PlanetSpawnFilters = PlanetSpawnFilterList.ToArray();
 
 		}
 

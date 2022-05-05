@@ -184,6 +184,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(54)]
 		public bool CameraDetectGrid;
 
+		[ProtoMember(55)]
+		public string FactionTag;
+
+		[ProtoMember(56)]
+		public bool UseCustomFactionTag;
+		
 		[ProtoIgnore]
 		public IBehavior Behavior;
 
@@ -245,6 +251,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MaxPlayerReputation = 1501;
 			AllPlayersMustMatchReputation = false;
 			CustomReputationRangeCheck = 5000;
+			UseCustomFactionTag = false;
+			FactionTag = "";
 
 			InventoryBlockName = "";
 			InventoryItemDefinitionId = "";
@@ -608,6 +616,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[CustomReputationRangeCheck:") == true) {
 
 						TagParse.TagDoubleCheck(tag, ref CustomReputationRangeCheck);
+
+					}
+
+					//UseCustomFactionTag
+					if (tag.Contains("[UseCustomFactionTag:") == true)
+					{
+
+						TagParse.TagBoolCheck(tag, ref UseCustomFactionTag);
+
+					}
+
+					//FactionTag
+					if (tag.Contains("[FactionTag:") == true)
+					{
+
+						TagParse.TagStringCheck(tag, ref FactionTag);
 
 					}
 

@@ -996,6 +996,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, _owner.FactionId, control);
 
+<<<<<<< Updated upstream
 			} else {
 
 				player = PlayerManager.GetNearestPlayer(remotePosition);

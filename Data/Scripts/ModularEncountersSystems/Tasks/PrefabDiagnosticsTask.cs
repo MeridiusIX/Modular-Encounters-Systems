@@ -92,9 +92,20 @@ namespace ModularEncountersSystems.Tasks {
 				_spawningGridTicks = 0;
 				_thrusterTestTicks = 0;
 
-				foreach (var grid in _grids)
-					grid.ProcessGrid();
+				foreach (var grid in _grids) {
 
+					try {
+
+						grid.ProcessGrid();
+
+					} catch (Exception) {
+
+						grid.ProcessedCorrectly = false;
+					
+					}
+			
+				}
+					
 				return;
 
 			} else if(_spawningGrid && _detectedGrid) {
@@ -148,6 +159,7 @@ namespace ModularEncountersSystems.Tasks {
 			_text.Append("PrefabName").Append(",");
 			_text.Append("GridName").Append(",");
 			_text.Append("PhysicalGrid").Append(",");
+			_text.Append("ProcessedCorrectly").Append(",");
 
 			_text.Append("BlockCount").Append(",");
 
@@ -399,6 +411,7 @@ namespace ModularEncountersSystems.Tasks {
 		public string PrefabName;
 		public string GridName;
 		public bool Physics;
+		public bool ProcessedCorrectly;
 		public bool GotGridSize;
 		public MyCubeSize GridSize;
 
@@ -466,6 +479,7 @@ namespace ModularEncountersSystems.Tasks {
 			PrefabName = "";
 			GridName = "";
 			Physics = false;
+			ProcessedCorrectly = true;
 			GotGridSize = false;
 			GridSize = MyCubeSize.Large;
 
@@ -529,7 +543,7 @@ namespace ModularEncountersSystems.Tasks {
 
 		public void ProcessGrid() {
 
-			if (CubeGrid == null)
+			if (CubeGrid == null || CubeGrid.Closed || CubeGrid.MarkedForClose)
 				return;
 
 			Physics = CubeGrid.Physics != null;
@@ -946,6 +960,7 @@ namespace ModularEncountersSystems.Tasks {
 			sb.Append(PrefabName).Append(",");
 			sb.Append(GridName).Append(",");
 			sb.Append(Physics).Append(",");
+			sb.Append(ProcessedCorrectly).Append(",");
 
 			sb.Append(BlockCount).Append(",");
 

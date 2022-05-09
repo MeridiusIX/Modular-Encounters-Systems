@@ -63,8 +63,8 @@
         <TypeId>ConsumableItem</TypeId>
         <SubtypeId>PlayerInhibitorBlocker</SubtypeId>
       </Id>
-      <DisplayName>Player Inhibitor Nullifier</DisplayName>
-      <Description>This module will temporarily negate the effects of Player Inhibitor Blocks when activated. The effect lasts for 30 seconds and will drain 30 points of Suit Energy.</Description>
+      <DisplayName>Personnel Inhibitor Nullifier</DisplayName>
+      <Description>This module will temporarily negate the effects of Personnel Inhibitor Blocks when activated. The effect lasts for 30 seconds and will drain 30 points of Suit Energy.</Description>
       <Icon>Textures\GUI\Icons\Items\PowerKit.dds</Icon>
       <IconSymbol>PN</IconSymbol>
       <Size>
@@ -83,8 +83,34 @@
       <CanPlayerOrder>false</CanPlayerOrder>
       <CanSpawnFromScreen>false</CanSpawnFromScreen>
     </PhysicalItem>
-    
-  <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
+
+    <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
+      <Id>
+        <TypeId>ConsumableItem</TypeId>
+        <SubtypeId>EnergyInhibitorBlocker</SubtypeId>
+      </Id>
+      <DisplayName>Energy Inhibitor Nullifier</DisplayName>
+      <Description>This module will temporarily negate the effects of Energy Inhibitor Blocks when activated. The effect lasts for 30 seconds.</Description>
+      <Icon>Textures\GUI\Icons\Items\PowerKit.dds</Icon>
+      <IconSymbol>EN</IconSymbol>
+      <Size>
+        <X>0.14</X>
+        <Y>0.43</Y>
+        <Z>0.14</Z>
+      </Size>
+      <Mass>9</Mass>
+      <Volume>9</Volume>
+      <Model>Models\Items\PowerKit.mwm</Model>
+      <PhysicalMaterial>Metal</PhysicalMaterial>
+      <Stats>
+        <Stat Name="BatteryCharge" Value ="-0.01" Time="1"/>
+      </Stats>
+      <MinimalPricePerUnit>25000000</MinimalPricePerUnit>
+      <CanPlayerOrder>false</CanPlayerOrder>
+      <CanSpawnFromScreen>false</CanSpawnFromScreen>
+    </PhysicalItem>
+
+    <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
       <Id>
         <TypeId>ConsumableItem</TypeId>
         <SubtypeId>CounterfeitInhibitorBlocker</SubtypeId>

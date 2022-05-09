@@ -49,14 +49,14 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			if (_antenna != null) {
 
-				_antenna.Radius = 1000;
+				_antenna.Radius = 800;
 				_antenna.CustomName = "[Jetpack Inhibitor Field]";
 				_antenna.CustomNameChanged += NameChange;
 
 			} else {
 
-				_antennaRange = 1000;
-				_dampenerRange = 1000;
+				_antennaRange = 800;
+				_dampenerRange = 800;
 				_disableRange = _dampenerRange / 3;
 
 

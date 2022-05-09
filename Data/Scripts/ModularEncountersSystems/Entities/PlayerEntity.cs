@@ -26,6 +26,7 @@ namespace ModularEncountersSystems.Entities {
 		public ConsumableItemTimer JetpackInhibitorNullifier;
 		public ConsumableItemTimer DrillInhibitorNullifier;
 		public ConsumableItemTimer PlayerInhibitorNullifier;
+		public ConsumableItemTimer EnergyInhibitorNullifier;
 
 		public List<GridEntity> LinkedGrids;
 
@@ -102,10 +103,25 @@ namespace ModularEncountersSystems.Entities {
 					PlayerInhibitorNullifier = new ConsumableItemTimer(30, Player.IdentityId, "Player Inhibitor Nullifier");
 					TaskProcessor.Tasks.Add(PlayerInhibitorNullifier);
 
-
 				} else {
 
 					PlayerInhibitorNullifier.ResetTimer(30);
+
+				}
+
+			}
+
+			if (id.SubtypeName == "EnergyInhibitorBlocker") {
+
+				if (EnergyInhibitorNullifier == null || !EnergyInhibitorNullifier.EffectActive()) {
+
+					EnergyInhibitorNullifier = new ConsumableItemTimer(30, Player.IdentityId, "Energy Inhibitor Nullifier", true);
+					TaskProcessor.Tasks.Add(EnergyInhibitorNullifier);
+
+
+				} else {
+
+					EnergyInhibitorNullifier.ResetTimer(30);
 
 				}
 

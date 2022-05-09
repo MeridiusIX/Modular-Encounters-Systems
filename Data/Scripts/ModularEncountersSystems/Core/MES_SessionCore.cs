@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.API;
+﻿using ModularEncountersSystems.Admin;
+using ModularEncountersSystems.API;
 using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Configuration;
@@ -25,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.49";
+		public static string ModVersion = "2.1.51";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -95,6 +96,7 @@ namespace ModularEncountersSystems.Core {
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
 
+			ProgramBlockControls.SpawnProgramBlockForControls();
 			LocalApi.SendApiToMods();
 			FactionHelper.PopulateNpcFactionLists();
 			EventWatcher.Setup();

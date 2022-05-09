@@ -491,7 +491,6 @@ namespace ModularEncountersSystems.Zones {
 				zone.Active = mode;
 
 				updateZones = true;
-				break;
 
 			}
 
@@ -517,7 +516,6 @@ namespace ModularEncountersSystems.Zones {
 				zone.Active = mode;
 
 				updateZones = true;
-				break;
 
 			}
 

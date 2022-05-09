@@ -651,7 +651,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public string GetAutopilotData() {
 
 			var sb = new StringBuilder();
-			sb.Append(" - Current Profile:                    ").Append(Data.ProfileSubtypeId).AppendLine();
+
+			if (_remoteControl == null) {
+
+				sb.Append(" - Remote Control Null, Cannot Get Autopilot Details");
+				sb.AppendLine();
+				return sb.ToString();
+
+			}
+
+			sb.Append(" - Current Profile:                    ").Append(Data?.ProfileSubtypeId ?? "null").AppendLine();
 			sb.Append(" - Speed:                              ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
 			sb.Append(" - Altitude:                           ").Append(MyAltitude.ToString()).AppendLine();
 			sb.Append(" - Position:                           ").Append(_remoteControl.GetPosition().ToString()).AppendLine();
@@ -683,21 +692,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			sb.Append(" - Side Thrust Mode:                   ").Append(_debugThrustSideMode).AppendLine();
 			sb.AppendLine();
 
-			sb.Append(" - ForwardDir:                         ").Append(_behavior.BehaviorSettings.RotationDirection.ToString()).AppendLine();
+			sb.Append(" - ForwardDir:                         ").Append(_behavior?.BehaviorSettings?.RotationDirection.ToString() ?? "null").AppendLine();
 			sb.Append(" - Pitch:   ").AppendLine();
 			sb.Append("   - Angle:                            ").Append(Math.Round(PitchAngleDifference, 2)).AppendLine();
 			sb.Append("   - Target Diff:                      ").Append(Math.Round(PitchTargetAngleResult, 2)).AppendLine();
-			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro.RawValues.X, 4)).AppendLine();
+			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro?.RawValues.X ?? 0, 4)).AppendLine();
 			sb.Append("   - Magnitude:                        ").Append(Math.Round(ExistingPitchMagnitude, 4)).AppendLine();
 			sb.Append(" - Yaw: ").AppendLine();
 			sb.Append("   - Angle:                            ").Append(Math.Round(YawAngleDifference, 2)).AppendLine();
 			sb.Append("   - Target Diff:                      ").Append(Math.Round(YawTargetAngleResult, 2)).AppendLine();
-			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro.RawValues.Y, 4)).AppendLine();
+			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro?.RawValues.Y ?? 0, 4)).AppendLine();
 			sb.Append("   - Magnitude:                        ").Append(Math.Round(ExistingYawMagnitude, 4)).AppendLine();
 			sb.Append(" - Roll: ").AppendLine();
 			sb.Append("   - Angle:                            ").Append(Math.Round(RollAngleDifference, 2)).AppendLine();
 			sb.Append("   - Target Diff:                      ").Append(Math.Round(RollTargetAngleResult, 2)).AppendLine();
-			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro.RawValues.Z, 4)).AppendLine();
+			sb.Append("   - Gyro Rotation:                    ").Append(Math.Round(ActiveGyro?.RawValues.Z ?? 0, 4)).AppendLine();
 			sb.Append("   - Magnitude:                        ").Append(Math.Round(ExistingRollMagnitude, 4)).AppendLine();
 
 			if (State != null) {

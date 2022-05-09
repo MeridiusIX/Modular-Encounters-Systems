@@ -235,6 +235,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Termination Of Behavior", BehaviorDebugEnum.Action);
 				_autopilot.ActivateAutoPilot(Vector3D.Zero, NewAutoPilotMode.None);
 				_behavior.BehaviorTerminated = true;
+				if (_behavior.CurrentGrid?.Npc != null)
+					_behavior.CurrentGrid.Npc.BehaviorTerminationReason = "Behavior Terminated By Trigger/Action";
 
 			}
 

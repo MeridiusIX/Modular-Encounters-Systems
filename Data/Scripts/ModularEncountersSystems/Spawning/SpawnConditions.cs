@@ -557,7 +557,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		public static bool CheckBlacklists(SpawningType type, ImprovedSpawnGroup spawnGroup, EnvironmentEvaluation environment, SpawnConditionsProfile conditions, ref string failReason) {
 
-			var modId = spawnGroup.SpawnGroup?.Context?.ModId ?? "N/A";
+			var modId = spawnGroup.SpawnGroup?.Context?.ModItem.PublishedFileId.ToString() ?? "N/A";
 			var spawnTypeBlacklist = Settings.GetSpawnTypeBlacklist(type);
 			var spawnTypePlanetBlacklist = Settings.GetSpawnTypePlanetBlacklist(type);
 			var planetfilter = Settings.GetPlanetFilterForType(type, environment.NearestPlanet?.Planet?.EntityId ?? 0);
@@ -751,6 +751,21 @@ namespace ModularEncountersSystems.Spawning {
 
 				failReason = "   - SpawnGroup Failed Chance Roll";
 				return false;
+
+			}
+
+			if (environment.AtmosphereAtPosition > 0) {
+
+				if (APIs.DragApiLoaded && APIs.Drag.AdvLift && !conditions.PlanetaryInstallation && !conditions.ForceStaticGrid) {
+
+					if (!conditions.UsesAerodynamicModAdvLift) {
+
+						failReason = "   - Aerodynamic Mod AdvLift feature not compatible with this encounter.";
+						return false;
+
+					}
+
+				}
 
 			}
 
@@ -1700,6 +1715,8 @@ namespace ModularEncountersSystems.Spawning {
 				factionList = new List<IMyFaction>(tempList.ToList());
 
 			}
+
+			SpawnLogger.Write("Faction List Count: " + factionList.Count, SpawnerDebugEnum.Dev);
 
 			if (factionList.Count == 0) {
 

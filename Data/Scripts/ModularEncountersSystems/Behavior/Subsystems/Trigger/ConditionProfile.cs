@@ -105,20 +105,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool AreConditionsMets(Command command = null) {
 
-			if (ConditionReference == null)
+			if (ConditionReference == null) {
+
+				BehaviorLogger.Write(ProfileSubtypeId + ": Condition Reference Null", BehaviorDebugEnum.Condition);
 				return false;
-
-			if (!_gotWatchedBlocks)
-				SetupWatchedBlocks();
-
-			if (ConditionReference.UseConditions == false) {
-
-				return true;
 
 			}
 
-			int usedConditions = 0;
-			int satisfiedConditions = 0;
+			if (ConditionReference.UseConditions == false) {
+
+				BehaviorLogger.Write(ProfileSubtypeId + ": Condition Not In Use", BehaviorDebugEnum.Condition);
+				return true;
+
+			}
 
 			if (_behavior == null) {
 
@@ -128,6 +127,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					return false;
 
 			}
+
+			if (!_gotWatchedBlocks)
+				SetupWatchedBlocks();
+
+			int usedConditions = 0;
+			int satisfiedConditions = 0;
 
 			if (ConditionReference.CheckAllLoadedModIDs == true) {
 
@@ -763,18 +768,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			_watchedAllBlocks.Clear();
 			_watchedNoneBlocks.Clear();
 
-			if (!ConditionReference.UseRequiredFunctionalBlocks)
+			if (!ConditionReference.UseRequiredFunctionalBlocks) {
+
+				BehaviorLogger.Write("Condition Not Using Required Functional Blocks", BehaviorDebugEnum.Condition);
 				return;
 
+			}
+
 			_remoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplitHandler;
-			var allBlocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(_behavior.CurrentGrid);
+
+			var allBlocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(_behavior.CurrentGrid); ;
+
+			BehaviorLogger.Write("Monitoring Blocks Pre-Filtered Count: " + allBlocks.Count, BehaviorDebugEnum.Condition);
 
 			foreach (var block in allBlocks) {
 
 				if (block == null)
 					continue;
-
-				BehaviorLogger.Write(" - " + block.CustomName.Trim(), BehaviorDebugEnum.Condition);
 
 				if (ConditionReference.RequiredAllFunctionalBlockNames.Contains(block.CustomName.Trim())) {
 
@@ -804,6 +814,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
+
+			BehaviorLogger.Write("Watch All Blocks Count:  " + _watchedAllBlocks.Count, BehaviorDebugEnum.Condition);
+			BehaviorLogger.Write("Watch Any Blocks Count:  " + _watchedAnyBlocks.Count, BehaviorDebugEnum.Condition);
+			BehaviorLogger.Write("Watch None Blocks Count: " + _watchedNoneBlocks.Count, BehaviorDebugEnum.Condition);
 
 			CheckAllBlocks();
 			CheckAnyBlocks();

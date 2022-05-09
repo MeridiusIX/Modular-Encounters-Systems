@@ -10,7 +10,7 @@ using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class PlayerInhibitor : BaseBlockLogic, IBlockLogic {
+	public class EnergyInhibitor : BaseBlockLogic, IBlockLogic {
 
 		internal IMyRadioAntenna _antenna;
 		internal IMyTerminalBlock _block;
@@ -20,9 +20,9 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal bool _playersInRange;
 		internal List<PlayerEntity> _playersInBlockRange;
 
-		internal float _damageAtZeroDistance = 25;
+		internal float _damageAtZeroDistance = 0.25f;
 
-		public PlayerInhibitor(BlockEntity block) {
+		public EnergyInhibitor(BlockEntity block) {
 
 			Setup(block);
 
@@ -47,7 +47,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			if (_antenna != null) {
 
 				_antenna.Radius = 800;
-				_antenna.CustomName = "[Personnel Inhibitor Field]";
+				_antenna.CustomName = "[Energy Inhibitor Field]";
 				_antenna.CustomNameChanged += NameChange;
 
 			} else {
@@ -56,7 +56,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			}
 
-			_logicType = "Player Inhibitor";
+			_logicType = "Energy Inhibitor";
 			_useTick60 = true;
 			_useTick100 = true;
 
@@ -64,8 +64,8 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal void NameChange(IMyTerminalBlock block) {
 		
-			if(_antenna.CustomName != "[Personnel Inhibitor Field]")
-				_antenna.CustomName = "[Personnel Inhibitor Field]";
+			if(_antenna.CustomName != "[Energy Inhibitor Field]")
+				_antenna.CustomName = "[Energy Inhibitor Field]";
 
 		}
 
@@ -80,8 +80,9 @@ namespace ModularEncountersSystems.BlockLogic {
 					continue;
 
 				float distanceRatio = 1 - (float)(Vector3D.Distance(player.GetPosition(), Entity.GetPosition()) / _antennaRange);
-
-				player.Player.Character.DoDamage(_damageAtZeroDistance * distanceRatio, MyStringHash.GetOrCompute("Radiation"), true, null, Entity.EntityId);
+				float existingEnergy = MyVisualScriptLogicProvider.GetPlayersEnergyLevel(player.Player.IdentityId);
+				float newEnergy = MathHelper.Clamp(existingEnergy - (_damageAtZeroDistance * distanceRatio), 0, 1);
+				MyVisualScriptLogicProvider.SetPlayersEnergyLevel(player.Player.IdentityId, newEnergy);
 
 			}
 
@@ -121,7 +122,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 					if (!_playersInBlockRange.Contains(player)) {
 
-						MyVisualScriptLogicProvider.ShowNotification("WARNING: Prolonged Exposure To Personnel Inhibitor Field May Be Fatal!", 5000, "Red", player.Player.IdentityId);
+						MyVisualScriptLogicProvider.ShowNotification("WARNING: Energy Inhibitor Detected. Suit Energy Rapidly Depleting.", 5000, "Red", player.Player.IdentityId);
 						_playersInBlockRange.Add(player);
 
 					}

@@ -368,6 +368,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(32)]
 		public SpawningType OriginalSpawnType;
 
+		[ProtoMember(33)]
+		public string BehaviorTerminationReason;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -535,6 +538,7 @@ namespace ModularEncountersSystems.World {
 			UniqueSpawnIdentifier = "";
 			CustomTags = new List<string>();
 			OriginalSpawnType = SpawningType.None;
+			BehaviorTerminationReason = "";
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;

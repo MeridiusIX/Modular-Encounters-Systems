@@ -25,6 +25,7 @@ namespace ModularEncountersSystems.BlockLogic {
         public static List<MyDefinitionId> JumpInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> NanobotInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> PlayerInhibitorIds = new List<MyDefinitionId>();
+        public static List<MyDefinitionId> EnergyInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> TurretControllers = new List<MyDefinitionId>();
 
         public static List<long> TrackedLogicIds = new List<long>();
@@ -96,6 +97,8 @@ namespace ModularEncountersSystems.BlockLogic {
             JumpInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large"));
             PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Small"));
             PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
+            EnergyInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Small"));
+            EnergyInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
 
             TurretControllers.Add(new MyDefinitionId(typeof(MyObjectBuilder_TurretControlBlock), "MES-NpcSmallTurretControlBlock"));
             TurretControllers.Add(new MyDefinitionId(typeof(MyObjectBuilder_TurretControlBlock), "MES-NpcLargeTurretControlBlock"));
@@ -168,6 +171,13 @@ namespace ModularEncountersSystems.BlockLogic {
             if (PlayerInhibitorIds.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
 
                 LogicBlocks.Add(block.Block.EntityId, new PlayerInhibitor(block));
+                return;
+
+            }
+
+            if (EnergyInhibitorIds.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
+
+                LogicBlocks.Add(block.Block.EntityId, new EnergyInhibitor(block));
                 return;
 
             }

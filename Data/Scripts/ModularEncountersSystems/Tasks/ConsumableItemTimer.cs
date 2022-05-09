@@ -14,12 +14,14 @@ namespace ModularEncountersSystems.Tasks {
 		private long _playerId;
 		private string _consumableType;
 		private bool _warning;
+		private bool _noEnergyConsumption;
 
-		public ConsumableItemTimer(int timerSeconds, long playerId, string consumableType = null) {
+		public ConsumableItemTimer(int timerSeconds, long playerId, string consumableType = null, bool ignoreEnergy = false) {
 
 			_tickTrigger = 60;
 			_playerId = playerId;
 			_consumableType = consumableType;
+			_noEnergyConsumption = ignoreEnergy;
 			ResetTimer(timerSeconds);
 
 		}

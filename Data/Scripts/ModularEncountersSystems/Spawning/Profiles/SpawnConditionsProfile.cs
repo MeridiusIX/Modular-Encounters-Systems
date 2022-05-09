@@ -147,6 +147,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public BoolEnum SettingsWeather; //Doc
 		public BoolEnum SettingsWolves; //Doc
 
+		public bool UsesAerodynamicModAdvLift;
+
 		public bool UseDateTimeYearRange;
 		public int MinDateTimeYear;
 		public int MaxDateTimeYear;
@@ -441,6 +443,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			SettingsWeather = BoolEnum.None;
 			SettingsWolves = BoolEnum.None;
 
+			UsesAerodynamicModAdvLift = false;
+
 			UseDateTimeYearRange = false;
 			MinDateTimeYear = -1;
 			MaxDateTimeYear = -1;
@@ -712,6 +716,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"SettingsWeaponsEnabled", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWeaponsEnabled) },
 				{"SettingsWeather", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWeather) },
 				{"SettingsWolves", (s, o) => TagParse.TagBoolEnumCheck(s, ref SettingsWolves) },
+				{"UsesAerodynamicModAdvLift", (s, o) => TagParse.TagBoolCheck(s, ref UsesAerodynamicModAdvLift) },
 				{"UseDateTimeYearRange", (s, o) => TagParse.TagBoolCheck(s, ref UseDateTimeYearRange) },
 				{"MinDateTimeYear", (s, o) => TagParse.TagIntCheck(s, ref MinDateTimeYear) },
 				{"MaxDateTimeYear", (s, o) => TagParse.TagIntCheck(s, ref MaxDateTimeYear) },

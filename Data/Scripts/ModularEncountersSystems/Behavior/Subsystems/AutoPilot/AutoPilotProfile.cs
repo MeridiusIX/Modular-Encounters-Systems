@@ -73,6 +73,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double DesiredAngleToTarget;
 
 		public bool DisableInertiaDampeners;
+		public bool ForceDampenersEnabled;
 
 		public bool ReverseOffsetDistAltAboveHeight;
 		public double ReverseOffsetHeight;
@@ -145,6 +146,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			ProfileSubtypeId = "";
 
 			DisableInertiaDampeners = false;
+			ForceDampenersEnabled = false;
 			IdealMaxSpeed = 100;
 			IdealMinSpeed = 10;
 			SlowDownOnWaypointApproach = false;
@@ -308,6 +310,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[DisableInertiaDampeners:") == true) {
 
 				TagParse.TagBoolCheck(tag, ref DisableInertiaDampeners);
+
+			}
+
+			//ForceDampenersEnabled
+			if (tag.Contains("[ForceDampenersEnabled:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref ForceDampenersEnabled);
 
 			}
 

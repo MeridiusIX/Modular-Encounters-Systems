@@ -185,7 +185,10 @@ namespace ModularEncountersSystems.Behavior {
 				
 				_currentGrid = value; 
 			
-			} }
+			} 
+		
+		}
+
 		internal GridEntity _currentGrid;
 
 		internal List<Vector3D> _escortOffsets;
@@ -536,6 +539,10 @@ namespace ModularEncountersSystems.Behavior {
 
 					BehaviorLogger.Write("Could Not Setup Behavior. Behavior Subclass Could Not Be Determined.", BehaviorDebugEnum.BehaviorSetup, true);
 					this.BehaviorTerminated = true;
+
+					if (CurrentGrid?.Npc != null)
+						CurrentGrid.Npc.BehaviorTerminationReason = "Behavior Subclass Setup Issue";
+
 					return;
 
 				}
@@ -551,6 +558,9 @@ namespace ModularEncountersSystems.Behavior {
 
 					BehaviorLogger.Write("NPC Active Behavior Null. Terminating Core Behavior", BehaviorDebugEnum.BehaviorSetup, true);
 					this.BehaviorTerminated = true;
+
+					if (CurrentGrid?.Npc != null)
+						CurrentGrid.Npc.BehaviorTerminationReason = "Active Behavior Null";
 
 				}
 
@@ -587,6 +597,8 @@ namespace ModularEncountersSystems.Behavior {
 				if (AddonManager.ConfigInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("LnNibQ=="))) && (!valA && !valB && !valC)) {
 
 					this.BehaviorTerminated = true;
+					if (CurrentGrid?.Npc != null)
+						CurrentGrid.Npc.BehaviorTerminationReason = "Setup/Config Error";
 					return;
 
 				}
@@ -638,6 +650,8 @@ namespace ModularEncountersSystems.Behavior {
 			if (ActiveBehavior == null) {
 
 				BehaviorLogger.Write("Could Not Setup Behavior. Behavior Subclass Could Not Be Determined.", BehaviorDebugEnum.BehaviorSetup, true);
+				if (CurrentGrid?.Npc != null)
+					CurrentGrid.Npc.BehaviorTerminationReason = "Behavior Subclass Setup Issue";
 				this.BehaviorTerminated = true;
 				return;
 

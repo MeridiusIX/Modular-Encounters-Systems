@@ -728,6 +728,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		//Main Thread
 		public void ApplyThrust() {
 
+			if (Data.ForceDampenersEnabled && !_remoteControl.DampenersOverride)
+				_remoteControl.DampenersOverride = true;
+
 			for (int i = ThrustProfiles.Count - 1; i >= 0; i--) {
 
 				var thrust = ThrustProfiles[i];

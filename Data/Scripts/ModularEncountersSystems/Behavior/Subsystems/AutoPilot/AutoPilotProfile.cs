@@ -138,8 +138,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public bool UseVerticalRetreat;
 		public bool UseWaterPatrolMode;
 
+		public bool EscortUsesRelativeDampening;
 		public double EscortSpeedMatchMinDistance;
 		public double EscortSpeedMatchMaxDistance;
+
+
+		public bool UseSubgridThrust;
+		public double MaxSubgridThrustAngle;
 
 		public AutoPilotProfile() {
 
@@ -267,8 +272,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			UseWaterPatrolMode = false;
 
+			EscortUsesRelativeDampening = false;
 			EscortSpeedMatchMinDistance = 25;
 			EscortSpeedMatchMaxDistance = 150;
+
+			UseSubgridThrust = false;
+			MaxSubgridThrustAngle = 35;
 
 			UseVelocityCollisionEvasion = BoolEnum.True;
 
@@ -948,6 +957,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[UseWaterPatrolMode:") == true) {
 
 				TagParse.TagBoolCheck(tag, ref UseWaterPatrolMode);
+
+			}
+
+			//UseSubgridThrust
+			if (tag.Contains("[UseSubgridThrust:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref UseSubgridThrust);
+
+			}
+
+			//MaxSubgridThrustAngle
+			if (tag.Contains("[MaxSubgridThrustAngle:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref MaxSubgridThrustAngle);
 
 			}
 

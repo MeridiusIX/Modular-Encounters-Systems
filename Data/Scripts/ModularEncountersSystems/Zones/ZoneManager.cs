@@ -341,7 +341,7 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.Persistent || !zone.UseZoneAnnounce)
+				if (!zone.Persistent || !zone.Active || !zone.UseZoneAnnounce)
 					continue;
 
 				for (int j = 0; j < PlayerManager.Players.Count; j++) {

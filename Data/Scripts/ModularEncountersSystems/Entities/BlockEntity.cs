@@ -133,7 +133,7 @@ namespace ModularEncountersSystems.Entities {
 
 			foreach (var grid in LinkedGrids) {
 
-				if (!grid.ActiveEntity())
+				if (grid == null || !grid.ActiveEntity())
 					continue;
 
 				if (onlyGetCurrentEntity && grid.CubeGrid != Block.SlimBlock.CubeGrid)

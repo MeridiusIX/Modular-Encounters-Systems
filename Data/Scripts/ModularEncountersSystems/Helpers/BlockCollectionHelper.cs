@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Logging;
 using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using VRage.Game;
@@ -126,23 +127,69 @@ namespace ModularEncountersSystems.Helpers {
 			if (grid == null || !grid.ActiveEntity())
 				return totalList;
 
-			foreach (var link in grid.LinkedGrids) {
+			for (int i = grid.LinkedGrids.Count - 1; i >= 0; i--) {
+
+				var link = GridManager.GetSafeGridFromIndex(i, grid.LinkedGrids);
+
+				if (link == null)
+					continue;
 
 				if (!getLinkedGrids && link != grid)
 					continue;
 
-				foreach (var block in link.AllBlocks) {
+				for (int j = link.AllBlocks.Count - 1; j >= 0; j--) {
+
+					SpawnLogger.Write(link.CubeGrid.CustomName + " AllBlocks Count: " + link.AllBlocks.Count, SpawnerDebugEnum.Dev);
+					var block = GetSafeBlockFromIndex(j, link.AllBlocks);
+
+					if (block == null)
+						continue;
 
 					if (totalList.Contains(block))
 						continue;
 
 					totalList.Add(block);
-				
+
 				}
 
 			}
 
+			SpawnLogger.Write("GetAllBlocks Count: " + totalList.Count, SpawnerDebugEnum.Dev);
 			return totalList;
+
+		}
+
+		public static BlockEntity GetSafeBlockFromIndex(int index, List<BlockEntity> list) {
+
+			try {
+
+				if (index < list.Count)
+					return list[index];
+
+			} catch (Exception) {
+
+
+
+			}
+
+			return null;
+
+		}
+
+		public static IMySlimBlock GetSafeBlockFromIndex(int index, List<IMySlimBlock> list) {
+
+			try {
+
+				if (index < list.Count)
+					return list[index];
+
+			} catch (Exception) {
+
+
+
+			}
+
+			return null;
 
 		}
 
@@ -209,19 +256,26 @@ namespace ModularEncountersSystems.Helpers {
 			if(grid == null || !grid.ActiveEntity())
 				return resultList;
 
-			foreach (var link in grid.LinkedGrids) {
+			for (int i = grid.LinkedGrids.Count - 1; i >= 0; i--) {
 
-				foreach (var antenna in link.Antennas) {
+				var link = GridManager.GetSafeGridFromIndex(i, grid.LinkedGrids);
+
+				if (link == null)
+					continue;
+
+				for (int j = link.Antennas.Count - 1; j >= 0; j--) {
+
+					var antenna = GetSafeBlockFromIndex(j, link.Antennas);
 
 					if (antenna == null || !antenna.ActiveEntity())
 						continue;
 
 					resultList.Add(antenna.Block as IMyRadioAntenna);
-				
-				}
-			
-			}
 
+				}
+
+			}
+			
 			return resultList;
 
 		}
@@ -234,9 +288,16 @@ namespace ModularEncountersSystems.Helpers {
 			if (grid == null || !grid.ActiveEntity())
 				return resultList;
 
-			foreach (var link in grid.LinkedGrids) {
+			for (int i = grid.LinkedGrids.Count - 1; i >= 0; i--) {
 
-				foreach (var controller in link.Controllers) {
+				var link = GridManager.GetSafeGridFromIndex(i, grid.LinkedGrids);
+
+				if (link == null)
+					continue;
+
+				for (int j = link.Antennas.Count - 1; j >= 0; j--) {
+
+					var controller = GetSafeBlockFromIndex(j, link.Controllers);
 
 					if (controller == null || !controller.ActiveEntity())
 						continue;

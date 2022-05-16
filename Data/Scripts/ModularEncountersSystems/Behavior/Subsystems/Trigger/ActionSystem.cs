@@ -65,6 +65,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			BehaviorLogger.Write(actions.ProfileSubtypeId + ": Performing Eligible Actions", BehaviorDebugEnum.Action);
 
+			//Debug Message
+			if (!string.IsNullOrWhiteSpace(actions.DebugMessage)) {
+
+				MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);
+			
+			}
+
 			//ChatBroadcast
 			if (actions.UseChatBroadcast == true) {
 

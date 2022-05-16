@@ -1433,23 +1433,24 @@ namespace ModularEncountersSystems.Behavior {
 
 			//CoreBehavior
 			sb.Append("::: NPC Core Behavior :::").AppendLine();
-			sb.Append(" - Grid Name:          ").Append(RemoteControl.SlimBlock.CubeGrid.CustomName).AppendLine();
-			sb.Append(" - Grid Static:        ").Append(RemoteControl.SlimBlock.CubeGrid.IsStatic).AppendLine();
-			sb.Append(" - Block Working:      ").Append(IsWorking).AppendLine();
-			sb.Append(" - Physics Valid:      ").Append(PhysicsValid).AppendLine();
-			sb.Append(" - NPC Owned:          ").Append(Owner.NpcOwned).AppendLine();
-			sb.Append(" - Behavior Setup:     ").Append(SetupCompleted).AppendLine();
-			sb.Append(" - Marked For Close:   ").Append(RemoteControl.SlimBlock.CubeGrid.MarkedForClose).AppendLine();
-			sb.Append(" - Behavior Name:      ").Append(CurrentGrid?.Npc?.BehaviorName != null ? CurrentGrid.Npc.BehaviorName : "(null)").AppendLine(); //SeeWhyThisIsntPopulated
-			sb.Append(" - Behavior Subclass:  ").Append(BehaviorSettings.ActiveBehaviorType).AppendLine();
-			sb.Append(" - Behavior Mode:      ").Append(Mode).AppendLine();
-			sb.Append(" - Active Behavior:    ").Append(ActiveBehavior != null ? ActiveBehavior.SubClass.ToString() : "(null)").AppendLine();
-			sb.Append(" - Behavior Run Count: ").Append(_mainBehaviorRunCount.ToString()).AppendLine();
-			sb.Append(" - Terminated:         ").Append(BehaviorTerminated).AppendLine();
-			sb.Append(" - Next Run Time:      ").Append(timeDifference.TotalMilliseconds).AppendLine();
-			sb.Append(" - Vanilla Autopilot:  ").Append(RemoteControl.IsAutoPilotEnabled).AppendLine();
-			sb.Append(" - Cargo Ship Watcher: ").Append(CargoShipWatcher.CargoShips.Contains(CurrentGrid)).AppendLine();
-			sb.Append(" - Legacy Cargo Ship:  ").Append(CargoShipWatcher.LegacyAutopilot.Contains(CurrentGrid)).AppendLine();
+			sb.Append(" - Grid Name:           ").Append(RemoteControl.SlimBlock.CubeGrid.CustomName).AppendLine();
+			sb.Append(" - Grid Static:         ").Append(RemoteControl.SlimBlock.CubeGrid.IsStatic).AppendLine();
+			sb.Append(" - Block Working:       ").Append(IsWorking).AppendLine();
+			sb.Append(" - Physics Valid:       ").Append(PhysicsValid).AppendLine();
+			sb.Append(" - NPC Owned:           ").Append(Owner.NpcOwned).AppendLine();
+			sb.Append(" - Behavior Setup Pass: ").Append(SetupCompleted).AppendLine();
+			sb.Append(" - Behavior Setup Fail: ").Append(SetupFailed).AppendLine();
+			sb.Append(" - Marked For Close:    ").Append(RemoteControl.SlimBlock.CubeGrid.MarkedForClose).AppendLine();
+			sb.Append(" - Behavior Name:       ").Append(CurrentGrid?.Npc?.BehaviorName != null ? CurrentGrid.Npc.BehaviorName : "(null)").AppendLine(); //SeeWhyThisIsntPopulated
+			sb.Append(" - Behavior Subclass:   ").Append(BehaviorSettings.ActiveBehaviorType).AppendLine();
+			sb.Append(" - Behavior Mode:       ").Append(Mode).AppendLine();
+			sb.Append(" - Active Behavior:     ").Append(ActiveBehavior != null ? ActiveBehavior.SubClass.ToString() : "(null)").AppendLine();
+			sb.Append(" - Behavior Run Count:  ").Append(_mainBehaviorRunCount.ToString()).AppendLine();
+			sb.Append(" - Terminated:          ").Append(BehaviorTerminated).AppendLine();
+			sb.Append(" - Next Run Time:       ").Append(timeDifference.TotalMilliseconds).AppendLine();
+			sb.Append(" - Vanilla Autopilot:   ").Append(RemoteControl.IsAutoPilotEnabled).AppendLine();
+			sb.Append(" - Cargo Ship Watcher:  ").Append(CargoShipWatcher.CargoShips.Contains(CurrentGrid)).AppendLine();
+			sb.Append(" - Legacy Cargo Ship:   ").Append(CargoShipWatcher.LegacyAutopilot.Contains(CurrentGrid)).AppendLine();
 			sb.AppendLine();
 
 			//Subclass Behavior

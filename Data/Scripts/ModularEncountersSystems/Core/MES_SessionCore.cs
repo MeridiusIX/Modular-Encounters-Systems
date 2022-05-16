@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.51";
+		public static string ModVersion = "2.1.55";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -136,6 +136,28 @@ namespace ModularEncountersSystems.Core {
 
 		private static bool CheckSyncRules() {
 
+			if (MES_SessionCore.Instance?.ModContext?.ModId != null && MES_SessionCore.Instance.ModContext.ModId.Contains(".sbm")) {
+
+				foreach (var mod in MyAPIGateway.Session.Mods) {
+
+					var context = mod.GetModContext();
+
+					if (context != null && mod.PublishedFileId == 0 && (context.ModName.Contains("Modular Encounters Systems") || context.ModName.Contains("Modular_Encounters_Systems") || context.ModName.Contains("ModularEncountersSystems"))) {
+
+						if (MyAPIGateway.Utilities.FileExistsInModLocation("ModularEncountersSystemsMod.txt", mod)) {
+
+							SpawnLogger.Write("Detected Offline / Local Version of MES loaded with Workshop Version of MES. Disabling Workshop Version", SpawnerDebugEnum.Startup, true);
+							ModEnabled = false;
+							return false;
+
+						}
+
+					}
+
+				}
+
+			}
+
 			if (!IsDedicated)
 				return true;
 
@@ -145,28 +167,6 @@ namespace ModularEncountersSystems.Core {
 				SpawnLogger.Write("Mod Disabled: Selective Physics Updates is Enabled with SyncDistance Less Than 10000", SpawnerDebugEnum.Startup, true);
 				SpawnLogger.Write("Disable Selective Physics Updates OR Increase SyncDistance To Minimum of 10000", SpawnerDebugEnum.Startup, true);
 				return false;
-
-			}
-
-			if (MES_SessionCore.Instance?.ModContext?.ModId != null && MES_SessionCore.Instance.ModContext.ModId.Contains(".sbm")) {
-
-				foreach (var mod in MyAPIGateway.Session.Mods) {
-
-					var context = mod.GetModContext();
-
-					if (context != null  && !context.ModId.Contains(".sbm")) {
-
-						if (MyAPIGateway.Utilities.FileExistsInModLocation("ModularEncountersSystemsMod.txt", mod)) {
-
-							SpawnLogger.Write("Detected Offline / Local Version of MES loaded with Workshop Version of MES. Disabling Workshop Version", SpawnerDebugEnum.Startup, true);
-							ModEnabled = false;
-							return false;
-
-						}
-						
-					}
-
-				}
 
 			}
 

@@ -23,7 +23,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
         private bool _valid;
         private bool _working;
 
-        public ThrusterProfile(IMyThrust thrust, IMyRemoteControl remoteControl, IBehavior behavior) {
+        public ThrusterProfile(IMyThrust thrust, IMyRemoteControl remoteControl, IBehavior behavior, bool useSubGrids = false, double maxSubgridAngle = 35) {
 
             _valid = true;
             Block = thrust;
@@ -34,39 +34,89 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
             DirectionEnabled = false;
             Behavior = behavior;
 
-            if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Backward) {
+            if (thrust.SlimBlock.CubeGrid != remoteControl.SlimBlock.CubeGrid) {
 
-                _realDirection = Base6Directions.Direction.Forward;
+                if (useSubGrids) {
 
-            }
+                    if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Backward, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-            if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Forward) {
+                        _realDirection = Base6Directions.Direction.Forward;
 
-                _realDirection = Base6Directions.Direction.Backward;
+                    }
 
-            }
+                    if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Forward, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-            if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Down) {
+                        _realDirection = Base6Directions.Direction.Backward;
 
-                _realDirection = Base6Directions.Direction.Up;
+                    }
 
-            }
+                    if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Down, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-            if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Up) {
+                        _realDirection = Base6Directions.Direction.Up;
 
-                _realDirection = Base6Directions.Direction.Down;
+                    }
 
-            }
+                    if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Up, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-            if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Right) {
+                        _realDirection = Base6Directions.Direction.Down;
 
-                _realDirection = Base6Directions.Direction.Left;
+                    }
 
-            }
+                    if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Left, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-            if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Left) {
+                        _realDirection = Base6Directions.Direction.Right;
 
-                _realDirection = Base6Directions.Direction.Right;
+                    }
+
+                    if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Right, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
+
+                        _realDirection = Base6Directions.Direction.Left;
+
+                    }
+
+                } else {
+
+                    _valid = false;
+
+                }
+
+            } else {
+
+                if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Backward) {
+
+                    _realDirection = Base6Directions.Direction.Forward;
+
+                }
+
+                if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Forward) {
+
+                    _realDirection = Base6Directions.Direction.Backward;
+
+                }
+
+                if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Down) {
+
+                    _realDirection = Base6Directions.Direction.Up;
+
+                }
+
+                if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Up) {
+
+                    _realDirection = Base6Directions.Direction.Down;
+
+                }
+
+                if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Right) {
+
+                    _realDirection = Base6Directions.Direction.Left;
+
+                }
+
+                if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Left) {
+
+                    _realDirection = Base6Directions.Direction.Right;
+
+                }
 
             }
 

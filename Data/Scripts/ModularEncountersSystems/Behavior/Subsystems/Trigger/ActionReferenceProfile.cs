@@ -348,6 +348,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> ContainerTypeBlockNames;
 		public List<string> ContainerTypeSubtypeIds;
 
+		public string DebugMessage;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -677,6 +679,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ContainerTypeBlockNames = new List<string>();
 			ContainerTypeSubtypeIds = new List<string>();
 
+			DebugMessage = "";
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -912,6 +916,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ApplyContainerTypeToInventoryBlock", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContainerTypeToInventoryBlock) },
 				{"ContainerTypeBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeBlockNames) },
 				{"ContainerTypeSubtypeIds", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeSubtypeIds) },
+
+				{"DebugMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugMessage) }, //DebugMessage
 				//SetGridCleanupExempt
 
 			};

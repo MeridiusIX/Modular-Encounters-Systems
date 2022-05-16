@@ -81,6 +81,7 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(27)] public bool ReceivedPlayerDamage;
 		[ProtoMember(28)] public bool AnnounceSpawnInApi;
 		[ProtoMember(29)] public bool ApplyContainerTypes;
+		[ProtoMember(30)] public bool UseEnergyDisable;
 
 		public NewNpcAttributes() {
 
@@ -113,6 +114,7 @@ namespace ModularEncountersSystems.World {
 			ReceivedPlayerDamage = false;
 			AnnounceSpawnInApi = false;
 			ApplyContainerTypes = false;
+			UseEnergyDisable = false;
 
 		}
 

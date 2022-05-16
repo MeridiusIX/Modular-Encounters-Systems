@@ -85,6 +85,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			CheckConnectedGrids();
 
 			var tempAllBlocks = BlockCollectionHelper.GetAllBlocks(GridManager.GetGridEntity(this.RemoteControl.SlimBlock.CubeGrid));
+			BehaviorLogger.Write("Grid System Total Blocks: " + tempAllBlocks.Count, BehaviorDebugEnum.BehaviorSetup);
 
 			foreach (var block in tempAllBlocks) {
 

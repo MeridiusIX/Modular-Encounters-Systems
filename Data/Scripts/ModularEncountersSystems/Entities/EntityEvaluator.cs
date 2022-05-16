@@ -207,9 +207,12 @@ namespace ModularEncountersSystems.Entities {
 
 			GridOwnershipEnum result = GridOwnershipEnum.None;
 
-			foreach (var grid in gridList) {
+			for (int i = gridList.Count - 1; i >= 0; i--) {
 
-				result |= GetGridOwnerships(grid, overrideCheck);
+				var grid = GridManager.GetSafeGridFromIndex(i);
+
+				if(grid != null)
+					result |= GetGridOwnerships(grid, overrideCheck);
 
 			}
 

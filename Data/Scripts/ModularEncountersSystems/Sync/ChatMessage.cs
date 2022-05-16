@@ -724,6 +724,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.SpawnAllPrefabs
+			if (array[2] == "SpawnAllPrefabs") {
+
+				LoggerTools.SpawnAllPrefabs(this, array);
+				return true;
+
+			}
+
 			//TestAsteroidSpawns
 			if (array[2] == "TestAsteroidSpawns") {
 

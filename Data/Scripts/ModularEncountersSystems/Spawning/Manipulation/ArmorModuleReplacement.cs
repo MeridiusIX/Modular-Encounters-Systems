@@ -209,7 +209,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			if (antenna.SubtypeName.StartsWith("MES-Suppressor-Energy-")) {
 
 				antenna.BroadcastRadius = 1000;
-				data.Attributes.UsePlayerDisable = true;
+				data.Attributes.UseEnergyDisable = true;
 
 			}
 

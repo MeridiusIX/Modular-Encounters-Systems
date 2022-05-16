@@ -719,6 +719,64 @@ namespace ModularEncountersSystems.Logging {
 
 			}
 
+			//Faction Data
+			sb.Append("::: Faction Data :::").AppendLine();
+			var factions = MyAPIGateway.Session.Factions.Factions;
+			var identites = new List<IMyIdentity>();
+			MyAPIGateway.Players.GetAllIdentites(identites);
+
+			foreach (var factionId in factions.Keys) {
+
+				var faction = factions[factionId];
+
+				if (faction == null)
+					continue;
+
+				if (faction.Tag.Length < 4)
+					continue;
+
+				var canUse = FactionHelper.GetFactionMemberIdFromTag(faction.Tag);
+
+				sb.Append(faction.Tag).AppendLine();
+				sb.Append(" - Faction ID:          ").Append(faction.FactionId).AppendLine();
+				sb.Append(" - Accept Humans:       ").Append(faction.AcceptHumans).AppendLine();
+				sb.Append(" - Auto Accept Peace:   ").Append(faction.AutoAcceptPeace).AppendLine();
+				sb.Append(" - Auto Accept Members: ").Append(faction.AutoAcceptMember).AppendLine();
+				sb.Append(" - Is Everyone Npc:     ").Append(faction.IsEveryoneNpc()).AppendLine();
+				sb.Append(" - MES Can Use:         ").Append(canUse > 0).AppendLine();
+				sb.Append(" - Members:             ").Append(faction.Members.Count).AppendLine();
+
+				foreach (var memberId in faction.Members.Keys) {
+
+					var member = faction.Members[memberId];
+					IMyIdentity identity = null;
+
+					foreach (var id in identites)
+						if (id.IdentityId == member.PlayerId) {
+							identity = id;
+							break;
+						}
+
+					sb.Append("   - Member: ").Append(member.PlayerId).AppendLine();
+					sb.Append("     - Identity ID:   ").Append(member.PlayerId).AppendLine();
+					sb.Append("     - Rank:          ").Append(member.IsFounder ? "Founder" : member.IsLeader ? "Leader" : "Member").AppendLine();
+
+					if (identity == null) {
+
+						sb.AppendLine();
+						continue;
+					
+					}
+
+					sb.Append("     - Name:          ").Append(string.IsNullOrWhiteSpace(identity.DisplayName) ? "(Empty)" : identity.DisplayName).AppendLine();
+					sb.Append("     - Steam ID:      ").Append(MyAPIGateway.Players.TryGetSteamId(member.PlayerId)).AppendLine();
+					sb.AppendLine();
+
+				}
+				
+
+			}
+
 			//All Mods
 			if (AddonManager.ModIdNameReferences.Keys.Count > 0) {
 
@@ -1541,6 +1599,29 @@ namespace ModularEncountersSystems.Logging {
 			var result = RelationManager.ResetFactionReputation(msgSplit[3]);
 			MyVisualScriptLogicProvider.ShowNotification("Faction [" + msgSplit[3] + "] Reputation Reset Result: " + result, 5000, "White", msg.PlayerId);
 			return;
+
+		}
+
+		public static void SpawnAllPrefabs(ChatMessage msg, string[] array) {
+
+			if (MyAPIGateway.Session.LocalHumanPlayer == null || MyAPIGateway.Utilities.IsDedicated) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "Command Must Be Run in Offline World";
+				return;
+
+			}
+
+			if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "No Mod Name Found In Chat Command";
+				return;
+
+			}
+
+			var prefabProcess = new SpawnAllPrefabs(array[3]);
+			TaskProcessor.Tasks.Add(prefabProcess);
 
 		}
 

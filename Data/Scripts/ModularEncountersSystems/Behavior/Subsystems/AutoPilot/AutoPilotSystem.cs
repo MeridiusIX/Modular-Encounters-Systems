@@ -327,32 +327,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			_collisionStrafeDirection = Vector3D.Zero;
 
 			//Post Constructor Setup
-			if (remoteControl != null && MyAPIGateway.Entities.Exist(remoteControl?.SlimBlock?.CubeGrid)) {
-
-				_remoteControl = remoteControl;
-				Collision = new CollisionSystem(_remoteControl, this);
-				Targeting = new TargetingSystem(_remoteControl);
-				Weapons = new WeaponSystem(_remoteControl, _behavior);
-
-				var blockList = new List<IMySlimBlock>();
-				GridManager.GetBlocksFromGrid<IMyTerminalBlock>(_remoteControl.SlimBlock.CubeGrid, blockList);
-
-				foreach (var block in blockList.Where(item => item.FatBlock as IMyThrust != null)) {
-
-					this.ThrustProfiles.Add(new ThrusterProfile(block.FatBlock as IMyThrust, _remoteControl, _behavior));
-
-				}
-
-				foreach (var block in blockList.Where(item => item.FatBlock as IMyGyro != null)) {
-
-					this.GyroProfiles.Add(new GyroscopeProfile(block.FatBlock as IMyGyro, _remoteControl, _behavior));
-
-				}
-
-				BehaviorLogger.Write("Total Thrusters: " + this.ThrustProfiles.Count.ToString(), BehaviorDebugEnum.BehaviorSetup);
-				BehaviorLogger.Write("Total Gyros:     " + this.GyroProfiles.Count.ToString(), BehaviorDebugEnum.BehaviorSetup);
-
-			}
+			_remoteControl = remoteControl;
+			Targeting = new TargetingSystem(_remoteControl);
 
 		}
 
@@ -463,7 +439,31 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				}
 
-				Targeting.InitTags();
+				if (_remoteControl != null && MyAPIGateway.Entities.Exist(_remoteControl?.SlimBlock?.CubeGrid)) {
+
+					Collision = new CollisionSystem(_remoteControl, this);
+					Targeting.InitTags();
+					Weapons = new WeaponSystem(_remoteControl, _behavior);
+
+					var blockList = new List<IMySlimBlock>();
+					GridManager.GetBlocksFromGrid<IMyTerminalBlock>(_remoteControl.SlimBlock.CubeGrid, blockList, true);
+
+					foreach (var block in blockList.Where(item => item.FatBlock as IMyThrust != null)) {
+
+						this.ThrustProfiles.Add(new ThrusterProfile(block.FatBlock as IMyThrust, _remoteControl, _behavior, Data.UseSubgridThrust, Data.MaxSubgridThrustAngle));
+
+					}
+
+					foreach (var block in blockList.Where(item => item.FatBlock as IMyGyro != null && item.CubeGrid == _remoteControl.SlimBlock.CubeGrid)) {
+
+						this.GyroProfiles.Add(new GyroscopeProfile(block.FatBlock as IMyGyro, _remoteControl, _behavior));
+
+					}
+
+					BehaviorLogger.Write("Total Thrusters: " + this.ThrustProfiles.Count.ToString(), BehaviorDebugEnum.BehaviorSetup);
+					BehaviorLogger.Write("Total Gyros:     " + this.GyroProfiles.Count.ToString(), BehaviorDebugEnum.BehaviorSetup);
+
+				}
 
 			}
 

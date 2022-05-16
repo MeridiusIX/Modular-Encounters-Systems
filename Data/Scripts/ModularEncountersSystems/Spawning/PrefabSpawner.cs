@@ -401,7 +401,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static void PrefabSpawnDebug(long playerId, string prefabId) {
+		public static void PrefabSpawnDebug(long playerId, string prefabId, BoundingBoxD? box = null, MatrixD? boxMatrix = null) {
 
 			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(prefabId);
 
@@ -418,7 +418,17 @@ namespace ModularEncountersSystems.Spawning {
 			if (player?.Player?.Character != null)
 				matrix = player.Player.Character.WorldMatrix;
 
-			Vector3D coords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
+			Vector3D coords = Vector3D.Zero;
+
+			if (box == null || !box.HasValue || boxMatrix == null || !boxMatrix.HasValue)
+				coords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
+			else {
+
+				var existingSphere = BoundingSphereD.CreateFromBoundingBox(box.Value);
+				var prefabSphere = prefab.BoundingSphere;
+				coords = ((existingSphere.Radius * 1.2) + (prefabSphere.Radius)) * boxMatrix.Value.Forward + existingSphere.Center;
+
+			}
 
 			var dummyList = new List<IMyCubeGrid>();
 			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + prefabId + "]", 5000, "White", playerId);

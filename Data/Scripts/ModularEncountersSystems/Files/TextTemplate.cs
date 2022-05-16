@@ -1,4 +1,5 @@
 ﻿using Sandbox.Common.ObjectBuilders.Definitions;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -67,6 +68,63 @@ namespace ModularEncountersSystems.Files {
 			ApplyLcdImage = false;
 			LcdImages = new string[] { };
 			LcdImageChangeDelay = 1;
+
+		}
+
+		public void ApplyLcdContents(IMyTextSurfaceProvider provider, int surfaceIndex) {
+
+			if (surfaceIndex < 0) {
+
+				if (provider == null)
+					return;
+
+				for (int i = 0; i < provider.SurfaceCount; i++) {
+
+					var panel = provider?.GetSurface(i) as IMyTextSurface;
+
+					if (panel == null)
+						return;
+
+					ApplyLcdContents(panel, i);
+
+				}
+			
+			} else {
+
+				var panel = provider?.GetSurface(surfaceIndex) as IMyTextSurface;
+
+				if (panel == null)
+					return;
+
+				ApplyLcdContents(panel, surfaceIndex);
+
+			}
+			
+		}
+
+		public void ApplyLcdContents(IMyTextSurface panel, int surfaceIndex) {
+
+			if (ApplyLcdText) {
+
+				panel.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
+				panel.WriteText(TextTemplate.CleanString(LcdText));
+
+			} else {
+
+				panel.WriteText("");
+
+			}
+
+			if (ApplyLcdImage) {
+
+				panel.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
+				panel.ClearImagesFromSelection();
+				panel.ChangeInterval = LcdImageChangeDelay;
+
+				foreach (var image in LcdImages)
+					panel.AddImageToSelection(image);
+
+			}
 
 		}
 	

@@ -141,9 +141,10 @@ namespace ModularEncountersSystems.Entities {
 
 			try {
 
-				return Grids[index];
+				if(index < Grids.Count)
+					return Grids[index];
 			
-			} catch (Exception e) {
+			} catch (Exception) {
 			
 			
 			
@@ -151,6 +152,23 @@ namespace ModularEncountersSystems.Entities {
 
 			return null;
 		
+		}
+
+		public static GridEntity GetSafeGridFromIndex(int index, List<GridEntity> list) {
+
+			try {
+
+				if (index < list.Count)
+					return list[index];
+
+			} catch (Exception) {
+
+
+
+			}
+
+			return null;
+
 		}
 
 		public static void OnGridGroupChanged(IMyGridGroupData data) {

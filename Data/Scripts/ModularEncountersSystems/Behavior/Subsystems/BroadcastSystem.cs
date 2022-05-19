@@ -244,9 +244,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				}
 
 				if (modifiedMsg.Contains("{GPS}") == true) {
+					
+					var modifiedLabel = chat.GPSLabel;
+					
+					if (modifiedLabel.Contains("{AntennaName}") && ) 
+						modifiedLabel = modifiedLabel.Replace("{AntennaName}", this.HighestAntennaRangeName);
+					
+					if(this.RemoteControl?.SlimBlock?.CubeGrid?.CustomName != null && modifiedLabel.Contains("{GridName}"))
+						modifiedLabel = modifiedLabel.Replace("{GridName}", this.RemoteControl.SlimBlock.CubeGrid.CustomName);
 
-					modifiedMsg = modifiedMsg.Replace("{GPS}", GetGPSString(chat.GPSLabel));
-					SendGPSToPlayer(chat.GPSLabel, RemoteControl.SlimBlock.CubeGrid.WorldAABB.Center, player.IdentityId);
+					modifiedMsg = modifiedMsg.Replace("{GPS}", GetGPSString(modifiedLabel));
+					SendGPSToPlayer(modifiedLabel, RemoteControl.SlimBlock.CubeGrid.WorldAABB.Center, player.IdentityId);
 
 				}
 

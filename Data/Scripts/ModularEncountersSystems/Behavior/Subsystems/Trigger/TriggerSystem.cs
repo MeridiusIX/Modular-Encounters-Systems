@@ -1015,9 +1015,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (control.MinPlayerReputation != -1501 || control.MaxPlayerReputation != 1501) {
 
-				player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, _owner.FactionId, control);
+				var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(control.FactionTag);
 
-			} else {
+				if (control.UseCustomFactionTag == true && customfaction != null)
+                {
+					var customfactionId = customfaction.FactionId;
+					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, customfactionId, control);
+				}
+                else
+                {
+					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, _owner.FactionId, control);
+				}
+			} 
+
+			else {
 
 				player = PlayerManager.GetNearestPlayer(remotePosition);
 

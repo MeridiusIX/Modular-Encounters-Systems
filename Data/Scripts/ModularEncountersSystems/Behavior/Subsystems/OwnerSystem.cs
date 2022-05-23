@@ -80,20 +80,49 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public void CheckIfNpcOwned(IMyTerminalBlock block){
 
 			var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(block.OwnerId);
-			
-			if(faction != null){
-				
-				if(faction.Tag != this.RequiredFactionTag && string.IsNullOrEmpty(this.RequiredFactionTag) == false){
+
+			if (faction == null) {
+
+				BehaviorLogger.Write("Faction Null While Using TryGetPlayerFaction. Attempting Advanced Faction Location", BehaviorDebugEnum.Owner);
+				var factions = MyAPIGateway.Session.Factions.Factions;
+
+				foreach (var fct in factions.Keys) {
+
+					bool skip = false;
+
+					foreach (var member in factions[fct].Members.Keys) {
+
+						if (factions[fct].Members[member].PlayerId == block.OwnerId) {
+
+							faction = factions[fct];
+							BehaviorLogger.Write("Got Faction With Advanced Find: " + faction.Tag, BehaviorDebugEnum.Owner);
+							skip = true;
+							break;
+						
+						}
 					
+					}
+
+					if (skip)
+						break;
+				
+				}
+
+			}
+
+			if (faction != null) {
+
+				if (faction.Tag != this.RequiredFactionTag && string.IsNullOrEmpty(this.RequiredFactionTag) == false) {
+
 					this.NpcOwned = false;
 					BehaviorLogger.Write("Owner Check: Incorrect Faction Tag", BehaviorDebugEnum.Owner);
 					return;
-					
+
 				}
 
-				if(this.AllowHumansInFaction == false) {
+				if (this.AllowHumansInFaction == false) {
 
-					if(faction.IsEveryoneNpc() == true) {
+					if (faction.IsEveryoneNpc() == true) {
 
 						this.NpcOwned = true;
 						this.WasNpcOwned = true;
@@ -102,7 +131,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						BehaviorLogger.Write("Owner Check: Valid NPC Faction", BehaviorDebugEnum.Owner);
 						var npcSteam = MyAPIGateway.Players.TryGetSteamId(block.OwnerId);
 
-						if(npcSteam != 0) {
+						if (npcSteam != 0) {
 
 							BehaviorLogger.Write("Warning. NPC Identity: " + block.OwnerId.ToString() + " has a SteamId of: " + npcSteam.ToString() + " - Please Alert Mod Author", BehaviorDebugEnum.Error);
 
@@ -110,7 +139,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 						return;
 
-					}else{
+					} else {
 
 						bool hasHuman = false;
 						var identities = new List<IMyIdentity>();
@@ -159,15 +188,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 							return;
 
+						} else {
+
+							BehaviorLogger.Write("Owner Check: Faction Contains Humans. Cannot Be Used By MES", BehaviorDebugEnum.Owner);
+
 						}
-					
+
 					}
 
 				} else {
 
 					var npcSteam = MyAPIGateway.Players.TryGetSteamId(block.OwnerId);
 
-					if(npcSteam == 0) {
+					if (npcSteam == 0) {
 
 						this.NpcOwned = true;
 						this.WasNpcOwned = true;
@@ -179,6 +212,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					}
 
 				}
+
+			} else {
+
+				BehaviorLogger.Write("Faction for provided OwnerId is Null", BehaviorDebugEnum.Owner);
 
 			}
 

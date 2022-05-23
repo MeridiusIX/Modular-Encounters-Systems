@@ -139,7 +139,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				for (int j = link.AllBlocks.Count - 1; j >= 0; j--) {
 
-					SpawnLogger.Write(link.CubeGrid.CustomName + " AllBlocks Count: " + link.AllBlocks.Count, SpawnerDebugEnum.Dev);
+					//SpawnLogger.Write(link.CubeGrid.CustomName + " AllBlocks Count: " + link.AllBlocks.Count, SpawnerDebugEnum.Dev);
 					var block = GetSafeBlockFromIndex(j, link.AllBlocks);
 
 					if (block == null)

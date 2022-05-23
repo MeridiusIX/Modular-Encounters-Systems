@@ -832,8 +832,8 @@ namespace ModularEncountersSystems.Tasks {
 			if (thrustDir.Count >= 6)
 				ThrustInAllDirections = true;
 
-			MaxGravityAtmo = (float)Math.Round(CalculatePlanetaryThrust(), 1);
-			MaxGravityVacuum = (float)Math.Round(CalculatePlanetaryThrust(0), 1);
+			MaxGravityAtmo = (float)Math.Round(CalculatePlanetaryThrust(), 2);
+			MaxGravityVacuum = (float)Math.Round(CalculatePlanetaryThrust(0), 2);
 
 		}
 

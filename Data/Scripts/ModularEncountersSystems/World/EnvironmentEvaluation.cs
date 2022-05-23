@@ -28,6 +28,8 @@ namespace ModularEncountersSystems.World {
 		public List<string> InsideKnownPlayerLocations;
 		public List<string> InsideStrictKnownPlayerLocations;
 
+		public List<PlanetaryLane> InsidePlanetaryLanes;
+
 		public PlanetEntity NearestPlanet;
 		public MyGravityProviderComponent Gravity;
 		public bool IsOnPlanet;
@@ -87,6 +89,9 @@ namespace ModularEncountersSystems.World {
 
 			InsideTerritories = new List<string>();
 			InsideStrictTerritories = new List<string>();
+
+			InsidePlanetaryLanes = new List<PlanetaryLane>();
+			PlanetManager.GetLanesAtPosition(coords, InsidePlanetaryLanes);
 
 			if (AddonManager.NebulaMod) {
 

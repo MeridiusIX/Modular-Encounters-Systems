@@ -89,6 +89,43 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
+		public float CalculateMaxGravity(bool useGravityOnly = false) {
+
+			if (_remoteControl == null)
+				return 0;
+
+			float gravityMultiplier = 0;
+
+			while (gravityMultiplier < 20) {
+
+				gravityMultiplier += 0.1f;
+				double totalForceAvailable = 0;
+
+				foreach (var thrust in ThrustProfiles) {
+
+					if (thrust.ActiveDirection != Base6Directions.Direction.Down)
+						continue;
+
+					totalForceAvailable += (useGravityOnly ? thrust.MaxThrustForceInGravity : thrust.MaxThrustForceInAtmo) * thrust.Block.ThrustMultiplier;
+
+				}
+
+				var liftingAccel = totalForceAvailable / _remoteControl.CalculateShipMass().TotalMass;
+				var gravityAccel = gravityMultiplier * 9.81;
+
+				if ((liftingAccel / gravityAccel) < 1.25) {
+
+					gravityMultiplier -= 0.1f;
+					break;
+
+				}
+
+			}
+
+			return gravityMultiplier;
+
+		}
+
 		public void CalculateRamThrust() {
 
 			if (!Targeting.HasTarget())

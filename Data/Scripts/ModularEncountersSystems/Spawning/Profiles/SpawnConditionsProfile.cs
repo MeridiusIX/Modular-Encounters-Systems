@@ -106,6 +106,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool ForceExactPositionAndOrientation;
 		public bool AdminSpawnOnly;
 
+		public bool MustSpawnInPlanetaryLane;
+		public string PlanetaryLanePlanetNameA;
+		public string PlanetaryLanePlanetNameB;
+
 		public string FactionOwner;
 		public bool UseRandomMinerFaction;
 		public bool UseRandomBuilderFaction;
@@ -402,6 +406,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ForceExactPositionAndOrientation = false;
 			AdminSpawnOnly = false;
 
+			MustSpawnInPlanetaryLane = false;
+			PlanetaryLanePlanetNameA = "";
+			PlanetaryLanePlanetNameB = "";
+
 			FactionOwner = "SPRT";
 			UseRandomMinerFaction = false;
 			UseRandomBuilderFaction = false;
@@ -678,6 +686,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"ForceStaticGrid", (s, o) => TagParse.TagBoolCheck(s, ref ForceStaticGrid) },
 				{"ForceExactPositionAndOrientation", (s, o) => TagParse.TagBoolCheck(s, ref ForceExactPositionAndOrientation) },
 				{"AdminSpawnOnly", (s, o) => TagParse.TagBoolCheck(s, ref AdminSpawnOnly) },
+				{"MustSpawnInPlanetaryLane", (s, o) => TagParse.TagBoolCheck(s, ref MustSpawnInPlanetaryLane) },
+				{"PlanetaryLanePlanetNameA", (s, o) => TagParse.TagStringCheck(s, ref PlanetaryLanePlanetNameA) },
+				{"PlanetaryLanePlanetNameB", (s, o) => TagParse.TagStringCheck(s, ref PlanetaryLanePlanetNameB) },
 				{"FactionOwner", (s, o) => TagParse.TagStringCheck(s, ref FactionOwner) },
 				{"UseRandomMinerFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomMinerFaction) },
 				{"UseRandomBuilderFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomBuilderFaction) },

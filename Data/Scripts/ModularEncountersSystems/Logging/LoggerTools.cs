@@ -1136,6 +1136,21 @@ namespace ModularEncountersSystems.Logging {
 
 			}
 
+			//Planetary Lanes
+			if (environment.InsidePlanetaryLanes.Count > 0) {
+
+				sb.Append("::: Planetary Lanes In Position :::").AppendLine();
+
+				foreach (var lane in environment.InsidePlanetaryLanes) {
+
+					sb.Append(" - ").Append(lane.PlanetA.Planet.Generator.Id.SubtypeName).Append(" - ").Append(lane.PlanetB.Planet.Generator.Id.SubtypeName).AppendLine();
+
+				}
+
+				sb.AppendLine();
+
+			}
+
 			return sb.ToString();
 
 		}

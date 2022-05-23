@@ -6,6 +6,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ProtoBuf;
@@ -598,6 +599,14 @@ namespace ModularEncountersSystems.Sync {
 
 				BehaviorManager.DebugDraw = !BehaviorManager.DebugDraw;
 				this.ReturnMessage = "Path Drawing For Behaviors Active: " + BehaviorManager.DebugDraw;
+				return true;
+
+			}
+
+			//MES.Debug.Lanes
+			if (array[2] == "Lanes") {
+
+				this.ReturnMessage = "LaneCount: " + PlanetManager.Lanes.Count;
 				return true;
 
 			}

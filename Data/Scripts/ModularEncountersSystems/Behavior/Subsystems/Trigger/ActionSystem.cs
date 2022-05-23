@@ -264,7 +264,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					var newCommand = new Command();
 					newCommand.PrepareCommand(_behavior, commandProfile, actions, command, attackerEntityId, detectedEntity);
 					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Sending Command: " + newCommand.CommandCode, BehaviorDebugEnum.Action);
-					CommandHelper.CommandTrigger?.Invoke(newCommand);
+					CommandHelper.SendCommand(newCommand);
 
 				}
 			
@@ -296,7 +296,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					newCommand.CommandCode = actions.BroadcastSendCode;
 					newCommand.RemoteControl = RemoteControl;
 					newCommand.Radius = sendRadius;
-					CommandHelper.CommandTrigger?.Invoke(newCommand);
+					CommandHelper.SendCommand(newCommand);
 
 				}
 
@@ -329,7 +329,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					newCommand.RemoteControl = RemoteControl;
 					newCommand.Radius = sendRadius;
 					newCommand.TargetEntityId = detectedEntity;
-					CommandHelper.CommandTrigger?.Invoke(newCommand);
+					CommandHelper.SendCommand(newCommand);
 
 				}
 

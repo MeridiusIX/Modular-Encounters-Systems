@@ -247,7 +247,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					
 					var modifiedLabel = chat.GPSLabel;
 					
-					if (modifiedLabel.Contains("{AntennaName}") && ) 
+					if (modifiedLabel.Contains("{AntennaName}")) 
 						modifiedLabel = modifiedLabel.Replace("{AntennaName}", this.HighestAntennaRangeName);
 					
 					if(this.RemoteControl?.SlimBlock?.CubeGrid?.CustomName != null && modifiedLabel.Contains("{GridName}"))

@@ -63,6 +63,60 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
+		public TargetProfile NormalData { get {
+
+				if (_normalData?.ProfileSubtypeId == null || _normalData.ProfileSubtypeId != _behavior.BehaviorSettings.CurrentTargetProfile) {
+
+					bool gotData = false;
+
+					if (!string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.CurrentTargetProfile)) {
+
+						if (ProfileManager.TargetProfiles.TryGetValue(_behavior.BehaviorSettings.CurrentTargetProfile, out _normalData))
+							gotData = true;
+
+					}
+
+					if (!gotData) {
+					
+						//TODO: Default a blank profile and raise an error in logger
+					
+					}
+
+				}
+
+				return _normalData;
+
+			}
+
+		}
+
+		public TargetProfile OverrideData {	get {
+
+				if (_overrideData?.ProfileSubtypeId == null || _overrideData.ProfileSubtypeId != _behavior.BehaviorSettings.OverrideTargetProfile) {
+
+					bool gotData = false;
+
+					if (!string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.OverrideTargetProfile)) {
+
+						if (ProfileManager.TargetProfiles.TryGetValue(_behavior.BehaviorSettings.OverrideTargetProfile, out _overrideData))
+							gotData = true;
+
+					}
+
+					if (!gotData) {
+
+						//TODO: Default a blank profile and raise an error in logger
+
+					}
+
+				}
+
+				return _overrideData;
+
+			}
+
+		}
+
 		public List<TargetFilterEnum> AllUniqueFilters {
 			get {
 
@@ -109,10 +163,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		private List<TargetFilterEnum> _allUniqueFilters;
 
 		public ITarget NormalTarget;
-		public TargetProfile NormalData;
+		internal TargetProfile _normalData;
 
 		public ITarget OverrideTarget;
-		public TargetProfile OverrideData;
+		internal TargetProfile _overrideData;
 
 		public bool PreviousTargetCheckResult;
 		public long PreviousTargetEntityId;
@@ -152,10 +206,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			RemoteControl = remoteControl;
 
 			NormalTarget = null;
-			NormalData = new TargetProfile();
+			_normalData = new TargetProfile();
 
 			OverrideTarget = null;
-			OverrideData = new TargetProfile();
+			_overrideData = new TargetProfile();
 
 			LastAcquisitionTime = MyAPIGateway.Session.GameDateTime;
 			LastRefreshTime = MyAPIGateway.Session.GameDateTime;
@@ -837,6 +891,42 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
+			//GravityThrust
+			if (AllUniqueFilters.Contains(TargetFilterEnum.GravityThrust)) {
+
+				bool result = false;
+
+				if (PlanetManager.InGravity(target.GetPosition())) {
+
+					double gravityAtPosition = PlanetManager.GetTotalNaturalGravity(target.GetPosition()).Length();
+					double gridGravity = 0;
+
+					if (PlanetManager.AirDensityAtPosition(target.GetPosition()) >= 0.7f) {
+
+						gridGravity = _behavior.AutoPilot.CalculateMaxGravity();
+
+					} else {
+
+						gridGravity = _behavior.AutoPilot.CalculateMaxGravity(true);
+
+					}
+
+					if (gridGravity >= gravityAtPosition)
+						result = true;
+
+				} else {
+
+					result = true;
+				
+				}
+
+				if (result)
+					FilterHits.Add(TargetFilterEnum.Underwater);
+
+				BehaviorLogger.Write(string.Format(" - Evaluated GravityThrust: {0}", result), BehaviorDebugEnum.TargetEvaluation);
+
+			}
+
 			//Any Conditions Check
 			bool anyConditionPassed = false;
 
@@ -1256,15 +1346,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					if (tag.Contains("[TargetData:") == true) {
 
 						var tempValue = "";
-						TagParse.TagStringCheck(tag, ref tempValue);
 
-						if (string.IsNullOrWhiteSpace(tempValue) == false) {
+						if (!string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.CurrentTargetProfile))
+							tempValue = _behavior.BehaviorSettings.CurrentTargetProfile;
+						else
+							TagParse.TagStringCheck(tag, ref tempValue);
+
+						if (!string.IsNullOrWhiteSpace(tempValue)) {
 
 							TargetProfile profile = null;
 
 							if (ProfileManager.TargetProfiles.TryGetValue(tempValue, out profile) == true) {
 
-								NormalData = profile;
+								_normalData = profile;
+								_behavior.BehaviorSettings.CurrentTargetProfile = tempValue;
 
 							} else {
 
@@ -1284,7 +1379,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					if (tag.Contains("[OverrideTargetData:") == true) {
 
 						var tempValue = "";
-						TagParse.TagStringCheck(tag, ref tempValue);
+
+						if (!string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.OverrideTargetProfile))
+							tempValue = _behavior.BehaviorSettings.OverrideTargetProfile;
+						else
+							TagParse.TagStringCheck(tag, ref tempValue);
 
 						if (string.IsNullOrWhiteSpace(tempValue) == false) {
 
@@ -1292,7 +1391,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 							if (ProfileManager.TargetProfiles.TryGetValue(tempValue, out profile) == true) {
 
-								OverrideData = profile;
+								_overrideData = profile;
+								_behavior.BehaviorSettings.OverrideTargetProfile = tempValue;
 								BehaviorLogger.Write(profile.ProfileSubtypeId + " Override Target Profile Loaded", BehaviorDebugEnum.BehaviorSetup);
 
 							} 
@@ -1314,45 +1414,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public void SetTargetProfile(bool setOverride = false) {
 
 			UseNewTargetProfile = false;
-			byte[] targetProfileBytes;
 
-			if (!ProfileManager.TargetObjectTemplates.TryGetValue(NewTargetProfileName, out targetProfileBytes)) {
-
-				BehaviorLogger.Write("No Target Profile For: " + NewTargetProfileName, BehaviorDebugEnum.Target);
+			if (!ProfileManager.TargetProfiles.ContainsKey(NewTargetProfileName))
 				return;
 
-			}
+			if (setOverride) {
 
-			TargetProfile targetProfile;
+				_behavior.BehaviorSettings.OverrideTargetProfile = NewTargetProfileName;
 
-			try {
+			} else {
 
-				targetProfile = MyAPIGateway.Utilities.SerializeFromBinary<TargetProfile>(targetProfileBytes);
-
-				if (targetProfile != null && !string.IsNullOrWhiteSpace(targetProfile.ProfileSubtypeId)) {
-
-					if (!setOverride) {
-
-						NormalData = targetProfile;
-						_behavior.BehaviorSettings.CustomTargetProfile = NewTargetProfileName;
-						BehaviorLogger.Write("Target Profile Switched To: " + NewTargetProfileName, BehaviorDebugEnum.Target);
-
-
-					} else {
-
-						OverrideData = targetProfile;
-						_behavior.BehaviorSettings.CustomTargetProfile = NewTargetProfileName;
-						BehaviorLogger.Write("Target Profile Switched To: " + NewTargetProfileName, BehaviorDebugEnum.Target);
-
-					}
-
-				}
-
-			} catch (Exception e) {
-
-				BehaviorLogger.Write("Target Profile Exception: " + NewTargetProfileName, BehaviorDebugEnum.Error, true);
-				BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Error, true);
-
+				_behavior.BehaviorSettings.CurrentTargetProfile = NewTargetProfileName;
+			
 			}
 
 		}

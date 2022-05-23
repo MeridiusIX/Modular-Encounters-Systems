@@ -80,6 +80,7 @@ namespace ModularEncountersSystems.Entities {
 				UnloadEntities += planetEntity.Unload;
 				PlanetManager.Planets.Add(planetEntity);
 				ZoneManager.AddNewZones();
+				PlanetManager.CalculateLanes();
 				return;
 
 			}

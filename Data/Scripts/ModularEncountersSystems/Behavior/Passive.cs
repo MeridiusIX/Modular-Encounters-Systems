@@ -35,13 +35,16 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void SetDefaultTags() {
 
+			if (_behavior.AutoPilot.Collision == null)
+				_behavior.AutoPilot.Collision = new Subsystems.AutoPilot.CollisionSystem(_behavior.RemoteControl, _behavior.AutoPilot);
+
 			_behavior.AutoPilot.Collision.UseCollisionDetection = false;
 			_behavior.Despawn.UsePlayerDistanceTimer = false;
 			_behavior.AutoPilot.Targeting.Data.UseCustomTargeting = false;
 
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
-				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericPAssive";
+				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericPassive";
 
 			}
 		}

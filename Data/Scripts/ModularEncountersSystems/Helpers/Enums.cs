@@ -252,6 +252,7 @@ namespace ModularEncountersSystems.Helpers {
         Static,
         TargetValue,
         Underwater,
+        GravityThrust,
 
     }
 

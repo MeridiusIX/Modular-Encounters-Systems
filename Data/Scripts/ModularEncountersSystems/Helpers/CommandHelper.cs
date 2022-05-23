@@ -2,6 +2,7 @@ using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Tasks;
 using Sandbox.ModAPI;
 using System;
 using VRage.Game.ModAPI;
@@ -11,10 +12,10 @@ using VRageMath;
 namespace ModularEncountersSystems.Helpers {
 
     public enum CommandType {
-    
+
         DroneAntenna,
         PlayerChat,
-        
+
     }
 
     public enum CommandTransmissionType {
@@ -81,8 +82,7 @@ namespace ModularEncountersSystems.Helpers {
 
         public bool RequestEscortSlot;
 
-        
-
+        public int DelayTicks;
 
         public Command() {
 
@@ -95,7 +95,7 @@ namespace ModularEncountersSystems.Helpers {
             var command = new Command();
             command.PlayerIdentity = playerId;
             return command;
-        
+
         }
 
         public void Defaults() {
@@ -122,7 +122,7 @@ namespace ModularEncountersSystems.Helpers {
             TransmissionType = CommandTransmissionType.None;
             Behavior = null;
             RequestEscortSlot = false;
-            
+            DelayTicks = 0;
 
         }
 
@@ -179,7 +179,7 @@ namespace ModularEncountersSystems.Helpers {
             if (profile.SendGridValue) {
 
                 GridValueScore = behavior.CurrentGrid?.TargetValue() ?? 0;
-            
+
             }
 
             TransmissionType = profile.TransmissionType;
@@ -190,9 +190,9 @@ namespace ModularEncountersSystems.Helpers {
 
                     this.SingleRecipient = true;
                     this.Recipient = receivedCommand.RemoteControl.EntityId;
-                
+
                 }
-            
+
             }
 
             if (profile.SendWaypoint) {
@@ -284,7 +284,16 @@ namespace ModularEncountersSystems.Helpers {
     public static class CommandHelper {
 
         public static Action<Command> CommandTrigger;
-    
+
+        public static void SendCommand(Command command, bool sendNow = false) {
+
+            if (command.DelayTicks == 0 || sendNow)
+                CommandTrigger?.Invoke(command);
+            else
+                TaskProcessor.Tasks.Add(new DelayedCommand(command));
+        
+        }
+
     }
-    
+
 }

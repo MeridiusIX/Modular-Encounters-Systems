@@ -1,5 +1,6 @@
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
@@ -11,8 +12,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
         public IMyThrust Block;
         public IMyCubeGrid Grid;
-        private Base6Directions.Direction _realDirection;
-        private Base6Directions.Direction _activeDirection;
+        public Base6Directions.Direction RealDirection;
+        public Base6Directions.Direction ActiveDirection;
+
+        public double MaxThrustForceInAtmo;
+        public double MaxThrustForceInGravity;
 
         public bool AxisEnabled;
         public bool DirectionEnabled;
@@ -34,43 +38,46 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
             DirectionEnabled = false;
             Behavior = behavior;
 
+            MaxThrustForceInAtmo = thrustForce(thrust.SlimBlock.BlockDefinition as MyThrustDefinition, 0.7f);
+            MaxThrustForceInGravity = thrustForce(thrust.SlimBlock.BlockDefinition as MyThrustDefinition, 0);
+
             if (thrust.SlimBlock.CubeGrid != remoteControl.SlimBlock.CubeGrid) {
 
                 if (useSubGrids) {
 
                     if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Backward, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-                        _realDirection = Base6Directions.Direction.Forward;
+                        RealDirection = Base6Directions.Direction.Forward;
 
                     }
 
                     if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Forward, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-                        _realDirection = Base6Directions.Direction.Backward;
+                        RealDirection = Base6Directions.Direction.Backward;
 
                     }
 
                     if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Down, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-                        _realDirection = Base6Directions.Direction.Up;
+                        RealDirection = Base6Directions.Direction.Up;
 
                     }
 
                     if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Up, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-                        _realDirection = Base6Directions.Direction.Down;
+                        RealDirection = Base6Directions.Direction.Down;
 
                     }
 
                     if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Left, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-                        _realDirection = Base6Directions.Direction.Right;
+                        RealDirection = Base6Directions.Direction.Right;
 
                     }
 
                     if (VectorHelper.GetAngleBetweenDirections(remoteControl.WorldMatrix.Right, thrust.WorldMatrix.Forward) <= maxSubgridAngle) {
 
-                        _realDirection = Base6Directions.Direction.Left;
+                        RealDirection = Base6Directions.Direction.Left;
 
                     }
 
@@ -84,43 +91,43 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
                 if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Backward) {
 
-                    _realDirection = Base6Directions.Direction.Forward;
+                    RealDirection = Base6Directions.Direction.Forward;
 
                 }
 
                 if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Forward) {
 
-                    _realDirection = Base6Directions.Direction.Backward;
+                    RealDirection = Base6Directions.Direction.Backward;
 
                 }
 
                 if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Down) {
 
-                    _realDirection = Base6Directions.Direction.Up;
+                    RealDirection = Base6Directions.Direction.Up;
 
                 }
 
                 if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Up) {
 
-                    _realDirection = Base6Directions.Direction.Down;
+                    RealDirection = Base6Directions.Direction.Down;
 
                 }
 
                 if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Right) {
 
-                    _realDirection = Base6Directions.Direction.Left;
+                    RealDirection = Base6Directions.Direction.Left;
 
                 }
 
                 if (thrust.WorldMatrix.Forward == remoteControl.WorldMatrix.Left) {
 
-                    _realDirection = Base6Directions.Direction.Right;
+                    RealDirection = Base6Directions.Direction.Right;
 
                 }
 
             }
 
-            _activeDirection = _realDirection;
+            ActiveDirection = RealDirection;
 
             Grid = remoteControl.SlimBlock.CubeGrid;
             Block.OnClosing += CloseEntity;
@@ -132,13 +139,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
         //New
         public void SetBaseDirection(MyBlockOrientation orientation) {
 
-            _activeDirection = orientation.TransformDirection(_realDirection);
+            ActiveDirection = orientation.TransformDirection(RealDirection);
 
         }
 
         public double GetEffectiveThrust(Base6Directions.Direction direction) {
 
-            if (direction != _activeDirection || !_working || !ValidCheck())
+            if (direction != ActiveDirection || !_working || !ValidCheck())
                 return 0;
 
             return Block.MaxEffectiveThrust;
@@ -151,25 +158,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
             if (!_working)
                 return;
 
-            if (_activeDirection == Base6Directions.Direction.Left || _activeDirection == Base6Directions.Direction.Right) {
+            if (ActiveDirection == Base6Directions.Direction.Left || ActiveDirection == Base6Directions.Direction.Right) {
 
-                bool direction = (_activeDirection == Base6Directions.Direction.Left && action.InvertX) || (_activeDirection == Base6Directions.Direction.Right && !action.InvertX);
+                bool direction = (ActiveDirection == Base6Directions.Direction.Left && action.InvertX) || (ActiveDirection == Base6Directions.Direction.Right && !action.InvertX);
                 UpdateThrusterBlock(action.ControlX, direction, action.StrengthX);
                 return;
             
             }
 
-            if (_activeDirection == Base6Directions.Direction.Up || _activeDirection == Base6Directions.Direction.Down) {
+            if (ActiveDirection == Base6Directions.Direction.Up || ActiveDirection == Base6Directions.Direction.Down) {
 
-                bool direction = (_activeDirection == Base6Directions.Direction.Down && action.InvertY) || (_activeDirection == Base6Directions.Direction.Up && !action.InvertY);
+                bool direction = (ActiveDirection == Base6Directions.Direction.Down && action.InvertY) || (ActiveDirection == Base6Directions.Direction.Up && !action.InvertY);
                 UpdateThrusterBlock(action.ControlY, direction, action.StrengthY);
                 return;
 
             }
 
-            if (_activeDirection == Base6Directions.Direction.Forward || _activeDirection == Base6Directions.Direction.Backward) {
+            if (ActiveDirection == Base6Directions.Direction.Forward || ActiveDirection == Base6Directions.Direction.Backward) {
 
-                bool direction = (_activeDirection == Base6Directions.Direction.Backward && action.InvertZ) || (_activeDirection == Base6Directions.Direction.Forward && !action.InvertZ);
+                bool direction = (ActiveDirection == Base6Directions.Direction.Backward && action.InvertZ) || (ActiveDirection == Base6Directions.Direction.Forward && !action.InvertZ);
                 UpdateThrusterBlock(action.ControlZ, direction, action.StrengthZ);
                 return;
 
@@ -251,6 +258,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
             BehaviorLogger.Write("Removed Thrust - Block Closed", BehaviorDebugEnum.Thrust);
             _valid = false;
             Unload();
+
+        }
+
+        internal double thrustForce(MyThrustDefinition def, float airDensity = 0.7f) {
+
+            double minPlanetInfluence = def.MinPlanetaryInfluence;
+            double maxPlanetInfluence = def.MaxPlanetaryInfluence;
+            double effectiveAtMin = def.EffectivenessAtMinInfluence;
+            double effectiveAtMax = def.EffectivenessAtMaxInfluence;
+
+            var InvDiffMinMaxPlanetaryInfluence = 1f / (maxPlanetInfluence - minPlanetInfluence);
+
+            double value = (airDensity - minPlanetInfluence) * InvDiffMinMaxPlanetaryInfluence;
+            var result = MathHelper.Lerp(effectiveAtMin, effectiveAtMax, MathHelper.Clamp(value, 0f, 1f));
+            return result;
 
         }
 

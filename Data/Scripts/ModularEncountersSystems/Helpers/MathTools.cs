@@ -456,6 +456,12 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static int RandomSign() {
+
+            return _rnd.Next(0, 2) == 0 ? -1 : 1;
+
+        }
+
         public static double GravityToDistance(double gravityMultiplier = 1, double maxGravity = 1, double falloff = 7, double minRadius = 59400, double maxRadius = 67200) {
 
             if (gravityMultiplier >= maxGravity)

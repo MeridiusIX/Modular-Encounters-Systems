@@ -1236,8 +1236,8 @@ namespace ModularEncountersSystems.Behavior {
 
 		internal void SetDefaultTargeting() {
 
-			var savedTarget = !string.IsNullOrWhiteSpace(BehaviorSettings.CustomTargetProfile);
-			var targetProfileName = !savedTarget ? "RivalAI-GenericTargetProfile-EnemyPlayer" : BehaviorSettings.CustomTargetProfile;
+			var savedTarget = !string.IsNullOrWhiteSpace(BehaviorSettings.CurrentTargetProfile);
+			var targetProfileName = !savedTarget ? "RivalAI-GenericTargetProfile-EnemyPlayer" : BehaviorSettings.CurrentTargetProfile;
 
 			if (savedTarget || string.IsNullOrWhiteSpace(AutoPilot.Targeting.NormalData.ProfileSubtypeId)) {
 
@@ -1245,7 +1245,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				if (ProfileManager.TargetProfiles.TryGetValue(targetProfileName, out profile) == true) {
 
-					AutoPilot.Targeting.NormalData = profile;
+					BehaviorSettings.CurrentTargetProfile = targetProfileName;
 
 				}
 
@@ -1259,7 +1259,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				if (ProfileManager.TargetProfiles.TryGetValue(overrideProfileName, out profile) == true) {
 
-					AutoPilot.Targeting.OverrideData = profile;
+					BehaviorSettings.OverrideTargetProfile = overrideProfileName;
 
 				}
 

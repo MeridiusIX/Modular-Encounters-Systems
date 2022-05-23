@@ -13,6 +13,7 @@ using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Profiles;
 using Sandbox.ModAPI;
+using Sandbox.Game;
 
 namespace ModularEncountersSystems.Spawning {
 
@@ -316,12 +317,51 @@ namespace ModularEncountersSystems.Spawning {
 				var initialMatrix = MatrixD.CreateWorld(environment.Position, randomPerpDir, randomDir);
 				var halfPoint = closestPathDist * randomDir + environment.Position;
 				var pathDistance = MathTools.RandomBetween(Settings.SpaceCargoShips.MinPathDistance, Settings.SpaceCargoShips.MaxPathDistance);
+				var pathDir = randomPerpDir;
 				var playerBox = new BoundingBoxD(Vector3D.Transform(new Vector3D(-800, -800, -800), initialMatrix), Vector3D.Transform(new Vector3D(800, 800, 800), initialMatrix));
 
+				if (environment.InsidePlanetaryLanes.Count > 0) {
+
+					PlanetaryLane lane = null;
+
+					if (!string.IsNullOrWhiteSpace(collection.Conditions.PlanetaryLanePlanetNameA) || !string.IsNullOrWhiteSpace(collection.Conditions.PlanetaryLanePlanetNameB)) {
+
+						foreach (var ln in PlanetManager.Lanes) {
+
+							if (ln.NameCheck(collection.Conditions.PlanetaryLanePlanetNameA) && ln.NameCheck(collection.Conditions.PlanetaryLanePlanetNameB)) {
+
+								lane = ln;
+								break;
+
+							}
+
+						}
+
+					} else {
+
+						lane = environment.InsidePlanetaryLanes[MathTools.RandomBetween(0, PlanetManager.Lanes.Count)];
+
+					}
+
+					if (lane != null) {
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Planetary Lane Pathing", 4000);
+						var dir = lane.LaneDirection * (double)MathTools.RandomSign();
+						randomPerpDir = VectorHelper.RandomPerpendicular(dir);
+						initialMatrix = MatrixD.CreateWorld(environment.Position, dir, randomPerpDir);
+						halfPoint = closestPathDist * randomPerpDir + environment.Position;
+						playerBox = new BoundingBoxD(Vector3D.Transform(new Vector3D(-800, -800, -800), initialMatrix), Vector3D.Transform(new Vector3D(800, 800, 800), initialMatrix));
+						pathDir = dir;
+
+					}
+
+				}
+
 				//Save To PathDetails
-				path.StartCoords = randomPerpDir * -(pathDistance / 2) + halfPoint;
-				path.SpawnMatrix = MatrixD.CreateWorld(path.StartCoords, randomPerpDir, randomDir);
-				path.PathDirection = randomPerpDir;
+				path.StartCoords = pathDir * -(pathDistance / 2) + halfPoint;
+				initialMatrix.Translation = path.StartCoords;
+				path.SpawnMatrix = initialMatrix;
+				path.PathDirection = pathDir;
 				path.PathDistance = pathDistance;
 
 				if (PlanetManager.InGravity(path.StartCoords))

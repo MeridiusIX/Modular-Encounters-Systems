@@ -339,7 +339,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					} else {
 
-						lane = environment.InsidePlanetaryLanes[MathTools.RandomBetween(0, PlanetManager.Lanes.Count)];
+						lane = environment.InsidePlanetaryLanes[MathTools.RandomBetween(0, environment.InsidePlanetaryLanes.Count)];
 
 					}
 

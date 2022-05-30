@@ -130,6 +130,7 @@ namespace ModularEncountersSystems.Helpers {
 
             this.Behavior = behavior;
             this.CommandCode = profile.CommandCode;
+            this.DelayTicks = profile.CommandDelayTicks;
             this.SingleRecipient = profile.SingleRecipient;
             this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
             this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;

@@ -47,7 +47,6 @@ namespace ModularEncountersSystems.Files {
 
 	public struct LcdEntry {
 
-		public string TextSurfaceBlockName;
 		public int TextSurfaceIndex;
 
 		public bool ApplyLcdText;
@@ -59,7 +58,6 @@ namespace ModularEncountersSystems.Files {
 
 		public LcdEntry(bool dummy = false) {
 
-			TextSurfaceBlockName = "";
 			TextSurfaceIndex = -1;
 
 			ApplyLcdText = false;
@@ -71,16 +69,16 @@ namespace ModularEncountersSystems.Files {
 
 		}
 
-		public void ApplyLcdContents(IMyTextSurfaceProvider provider, int surfaceIndex) {
+		public void ApplyLcdContents(IMyTextSurfaceProvider provider) {
 
-			if (surfaceIndex < 0) {
+			if (provider == null)
+				return;
 
-				if (provider == null)
-					return;
+			if (TextSurfaceIndex < 0) {
 
 				for (int i = 0; i < provider.SurfaceCount; i++) {
 
-					var panel = provider?.GetSurface(i) as IMyTextSurface;
+					var panel = provider.GetSurface(i) as IMyTextSurface;
 
 					if (panel == null)
 						return;
@@ -91,12 +89,12 @@ namespace ModularEncountersSystems.Files {
 			
 			} else {
 
-				var panel = provider?.GetSurface(surfaceIndex) as IMyTextSurface;
+				var panel = provider.GetSurface(TextSurfaceIndex) as IMyTextSurface;
 
 				if (panel == null)
 					return;
 
-				ApplyLcdContents(panel, surfaceIndex);
+				ApplyLcdContents(panel, TextSurfaceIndex);
 
 			}
 			

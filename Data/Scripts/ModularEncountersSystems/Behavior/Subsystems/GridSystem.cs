@@ -202,6 +202,36 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
+		public void ApplyLcdContents(string textTemplate, List<string> blockNames, List<int> indexes) {
+
+			TextTemplate template = ProfileManager.GetTextTemplate(textTemplate);
+
+			if (template == null)
+				return;
+
+			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
+
+				var block = AllTerminalBlocks[i];
+
+				if (block?.GetInventory() == null)
+					continue;
+
+				for (int j = 0; j < blockNames.Count && j < indexes.Count; j++) {
+
+					var indexAllowed = template.LcdEntries.Length <= indexes[j] + 1;
+
+					if (block.CustomName == blockNames[j] && indexAllowed) {
+
+						template.LcdEntries[indexes[j]].ApplyLcdContents(block as IMyTextSurfaceProvider);
+
+					}
+
+				}
+
+			}
+
+		}
+
 		public void BuildProjectedBlocks(int maxBlocksToBuild) {
 
 			int builtBlocks = 0;

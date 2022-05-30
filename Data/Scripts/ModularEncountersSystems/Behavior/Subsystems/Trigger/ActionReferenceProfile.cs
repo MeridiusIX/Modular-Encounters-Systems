@@ -350,6 +350,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public string DebugMessage;
 
+		public bool ApplyLcdChanges;
+		public string LcdTextTemplateFile;
+		public List<string> LcdBlockNames;
+		public List<int> LcdTemplateIndexes;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -681,6 +686,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			DebugMessage = "";
 
+			ApplyLcdChanges = false;
+			LcdTextTemplateFile = "";
+			LcdBlockNames = new List<string>();
+			LcdTemplateIndexes = new List<int>();
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -917,8 +927,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ContainerTypeBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeBlockNames) },
 				{"ContainerTypeSubtypeIds", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeSubtypeIds) },
 
-				{"DebugMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugMessage) }, //DebugMessage
-				//SetGridCleanupExempt
+				{"DebugMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugMessage) },
+
+				{"ApplyLcdChanges", (s, o) => TagParse.TagBoolCheck(s, ref ApplyLcdChanges) },
+				{"LcdTextTemplateFile", (s, o) => TagParse.TagStringCheck(s, ref LcdTextTemplateFile) },
+				{"LcdBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref LcdBlockNames) },
+				{"LcdTemplateIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref LcdTemplateIndexes) },
 
 			};
 

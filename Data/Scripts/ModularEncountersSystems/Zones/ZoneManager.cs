@@ -158,9 +158,17 @@ namespace ModularEncountersSystems.Zones {
 
 						var id = planet?.Planet?.Generator?.Id.SubtypeName ?? "";
 
-						if (string.IsNullOrWhiteSpace(id) || id != zone.PlanetName) {
+						if (string.IsNullOrWhiteSpace(id)) {
 
-							SpawnLogger.Write("Planet Id Null or Id doesn't Match PlanetName in Zone: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
+							SpawnLogger.Write("Planet Id Null: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
+							continue;
+
+						}
+
+						if (id != zone.PlanetName) {
+
+							SpawnLogger.Write("Planet Id doesn't Match PlanetName in Zone: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
+							SpawnLogger.Write(" - Planet Id: " + id + " // Zone Planet: " + zone.PlanetName ?? "null", SpawnerDebugEnum.Startup);
 							continue;
 
 						}

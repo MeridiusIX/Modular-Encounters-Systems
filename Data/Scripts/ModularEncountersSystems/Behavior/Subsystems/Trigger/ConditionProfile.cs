@@ -96,10 +96,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		public void SetReferences(IMyRemoteControl remoteControl, StoredSettings settings) {
+		public void SetReferences(IMyRemoteControl remoteControl, IBehavior behavior) {
 
 			_remoteControl = remoteControl;
-			_settings = settings;
+			_behavior = behavior;
+			_settings = _behavior?.BehaviorSettings;
 
 		}
 
@@ -123,9 +124,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				_behavior = BehaviorManager.GetBehavior(_remoteControl);
 
-				if (_behavior == null)
+				if (_behavior == null) {
+
+					BehaviorLogger.Write(ProfileSubtypeId + ": Behavior Is Null, Cannot Continue With Conditions", BehaviorDebugEnum.Condition);
 					return false;
 
+				}
+					
 			}
 
 			if (!_gotWatchedBlocks)
@@ -187,6 +192,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						failedCheck = true;
 						break;
 
+					} else if (ConditionReference.AllowAnyTrueBoolean) {
+
+						break;
+					
 					}
 
 				}
@@ -218,6 +227,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								failedCheck = true;
 								break;
 
+							} else if (ConditionReference.AllowAnyValidCounter) {
+
+								break;
+							
 							}
 
 						} catch (Exception e) {
@@ -259,6 +272,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							failedCheck = true;
 							break;
 
+						} else if (ConditionReference.AllowAnyTrueSandboxBoolean) {
+
+							break;
+						
 						}
 
 					} catch (Exception e) {
@@ -320,6 +337,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								failedCheck = true;
 								break;
 
+							} else if (ConditionReference.AllowAnyValidSandboxCounter) {
+
+								break;
+							
 							}
 
 						} catch (Exception e) {
@@ -695,9 +716,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (command != null) {
 
 					var myScore = (_behavior.CurrentGrid?.TargetValue() ?? 0) * ConditionReference.CompareCommandGridValueSelfMultiplier;
+					BehaviorLogger.Write(string.Format("Command Grid Value Compare: Self={0} // Other={1}", myScore, command.GridValueScore), BehaviorDebugEnum.Condition);
 
-					if (MathTools.CompareValues(command.GridValueScore, myScore, ConditionReference.CheckCommandGridValueCompare))
+					if (MathTools.CompareValues(command.GridValueScore, myScore, ConditionReference.CompareCommandGridValueMode))
 						satisfiedConditions++;
+
+				} else {
+
+					BehaviorLogger.Write("Command Was Null For CompareCommandGridValue", BehaviorDebugEnum.Condition);
 
 				}
 
@@ -739,6 +765,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 
 				}
+
+			}
+
+			if (ConditionReference.CheckForPlanetaryLane) {
+
+				usedConditions++;
+				var laneResult = PlanetManager.IsPositionInsideLane(_behavior.RemoteControl.GetPosition()) == ConditionReference.PlanetaryLanePassValue;
+
+				if (laneResult)
+					satisfiedConditions++;
 
 			}
 

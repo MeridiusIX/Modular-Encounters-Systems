@@ -756,12 +756,16 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (environment.AtmosphereAtPosition > 0) {
 
-				if (APIs.DragApiLoaded && APIs.Drag.AdvLift && !conditions.PlanetaryInstallation && !conditions.ForceStaticGrid) {
+				if (conditions.AtmosphericCargoShip || conditions.DroneEncounter) {
 
-					if (!conditions.UsesAerodynamicModAdvLift) {
+					if (!Settings.Grids.AerodynamicsModAdvLiftOverride && APIs.DragApiLoaded && APIs.Drag.AdvLift && !conditions.ForceStaticGrid) {
 
-						failReason = "   - Aerodynamic Mod AdvLift feature not compatible with this encounter.";
-						return false;
+						if (!conditions.UsesAerodynamicModAdvLift) {
+
+							failReason = "   - Aerodynamic Mod AdvLift feature not compatible with this encounter.";
+							return false;
+
+						}
 
 					}
 

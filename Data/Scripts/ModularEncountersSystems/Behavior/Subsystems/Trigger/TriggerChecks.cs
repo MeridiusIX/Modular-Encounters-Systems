@@ -108,6 +108,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+		//SwitchedTarget
+		public bool CheckSwitchedTarget(TriggerProfile trigger) {
+
+			var result = _autopilot.Targeting.TargetSwitched;
+			_autopilot.Targeting.TargetSwitched = false;
+			return result;
+
+		}
+
+		//ChangedTarget
+		public bool CheckChangedTarget(TriggerProfile trigger) {
+
+			var result = _autopilot.Targeting.TargetChanged;
+			_autopilot.Targeting.TargetChanged = false;
+			return result;
+
+		}
+
 		//TargetInSafezone
 		public bool CheckTargetInSafezone(TriggerProfile trigger) {
 

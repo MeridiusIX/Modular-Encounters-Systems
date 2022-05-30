@@ -99,7 +99,9 @@ namespace ModularEncountersSystems.Entities {
 
 		public static void GetAttachedGrids(IMyCubeGrid cubeGrid, List<GridEntity> gridList) {
 
-			gridList.Clear();
+			lock(gridList)
+				gridList.Clear();
+
 			var gridGroup = MyAPIGateway.GridGroups.GetGroup(cubeGrid, GridLinkTypeEnum.Physical);
 
 			foreach (var grid in GridManager.Grids) {
@@ -122,8 +124,12 @@ namespace ModularEncountersSystems.Entities {
 				return;
 
 			//SpawnLogger.Write("Clear Lists", SpawnerDebugEnum.Dev, true);
-			parent.PhysicalLinkedGrids.Clear();
-			parent.LinkedGrids.Clear();
+
+			lock (parent.PhysicalLinkedGrids)
+				parent.PhysicalLinkedGrids.Clear();
+
+			lock (parent.LinkedGrids)
+				parent.LinkedGrids.Clear();
 
 			//SpawnLogger.Write("Get Group", SpawnerDebugEnum.Dev, true);
 			MyAPIGateway.GridGroups.GetGroup(parent.CubeGrid, GridLinkTypeEnum.Physical, parent.PhysicalLinkedGrids);
@@ -579,12 +585,16 @@ namespace ModularEncountersSystems.Entities {
 
 			var result = Vector2.Zero;
 
-			foreach (var grid in grids) {
+			for (int i = grids.Count - 1; i >= 0; i--) {
 
-				result += GridPowerOutput(grid);
+				var grid = GridManager.GetSafeGridFromIndex(i, grids);
+
+				if (grid != null)
+					result += GridPowerOutput(grid);
+
 
 			}
-
+			
 			return result;
 
 		}

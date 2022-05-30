@@ -302,6 +302,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void ActivateTrigger(Func<TriggerProfile, bool> mainTriggerCheck = null, Command command = null) {
 
+			ValidateTrigger(mainTriggerCheck, command);
+
+			if (!Triggered && UseElseActions && ElseActions.Count > 0) {
+
+				Triggered = true;
+				LastRunFailed = true;
+				BehaviorLogger.Write(ProfileSubtypeId + ": Else Actions Will Be Activated: " + Type, BehaviorDebugEnum.Trigger);
+
+			}
+
+		}
+
+		public void ValidateTrigger(Func<TriggerProfile, bool> mainTriggerCheck = null, Command command = null) {
+
 			if (MaxActions >= 0 && TriggerCount >= MaxActions) {
 
 				BehaviorLogger.Write(ProfileSubtypeId + ": Max Successful Actions Reached. Trigger Disabled: " + Type, BehaviorDebugEnum.Trigger);
@@ -320,14 +334,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if ((!mainTriggerPass && !UseFailCondition) || (mainTriggerPass && UseFailCondition)) {
 
-						LastRunFailed = true;
 						return;
 
 					}
 
 					if ((Conditions.ConditionReference?.UseConditions ?? false) == true) {
 
-						var conditionsMet = Conditions.AreConditionsMets();
+						var conditionsMet = Conditions.AreConditionsMets(command);
 
 						if (conditionsMet || (!conditionsMet == UseFailCondition)) {
 
@@ -344,7 +357,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if (!Triggered) {
 
 							BehaviorLogger.Write(ProfileSubtypeId + ": Condition Profile Not Satisfied", BehaviorDebugEnum.Trigger);
-							LastRunFailed = true;
 
 						}
 
@@ -363,14 +375,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if ((!mainTriggerPass && !UseFailCondition) || (mainTriggerPass && UseFailCondition)) {
 
-					LastRunFailed = true;
 					return;
 
 				}
 
 				if ((Conditions.ConditionReference?.UseConditions ?? false) == true) {
 
-					var conditionsMet = Conditions.AreConditionsMets();
+					var conditionsMet = Conditions.AreConditionsMets(command);
 
 					if (conditionsMet || (!conditionsMet == UseFailCondition)) {
 
@@ -381,7 +392,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (!Triggered) {
 
-						LastRunFailed = true;
 						BehaviorLogger.Write(ProfileSubtypeId + ": Condition Profile Not Satisfied", BehaviorDebugEnum.Trigger);
 
 					}
@@ -759,6 +769,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
+					//UseElseActions
+					if (tag.Contains("[UseElseActions:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref UseElseActions);
+
+					}
+
 					//ElseActions
 					if (tag.Contains("[ElseActions:") == true) {
 
@@ -778,7 +795,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 									if (profile != null) {
 
-										Actions.Add(profile);
+										ElseActions.Add(profile);
 										gotAction = true;
 
 									}

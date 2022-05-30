@@ -28,9 +28,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool CheckTrueBooleans;
 		public List<string> TrueBooleans;
+		public bool AllowAnyTrueBoolean;
 		public bool CheckCustomCounters;
 		public List<string> CustomCounters;
 		public List<int> CustomCountersTargets;
+		public bool AllowAnyValidCounter;
 
 		public bool CheckGridSpeed;
 		public float MinGridSpeed;
@@ -52,9 +54,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool CheckTrueSandboxBooleans;
 		public List<string> TrueSandboxBooleans;
+		public bool AllowAnyTrueSandboxBoolean;
 		public bool CheckCustomSandboxCounters;
 		public List<string> CustomSandboxCounters;
 		public List<int> CustomSandboxCountersTargets;
+		public bool AllowAnyValidSandboxCounter;
 
 		public bool CheckTargetAltitudeDifference;
 		public double MinTargetAltitudeDifference;
@@ -119,11 +123,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckForSpawnConditions;
 		public List<string> RequiredSpawnConditions;
 
+		public bool CheckForPlanetaryLane;
+		public bool PlanetaryLanePassValue;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 		public ConditionReferenceProfile() {
 
-			UseConditions = false;
+			UseConditions = true;
 			MatchAnyCondition = false;
 
 			CheckAllLoadedModIDs = false;
@@ -134,17 +141,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			CheckTrueBooleans = false;
 			TrueBooleans = new List<string>();
+			AllowAnyTrueBoolean = false;
 
 			CheckCustomCounters = false;
 			CustomCounters = new List<string>();
 			CustomCountersTargets = new List<int>();
+			AllowAnyValidCounter = false;
 
 			CheckTrueSandboxBooleans = false;
 			TrueSandboxBooleans = new List<string>();
+			AllowAnyTrueSandboxBoolean = false;
 
 			CheckCustomSandboxCounters = false;
 			CustomSandboxCounters = new List<string>();
 			CustomSandboxCountersTargets = new List<int>();
+			AllowAnyValidSandboxCounter = false;
 
 			CheckGridSpeed = false;
 			MinGridSpeed = -1;
@@ -225,6 +236,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckForSpawnConditions = false;
 			RequiredSpawnConditions = new List<string>();
 
+			CheckForPlanetaryLane = false;
+			PlanetaryLanePassValue = true;
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -237,9 +251,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AnyModIDsToCheck", (s, o) => TagParse.TagLongCheck(s, ref AnyModIDsToCheck) },
 				{"CheckTrueBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckTrueBooleans) },
 				{"TrueBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueBooleans) },
+				{"AllowAnyTrueBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyTrueBoolean) },
 				{"CheckCustomCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomCounters) },
 				{"CustomCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomCounters) },
 				{"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomCountersTargets) },
+				{"AllowAnyValidCounter", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyValidCounter) },
 				{"CheckGridSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSpeed) },
 				{"MinGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MinGridSpeed) },
 				{"MaxGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MaxGridSpeed) },
@@ -255,9 +271,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"MaxAccumulatedDamage", (s, o) => TagParse.TagFloatCheck(s, ref MaxAccumulatedDamage) },
 				{"CheckTrueSandboxBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckTrueSandboxBooleans) },
 				{"TrueSandboxBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueSandboxBooleans) },
+				{"AllowAnyTrueSandboxBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyTrueSandboxBoolean) },
 				{"CheckCustomSandboxCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomSandboxCounters) },
 				{"CustomSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomSandboxCounters) },
 				{"CustomSandboxCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomSandboxCountersTargets) },
+				{"AllowAnyValidSandboxCounter", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyValidSandboxCounter) },
 				{"CheckTargetAltitudeDifference", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetAltitudeDifference) },
 				{"MinTargetAltitudeDifference", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetAltitudeDifference) },
 				{"MaxTargetAltitudeDifference", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetAltitudeDifference) },
@@ -306,6 +324,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"BlocksOfType", (s, o) => TagParse.TagStringListCheck(s, ref BlocksOfType) },
 				{"CheckForSpawnConditions", (s, o) => TagParse.TagBoolCheck(s, ref CheckForSpawnConditions) },
 				{"RequiredSpawnConditions", (s, o) => TagParse.TagStringListCheck(s, ref RequiredSpawnConditions) },
+				{"CheckForPlanetaryLane", (s, o) => TagParse.TagBoolCheck(s, ref CheckForPlanetaryLane) },//CheckForPlanetaryLane
+				{"PlanetaryLanePassValue", (s, o) => TagParse.TagBoolCheck(s, ref PlanetaryLanePassValue) },
 
 			};
 

@@ -212,6 +212,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+				//SwitchedTarget
+				if (trigger.Type == "SwitchedTarget") {
+
+					trigger.ActivateTrigger(CheckSwitchedTarget);
+					continue;
+
+				}
+
+				//ChangedTarget
+				if (trigger.Type == "ChangedTarget") {
+
+					trigger.ActivateTrigger(CheckChangedTarget);
+					continue;
+
+				}
+
 				//TargetInSafezone
 				if (trigger.Type == "TargetInSafezone") {
 
@@ -368,6 +384,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			_behavior.AutoPilot.Targeting.TargetAcquired = false;
+			_behavior.AutoPilot.Targeting.TargetLost = false;
+			_behavior.AutoPilot.Targeting.TargetSwitched = false;
+			_behavior.AutoPilot.Targeting.TargetChanged = false;
 			_behavior.BehaviorTriggerA = false;
 			_behavior.BehaviorTriggerB = false;
 			_behavior.BehaviorTriggerC = false;
@@ -506,7 +526,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (dist > command.Radius) {
 
-					BehaviorLogger.Write("Receiver Out Of Code Broadcast Range", BehaviorDebugEnum.Command);
+					BehaviorLogger.Write("Receiver Out Of Code Broadcast Range. Distance: " + dist + " // Command Radius: " + command.Radius, BehaviorDebugEnum.Command);
 					return;
 
 				}
@@ -841,22 +861,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (RemoteControl?.SlimBlock?.CubeGrid == null)
 				return;
 
+			if (!trigger.Triggered)
+				return;
+
 			var actionList = trigger.Actions;
 
-			if (trigger.Triggered == false || trigger.Actions == null || trigger.Actions.Count == 0) {
+			if (trigger.LastRunFailed) {
 
-				if (trigger.LastRunFailed && trigger.UseElseActions && trigger.ElseActions != null && trigger.ElseActions.Count > 0) {
+				actionList = trigger.ElseActions;
+				trigger.LastRunFailed = false;
 
-					trigger.Triggered = true;
-					actionList = trigger.ElseActions;
-
-				} else {
-
-					trigger.LastRunFailed = false;
-					return;
-
-				}
-		
 			}
 
 			long detectedEntity = attackerEntityId;
@@ -1017,14 +1031,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(control.FactionTag);
 
-				if (control.UseCustomFactionTag == true && customfaction != null)
-                {
-					var customfactionId = customfaction.FactionId;
-					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, customfactionId, control);
-				}
-                else
-                {
+				if (control.UseCustomFactionTag == true && customfaction != null){
+
+					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, customfaction.FactionId, control);
+
+				}else{
+
 					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, _owner.FactionId, control);
+
 				}
 			} 
 

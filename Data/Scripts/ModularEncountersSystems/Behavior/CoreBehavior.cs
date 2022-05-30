@@ -1172,7 +1172,7 @@ namespace ModularEncountersSystems.Behavior {
 			BehaviorLogger.Write("Beginning Individual Trigger Reference Setup", BehaviorDebugEnum.BehaviorSetup);
 			foreach (var trigger in Trigger.Triggers) {
 
-				trigger.Conditions.SetReferences(this.RemoteControl, BehaviorSettings);
+				trigger.Conditions.SetReferences(this.RemoteControl, this);
 
 				if (!string.IsNullOrWhiteSpace(trigger.ActionsDefunct?.ProfileSubtypeId))
 					trigger.Actions.Add(trigger.ActionsDefunct);
@@ -1195,7 +1195,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			foreach (var trigger in Trigger.DamageTriggers) {
 
-				trigger.Conditions.SetReferences(this.RemoteControl, BehaviorSettings);
+				trigger.Conditions.SetReferences(this.RemoteControl, this);
 
 				if (!foundStoredSettings)
 					trigger.ResetTime();
@@ -1205,7 +1205,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			foreach (var trigger in Trigger.CommandTriggers) {
 
-				trigger.Conditions.SetReferences(this.RemoteControl, BehaviorSettings);
+				trigger.Conditions.SetReferences(this.RemoteControl, this);
 
 				if (!foundStoredSettings)
 					trigger.ResetTime();
@@ -1214,7 +1214,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			foreach (var trigger in Trigger.CompromisedTriggers) {
 
-				trigger.Conditions.SetReferences(this.RemoteControl, BehaviorSettings);
+				trigger.Conditions.SetReferences(this.RemoteControl, this);
 
 				if (!foundStoredSettings)
 					trigger.ResetTime();
@@ -1453,6 +1453,26 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Legacy Cargo Ship:   ").Append(CargoShipWatcher.LegacyAutopilot.Contains(CurrentGrid)).AppendLine();
 			sb.AppendLine();
 
+			sb.Append("::: Active Profiles and Targeting :::").AppendLine();
+			sb.Append(" - Current Autopilot:   ").Append(AutoPilot?.Data?.ProfileSubtypeId ?? "N/A").AppendLine();
+			sb.Append(" - Current Target Data: ").Append(AutoPilot?.Targeting?.Data?.ProfileSubtypeId ?? "N/A").AppendLine();
+			sb.Append(" - Current Target:      ").Append((AutoPilot?.Targeting?.HasTarget() ?? false) ? AutoPilot.Targeting.Target.Name() ?? "N/A" : "No Target").AppendLine();
+
+			if (AutoPilot?.Targeting?.Data != null) {
+
+				sb.Append(" - Allowed Targets:     ").Append(AutoPilot.Targeting.Data.Target).AppendLine();
+				sb.Append(" - Sort Targets:        ").Append(AutoPilot.Targeting.Data.GetTargetBy).AppendLine();
+				sb.Append(" - Sort Targets:        ").Append(AutoPilot.Targeting.Data.MaxDistance).AppendLine();
+				sb.Append(" - Match All Targets:   ").Append(AutoPilot.Targeting.Data.MatchAllFilters.ToString()).AppendLine();
+				sb.Append(" - Match Any Targets:   ").Append(AutoPilot.Targeting.Data.MatchAnyFilters.ToString()).AppendLine();
+				sb.Append(" - Match None Targets:  ").Append(AutoPilot.Targeting.Data.MatchNoneFilters.ToString()).AppendLine();
+				sb.Append(" - Target Owners:       ").Append(AutoPilot.Targeting.Data.Owners.ToString()).AppendLine();
+				sb.Append(" - Target Relations:    ").Append(AutoPilot.Targeting.Data.Relations.ToString()).AppendLine();
+
+			}
+
+			sb.AppendLine();
+
 			//Subclass Behavior
 			var subclassBehaviorString = ActiveBehavior.ToString();
 
@@ -1570,6 +1590,33 @@ namespace ModularEncountersSystems.Behavior {
 					foreach (var spawn in action.Spawner) {
 
 						sb.Append("         - Spawn:       ").Append(spawn.ProfileSubtypeId).AppendLine();
+
+					}
+
+				}
+
+				if (trigger.UseElseActions && trigger.ElseActions.Count > 0) {
+
+					sb.Append("     - ElseActions:         ").Append(trigger.Actions.Count).AppendLine();
+
+					foreach (var action in trigger.Actions) {
+
+						sb.Append("       - Action:        ").Append(action.ProfileSubtypeId).AppendLine();
+						sb.Append("       - Chats:         ").Append(action.ChatData.Count).AppendLine();
+
+						foreach (var chat in action.ChatData) {
+
+							sb.Append("         - Chat:        ").Append(chat.ProfileSubtypeId).AppendLine();
+
+						}
+
+						sb.Append("       - Spawns:        ").Append(action.Spawner.Count).AppendLine();
+
+						foreach (var spawn in action.Spawner) {
+
+							sb.Append("         - Spawn:       ").Append(spawn.ProfileSubtypeId).AppendLine();
+
+						}
 
 					}
 

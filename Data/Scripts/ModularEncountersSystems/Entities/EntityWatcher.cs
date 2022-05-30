@@ -19,6 +19,8 @@ namespace ModularEncountersSystems.Entities {
 		public static bool NewPlayerConnected = false;
 		public static bool EntityWatcherRegistered = false;
 
+		private static bool _setup = false;
+
 		public static List<IMyCubeGrid> GridsOnLoad = new List<IMyCubeGrid>();
 
 		public static Action UnloadEntities;
@@ -28,6 +30,8 @@ namespace ModularEncountersSystems.Entities {
 			var entityList = new HashSet<IMyEntity>();
 			MyAPIGateway.Entities.GetEntities(entityList);
 
+			_setup = true;
+
 			foreach (var entity in entityList) {
 
 				if(entity as IMyCubeGrid != null)
@@ -36,6 +40,8 @@ namespace ModularEncountersSystems.Entities {
 				NewEntityDetected(entity);
 
 			}
+
+			_setup = false;
 
 			MyVisualScriptLogicProvider.PlayerConnected += PlayerManager.PlayerConnectEvent;
 			MyAPIGateway.Players.ItemConsumed += PlayerManager.ItemConsumedEvent;
@@ -79,7 +85,10 @@ namespace ModularEncountersSystems.Entities {
 				var planetEntity = new PlanetEntity(entity);
 				UnloadEntities += planetEntity.Unload;
 				PlanetManager.Planets.Add(planetEntity);
-				ZoneManager.AddNewZones();
+
+				if(!_setup)
+					ZoneManager.AddNewZones();
+
 				PlanetManager.CalculateLanes();
 				return;
 

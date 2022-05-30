@@ -176,6 +176,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public bool TargetAcquired;
 		public bool TargetLost;
+		public bool TargetSwitched;
+		public bool TargetChanged;
 
 		public DateTime LastAcquisitionTime;
 		public DateTime LastRefreshTime;
@@ -557,11 +559,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			CurrentTargetCheckResult = HasTarget();
 			CurrentTargetEntityId = Target != null ? Target.GetEntityId() : 0;
 
-			if (CurrentTargetEntityId != PreviousTargetEntityId)
+			if (CurrentTargetEntityId != PreviousTargetEntityId && !PreviousTargetCheckResult)
 				TargetAcquired = true;
 
 			if (PreviousTargetCheckResult && !CurrentTargetCheckResult)
 				TargetLost = true;
+
+			if (CurrentTargetEntityId != PreviousTargetEntityId && PreviousTargetCheckResult)
+				TargetSwitched = true;
+
+			if (CurrentTargetEntityId != PreviousTargetEntityId)
+				TargetChanged = true;
 
 			//BehaviorLogger.Write("CheckForTarget - Complete: " + RemoteControl.SlimBlock.CubeGrid.CustomName, BehaviorDebugEnum.Target);
 

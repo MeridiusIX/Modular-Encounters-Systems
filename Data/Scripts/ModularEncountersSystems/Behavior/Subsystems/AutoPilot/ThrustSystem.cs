@@ -29,6 +29,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		private bool _minAngleDistanceStrafeAdjusted;
 		private Vector3D _collisionStrafeDirection;
 
+		private DateTime _lastGravityThrustCalc = DateTime.MinValue;
+		private float _lastGravityThrustValue = 0;
+
 		private ThrustAction _thrustToApply;
 
 
@@ -94,6 +97,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (_remoteControl == null)
 				return 0;
 
+			var time = MyAPIGateway.Session.GameDateTime - _lastGravityThrustCalc;
+			if (time.TotalMilliseconds < 2500)
+				return _lastGravityThrustValue;
+
 			float gravityMultiplier = 0;
 
 			while (gravityMultiplier < 20) {
@@ -122,6 +129,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
+			_lastGravityThrustValue = gravityMultiplier;
 			return gravityMultiplier;
 
 		}

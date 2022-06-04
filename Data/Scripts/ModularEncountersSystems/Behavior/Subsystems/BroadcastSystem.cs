@@ -188,8 +188,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			if(this.RemoteControl?.SlimBlock?.CubeGrid?.CustomName != null && message.Contains("{GridName}"))
 				message = message.Replace("{GridName}", this.RemoteControl.SlimBlock.CubeGrid.CustomName);
-			
-			if(chat.UseRandomNameGeneratorFromMES)
+
+			if (this.RemoteControl.GetOwnerFactionTag() != null && message.Contains("{Fac}"))
+				message = message.Replace("{Fac}", this.RemoteControl.GetOwnerFactionTag());
+
+
+			if (chat.UseRandomNameGeneratorFromMES)
 				message = RandomNameGenerator.CreateRandomNameFromPattern(message);
 			
 			var authorName = chat.Author;
@@ -199,6 +203,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			if (this.RemoteControl?.SlimBlock?.CubeGrid?.CustomName != null && authorName.Contains("{GridName}"))
 				authorName = authorName.Replace("{GridName}", this.RemoteControl.SlimBlock.CubeGrid.CustomName);
+
+			if (this.RemoteControl.GetOwnerFactionTag() != null && authorName.Contains("{Fac}"))
+				authorName = authorName.Replace("{Fac}", this.RemoteControl.GetOwnerFactionTag());
 
 			bool sentToAll = false;
 

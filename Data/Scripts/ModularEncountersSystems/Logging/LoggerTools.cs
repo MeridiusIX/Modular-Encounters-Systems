@@ -955,13 +955,27 @@ namespace ModularEncountersSystems.Logging {
 			collection = new SpawnGroupCollection();
 			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryCargoShip, environment, "", collection);
 
-			if (collection.SpawnGroups.Count > 0) {
+			if (environment.PlanetaryCargoShipsEligible) {
 
 				sb.Append("::: Planetary / Gravity Cargo Ship Eligible Spawns :::").AppendLine();
 
-				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
+				if (APIs.DragApiLoaded && APIs.Drag.AdvLift && !Settings.Grids.AerodynamicsModAdvLiftOverride) {
 
-					sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
+					sb.Append(" > Aerodynamics Mod AdvLift Detected. Most Planetary Cargo Ships Will Not Be Compatible.").AppendLine();
+					sb.Append(" > To Restore Cargo Ships, Use One Of The Following Options:").AppendLine();
+					sb.Append("   > Disable AdvLift in Aerodynamics Mod Config.").AppendLine();
+					sb.Append("   > Remove Aerodynamics Mod.").AppendLine();
+					sb.Append("   > Enable [AerodynamicsModAdvLiftOverride] in MES Config File Config-Grids.xml (Not Recommended / Ships May Not Behave Properly)").AppendLine();
+
+				}
+
+				if (collection.SpawnGroups.Count > 0) {
+
+					foreach (var sgroup in collection.SpawnGroups.Distinct()) {
+
+						sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
+
+					}
 
 				}
 

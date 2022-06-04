@@ -243,7 +243,7 @@ namespace ModularEncountersSystems.Helpers {
 				var tag = factionTags[i];
 				var amount = amounts[i];
 
-                if(tag == "self"){
+				if(tag == "{Self}"){
 					tag = remoteControl.GetOwnerFactionTag();
 
 				}

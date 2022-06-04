@@ -123,6 +123,10 @@ namespace ModularEncountersSystems.Spawning {
 
 			string faction = spawnCollection.SelectRandomFaction();
 			long factionOwner = FactionHelper.GetFactionMemberIdFromTag(faction);
+
+			if (factionOwner == 0 && faction != "Nobody")
+				SpawnLogger.Write(spawnCollection.SpawnGroup.SpawnGroupName + " Expected To Spawn With Faction: " + (faction ?? "Null") + ", But Got Ownership ID 0 / Nobody", SpawnerDebugEnum.Error, true);
+
 			environment.GetThreat(spawnCollection.Conditions.ThreatLevelCheckRange, spawnCollection.Conditions.ThreatIncludeOtherNpcOwners);
 			SpawnLogger.Write("Spawning " + spawnCollection.PrefabIndexes.Count + " Prefabs With Ownership: " + faction + " / " + factionOwner.ToString(), SpawnerDebugEnum.Spawning);
 
@@ -162,6 +166,8 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.OriginalSpawnType = path.SpawnType;
 				npcData.SpawnGroupName = spawnCollection.SpawnGroup.SpawnGroupName;
 				npcData.OriginalPrefabId = sgPrefab.SubtypeId;
+				npcData.OriginalOwnerFaction = faction;
+				npcData.OriginalOwnerId = factionOwner;
 				npcData.SpawnerPrefabId = prefab.PrefabSubtypeId;
 				npcData.BehaviorName = sgPrefab.Behaviour;
 				npcData.BehaviorTriggerDist = sgPrefab.BehaviourActivationDistance;
@@ -171,6 +177,7 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.ConditionIndex = spawnCollection.ConditionsIndex;
 				npcData.ZoneIndex = spawnCollection.ZoneIndex;
 				npcData.UniqueSpawnIdentifier = MyAPIGateway.Session.GameDateTime.ToString("yyyyMMddhhmmssfff-") + NpcManager.SpawnIncrement;
+				npcData.Attributes.OwnershipValidation = true;
 
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(spawnCollection.SelectPrefabOffet(sgPrefab.Position, i), environment, spawnCollection.Conditions.CustomPathStartAltitude);

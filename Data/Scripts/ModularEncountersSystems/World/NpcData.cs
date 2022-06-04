@@ -82,6 +82,7 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(28)] public bool AnnounceSpawnInApi;
 		[ProtoMember(29)] public bool ApplyContainerTypes;
 		[ProtoMember(30)] public bool UseEnergyDisable;
+		[ProtoMember(31)] public bool OwnershipValidation;
 
 		public NewNpcAttributes() {
 
@@ -115,6 +116,7 @@ namespace ModularEncountersSystems.World {
 			AnnounceSpawnInApi = false;
 			ApplyContainerTypes = false;
 			UseEnergyDisable = false;
+			OwnershipValidation = false;
 
 		}
 
@@ -202,6 +204,12 @@ namespace ModularEncountersSystems.World {
 
 			if (ApplyContainerTypes)
 				sb.Append("ApplyContainerTypes").Append(", ");
+
+			if (UseEnergyDisable)
+				sb.Append("UseEnergyDisable").Append(", ");
+
+			if (OwnershipValidation)
+				sb.Append("OwnershipValidation").Append(", ");
 
 			if (OldFlagsProcessed)
 				sb.Append("OldFlagsProcessed").Append(", ");
@@ -373,6 +381,12 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(33)]
 		public string BehaviorTerminationReason;
 
+		[ProtoMember(34)]
+		public string OriginalOwnerFaction;
+
+		[ProtoMember(35)]
+		public long OriginalOwnerId;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -541,6 +555,8 @@ namespace ModularEncountersSystems.World {
 			CustomTags = new List<string>();
 			OriginalSpawnType = SpawningType.None;
 			BehaviorTerminationReason = "";
+			OriginalOwnerFaction = "";
+			OriginalOwnerId = 0;
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -891,6 +907,29 @@ namespace ModularEncountersSystems.World {
 
 			Grid.RefreshSubGrids();
 
+			//OwnershipValidation
+			if (Attributes.OwnershipValidation && !AppliedAttributes.OwnershipValidation) {
+
+				AppliedAttributes.OwnershipValidation = true;
+
+				if (Grid.CubeGrid.BigOwners.Count == 0 || Grid.CubeGrid.BigOwners[0] != OriginalOwnerId) {
+
+					SpawnLogger.Write("Ship From " + SpawnGroupName + " Spawned With Wrong Ownership. Attempting Correction.", SpawnerDebugEnum.Error, true);
+
+					var gridList = new List<IMyCubeGrid>();
+					MyAPIGateway.GridGroups.GetGroup(Grid.CubeGrid, GridLinkTypeEnum.Physical, gridList);
+
+					foreach (var grid in gridList) {
+
+						grid.ChangeGridOwnership(OriginalOwnerId, VRage.Game.MyOwnershipShareModeEnum.Faction);
+
+					}
+
+				}
+
+
+			}
+
 			//InhibitorActivation
 			if (Attributes.UseJetpackDisable && !AppliedAttributes.UseJetpackDisable && !HasInhibitor("Jetpack")) {
 
@@ -1072,6 +1111,8 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - PrefabSpeed:         ").Append(PrefabSpeed.ToString()).AppendLine();
 			sb.Append(" - DespawnSource:       ").Append(!string.IsNullOrWhiteSpace(DespawnSource) ? DespawnSource : "N/A").AppendLine();
 			sb.Append(" - SpawnedByMES:        ").Append(SpawnedByMES.ToString()).AppendLine();
+			sb.Append(" - OriginalFaction:     ").Append(OriginalOwnerFaction).AppendLine();
+			sb.Append(" - OriginalOwnerId:     ").Append(OriginalOwnerId).AppendLine();
 
 			return sb.ToString();
 			

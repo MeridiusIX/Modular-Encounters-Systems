@@ -158,7 +158,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static void ChangeDamageOwnerReputation(List<string> factions, long attackingEntity, List<int> amounts, bool applyChangeToAttackerFaction) {
+		public static void ChangeDamageOwnerReputation(IMyRemoteControl remoteControl, List<string> factions, long attackingEntity, List<int> amounts, bool applyChangeToAttackerFaction) {
 
 			if (amounts.Count != factions.Count) {
 
@@ -178,7 +178,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			var ownerList = new List<long>();
 			ownerList.Add(owner);
-			ChangePlayerReputationWithFactions(amounts, ownerList, factions, applyChangeToAttackerFaction);
+			ChangePlayerReputationWithFactions(remoteControl, amounts, ownerList, factions, applyChangeToAttackerFaction);
 
 		}
 
@@ -209,11 +209,11 @@ namespace ModularEncountersSystems.Helpers {
 
 			}
 
-			ChangePlayerReputationWithFactions(amounts, playerIds, factions, applyReputationChangeToFactionMembers);
+			ChangePlayerReputationWithFactions(remoteControl, amounts, playerIds, factions, applyReputationChangeToFactionMembers);
 
 		}
 
-		public static void ChangePlayerReputationWithFactions(List<int> amounts, List<long> players, List<string> factionTags, bool applyReputationChangeToFactionMembers) {
+		public static void ChangePlayerReputationWithFactions(IMyRemoteControl remoteControl, List<int> amounts, List<long> players, List<string> factionTags, bool applyReputationChangeToFactionMembers) {
 
 			var allPlayerIds = new List<long>(players.ToList());
 
@@ -243,6 +243,10 @@ namespace ModularEncountersSystems.Helpers {
 				var tag = factionTags[i];
 				var amount = amounts[i];
 
+                if(tag == "self"){
+					tag = remoteControl.GetOwnerFactionTag();
+
+				}
 				var faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(tag);
 
 				if (faction == null)

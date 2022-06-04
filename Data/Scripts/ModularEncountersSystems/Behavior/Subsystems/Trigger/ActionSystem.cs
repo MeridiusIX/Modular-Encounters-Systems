@@ -657,7 +657,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.ChangeAttackerReputation == true && detectedEntity != 0) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Reputation Change for Attacker", BehaviorDebugEnum.Action);
-				FactionHelper.ChangeDamageOwnerReputation(actions.ChangeAttackerReputationFaction, detectedEntity, actions.ChangeAttackerReputationAmount, actions.ReputationChangesForAllAttackPlayerFactionMembers);
+				FactionHelper.ChangeDamageOwnerReputation(RemoteControl, actions.ChangeAttackerReputationFaction, detectedEntity, actions.ChangeAttackerReputationAmount, actions.ReputationChangesForAllAttackPlayerFactionMembers);
 
 			}
 

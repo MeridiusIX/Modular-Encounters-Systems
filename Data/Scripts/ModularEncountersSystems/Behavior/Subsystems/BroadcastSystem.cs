@@ -177,28 +177,37 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
-			
+
 
 			var playerList = new List<IMyPlayer>();
 			MyAPIGateway.Players.GetPlayers(playerList);
 			BehaviorLogger.Write(chat.ProfileSubtypeId + ": Sending Chat to all Players within distance: " + this.HighestRadius.ToString(), BehaviorDebugEnum.Chat);
 
+			var factionTag = this.RemoteControl.GetOwnerFactionTag();
+			bool factionTagcheck = string.IsNullOrWhiteSpace(factionTag);
 			if (message.Contains("{AntennaName}"))
 				message = message.Replace("{AntennaName}", this.HighestAntennaRangeName);
 
 			if(this.RemoteControl?.SlimBlock?.CubeGrid?.CustomName != null && message.Contains("{GridName}"))
 				message = message.Replace("{GridName}", this.RemoteControl.SlimBlock.CubeGrid.CustomName);
-			
-			if(chat.UseRandomNameGeneratorFromMES)
+
+			if (factionTagcheck == false && message.Contains("{Faction}"))
+				message = message.Replace("{Faction}", factionTag);
+
+
+			if (chat.UseRandomNameGeneratorFromMES)
 				message = RandomNameGenerator.CreateRandomNameFromPattern(message);
 			
 			var authorName = chat.Author;
-
+				
 			if (authorName.Contains("{AntennaName}"))
 				authorName = authorName.Replace("{AntennaName}", this.HighestAntennaRangeName);
 
 			if (this.RemoteControl?.SlimBlock?.CubeGrid?.CustomName != null && authorName.Contains("{GridName}"))
 				authorName = authorName.Replace("{GridName}", this.RemoteControl.SlimBlock.CubeGrid.CustomName);
+
+			if (factionTagcheck == false && authorName.Contains("{Faction}"))
+				authorName = authorName.Replace("{Faction}", factionTag);
 
 			bool sentToAll = false;
 

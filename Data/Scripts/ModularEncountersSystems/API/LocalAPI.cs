@@ -58,6 +58,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("SpawnPlanetaryInstallation", new Func<Vector3D, List<string>, bool>(SpawnPlanetaryInstallation));
 			dict.Add("SpawnRandomEncounter", new Func<Vector3D, List<string>, bool>(SpawnRandomEncounter));
 			dict.Add("SpawnSpaceCargoShip", new Func<Vector3D, List<string>, bool>(SpawnSpaceCargoShip));
+			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
 
 			return dict;
 
@@ -265,6 +266,21 @@ namespace ModularEncountersSystems.API {
 
 			return SpawnRequest.CalculateSpawn(coords, "API Request", SpawningType.SpaceCargoShip, false, false, spawnGroups);
 
+		}
+
+		public static void ToggleSpawnGroupEnabled(string spawnGroupName, bool toggle) {
+
+			foreach (var spawnGroup in SpawnGroupManager.SpawnGroups) {
+
+				if (spawnGroup.SpawnGroupName == spawnGroupName) {
+
+					spawnGroup.SpawnGroupEnabled = toggle;
+					break;
+
+				}
+
+			}
+								
 		}
 
 	}

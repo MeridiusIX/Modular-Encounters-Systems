@@ -76,7 +76,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			foreach (var player in _playersInBlockRange) {
 
-				if (!player.ActiveEntity() || player.IsParentEntitySeat)
+				if (player?.Player?.Character == null || !player.ActiveEntity() || player.IsParentEntitySeat)
 					continue;
 
 				float distanceRatio = 1 - (float)(Vector3D.Distance(player.GetPosition(), Entity.GetPosition()) / _antennaRange);

@@ -40,6 +40,7 @@ namespace ModularEncountersSystems.API {
 		private Func<Vector3D, List<string>, bool> _spawnPlanetaryInstallation;
 		private Func<Vector3D, List<string>, bool> _spawnRandomEncounter;
 		private Func<Vector3D, List<string>, bool> _spawnSpaceCargoShip;
+		private Action<string, bool> _toggleSpawnGroupEnabled;
 
 		//Create this object in your SessionComponent LoadData() Method
 		public MESApi() {
@@ -268,6 +269,13 @@ namespace ModularEncountersSystems.API {
 		/// <returns>true or false depending on if the spawn was successful</returns>
 		public bool SpawnSpaceCargoShip(Vector3D coords, List<string> spawnGroups) => _spawnSpaceCargoShip?.Invoke(coords, spawnGroups) ?? false;
 
+		/// <summary>
+		/// Allows you to Enable or Disable a SpawnGroup, determining whether it can be spawned at all.
+		/// </summary>
+		/// <param name="spawnGroupName">The name (SubtypeId) of the Spawngroup you want to toggle</param>
+		/// <param name="toggle">true for enabled, false for disabled</param>
+		public void ToggleSpawnGroupEnabled(string spawnGroupName, bool toggle) => _toggleSpawnGroupEnabled?.Invoke(spawnGroupName, toggle);
+
 		//Run This Method in your SessionComponent UnloadData() Method
 		public void UnregisterListener() {
 
@@ -313,6 +321,7 @@ namespace ModularEncountersSystems.API {
 				_spawnPlanetaryInstallation = (Func<Vector3D, List<string>, bool>)dict["SpawnPlanetaryInstallation"];
 				_spawnRandomEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnRandomEncounter"];
 				_spawnSpaceCargoShip = (Func<Vector3D, List<string>, bool>)dict["SpawnSpaceCargoShip"];
+				_toggleSpawnGroupEnabled = (Action<string, bool>)dict["ToggleSpawnGroupEnabled"]; 
 
 			} catch (Exception e) {
 

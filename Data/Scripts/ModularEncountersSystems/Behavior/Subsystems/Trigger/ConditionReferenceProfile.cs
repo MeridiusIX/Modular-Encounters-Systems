@@ -108,6 +108,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckIfTargetIsPlayerOwned;
 		public bool CheckIfTargetIsNpcOwned;
 
+		public bool IsAttackerHostile;
+		public bool IsAttackerNeutral;
+		public bool IsAttackerFriendly;
+
 		public bool CheckCommandGridValue;
 		public float CommandGridValue;
 		public CounterCompareEnum CheckCommandGridValueCompare;
@@ -220,6 +224,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckIfTargetIsPlayerOwned = false;
 			CheckIfTargetIsNpcOwned = false;
 
+			IsAttackerHostile = false;
+			IsAttackerNeutral = false;
+			IsAttackerFriendly = false;
+
 			BehaviorModeCheck = false;
 			CurrentBehaviorMode = new List<BehaviorMode>();
 
@@ -313,6 +321,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckIfDamagerIsNpc", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfDamagerIsNpc) },
 				{"CheckIfTargetIsPlayerOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsPlayerOwned) },
 				{"CheckIfTargetIsNpcOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsNpcOwned) },
+				{"IsAttackerHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerHostile) },
+				{"IsAttackerNeutral", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerNeutral) },
+				{"IsAttackerFriendly", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerFriendly) },
 				{"CheckCommandGridValue", (s, o) => TagParse.TagBoolCheck(s, ref CheckCommandGridValue) },
 				{"CommandGridValue", (s, o) => TagParse.TagFloatCheck(s, ref CommandGridValue) },
 				{"CheckCommandGridValueCompare", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CheckCommandGridValueCompare) },

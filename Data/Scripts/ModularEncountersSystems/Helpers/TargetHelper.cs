@@ -310,14 +310,17 @@ namespace ModularEncountersSystems.Helpers {
 			PlayerEntity closestPlayer = null;
 			double closestPlayerDistance = 0;
 
+			if (control == null)
+				return null;
+
 			foreach(var playerEnt in PlayerManager.Players) {
 
-				if (!playerEnt.ActiveEntity())
+				if (playerEnt == null || !playerEnt.ActiveEntity())
 					continue;
 
 				var player = playerEnt.Player;
 
-				if(player.Controller.ControlledEntity.Entity == null || player.IsBot == true) {
+				if(player?.Controller?.ControlledEntity?.Entity == null || player.IsBot == true) {
 
 					continue;
 
@@ -341,8 +344,6 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 
 				}
-
-				
 
 				if(closestPlayer == null) {
 

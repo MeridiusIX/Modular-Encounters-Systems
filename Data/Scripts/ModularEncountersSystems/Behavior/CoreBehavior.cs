@@ -219,7 +219,7 @@ namespace ModularEncountersSystems.Behavior {
 
 		private bool _readyToSaveSettings;
 		private string _settingsDataPending;
-
+		
 		public bool IsWorking;
 		public bool HasBeenWorking; //block was alive at one point
 		public bool PhysicsValid;

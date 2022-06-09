@@ -696,6 +696,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.IsAttackerHostile) {
+
+				usedConditions++;
+
+				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+				if(rep <= -501)
+					satisfiedConditions++;
+
+			}
+
+			if (ConditionReference.IsAttackerNeutral) {
+
+				usedConditions++;
+
+				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+				if (rep >= -500 && rep <= 500)
+					satisfiedConditions++;
+
+			}
+
+			if (ConditionReference.IsAttackerFriendly) {
+
+				usedConditions++;
+
+				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+				if (rep >= 501)
+					satisfiedConditions++;
+
+			}
+
 			if (ConditionReference.CheckCommandGridValue) {
 
 				usedConditions++;

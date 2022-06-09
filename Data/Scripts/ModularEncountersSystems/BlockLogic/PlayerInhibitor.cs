@@ -20,7 +20,7 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal bool _playersInRange;
 		internal List<PlayerEntity> _playersInBlockRange;
 
-		internal float _damageAtZeroDistance = 25;
+		internal float _damageAtZeroDistance = 10;
 
 		public PlayerInhibitor(BlockEntity block) {
 

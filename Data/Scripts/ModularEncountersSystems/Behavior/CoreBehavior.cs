@@ -15,6 +15,7 @@ using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
@@ -48,7 +49,8 @@ namespace ModularEncountersSystems.Behavior {
 		private TriggerSystem _trigger;
 
 		//Behavior Subclasses
-		private IBehaviorSubClass ActiveBehavior;
+		public IBehaviorSubClass ActiveBehavior { get { return _activeBehavior; } set { _activeBehavior = value; } }
+		private IBehaviorSubClass _activeBehavior;
 		private CargoShip _cargoship;
 		private Escort _escort;
 		private Fighter _fighter;
@@ -61,7 +63,8 @@ namespace ModularEncountersSystems.Behavior {
 		private Scout _scout;
 		private Sniper _sniper;
 		private Strike _strike;
-		
+		private Vulture _vulture;
+
 		private bool _behaviorTriggerA;
 		private bool _behaviorTriggerB;
 		private bool _behaviorTriggerC;
@@ -404,6 +407,28 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void FirstRun() {
 
+			if (AutoPilot.ThrustProfiles.Count == 0 || AutoPilot.GyroProfiles.Count == 0) {
+
+				AutoPilot.ThrustProfiles.Clear();
+				AutoPilot.GyroProfiles.Clear();
+
+				var blockList = new List<IMySlimBlock>();
+				GridManager.GetBlocksFromGrid<IMyTerminalBlock>(_remoteControl.SlimBlock.CubeGrid, blockList, true);
+
+				foreach (var block in blockList.Where(item => item.FatBlock as IMyThrust != null)) {
+
+					AutoPilot.ThrustProfiles.Add(new ThrusterProfile(block.FatBlock as IMyThrust, _remoteControl, this, AutoPilot.Data.UseSubgridThrust, AutoPilot.Data.MaxSubgridThrustAngle));
+
+				}
+
+				foreach (var block in blockList.Where(item => item.FatBlock as IMyGyro != null && item.CubeGrid == _remoteControl.SlimBlock.CubeGrid)) {
+
+					AutoPilot.GyroProfiles.Add(new GyroscopeProfile(block.FatBlock as IMyGyro, _remoteControl, this));
+
+				}
+
+			}
+
 			Escort.InitializeEscorts();
 		
 		}
@@ -630,7 +655,7 @@ namespace ModularEncountersSystems.Behavior {
 			BehaviorSettings = new StoredSettings();
 			AutoPilot = new AutoPilotSystem(remoteControl, this);
 			Broadcast = new BroadcastSystem(this, remoteControl);
-			Damage = new DamageSystem(remoteControl);
+			Damage = new DamageSystem(remoteControl, this);
 			Despawn = new DespawnSystem(this, remoteControl);
 			Diagnostic = new DiagnosticSystem(this, remoteControl);
 			Escort = new EscortSystem(this, remoteControl);
@@ -971,6 +996,31 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
+			if (subclass == BehaviorSubclass.Vulture) {
+
+				if (_vulture == null)
+					_vulture = new Vulture(this);
+
+				ActiveBehavior = _vulture;
+
+				if (BehaviorSettings.ActiveBehaviorType != subclass) {
+
+					Mode = BehaviorMode.Init;
+
+					if (!BehaviorSettings.SubclassBehaviorDefaultsSet) {
+
+						BehaviorSettings.SubclassBehaviorDefaultsSet = true;
+						ActiveBehavior.SetDefaultTags();
+
+					}
+
+				}
+
+				BehaviorSettings.ActiveBehaviorType = subclass;
+				return;
+
+			}
+
 		}
 
 		public void InitCoreTags() {
@@ -1106,6 +1156,10 @@ namespace ModularEncountersSystems.Behavior {
 				BehaviorSettings.DamageTriggers = Trigger.DamageTriggers;
 				BehaviorSettings.CommandTriggers = Trigger.CommandTriggers;
 				BehaviorSettings.CompromisedTriggers = Trigger.CompromisedTriggers;
+				BehaviorSettings.InitialWeaponCount = (short)AutoPilot.Weapons.GetActiveWeaponCount();
+				BehaviorSettings.InitialTurretCount = (short)AutoPilot.Weapons.GetActiveTurretCount();
+				BehaviorSettings.InitialGunCount = (short)AutoPilot.Weapons.GetActiveGunCount();
+				BehaviorSettings.InitialGridIntegrity = CurrentGrid.GetCurrentHealth();
 
 			} else {
 
@@ -1451,6 +1505,11 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Vanilla Autopilot:   ").Append(RemoteControl.IsAutoPilotEnabled).AppendLine();
 			sb.Append(" - Cargo Ship Watcher:  ").Append(CargoShipWatcher.CargoShips.Contains(CurrentGrid)).AppendLine();
 			sb.Append(" - Legacy Cargo Ship:   ").Append(CargoShipWatcher.LegacyAutopilot.Contains(CurrentGrid)).AppendLine();
+			sb.Append(" - Health:              ").Append(CurrentGrid?.GetCurrentHealth() ?? 0).Append(" / ").Append(BehaviorSettings.InitialGridIntegrity).AppendLine();
+			sb.Append(" - Weapons:             ").Append(AutoPilot?.Weapons?.GetActiveWeaponCount() ?? 0).Append(" / ").Append(BehaviorSettings.InitialWeaponCount).AppendLine();
+			sb.Append(" - Turrets:             ").Append(AutoPilot?.Weapons?.GetActiveTurretCount() ?? 0).Append(" / ").Append(BehaviorSettings.InitialTurretCount).AppendLine();
+			sb.Append(" - Guns:                ").Append(AutoPilot?.Weapons?.GetActiveGunCount() ?? 0).Append(" / ").Append(BehaviorSettings.InitialGunCount).AppendLine();
+
 			sb.AppendLine();
 
 			sb.Append("::: Active Profiles and Targeting :::").AppendLine();

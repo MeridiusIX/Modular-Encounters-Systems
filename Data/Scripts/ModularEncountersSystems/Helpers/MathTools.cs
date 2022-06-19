@@ -332,6 +332,28 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static int NextIndex(int currentIndex, int count) {
+
+            int newIndex = currentIndex += 1;
+
+            if (newIndex >= count)
+                return 0;
+
+            return newIndex;
+        
+        }
+
+        public static int PreviousIndex(int currentIndex, int count) {
+
+            int newIndex = currentIndex -= 1;
+
+            if (newIndex < 0)
+                return (count -= 1);
+
+            return newIndex;
+
+        }
+
         /// <summary>
         /// This method will convert a radian value into degrees
         /// </summary>
@@ -525,6 +547,14 @@ namespace ModularEncountersSystems.Helpers {
             else
                 return value <= target;
 
+        }
+
+        public static bool IsValueCloser(double target, double existing, double challenger) {
+
+            var existingDiff = Math.Abs(target - existing);
+            var challengeDiff = Math.Abs(target - challenger);
+            return challenger < existing;
+        
         }
 
     }

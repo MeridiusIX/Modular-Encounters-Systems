@@ -540,9 +540,11 @@ namespace ModularEncountersSystems.Logging {
 
 			sb.Append(BuildKeyList("SpawnGroup", SpawnGroupManager.SpawnGroupNames));
 			sb.Append(BuildKeyList("Manipulation", ProfileManager.ManipulationProfiles.Keys));
+			sb.Append(BuildKeyList("Manipulation Group", ProfileManager.ManipulationGroups.Keys));
 			sb.Append(BuildKeyList("Block Replacement", ProfileManager.BlockReplacementProfiles.Keys));
 			sb.Append(BuildKeyList("Dereliction", ProfileManager.DerelictionProfiles.Keys));
 			sb.Append(BuildKeyList("Spawn Condition", ProfileManager.SpawnConditionProfiles.Keys));
+			sb.Append(BuildKeyList("Spawn Condition Group", ProfileManager.SpawnConditionGroups.Keys));
 			sb.Append(BuildKeyList("Zone Condition", ProfileManager.ZoneConditionsProfiles.Keys));
 			sb.Append(BuildKeyList("Replenishment", ProfileManager.ReplenishmentProfiles.Keys));
 			sb.Append(BuildKeyList("Zone", ProfileManager.ZoneProfiles.Keys));

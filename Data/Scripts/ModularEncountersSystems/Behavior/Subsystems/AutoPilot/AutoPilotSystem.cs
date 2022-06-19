@@ -57,6 +57,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		WaterNavigation = 1 << 12,
 		HeavyYaw = 1 << 13,
 		WaypointFromEscort = 1 << 14,
+		CircleTarget = 1 << 15,
 
 	}
 
@@ -174,6 +175,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 
 		private Vector3D _calculatedOffsetWaypoint;
+		private Vector3D _calculatedCircleTargetWaypoint;
 		private Vector3D _calculatedPlanetPathWaypoint;
 		private Vector3D _calculatedWeaponPredictionWaypoint;
 		private Vector3D _evadeWaypoint;
@@ -209,6 +211,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		private MatrixD _offsetMatrix;
 		private IMyEntity _offsetRelativeEntity;
 
+		//Circle Target
+		internal bool _circleTargetNextWaypoint;
+		internal bool _circleTargetRequiresReset;
+		internal List<Vector3D> _circleTargetDirections;
+		internal int _circleTargetCurrentIndex;
+		internal MatrixD _circleTargetMatrix;
+		internal double _circleTargetDistance;
+		internal double _circleTargetTotalDistanceDecrement;
+		internal double _circleTargetAltitude;
+		internal double _circleTargetTotalAltitudeDecrement;
+		internal bool _circleTargetGravity;
+
 		//Autopilot Correction
 		private DateTime _lastAutoPilotCorrection;
 		private bool _needsThrustersRetoggled;
@@ -221,6 +235,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double AngleToCurrentWaypoint;
 		public double AngleToUpDirection;
 		public double DistanceToOffsetAtMyAltitude;
+		public double DistanceToCircleTargetAtMyAltitude;
 		private bool _requiresClimbToIdealAltitude;
 		private bool _requiresNavigationAroundCollision;
 
@@ -279,7 +294,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			_offsetMatrix = MatrixD.Identity;
 			_offsetRelativeEntity = null;
 
-			_lastAutoPilotCorrection = MyAPIGateway.Session.GameDateTime;
+			_circleTargetNextWaypoint = false;
+			_circleTargetRequiresReset = false;
+			_circleTargetDirections = new List<Vector3D>();
+			_circleTargetCurrentIndex = 0;
+			_circleTargetMatrix = MatrixD.Identity;
+			_circleTargetDistance = 0;
+			_circleTargetTotalDistanceDecrement = 0;
+			_circleTargetAltitude = 0;
+			_circleTargetTotalAltitudeDecrement = 0;
+			_circleTargetGravity = false;
+
+		_lastAutoPilotCorrection = MyAPIGateway.Session.GameDateTime;
 			_needsThrustersRetoggled = false;
 
 			_requiresClimbToIdealAltitude = false;
@@ -540,6 +566,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				this.AngleToCurrentWaypoint = VectorHelper.GetAngleBetweenDirections(_forwardDir, Vector3D.Normalize(_currentWaypoint - _myPosition));
 				this.DistanceToWaypointAtMyAltitude = VectorHelper.GetDistanceToTargetAtMyAltitude(_myPosition, _currentWaypoint, CurrentPlanet);
 				this.DistanceToOffsetAtMyAltitude = VectorHelper.GetDistanceToTargetAtMyAltitude(_myPosition, _calculatedOffsetWaypoint, CurrentPlanet);
+				this.DistanceToCircleTargetAtMyAltitude = VectorHelper.GetDistanceToTargetAtMyAltitude(_myPosition, _calculatedCircleTargetWaypoint, CurrentPlanet);
 				this.MyAltitude = _surfaceDistance;
 				this.UpDirectionFromPlanet = _upDirection;
 
@@ -1076,6 +1103,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (CurrentMode.HasFlag(NewAutoPilotMode.OffsetWaypoint))
 				OffsetWaypointGenerator();
 
+			//Circle Target
+			if (CurrentMode.HasFlag(NewAutoPilotMode.CircleTarget))
+				CircleTargetHandling();
+
 			//BehaviorLogger.Write("Autopilot: Planet Pathing", BehaviorDebugEnum.TempDebug);
 			//PlanetPathing
 			if (InGravity() && CurrentMode.HasFlag(NewAutoPilotMode.PlanetaryPathing) && _gravityStrength > 0) {
@@ -1391,6 +1422,157 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			_calculatedOffsetWaypoint = _pendingWaypoint;
 			IndirectWaypointType |= WaypointModificationEnum.Offset;
+
+		}
+
+		public void CircleTargetHandling(bool reset = false, bool nextWaypoint = false) {
+
+			if (reset) {
+
+				_circleTargetRequiresReset = true;
+				return;
+			
+			}
+
+			if (nextWaypoint) {
+
+				_circleTargetNextWaypoint = true;
+				return;
+			
+			}
+
+			//Check Gravity
+			if (InGravity() != _circleTargetGravity) {
+
+				_circleTargetGravity = !_circleTargetGravity;
+				_circleTargetRequiresReset = true;
+
+
+			}
+
+			//Check Matrix in Gravity
+			if (_circleTargetGravity && !_circleTargetRequiresReset) {
+
+				if (_circleTargetMatrix == MatrixD.Identity) {
+
+					_circleTargetRequiresReset = true;
+
+				} else {
+
+					if (VectorHelper.GetAngleBetweenDirections(_circleTargetMatrix.Up, _upDirection) > Data.CircleTargetUpAngleLimit) {
+
+						_circleTargetRequiresReset = true;
+
+					}
+				
+				}
+			
+			}
+
+			var targetCoords = Targeting.HasTarget() ? Targeting.Target.GetPosition() : _myPosition;
+			
+			//Reset
+			if (_circleTargetRequiresReset) {
+
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("CT-Reset", 500);
+				_circleTargetRequiresReset = false;
+				_circleTargetMatrix = MatrixD.Identity;
+				_circleTargetTotalDistanceDecrement = 0;
+				_circleTargetTotalAltitudeDecrement = 0;
+				RecalculateCircleTargetDistanceAndAltitude();
+
+				if (_circleTargetGravity && CurrentPlanet?.Planet != null) {
+
+					var upAtTarget = CurrentPlanet.UpAtPosition(targetCoords);
+					_circleTargetMatrix = MatrixD.CreateWorld(targetCoords, Vector3D.CalculatePerpendicularVector(upAtTarget), upAtTarget);
+
+				} else {
+
+					_circleTargetMatrix = MatrixD.CreateWorld(targetCoords, Vector3D.Forward, Vector3D.Up);
+
+				}
+
+				_circleTargetDirections.Clear();
+				VectorHelper.GenerateCircularDirections(_circleTargetMatrix, _circleTargetDirections);
+				_circleTargetCurrentIndex = VectorHelper.GetClosestDirectionIndexFromList((targetCoords == _myPosition ? Vector3D.Forward : Vector3D.Normalize(_myPosition - targetCoords)), _circleTargetDirections, _circleTargetGravity ? 0 : 90);
+
+			}
+
+			//Prepare Next Waypoint
+			if (_circleTargetNextWaypoint) {
+
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("CT-Next", 500);
+				_circleTargetNextWaypoint = false;
+
+				if (Data.CircleTargetRadiusConstriction)
+					_circleTargetTotalDistanceDecrement += Data.CircleTargetRadiusConstrictionAmount;
+
+				if (Data.CircleTargetAltitudeConstriction)
+					_circleTargetTotalAltitudeDecrement += Data.CircleTargetAltitudeConstrictionAmount;
+
+				if (Data.CircleTargetClockwise)
+					_circleTargetCurrentIndex = MathTools.NextIndex(_circleTargetCurrentIndex, _circleTargetDirections.Count);
+				else
+					_circleTargetCurrentIndex = MathTools.PreviousIndex(_circleTargetCurrentIndex, _circleTargetDirections.Count);
+
+
+			}
+
+			//Generate Waypoint
+			var posOrigin = _myPosition != targetCoords ? targetCoords : _circleTargetMatrix.Translation;
+			var altitudeAdjustedOrigin = posOrigin;
+			double distance = 0;
+
+			if (CurrentPlanet?.Planet != null) {
+
+				var up = CurrentPlanet.UpAtPosition(posOrigin);
+				var altitude = MathHelper.Clamp(_circleTargetAltitude - _circleTargetTotalAltitudeDecrement, Data.OffsetPlanetMinTargetAltitude, Data.OffsetPlanetMaxTargetAltitude);
+				distance = MathHelper.Clamp(_circleTargetDistance - _circleTargetTotalDistanceDecrement, Data.OffsetPlanetMinDistFromTarget, Data.OffsetPlanetMaxDistFromTarget);
+				altitudeAdjustedOrigin = up * altitude + posOrigin;
+
+			} else {
+
+				distance = MathHelper.Clamp(_circleTargetDistance - _circleTargetTotalDistanceDecrement, Data.OffsetSpaceMinDistFromTarget, Data.OffsetSpaceMaxDistFromTarget);
+
+			}
+
+			_calculatedCircleTargetWaypoint = _circleTargetDirections[_circleTargetCurrentIndex] * distance + altitudeAdjustedOrigin;
+			_pendingWaypoint = _calculatedCircleTargetWaypoint;
+			IndirectWaypointType |= WaypointModificationEnum.CircleTarget;
+
+		}
+
+		private void RecalculateCircleTargetDistanceAndAltitude(bool decrement = false) {
+
+			if (_circleTargetGravity && CurrentPlanet?.Planet != null) {
+
+				bool reverseDistAlt = false;
+
+				if (Data.ReverseOffsetDistAltAboveHeight) {
+
+					var surfaceAtWaypoint = CurrentPlanet.SurfaceCoordsAtPosition(_pendingWaypoint);
+					reverseDistAlt = Vector3D.Distance(surfaceAtWaypoint, _pendingWaypoint) > Data.ReverseOffsetHeight;
+
+				}
+
+				if (reverseDistAlt) {
+
+					_circleTargetAltitude = Data.CircleTargetAltitudeConstriction ? Data.OffsetPlanetMaxDistFromTarget : MathTools.RandomBetween(Data.OffsetPlanetMinDistFromTarget, Data.OffsetPlanetMaxDistFromTarget);
+					_circleTargetDistance = Data.CircleTargetRadiusConstriction ? Data.OffsetPlanetMaxTargetAltitude : MathTools.RandomBetween(Data.OffsetPlanetMinTargetAltitude, Data.OffsetPlanetMaxTargetAltitude);
+
+				} else {
+
+					_circleTargetAltitude = Data.CircleTargetAltitudeConstriction ? Data.OffsetPlanetMaxTargetAltitude : MathTools.RandomBetween(Data.OffsetPlanetMinTargetAltitude, Data.OffsetPlanetMaxTargetAltitude);
+					_circleTargetDistance = Data.CircleTargetRadiusConstriction ? Data.OffsetPlanetMaxDistFromTarget : MathTools.RandomBetween(Data.OffsetPlanetMinDistFromTarget, Data.OffsetPlanetMaxDistFromTarget);
+
+				}
+
+			} else {
+
+				_circleTargetAltitude = Data.CircleTargetRadiusConstriction ? Data.OffsetSpaceMaxDistFromTarget : MathTools.RandomBetween(Data.OffsetSpaceMinDistFromTarget, Data.OffsetSpaceMaxDistFromTarget);
+				_circleTargetDistance = Data.CircleTargetRadiusConstriction ? Data.OffsetSpaceMaxDistFromTarget : MathTools.RandomBetween(Data.OffsetSpaceMinDistFromTarget, Data.OffsetSpaceMaxDistFromTarget);
+
+			}
 
 		}
 
@@ -1729,6 +1911,54 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
+		public bool ArrivedAtCircleTargetWaypoint() {
+
+			if (Data.CircleTargetDriftExemption && _circleTargetDirections.Count > 0) {
+
+				var targetCoords = Targeting.HasTarget() ? Targeting.Target.GetPosition() : _circleTargetMatrix.Translation;
+				var dir = Vector3D.Normalize(_myPosition - targetCoords);
+				var nextDir = dir;
+
+				if(Data.CircleTargetClockwise)
+					nextDir = _circleTargetDirections[MathTools.NextIndex(_circleTargetCurrentIndex, _circleTargetDirections.Count)];
+				else
+					nextDir = _circleTargetDirections[MathTools.PreviousIndex(_circleTargetCurrentIndex, _circleTargetDirections.Count)];
+
+				var angle = VectorHelper.GetAngleBetweenDirections(dir, nextDir);
+
+				//MyVisualScriptLogicProvider.ShowNotificationToAll(angle.ToString(), 500);
+
+				if (VectorHelper.GetAngleBetweenDirections(dir, nextDir) <= 45) {
+
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("CT-DriftExempt", 500);
+					return true;
+
+				}
+			
+			}
+
+			if (InGravity() && MyAltitude < Data.IdealPlanetAltitude) {
+
+				if (DistanceToWaypointAtMyAltitude == -1 || DistanceToOffsetAtMyAltitude == -1)
+					return false;
+
+				if (DistanceToWaypointAtMyAltitude < Data.WaypointTolerance && DistanceToCircleTargetAtMyAltitude < Data.WaypointTolerance) {
+
+					BehaviorLogger.Write("Offset Compensation", BehaviorDebugEnum.AutoPilot);
+					return true;
+
+				}
+
+				return false;
+
+			}
+
+			if (DistanceToCurrentWaypoint < Data.WaypointTolerance)
+				return true;
+
+			return false;
+
+		}
 		public bool InvalidTarget() {
 
 			return !Targeting.HasTarget();

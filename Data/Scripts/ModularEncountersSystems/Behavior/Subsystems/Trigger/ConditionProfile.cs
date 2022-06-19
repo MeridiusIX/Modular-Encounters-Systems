@@ -190,10 +190,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						BehaviorLogger.Write(ProfileSubtypeId + ": Boolean Not True: " + boolName, BehaviorDebugEnum.Condition);
 						failedCheck = true;
-						break;
 
+						if (!ConditionReference.AllowAnyTrueBoolean) {
+
+							failedCheck = true;
+							break;
+
+						}
+						
 					} else if (ConditionReference.AllowAnyTrueBoolean) {
 
+						failedCheck = false;
 						break;
 					
 					}
@@ -596,6 +603,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.BehaviorSubclassCheck) {
+
+				usedConditions++;
+
+				if (ConditionReference.BehaviorSubclass.Contains(_behavior.ActiveBehavior.SubClass))
+					satisfiedConditions++;
+
+			}
+
 			if (ConditionReference.BehaviorModeCheck) {
 
 				usedConditions++;
@@ -720,7 +736,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (ConditionReference.IsAttackerFriendly) {
 
-				usedConditions++;
+				usedConditions++;//
 
 				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
 
@@ -757,6 +773,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				} else {
 
 					BehaviorLogger.Write("Command Was Null For CompareCommandGridValue", BehaviorDebugEnum.Condition);
+
+				}
+
+			}
+
+			if (ConditionReference.CommandGravityCheck) {
+
+				usedConditions++;
+
+				if (command != null) {
+
+					var match = command.Behavior.AutoPilot.InGravity() == _behavior.AutoPilot.InGravity();
+
+					if(match == ConditionReference.CommandGravityMatches)
+						satisfiedConditions++;
 
 				}
 

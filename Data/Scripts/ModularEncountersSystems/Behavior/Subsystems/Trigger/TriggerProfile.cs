@@ -189,7 +189,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		[ProtoMember(56)]
 		public bool UseCustomFactionTag;
-		
+
+		[ProtoMember(57)]
+		public float PercentageOfWeaponsRemaining;
+
+		[ProtoMember(58)]
+		public float PercentageOfHealthRemaining;
+
 		[ProtoIgnore]
 		public IBehavior Behavior;
 
@@ -292,6 +298,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ButtonPanelName = "";
 			ButtonPanelIndex = 0;
+
+			PercentageOfWeaponsRemaining = 0;
 
 			ProfileSubtypeId = "";
 
@@ -861,6 +869,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[ButtonPanelIndex:") == true) {
 
 						TagParse.TagIntCheck(tag, ref ButtonPanelIndex);
+
+					}
+
+					//PercentageOfWeaponsRemaining
+					if (tag.Contains("[PercentageOfWeaponsRemaining:") == true) {
+
+						TagParse.TagFloatCheck(tag, ref PercentageOfWeaponsRemaining);
+
+					}
+
+					//PercentageOfHealthRemaining
+					if (tag.Contains("[PercentageOfHealthRemaining:") == true) {
+
+						TagParse.TagFloatCheck(tag, ref PercentageOfHealthRemaining);
 
 					}
 

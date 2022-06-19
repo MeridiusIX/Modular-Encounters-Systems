@@ -317,6 +317,13 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
+			//Vulture
+			if (customData.Contains("[BehaviorName:Vulture]")) {
+
+				return BehaviorSubclass.Vulture;
+
+			}
+
 			return BehaviorSubclass.None;
 
 		}

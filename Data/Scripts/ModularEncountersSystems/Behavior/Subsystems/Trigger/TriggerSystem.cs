@@ -380,7 +380,37 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				
+				//ActiveWeaponsPercentage
+				if (trigger.Type == "ActiveWeaponsPercentage") {
+
+					trigger.ActivateTrigger(CheckActiveWeaponsPercentage);
+					continue;
+
+				}
+
+				//ActiveTurretsPercentage
+				if (trigger.Type == "ActiveTurretsPercentage") {
+
+					trigger.ActivateTrigger(CheckActiveTurretsPercentage);
+					continue;
+
+				}
+
+				//ActiveGunsPercentage
+				if (trigger.Type == "ActiveGunsPercentage") {
+
+					trigger.ActivateTrigger(CheckActiveGunsPercentage);
+					continue;
+
+				}
+
+				//HealthPercentage
+				if (trigger.Type == "HealthPercentage") {
+
+					trigger.ActivateTrigger(CheckHealthPercentage);
+					continue;
+
+				}
 
 			}
 
@@ -763,6 +793,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (panel.SlimBlock.CubeGrid != _behavior.RemoteControl.SlimBlock.CubeGrid && panel.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(_behavior.RemoteControl.SlimBlock.CubeGrid))
 						return;
+
+					if (trigger.MinPlayerReputation >= -1500 || trigger.MaxPlayerReputation <= 1500) {
+
+						var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(playerId, _behavior.Owner.FactionId);
+
+						if ((trigger.MinPlayerReputation >= -1500 && rep < trigger.MinPlayerReputation) || (trigger.MaxPlayerReputation <= 1500 && rep > trigger.MaxPlayerReputation))
+							return;
+					
+					}
 
 					trigger.ActivateTrigger();
 

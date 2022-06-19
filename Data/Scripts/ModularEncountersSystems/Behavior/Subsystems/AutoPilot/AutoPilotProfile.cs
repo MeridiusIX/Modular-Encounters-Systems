@@ -6,7 +6,6 @@ using System.Text;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
-	[ProtoContract]
 	public class AutoPilotProfile {
 
 		//Profile
@@ -37,6 +36,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double OffsetPlanetMaxDistFromTarget;
 		public double OffsetPlanetMinTargetAltitude;
 		public double OffsetPlanetMaxTargetAltitude;
+
+		//Circle Target Config
+		public bool CircleTargetClockwise;
+		public bool CircleTargetRadiusConstriction;
+		public double CircleTargetRadiusConstrictionAmount;
+		public bool CircleTargetAltitudeConstriction;
+		public double CircleTargetAltitudeConstrictionAmount;
+		public bool CircleTargetDriftExemption;
+		public double CircleTargetUpAngleLimit;
+		public bool CircleTargetUseWaypointAbandon;
 
 		//Collision Config
 		public bool Unused;
@@ -176,6 +185,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			ReverseOffsetDistAltAboveHeight = false;
 			ReverseOffsetHeight = 1300;
+
+			CircleTargetClockwise = true;
+			CircleTargetRadiusConstriction = false;
+			CircleTargetRadiusConstrictionAmount = 10;
+			CircleTargetAltitudeConstriction = false;
+			CircleTargetAltitudeConstrictionAmount = 10;
+			CircleTargetUpAngleLimit = 20;
+			CircleTargetDriftExemption = false;
 
 			PadDistanceFromTarget = 0;
 
@@ -466,6 +483,55 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[ReverseOffsetHeight:") == true) {
 
 				TagParse.TagDoubleCheck(tag, ref this.ReverseOffsetHeight);
+
+			}
+
+			//CircleTargetClockwise
+			if (tag.Contains("[CircleTargetClockwise:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref CircleTargetClockwise);
+
+			}
+
+			//CircleTargetRadiusConstriction
+			if (tag.Contains("[CircleTargetRadiusConstriction:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref CircleTargetRadiusConstriction);
+
+			}
+
+			//CircleTargetRadiusConstrictionAmount
+			if (tag.Contains("[CircleTargetRadiusConstrictionAmount:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.CircleTargetRadiusConstrictionAmount);
+
+			}
+
+			//CircleTargetAltitudeConstriction
+			if (tag.Contains("[CircleTargetAltitudeConstriction:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref CircleTargetAltitudeConstriction);
+
+			}
+
+			//CircleTargetAltitudeConstrictionAmount
+			if (tag.Contains("[CircleTargetAltitudeConstrictionAmount:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.CircleTargetAltitudeConstrictionAmount);
+
+			}
+
+			//CircleTargetUpAngleLimit
+			if (tag.Contains("[CircleTargetUpAngleLimit:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.CircleTargetUpAngleLimit);
+
+			}
+
+			//CircleTargetDriftExemption
+			if (tag.Contains("[CircleTargetDriftExemption:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref CircleTargetDriftExemption);
 
 			}
 

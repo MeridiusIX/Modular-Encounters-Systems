@@ -100,6 +100,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			_restrictedFlags.Add(WaypointModificationEnum.PlanetPathingAscend);
 			_restrictedFlags.Add(WaypointModificationEnum.WaterPathing);
 			_restrictedFlags.Add(WaypointModificationEnum.EscortPathing);
+			_restrictedFlags.Add(WaypointModificationEnum.CircleTarget);
 
 			AllWeapons = new List<IWeapon>();
 			TurretControllers = new List<IWeapon>();
@@ -552,6 +553,70 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			}
 		
 		}
+		public int GetActiveGunCount() {
+
+			int result = 0;
+
+			foreach (var weapon in this.StaticWeapons) {
+
+				if (weapon.IsValid() && weapon.IsActive() && weapon.HasAmmo())
+					result++;
+
+			}
+
+			return result;
+
+		}
+		public int GetActiveTurretCount() {
+
+			int result = 0;
+
+			foreach (var weapon in this.Turrets) {
+
+				if (weapon.IsValid() && weapon.IsActive() && weapon.HasAmmo())
+					result++;
+
+			}
+
+			foreach (var weapon in this.TurretControllers) {
+
+				if (weapon.IsValid() && weapon.IsActive() && weapon.HasAmmo())
+					result++;
+
+			}
+
+			return result;
+
+		}
+
+		public int GetActiveWeaponCount() {
+
+			int result = 0;
+
+			foreach (var weapon in this.StaticWeapons) {
+
+				if (weapon.IsValid() && weapon.IsActive() && weapon.HasAmmo())
+					result++;
+
+			}
+
+			foreach (var weapon in this.Turrets) {
+
+				if (weapon.IsValid() && weapon.IsActive() && weapon.HasAmmo())
+					result++;
+
+			}
+
+			foreach (var weapon in this.TurretControllers) {
+
+				if (weapon.IsValid() && weapon.IsActive() && weapon.HasAmmo())
+					result++;
+
+			}
+
+			return result;
+
+		}
 
 		public void FireWeapons() {
 
@@ -651,6 +716,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			}
 
 			foreach (var weapon in this.Turrets) {
+
+				if (weapon.IsValid() && weapon.IsActive() && weapon.HasAmmo())
+					return true;
+
+			}
+
+			foreach (var weapon in this.TurretControllers) {
 
 				if (weapon.IsValid() && weapon.IsActive() && weapon.HasAmmo())
 					return true;

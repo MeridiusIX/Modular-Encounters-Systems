@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Tasks;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
@@ -99,6 +100,28 @@ namespace ModularEncountersSystems.BlockLogic {
             PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
             EnergyInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Small"));
             EnergyInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
+
+            if (ArmorModuleReplacement.SmallModules.Count == 0) {
+
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Small"));
+
+            }
+
+            if (ArmorModuleReplacement.LargeModules.Count == 0) {
+
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
+
+            }
 
             TurretControllers.Add(new MyDefinitionId(typeof(MyObjectBuilder_TurretControlBlock), "MES-NpcSmallTurretControlBlock"));
             TurretControllers.Add(new MyDefinitionId(typeof(MyObjectBuilder_TurretControlBlock), "MES-NpcLargeTurretControlBlock"));

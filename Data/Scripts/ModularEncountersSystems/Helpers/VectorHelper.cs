@@ -23,6 +23,64 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void GenerateCircularDirections(MatrixD matrix, List<Vector3D> result) {
+
+			result.Add(matrix.Forward);
+			result.Add(Vector3D.Normalize(matrix.Forward + matrix.Right));
+			result.Add(matrix.Right);
+			result.Add(Vector3D.Normalize(matrix.Right + matrix.Backward));
+			result.Add(matrix.Backward);
+			result.Add(Vector3D.Normalize(matrix.Backward + matrix.Left));
+			result.Add(matrix.Left);
+			result.Add(Vector3D.Normalize(matrix.Left + matrix.Forward));
+
+		}
+
+		public static Vector3D GetClosestDirectionFromList(Vector3D originalDirection, List<Vector3D> directions) {
+
+			Vector3D result = originalDirection;
+			double angle = 180;
+
+			foreach (var dir in directions) {
+
+				var thisAngle = GetAngleBetweenDirections(originalDirection, dir);
+
+				if (thisAngle < angle) {
+
+					result = dir;
+					angle = thisAngle;
+				
+				}
+			
+			}
+
+			return result;
+		
+		}
+
+		public static int GetClosestDirectionIndexFromList(Vector3D originalDirection, List<Vector3D> directions, double targetAngle = 0) {
+
+			int result = 0;
+			double angle = 180;
+
+			for (int i = 0; i < directions.Count; i++) {
+
+				var dir = directions[i];
+				var thisAngle = GetAngleBetweenDirections(originalDirection, dir);
+
+				if (MathTools.IsValueCloser(targetAngle, angle, thisAngle)) {
+
+					result = i;
+					angle = thisAngle;
+
+				}
+
+			}
+
+			return result;
+
+		}
+
 		public static Vector3D GetRandomDespawnCoords(Vector3D coords, double distance = 8000, double altitude = 1500) {
 
 			Vector3D result = Vector3D.Zero;

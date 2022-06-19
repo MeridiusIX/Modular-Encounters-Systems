@@ -122,6 +122,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		[ProtoMember(36)]
 		public string OverrideTargetProfile;
 
+		[ProtoMember(37)]
+		public short InitialWeaponCount;
+
+		[ProtoMember(38)]
+		public short InitialTurretCount;
+
+		[ProtoMember(39)]
+		public short InitialGunCount;
+
+		[ProtoMember(40)]
+		public double InitialGridIntegrity; //Block Health = BuildIntegrity - CurrentDamage
+
 		[ProtoIgnore]
 		public EscortProfile ParentEscort { get {
 

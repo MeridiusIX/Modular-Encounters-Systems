@@ -43,6 +43,9 @@ namespace ModularEncountersSystems.Entities {
 		public List<GridEntity> LinkedGrids;
 		public List<IMyCubeGrid> PhysicalLinkedGrids;
 
+		public double LastHealthReading;
+		public bool HealthUpdated;
+
 		public List<BlockEntity> AllTerminalBlocks;
 		public List<BlockEntity> Antennas;
 		public List<BlockEntity> Beacons;
@@ -184,10 +187,12 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+			HealthUpdated = true;
 			CubeGrid.OnBlockAdded += NewBlockAdded;
 			CubeGrid.OnBlockRemoved += BlockRemoved;
 			CubeGrid.OnGridSplit += GridSplit;
 			CubeGrid.OnBlockOwnershipChanged += OwnershipChange;
+			DamageHelper.DamageRelay += DamageHandler;
 
 			if (GridGroupData != null) {
 
@@ -283,10 +288,19 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public void DamageHandler(object hit, MyDamageInformation info) {
+
+			if ((hit as IMySlimBlock)?.CubeGrid == CubeGrid)
+				HealthUpdated = true;
+		
+		}
+
 		private void NewBlockAdded(IMySlimBlock block) {
 
 			if (!AllBlocks.Contains(block))
 				AllBlocks.Add(block);
+
+			HealthUpdated = true;
 
 			if (!GridManager.ProcessBlock(block))
 				return;
@@ -496,6 +510,7 @@ namespace ModularEncountersSystems.Entities {
 		private void BlockRemoved(IMySlimBlock block) {
 
 			AllBlocks.Remove(block);
+			HealthUpdated = true;
 		
 		}
 
@@ -687,6 +702,8 @@ namespace ModularEncountersSystems.Entities {
 			
 			}
 
+			HealthUpdated = true;
+
 			try {
 
 				CleanBlockList(AllTerminalBlocks);
@@ -859,6 +876,7 @@ namespace ModularEncountersSystems.Entities {
 			CubeGrid.OnGridSplit -= GridSplit;
 			CubeGrid.OnBlockAdded -= NewBlockAdded;
 			CubeGrid.OnBlockRemoved -= BlockRemoved;
+			DamageHelper.DamageRelay -= DamageHandler;
 
 			if (GridGroupData != null) {
 
@@ -915,6 +933,34 @@ namespace ModularEncountersSystems.Entities {
 
 			return result;
 		
+		}
+
+		public double GetCurrentHealth() {
+
+			double result = 0;
+
+			if (!HealthUpdated && LastHealthReading > 0)
+				return LastHealthReading;
+
+			lock (AllBlocks) {
+
+				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+					var block = AllBlocks[i];
+
+					if (block == null)
+						continue;
+
+					result += Math.Round(block.BuildIntegrity - block.CurrentDamage, 3);
+
+				}
+
+			}
+
+			LastHealthReading = result;
+			HealthUpdated = false;
+			return result;
+
 		}
 
 		public List<long> GetOwners(bool onlyGetCurrentEntity = false, bool includeMinorityOwners = false) {

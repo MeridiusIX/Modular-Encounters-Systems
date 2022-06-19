@@ -169,6 +169,29 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagBehaviorSubclassEnumCheck(string tag, ref List<BehaviorSubclass> original) {
+
+			BehaviorSubclass result = BehaviorSubclass.None;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (BehaviorSubclass.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			} else {
+
+				return;
+
+			}
+
+			original.Add(result);
+
+		}
+
 		public static void TagBlockSizeEnumCheck(string tag, ref BlockSizeEnum original) {
 
 			BlockSizeEnum result = BlockSizeEnum.None;

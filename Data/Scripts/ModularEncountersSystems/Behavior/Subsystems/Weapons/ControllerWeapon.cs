@@ -138,6 +138,37 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		}
 
+		public override bool IsActive() {
+
+			if (!base.IsActive())
+				return false;
+
+			if (_controller == null)
+				return false;
+
+			if (_controller.AzimuthRotor == null || !_controller.AzimuthRotor.IsFunctional || !_controller.AzimuthRotor.IsWorking)
+				return false;
+
+			if (_controller.ElevationRotor == null || !_controller.ElevationRotor.IsFunctional || !_controller.ElevationRotor.IsWorking)
+				return false;
+
+			var result = false;
+
+			for (int i = _subWeapons.Count - 1; i >= 0; i--) {
+
+				if (_subWeapons[i].IsValid() && _subWeapons[i].IsActive() && _subWeapons[i].HasAmmo()) {
+
+					result = true;
+					break;
+
+				}
+
+			}
+
+			return result;
+
+		}
+
 		public override bool IsBarrageWeapon() {
 
 			return false;

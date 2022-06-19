@@ -915,7 +915,7 @@ namespace ModularEncountersSystems.World {
 				if (Grid.CubeGrid.BigOwners.Count == 0 && OriginalOwnerId != 0) {
 
 					var originalFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction(OriginalOwnerId)?.Tag ?? "Nobody";
-					var currentFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction((Grid.CubeGrid.BigOwners.Count > 0) ? Grid.CubeGrid.BigOwners[0] : 0)?.Tag ?? "Nobody";
+					var currentFactionTag = "Nobody";
 
 					SpawnLogger.Write(string.Format("Ship From " + SpawnGroupName + " Spawned With Wrong Ownership. Expected [{0}] ; Got [{1}]. Attempting Correction.", originalFactionTag, currentFactionTag), SpawnerDebugEnum.Error, true);
 
@@ -928,7 +928,7 @@ namespace ModularEncountersSystems.World {
 
 					}
 
-				} else if (Grid.CubeGrid.BigOwners[0] != OriginalOwnerId) {
+				} else if (Grid.CubeGrid.BigOwners.Count > 0 && Grid.CubeGrid.BigOwners[0] != OriginalOwnerId) {
 
 					var originalFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction(OriginalOwnerId)?.Tag ?? "Nobody";
 					var currentFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction((Grid.CubeGrid.BigOwners.Count > 0) ? Grid.CubeGrid.BigOwners[0] : 0)?.Tag ?? "Nobody";

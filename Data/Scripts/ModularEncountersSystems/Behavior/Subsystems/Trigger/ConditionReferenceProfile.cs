@@ -92,6 +92,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MinTargetDistanceUnderwater;
 		public double MaxTargetDistanceUnderwater;
 
+		public bool BehaviorSubclassCheck;
+		public List<BehaviorSubclass> BehaviorSubclass;
+
 		public bool BehaviorModeCheck;
 		public List<BehaviorMode> CurrentBehaviorMode;
 
@@ -118,6 +121,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CompareCommandGridValue;
 		public CounterCompareEnum CompareCommandGridValueMode;
 		public float CompareCommandGridValueSelfMultiplier;
+
+		public bool CommandGravityCheck;
+		public bool CommandGravityMatches;
 
 		public bool UseFailCondition;
 
@@ -228,6 +234,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			IsAttackerNeutral = false;
 			IsAttackerFriendly = false;
 
+			BehaviorSubclassCheck = false;
+			BehaviorSubclass = new List<BehaviorSubclass>();
+
 			BehaviorModeCheck = false;
 			CurrentBehaviorMode = new List<BehaviorMode>();
 
@@ -238,6 +247,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CompareCommandGridValue = false;
 			CompareCommandGridValueMode = CounterCompareEnum.GreaterOrEqual;
 			CompareCommandGridValueSelfMultiplier = 1;
+
+			CommandGravityCheck = false;
+			CommandGravityMatches = false;
 
 			UseFailCondition = false;
 
@@ -309,6 +321,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"TargetIsUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref TargetIsUnderwater) },
 				{"MinTargetDistanceUnderwater", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetDistanceUnderwater) },
 				{"MaxTargetDistanceUnderwater", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetDistanceUnderwater) },
+				{"BehaviorSubclassCheck", (s, o) => TagParse.TagBoolCheck(s, ref BehaviorSubclassCheck) },
+				{"BehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref BehaviorSubclass) },
 				{"BehaviorModeCheck", (s, o) => TagParse.TagBoolCheck(s, ref BehaviorModeCheck) },
 				{"CurrentBehaviorMode", (s, o) => TagParse.TagBehaviorModeEnumCheck(s, ref CurrentBehaviorMode) },
 				{"AltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref AltitudeCheck) },
@@ -321,7 +335,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckIfDamagerIsNpc", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfDamagerIsNpc) },
 				{"CheckIfTargetIsPlayerOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsPlayerOwned) },
 				{"CheckIfTargetIsNpcOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsNpcOwned) },
-				{"IsAttackerHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerHostile) },
+				{"IsAttackerHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerHostile) }, //
 				{"IsAttackerNeutral", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerNeutral) },
 				{"IsAttackerFriendly", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerFriendly) },
 				{"CheckCommandGridValue", (s, o) => TagParse.TagBoolCheck(s, ref CheckCommandGridValue) },
@@ -330,6 +344,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CompareCommandGridValue", (s, o) => TagParse.TagBoolCheck(s, ref CompareCommandGridValue) },
 				{"CompareCommandGridValueMode", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CompareCommandGridValueMode) },
 				{"CompareCommandGridValueSelfMultiplier", (s, o) => TagParse.TagFloatCheck(s, ref CompareCommandGridValueSelfMultiplier) },
+				{"CommandGravityCheck", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityCheck) },
+				{"CommandGravityMatches", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityMatches) },
 				{"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },
 				{"CheckForBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref CheckForBlocksOfType) },
 				{"BlocksOfType", (s, o) => TagParse.TagStringListCheck(s, ref BlocksOfType) },

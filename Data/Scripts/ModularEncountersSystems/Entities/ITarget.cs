@@ -19,6 +19,7 @@ namespace ModularEncountersSystems.Entities {
 		IMyEntity GetEntity();
 		long GetEntityId();
 		EntityType GetEntityType();
+		double GetCurrentHealth();
 		List<long> GetOwners(bool onlyGetCurrentEntity = false, bool includeMinorityOwners = false);
 		GridOwnershipEnum GetOwnerType();
 		IMyEntity GetParentEntity();

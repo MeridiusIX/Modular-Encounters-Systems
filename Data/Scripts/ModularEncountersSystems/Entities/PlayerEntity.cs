@@ -19,6 +19,7 @@ namespace ModularEncountersSystems.Entities {
 		public bool Online;
 		public bool IsParentEntityGrid;
 		public bool IsParentEntitySeat;
+		public bool RemoteControlling;
 
 		public bool PlayerEntityChanged;
 
@@ -188,6 +189,7 @@ namespace ModularEncountersSystems.Entities {
 			if (id != Player.IdentityId)
 				return;
 
+			RemoteControlling = cont;
 			PlayerEntityChanged = true;
 
 		}
@@ -398,6 +400,12 @@ namespace ModularEncountersSystems.Entities {
 
 			return faction.Tag;
 
+		}
+
+		public double GetCurrentHealth() {
+
+			return MyVisualScriptLogicProvider.GetPlayersHealth(Player?.IdentityId ?? 0);
+		
 		}
 
 		public override IMyEntity GetEntity() {

@@ -643,6 +643,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"BossEncounterAtmo", (s, o) => TagParse.TagBoolCheck(s, ref BossEncounterAtmo) },
 				{"BossEncounterAny", (s, o) => TagParse.TagBoolCheck(s, ref BossEncounterAny) },
 				{"RivalAiSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiSpawn) },
+				{"BehaviorSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiSpawn) },
 				{"RivalAiSpaceSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiSpaceSpawn) },
 				{"RivalAiAtmosphericSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiAtmosphericSpawn) },
 				{"RivalAiAnySpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiAnySpawn) },

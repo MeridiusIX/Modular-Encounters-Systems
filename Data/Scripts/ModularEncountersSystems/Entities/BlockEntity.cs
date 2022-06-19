@@ -107,11 +107,21 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public double GetCurrentHealth() {
+
+			if (ActiveEntity() && Block?.SlimBlock != null)
+				return Math.Round(Block.SlimBlock.BuildIntegrity - Block.SlimBlock.CurrentDamage, 3);
+			return 0;
+		
+		}
+
 		public override EntityType GetEntityType() {
 
 			return EntityType.Grid;
 
 		}
+
+
 
 		public List<long> GetOwners(bool onlyGetCurrentEntity = false, bool includeMinorityOwners = false) {
 

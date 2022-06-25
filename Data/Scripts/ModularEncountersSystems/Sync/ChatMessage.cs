@@ -611,6 +611,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.GetBlockPairs
+			if (array[2] == "GetBlockPairs") {
+
+				LoggerTools.DebugBlockPairs(this);
+				return true;
+
+			}
+
 			//MES.Debug.GetPlanetData
 			if (array[2] == "GetPlanetData") {
 

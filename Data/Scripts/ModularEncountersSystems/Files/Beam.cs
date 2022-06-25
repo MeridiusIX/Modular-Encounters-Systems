@@ -2,8 +2,36 @@
 using System.Collections.Generic;
 using System.Text;
 using VRage;
+using VRage.ObjectBuilders;
 
 namespace ModularEncountersSystems.Files {
+
+	public struct BeamsContainer {
+
+		public Beam[] Beams;
+
+	}
+
+	public struct Beam {
+
+		public string Name;
+		public string BlockId;
+
+		public BeamBehavior Behavior;
+		public BeamEffect Visual;
+		public BeamDamage Damage;
+
+	}
+
+	public struct BeamBehavior {
+
+		public double MaxRange;
+		public double PadDistanceFromOrigin;
+		public int Lifecycle;
+		public int HitTicks;
+		public bool BarrageCapable;
+
+	}
 
 	public struct BeamEffect {
 
@@ -14,12 +42,19 @@ namespace ModularEncountersSystems.Files {
 		public SerializableVector3[] LinearBeamColors;
 		public bool FadeThroughLinearBeamColors;
 
+		public bool ElectricBeam;
+		public float ElectricBeamMinWidth;
+		public float ElectricBeamMaxWidth;
+
+		public SerializableVector3 ElectricBeamColor;
+
 		public string ImpactParticleId;
 		public float ImpactParticleScale;
 		public SerializableVector3 ImpactParticleColor;
 		public int ImpactParticlePerTicks;
 
 		public string FireSound;
+		public string HitSound;
 
 		public BeamEffect(bool init = false) {
 
@@ -30,21 +65,21 @@ namespace ModularEncountersSystems.Files {
 			LinearBeamColors = new SerializableVector3[] { };
 			FadeThroughLinearBeamColors = false;
 
+			ElectricBeam = false;
+			ElectricBeamMinWidth = 1;
+			ElectricBeamMaxWidth = 2;
+
+			ElectricBeamColor = new SerializableVector3();
+
 			ImpactParticleId = "";
 			ImpactParticleScale = 1;
 			ImpactParticleColor = new SerializableVector3();
 			ImpactParticlePerTicks = 60;
 
 			FireSound = "";
+			HitSound = "";
 
 		}
-	
-	}
-
-	public struct BeamBehavior {
-
-		public double MaxRange;
-		public double PadDistanceFromOrigin;
 	
 	}
 
@@ -56,7 +91,7 @@ namespace ModularEncountersSystems.Files {
 		public bool PenetrativeDamage;
 
 		public bool ExplosionDamage;
-		public bool ExplosionDamageAmount;
+		public float ExplosionDamageAmount;
 		public float ExplosionDamageRadius;
 
 		public bool TeslaDamage;
@@ -66,13 +101,25 @@ namespace ModularEncountersSystems.Files {
 		public bool ShieldDamage;
 		public float ShieldDamageAmount;
 
-	}
+		public BeamDamage(bool init = false) {
 
-	public class Beam {
+			RegularDamage = false;
+			RegularDamageAmount = 100;
 
-		public BeamBehavior Behavior;
-		public BeamEffect Visual;
-		public BeamDamage Damage;
+			PenetrativeDamage = false;
+
+			ExplosionDamage = false;
+			ExplosionDamageAmount = 300;
+			ExplosionDamageRadius = 5;
+
+			TeslaDamage = false;
+			TeslaDamageBlockCount = 5;
+			TeslaDamageEffectDuration = 10;
+
+			ShieldDamage = false;
+			ShieldDamageAmount = 1000;
+
+		}
 
 	}
 

@@ -1012,11 +1012,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				//CustomBools
 				if (actions.ZoneCustomBoolChange)
-					ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+					if(actions.ZoneCustomBoolChangeUseKPL)
+						ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+					else
+						ZoneManager.ChangeKPLBools(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
 
 				//CustomCounters
 				if (actions.ZoneCustomCounterChange)
-					ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+					if(actions.ZoneCustomCounterChangeUseKPL)
+						ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+					else
+						ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
 
 			}
 

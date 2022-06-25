@@ -193,7 +193,6 @@ namespace ModularEncountersSystems.Helpers {
 						var bytes = Convert.FromBase64String(previousRelationsArray);
 						PreviouslySetRelations = MyAPIGateway.Utilities.SerializeFromBinary<List<string>>(bytes);
 
-
 					}
 
 					for (int i = PlayerManager.Players.Count - 1; i >= 0; i--) {

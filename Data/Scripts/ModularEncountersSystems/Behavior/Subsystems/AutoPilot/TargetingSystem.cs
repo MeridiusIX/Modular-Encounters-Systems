@@ -1444,6 +1444,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		
 		}
 
+		public string AllTargetsString() {
+
+			var sb = new StringBuilder();
+
+			foreach (var filter in Data.MatchAllFilters) {
+
+				sb.Append(filter.ToString()).Append(", ");
+			
+			}
+
+			return sb.ToString();
+		
+		}
+
+		public string AnyTargetsString() {
+
+			var sb = new StringBuilder();
+
+			foreach (var filter in Data.MatchAnyFilters) {
+
+				sb.Append(filter.ToString()).Append(", ");
+
+			}
+
+			return sb.ToString();
+
+		}
+
+		public string NoneTargetsString() {
+
+			var sb = new StringBuilder();
+
+			foreach (var filter in Data.MatchNoneFilters) {
+
+				sb.Append(filter.ToString()).Append(", ");
+
+			}
+
+			return sb.ToString();
+
+		}
+
 	}
 
 }

@@ -13,6 +13,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		Random,
 		SelectedIndexes,
 		RandomSelectedIndexes,
+		RandomFixedCount,
 	
 	}
 
@@ -222,6 +223,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool ThreatIncludeOtherNpcOwners;
 		public int ThreatScoreMinimum;
 		public int ThreatScoreMaximum;
+		public int ThreatScorePlanetaryHandicap;
 
 		public bool UsePCUCheck;
 		public double PCUCheckRadius;
@@ -278,6 +280,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<ulong> RequiredAnyPlayersOnline;
 
 		public bool UseKnownPlayerLocations;
+		public bool KnownPlayerLocationMustBeInside;
 		public bool KnownPlayerLocationMustMatchFaction;
 		public int KnownPlayerLocationMinSpawnedEncounters;
 		public int KnownPlayerLocationMaxSpawnedEncounters;
@@ -311,6 +314,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public Dictionary<string, List<int>> PrefabIndexGroups;
 		public List<string> PrefabIndexGroupNames;
 		public List<int> PrefabIndexGroupValues;
+		public int PrefabFixedCount;
 		public List<Vector3D> PrefabOffsetOverrides;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
@@ -525,6 +529,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ThreatIncludeOtherNpcOwners = false;
 			ThreatScoreMinimum = -1;
 			ThreatScoreMaximum = -1;
+			ThreatScorePlanetaryHandicap = 0;
 
 			UsePCUCheck = false;
 			PCUCheckRadius = 5000;
@@ -578,6 +583,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RequiredAnyPlayersOnline = new List<ulong>();
 
 			UseKnownPlayerLocations = false;
+			KnownPlayerLocationMustBeInside = true;
 			KnownPlayerLocationMustMatchFaction = false;
 			KnownPlayerLocationMinSpawnedEncounters = -1;
 			KnownPlayerLocationMaxSpawnedEncounters = -1;
@@ -612,6 +618,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PrefabIndexGroups = new Dictionary<string, List<int>>();
 			PrefabIndexGroupNames = new List<string>();
 			PrefabIndexGroupValues = new List<int>();
+			PrefabFixedCount = 1;
 			PrefabOffsetOverrides = new List<Vector3D>();
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -783,6 +790,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"ThreatIncludeOtherNpcOwners", (s, o) => TagParse.TagBoolCheck(s, ref ThreatIncludeOtherNpcOwners) },
 				{"ThreatScoreMinimum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMinimum) },
 				{"ThreatScoreMaximum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMaximum) },
+				{"ThreatScorePlanetaryHandicap", (s, o) => TagParse.TagIntCheck(s, ref ThreatScorePlanetaryHandicap) },
 				{"UsePCUCheck", (s, o) => TagParse.TagBoolCheck(s, ref UsePCUCheck) },
 				{"PCUCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PCUCheckRadius) },
 				{"PCUMinimum", (s, o) => TagParse.TagIntCheck(s, ref PCUMinimum) },
@@ -826,6 +834,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"RequiredPlayersOnline", (s, o) => TagParse.TagUlongListCheck(s, ref RequiredPlayersOnline) },
 				{"RequiredAnyPlayersOnline", (s, o) => TagParse.TagUlongListCheck(s, ref RequiredAnyPlayersOnline) },
 				{"UseKnownPlayerLocations", (s, o) => TagParse.TagBoolCheck(s, ref UseKnownPlayerLocations) },
+				{"KnownPlayerLocationMustBeInside", (s, o) => TagParse.TagBoolCheck(s, ref KnownPlayerLocationMustBeInside) },
 				{"KnownPlayerLocationMustMatchFaction", (s, o) => TagParse.TagBoolCheck(s, ref KnownPlayerLocationMustMatchFaction) },
 				{"KnownPlayerLocationMinSpawnedEncounters", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerLocationMinSpawnedEncounters) },
 				{"KnownPlayerLocationMaxSpawnedEncounters", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerLocationMaxSpawnedEncounters) },
@@ -852,6 +861,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"PrefabIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref PrefabIndexes) },
 				{"PrefabIndexGroupNames", (s, o) => TagParse.TagStringListCheck(s, ref PrefabIndexGroupNames) },
 				{"PrefabIndexGroupValues", (s, o) => TagParse.TagIntListCheck(s, true, ref PrefabIndexGroupValues) },
+				{"PrefabFixedCount", (s, o) => TagParse.TagIntCheck(s, ref PrefabFixedCount) },
 				{"PrefabOffsetOverrides", (s, o) => TagParse.TagVector3DListCheck(s, ref PrefabOffsetOverrides) },
 
 			};

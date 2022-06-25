@@ -278,11 +278,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double ZoneRadiusChangeAmount;
 
 		public bool ZoneCustomCounterChange;
+		public bool ZoneCustomCounterChangeUseKPL;
 		public List<ModifierEnum> ZoneCustomCounterChangeType;
 		public List<string> ZoneCustomCounterChangeName;
 		public List<long> ZoneCustomCounterChangeAmount;
 
 		public bool ZoneCustomBoolChange;
+		public bool ZoneCustomBoolChangeUseKPL;
 		public List<string> ZoneCustomBoolChangeName;
 		public List<bool> ZoneCustomBoolChangeValue;
 
@@ -614,11 +616,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ZoneRadiusChangeAmount = 0;
 
 			ZoneCustomCounterChange = false;
+			ZoneCustomCounterChangeUseKPL = false;
 			ZoneCustomCounterChangeType = new List<ModifierEnum>();
 			ZoneCustomCounterChangeName = new List<string>();
 			ZoneCustomCounterChangeAmount = new List<long>();
 
 			ZoneCustomBoolChange = false;
+			ZoneCustomBoolChangeUseKPL = false;
 			ZoneCustomBoolChangeName = new List<string>();
 			ZoneCustomBoolChangeValue = new List<bool>();
 
@@ -871,10 +875,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ZoneRadiusChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneRadiusChangeType) },
 				{"ZoneRadiusChangeAmount", (s, o) => TagParse.TagDoubleCheck(s, ref ZoneRadiusChangeAmount) },
 				{"ZoneCustomCounterChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChange) },
+				{"ZoneCustomCounterChangeUseKPL", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChangeUseKPL) },
 				{"ZoneCustomCounterChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneCustomCounterChangeType) },
 				{"ZoneCustomCounterChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomCounterChangeName) },
 				{"ZoneCustomCounterChangeAmount", (s, o) => TagParse.TagLongCheck(s, ref ZoneCustomCounterChangeAmount) },
 				{"ZoneCustomBoolChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChange) },
+				{"ZoneCustomBoolChangeUseKPL", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChangeUseKPL) },
 				{"ZoneCustomBoolChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomBoolChangeName) },
 				{"ZoneCustomBoolChangeValue", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeValue) },
 				{"AddBotsToGrid", (s, o) => TagParse.TagBoolCheck(s, ref AddBotsToGrid) },

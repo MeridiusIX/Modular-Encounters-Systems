@@ -118,7 +118,7 @@ namespace ModularEncountersSystems.API {
             [ProtoMember(15)] public List<string> PainSounds;
 
             /// <summary>
-            /// These sounds are played randomly when the bot is pursuing a target
+            /// These sounds are played randomly when the bot does NOT have a target
             /// </summary>
             [ProtoMember(16)] public List<string> IdleSounds;
 
@@ -149,6 +149,18 @@ namespace ModularEncountersSystems.API {
             /// This is an SBC definition, so you can create your own custom loot containers and use those.
             /// </summary>
             [ProtoMember(21)] public string LootContainerSubtypeId;
+
+            /// <summary>
+            /// This is a list of SubtypeIds for the weapon or tool you want to give the bot.
+            /// A random subtype will be chosen from among the valid subtypes for the bot.
+            /// If the bot is unable to use any of the specified types, the default type will be used instead.
+            /// </summary>
+            [ProtoMember(22)] public List<string> ToolSubtypeIdList;
+
+            /// <summary>
+            /// These sounds are played randomly when the bot is pursuing a target
+            /// </summary>
+            [ProtoMember(23)] public List<string> TauntSounds;
         }
 
         /////////////////////////////////////////////
@@ -238,11 +250,11 @@ namespace ModularEncountersSystems.API {
         public string[] GetNeutralBotRoles() => _getNeutralBotRoles?.Invoke() ?? null;
 
         /// <summary>
-        /// Determines if the entity id belongs to an AiEnabled bot
+        /// Determines if the entity or player id belongs to an AiEnabled bot
         /// </summary>
-        /// <param name="entityId">The EntityId of the Character</param>
-        /// <returns>true if the EntityId belongs to a bot, otherwise false</returns>
-        public bool IsBot(long entityId) => _isBot?.Invoke(entityId) ?? false;
+        /// <param name="id">The EntityId or PlayerId of the Character</param>
+        /// <returns>true if the Id belongs to a bot, otherwise false</returns>
+        public bool IsBot(long id) => _isBot?.Invoke(id) ?? false;
 
         /// <summary>
         /// Retrieves the relationship between an AiEnabled bot and an identity
@@ -362,9 +374,23 @@ namespace ModularEncountersSystems.API {
         /// <param name="upVec">If supplied, the returned node will be confined to nodes on the same level as the start position</param>
         /// <param name="validWorldPosition">The returned world position</param>
         /// <returns>true if able to find a valid node nearby, otherwise false</returns>
+        [Obsolete("Use the overload that takes in a Vector3D for startPosition to avoid subgrid issues")]
         public bool GetClosestValidNode(long botEntityId, MyCubeGrid grid, Vector3I startPosition, Vector3D? upVec, out Vector3D validWorldPosition) {
             validWorldPosition = Vector3D.Zero;
             return _getClosestValidNode?.Invoke(botEntityId, grid, startPosition, upVec, out validWorldPosition) ?? false;
+        }
+
+        /// <summary>
+        /// Attempts to get the closest valid node to a given grid position
+        /// </summary>
+        /// <param name="grid">The grid the position is on</param>
+        /// <param name="startPosition">The world position you want to get a nearby node for</param>
+        /// <param name="upVec">If supplied, the returned node will be confined to nodes on the same level as the start position</param>
+        /// <param name="validWorldPosition">The returned world position</param>
+        /// <returns>true if able to find a valid node nearby, otherwise false</returns>
+        public bool GetClosestValidNode(long botEntityId, MyCubeGrid grid, Vector3D startPosition, Vector3D? upVec, out Vector3D validWorldPosition, bool allowAirNodes) {
+            validWorldPosition = Vector3D.Zero;
+            return _getClosestValidNodeNew?.Invoke(botEntityId, grid, startPosition, upVec, out validWorldPosition, allowAirNodes) ?? false;
         }
 
         /// <summary>
@@ -411,11 +437,30 @@ namespace ModularEncountersSystems.API {
         /// <returns>true if the role is allowed to use the item, otherwise false</returns>
         public bool CanRoleUseTool(string botRole, string toolSubtype) => _canBotUseTool?.Invoke(botRole, toolSubtype) ?? false;
 
+        /// <summary>
+        /// Changes the bot's role and any other associated data from <see cref="SpawnData"/>
+        /// </summary>
+        /// <param name="botEntityId">The EntityId of the Bot's Character</param>
+        /// <param name="spawnData">The serialized <see cref="SpawnData"/> object</param>
+        /// <returns>true if the change is successful, otherwise false</returns>
+        public bool SwitchBotRole(long botEntityId, SpawnData spawnData) => _switchBotRole?.Invoke(botEntityId, spawnData) ?? false;
+
+        /// <summary>
+        /// Changes the bot's role and potential tooltype
+        /// </summary>
+        /// <param name="botEntityId">The EntityId of the Bot's Character</param>
+        /// <param name="newRole">Bot Role: see <see cref="GetFriendlyBotRoles"/>, <see cref="GetNPCBotRoles"/>, or <see cref="GetNeutralBotRoles"/></param>
+        /// <param name="toolSubtypes">A list of SubtypeIds for the weapon or tool you want to give the bot. A random item will be chosen from the list.</param>
+        /// <returns>true if the change is successful, otherwise false</returns>
+        public bool SwitchBotRole(long botEntityId, string newRole, List<string> toolSubtypes) => _switchBotRoleSlim?.Invoke(botEntityId, newRole, toolSubtypes) ?? false;
+
+
         /////////////////////////////////////////////
         //API Methods End
         /////////////////////////////////////////////
 
         delegate bool GetClosestNodeDelegate(long botEntityId, MyCubeGrid grid, Vector3I start, Vector3D? up, out Vector3D result);
+        delegate bool GetClosestNodeDelegateNew(long botEntityId, MyCubeGrid grid, Vector3D start, Vector3D? up, out Vector3D result, bool allowAirNodes);
         delegate bool GetBotAndRelationTo(long botEntityId, long otherIdentityId, out MyRelationsBetweenPlayerAndBlock relationBetween);
 
         private const long _botControllerModChannel = 2408831996; //This is the channel this object will receive API methods at. Sender should also use this.
@@ -444,7 +489,10 @@ namespace ModularEncountersSystems.API {
         private Func<string, string, bool> _canBotUseTool;
         private Action<string, string, MyPositionAndOrientation, MyCubeGrid, string, long?, Color?, Action<IMyCharacter>> _spawnBotQueued;
         private Action<MyPositionAndOrientation, byte[], MyCubeGrid, long?, Action<IMyCharacter>> _spawnBotCustomQueued;
+        private Func<long, SpawnData, bool> _switchBotRole;
+        private Func<long, string, List<string>, bool> _switchBotRoleSlim;
         private GetClosestNodeDelegate _getClosestValidNode;
+        private GetClosestNodeDelegateNew _getClosestValidNodeNew;
         private GetBotAndRelationTo _getBotAndRelationTo;
 
         private void ReceiveModMessage(object payload) {
@@ -488,6 +536,9 @@ namespace ModularEncountersSystems.API {
                 _spawnBotCustomQueued = dict["SpawnBotCustomQueued"] as Action<MyPositionAndOrientation, byte[], MyCubeGrid, long?, Action<IMyCharacter>>;
                 _setBotPatrol = dict["SetBotPatrol"] as Func<long, List<Vector3D>, bool>;
                 _canBotUseTool = dict["CanRoleUseTool"] as Func<string, string, bool>;
+                _switchBotRole = dict["SwitchBotRole"] as Func<long, SpawnData, bool>;
+                _getClosestValidNodeNew = dict["GetClosestValidNodeNew"] as GetClosestNodeDelegateNew;
+                _switchBotRoleSlim = dict["SwitchBotRoleSlim"] as Func<long, string, List<string>, bool>;
 
             } catch {
 

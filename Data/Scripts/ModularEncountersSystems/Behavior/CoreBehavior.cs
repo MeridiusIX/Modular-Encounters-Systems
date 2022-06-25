@@ -1522,9 +1522,9 @@ namespace ModularEncountersSystems.Behavior {
 				sb.Append(" - Allowed Targets:     ").Append(AutoPilot.Targeting.Data.Target).AppendLine();
 				sb.Append(" - Sort Targets:        ").Append(AutoPilot.Targeting.Data.GetTargetBy).AppendLine();
 				sb.Append(" - Sort Targets:        ").Append(AutoPilot.Targeting.Data.MaxDistance).AppendLine();
-				sb.Append(" - Match All Targets:   ").Append(AutoPilot.Targeting.Data.MatchAllFilters.ToString()).AppendLine();
-				sb.Append(" - Match Any Targets:   ").Append(AutoPilot.Targeting.Data.MatchAnyFilters.ToString()).AppendLine();
-				sb.Append(" - Match None Targets:  ").Append(AutoPilot.Targeting.Data.MatchNoneFilters.ToString()).AppendLine();
+				sb.Append(" - Match All Targets:   ").Append(AutoPilot.Targeting.AllTargetsString()).AppendLine();
+				sb.Append(" - Match Any Targets:   ").Append(AutoPilot.Targeting.AnyTargetsString()).AppendLine();
+				sb.Append(" - Match None Targets:  ").Append(AutoPilot.Targeting.NoneTargetsString()).AppendLine();
 				sb.Append(" - Target Owners:       ").Append(AutoPilot.Targeting.Data.Owners.ToString()).AppendLine();
 				sb.Append(" - Target Relations:    ").Append(AutoPilot.Targeting.Data.Relations.ToString()).AppendLine();
 

@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VRage.Game;
 using VRage.Game.ModAPI;
 using VRageMath;
 
@@ -346,6 +347,37 @@ namespace ModularEncountersSystems.Logging {
 			msg.ReturnMessage = "Autopilot Debug Activated";
 			//thisGrid.Behavior.AutoPilot.Debug = true;
 			return;
+
+		}
+
+		public static void DebugBlockPairs(ChatMessage msg) {
+
+			var sbsmall = new StringBuilder();
+			sbsmall.Append("::: Small Blocks :::").AppendLine().AppendLine();
+			var sblarge = new StringBuilder();
+			sblarge.Append("::: Large Blocks :::").AppendLine().AppendLine();
+
+			foreach (var block in DefinitionHelper.AllBlockDefinitions) {
+
+				if (string.IsNullOrWhiteSpace(block.BlockPairName))
+					continue;
+
+				StringBuilder sb = null;
+
+				if (block.CubeSize == VRage.Game.MyCubeSize.Small)
+					sb = sbsmall;
+				else
+					sb = sblarge;
+
+				sb.Append("[OldBlock:").Append(block.Id.ToString()).Append("]").AppendLine();
+				sb.Append("[NewBlock:").Append(new MyDefinitionId(block.Id.TypeId, block.BlockPairName)).Append("]").AppendLine().AppendLine();
+
+			}
+
+			sbsmall.Append(sblarge.ToString());
+			msg.ClipboardPayload = sbsmall.ToString();
+			msg.Mode = ChatMsgMode.ReturnMessage;
+			msg.ReturnMessage = "Block Pair Data Copied To Clipboard";
 
 		}
 

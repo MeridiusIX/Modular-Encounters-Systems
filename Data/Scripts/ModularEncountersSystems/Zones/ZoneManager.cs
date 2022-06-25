@@ -280,7 +280,7 @@ namespace ModularEncountersSystems.Zones {
 				
 				}
 
-				if (zone.Persistent && zone.UseLimitedFactions && zone.Factions.Count > 0) {
+				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseLimitedFactions && zone.Factions.Count > 0) {
 
 					foreach (var faction in zone.Factions) {
 
@@ -386,6 +386,56 @@ namespace ModularEncountersSystems.Zones {
 
 
 		}
+
+		public static void ChangeKPLBools(Vector3D coords, string faction, List<string> counterNames, List<bool> counterValues) {
+
+			bool updateZones = false;
+
+			for (int i = 0; i < ActiveZones.Count; i++) {
+
+				var zone = ActiveZones[i];
+
+				if (!zone.PlayerKnownLocation || !zone.Factions.Contains(faction))
+					continue;
+
+				if (zone.PositionInsideZone(coords))
+					continue;
+
+				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
+				updateZones = true;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
+		}
+
+
+		public static void ChangeKPLCounters(Vector3D coords, string faction, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers) {
+
+			bool updateZones = false;
+
+			for (int i = 0; i < ActiveZones.Count; i++) {
+
+				var zone = ActiveZones[i];
+
+				if (!zone.PlayerKnownLocation || !zone.Factions.Contains(faction))
+					continue;
+
+				if (zone.PositionInsideZone(coords))
+					continue;
+
+				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
+				updateZones = true;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
+		}
+
 
 		public static void ChangeZoneRadius(Vector3D coords, string name, double radiusChange, ModifierEnum modifier) {
 

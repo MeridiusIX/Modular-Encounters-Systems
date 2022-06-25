@@ -871,7 +871,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (conditions.UseKnownPlayerLocations == true) {
 
-				if (KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(environment.Position, conditions.KnownPlayerLocationMustMatchFaction, conditions.FactionOwner) == false) {
+				if (KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(environment.Position, conditions.KnownPlayerLocationMustMatchFaction, conditions.FactionOwner) != conditions.KnownPlayerLocationMustBeInside) {
 
 					failReason = "   - Known Player Location Check Failed";
 					return false;
@@ -1037,16 +1037,16 @@ namespace ModularEncountersSystems.Spawning {
 			if (conditions.UseThreatLevelCheck == true) {
 
 				var threatLevel = GetThreatLevel(conditions.ThreatLevelCheckRange, conditions.ThreatIncludeOtherNpcOwners, environment.Position);
-				threatLevel -= (float)Settings.General.ThreatReductionHandicap;
+				var gravityHandicap = environment.IsOnPlanet ? conditions.ThreatScorePlanetaryHandicap : 0;
 
-				if (threatLevel < (float)conditions.ThreatScoreMinimum && (float)conditions.ThreatScoreMinimum > 0) {
+				if (threatLevel < (float)conditions.ThreatScoreMinimum + gravityHandicap && (float)conditions.ThreatScoreMinimum > 0) {
 
 					failReason = "   - Minimum Threat Check Failed";
 					return false;
 
 				}
 
-				if (threatLevel > (float)conditions.ThreatScoreMaximum && (float)conditions.ThreatScoreMaximum > 0) {
+				if (threatLevel > (float)conditions.ThreatScoreMaximum + gravityHandicap && (float)conditions.ThreatScoreMaximum > 0) {
 
 					failReason = "   - Maximum Threat Check Failed";
 					return false;
@@ -1533,20 +1533,35 @@ namespace ModularEncountersSystems.Spawning {
 
 				var zoneCondition = conditions.ZoneConditions[i];
 
-				if (!zoneRequirement && !string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
+				if (!zoneRequirement && (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && !zoneCondition.UseKnownPlayerLocation))
 					zoneRequirement = true;
 
 				for (int j = 0; j < ZoneManager.ActiveZones.Count; j++) {
 
 					var zone = ZoneManager.ActiveZones[j];
 
-					if (!zone.Persistent || !zone.Active || string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
+					if (!zone.Active)
 						continue;
+
+					if (!zone.Persistent && string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
+						continue;
+
+					if (zone.Persistent) {
+
+						if (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && zone.PublicName != zoneCondition.ZoneName)
+							continue;
+
+					} else {
+
+						if (!zoneCondition.UseKnownPlayerLocation || !zone.PlayerKnownLocation) {
+
+							continue;
+
+						}
+					
+					}
 
 					if (!zone.SandboxBoolCheck())
-						continue;
-
-					if (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && zone.PublicName != zoneCondition.ZoneName)
 						continue;
 
 					var distance = Vector3D.Distance(position, zone.Coordinates);

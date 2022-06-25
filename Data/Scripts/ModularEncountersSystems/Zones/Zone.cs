@@ -285,6 +285,36 @@ namespace ModularEncountersSystems.Zones {
 			sb.Append(" - Use Allowed Mod IDs:         ").Append(UseAllowedModIDs).AppendLine();
 			sb.Append(" - Use Restricted Mod IDs:      ").Append(UseRestrictedModIDs).AppendLine();
 
+			if (CustomBools.Count > 0) {
+
+				sb.Append(" - Custom Bools:      ").AppendLine();
+
+				foreach (var custbool in CustomBools.Keys) {
+
+					if (string.IsNullOrWhiteSpace(custbool))
+						continue;
+
+					sb.Append("   - ").Append(custbool).Append(" : ").Append(CustomBools[custbool]).AppendLine();
+
+				}
+
+			}
+
+			if (CustomCounters.Count > 0) {
+
+				sb.Append(" - Custom Counters:      ").AppendLine();
+
+				foreach (var custCounter in CustomCounters.Keys) {
+
+					if (string.IsNullOrWhiteSpace(custCounter))
+						continue;
+
+					sb.Append("   - ").Append(custCounter).Append(" : ").Append(CustomCounters[custCounter]).AppendLine();
+
+				}
+
+			}
+
 			return sb.ToString();
 
 		}

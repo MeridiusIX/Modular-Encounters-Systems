@@ -400,6 +400,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 						SpawnLogger.Write("RivalAI Behavior Applied To RemoteControl", SpawnerDebugEnum.Manipulation);
 						data.Attributes.RivalAiBehaviorSet = true;
+						primaryBehaviorSet = true;
 
 					}
 

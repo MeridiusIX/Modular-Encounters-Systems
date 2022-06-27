@@ -323,7 +323,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				if (spawnGroup.SpawnConditionsProfiles.Count == conditionsFailedBySpawnType) {
+				if (spawnGroup.SpawnConditionsProfiles.Count == conditionsFailedBySpawnType || (adminSpawn && !eligibleNames.Contains(spawnGroup.SpawnGroupName))) {
 
 					SpawnLogger.QueuedItems.Clear();
 

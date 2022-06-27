@@ -1633,17 +1633,15 @@ namespace ModularEncountersSystems.Helpers {
 
 			var tagSplit = ProcessTag(tag);
 
-			if (tagSplit.Length < 2) {
+			if (tagSplit.Length == 2) {
 
-				return;
+				var key = tagSplit[1];
+				ZoneConditionsProfile result = null;
+
+				if (ProfileManager.ZoneConditionsProfiles.TryGetValue(key, out result))
+					original.Add(result);
 
 			}
-
-			var key = tagSplit[1];
-			ZoneConditionsProfile result = null;
-
-			if (ProfileManager.ZoneConditionsProfiles.TryGetValue(key, out result))
-				original.Add(result);
 
 		}
 

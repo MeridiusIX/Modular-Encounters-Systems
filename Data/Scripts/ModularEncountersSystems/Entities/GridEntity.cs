@@ -738,6 +738,39 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public bool LineIntersection(LineD line, RayD ray, ref Vector3D hitPosition) {
+
+			if (!ActiveEntity())
+				return false;
+
+			double minDist = 0;
+			double maxDist = 0;
+			bool boxCheckResult = CubeGrid.PositionComp.WorldAABB.Intersect(ref ray, out minDist, out maxDist);
+
+			Vector3D startBox = boxCheckResult ? (minDist - 5) * line.Direction + line.From : line.From;
+			Vector3D endBox = boxCheckResult ? (maxDist + 5) * line.Direction + line.From : line.To;
+
+			var blockPos = CubeGrid.RayCastBlocks(startBox, endBox);
+
+			if (!blockPos.HasValue) {
+
+				return false;
+
+			}
+
+			IMySlimBlock slimBlock = CubeGrid.GetCubeBlock(blockPos.Value);
+
+			if (slimBlock == null) {
+
+				return false;
+
+			}
+
+			slimBlock.ComputeWorldCenter(out hitPosition);
+			return true;
+
+		}
+
 		public void OnSubgridChange(IMyGridGroupData dataA, IMyCubeGrid grid, IMyGridGroupData dataB) {
 
 			//MyVisualScriptLogicProvider.ShowNotificationToAll("Subgrid Change", 4000);

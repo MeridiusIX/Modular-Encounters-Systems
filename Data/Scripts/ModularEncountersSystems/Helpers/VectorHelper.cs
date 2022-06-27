@@ -269,6 +269,28 @@ namespace ModularEncountersSystems.Helpers {
 		
 		}
 
+		public static void GetPathSteps(Vector3D startCoords, Vector3D directionToTarget, double distanceToTarget, double stepDistance, List<Vector3D> result) {
+
+			double currentPathDistance = 0;
+
+			while (currentPathDistance < distanceToTarget) {
+
+				if ((distanceToTarget - currentPathDistance) < stepDistance) {
+
+					currentPathDistance = distanceToTarget;
+
+				} else {
+
+					currentPathDistance += stepDistance;
+
+				}
+
+				result.Add(directionToTarget * currentPathDistance + startCoords);
+
+			}
+
+		}
+
 		//GetThrustDirectionsAwayFromPosition
 		public static Vector3I GetThrustDirectionsAwayFromDirection(MatrixD myMatrix, Vector3D targetPosition) {
 

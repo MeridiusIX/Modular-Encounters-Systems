@@ -18,7 +18,7 @@ namespace ModularEncountersSystems.Files {
 		public string BlockId;
 
 		public BeamBehavior Behavior;
-		public BeamEffect Visual;
+		public BeamEffect Effect;
 		public BeamDamage Damage;
 
 	}
@@ -27,9 +27,27 @@ namespace ModularEncountersSystems.Files {
 
 		public double MaxRange;
 		public double PadDistanceFromOrigin;
-		public int Lifecycle;
-		public int HitTicks;
 		public bool BarrageCapable;
+
+		public short PrefireTicks;
+
+		public short FireTicks;
+
+		public short PostfireTicks;
+
+		public BeamBehavior(bool init = false) {
+
+			MaxRange = 800;
+			PadDistanceFromOrigin = 0;
+			BarrageCapable = false;
+
+			PrefireTicks = 0;
+
+			FireTicks = 31;
+
+			PostfireTicks = 0;
+
+		}
 
 	}
 
@@ -53,8 +71,10 @@ namespace ModularEncountersSystems.Files {
 		public SerializableVector3 ImpactParticleColor;
 		public int ImpactParticlePerTicks;
 
+		public string PrefireSound;
 		public string FireSound;
 		public string HitSound;
+		public string PostfireSound;
 
 		public BeamEffect(bool init = false) {
 
@@ -76,8 +96,10 @@ namespace ModularEncountersSystems.Files {
 			ImpactParticleColor = new SerializableVector3();
 			ImpactParticlePerTicks = 60;
 
+			PrefireSound = "";
 			FireSound = "";
 			HitSound = "";
+			PostfireSound = "";
 
 		}
 	

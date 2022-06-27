@@ -24,6 +24,8 @@ namespace ModularEncountersSystems.Spawning {
 		public static Dictionary<string, int> SandboxVariableCache = new Dictionary<string, int>();
 		public static MyObjectBuilder_SessionSettings SessionSettings = null;
 
+		internal static StringBuilder _zoneDebug = new StringBuilder();
+
 		public static SpawningType AllowedSpawningTypes(SpawningType type, EnvironmentEvaluation environment) {
 
 			var spawnTypes = SpawningType.None;
@@ -880,7 +882,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (!ZoneValidation(spawnGroup, conditions, collection, environment.Position, ref failReason)) {
+			if (!ZoneValidation(spawnGroup, conditions, collection, environment.Position, adminSpawn, ref failReason)) {
 
 				return false;
 
@@ -1525,66 +1527,102 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position, ref string failReason){
+		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position, bool extendFailReasons, ref string failReason){
 
-			bool zoneRequirement = false;
+			bool zonePersistentRequirement = false;
+			bool zoneKPLRequirement = false;
+			_zoneDebug.Clear();
 
 			for (int i = 0; i < conditions.ZoneConditions.Count; i++) {
 
 				var zoneCondition = conditions.ZoneConditions[i];
+				_zoneDebug.Append("     - Zone Condition: ").Append(zoneCondition.ProfileSubtypeId != "" ? zoneCondition.ProfileSubtypeId : "Null").Append(" / ").Append(zoneCondition.ZoneName ?? "Null").AppendLine(); ;
 
-				if (!zoneRequirement && (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && !zoneCondition.UseKnownPlayerLocation))
-					zoneRequirement = true;
+				if (!zonePersistentRequirement && !string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && !zoneCondition.UseKnownPlayerLocation)
+					zonePersistentRequirement = true;
+
+				if (!zoneKPLRequirement && zoneCondition.UseKnownPlayerLocation)
+					zoneKPLRequirement = true;
 
 				for (int j = 0; j < ZoneManager.ActiveZones.Count; j++) {
 
 					var zone = ZoneManager.ActiveZones[j];
 
-					if (!zone.Active)
+					if (!zone.Active) {
+
 						continue;
 
-					if (!zone.Persistent && string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
-						continue;
+					}
+						
 
 					if (zone.Persistent) {
 
-						if (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && zone.PublicName != zoneCondition.ZoneName)
+						if (string.IsNullOrWhiteSpace(zoneCondition.ZoneName) || zone.PublicName != zoneCondition.ZoneName) {
+
+							_zoneDebug.Append("       - Zone Persistent Name Mismatch: ").Append(zoneCondition.ZoneName ?? "Null").Append(" / ").Append(zone.PublicName ?? "Null").AppendLine();
 							continue;
 
+						}
+							
 					} else {
 
 						if (!zoneCondition.UseKnownPlayerLocation || !zone.PlayerKnownLocation) {
 
+							_zoneDebug.Append("       - Zone Not Known Player Location as Alternative to Persistent Zone").AppendLine();
 							continue;
 
 						}
 					
 					}
 
-					if (!zone.SandboxBoolCheck())
+					if (!zone.SandboxBoolCheck()) {
+
+						_zoneDebug.Append("       - Zone Sandbox Bool Check Failed").AppendLine();
 						continue;
+
+					}
 
 					var distance = Vector3D.Distance(position, zone.Coordinates);
 
 					//In Zone Radius
-					if (distance > zone.Radius)
+					if (distance > zone.Radius) {
+
+						_zoneDebug.Append("       - Zone Radius Check Failed").AppendLine();
 						continue;
+
+					}
 
 					//Min Dist From Center
-					if (zoneCondition.MinDistanceFromZoneCenter > -1 && distance < zoneCondition.MinDistanceFromZoneCenter)
+					if (zoneCondition.MinDistanceFromZoneCenter > -1 && distance < zoneCondition.MinDistanceFromZoneCenter) {
+
+						_zoneDebug.Append("       - Zone Min Dist From Center Check Failed").AppendLine();
 						continue;
 
+					}
+						
 					//Max Dist From Center
-					if (zoneCondition.MaxDistanceFromZoneCenter > -1 && distance > zoneCondition.MaxDistanceFromZoneCenter)
+					if (zoneCondition.MaxDistanceFromZoneCenter > -1 && distance > zoneCondition.MaxDistanceFromZoneCenter) {
+
+						_zoneDebug.Append("       - Zone Max Dist From Center Check Failed").AppendLine();
 						continue;
+
+					}
 
 					//Min Spawned Encounters
-					if (zoneCondition.MinSpawnedZoneEncounters > -1 && zone.SpawnedEncounters < zoneCondition.MinSpawnedZoneEncounters)
+					if (zoneCondition.MinSpawnedZoneEncounters > -1 && zone.SpawnedEncounters < zoneCondition.MinSpawnedZoneEncounters) {
+
+						_zoneDebug.Append("       - Zone Min Spawned Encounters Check Failed").AppendLine();
 						continue;
 
+					}
+
 					//Max Spawned Encounters
-					if (zoneCondition.MaxSpawnedZoneEncounters > -1 && zone.SpawnedEncounters > zoneCondition.MaxSpawnedZoneEncounters)
+					if (zoneCondition.MaxSpawnedZoneEncounters > -1 && zone.SpawnedEncounters > zoneCondition.MaxSpawnedZoneEncounters) {
+
+						_zoneDebug.Append("       - Zone Max Spawned Encounters Check Failed").AppendLine();
 						continue;
+
+					}
 
 					//Custom Counters
 					if (zoneCondition.CheckCustomZoneCounters) {
@@ -1611,9 +1649,13 @@ namespace ModularEncountersSystems.Spawning {
 						
 						}
 
-						if (failedResult)
+						if (failedResult) {
+
+							_zoneDebug.Append("       - Zone Custom Counters Check Failed").AppendLine();
 							continue;
-					
+
+						}
+
 					}
 
 					//Custom Bools
@@ -1641,11 +1683,16 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
-						if (failedResult)
+						if (failedResult) {
+
+							_zoneDebug.Append("       - Zone Custom Bools Check Failed").AppendLine();
 							continue;
+
+						}
 
 					}
 
+					failReason = "";
 					collection.ActiveZone = zone;
 					collection.ZoneIndex = i;
 					return true;
@@ -1657,15 +1704,25 @@ namespace ModularEncountersSystems.Spawning {
 			//Check Against Rules For Strict and Faction Only
 			if (collection.MustUseStrictZone) {
 
-				failReason = "   - Zone Check Failed: Strict Zone";
+				failReason = _zoneDebug.ToString();
+				failReason += "   - Zone Check Failed: Strict Zone";
 				return false;
 
 			}
 				
 
-			if (zoneRequirement) {
+			if (zonePersistentRequirement) {
 
-				failReason = "   - Zone Check Failed: Spawn Conditions Requires Specific Zone";
+				failReason = _zoneDebug.ToString();
+				failReason += "   - Zone Check Failed: Spawn Conditions Requires Specific Zone";
+				return false;
+
+			}
+
+			if (zoneKPLRequirement) {
+
+				failReason = _zoneDebug.ToString();
+				failReason += "   - Zone Check Failed: Spawn Conditions Requires Player Known Location";
 				return false;
 
 			}
@@ -1673,11 +1730,13 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (collection.AllowedZoneFactions.Count > 0) {
 
-				failReason = "   - Zone Check Failed: Allowed Zone Factions Not Satisfied";
+				failReason = _zoneDebug.ToString();
+				failReason += "   - Zone Check Failed: Allowed Zone Factions Not Satisfied";
 				return false;
 
-			}	
+			}
 
+			failReason = "";
 			return true;
 
 		}

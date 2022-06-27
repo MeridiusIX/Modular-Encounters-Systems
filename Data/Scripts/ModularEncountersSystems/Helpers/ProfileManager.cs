@@ -125,8 +125,8 @@ namespace ModularEncountersSystems.Helpers {
 				if (!ZoneConditionsProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Zone Conditions]")) {
 
 					var zone = new ZoneConditionsProfile();
-					zone.InitTags(component.DescriptionText);
 					zone.ProfileSubtypeId = component.Id.SubtypeName;
+					zone.InitTags(component.DescriptionText);
 					ZoneConditionsProfiles.Add(component.Id.SubtypeName, zone);
 					continue;
 
@@ -199,8 +199,8 @@ namespace ModularEncountersSystems.Helpers {
 				if (!SpawnConditionProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Spawn Conditions]")) {
 
 					var profile = new SpawnConditionsProfile();
-					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					profile.InitTags(component.DescriptionText);
 					SpawnConditionProfiles.Add(component.Id.SubtypeName, profile);
 					continue;
 

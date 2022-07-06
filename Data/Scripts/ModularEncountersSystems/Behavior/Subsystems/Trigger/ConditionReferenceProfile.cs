@@ -104,6 +104,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckIfTargetIsPlayerOwned;
 		public bool CheckIfTargetIsNpcOwned;
 
+		public bool CheckIfTargetIsStatic;
+		public bool HasTarget;
+		public bool HasNoTarget;
+
+		public bool IsTargetHostile;
+		public bool IsTargetNeutral;
+		public bool IsTargetFriendly;
+
+		public bool CheckTargetGridValue;
+		public float TargetGridValue;
+		public CounterCompareEnum CheckTargetGridValueCompare;
+
+		public bool CompareTargetGridValue;
+		public CounterCompareEnum CompareTargetGridValueMode;
+		public float CompareTargetGridValueSelfMultiplier;
+
+
 		public bool CheckCommandGridValue;
 		public float CommandGridValue;
 		public CounterCompareEnum CheckCommandGridValueCompare;
@@ -209,6 +226,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckIfTargetIsPlayerOwned = false;
 			CheckIfTargetIsNpcOwned = false;
 
+			CheckIfTargetIsStatic = false;
+			HasTarget = false;
+			HasNoTarget = false;
+
+			IsTargetHostile = false;
+			IsTargetNeutral = false;
+			IsTargetFriendly = false;
+
+			CheckTargetGridValue = false;
+			TargetGridValue = 0;
+			CheckTargetGridValueCompare = CounterCompareEnum.GreaterOrEqual;
+
+			CompareTargetGridValue = false;
+			CompareTargetGridValueMode = CounterCompareEnum.GreaterOrEqual;
+			CompareTargetGridValueSelfMultiplier = 1;
+
 			BehaviorModeCheck = false;
 			CurrentBehaviorMode = new List<BehaviorMode>();
 
@@ -295,6 +328,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckIfDamagerIsNpc", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfDamagerIsNpc) },
 				{"CheckIfTargetIsPlayerOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsPlayerOwned) },
 				{"CheckIfTargetIsNpcOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsNpcOwned) },
+				{"CheckIfTargetIsStatic", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsStatic) },
+				{"HasTarget", (s, o) => TagParse.TagBoolCheck(s, ref HasTarget) },
+				{"HasNoTarget", (s, o) => TagParse.TagBoolCheck(s, ref HasNoTarget) },
+				{"IsTargetHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetHostile) },
+				{"IsTargetNeutral", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetNeutral) },
+				{"IsTargetFriendly", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetFriendly) },
+				{"CheckTargetGridValue", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetGridValue) },
+				{"TargetGridValue", (s, o) => TagParse.TagFloatCheck(s, ref TargetGridValue) },
+				{"CheckTargetGridValueCompare", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CheckTargetGridValueCompare) },
+				{"CompareTargetGridValue", (s, o) => TagParse.TagBoolCheck(s, ref CompareTargetGridValue) },
+				{"CompareTargetGridValueMode", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CompareTargetGridValueMode) },
+				{"CompareTargetGridValueSelfMultiplier", (s, o) => TagParse.TagFloatCheck(s, ref CompareTargetGridValueSelfMultiplier) },
 				{"CheckCommandGridValue", (s, o) => TagParse.TagBoolCheck(s, ref CheckCommandGridValue) },
 				{"CommandGridValue", (s, o) => TagParse.TagFloatCheck(s, ref CommandGridValue) },
 				{"CheckCommandGridValueCompare", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CheckCommandGridValueCompare) },

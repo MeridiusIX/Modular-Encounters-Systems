@@ -735,6 +735,117 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+				
+				if (ConditionReference.CheckIfTargetIsStatic)
+				{
+
+					usedConditions++;
+
+					if (_behavior.AutoPilot.Targeting.HasTarget())
+					{
+
+						if (_behavior.AutoPilot.Targeting.Target.IsStatic())
+							satisfiedConditions++;
+
+					}
+
+				}
+				if (ConditionReference.HasTarget)
+				{
+					usedConditions++;
+					if (_behavior.AutoPilot.Targeting.HasTarget())
+					{
+						satisfiedConditions++;
+					}
+				}
+
+				if (ConditionReference.HasNoTarget)
+				{
+					usedConditions++;
+					if (!_behavior.AutoPilot.Targeting.HasTarget())
+					{
+						satisfiedConditions++;
+					}
+				}
+
+				if (ConditionReference.IsTargetHostile)
+				{
+
+					usedConditions++;
+					if (_behavior.AutoPilot.Targeting.HasTarget())
+					{
+						var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(_behavior.AutoPilot.Targeting.Target.GetEntityId(), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+						if (rep <= -501)
+							satisfiedConditions++;
+					}
+
+
+				}
+
+				if (ConditionReference.IsTargetNeutral)
+				{
+
+					usedConditions++;
+					if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+						var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(_behavior.AutoPilot.Targeting.Target.GetEntityId(), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+						if (rep >= -500 && rep <= 500)
+							satisfiedConditions++;
+					}
+
+
+				}
+
+				if (ConditionReference.IsTargetFriendly)
+				{
+
+					usedConditions++;
+					if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+						var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(_behavior.AutoPilot.Targeting.Target.GetEntityId(), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+						if (rep >= 501)
+							satisfiedConditions++;
+					}
+
+
+				}
+
+				if (ConditionReference.CheckTargetGridValue)
+				{
+
+					usedConditions++;
+					if (_behavior.AutoPilot.Targeting.HasTarget())
+					{
+						if (MathTools.CompareValues(_behavior.AutoPilot.Targeting.Target.TargetValue(), ConditionReference.TargetGridValue, ConditionReference.CheckTargetGridValueCompare))
+							satisfiedConditions++;
+					}
+
+				}
+
+				if (ConditionReference.CompareTargetGridValue)
+				{
+
+					usedConditions++;
+
+					if (_behavior.AutoPilot.Targeting.HasTarget())
+					{
+
+						var myScore = (_behavior.CurrentGrid?.TargetValue() ?? 0) * ConditionReference.CompareTargetGridValueSelfMultiplier;
+
+						if (MathTools.CompareValues(_behavior.AutoPilot.Targeting.Target.TargetValue(), myScore, ConditionReference.CheckTargetGridValueCompare))
+							satisfiedConditions++;
+
+					}
+
+				}
+
+
+
+
+
 			}
 
 			if (ConditionReference.MatchAnyCondition == false) {

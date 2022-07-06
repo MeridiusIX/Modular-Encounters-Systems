@@ -56,6 +56,7 @@ namespace ModularEncountersSystems.API {
         //Water Mod
         public static bool WaterMod = false;
         private static ulong _waterModSteamId = 2200451495;
+        private static ulong _waterModModIoId = 2148454;
 
         //Nebula Mod
         public static bool NebulaMod = false;
@@ -85,6 +86,10 @@ namespace ModularEncountersSystems.API {
         //Aerodynamic Drag
         public static bool AerodynamicDrag = false;
         public static ulong _aerodynamicDragSteamId = 571920453;
+
+        //TextHUDAPI
+        public static bool TextHudApi = false;
+        private static ulong _textHudApiSteamId = 758597413;
 
         public static void DetectAddons() {
 
@@ -166,7 +171,7 @@ namespace ModularEncountersSystems.API {
                 }
 
                 //Water Mod
-                if (id == _waterModSteamId) {
+                if (id == _waterModSteamId || id == _waterModModIoId) {
 
                     SpawnLogger.Write("Water Mod Detected", SpawnerDebugEnum.Startup);
                     WaterMod = true;
@@ -174,7 +179,7 @@ namespace ModularEncountersSystems.API {
 
                 }
 
-                //Water Mod
+                //Nebula Mod
                 if (id == _nebulaModSteamId) {
 
                     SpawnLogger.Write("Nebula Mod Detected", SpawnerDebugEnum.Startup);
@@ -233,6 +238,15 @@ namespace ModularEncountersSystems.API {
 
                     SpawnLogger.Write("Aerodynamic Drag Mod Detected", SpawnerDebugEnum.Startup);
                     AerodynamicDrag = true;
+                    continue;
+
+                }
+
+                //TextHudAPI
+                if (id == _textHudApiSteamId) {
+
+                    SpawnLogger.Write("TextHudAPI Mod Detected", SpawnerDebugEnum.Startup);
+                    TextHudApi = true;
                     continue;
 
                 }

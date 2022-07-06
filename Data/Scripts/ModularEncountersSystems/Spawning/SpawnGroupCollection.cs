@@ -218,6 +218,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			var spawnGroup = SpawnGroup.SpawnGroup;
 
+			SpawnLogger.Write("Prefab Spawning Mode: " + Conditions.PrefabSpawningMode, SpawnerDebugEnum.Spawning);
+
 			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.All) {
 
 				for (int i = 0; i < spawnGroup.Prefabs.Count; i++) {
@@ -274,6 +276,30 @@ namespace ModularEncountersSystems.Spawning {
 
 						SpawnLogger.Write("Prefab Index Selected: " + list[indexToAdd], SpawnerDebugEnum.Spawning);
 						PrefabIndexes.Add(list[indexToAdd]);
+
+					}
+
+				}
+
+			}
+
+			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.RandomFixedCount) {
+
+				for (int i = 0; i < Conditions.PrefabFixedCount; i++) {
+
+					int indexToAdd = -1;
+
+					for (int j = 0; j < 10; j++) {
+
+						indexToAdd = MathTools.RandomBetween(0, spawnGroup.Prefabs.Count);
+
+						if (indexToAdd >= 0 && (!PrefabIndexes.Contains(indexToAdd) || Conditions.AllowPrefabIndexReuse)) {
+
+							SpawnLogger.Write("Prefab Index Selected: " + indexToAdd, SpawnerDebugEnum.Spawning);
+							PrefabIndexes.Add(indexToAdd);
+							break;
+
+						}
 
 					}
 

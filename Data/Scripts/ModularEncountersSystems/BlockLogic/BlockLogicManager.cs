@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Tasks;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
@@ -25,6 +26,7 @@ namespace ModularEncountersSystems.BlockLogic {
         public static List<MyDefinitionId> JumpInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> NanobotInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> PlayerInhibitorIds = new List<MyDefinitionId>();
+        public static List<MyDefinitionId> EnergyInhibitorIds = new List<MyDefinitionId>();
         public static List<MyDefinitionId> TurretControllers = new List<MyDefinitionId>();
 
         public static List<long> TrackedLogicIds = new List<long>();
@@ -71,10 +73,20 @@ namespace ModularEncountersSystems.BlockLogic {
             NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-IonSciFi-SmallGrid-Large"));
             NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-IonSciFi-SmallGrid-Small"));
 
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-WarfareIon-LargeGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-WarfareIon-LargeGrid-Small"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-WarfareIon-SmallGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-WarfareIon-SmallGrid-Small"));
+
             NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoSciFi-LargeGrid-Large"));
             NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoSciFi-LargeGrid-Small"));
             NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoSciFi-SmallGrid-Large"));
             NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoSciFi-SmallGrid-Small"));
+
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-IndustryHydro-LargeGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-IndustryHydro-LargeGrid-Small"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-IndustryHydro-SmallGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-IndustryHydro-SmallGrid-Small"));
 
             JetpackInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Small"));
             JetpackInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Large"));
@@ -86,6 +98,30 @@ namespace ModularEncountersSystems.BlockLogic {
             JumpInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large"));
             PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Small"));
             PlayerInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
+            EnergyInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Small"));
+            EnergyInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
+
+            if (ArmorModuleReplacement.SmallModules.Count == 0) {
+
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Small"));
+
+            }
+
+            if (ArmorModuleReplacement.LargeModules.Count == 0) {
+
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
+
+            }
 
             TurretControllers.Add(new MyDefinitionId(typeof(MyObjectBuilder_TurretControlBlock), "MES-NpcSmallTurretControlBlock"));
             TurretControllers.Add(new MyDefinitionId(typeof(MyObjectBuilder_TurretControlBlock), "MES-NpcLargeTurretControlBlock"));
@@ -158,6 +194,13 @@ namespace ModularEncountersSystems.BlockLogic {
             if (PlayerInhibitorIds.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
 
                 LogicBlocks.Add(block.Block.EntityId, new PlayerInhibitor(block));
+                return;
+
+            }
+
+            if (EnergyInhibitorIds.Contains(block.Block.SlimBlock.BlockDefinition.Id)) {
+
+                LogicBlocks.Add(block.Block.EntityId, new EnergyInhibitor(block));
                 return;
 
             }

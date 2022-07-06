@@ -123,6 +123,10 @@ namespace ModularEncountersSystems.Spawning {
 
 			string faction = spawnCollection.SelectRandomFaction();
 			long factionOwner = FactionHelper.GetFactionMemberIdFromTag(faction);
+
+			if (factionOwner == 0 && faction != "Nobody")
+				SpawnLogger.Write(spawnCollection.SpawnGroup.SpawnGroupName + " Expected To Spawn With Faction: " + (faction ?? "Null") + ", But Got Ownership ID 0 / Nobody", SpawnerDebugEnum.Error, true);
+
 			environment.GetThreat(spawnCollection.Conditions.ThreatLevelCheckRange, spawnCollection.Conditions.ThreatIncludeOtherNpcOwners);
 			SpawnLogger.Write("Spawning " + spawnCollection.PrefabIndexes.Count + " Prefabs With Ownership: " + faction + " / " + factionOwner.ToString(), SpawnerDebugEnum.Spawning);
 
@@ -159,8 +163,11 @@ namespace ModularEncountersSystems.Spawning {
 				var npcData = new NpcData();
 				npcData.AssignAttributes(spawnCollection.SpawnGroup, path.SpawnType);
 				npcData.SpawnType = path.SpawnType;
+				npcData.OriginalSpawnType = path.SpawnType;
 				npcData.SpawnGroupName = spawnCollection.SpawnGroup.SpawnGroupName;
 				npcData.OriginalPrefabId = sgPrefab.SubtypeId;
+				npcData.OriginalOwnerFaction = faction;
+				npcData.OriginalOwnerId = factionOwner;
 				npcData.SpawnerPrefabId = prefab.PrefabSubtypeId;
 				npcData.BehaviorName = sgPrefab.Behaviour;
 				npcData.BehaviorTriggerDist = sgPrefab.BehaviourActivationDistance;
@@ -170,6 +177,7 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.ConditionIndex = spawnCollection.ConditionsIndex;
 				npcData.ZoneIndex = spawnCollection.ZoneIndex;
 				npcData.UniqueSpawnIdentifier = MyAPIGateway.Session.GameDateTime.ToString("yyyyMMddhhmmssfff-") + NpcManager.SpawnIncrement;
+				npcData.Attributes.OwnershipValidation = true;
 
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(spawnCollection.SelectPrefabOffet(sgPrefab.Position, i), environment, spawnCollection.Conditions.CustomPathStartAltitude);
@@ -220,6 +228,9 @@ namespace ModularEncountersSystems.Spawning {
 
 					if (!options.HasFlag(SpawningOptions.UseGridOrigin))
 						options |= SpawningOptions.UseGridOrigin;
+
+					if (!options.HasFlag(SpawningOptions.UseOnlyWorldMatrix))
+						options |= SpawningOptions.UseOnlyWorldMatrix;
 
 					if (options.HasFlag(SpawningOptions.RotateFirstCockpitTowardsDirection))
 						options &= ~SpawningOptions.RotateFirstCockpitTowardsDirection;
@@ -394,6 +405,42 @@ namespace ModularEncountersSystems.Spawning {
 			var dummyList = new List<IMyCubeGrid>();
 			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + msgSplit[2] + "]", 5000, "White", msg.PlayerId);
 			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, msgSplit[3], coords, (Vector3)matrix.Backward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, msg.PlayerId);
+
+		}
+
+		public static void PrefabSpawnDebug(long playerId, string prefabId, BoundingBoxD? box = null, MatrixD? boxMatrix = null) {
+
+			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(prefabId);
+
+			if (prefab == null) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Could Not Find Prefab With Name: " + prefabId, 5000, "White", playerId);
+				return;
+
+			}
+
+			var matrix = MatrixD.Identity;
+			var player = PlayerManager.GetPlayerWithIdentityId(playerId);
+
+			if (player?.Player?.Character != null)
+				matrix = player.Player.Character.WorldMatrix;
+
+			Vector3D coords = Vector3D.Zero;
+
+			if (box == null || !box.HasValue || boxMatrix == null || !boxMatrix.HasValue)
+				coords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
+			else {
+
+				var existingSphere = BoundingSphereD.CreateFromBoundingBox(box.Value);
+				var prefabSphere = prefab.BoundingSphere;
+				coords = ((existingSphere.Radius * 1.2) + (prefabSphere.Radius)) * boxMatrix.Value.Forward + existingSphere.Center;
+
+			}
+
+			var dummyList = new List<IMyCubeGrid>();
+			MyVisualScriptLogicProvider.ShowNotification("Spawning Prefab [" + prefabId + "]", 5000, "White", playerId);
+			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, prefabId, coords, (Vector3)matrix.Backward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, playerId);
+
 
 		}
 

@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
@@ -42,6 +43,24 @@ namespace ModularEncountersSystems.Entities {
 				TaskProcessor.Tasks.Add(new TimedAction((int)timeSpan.TotalSeconds, DeletePlanet));
 
 			}
+
+			if (Settings.SpaceCargoShips.GetPlanetSpawnFilter(entity.EntityId) == null)
+				Settings.SpaceCargoShips.AddPlanetSpawnFilter(new PlanetSpawnFilter(Planet.Generator.Id.SubtypeName, entity.EntityId));
+
+			if (Settings.RandomEncounters.GetPlanetSpawnFilter(entity.EntityId) == null)
+				Settings.RandomEncounters.AddPlanetSpawnFilter(new PlanetSpawnFilter(Planet.Generator.Id.SubtypeName, entity.EntityId));
+
+			if (Settings.PlanetaryCargoShips.GetPlanetSpawnFilter(entity.EntityId) == null)
+				Settings.PlanetaryCargoShips.AddPlanetSpawnFilter(new PlanetSpawnFilter(Planet.Generator.Id.SubtypeName, entity.EntityId));
+
+			if (Settings.PlanetaryInstallations.GetPlanetSpawnFilter(entity.EntityId) == null)
+				Settings.PlanetaryInstallations.AddPlanetSpawnFilter(new PlanetSpawnFilter(Planet.Generator.Id.SubtypeName, entity.EntityId));
+
+			if (Settings.BossEncounters.GetPlanetSpawnFilter(entity.EntityId) == null)
+				Settings.BossEncounters.AddPlanetSpawnFilter(new PlanetSpawnFilter(Planet.Generator.Id.SubtypeName, entity.EntityId));
+
+			if (Settings.DroneEncounters.GetPlanetSpawnFilter(entity.EntityId) == null)
+				Settings.DroneEncounters.AddPlanetSpawnFilter(new PlanetSpawnFilter(Planet.Generator.Id.SubtypeName, entity.EntityId));
 
 		}
 

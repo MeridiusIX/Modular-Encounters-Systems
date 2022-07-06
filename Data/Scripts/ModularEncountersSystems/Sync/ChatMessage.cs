@@ -1,10 +1,12 @@
 ﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.Configuration.Editor;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ProtoBuf;
@@ -448,6 +450,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.Autopilot
+			if (array[2] == "Autopilot") {
+
+				LoggerTools.DebugAutoPilot(this);
+				return true;
+
+			}
+
 			//MES.Debug.ChangeBool
 			if (array[2] == "ChangeBool") {
 
@@ -490,6 +500,13 @@ namespace ModularEncountersSystems.Sync {
 				}
 
 				NpcManager.UpdateStaticEncounters();
+				return true;
+
+			}
+
+			if (array[2] == "ClearThrust") {
+
+				LoggerTools.DebugClearThrust(this);
 				return true;
 
 			}
@@ -577,6 +594,31 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.DrawPaths
+			if (array[2] == "DrawPaths") {
+
+				BehaviorManager.DebugDraw = !BehaviorManager.DebugDraw;
+				this.ReturnMessage = "Path Drawing For Behaviors Active: " + BehaviorManager.DebugDraw;
+				return true;
+
+			}
+
+			//MES.Debug.Lanes
+			if (array[2] == "Lanes") {
+
+				this.ReturnMessage = "LaneCount: " + PlanetManager.Lanes.Count;
+				return true;
+
+			}
+
+			//MES.Debug.GetBlockPairs
+			if (array[2] == "GetBlockPairs") {
+
+				LoggerTools.DebugBlockPairs(this);
+				return true;
+
+			}
+
 			//MES.Debug.GetPlanetData
 			if (array[2] == "GetPlanetData") {
 
@@ -611,6 +653,21 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.LinkedGrids
+			if (array[2] == "LinkedGrids") {
+
+				LoggerTools.DebugLinkedGrids(this);
+				return true;
+
+			}
+
+			//MES.Debug.ProcessPrefabs
+			if (array[2] == "ProcessPrefabs") {
+
+				LoggerTools.ProcessPrefabs(this, array);
+				return true;
+
+			}
 
 			//MES.Debug.RemoveAllNpcs
 			if (array[2] == "RemoveAllNpcs") {
@@ -624,6 +681,14 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "ResetReputation") {
 
 				LoggerTools.ResetReputation(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.RotationData
+			if (array[2] == "RotationData") {
+
+				LoggerTools.RotationData(this, array);
 				return true;
 
 			}
@@ -660,6 +725,30 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.SetReputation
+			if (array[2] == "SetReputation") {
+
+				//LoggerTools.SetReputation(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.SetSyncedReputation
+			if (array[2] == "SetSyncedReputation") {
+
+				//LoggerTools.SetSyncedReputation(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.SpawnAllPrefabs
+			if (array[2] == "SpawnAllPrefabs") {
+
+				LoggerTools.SpawnAllPrefabs(this, array);
+				return true;
+
+			}
+
 			//TestAsteroidSpawns
 			if (array[2] == "TestAsteroidSpawns") {
 
@@ -689,6 +778,36 @@ namespace ModularEncountersSystems.Sync {
 				Mode = ChatMsgMode.ReturnMessage;
 				return true;
 			
+			}
+
+			//MES.Debug.TextTest
+			if (array[2] == "TextTest") {
+
+				var textText = ProfileManager.GetTextTemplate("Imber-TextTemplate-DatapadLore.xml");
+
+				if (textText == null) {
+
+					ReturnMessage = "Could Not Find TextTemplate";
+					Mode = ChatMsgMode.ReturnMessage;
+					return true;
+				
+				}
+
+				if (textText.DataPadEntries.Length == 0) {
+
+					ReturnMessage = "Datapad Entries Count 0";
+					Mode = ChatMsgMode.ReturnMessage;
+					return true;
+
+				}
+
+				ReturnMessage = "Found TextTemplate";
+				Mode = ChatMsgMode.ReturnMessage;
+				ClipboardPayload = textText.DataPadEntries[5].GetBody();
+				MyAPIGateway.Utilities.ShowMissionScreen(textText.DataPadEntries[5].GetTitle(), null, null, textText.DataPadEntries[5].GetBody());
+
+				return true;
+
 			}
 
 			/*
@@ -721,7 +840,7 @@ namespace ModularEncountersSystems.Sync {
 			*/
 
 			//MES.Debug.UnlockAdminBlocks
-			if (array[2] == "UnlockNpcBlocks") {
+			if (array[2] == "UnlockNpcBlocks" || array[2] == "UnlockAdminBlocks") {
 
 				Mode = ChatMsgMode.ReturnMessage;
 				ReturnMessage = "NPC-Only Blocks Have Been Unlocked For This Session.";

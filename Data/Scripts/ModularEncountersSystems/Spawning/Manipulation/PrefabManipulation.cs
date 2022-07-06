@@ -48,6 +48,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				if (!prefabData.Prefabs.Contains(prefab.OriginalPrefab.Id.SubtypeName))
 					continue;
 
+				foreach (var tag in prefabData.CustomTags)
+					if (!data.CustomTags.Contains(tag))
+						data.CustomTags.Add(tag);
+
 				foreach (var profile in prefabData.ManipulationProfiles) {
 
 					//Conditions
@@ -215,6 +219,17 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				SpawnLogger.Write("Maximum Difficulty Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
 				return false;
 
+			}
+
+			foreach (var tag in profile.ManipulationRequiredCustomTags) {
+
+				if (!data.CustomTags.Contains(tag)) {
+
+					SpawnLogger.Write("Custom Tag Requirement Not Met For Profile: " + profile.ProfileSubtypeId, SpawnerDebugEnum.Manipulation);
+					return false;
+
+				}
+			
 			}
 
 			return true;
@@ -385,6 +400,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 						SpawnLogger.Write("RivalAI Behavior Applied To RemoteControl", SpawnerDebugEnum.Manipulation);
 						data.Attributes.RivalAiBehaviorSet = true;
+						primaryBehaviorSet = true;
 
 					}
 
@@ -503,7 +519,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			if (profile.UseLootProfiles) {
 
 				PrefabInventory.ApplyLootProfiles(prefab, profile);
-			
+				data.Attributes.ApplyContainerTypes = true;
+
+
 			}
 
 			//Cosmetics

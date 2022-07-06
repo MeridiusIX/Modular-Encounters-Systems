@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.API;
+﻿using ModularEncountersSystems.Admin;
+using ModularEncountersSystems.API;
 using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Configuration;
@@ -24,16 +25,20 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.36";
+		public static string ModVersion = "2.1.64";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
 		public static bool IsDedicated;
 		public static DateTime SessionStartTime;
 
+		public static bool AreaTestStart;
+
 		public static Action UnloadActions;
 
 		public override void LoadData() {
+
+			Instance = this;
 
 			IsServer = MyAPIGateway.Multiplayer.IsServer;
 			IsDedicated = MyAPIGateway.Utilities.IsDedicated;
@@ -41,8 +46,6 @@ namespace ModularEncountersSystems.Core {
 
 			if (!ModEnabled)
 				return;
-
-			Instance = this;
 
 			SpawnLogger.Setup();
 			BehaviorLogger.Setup();
@@ -55,11 +58,11 @@ namespace ModularEncountersSystems.Core {
 			ProfileManager.Setup();
 			SpawnGroupManager.CreateSpawnLists();
 			BotSpawner.Setup();
+			APIs.RegisterAPIs(0); //Register Any Applicable APIs
 
 			if (!IsServer)
 				return;
 
-			APIs.RegisterAPIs(0); //Register Any Applicable APIs
 			BlockManager.Setup(); //Build Lists of Special Blocks
 			PlayerSpawnWatcher.Setup();
 			PrefabSpawner.Setup();
@@ -74,7 +77,7 @@ namespace ModularEncountersSystems.Core {
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
 
-			
+			APIs.TextHud = new HudAPIv2();
 
 		}
 
@@ -87,12 +90,13 @@ namespace ModularEncountersSystems.Core {
 			BlockLogicManager.Setup();
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();
+			APIs.RegisterAPIs(2); //Register Any Applicable APIs
 
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
 
+			ProgramBlockControls.SpawnProgramBlockForControls();
 			LocalApi.SendApiToMods();
-			APIs.RegisterAPIs(2); //Register Any Applicable APIs
 			FactionHelper.PopulateNpcFactionLists();
 			EventWatcher.Setup();
 			NpcManager.Setup();
@@ -131,6 +135,28 @@ namespace ModularEncountersSystems.Core {
 
 		private static bool CheckSyncRules() {
 
+			if (MES_SessionCore.Instance?.ModContext?.ModId != null && MES_SessionCore.Instance.ModContext.ModId.Contains(".sbm")) {
+
+				foreach (var mod in MyAPIGateway.Session.Mods) {
+
+					var context = mod.GetModContext();
+
+					if (context != null && mod.PublishedFileId == 0 && (context.ModName.Contains("Modular Encounters Systems") || context.ModName.Contains("Modular_Encounters_Systems") || context.ModName.Contains("ModularEncountersSystems"))) {
+
+						if (MyAPIGateway.Utilities.FileExistsInModLocation("ModularEncountersSystemsMod.txt", mod)) {
+
+							SpawnLogger.Write("Detected Offline / Local Version of MES loaded with Workshop Version of MES. Disabling Workshop Version", SpawnerDebugEnum.Startup, true);
+							ModEnabled = false;
+							return false;
+
+						}
+
+					}
+
+				}
+
+			}
+
 			if (!IsDedicated)
 				return true;
 
@@ -142,24 +168,6 @@ namespace ModularEncountersSystems.Core {
 				return false;
 
 			}
-
-			/*
-			if (MES_SessionCore.Instance.ModContext?.ModId != null && MES_SessionCore.Instance.ModContext.ModId.Contains(".sbm")) {
-
-				foreach (var mod in MyAPIGateway.Session.Mods) {
-
-					if (mod.PublishedFileId < 10 && !string.IsNullOrWhiteSpace(mod.FriendlyName) && mod.FriendlyName.StartsWith("Modular Encounters Systems")) {
-
-						SpawnLogger.Write("Detected Offline / Local Version of MES loaded with Workshop Version of MES. Disabling Workshop Version", SpawnerDebugEnum.Error);
-						ModEnabled = false;
-						return false;
-
-					}
-
-				}
-
-			}
-			*/
 
 			return true;
 		

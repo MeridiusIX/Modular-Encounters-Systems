@@ -18,6 +18,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public float ManipulationThreatMaximum;
 		public int ManipulationMinBlockCount;
 		public int ManipulationMaxBlockCount;
+		public List<string> ManipulationRequiredCustomTags;
 		public List<string> ManipulationAllowedPrefabNames;
 		public List<string> ManipulationRestrictedPrefabNames;
 		public List<int> ManipulationAllowedPrefabIndexes;
@@ -187,6 +188,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<LootProfile> LootProfiles;
 		public List<string> LootGroups;
 		public bool ClearExistingContainerTypes;
+		public bool OverrideLootChance;
+		public int LootChanceOverride;
 
 		public ManipulationProfile(string data = null) {
 
@@ -200,6 +203,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ManipulationThreatMaximum = -1;
 			ManipulationMinBlockCount = -1;
 			ManipulationMaxBlockCount = -1;
+			ManipulationRequiredCustomTags = new List<string>();
 			ManipulationAllowedPrefabNames = new List<string>();
 			ManipulationRestrictedPrefabNames = new List<string>();
 			ManipulationAllowedPrefabIndexes = new List<int>();
@@ -360,6 +364,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			LootProfiles = new List<LootProfile>();
 			LootGroups = new List<string>();
 			ClearExistingContainerTypes = false;
+			OverrideLootChance = false;
+			LootChanceOverride = 100;
 
 			InitTags(data);
 
@@ -429,6 +435,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ManipulationMaxBlockCount:") == true) {
 
 					TagParse.TagIntCheck(tag, ref this.ManipulationMaxBlockCount);
+
+				}
+
+				//ManipulationRequiredCustomTags
+				if (tag.StartsWith("[ManipulationRequiredCustomTags:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.ManipulationRequiredCustomTags);
 
 				}
 
@@ -1302,6 +1315,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ClearExistingContainerTypes:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.ClearExistingContainerTypes);
+
+				}
+
+				//OverrideLootChance
+				if (tag.StartsWith("[OverrideLootChance:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.OverrideLootChance);
+
+				}
+
+				//LootChanceOverride
+				if (tag.StartsWith("[LootChanceOverride:") == true) {
+
+					TagParse.TagIntCheck(tag, ref this.LootChanceOverride);
 
 				}
 

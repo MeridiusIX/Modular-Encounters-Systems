@@ -1,0 +1,324 @@
+<?xml version="1.0"?>
+<!-- Created by enenra's ContainerType Editor on: 2019-08-20 17:43 -->
+<!-- https://docs.google.com/spreadsheets/d/1_s1o03enFuZxV-OrH-ufegozE_usZcfHkKI_JOXck7A/edit#gid=0 -->
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<ContainerTypes>
+	
+		<ContainerType CountMin="2" CountMax="4">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-BasicComponents-1</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Motor</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>SteelPlate</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Construction</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>InteriorPlate</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Display</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>SmallTube</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>LargeTube</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Computer</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>MetalGrid</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="50" AmountMax="250">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>BulletproofGlass</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="3" CountMax="6">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-BasicComponents-2</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Motor</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>SteelPlate</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Construction</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>InteriorPlate</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Display</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>SmallTube</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>LargeTube</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Computer</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>MetalGrid</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="100" AmountMax="500">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>BulletproofGlass</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="6" CountMax="10">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-BasicComponents-3</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Motor</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>SteelPlate</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Construction</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>InteriorPlate</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Display</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>SmallTube</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>LargeTube</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Computer</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>MetalGrid</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="250" AmountMax="1000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>BulletproofGlass</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="6" CountMax="10">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-BasicComponents-4</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Motor</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>SteelPlate</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Construction</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>InteriorPlate</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Display</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>SmallTube</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>LargeTube</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>Computer</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>MetalGrid</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="500" AmountMax="5000">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>Component</TypeId>
+						<SubtypeId>BulletproofGlass</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+	</ContainerTypes>																									
+</Definitions>																										

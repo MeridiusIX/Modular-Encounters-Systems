@@ -94,42 +94,61 @@ namespace ModularEncountersSystems.Behavior {
 			//Approach
 			if (Mode == BehaviorMode.ApproachTarget) {
 
-				var targetDist = Vector3D.Distance(RemoteControl.GetPosition(), AutoPilot.Targeting.TargetLastKnownCoords);
+				bool inRange = false;
 
-				if (targetDist < MaxDistanceFromTarget) {
+				if (!_behavior.AutoPilot.InGravity() && _behavior.AutoPilot.DistanceToTargetWaypoint < _behavior.AutoPilot.Data.EngageDistanceSpace)
+					inRange = true;
 
-					if (AutoPilot.Data.PadDistanceFromTarget > 0 && targetDist > AutoPilot.Data.PadDistanceFromTarget) {
-					
+				if (_behavior.AutoPilot.InGravity() && _behavior.AutoPilot.DistanceToTargetWaypoint < _behavior.AutoPilot.Data.EngageDistancePlanet)
+					inRange = true;
+
+				if (inRange) {
+
+					if (_behavior.AutoPilot.Data.PadDistanceFromTarget > 0 && _behavior.AutoPilot.DistanceToTargetWaypoint < _behavior.AutoPilot.Data.PadDistanceFromTarget) {
+
 						//Nothing
-					
+
 					} else {
 
 						BehaviorTriggerA = true;
 						ChangeCoreBehaviorMode(BehaviorMode.WaitAtWaypoint);
-						AutoPilot.ActivateAutoPilot(this.RemoteControl.GetPosition(), (RotateToTargetWithinRange ? NewAutoPilotMode.RotateToWaypoint : NewAutoPilotMode.None) | NewAutoPilotMode.WaypointFromTarget, CheckEnum.Yes, CheckEnum.No);
+						var rotate = _behavior.AutoPilot.Data.RotateTowardsTargetWhileAtPosition ? NewAutoPilotMode.RotateToWaypoint : NewAutoPilotMode.None;
+						AutoPilot.ActivateAutoPilot(this.RemoteControl.GetPosition(), rotate | NewAutoPilotMode.WaypointFromTarget, CheckEnum.Yes, CheckEnum.No);
 
 					}
-				
+
 				}
 
 			}
 
-			//Engage
+			//WaitAtWaypoint
 			if (Mode == BehaviorMode.WaitAtWaypoint) {
 
-				var targetDist = Vector3D.Distance(RemoteControl.GetPosition(), AutoPilot.Targeting.TargetLastKnownCoords);
+				bool inRange = false;
 
-				if (AutoPilot.Data.PadDistanceFromTarget > 0 && targetDist > AutoPilot.Data.PadDistanceFromTarget) {
+				if (!_behavior.AutoPilot.InGravity() && _behavior.AutoPilot.DistanceToTargetWaypoint < _behavior.AutoPilot.Data.DisengageDistanceSpace)
+					inRange = true;
 
-					BehaviorTriggerC = true;
+				if (_behavior.AutoPilot.InGravity() && _behavior.AutoPilot.DistanceToTargetWaypoint < _behavior.AutoPilot.Data.DisengageDistancePlanet)
+					inRange = true;
+
+				if (inRange) {
+
+					//Target Too Far
+					BehaviorTriggerB = true;
 					ChangeCoreBehaviorMode(BehaviorMode.ApproachTarget);
 					AutoPilot.ActivateAutoPilot(this.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing | NewAutoPilotMode.WaypointFromTarget, CheckEnum.Yes, CheckEnum.No);
 
-				} else if(targetDist > MaxDistanceFromTarget) {
+				} else {
 
-					BehaviorTriggerB = true;
-					ChangeCoreBehaviorMode(BehaviorMode.WaitAtWaypoint);
-					AutoPilot.ActivateAutoPilot(this.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing | NewAutoPilotMode.WaypointFromTarget, CheckEnum.Yes, CheckEnum.No);
+					//Target Too Close
+					if (AutoPilot.Data.PadDistanceFromTarget > 0 && _behavior.AutoPilot.DistanceToTargetWaypoint < AutoPilot.Data.PadDistanceFromTarget) {
+
+						BehaviorTriggerC = true;
+						ChangeCoreBehaviorMode(BehaviorMode.ApproachTarget);
+						AutoPilot.ActivateAutoPilot(this.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing | NewAutoPilotMode.WaypointFromTarget, CheckEnum.Yes, CheckEnum.No);
+
+					}
 
 				}
 
@@ -140,12 +159,11 @@ namespace ModularEncountersSystems.Behavior {
 
 				if (Despawn.NearestPlayer?.Player?.Controller?.ControlledEntity?.Entity != null) {
 
-					//_behavior.AutoPilot.SetInitialWaypoint(_behavior.Despawn.GetRetreatCoords());
+					_behavior.AutoPilot.SetInitialWaypoint(_behavior.Despawn.GetRetreatCoords());
 
 				}
 
 			}
-
 
 		}
 

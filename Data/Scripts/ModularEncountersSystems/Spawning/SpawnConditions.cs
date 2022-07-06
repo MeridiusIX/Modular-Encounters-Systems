@@ -16,12 +16,15 @@ using VRage.Game.ModAPI;
 using VRageMath;
 using ModularEncountersSystems.Spawning.Profiles;
 using VRage.Game;
+using Sandbox.Game;
 
 namespace ModularEncountersSystems.Spawning {
 	public static class SpawnConditions {
 
 		public static Dictionary<string, int> SandboxVariableCache = new Dictionary<string, int>();
 		public static MyObjectBuilder_SessionSettings SessionSettings = null;
+
+		internal static StringBuilder _zoneDebug = new StringBuilder();
 
 		public static SpawningType AllowedSpawningTypes(SpawningType type, EnvironmentEvaluation environment) {
 
@@ -439,12 +442,14 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
+				/*
 				if (spawnGroup.MinWaterDepth > 0 && environment.NearestPlanet.WaterDepthAtPosition(environment.SurfaceCoords) < spawnGroup.MinWaterDepth) {
 
 					failReason = "   - Water Depth Check Failed";
 					return false;
 
 				}
+				*/
 
 			}
 
@@ -554,9 +559,10 @@ namespace ModularEncountersSystems.Spawning {
 
 		public static bool CheckBlacklists(SpawningType type, ImprovedSpawnGroup spawnGroup, EnvironmentEvaluation environment, SpawnConditionsProfile conditions, ref string failReason) {
 
-			var modId = spawnGroup.SpawnGroup?.Context?.ModId ?? "N/A";
+			var modId = spawnGroup.SpawnGroup?.Context?.ModItem.PublishedFileId.ToString() ?? "N/A";
 			var spawnTypeBlacklist = Settings.GetSpawnTypeBlacklist(type);
 			var spawnTypePlanetBlacklist = Settings.GetSpawnTypePlanetBlacklist(type);
+			var planetfilter = Settings.GetPlanetFilterForType(type, environment.NearestPlanet?.Planet?.EntityId ?? 0);
 
 			//Global Blacklist SpawnGroup Name
 			if (Settings.General.NpcSpawnGroupBlacklist.Contains<string>(spawnGroup.SpawnGroupName)) {
@@ -582,6 +588,28 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			//Planet Spawn Filter
+			if (environment.IsOnPlanet && planetfilter != null && environment.NearestPlanet.Planet.EntityId == planetfilter.PlanetId) {
+
+				//Blacklist SpawnGroup Name
+				if (planetfilter.PlanetSpawnGroupBlacklist.Contains<string>(spawnGroup.SpawnGroupName)) {
+
+					failReason = "   - SpawnGroup Name Is Blacklisted For This Planet Filter: " + planetfilter.PlanetName + " - " + planetfilter.PlanetId;
+					return true;
+
+				}
+
+				//Blacklist Mod ID
+				if (planetfilter.PlanetSpawnGroupBlacklist.Contains<string>(modId)) {
+
+					failReason = "   - SpawnGroup ModID Is Blacklisted For This Planet Filter: " + planetfilter.PlanetName + " - " + planetfilter.PlanetId;
+					return true;
+
+				}
+
+			}
+
+			//SpawnGroup Planet Blacklist/Whitelist
 			if (!CheckSpawnGroupPlanetLists(conditions, environment)) {
 
 				failReason = "   - SpawnGroup Planet Blacklist/Whitelist Check Failed";
@@ -728,6 +756,25 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			if (environment.AtmosphereAtPosition > 0) {
+
+				if (conditions.AtmosphericCargoShip || conditions.DroneEncounter) {
+
+					if (!Settings.Grids.AerodynamicsModAdvLiftOverride && APIs.DragApiLoaded && APIs.Drag.AdvLift && !conditions.ForceStaticGrid) {
+
+						if (!conditions.UsesAerodynamicModAdvLift) {
+
+							failReason = "   - Aerodynamic Mod AdvLift feature not compatible with this encounter.";
+							return false;
+
+						}
+
+					}
+
+				}
+
+			}
+
 			if (spawnTypes.HasFlag(SpawningType.PlanetaryInstallation) || spawnTypes.HasFlag(SpawningType.WaterSurfaceStation) || spawnTypes.HasFlag(SpawningType.UnderWaterStation)) {
 
 				if (conditions.PlanetaryInstallationType != "Small" && conditions.PlanetaryInstallationType != "Medium" && conditions.PlanetaryInstallationType != "Large") {
@@ -761,6 +808,12 @@ namespace ModularEncountersSystems.Spawning {
 				failReason = "   - World Settings Check Failed.";
 				return false;
 
+			}
+
+			if (!CheckDateTime(conditions, environment, ref failReason)) {
+
+				return false;
+			
 			}
 
 			if (DistanceFromCenterCheck(conditions, environment) == false) {
@@ -820,7 +873,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (conditions.UseKnownPlayerLocations == true) {
 
-				if (KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(environment.Position, conditions.KnownPlayerLocationMustMatchFaction, conditions.FactionOwner) == false) {
+				if (KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(environment.Position, conditions.KnownPlayerLocationMustMatchFaction, conditions.FactionOwner) != conditions.KnownPlayerLocationMustBeInside) {
 
 					failReason = "   - Known Player Location Check Failed";
 					return false;
@@ -829,7 +882,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (!ZoneValidation(spawnGroup, conditions, collection, environment.Position, ref failReason)) {
+			if (!ZoneValidation(spawnGroup, conditions, collection, environment.Position, adminSpawn, ref failReason)) {
 
 				return false;
 
@@ -986,16 +1039,16 @@ namespace ModularEncountersSystems.Spawning {
 			if (conditions.UseThreatLevelCheck == true) {
 
 				var threatLevel = GetThreatLevel(conditions.ThreatLevelCheckRange, conditions.ThreatIncludeOtherNpcOwners, environment.Position);
-				threatLevel -= (float)Settings.General.ThreatReductionHandicap;
+				var gravityHandicap = environment.IsOnPlanet ? conditions.ThreatScorePlanetaryHandicap : 0;
 
-				if (threatLevel < (float)conditions.ThreatScoreMinimum && (float)conditions.ThreatScoreMinimum > 0) {
+				if (threatLevel < (float)conditions.ThreatScoreMinimum + gravityHandicap && (float)conditions.ThreatScoreMinimum > 0) {
 
 					failReason = "   - Minimum Threat Check Failed";
 					return false;
 
 				}
 
-				if (threatLevel > (float)conditions.ThreatScoreMaximum && (float)conditions.ThreatScoreMaximum > 0) {
+				if (threatLevel > (float)conditions.ThreatScoreMaximum + gravityHandicap && (float)conditions.ThreatScoreMaximum > 0) {
 
 					failReason = "   - Maximum Threat Check Failed";
 					return false;
@@ -1153,6 +1206,75 @@ namespace ModularEncountersSystems.Spawning {
 			//Logger.Write(spawnGroup.SpawnGroupName + " Passed Common Conditions", true);
 			return true;
 
+		}
+
+		public static bool CheckDateTime(SpawnConditionsProfile conditions, EnvironmentEvaluation environment, ref string failReason) {
+
+			if (conditions.UseDateTimeYearRange) {
+
+				if ((conditions.MinDateTimeYear > -1 && environment.ServerTime.Year < conditions.MinDateTimeYear) || (conditions.MaxDateTimeYear > -1 && environment.ServerTime.Year > conditions.MaxDateTimeYear)) {
+
+					failReason = "   - DateTime Year Check Failed";
+					return false;
+
+				}
+			
+			}
+
+			if (conditions.UseDateTimeMonthRange) {
+
+				if ((conditions.MinDateTimeMonth > -1 && environment.ServerTime.Month < conditions.MinDateTimeMonth) || (conditions.MaxDateTimeMonth > -1 && environment.ServerTime.Month > conditions.MaxDateTimeMonth)) {
+
+					failReason = "   - DateTime Month Check Failed";
+					return false;
+
+				}
+
+			}
+
+			if (conditions.UseDateTimeDayRange) {
+
+				if ((conditions.MinDateTimeDay > -1 && environment.ServerTime.Day < conditions.MinDateTimeDay) || (conditions.MaxDateTimeDay > -1 && environment.ServerTime.Day > conditions.MaxDateTimeDay)) {
+
+					failReason = "   - DateTime Day Check Failed";
+					return false;
+
+				}
+
+			}
+
+			if (conditions.UseDateTimeHourRange) {
+
+				if ((conditions.MinDateTimeHour > -1 && environment.ServerTime.Hour < conditions.MinDateTimeHour) || (conditions.MaxDateTimeHour > -1 && environment.ServerTime.Hour > conditions.MaxDateTimeHour)) {
+
+					failReason = "   - DateTime Hour Check Failed";
+					return false;
+
+				}
+
+			}
+
+			if (conditions.UseDateTimeMinuteRange) {
+
+				if ((conditions.MinDateTimeMinute > -1 && environment.ServerTime.Minute < conditions.MinDateTimeMinute) || (conditions.MaxDateTimeMinute > -1 && environment.ServerTime.Minute > conditions.MaxDateTimeMinute)) {
+
+					failReason = "   - DateTime Minute Check Failed";
+					return false;
+
+				}
+
+			}
+
+			/*
+			if (conditions.UseDateTimeDaysOfWeek && !conditions.DateTimeDaysOfWeek.Contains(environment.ServerTime.DayOfWeek)) {
+
+				failReason = "   - DateTime Day Of Week Check Failed";
+				return false;
+
+			}
+			*/
+			return true;
+		
 		}
 
 		public static bool CheckSandboxVariables(List<string> variableNames, List<string> falseVariableNames) {
@@ -1405,51 +1527,102 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position, ref string failReason){
+		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position, bool extendFailReasons, ref string failReason){
 
-			bool zoneRequirement = false;
+			bool zonePersistentRequirement = false;
+			bool zoneKPLRequirement = false;
+			_zoneDebug.Clear();
 
 			for (int i = 0; i < conditions.ZoneConditions.Count; i++) {
 
 				var zoneCondition = conditions.ZoneConditions[i];
+				_zoneDebug.Append("     - Zone Condition: ").Append(zoneCondition.ProfileSubtypeId != "" ? zoneCondition.ProfileSubtypeId : "Null").Append(" / ").Append(zoneCondition.ZoneName ?? "Null").AppendLine(); ;
 
-				if (!zoneRequirement && !string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
-					zoneRequirement = true;
+				if (!zonePersistentRequirement && !string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && !zoneCondition.UseKnownPlayerLocation)
+					zonePersistentRequirement = true;
+
+				if (!zoneKPLRequirement && zoneCondition.UseKnownPlayerLocation)
+					zoneKPLRequirement = true;
 
 				for (int j = 0; j < ZoneManager.ActiveZones.Count; j++) {
 
 					var zone = ZoneManager.ActiveZones[j];
 
-					if (!zone.Persistent || !zone.Active || string.IsNullOrWhiteSpace(zoneCondition.ZoneName))
+					if (!zone.Active) {
+
 						continue;
 
-					if (!zone.SandboxBoolCheck())
+					}
+						
+
+					if (zone.Persistent) {
+
+						if (string.IsNullOrWhiteSpace(zoneCondition.ZoneName) || zone.PublicName != zoneCondition.ZoneName) {
+
+							_zoneDebug.Append("       - Zone Persistent Name Mismatch: ").Append(zoneCondition.ZoneName ?? "Null").Append(" / ").Append(zone.PublicName ?? "Null").AppendLine();
+							continue;
+
+						}
+							
+					} else {
+
+						if (!zoneCondition.UseKnownPlayerLocation || !zone.PlayerKnownLocation) {
+
+							_zoneDebug.Append("       - Zone Not Known Player Location as Alternative to Persistent Zone").AppendLine();
+							continue;
+
+						}
+					
+					}
+
+					if (!zone.SandboxBoolCheck()) {
+
+						_zoneDebug.Append("       - Zone Sandbox Bool Check Failed").AppendLine();
 						continue;
 
-					if (!string.IsNullOrWhiteSpace(zoneCondition.ZoneName) && zone.PublicName != zoneCondition.ZoneName)
-						continue;
+					}
 
 					var distance = Vector3D.Distance(position, zone.Coordinates);
 
 					//In Zone Radius
-					if (distance > zone.Radius)
+					if (distance > zone.Radius) {
+
+						_zoneDebug.Append("       - Zone Radius Check Failed").AppendLine();
 						continue;
+
+					}
 
 					//Min Dist From Center
-					if (zoneCondition.MinDistanceFromZoneCenter > -1 && distance < zoneCondition.MinDistanceFromZoneCenter)
+					if (zoneCondition.MinDistanceFromZoneCenter > -1 && distance < zoneCondition.MinDistanceFromZoneCenter) {
+
+						_zoneDebug.Append("       - Zone Min Dist From Center Check Failed").AppendLine();
 						continue;
 
+					}
+						
 					//Max Dist From Center
-					if (zoneCondition.MaxDistanceFromZoneCenter > -1 && distance > zoneCondition.MaxDistanceFromZoneCenter)
+					if (zoneCondition.MaxDistanceFromZoneCenter > -1 && distance > zoneCondition.MaxDistanceFromZoneCenter) {
+
+						_zoneDebug.Append("       - Zone Max Dist From Center Check Failed").AppendLine();
 						continue;
+
+					}
 
 					//Min Spawned Encounters
-					if (zoneCondition.MinSpawnedZoneEncounters > -1 && zone.SpawnedEncounters < zoneCondition.MinSpawnedZoneEncounters)
+					if (zoneCondition.MinSpawnedZoneEncounters > -1 && zone.SpawnedEncounters < zoneCondition.MinSpawnedZoneEncounters) {
+
+						_zoneDebug.Append("       - Zone Min Spawned Encounters Check Failed").AppendLine();
 						continue;
 
+					}
+
 					//Max Spawned Encounters
-					if (zoneCondition.MaxSpawnedZoneEncounters > -1 && zone.SpawnedEncounters > zoneCondition.MaxSpawnedZoneEncounters)
+					if (zoneCondition.MaxSpawnedZoneEncounters > -1 && zone.SpawnedEncounters > zoneCondition.MaxSpawnedZoneEncounters) {
+
+						_zoneDebug.Append("       - Zone Max Spawned Encounters Check Failed").AppendLine();
 						continue;
+
+					}
 
 					//Custom Counters
 					if (zoneCondition.CheckCustomZoneCounters) {
@@ -1476,9 +1649,13 @@ namespace ModularEncountersSystems.Spawning {
 						
 						}
 
-						if (failedResult)
+						if (failedResult) {
+
+							_zoneDebug.Append("       - Zone Custom Counters Check Failed").AppendLine();
 							continue;
-					
+
+						}
+
 					}
 
 					//Custom Bools
@@ -1506,11 +1683,16 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
-						if (failedResult)
+						if (failedResult) {
+
+							_zoneDebug.Append("       - Zone Custom Bools Check Failed").AppendLine();
 							continue;
+
+						}
 
 					}
 
+					failReason = "";
 					collection.ActiveZone = zone;
 					collection.ZoneIndex = i;
 					return true;
@@ -1522,15 +1704,25 @@ namespace ModularEncountersSystems.Spawning {
 			//Check Against Rules For Strict and Faction Only
 			if (collection.MustUseStrictZone) {
 
-				failReason = "   - Zone Check Failed: Strict Zone";
+				failReason = _zoneDebug.ToString();
+				failReason += "   - Zone Check Failed: Strict Zone";
 				return false;
 
 			}
 				
 
-			if (zoneRequirement) {
+			if (zonePersistentRequirement) {
 
-				failReason = "   - Zone Check Failed: Spawn Conditions Requires Specific Zone";
+				failReason = _zoneDebug.ToString();
+				failReason += "   - Zone Check Failed: Spawn Conditions Requires Specific Zone";
+				return false;
+
+			}
+
+			if (zoneKPLRequirement) {
+
+				failReason = _zoneDebug.ToString();
+				failReason += "   - Zone Check Failed: Spawn Conditions Requires Player Known Location";
 				return false;
 
 			}
@@ -1538,11 +1730,13 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (collection.AllowedZoneFactions.Count > 0) {
 
-				failReason = "   - Zone Check Failed: Allowed Zone Factions Not Satisfied";
+				failReason = _zoneDebug.ToString();
+				failReason += "   - Zone Check Failed: Allowed Zone Factions Not Satisfied";
 				return false;
 
-			}	
+			}
 
+			failReason = "";
 			return true;
 
 		}
@@ -1552,7 +1746,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			var resultList = new List<string>();
 			var factionList = new List<IMyFaction>();
-			var initialFactionTag = !string.IsNullOrWhiteSpace(factionOverride) ? factionOverride : condition.FactionOwner;
+			var initialFactionTag = !string.IsNullOrWhiteSpace(factionOverride) ? factionOverride : (!string.IsNullOrWhiteSpace(spawnGroup.FactionOverride) ? spawnGroup.FactionOverride : condition.FactionOwner);
 
 			if (!string.IsNullOrWhiteSpace(factionOverride) || (condition.UseRandomBuilderFaction == false && condition.UseRandomMinerFaction == false && condition.UseRandomTraderFaction == false)) {
 
@@ -1600,6 +1794,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			SpawnLogger.Write("Faction List Count: " + factionList.Count, SpawnerDebugEnum.Dev);
+
 			if (factionList.Count == 0) {
 
 				var defaultFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(condition.FactionOwner);
@@ -1634,6 +1830,7 @@ namespace ModularEncountersSystems.Spawning {
 
 								if (FactionHelper.NpcFactionTags.Contains(factionOvr.Tag) == false) {
 
+									//MyVisualScriptLogicProvider.ShowNotificationToAll("Npc Faction Tags Don't Include " + factionOvr.Tag, 4000);
 									continue;
 
 								}
@@ -1645,7 +1842,7 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
-						if (faction?.Tag != null && !collection.AllowedZoneFactions.Contains(faction.Tag)) {
+						if (faction?.Tag != null && collection.AllowedZoneFactions.Count > 0 && !collection.AllowedZoneFactions.Contains(faction.Tag)) {
 
 							factionList.Remove(faction);
 
@@ -1660,6 +1857,8 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Player Count " + PlayerManager.Players.Count, 4000);
+
 						foreach (var player in PlayerManager.Players) {
 
 							if (!player.Online)
@@ -1667,41 +1866,31 @@ namespace ModularEncountersSystems.Spawning {
 
 							if (player.Player.IsBot == true || player.Player.Character == null) {
 
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot or Chara Null ", 4000);
 								continue;
 
 							}
 
 							if (player.Distance(coords) > condition.PlayerReputationCheckRadius) {
 
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Radius Fail ", 4000);
 								continue;
 
 							}
 
-							//var playerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(player.IdentityId);
-
 							int rep = 0;
 							rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.Player.IdentityId, checkFaction.FactionId);
 
-							/*
-							if(playerFaction != null) {
-
-								rep = MyAPIGateway.Session.Factions.GetReputationBetweenFactions(playerFaction.FactionId, checkFaction.FactionId);
-
-							} else {
-
-								rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.IdentityId, checkFaction.FactionId);
-
-							}
-							*/
-
 							if (rep < condition.MinimumReputation && condition.MinimumReputation > -1501) {
 
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Min Rep Fail " + rep, 4000);
 								continue;
 
 							}
 
 							if (rep > condition.MaximumReputation && condition.MaximumReputation < 1501) {
 
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Rep Fail " + rep, 4000);
 								continue;
 
 							}

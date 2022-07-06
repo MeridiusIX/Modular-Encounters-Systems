@@ -1,0 +1,37 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Loot-AntiInhibitor</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Loot]
+
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/LargeBlockCockpit]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/LargeBlockCockpitSeat]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/SmallBlockCockpit]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/DBSmallBlockFighterCockpit]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/CockpitOpen]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/RoverCockpit]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/OpenCockpitSmall]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/OpenCockpitLarge]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/SmallBlockCockpitIndustrial]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/LargeBlockCockpitIndustrial]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/SmallBlockStandingCockpit]
+        [ContainerBlockTypes:MyObjectBuilder_Cockpit/LargeBlockStandingCockpit]
+
+        [ContainerTypes:MES-ContainerTypes-AntiInhibitor-1]
+
+        [MinBlocks:1]
+        [MaxBlocks:1]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

@@ -99,7 +99,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (!player.CheckTimer(spawnType)) {
 
-				SpawnLogger.Write(player.Player.Player.DisplayName + " Timer Check Failed (" + player.GetTimerValue(spawnType) + ") For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+				//SpawnLogger.Write(player.Player.Player.DisplayName + " Timer Check Failed (" + player.GetTimerValue(spawnType) + ") For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
 				return false;
 
 			}
@@ -121,7 +121,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (!LocationSpawnEligibility(spawnType, player.Player.GetPosition())) {
 
-				SpawnLogger.Write(player.Player.Player.DisplayName + " Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+				//SpawnLogger.Write(player.Player.Player.DisplayName + " Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
 				player.ResetPosition(spawnType);
 				return false;
 
@@ -129,7 +129,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (!LocationSpawnEligibility(spawnType, player.GetLastPosition(spawnType))) {
 
-					SpawnLogger.Write(player.Player.Player.DisplayName + " Previous Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+					//SpawnLogger.Write(player.Player.Player.DisplayName + " Previous Position Invalid For Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
 					player.ResetPosition(spawnType);
 					return false;
 
@@ -139,7 +139,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (!PlayerDistanceToNextEncounter(spawnType, player)) {
 
-				SpawnLogger.Write(player.Player.Player.DisplayName + " Hasn't Travelled Far Enough To Trigger Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
+				//SpawnLogger.Write(player.Player.Player.DisplayName + " Hasn't Travelled Far Enough To Trigger Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
 				return false;
 			
 			}

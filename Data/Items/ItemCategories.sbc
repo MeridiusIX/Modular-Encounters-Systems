@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"  encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CategoryClasses>
+    <Category xsi:type="MyObjectBuilder_GuiBlockCategoryDefinition">
+      <Id>
+        <TypeId>GuiBlockCategoryDefinition</TypeId>
+        <SubtypeId/>
+      </Id>
+      <DisplayName>DisplayName_Category_Consumables</DisplayName>
+      <Name>Consumables</Name>
+      <SearchBlocks>false</SearchBlocks>
+      <IsToolCategory>true</IsToolCategory>
+      <ItemIds>
+        <string>JetpackInhibitorBlocker</string>
+        <string>DrillInhibitorBlocker</string>
+        <string>PlayerInhibitorBlocker</string>
+      </ItemIds>
+    </Category>
+  </CategoryClasses>
+</Definitions>

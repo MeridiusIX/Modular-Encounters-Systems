@@ -11,8 +11,8 @@
 
         [MES Block Replacement]
 
-        [OldBlock:MyObjectBuilder_InteriorTurret/LargeInteriorTurret]
-        [NewBlock:MyObjectBuilder_InteriorTurret/NpcLargeInteriorTurret]
+        [//OldBlock:MyObjectBuilder_InteriorTurret/LargeInteriorTurret]
+        [//NewBlock:MyObjectBuilder_InteriorTurret/NpcLargeInteriorTurret]
 
       </Description>
 

@@ -1,5 +1,8 @@
-﻿using Sandbox.Game.Entities;
+﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Logging;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using VRage.Game;
@@ -28,6 +31,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (!nameToOwner.ContainsKey(blockNames[i])) {
 
+						BehaviorLogger.Write(" - Owner Collection 1: " + blockNames[i] + " / " + 0, BehaviorDebugEnum.Action);
 						nameToOwner.Add(blockNames[i], 0);
 
 					}
@@ -42,6 +46,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (!nameToOwner.ContainsKey(blockNames[i])) {
 
+						BehaviorLogger.Write(" - Owner Collection 2: " + blockNames[i] + " / " + owner, BehaviorDebugEnum.Action);
 						nameToOwner.Add(blockNames[i], owner);
 
 					}
@@ -55,11 +60,12 @@ namespace ModularEncountersSystems.Helpers {
 
 					if (faction != null) {
 
-						_factionData.Add(factionNames[i], owner);
+						_factionData.Add(factionNames[i], factOwner);
 
 						if (!nameToOwner.ContainsKey(blockNames[i])) {
 
-							nameToOwner.Add(blockNames[i], owner);
+							BehaviorLogger.Write(" - Owner Collection 3: " + blockNames[i] + " / " + factOwner, BehaviorDebugEnum.Action);
+							nameToOwner.Add(blockNames[i], factOwner);
 
 						}
 
@@ -81,14 +87,16 @@ namespace ModularEncountersSystems.Helpers {
 				if (nameToOwner.TryGetValue(block.CustomName, out owner)) {
 
 					var cubeBlock = block as MyCubeBlock;
-					cubeBlock.ChangeBlockOwnerRequest(owner, cubeBlock.IDModule.ShareMode);
+					cubeBlock.ChangeOwner(owner, MyOwnershipShareModeEnum.Faction);
+					cubeBlock.ChangeBlockOwnerRequest(owner, MyOwnershipShareModeEnum.Faction);
 				
 				}
 			
 			}
 
 		}
-		
+
+		/*
 		public static List<IMySlimBlock> GetAllBlocks(IMyCubeGrid cubeGrid) {
 
 			List<IMySlimBlock> totalList = new List<IMySlimBlock>();
@@ -110,30 +118,74 @@ namespace ModularEncountersSystems.Helpers {
 			return totalList;
 
 		}
+		*/
 
-		public static IMyTerminalBlock GetBlockWithName(IMyCubeGrid cubeGrid, string name) {
+		public static List<IMySlimBlock> GetAllBlocks(GridEntity grid, bool getLinkedGrids = true) {
 
-			if(string.IsNullOrWhiteSpace(name) == true) {
+			List<IMySlimBlock> totalList = new List<IMySlimBlock>();
 
-				return null;
+			if (grid == null || !grid.ActiveEntity())
+				return totalList;
+
+			for (int i = grid.LinkedGrids.Count - 1; i >= 0; i--) {
+
+				var link = GridManager.GetSafeGridFromIndex(i, grid.LinkedGrids);
+
+				if (link == null)
+					continue;
+
+				if (!getLinkedGrids && link != grid)
+					continue;
+
+				for (int j = link.AllBlocks.Count - 1; j >= 0; j--) {
+
+					//SpawnLogger.Write(link.CubeGrid.CustomName + " AllBlocks Count: " + link.AllBlocks.Count, SpawnerDebugEnum.Dev);
+					var block = GetSafeBlockFromIndex(j, link.AllBlocks);
+
+					if (block == null)
+						continue;
+
+					if (totalList.Contains(block))
+						continue;
+
+					totalList.Add(block);
+
+				}
 
 			}
 
-			var blockList = GetAllBlocks(cubeGrid);
+			SpawnLogger.Write("GetAllBlocks Count: " + totalList.Count, SpawnerDebugEnum.Dev);
+			return totalList;
 
-			foreach(var block in blockList.Where(x => x.FatBlock != null)) {
+		}
 
-				if((block.FatBlock as IMyTerminalBlock) == null) {
+		public static BlockEntity GetSafeBlockFromIndex(int index, List<BlockEntity> list) {
 
-					continue;
+			try {
 
-				}
+				if (index < list.Count)
+					return list[index];
 
-				if((block.FatBlock as IMyTerminalBlock).CustomName == name) {
+			} catch (Exception) {
 
-					return block as IMyTerminalBlock;
 
-				}
+
+			}
+
+			return null;
+
+		}
+
+		public static IMySlimBlock GetSafeBlockFromIndex(int index, List<IMySlimBlock> list) {
+
+			try {
+
+				if (index < list.Count)
+					return list[index];
+
+			} catch (Exception) {
+
+
 
 			}
 
@@ -143,35 +195,31 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static List<IMyTerminalBlock> GetBlocksOfType<T>(IMyCubeGrid cubeGrid) where T : class {
 
-			var blockList = GetAllBlocks(cubeGrid);
-			var resultList = new List<IMyTerminalBlock>();
-
-			foreach (IMySlimBlock block in blockList.Where(x => x.FatBlock != null)) {
-
-				IMyTerminalBlock terminalBlock = block.FatBlock as IMyTerminalBlock;
-
-				if (terminalBlock == null || terminalBlock as T == null)
-					continue;
-
-				resultList.Add(terminalBlock);
-
-			}
-
-			return resultList;
+			return GetBlocksOfType<T>(GridManager.GetGridEntity(cubeGrid));
 
 		}
 
-		public static List<IMySlimBlock> GetBlocksOfTypes(IMyCubeGrid cubeGrid, params MyDefinitionId[] types) {
+		public static List<IMyTerminalBlock> GetBlocksOfType<T>(GridEntity cubeGrid) where T : class {
 
-			var blockList = GetAllBlocks(cubeGrid);
-			var resultList = new List<IMySlimBlock>();
+			var resultList = new List<IMyTerminalBlock>();
 
-			foreach (IMySlimBlock block in blockList.Where(x => x.BlockDefinition != null)) {
+			if (cubeGrid == null || !cubeGrid.ActiveEntity() && cubeGrid.LinkedGrids == null)
+				return resultList;
 
-				if (block == null || !types.Contains<MyDefinitionId>(block.BlockDefinition.Id))
-					continue;
+			for (int i = cubeGrid.LinkedGrids.Count - 1; i >= 0; i--) {
 
-				resultList.Add(block);
+				var grid = cubeGrid.LinkedGrids[i];
+
+				for (int j = grid.AllTerminalBlocks.Count - 1; j >= 0; j--) {
+
+					var terminalBlock = grid.AllTerminalBlocks[j];
+
+					if (terminalBlock == null || !terminalBlock.ActiveEntity() || terminalBlock.Block as T == null)
+						continue;
+
+					resultList.Add(terminalBlock.Block);
+
+				}
 
 			}
 
@@ -181,22 +229,16 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static List<IMyTerminalBlock> GetBlocksWithNames(IMyCubeGrid cubeGrid, List<string> names) {
 
-			var resultList = new List<IMyTerminalBlock>();
-			var blockList = GetAllBlocks(cubeGrid);
+			var resultList = GetBlocksOfType<IMyTerminalBlock>(cubeGrid);
 
-			foreach(var block in blockList.Where(x => x.FatBlock != null)) {
+			for(int i = resultList.Count - 1; i >= 0; i--) {
 
-				var tBlock = block.FatBlock as IMyTerminalBlock;
+				var tBlock = resultList[i];
 
-				if(tBlock == null) {
+				if(tBlock?.CustomName == null || !names.Contains(tBlock.CustomName)) {
 
+					resultList.RemoveAt(i);
 					continue;
-
-				}
-
-				if(names.Contains(tBlock.CustomName)) {
-
-					resultList.Add(tBlock);
 
 				}
 
@@ -209,47 +251,66 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMyRadioAntenna> GetGridAntennas(IMyCubeGrid cubeGrid) {
 
 			var resultList = new List<IMyRadioAntenna>();
-			var blockList = GetAllBlocks(cubeGrid);
+			var grid = GridManager.GetGridEntity(cubeGrid);
 
-			foreach(var block in blockList.Where(x => x.FatBlock != null)) {
+			if(grid == null || !grid.ActiveEntity())
+				return resultList;
 
-				var antenna = block.FatBlock as IMyRadioAntenna;
+			for (int i = grid.LinkedGrids.Count - 1; i >= 0; i--) {
 
-				if(antenna != null) {
+				var link = GridManager.GetSafeGridFromIndex(i, grid.LinkedGrids);
 
-					resultList.Add(antenna);
+				if (link == null)
+					continue;
+
+				for (int j = link.Antennas.Count - 1; j >= 0; j--) {
+
+					var antenna = GetSafeBlockFromIndex(j, link.Antennas);
+
+					if (antenna == null || !antenna.ActiveEntity())
+						continue;
+
+					resultList.Add(antenna.Block as IMyRadioAntenna);
 
 				}
 
 			}
-
+			
 			return resultList;
 
 		}
 	
 		public static List<IMyShipController> GetGridControllers(IMyCubeGrid cubeGrid){
-		
+
 			var resultList = new List<IMyShipController>();
+			var grid = GridManager.GetGridEntity(cubeGrid);
 
-			var blockList = GetAllBlocks(cubeGrid);
+			if (grid == null || !grid.ActiveEntity())
+				return resultList;
 
-			foreach(var block in blockList.Where(x => x.FatBlock != null)) {
+			for (int i = grid.LinkedGrids.Count - 1; i >= 0; i--) {
 
-				var controller = block.FatBlock as IMyShipController;
+				var link = GridManager.GetSafeGridFromIndex(i, grid.LinkedGrids);
 
-				if(controller != null) {
+				if (link == null)
+					continue;
 
-					resultList.Add(controller);
+				for (int j = link.Antennas.Count - 1; j >= 0; j--) {
+
+					var controller = GetSafeBlockFromIndex(j, link.Controllers);
+
+					if (controller == null || !controller.ActiveEntity())
+						continue;
+
+					resultList.Add(controller.Block as IMyShipController);
 
 				}
 
 			}
 
 			return resultList;
-		
-		}
 
-		
+		}
 
 	}
 

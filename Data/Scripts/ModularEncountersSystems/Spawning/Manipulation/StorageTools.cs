@@ -20,6 +20,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static Guid NpcThrusterDataKey = new Guid("BF529D66-9AA1-4419-B5D3-A65BA21306CE");
 		public static Guid MesTurretControllerKey = new Guid("438AA687-C800-4784-948F-B731C46D4F18");
 		public static Guid MesTemporaryPlanetKey = new Guid("8823361C-E6A4-4BD6-8F1D-3C935D9D4AA7");
+		public static Guid MesContainerTypeKey = new Guid("9E614A24-8027-4C66-8A7B-63A36AFE36EC");
 
 
 		public static List<Guid> CustomStorageKeys = new List<Guid>();

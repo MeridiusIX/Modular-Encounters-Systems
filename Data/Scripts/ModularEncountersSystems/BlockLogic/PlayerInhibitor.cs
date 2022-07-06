@@ -20,7 +20,7 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal bool _playersInRange;
 		internal List<PlayerEntity> _playersInBlockRange;
 
-		internal float _damageAtZeroDistance = 25;
+		internal float _damageAtZeroDistance = 10;
 
 		public PlayerInhibitor(BlockEntity block) {
 
@@ -46,13 +46,13 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			if (_antenna != null) {
 
-				_antenna.Radius = 1000;
-				_antenna.CustomName = "[Player Inhibitor Field]";
+				_antenna.Radius = 800;
+				_antenna.CustomName = "[Personnel Inhibitor Field]";
 				_antenna.CustomNameChanged += NameChange;
 
 			} else {
 
-				_antennaRange = 1000;
+				_antennaRange = 800;
 
 			}
 
@@ -64,8 +64,8 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal void NameChange(IMyTerminalBlock block) {
 		
-			if(_antenna.CustomName != "[Player Inhibitor Field]")
-				_antenna.CustomName = "[Player Inhibitor Field]";
+			if(_antenna.CustomName != "[Personnel Inhibitor Field]")
+				_antenna.CustomName = "[Personnel Inhibitor Field]";
 
 		}
 
@@ -76,7 +76,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			foreach (var player in _playersInBlockRange) {
 
-				if (!player.ActiveEntity() || player.IsParentEntitySeat)
+				if (player?.Player?.Character == null || !player.ActiveEntity() || player.IsParentEntitySeat)
 					continue;
 
 				float distanceRatio = 1 - (float)(Vector3D.Distance(player.GetPosition(), Entity.GetPosition()) / _antennaRange);
@@ -101,14 +101,31 @@ namespace ModularEncountersSystems.BlockLogic {
 			//Check Player Distances and Status
 			foreach (var player in PlayerManager.Players) {
 
-				if (!player.ActiveEntity() || player.IsParentEntitySeat || (player.PlayerInhibitorNullifier != null && player.PlayerInhibitorNullifier.EffectActive())) {
+				if (!player.ActiveEntity() || (player.PlayerInhibitorNullifier != null && player.PlayerInhibitorNullifier.EffectActive())) {
 
 					RemovePlayer(player);
 					continue;
 
 				}
 
-				var distance = player.Distance(Entity.GetPosition());
+				var characterPos = player.GetCharacterPosition();
+
+				if (player?.Player?.Character != null && player.IsParentEntityGrid) {
+
+					if (player.Player.Character.CurrentMovementState.HasFlag(VRage.Game.MyCharacterMovementEnum.Sitting)) {
+
+						RemovePlayer(player);
+						continue;
+
+					}
+
+				} else if(characterPos == Vector3D.Zero) {
+
+					characterPos = player.GetPosition();
+				
+				}
+
+				var distance = Vector3D.Distance(Entity.GetPosition(), characterPos);
 
 				if (distance > _antennaRange) {
 
@@ -121,7 +138,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 					if (!_playersInBlockRange.Contains(player)) {
 
-						MyVisualScriptLogicProvider.ShowNotification("WARNING: Prolonged Exposure To Player Inhibitor Field May Be Fatal!", 5000, "Red", player.Player.IdentityId);
+						MyVisualScriptLogicProvider.ShowNotification("WARNING: Prolonged Exposure To Personnel Inhibitor Field May Be Fatal!", 5000, "Red", player.Player.IdentityId);
 						_playersInBlockRange.Add(player);
 
 					}

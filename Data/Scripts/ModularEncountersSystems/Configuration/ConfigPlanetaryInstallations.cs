@@ -223,7 +223,7 @@ namespace ModularEncountersSystems.Configuration {
 			
 		}
 		
-		public string SaveSettings(ConfigPlanetaryInstallations settings){
+		public string SaveThisSettings(ConfigPlanetaryInstallations settings){
 			
 			try{
 				
@@ -263,7 +263,7 @@ namespace ModularEncountersSystems.Configuration {
 				return "Provided Value For [" + commandSplit[3] + "] Could Not Be Parsed.";
 
 			InitDefinitionDisableList();
-			return SaveSettings();
+			return SaveThisSettings(this);
 
 		}
 

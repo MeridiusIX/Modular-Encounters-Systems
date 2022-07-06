@@ -332,6 +332,28 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static int NextIndex(int currentIndex, int count) {
+
+            int newIndex = currentIndex += 1;
+
+            if (newIndex >= count)
+                return 0;
+
+            return newIndex;
+        
+        }
+
+        public static int PreviousIndex(int currentIndex, int count) {
+
+            int newIndex = currentIndex -= 1;
+
+            if (newIndex < 0)
+                return (count -= 1);
+
+            return newIndex;
+
+        }
+
         /// <summary>
         /// This method will convert a radian value into degrees
         /// </summary>
@@ -356,6 +378,20 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static bool WithinMultiplierTolerance(double number, double multiplier, double target) {
+
+            var check = target *= multiplier;
+
+            if (number > check + target)
+                return false;
+
+            if (number < target - check)
+                return false;
+
+            return true;
+
+        }
+
         public static bool WithinTolerance(double number, double target, double tolerance) {
 
             return !UnderTolerance(number, target, tolerance) && !OverTolerance(number, target, tolerance);
@@ -364,13 +400,13 @@ namespace ModularEncountersSystems.Helpers {
 
         public static bool UnderTolerance(double number, double target, double tolerance) {
 
-            return number - tolerance < target;
+            return (number - tolerance) < target;
 
         }
 
         public static bool OverTolerance(double number, double target, double tolerance) {
 
-            return number + tolerance > target;
+            return (number + tolerance) > target;
 
         }
 
@@ -442,6 +478,12 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static int RandomSign() {
+
+            return _rnd.Next(0, 2) == 0 ? -1 : 1;
+
+        }
+
         public static double GravityToDistance(double gravityMultiplier = 1, double maxGravity = 1, double falloff = 7, double minRadius = 59400, double maxRadius = 67200) {
 
             if (gravityMultiplier >= maxGravity)
@@ -451,6 +493,68 @@ namespace ModularEncountersSystems.Helpers {
             var distanceMultiplier = Math.Pow(multiplier, 1 / -falloff);
             return maxRadius * distanceMultiplier;
 
+        }
+
+        public static bool CloserToZero(int value, int target) {
+
+            if (target >= 0)
+                return value <= target;
+            else
+                return value >= target;
+        
+        }
+
+        public static bool CloserToZero(float value, float target) {
+
+            if (target >= 0)
+                return value <= target;
+            else
+                return value >= target;
+
+        }
+
+        public static bool CloserToZero(double value, double target) {
+
+            if (target >= 0)
+                return value <= target;
+            else
+                return value >= target;
+
+        }
+
+        public static bool FurtherFromZero(int value, int target) {
+
+            if (target >= 0)
+                return value >= target;
+            else
+                return value <= target;
+
+        }
+
+        public static bool FurtherFromZero(float value, float target) {
+
+            if (target >= 0)
+                return value >= target;
+            else
+                return value <= target;
+
+        }
+
+        public static bool FurtherFromZero(double value, double target) {
+
+            if (target >= 0)
+                return value >= target;
+            else
+                return value <= target;
+
+        }
+
+        public static bool IsValueCloser(double target, double existing, double challenger) {
+
+            var existingDiff = Math.Abs(target - existing);
+            var challengeDiff = Math.Abs(target - challenger);
+            return challenger < existing;
+        
         }
 
     }

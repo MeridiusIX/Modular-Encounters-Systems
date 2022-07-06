@@ -33,6 +33,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> AttackSounds;
 		public List<string> PainSounds;
 		public List<string> IdleSounds;
+		public List<string> TauntSounds;
 
 		public List<string> EmoteActions;
 
@@ -67,6 +68,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			AttackSounds = new List<string>();
 			PainSounds = new List<string>();
 			IdleSounds = new List<string>();
+			TauntSounds = new List<string>();
 
 			EmoteActions = new List<string>();
 
@@ -199,9 +201,16 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-				if (tag.Contains("[IdleSounds:") || tag.Contains("[Taunts:")) {
+				if (tag.Contains("[IdleSounds:")) {
 
 					TagParse.TagStringListCheck(tag, ref IdleSounds);
+					continue;
+
+				}
+
+				if (tag.Contains("[TauntSounds:") || tag.Contains("[Taunts:")) {
+
+					TagParse.TagStringListCheck(tag, ref TauntSounds);
 					continue;
 
 				}
@@ -263,6 +272,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			Data.AttackSounds = this.AttackSounds;
 			Data.PainSounds = this.PainSounds;
 			Data.IdleSounds = this.IdleSounds;
+			Data.TauntSounds = this.TauntSounds;
 			Data.Actions = this.EmoteActions;
 			Data.ShotDeviationAngle = this.ShotDeviationAngle;
 			Data.LeadTargets = this.LeadTargets;

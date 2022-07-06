@@ -3,8 +3,10 @@ using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Watchers;
 using Sandbox.Game;
 using Sandbox.ModAPI;
+using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
 using VRage.Game.ModAPI;
@@ -49,8 +51,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public Action OnComplete;
 		public Action<IMyCubeGrid, string> DespawnFromMES;
-
-
+		
 		public TriggerSystem(IMyRemoteControl remoteControl) {
 
 			RemoteControl = null;
@@ -211,6 +212,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+				//SwitchedTarget
+				if (trigger.Type == "SwitchedTarget") {
+
+					trigger.ActivateTrigger(CheckSwitchedTarget);
+					continue;
+
+				}
+
+				//ChangedTarget
+				if (trigger.Type == "ChangedTarget") {
+
+					trigger.ActivateTrigger(CheckChangedTarget);
+					continue;
+
+				}
+
 				//TargetInSafezone
 				if (trigger.Type == "TargetInSafezone") {
 
@@ -363,8 +380,44 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+				//ActiveWeaponsPercentage
+				if (trigger.Type == "ActiveWeaponsPercentage") {
+
+					trigger.ActivateTrigger(CheckActiveWeaponsPercentage);
+					continue;
+
+				}
+
+				//ActiveTurretsPercentage
+				if (trigger.Type == "ActiveTurretsPercentage") {
+
+					trigger.ActivateTrigger(CheckActiveTurretsPercentage);
+					continue;
+
+				}
+
+				//ActiveGunsPercentage
+				if (trigger.Type == "ActiveGunsPercentage") {
+
+					trigger.ActivateTrigger(CheckActiveGunsPercentage);
+					continue;
+
+				}
+
+				//HealthPercentage
+				if (trigger.Type == "HealthPercentage") {
+
+					trigger.ActivateTrigger(CheckHealthPercentage);
+					continue;
+
+				}
+
 			}
 
+			_behavior.AutoPilot.Targeting.TargetAcquired = false;
+			_behavior.AutoPilot.Targeting.TargetLost = false;
+			_behavior.AutoPilot.Targeting.TargetSwitched = false;
+			_behavior.AutoPilot.Targeting.TargetChanged = false;
 			_behavior.BehaviorTriggerA = false;
 			_behavior.BehaviorTriggerB = false;
 			_behavior.BehaviorTriggerC = false;
@@ -503,7 +556,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (dist > command.Radius) {
 
-					BehaviorLogger.Write("Receiver Out Of Code Broadcast Range", BehaviorDebugEnum.Command);
+					BehaviorLogger.Write("Receiver Out Of Code Broadcast Range. Distance: " + dist + " // Command Radius: " + command.Radius, BehaviorDebugEnum.Command);
 					return;
 
 				}
@@ -717,6 +770,53 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+		public void ProcessButtonTriggers(IMyButtonPanel panel, int index, long playerId) {
+
+			for (int i = 0; i < Triggers.Count; i++) {
+
+				var trigger = Triggers[i];
+
+				if (trigger.UseTrigger == true && trigger.Type == "ButtonPress") {
+
+					if (_behavior?.RemoteControl == null || !_behavior.IsAIReady()) {
+
+						EventWatcher.ButtonPressed -= ProcessButtonTriggers;
+						return;
+
+					}
+
+					if (index != trigger.ButtonPanelIndex)
+						return;
+
+					if (panel.CustomName == null || panel.CustomName != trigger.ButtonPanelName)
+						return;
+
+					if (panel.SlimBlock.CubeGrid != _behavior.RemoteControl.SlimBlock.CubeGrid && panel.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(_behavior.RemoteControl.SlimBlock.CubeGrid))
+						return;
+
+					if (trigger.MinPlayerReputation >= -1500 || trigger.MaxPlayerReputation <= 1500) {
+
+						var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(playerId, _behavior.Owner.FactionId);
+
+						if ((trigger.MinPlayerReputation >= -1500 && rep < trigger.MinPlayerReputation) || (trigger.MaxPlayerReputation <= 1500 && rep > trigger.MaxPlayerReputation))
+							return;
+					
+					}
+
+					trigger.ActivateTrigger();
+
+					if (trigger.Triggered == true) {
+
+						ProcessTrigger(trigger, 0, Command.ButtonPressCommand(playerId));
+
+					}
+
+				}
+
+			}
+
+		}
+
 		public void ProcessDespawnTriggers() {
 
 			for (int i = 0; i < Triggers.Count; i++) {
@@ -800,22 +900,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (RemoteControl?.SlimBlock?.CubeGrid == null)
 				return;
 
+			if (!trigger.Triggered)
+				return;
+
 			var actionList = trigger.Actions;
 
-			if (trigger.Triggered == false || trigger.Actions == null || trigger.Actions.Count == 0) {
+			if (trigger.LastRunFailed) {
 
-				if (trigger.LastRunFailed && trigger.UseElseActions && trigger.ElseActions != null && trigger.ElseActions.Count > 0) {
+				actionList = trigger.ElseActions;
+				trigger.LastRunFailed = false;
 
-					trigger.Triggered = true;
-					actionList = trigger.ElseActions;
-
-				} else {
-
-					trigger.LastRunFailed = false;
-					return;
-
-				}
-		
 			}
 
 			long detectedEntity = attackerEntityId;
@@ -904,38 +998,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void ToggleTriggers(string triggerName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore) {
 
-			foreach (var resetTrigger in Triggers) {
+			ToggleTriggers(Triggers, triggerName, toggleMode, resetCooldown);
+			ToggleTriggers(DamageTriggers, triggerName, toggleMode, resetCooldown);
+			ToggleTriggers(CommandTriggers, triggerName, toggleMode, resetCooldown);
+			ToggleTriggers(CompromisedTriggers, triggerName, toggleMode, resetCooldown);
+			
+		}
+
+		public void ToggleTriggers(List<TriggerProfile> triggers, string triggerName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore) {
+
+			foreach (var resetTrigger in triggers) {
 
 				if (triggerName == resetTrigger.ProfileSubtypeId) {
 
-					if(toggleMode != CheckEnum.Ignore)
+					if (toggleMode != CheckEnum.Ignore)
 						resetTrigger.UseTrigger = (toggleMode == CheckEnum.Yes);
 
 					if (resetCooldown == CheckEnum.Yes)
 						resetTrigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
 
 				}
-
-			}
-
-			foreach (var resetTrigger in DamageTriggers) {
-
-				if (triggerName == resetTrigger.ProfileSubtypeId)
-					resetTrigger.UseTrigger = true;
-
-			}
-
-			foreach (var resetTrigger in CommandTriggers) {
-
-				if (triggerName == resetTrigger.ProfileSubtypeId)
-					resetTrigger.UseTrigger = true;
-
-			}
-
-			foreach (var resetTrigger in CompromisedTriggers) {
-
-				if (triggerName == resetTrigger.ProfileSubtypeId)
-					resetTrigger.UseTrigger = true;
 
 			}
 
@@ -960,6 +1042,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			MyAPIGateway.Utilities.GetVariable(counterName, out existingCounter);
 
+			//This is for ResetSandboxCounters
 			if (amount == 0) {
 
 				MyAPIGateway.Utilities.SetVariable(counterName, 0);
@@ -967,22 +1050,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (amount == 1) {
-
-				existingCounter++;
+			else
+			{
+				existingCounter += amount;
 				MyAPIGateway.Utilities.SetVariable(counterName, existingCounter);
 				return;
 
 			}
-
-			if (amount == -1) {
-
-				existingCounter--;
-				MyAPIGateway.Utilities.SetVariable(counterName, existingCounter < 0 ? 0 : existingCounter);
-				return;
-
-			}
-
 
 		}
 
@@ -994,9 +1068,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (control.MinPlayerReputation != -1501 || control.MaxPlayerReputation != 1501) {
 
-				player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, _owner.FactionId, control);
+				var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(control.FactionTag);
 
-			} else {
+				if (control.UseCustomFactionTag == true && customfaction != null){
+
+					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, customfaction.FactionId, control);
+
+				}else{
+
+					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, _owner.FactionId, control);
+
+				}
+			} 
+
+			else {
 
 				player = PlayerManager.GetNearestPlayer(remotePosition);
 

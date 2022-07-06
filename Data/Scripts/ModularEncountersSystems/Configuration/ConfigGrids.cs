@@ -71,6 +71,8 @@ namespace ModularEncountersSystems.Configuration {
 
 		public string[] GlobalReplenishmentProfiles;
 
+		public bool AerodynamicsModAdvLiftOverride;
+
 		[XmlIgnore]
 		public bool ConfigLoaded;
 
@@ -105,6 +107,8 @@ namespace ModularEncountersSystems.Configuration {
 			UseMaxAmmoInventoryWeight = true;
 			MaxAmmoInventoryWeight = 1500;
 
+			AerodynamicsModAdvLiftOverride = false;
+
 			GlobalReplenishmentProfiles = new string[] { "MES-Replenishment-BaseRules" };
 
 			EditorReference = new Dictionary<string, Func<string, object, bool>> {
@@ -127,7 +131,8 @@ namespace ModularEncountersSystems.Configuration {
 				{"MaxAmmoInventoryWeight", (s, o) => EditorTools.SetCommandValueFloat(s, ref MaxAmmoInventoryWeight) },
 				{"WeaponReplacerUseTotalGridMassMultiplier", (s, o) => EditorTools.SetCommandValueBool(s, ref WeaponReplacerUseTotalGridMassMultiplier) },
 				{"WeaponReplacerTotalGridMassMultiplier", (s, o) => EditorTools.SetCommandValueFloat(s, ref WeaponReplacerTotalGridMassMultiplier) },
-				{"GlobalReplenishmentProfiles", (s, o) => EditorTools.SetCommandValueStringArray(s, ref GlobalReplenishmentProfiles) }
+				{"GlobalReplenishmentProfiles", (s, o) => EditorTools.SetCommandValueStringArray(s, ref GlobalReplenishmentProfiles) },
+				{"AerodynamicsModAdvLiftOverride", (s, o) => EditorTools.SetCommandValueBool(s, ref AerodynamicsModAdvLiftOverride) },
 
 			};
 

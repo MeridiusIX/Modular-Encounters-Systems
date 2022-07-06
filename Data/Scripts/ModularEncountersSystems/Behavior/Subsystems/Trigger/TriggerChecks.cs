@@ -108,6 +108,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+		//SwitchedTarget
+		public bool CheckSwitchedTarget(TriggerProfile trigger) {
+
+			var result = _autopilot.Targeting.TargetSwitched;
+			_autopilot.Targeting.TargetSwitched = false;
+			return result;
+
+		}
+
+		//ChangedTarget
+		public bool CheckChangedTarget(TriggerProfile trigger) {
+
+			var result = _autopilot.Targeting.TargetChanged;
+			_autopilot.Targeting.TargetChanged = false;
+			return result;
+
+		}
+
 		//TargetInSafezone
 		public bool CheckTargetInSafezone(TriggerProfile trigger) {
 
@@ -241,6 +259,57 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckSession(TriggerProfile trigger) {
 
 			return !trigger.SessionTriggerActivated;
+
+		}
+
+		//CheckActiveWeaponsPercentage
+		public bool CheckActiveWeaponsPercentage(TriggerProfile trigger) {
+
+			float count = _behavior.AutoPilot.Weapons.GetActiveWeaponCount();
+
+			if (count == 0)
+				return false;
+
+			return ((count / _behavior.BehaviorSettings.InitialWeaponCount) * 100) >= trigger.PercentageOfWeaponsRemaining;
+
+		}
+
+		//CheckActiveTurretsPercentage
+		public bool CheckActiveTurretsPercentage(TriggerProfile trigger) {
+
+			float count = _behavior.AutoPilot.Weapons.GetActiveTurretCount();
+
+			if (count == 0)
+				return false;
+
+			return ((count / _behavior.BehaviorSettings.InitialTurretCount) * 100) >= trigger.PercentageOfWeaponsRemaining;
+
+		}
+
+		//CheckActiveGunsPercentage
+		public bool CheckActiveGunsPercentage(TriggerProfile trigger) {
+
+			float count = _behavior.AutoPilot.Weapons.GetActiveGunCount();
+
+			if (count == 0)
+				return false;
+
+			return ((count / _behavior.BehaviorSettings.InitialGunCount) * 100) >= trigger.PercentageOfWeaponsRemaining;
+
+		}
+
+		//CheckHealthPercentage
+		public bool CheckHealthPercentage(TriggerProfile trigger) {
+
+			if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+				return false;
+
+			var health = _behavior.CurrentGrid.GetCurrentHealth();
+
+			if (health == 0)
+				return false;
+
+			return ((health / _behavior.BehaviorSettings.InitialGridIntegrity) * 100) >= trigger.PercentageOfHealthRemaining;
 
 		}
 

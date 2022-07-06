@@ -34,11 +34,13 @@ namespace ModularEncountersSystems.API {
 		private Action<Vector3D, string, bool> _removeKnownPlayerLocation;
 		private Action<IMyCubeGrid, bool> _setCargoShipOverride;
 		private Func<IMyCubeGrid, bool, bool> _setSpawnerIgnoreForDespawn;
+		private Action<string, bool, Vector3D?> _setZoneEnabled;
 		private Func<Vector3D, List<string>, bool> _spawnBossEncounter;
 		private Func<Vector3D, List<string>, bool> _spawnPlanetaryCargoShip;
 		private Func<Vector3D, List<string>, bool> _spawnPlanetaryInstallation;
 		private Func<Vector3D, List<string>, bool> _spawnRandomEncounter;
 		private Func<Vector3D, List<string>, bool> _spawnSpaceCargoShip;
+		private Action<string, bool> _toggleSpawnGroupEnabled;
 
 		//Create this object in your SessionComponent LoadData() Method
 		public MESApi() {
@@ -84,7 +86,7 @@ namespace ModularEncountersSystems.API {
 		public void ChatCommand(string message, MatrixD playerPosition, long identityId, ulong steamUserId) => _chatCommand?.Invoke(message, playerPosition, identityId, steamUserId);
 
 		/// <summary>
-		/// Used To Spawn A Random SpawnGroup From A Provided List At A Provided Location. The Spawn Will Not Be Categorized As A CargoShip/RandomEncounter/Etc
+		/// Used To Spawn A Random SpawnGroup From A Provided List At A Provided Location. The Spawn Will Not Be Categorized As A CargoShip/RandomEncounter/Etc. The spawngroup/conditions must also use the [RivalAiSpawn:true] tag to be able to spawn with this command.
 		/// </summary>
 		/// <param name="spawnGroups">List of SpawnGroups you want to attempt spawning from</param>
 		/// <param name="coords">The coordinates the Spawn will use</param>
@@ -212,6 +214,14 @@ namespace ModularEncountersSystems.API {
 		public void SetCargoShipOverride(IMyCubeGrid cubeGrid, bool enabled) => _setCargoShipOverride(cubeGrid, enabled);
 
 		/// <summary>
+		/// Allows you to enable or disable an MES Zone by name, and optionally at a set of coords in case there are multiple zones with same name
+		/// </summary>
+		/// <param name="zoneName">Zone Name</param>
+		/// <param name="enabled">Whether the Zone should be enabled or not</param>
+		/// <param name="zoneAtCoords">Optional position / coords that are checked against</param>
+		public void SetZoneEnabled(string zoneName, bool enabled, Vector3D? zoneAtCoords = null) => _setZoneEnabled(zoneName, enabled, zoneAtCoords);
+
+		/// <summary>
 		/// Allows you to set a grid to be ignored or considered by the MES Cleanup Processes
 		/// </summary>
 		/// <param name="cubeGrid">The cubegrid of the NPC you want to set</param>
@@ -259,6 +269,13 @@ namespace ModularEncountersSystems.API {
 		/// <returns>true or false depending on if the spawn was successful</returns>
 		public bool SpawnSpaceCargoShip(Vector3D coords, List<string> spawnGroups) => _spawnSpaceCargoShip?.Invoke(coords, spawnGroups) ?? false;
 
+		/// <summary>
+		/// Allows you to Enable or Disable a SpawnGroup, determining whether it can be spawned at all.
+		/// </summary>
+		/// <param name="spawnGroupName">The name (SubtypeId) of the Spawngroup you want to toggle</param>
+		/// <param name="toggle">true for enabled, false for disabled</param>
+		public void ToggleSpawnGroupEnabled(string spawnGroupName, bool toggle) => _toggleSpawnGroupEnabled?.Invoke(spawnGroupName, toggle);
+
 		//Run This Method in your SessionComponent UnloadData() Method
 		public void UnregisterListener() {
 
@@ -298,11 +315,13 @@ namespace ModularEncountersSystems.API {
 				_registerSuccessfulSpawnAction = (Action<Action<IMyCubeGrid>, bool>)dict["RegisterSuccessfulSpawnAction"];
 				_removeKnownPlayerLocation = (Action<Vector3D, string, bool>)dict["RemoveKnownPlayerLocation"];
 				_setSpawnerIgnoreForDespawn = (Func<IMyCubeGrid, bool, bool>)dict["SetSpawnerIgnoreForDespawn"];
+				_setZoneEnabled = (Action<string, bool, Vector3D?>)dict["SetZoneEnabled"];
 				_spawnBossEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnBossEncounter"];
 				_spawnPlanetaryCargoShip = (Func<Vector3D, List<string>, bool>)dict["SpawnPlanetaryCargoShip"];
 				_spawnPlanetaryInstallation = (Func<Vector3D, List<string>, bool>)dict["SpawnPlanetaryInstallation"];
 				_spawnRandomEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnRandomEncounter"];
 				_spawnSpaceCargoShip = (Func<Vector3D, List<string>, bool>)dict["SpawnSpaceCargoShip"];
+				_toggleSpawnGroupEnabled = (Action<string, bool>)dict["ToggleSpawnGroupEnabled"]; 
 
 			} catch (Exception e) {
 

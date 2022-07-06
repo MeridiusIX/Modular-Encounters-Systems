@@ -57,10 +57,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public List<IMyCubeGrid> CurrentGrids;
 		public bool SetupHandler;
 
+		private IBehavior _behavior;
+
 		public Func<bool> IsRemoteWorking;
 		private TriggerSystem _trigger;
 
-		public DamageSystem(IMyRemoteControl remoteControl = null) {
+		public DamageSystem(IMyRemoteControl remoteControl = null, IBehavior behavior = null) {
 
 			UseDamageDetection = false;
 

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+
+    <!--All Cargo Ship B-->
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditions-AllCargoShipB</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions]
+
+        [SpaceCargoShip:true]
+        [LunarCargoShip:true]
+        [GravityCargoShip:true]
+        [AtmosphericCargoShip:true]
+        [SkipAirDensityCheck:true]
+
+        [PrefabSpawningMode:SelectedIndexes]
+        [PrefabIndexes:0]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditions-AllCargoShipB-Escort</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions]
+
+        [SpaceCargoShip:true]
+        [LunarCargoShip:true]
+        [GravityCargoShip:true]
+        [AtmosphericCargoShip:true]
+        [SkipAirDensityCheck:true]
+
+        [SpaceCargoShipChance:20]
+        [LunarCargoShipChance:20]
+        [GravityCargoShipChance:20]
+        [AtmosphericCargoShipChance:20]
+
+      </Description>
+
+    </EntityComponent>
+
+
+  </EntityComponents>
+</Definitions>

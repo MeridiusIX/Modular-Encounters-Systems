@@ -32,10 +32,12 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 						if (cubeGrid.GridSizeEnum == MyCubeSize.Large) {
 
 							thisRemote.SubtypeName = "RivalAIRemoteControlLarge";
+							thisRemote.CustomName = "AI Control Module";
 
 						} else {
 
 							thisRemote.SubtypeName = "RivalAIRemoteControlSmall";
+							thisRemote.CustomName = "AI Control Module";
 
 						}
 

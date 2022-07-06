@@ -6,6 +6,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Sync;
+using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
@@ -16,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VRage.Game;
 using VRage.Game.ModAPI;
 using VRageMath;
 
@@ -277,6 +279,201 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void DebugAutoPilot(ChatMessage msg) {
+
+			var line = new LineD(msg.CameraPosition, msg.CameraDirection * 10000 + msg.CameraPosition);
+			GridEntity thisGrid = null;
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				if (grid.Behavior == null) {
+
+					foreach (var behavior in BehaviorManager.Behaviors) {
+
+						if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+							grid.Behavior = behavior;
+							break;
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						foreach (var behavior in BehaviorManager.TerminatedBehaviors) {
+
+							if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+								grid.Behavior = behavior;
+								break;
+
+							}
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						continue;
+
+					}
+
+
+					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);
+					//return "";
+
+				}
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				msg.ReturnMessage = "Could Not Locate NPC Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return;
+
+			}
+
+			msg.ReturnMessage = "Autopilot Debug Activated";
+			//thisGrid.Behavior.AutoPilot.Debug = true;
+			return;
+
+		}
+
+		public static void DebugBlockPairs(ChatMessage msg) {
+
+			var sbsmall = new StringBuilder();
+			sbsmall.Append("::: Small Blocks :::").AppendLine().AppendLine();
+			var sblarge = new StringBuilder();
+			sblarge.Append("::: Large Blocks :::").AppendLine().AppendLine();
+
+			foreach (var block in DefinitionHelper.AllBlockDefinitions) {
+
+				if (string.IsNullOrWhiteSpace(block.BlockPairName))
+					continue;
+
+				StringBuilder sb = null;
+
+				if (block.CubeSize == VRage.Game.MyCubeSize.Small)
+					sb = sbsmall;
+				else
+					sb = sblarge;
+
+				sb.Append("[OldBlock:").Append(block.Id.ToString()).Append("]").AppendLine();
+				sb.Append("[NewBlock:").Append(new MyDefinitionId(block.Id.TypeId, block.BlockPairName)).Append("]").AppendLine().AppendLine();
+
+			}
+
+			sbsmall.Append(sblarge.ToString());
+			msg.ClipboardPayload = sbsmall.ToString();
+			msg.Mode = ChatMsgMode.ReturnMessage;
+			msg.ReturnMessage = "Block Pair Data Copied To Clipboard";
+
+		}
+
+		public static void DebugClearThrust(ChatMessage msg) {
+
+			var line = new LineD(msg.CameraPosition, msg.CameraDirection * 10000 + msg.CameraPosition);
+			GridEntity thisGrid = null;
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				if (grid.Behavior == null) {
+
+					foreach (var behavior in BehaviorManager.Behaviors) {
+
+						if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+							grid.Behavior = behavior;
+							break;
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						foreach (var behavior in BehaviorManager.TerminatedBehaviors) {
+
+							if (behavior?.RemoteControl?.SlimBlock?.CubeGrid != null && grid.CubeGrid == behavior.RemoteControl.SlimBlock.CubeGrid) {
+
+								grid.Behavior = behavior;
+								break;
+
+							}
+
+						}
+
+					}
+
+					if (grid.Behavior == null) {
+
+						continue;
+
+					}
+
+
+					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);
+					//return "";
+
+				}
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				msg.ReturnMessage = "Could Not Locate NPC Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return;
+
+			}
+
+			msg.ReturnMessage = "Cleared Thrust";
+			thisGrid.Behavior.AutoPilot.StopAllThrust();
+			return;
+
+		}
+
+		public static void DebugLinkedGrids(ChatMessage msg) {
+
+			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
+
+			if (grid == null) {
+
+				msg.ReturnMessage = "No Grid in Camera Direction";
+				return;
+
+			}
+
+			foreach (var link in grid.LinkedGrids) {
+
+				MyVisualScriptLogicProvider.ShowNotificationToAll(link.RefreshLinkedGrids + " / " + link.CubeGrid?.CustomName ?? "null", 6000);
+			
+			}
+
+			msg.ReturnMessage = "Processed Linked Grids";
+			//grid.RefreshSubGrids();
+
+		}
+
 		public static void ForceSpawnTimer(ChatMessage msg, string[] array) {
 
 			if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
@@ -375,9 +572,11 @@ namespace ModularEncountersSystems.Logging {
 
 			sb.Append(BuildKeyList("SpawnGroup", SpawnGroupManager.SpawnGroupNames));
 			sb.Append(BuildKeyList("Manipulation", ProfileManager.ManipulationProfiles.Keys));
+			sb.Append(BuildKeyList("Manipulation Group", ProfileManager.ManipulationGroups.Keys));
 			sb.Append(BuildKeyList("Block Replacement", ProfileManager.BlockReplacementProfiles.Keys));
 			sb.Append(BuildKeyList("Dereliction", ProfileManager.DerelictionProfiles.Keys));
 			sb.Append(BuildKeyList("Spawn Condition", ProfileManager.SpawnConditionProfiles.Keys));
+			sb.Append(BuildKeyList("Spawn Condition Group", ProfileManager.SpawnConditionGroups.Keys));
 			sb.Append(BuildKeyList("Zone Condition", ProfileManager.ZoneConditionsProfiles.Keys));
 			sb.Append(BuildKeyList("Replenishment", ProfileManager.ReplenishmentProfiles.Keys));
 			sb.Append(BuildKeyList("Zone", ProfileManager.ZoneProfiles.Keys));
@@ -390,9 +589,12 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(BuildKeyList("Datapad", ProfileManager.DatapadTemplates.Keys));
 			sb.Append(BuildKeyList("Spawner", ProfileManager.SpawnerObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Target", ProfileManager.TargetObjectTemplates.Keys));
+			sb.Append(BuildKeyList("TextTemplate", ProfileManager.TextTemplates.Keys));
 			sb.Append(BuildKeyList("Trigger", ProfileManager.TriggerObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Trigger Group", ProfileManager.TriggerGroupObjectTemplates.Keys));
 			sb.Append(BuildKeyList("Waypoint", ProfileManager.WaypointProfiles.Keys));
+			sb.Append(BuildKeyList("Loot", ProfileManager.LootProfiles.Keys));
+			sb.Append(BuildKeyList("Loot Group", ProfileManager.LootGroups.Keys));
 			sb.Append(BuildKeyList("Error", ProfileManager.ErrorProfiles));
 
 			return sb.ToString();
@@ -548,6 +750,64 @@ namespace ModularEncountersSystems.Logging {
 
 				if (player != null)
 					player.GetPlayerInfo(sb);
+
+			}
+
+			//Faction Data
+			sb.Append("::: Faction Data :::").AppendLine();
+			var factions = MyAPIGateway.Session.Factions.Factions;
+			var identites = new List<IMyIdentity>();
+			MyAPIGateway.Players.GetAllIdentites(identites);
+
+			foreach (var factionId in factions.Keys) {
+
+				var faction = factions[factionId];
+
+				if (faction == null)
+					continue;
+
+				if (faction.Tag.Length < 4)
+					continue;
+
+				var canUse = FactionHelper.GetFactionMemberIdFromTag(faction.Tag);
+
+				sb.Append(faction.Tag).AppendLine();
+				sb.Append(" - Faction ID:          ").Append(faction.FactionId).AppendLine();
+				sb.Append(" - Accept Humans:       ").Append(faction.AcceptHumans).AppendLine();
+				sb.Append(" - Auto Accept Peace:   ").Append(faction.AutoAcceptPeace).AppendLine();
+				sb.Append(" - Auto Accept Members: ").Append(faction.AutoAcceptMember).AppendLine();
+				sb.Append(" - Is Everyone Npc:     ").Append(faction.IsEveryoneNpc()).AppendLine();
+				sb.Append(" - MES Can Use:         ").Append(canUse > 0).AppendLine();
+				sb.Append(" - Members:             ").Append(faction.Members.Count).AppendLine();
+
+				foreach (var memberId in faction.Members.Keys) {
+
+					var member = faction.Members[memberId];
+					IMyIdentity identity = null;
+
+					foreach (var id in identites)
+						if (id.IdentityId == member.PlayerId) {
+							identity = id;
+							break;
+						}
+
+					sb.Append("   - Member: ").Append(member.PlayerId).AppendLine();
+					sb.Append("     - Identity ID:   ").Append(member.PlayerId).AppendLine();
+					sb.Append("     - Rank:          ").Append(member.IsFounder ? "Founder" : member.IsLeader ? "Leader" : "Member").AppendLine();
+
+					if (identity == null) {
+
+						sb.AppendLine();
+						continue;
+					
+					}
+
+					sb.Append("     - Name:          ").Append(string.IsNullOrWhiteSpace(identity.DisplayName) ? "(Empty)" : identity.DisplayName).AppendLine();
+					sb.Append("     - Steam ID:      ").Append(MyAPIGateway.Players.TryGetSteamId(member.PlayerId)).AppendLine();
+					sb.AppendLine();
+
+				}
+				
 
 			}
 
@@ -729,13 +989,27 @@ namespace ModularEncountersSystems.Logging {
 			collection = new SpawnGroupCollection();
 			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryCargoShip, environment, "", collection);
 
-			if (collection.SpawnGroups.Count > 0) {
+			if (environment.PlanetaryCargoShipsEligible) {
 
 				sb.Append("::: Planetary / Gravity Cargo Ship Eligible Spawns :::").AppendLine();
 
-				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
+				if (APIs.DragApiLoaded && APIs.Drag.AdvLift && !Settings.Grids.AerodynamicsModAdvLiftOverride) {
 
-					sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
+					sb.Append(" > Aerodynamics Mod AdvLift Detected. Most Planetary Cargo Ships Will Not Be Compatible.").AppendLine();
+					sb.Append(" > To Restore Cargo Ships, Use One Of The Following Options:").AppendLine();
+					sb.Append("   > Disable AdvLift in Aerodynamics Mod Config.").AppendLine();
+					sb.Append("   > Remove Aerodynamics Mod.").AppendLine();
+					sb.Append("   > Enable [AerodynamicsModAdvLiftOverride] in MES Config File Config-Grids.xml (Not Recommended / Ships May Not Behave Properly)").AppendLine();
+
+				}
+
+				if (collection.SpawnGroups.Count > 0) {
+
+					foreach (var sgroup in collection.SpawnGroups.Distinct()) {
+
+						sb.Append(" - ").Append(sgroup.SpawnGroupName).AppendLine();
+
+					}
 
 				}
 
@@ -903,6 +1177,21 @@ namespace ModularEncountersSystems.Logging {
 					}
 
 					sb.Append(timeout.GetInfo(environment.Position)).AppendLine();
+
+				}
+
+				sb.AppendLine();
+
+			}
+
+			//Planetary Lanes
+			if (environment.InsidePlanetaryLanes.Count > 0) {
+
+				sb.Append("::: Planetary Lanes In Position :::").AppendLine();
+
+				foreach (var lane in environment.InsidePlanetaryLanes) {
+
+					sb.Append(" - ").Append(lane.PlanetA.Planet.Generator.Id.SubtypeName).Append(" - ").Append(lane.PlanetB.Planet.Generator.Id.SubtypeName).AppendLine();
 
 				}
 
@@ -1266,6 +1555,29 @@ namespace ModularEncountersSystems.Logging {
 		
 		}
 
+		public static void ProcessPrefabs(ChatMessage msg, string[] array) {
+
+			if (MyAPIGateway.Session.LocalHumanPlayer == null || MyAPIGateway.Utilities.IsDedicated) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "Command Must Be Run in Offline World";
+				return;
+
+			}
+
+			if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "No Mod Name Found In Chat Command";
+				return;
+
+			}
+
+			var prefabProcess = new PrefabDiagnosticsTask(array[3]);
+			TaskProcessor.Tasks.Add(prefabProcess);
+		
+		}
+
 		public static void RemoveAllNpcs(ChatMessage msg) {
 
 			for (int i = NpcManager.ActiveNpcs.Count - 1; i >= 0; i--) {
@@ -1306,10 +1618,76 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void RotationData(ChatMessage msg, string[] msgSplit) {
 
-		//
+			// /MES.Debug.RotationData.RotationMulti
+			if (msgSplit.Length < 4) {
 
-		//
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			float rotation = 0;
+
+			if (!float.TryParse(msgSplit[3], out rotation)) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Couldn't Parse " + msgSplit[3] + " To A Number.", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
+
+			if (grid == null) {
+
+				MyVisualScriptLogicProvider.ShowNotification("No Grid Detected In Direction", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			TaskProcessor.Tasks.Add(new DebugRotationData(grid, rotation, msg));
+
+		}
+
+		public static void SetReputation(ChatMessage msg, string[] msgSplit) {
+
+			if (msgSplit.Length != 4) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", msg.PlayerId);
+				return;
+
+			}
+
+			var result = RelationManager.ResetFactionReputation(msgSplit[3]);
+			MyVisualScriptLogicProvider.ShowNotification("Faction [" + msgSplit[3] + "] Reputation Reset Result: " + result, 5000, "White", msg.PlayerId);
+			return;
+
+		}
+
+		public static void SpawnAllPrefabs(ChatMessage msg, string[] array) {
+
+			if (MyAPIGateway.Session.LocalHumanPlayer == null || MyAPIGateway.Utilities.IsDedicated) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "Command Must Be Run in Offline World";
+				return;
+
+			}
+
+			if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "No Mod Name Found In Chat Command";
+				return;
+
+			}
+
+			var prefabProcess = new SpawnAllPrefabs(array[3]);
+			TaskProcessor.Tasks.Add(prefabProcess);
+
+		}
+
 
 	}
 

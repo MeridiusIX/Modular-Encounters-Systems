@@ -8,6 +8,7 @@ using VRage.Game;
 using VRage.ObjectBuilders;
 using VRageMath;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Files;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -84,6 +85,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> SetSandboxBooleansFalse;
 		public List<string> IncreaseSandboxCounters;
 		public List<string> DecreaseSandboxCounters;
+		public int IncreaseSandboxCountersAmount;      //CPT
+		public int DecreaseSandboxCountersAmount;      //CPT
+
 		public List<string> ResetSandboxCounters;
 
 		public bool ChangeAttackerReputation;
@@ -233,9 +237,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool BroadcastCommandProfiles;
 		public List<string> CommandProfileIds;
 
-		public bool AddWaypointFromCommand;
-		public bool RecalculateDespawnCoords;
-
 		public bool AddDatapadsToSeats;
 		public List<string> DatapadNamesToAdd;
 		public int DatapadCountToAdd;
@@ -244,9 +245,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<SerializableDefinitionId> BlockTypesToToggle;
 		public List<SwitchEnum> BlockTypeToggles;
 
+		public bool ClearAllWaypoints;
+
+		public bool AddWaypoints;
+		public List<string> WaypointsToAdd;
+
+		public bool AddWaypointFromCommand;
+		public bool RecalculateDespawnCoords;
+
 		public bool CancelWaitingAtWaypoint;
 		public bool SwitchToNextWaypoint;
-
+		
 		public bool HeavyYaw;
 
 		public bool StopAllRotation;
@@ -269,11 +278,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double ZoneRadiusChangeAmount;
 
 		public bool ZoneCustomCounterChange;
+		public bool ZoneCustomCounterChangeUseKPL;
 		public List<ModifierEnum> ZoneCustomCounterChangeType;
 		public List<string> ZoneCustomCounterChangeName;
 		public List<long> ZoneCustomCounterChangeAmount;
 
 		public bool ZoneCustomBoolChange;
+		public bool ZoneCustomBoolChangeUseKPL;
 		public List<string> ZoneCustomBoolChangeName;
 		public List<bool> ZoneCustomBoolChangeValue;
 
@@ -312,7 +323,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool JumpToTarget; 
 		public bool JumpToJumpedEntity; 
-		public bool JumpedEntityMustBeTarget; 
+		public bool JumpedEntityMustBeTarget;
+
+		public bool JumpToWaypoint;
+		public string JumpWaypoint;
 
 		public bool SetGridCleanupExempt; 
 		public int GridCleanupExemptDuration; 
@@ -327,6 +341,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string PlanetWaypointProfile; 
 		public bool TemporaryPlanet; 
 		public int PlanetTimeLimit;
+
+		public bool AddCustomDataToBlocks;
+		public List<string> CustomDataBlockNames;
+		public List<TextTemplate> CustomDataFiles;
+
+		public bool ApplyContainerTypeToInventoryBlock;
+		public List<string> ContainerTypeBlockNames;
+		public List<string> ContainerTypeSubtypeIds;
+
+		public string DebugMessage;
+
+		public bool ApplyLcdChanges;
+		public string LcdTextTemplateFile;
+		public List<string> LcdBlockNames;
+		public List<int> LcdTemplateIndexes;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -413,6 +442,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ResetSandboxCounters = new List<string>();
 			SetSandboxCounters = new List<string>();
 			SetSandboxCountersValues = new List<int>();
+
+			//CPT
+			IncreaseSandboxCountersAmount = 1;
+			DecreaseSandboxCountersAmount = -1;
+
 
 			BroadcastGenericCommand = false;
 
@@ -541,10 +575,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			BroadcastCommandProfiles = false;
 			CommandProfileIds = new List<string>();
 
-			AddWaypointFromCommand = false;
-
-			RecalculateDespawnCoords = false;
-
 			AddDatapadsToSeats = false;
 			DatapadNamesToAdd = new List<string>();
 			DatapadCountToAdd = 1;
@@ -552,6 +582,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ToggleBlocksOfType = false;
 			BlockTypesToToggle = new List<SerializableDefinitionId>();
 			BlockTypeToggles = new List<SwitchEnum>();
+
+			ClearAllWaypoints = false;
+
+			AddWaypoints = false;
+			WaypointsToAdd = new List<string>();
+
+			AddWaypointFromCommand = false;
+			RecalculateDespawnCoords = false;
 
 			CancelWaitingAtWaypoint = false;
 			SwitchToNextWaypoint = false;
@@ -578,11 +616,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ZoneRadiusChangeAmount = 0;
 
 			ZoneCustomCounterChange = false;
+			ZoneCustomCounterChangeUseKPL = false;
 			ZoneCustomCounterChangeType = new List<ModifierEnum>();
 			ZoneCustomCounterChangeName = new List<string>();
 			ZoneCustomCounterChangeAmount = new List<long>();
 
 			ZoneCustomBoolChange = false;
+			ZoneCustomBoolChangeUseKPL = false;
 			ZoneCustomBoolChangeName = new List<string>();
 			ZoneCustomBoolChangeValue = new List<bool>();
 
@@ -621,6 +661,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			JumpToTarget = false;
 			JumpToJumpedEntity = false;
+			JumpedEntityMustBeTarget = false;
+
+			JumpToWaypoint = false;
+			JumpWaypoint = "";
 
 			SetGridCleanupExempt = false;
 			GridCleanupExemptDuration = 30;
@@ -635,6 +679,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			PlanetWaypointProfile = "";
 			TemporaryPlanet = false;
 			PlanetTimeLimit = 10;
+
+			AddCustomDataToBlocks = false;
+			CustomDataBlockNames = new List<string>();
+			CustomDataFiles = new List<TextTemplate>();
+
+			ApplyContainerTypeToInventoryBlock = false;
+			ContainerTypeBlockNames = new List<string>();
+			ContainerTypeSubtypeIds = new List<string>();
+
+			DebugMessage = "";
+
+			ApplyLcdChanges = false;
+			LcdTextTemplateFile = "";
+			LcdBlockNames = new List<string>();
+			LcdTemplateIndexes = new List<int>();
 
 			ProfileSubtypeId = "";
 
@@ -695,6 +754,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"SetSandboxBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansFalse) },
 				{"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
 				{"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
+				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) }, //CPT
+				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) }, //CPT
 				{"ResetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetSandboxCounters) },
 				{"ChangeAttackerReputation", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackerReputation) },
 				{"ChangeAttackerReputationFaction", (s, o) => TagParse.TagStringListCheck(s, ref ChangeAttackerReputationFaction) },
@@ -794,6 +855,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ToggleBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref ToggleBlocksOfType) },
 				{"BlockTypesToToggle", (s, o) => TagParse.TagMyDefIdCheck(s, ref BlockTypesToToggle) },
 				{"BlockTypeToggles", (s, o) => TagParse.TagSwitchEnumCheck(s, ref BlockTypeToggles) },
+				{"ClearAllWaypoints", (s, o) => TagParse.TagBoolCheck(s, ref ClearAllWaypoints) },
+				{"AddWaypoints", (s, o) => TagParse.TagBoolCheck(s, ref AddWaypoints) },
+				{"WaypointsToAdd", (s, o) => TagParse.TagStringListCheck(s, ref WaypointsToAdd) },
 				{"CancelWaitingAtWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref CancelWaitingAtWaypoint) },
 				{"SwitchToNextWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToNextWaypoint) },
 				{"HeavyYaw", (s, o) => TagParse.TagBoolCheck(s, ref HeavyYaw) },
@@ -811,10 +875,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ZoneRadiusChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneRadiusChangeType) },
 				{"ZoneRadiusChangeAmount", (s, o) => TagParse.TagDoubleCheck(s, ref ZoneRadiusChangeAmount) },
 				{"ZoneCustomCounterChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChange) },
+				{"ZoneCustomCounterChangeUseKPL", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChangeUseKPL) },
 				{"ZoneCustomCounterChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneCustomCounterChangeType) },
 				{"ZoneCustomCounterChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomCounterChangeName) },
 				{"ZoneCustomCounterChangeAmount", (s, o) => TagParse.TagLongCheck(s, ref ZoneCustomCounterChangeAmount) },
 				{"ZoneCustomBoolChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChange) },
+				{"ZoneCustomBoolChangeUseKPL", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChangeUseKPL) },
 				{"ZoneCustomBoolChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomBoolChangeName) },
 				{"ZoneCustomBoolChangeValue", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeValue) },
 				{"AddBotsToGrid", (s, o) => TagParse.TagBoolCheck(s, ref AddBotsToGrid) },
@@ -843,6 +909,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"TurretSubtypesForTargetChange", (s, o) => TagParse.TagStringListCheck(s, ref TurretSubtypesForTargetChange) },
 				{"JumpToTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpToTarget) },
 				{"JumpToJumpedEntity", (s, o) => TagParse.TagBoolCheck(s, ref JumpToJumpedEntity) },
+				{"JumpedEntityMustBeTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpedEntityMustBeTarget) },
+				{"JumpToWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref JumpToWaypoint) },
+				{"JumpWaypoint", (s, o) => TagParse.TagStringCheck(s, ref JumpWaypoint) },
 				{"SetGridCleanupExempt", (s, o) => TagParse.TagBoolCheck(s, ref SetGridCleanupExempt) },
 				{"GridCleanupExemptDuration", (s, o) => TagParse.TagIntCheck(s, ref GridCleanupExemptDuration) },
 				{"PlaySoundAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref PlaySoundAtPosition) },
@@ -855,7 +924,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"PlanetWaypointProfile", (s, o) => TagParse.TagStringCheck(s, ref PlanetWaypointProfile) },
 				{"TemporaryPlanet", (s, o) => TagParse.TagBoolCheck(s, ref TemporaryPlanet) },
 				{"PlanetTimeLimit", (s, o) => TagParse.TagIntCheck(s, ref PlanetTimeLimit) },
-				//SetGridCleanupExempt
+
+				{"AddCustomDataToBlocks", (s, o) => TagParse.TagBoolCheck(s, ref AddCustomDataToBlocks) },
+				{"CustomDataBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref CustomDataBlockNames) },
+				{"CustomDataFiles", (s, o) => TagParse.TagTextTemplateCheck(s, ref CustomDataFiles) },
+
+				{"ApplyContainerTypeToInventoryBlock", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContainerTypeToInventoryBlock) },
+				{"ContainerTypeBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeBlockNames) },
+				{"ContainerTypeSubtypeIds", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeSubtypeIds) },
+
+				{"DebugMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugMessage) },
+
+				{"ApplyLcdChanges", (s, o) => TagParse.TagBoolCheck(s, ref ApplyLcdChanges) },
+				{"LcdTextTemplateFile", (s, o) => TagParse.TagStringCheck(s, ref LcdTextTemplateFile) },
+				{"LcdBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref LcdBlockNames) },
+				{"LcdTemplateIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref LcdTemplateIndexes) },
 
 			};
 

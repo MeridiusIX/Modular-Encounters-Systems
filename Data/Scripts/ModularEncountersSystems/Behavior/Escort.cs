@@ -1,9 +1,12 @@
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Helpers;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
 using System.Text;
+using VRage.Game.Entity;
+using VRageMath;
 
 namespace ModularEncountersSystems.Behavior {
 
@@ -17,11 +20,13 @@ namespace ModularEncountersSystems.Behavior {
 		private NewAutoPilotMode WaterNav { get { return (_behavior.AutoPilot.Data.UseWaterPatrolMode ? NewAutoPilotMode.WaterNavigation : NewAutoPilotMode.None); } }
 
 		private DateTime _waitForParent;
+		private MyShipController _controller;
 
 		public Escort(IBehavior behavior){
 
 			_subClass = BehaviorSubclass.Escort;
 			_behavior = behavior;
+			_controller = behavior.RemoteControl as MyShipController;
 
 		}
 
@@ -76,6 +81,20 @@ namespace ModularEncountersSystems.Behavior {
 					_waitForParent = MyAPIGateway.Session.GameDateTime;
 
 				} else {
+
+					if (_behavior.AutoPilot.Data.EscortUsesRelativeDampening) {
+
+						if (_controller.RelativeDampeningEntity == null) {
+
+							if (Vector3D.Distance(_behavior.RemoteControl.GetPosition(), _behavior.BehaviorSettings.ParentEscort.ParentBehavior.RemoteControl.GetPosition()) <= 250) {
+
+								_controller.RelativeDampeningEntity = _behavior.BehaviorSettings.ParentEscort.ParentBehavior.RemoteControl.SlimBlock.CubeGrid as MyEntity;
+
+							}
+						
+						}
+					
+					}
 
 					if (_behavior.AutoPilot.DistanceToInitialWaypoint < _behavior.AutoPilot.Data.EscortSpeedMatchMaxDistance) {
 

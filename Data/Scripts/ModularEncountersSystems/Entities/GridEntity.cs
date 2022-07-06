@@ -5,6 +5,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
@@ -37,15 +38,23 @@ namespace ModularEncountersSystems.Entities {
 		public IMyCubeGrid CubeGrid;
 		public bool HasPhysics;
 
+		public IMyGridGroupData GridGroupData;
+		public bool RefreshLinkedGrids;
 		public List<GridEntity> LinkedGrids;
+		public List<IMyCubeGrid> PhysicalLinkedGrids;
+
+		public double LastHealthReading;
+		public bool HealthUpdated;
 
 		public List<BlockEntity> AllTerminalBlocks;
 		public List<BlockEntity> Antennas;
 		public List<BlockEntity> Beacons;
+		public List<BlockEntity> Buttons;
 		public List<BlockEntity> Containers;
 		public List<BlockEntity> Controllers;
 		public List<BlockEntity> Gravity;
 		public List<BlockEntity> Guns;
+		public List<BlockEntity> Gyros;
 		public List<BlockEntity> Inhibitors;
 		public List<BlockEntity> JumpDrives;
 		public List<BlockEntity> Mechanical;
@@ -92,15 +101,20 @@ namespace ModularEncountersSystems.Entities {
 			Type = EntityType.Grid;
 			CubeGrid = entity as IMyCubeGrid;
 
+			GridGroupData = MyAPIGateway.GridGroups.GetGridGroup(GridLinkTypeEnum.Physical, CubeGrid);
+			RefreshLinkedGrids = true;
 			LinkedGrids = new List<GridEntity>();
+			PhysicalLinkedGrids = new List<IMyCubeGrid>();
 
 			AllTerminalBlocks = new List<BlockEntity>();
 			Antennas = new List<BlockEntity>();
 			Beacons = new List<BlockEntity>();
+			Buttons = new List<BlockEntity>();
 			Containers = new List<BlockEntity>();
 			Controllers = new List<BlockEntity>();
 			Gravity = new List<BlockEntity>();
 			Guns = new List<BlockEntity>();
+			Gyros = new List<BlockEntity>();
 			Inhibitors = new List<BlockEntity>();
 			JumpDrives = new List<BlockEntity>();
 			Mechanical = new List<BlockEntity>();
@@ -123,10 +137,12 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.All, AllTerminalBlocks);
 			BlockListReference.Add(BlockTypeEnum.Antennas, Antennas);
 			BlockListReference.Add(BlockTypeEnum.Beacons, Beacons);
+			BlockListReference.Add(BlockTypeEnum.Buttons, Buttons);
 			BlockListReference.Add(BlockTypeEnum.Containers, Containers);
 			BlockListReference.Add(BlockTypeEnum.Controllers, Controllers);
 			BlockListReference.Add(BlockTypeEnum.Gravity, Gravity);
 			BlockListReference.Add(BlockTypeEnum.Guns, Guns);
+			BlockListReference.Add(BlockTypeEnum.Gyros, Gyros);
 			BlockListReference.Add(BlockTypeEnum.Inhibitors, Inhibitors);
 			BlockListReference.Add(BlockTypeEnum.JumpDrives, JumpDrives);
 			BlockListReference.Add(BlockTypeEnum.Mechanical, Mechanical);
@@ -155,6 +171,7 @@ namespace ModularEncountersSystems.Entities {
 			} else {
 
 				DebugData.Append(" - Grid Has Physics On Entity Load.").AppendLine();
+				EntityEvaluator.GetAttachedGrids(this);
 				HasPhysics = true;
 			
 			}
@@ -170,10 +187,19 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+			HealthUpdated = true;
 			CubeGrid.OnBlockAdded += NewBlockAdded;
 			CubeGrid.OnBlockRemoved += BlockRemoved;
 			CubeGrid.OnGridSplit += GridSplit;
 			CubeGrid.OnBlockOwnershipChanged += OwnershipChange;
+			DamageHelper.DamageRelay += DamageHandler;
+
+			if (GridGroupData != null) {
+
+				GridGroupData.OnGridAdded += OnSubgridChange;
+				GridGroupData.OnGridRemoved += OnSubgridChange;
+
+			}
 
 			CheckForNpcData();
 
@@ -262,10 +288,19 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public void DamageHandler(object hit, MyDamageInformation info) {
+
+			if ((hit as IMySlimBlock)?.CubeGrid == CubeGrid)
+				HealthUpdated = true;
+		
+		}
+
 		private void NewBlockAdded(IMySlimBlock block) {
 
 			if (!AllBlocks.Contains(block))
 				AllBlocks.Add(block);
+
+			HealthUpdated = true;
 
 			if (!GridManager.ProcessBlock(block))
 				return;
@@ -297,6 +332,16 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+			//Button
+			if (terminalBlock as IMyButtonPanel != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Buttons);
+
+				if (!EventWatcher.ButtonPanels.ContainsKey(terminalBlock.EntityId))
+					EventWatcher.ButtonPanels.Add(terminalBlock.EntityId, terminalBlock as IMyButtonPanel);
+
+			}
+
 			//Container
 			if (terminalBlock as IMyCargoContainer != null) {
 
@@ -316,6 +361,13 @@ namespace ModularEncountersSystems.Entities {
 			if (terminalBlock as IMyGravityGeneratorBase != null || terminalBlock as IMyVirtualMass != null) {
 
 				assignedBlock = AddBlock(terminalBlock, Gravity);
+
+			}
+
+			//Gyros
+			if (terminalBlock as IMyGyro != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Gyros);
 
 			}
 
@@ -458,6 +510,7 @@ namespace ModularEncountersSystems.Entities {
 		private void BlockRemoved(IMySlimBlock block) {
 
 			AllBlocks.Remove(block);
+			HealthUpdated = true;
 		
 		}
 
@@ -504,6 +557,26 @@ namespace ModularEncountersSystems.Entities {
 
 			base.CloseEntity(entity);
 			Unload();
+
+		}
+
+		public void GetAllFatBlocks(List<IMySlimBlock> blocks, bool clearList = false) {
+
+			if (clearList)
+				blocks.Clear();
+
+			for (int i = LinkedGrids.Count - 1; i >= 0; i--) {
+
+				var blockList = LinkedGrids[i].AllBlocks;
+
+				for (int j = blockList.Count - 1; j >= 0; j--) {
+
+					if(blockList[j].FatBlock != null)
+						blocks.Add(blockList[j]);
+
+				}
+
+			}
 
 		}
 
@@ -629,15 +702,19 @@ namespace ModularEncountersSystems.Entities {
 			
 			}
 
+			HealthUpdated = true;
+
 			try {
 
 				CleanBlockList(AllTerminalBlocks);
 				CleanBlockList(Antennas);
 				CleanBlockList(Beacons);
+				CleanBlockList(Buttons);
 				CleanBlockList(Containers);
 				CleanBlockList(Controllers);
 				CleanBlockList(Gravity);
 				CleanBlockList(Guns);
+				CleanBlockList(Gyros);
 				CleanBlockList(Inhibitors);
 				CleanBlockList(JumpDrives);
 				CleanBlockList(Mechanical);
@@ -659,6 +736,46 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+		}
+
+		public bool LineIntersection(LineD line, RayD ray, ref Vector3D hitPosition) {
+
+			if (!ActiveEntity())
+				return false;
+
+			double minDist = 0;
+			double maxDist = 0;
+			bool boxCheckResult = CubeGrid.PositionComp.WorldAABB.Intersect(ref ray, out minDist, out maxDist);
+
+			Vector3D startBox = boxCheckResult ? (minDist - 5) * line.Direction + line.From : line.From;
+			Vector3D endBox = boxCheckResult ? (maxDist + 5) * line.Direction + line.From : line.To;
+
+			var blockPos = CubeGrid.RayCastBlocks(startBox, endBox);
+
+			if (!blockPos.HasValue) {
+
+				return false;
+
+			}
+
+			IMySlimBlock slimBlock = CubeGrid.GetCubeBlock(blockPos.Value);
+
+			if (slimBlock == null) {
+
+				return false;
+
+			}
+
+			slimBlock.ComputeWorldCenter(out hitPosition);
+			return true;
+
+		}
+
+		public void OnSubgridChange(IMyGridGroupData dataA, IMyCubeGrid grid, IMyGridGroupData dataB) {
+
+			//MyVisualScriptLogicProvider.ShowNotificationToAll("Subgrid Change", 4000);
+			RefreshLinkedGrids = true;
+		
 		}
 
 		public void OwnershipChange(IMyCubeGrid cubeGrid) {
@@ -702,6 +819,9 @@ namespace ModularEncountersSystems.Entities {
 
 			HasPhysics = entity.Physics != null ? true : false;
 
+			if(HasPhysics)
+				EntityEvaluator.GetAttachedGrids(this);
+
 		}
 
 		public BlockEntity RandomTerminalBlock() {
@@ -717,8 +837,24 @@ namespace ModularEncountersSystems.Entities {
 
 		public void RefreshSubGrids() {
 
-			LinkedGrids = EntityEvaluator.GetAttachedGrids(CubeGrid);
+			if (LinkedGrids == null) {
 
+				SpawnLogger.Write("Warning: LinkedGrids collection null", SpawnerDebugEnum.Error, true);
+				return;
+			
+			}
+
+			for (int i = LinkedGrids.Count - 1; i >= 0; i--) {
+
+				if (LinkedGrids[i] != null && LinkedGrids[i].RefreshLinkedGrids) {
+
+					EntityEvaluator.GetAttachedGrids(this);
+					break;
+
+				}
+				
+			}
+			
 		}
 
 		public void SetAutomatedWeaponRanges(bool useMax = false) {
@@ -773,6 +909,15 @@ namespace ModularEncountersSystems.Entities {
 			CubeGrid.OnGridSplit -= GridSplit;
 			CubeGrid.OnBlockAdded -= NewBlockAdded;
 			CubeGrid.OnBlockRemoved -= BlockRemoved;
+			DamageHelper.DamageRelay -= DamageHandler;
+
+			if (GridGroupData != null) {
+
+				GridGroupData.OnGridAdded -= OnSubgridChange;
+				GridGroupData.OnGridRemoved -= OnSubgridChange;
+
+			}
+			
 			UnloadEntities?.Invoke();
 
 		}
@@ -821,6 +966,34 @@ namespace ModularEncountersSystems.Entities {
 
 			return result;
 		
+		}
+
+		public double GetCurrentHealth() {
+
+			double result = 0;
+
+			if (!HealthUpdated && LastHealthReading > 0)
+				return LastHealthReading;
+
+			lock (AllBlocks) {
+
+				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+					var block = AllBlocks[i];
+
+					if (block == null)
+						continue;
+
+					result += Math.Round(block.BuildIntegrity - block.CurrentDamage, 3);
+
+				}
+
+			}
+
+			LastHealthReading = result;
+			HealthUpdated = false;
+			return result;
+
 		}
 
 		public List<long> GetOwners(bool onlyGetCurrentEntity = false, bool includeMinorityOwners = false) {

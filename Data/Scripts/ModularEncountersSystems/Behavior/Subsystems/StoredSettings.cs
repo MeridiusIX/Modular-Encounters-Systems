@@ -42,7 +42,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public DateTime LastDamageTakenTime;
 
 		[ProtoMember(10)]
-		public string CustomTargetProfile;
+		public string CurrentTargetProfile;
 
 		[ProtoMember(11)]
 		public List<TriggerProfile> CompromisedTriggers;
@@ -119,6 +119,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		[ProtoMember(35)]
 		public string WeaponsSystemProfile;
 
+		[ProtoMember(36)]
+		public string OverrideTargetProfile;
+
+		[ProtoMember(37)]
+		public short InitialWeaponCount;
+
+		[ProtoMember(38)]
+		public short InitialTurretCount;
+
+		[ProtoMember(39)]
+		public short InitialGunCount;
+
+		[ProtoMember(40)]
+		public double InitialGridIntegrity; //Block Health = BuildIntegrity - CurrentDamage
+
 		[ProtoIgnore]
 		public EscortProfile ParentEscort { get {
 
@@ -152,7 +167,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			TotalDamageAccumulated = 0;
 			LastDamageTakenTime = MyAPIGateway.Session.GameDateTime;
 
-			CustomTargetProfile = "";
+			CurrentTargetProfile = "";
+			OverrideTargetProfile = "";
 
 			RotationDirection = Direction.Forward;
 			BlockOrientation = new SerializableBlockOrientation(Base6Directions.Direction.Forward, Base6Directions.Direction.Up);
@@ -233,7 +249,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			//TargetProfile
 			if (preserveTargetProfile) {
 
-				this.CustomTargetProfile = oldSettings.CustomTargetProfile;
+				this.CurrentTargetProfile = oldSettings.CurrentTargetProfile;
 				this.CurrentTargetEntityId = oldSettings.CurrentTargetEntityId;
 
 			}

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
+using VRageMath;
 
 namespace ModularEncountersSystems.Entities {
 	public static class GridManager {
@@ -16,6 +17,13 @@ namespace ModularEncountersSystems.Entities {
 
 		public static List<MyDefinitionId> AllowedBlocks = new List<MyDefinitionId>();
 		public static List<MyDefinitionId> RestrictedBlocks = new List<MyDefinitionId>();
+
+		public static void LoadData() {
+
+			MyAPIGateway.GridGroups.OnGridGroupCreated += OnGridGroupChanged;
+			MyAPIGateway.GridGroups.OnGridGroupDestroyed += OnGridGroupChanged;
+		
+		}
 
 		public static void GetBlocksFromGrid<T>(IMyCubeGrid grid, List<IMySlimBlock> blocks, bool getAttachedGrids = false) where T : class {
 
@@ -79,6 +87,26 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public static GridEntity GetClosestGridInDirection(MatrixD cameraMatrix, double distance) {
+
+			var line = new LineD(cameraMatrix.Translation, cameraMatrix.Forward * distance + cameraMatrix.Translation);
+
+			for (int i = Grids.Count - 1; i >= 0; i--) {
+
+				var grid = GetSafeGridFromIndex(i);
+
+				if (grid == null || !grid.ActiveEntity())
+					continue;
+
+				if (grid.CubeGrid.WorldAABB.Contains(cameraMatrix.Translation) == ContainmentType.Contains || grid.CubeGrid.WorldAABB.Intersects(ref line))
+					return grid;
+
+			}
+
+			return null;
+
+		}
+
 		public static GridEntity GetGridEntity(IMyCubeGrid cubeGrid) {
 
 			for (int i = Grids.Count - 1; i >= 0; i--) {
@@ -113,9 +141,10 @@ namespace ModularEncountersSystems.Entities {
 
 			try {
 
-				return Grids[index];
+				if(index < Grids.Count)
+					return Grids[index];
 			
-			} catch (Exception e) {
+			} catch (Exception) {
 			
 			
 			
@@ -123,6 +152,29 @@ namespace ModularEncountersSystems.Entities {
 
 			return null;
 		
+		}
+
+		public static GridEntity GetSafeGridFromIndex(int index, List<GridEntity> list) {
+
+			try {
+
+				if (index < list.Count)
+					return list[index];
+
+			} catch (Exception) {
+
+
+
+			}
+
+			return null;
+
+		}
+
+		public static void OnGridGroupChanged(IMyGridGroupData data) {
+
+
+
 		}
 
 		public static bool ProcessBlock(IMySlimBlock block) {
@@ -247,6 +299,21 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 		
+		}
+
+		public static void UnloadData() {
+
+			try {
+
+				MyAPIGateway.GridGroups.OnGridGroupCreated -= OnGridGroupChanged;
+				MyAPIGateway.GridGroups.OnGridGroupDestroyed -= OnGridGroupChanged;
+
+			} catch (Exception) {
+			
+				
+			
+			}
+			
 		}
 
 	}

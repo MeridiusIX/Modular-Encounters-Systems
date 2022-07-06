@@ -12,15 +12,18 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public string ProfileSubtypeId;
 
 		public List<string> Prefabs;
+
+		public List<string> CustomTags;
 		public List<ManipulationProfile> ManipulationProfiles;
 		public List<string> ManipulationGroups;
-		
 
 		public PrefabDataProfile() {
 
 			ProfileSubtypeId = "";
 
 			Prefabs = new List<string>();
+
+			CustomTags = new List<string>();
 			ManipulationProfiles = new List<ManipulationProfile>();
 			ManipulationGroups = new List<string>();
 
@@ -39,6 +42,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.Contains("[Prefabs:")) {
 
 					TagParse.TagStringListCheck(tag, ref Prefabs);
+					continue;
+
+				}
+
+				//CustomTags
+				if (tag.Contains("[CustomTags:")) {
+
+					TagParse.TagStringListCheck(tag, ref CustomTags);
 					continue;
 
 				}

@@ -9,6 +9,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string ProfileSubtypeId;
 		public string CommandCode;
 
+		public int CommandDelayTicks;
+
 		public bool SingleRecipient;
 		public bool ReturnToSender;
 		public bool IgnoreAntennaRequirement;
@@ -34,6 +36,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ProfileSubtypeId = "";
 			CommandCode = "";
+
+			CommandDelayTicks = 0;
 
 			SingleRecipient = false;
 			ReturnToSender = false;
@@ -70,6 +74,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[CommandCode:") == true) {
 
 						TagParse.TagStringCheck(tag, ref CommandCode);
+
+					}
+
+					//CommandDelayTicks
+					if (tag.Contains("[CommandDelayTicks:") == true) {
+
+						TagParse.TagIntCheck(tag, ref CommandDelayTicks);
 
 					}
 

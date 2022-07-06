@@ -36,6 +36,9 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			if (!_firstRun) {
 
+				if (!_physicsActive)
+					return;
+
 				_firstRun = true;
 
 				if (_gasTank == null) {

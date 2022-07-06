@@ -19,6 +19,7 @@ namespace ModularEncountersSystems.Entities {
 		public bool Online;
 		public bool IsParentEntityGrid;
 		public bool IsParentEntitySeat;
+		public bool RemoteControlling;
 
 		public bool PlayerEntityChanged;
 
@@ -26,6 +27,7 @@ namespace ModularEncountersSystems.Entities {
 		public ConsumableItemTimer JetpackInhibitorNullifier;
 		public ConsumableItemTimer DrillInhibitorNullifier;
 		public ConsumableItemTimer PlayerInhibitorNullifier;
+		public ConsumableItemTimer EnergyInhibitorNullifier;
 
 		public List<GridEntity> LinkedGrids;
 
@@ -102,10 +104,25 @@ namespace ModularEncountersSystems.Entities {
 					PlayerInhibitorNullifier = new ConsumableItemTimer(30, Player.IdentityId, "Player Inhibitor Nullifier");
 					TaskProcessor.Tasks.Add(PlayerInhibitorNullifier);
 
-
 				} else {
 
 					PlayerInhibitorNullifier.ResetTimer(30);
+
+				}
+
+			}
+
+			if (id.SubtypeName == "EnergyInhibitorBlocker") {
+
+				if (EnergyInhibitorNullifier == null || !EnergyInhibitorNullifier.EffectActive()) {
+
+					EnergyInhibitorNullifier = new ConsumableItemTimer(30, Player.IdentityId, "Energy Inhibitor Nullifier", true);
+					TaskProcessor.Tasks.Add(EnergyInhibitorNullifier);
+
+
+				} else {
+
+					EnergyInhibitorNullifier.ResetTimer(30);
 
 				}
 
@@ -172,6 +189,7 @@ namespace ModularEncountersSystems.Entities {
 			if (id != Player.IdentityId)
 				return;
 
+			RemoteControlling = cont;
 			PlayerEntityChanged = true;
 
 		}
@@ -382,6 +400,12 @@ namespace ModularEncountersSystems.Entities {
 
 			return faction.Tag;
 
+		}
+
+		public double GetCurrentHealth() {
+
+			return MyVisualScriptLogicProvider.GetPlayersHealth(Player?.IdentityId ?? 0);
+		
 		}
 
 		public override IMyEntity GetEntity() {

@@ -81,7 +81,8 @@
         <TypeId>TurretControlBlock</TypeId>
         <SubtypeId>MES-NpcSmallTurretControlBlock</SubtypeId>
       </Id>
-      <Public>true</Public>
+      <Public>false</Public>
+      <GuiVisible>false</GuiVisible>
       <DisplayName>Npc Turret Control Block</DisplayName>
       <Icon>Textures\GUI\Icons\Cubes\TurretControlBlockSmall.dds</Icon>
       <Description>Description_TurretControlBlock</Description>

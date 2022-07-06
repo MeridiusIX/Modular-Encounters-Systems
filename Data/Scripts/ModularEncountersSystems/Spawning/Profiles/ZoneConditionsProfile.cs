@@ -11,6 +11,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public string ZoneName;
 
+		public bool UseKnownPlayerLocation;
+
 		public double MinDistanceFromZoneCenter;
 		public double MaxDistanceFromZoneCenter;
 
@@ -66,6 +68,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ZoneName:") == true) {
 
 					TagParse.TagStringCheck(tag, ref this.ZoneName);
+
+				}
+
+				//UseKnownPlayerLocation
+				if (tag.StartsWith("[UseKnownPlayerLocation:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseKnownPlayerLocation);
 
 				}
 

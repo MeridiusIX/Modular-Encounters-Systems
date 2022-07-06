@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using VRage.Game.Entity;
 using VRage.ModAPI;
+using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
 	public class JetpackInhibitor : BaseBlockLogic, IBlockLogic {
@@ -49,14 +50,14 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			if (_antenna != null) {
 
-				_antenna.Radius = 1000;
+				_antenna.Radius = 800;
 				_antenna.CustomName = "[Jetpack Inhibitor Field]";
 				_antenna.CustomNameChanged += NameChange;
 
 			} else {
 
-				_antennaRange = 1000;
-				_dampenerRange = 1000;
+				_antennaRange = 800;
+				_dampenerRange = 800;
 				_disableRange = _dampenerRange / 3;
 
 
@@ -120,14 +121,31 @@ namespace ModularEncountersSystems.BlockLogic {
 			//Check Player Distances and Status
 			foreach (var player in PlayerManager.Players) {
 
-				if (!player.ActiveEntity() || player.IsParentEntitySeat || (player.JetpackInhibitorNullifier != null && player.JetpackInhibitorNullifier.EffectActive())) {
+				if (!player.ActiveEntity() || (player.JetpackInhibitorNullifier != null && player.JetpackInhibitorNullifier.EffectActive())) {
 
 					RemovePlayer(player);
 					continue;
 
 				}
 
-				var distance = player.Distance(Entity.GetPosition());
+				var characterPos = player.GetCharacterPosition();
+
+				if (player?.Player?.Character != null && player.IsParentEntityGrid) {
+
+					if (player.Player.Character.CurrentMovementState.HasFlag(VRage.Game.MyCharacterMovementEnum.Sitting)) {
+
+						RemovePlayer(player);
+						continue;
+
+					}
+
+				} else if (characterPos == Vector3D.Zero) {
+
+					characterPos = player.GetPosition();
+
+				}
+
+				var distance = Vector3D.Distance(Entity.GetPosition(), characterPos);
 
 				if (distance > _dampenerRange) {
 

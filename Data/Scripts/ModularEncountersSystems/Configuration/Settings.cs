@@ -271,6 +271,30 @@ namespace ModularEncountersSystems.Configuration {
 
 		}
 
+		public static PlanetSpawnFilter GetPlanetFilterForType(SpawningType type, long entityId) {
+
+			if (type == SpawningType.SpaceCargoShip)
+				return SpaceCargoShips.GetPlanetSpawnFilter(entityId);
+
+			if (type == SpawningType.RandomEncounter)
+				return RandomEncounters.GetPlanetSpawnFilter(entityId);
+
+			if (type == SpawningType.PlanetaryCargoShip)
+				return PlanetaryCargoShips.GetPlanetSpawnFilter(entityId);
+
+			if (type == SpawningType.PlanetaryInstallation)
+				return PlanetaryInstallations.GetPlanetSpawnFilter(entityId);
+
+			if (type == SpawningType.BossEncounter)
+				return BossEncounters.GetPlanetSpawnFilter(entityId);
+
+			if (type == SpawningType.DroneEncounter)
+				return DroneEncounters.GetPlanetSpawnFilter(entityId);
+
+			return null;
+
+		}
+
 		public static string[] GetSpawnTypeBlacklist(SpawningType type) {
 
 			if (type == SpawningType.SpaceCargoShip)
@@ -343,6 +367,30 @@ namespace ModularEncountersSystems.Configuration {
 
 			if (type == SpawningType.OtherNPC || type == SpawningType.None)
 				return OtherNPCs;
+
+			return null;
+
+		}
+
+		public static ConfigBase GetConfig(string type) {
+
+			if (type == "SpaceCargoShips")
+				return SpaceCargoShips;
+
+			if (type == "RandomEncounters")
+				return RandomEncounters;
+
+			if (type == "PlanetaryCargoShips")
+				return PlanetaryCargoShips;
+
+			if (type == "PlanetaryInstallations")
+				return PlanetaryInstallations;
+
+			if (type == "BossEncounters")
+				return BossEncounters;
+
+			if (type == "DroneEncounters")
+				return DroneEncounters;
 
 			return null;
 

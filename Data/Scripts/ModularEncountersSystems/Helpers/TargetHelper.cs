@@ -303,38 +303,24 @@ namespace ModularEncountersSystems.Helpers {
 		}
 
 		//GetAllBlocks
-		public static List<IMySlimBlock> GetAllBlocks(IMyCubeGrid cubeGrid) {
-
-			List<IMySlimBlock> totalList = new List<IMySlimBlock>();
-			//cubeGrid.GetBlocks(totalList);
-			var gridGroup = MyAPIGateway.GridGroups.GetGroup(cubeGrid, GridLinkTypeEnum.Physical);
-
-			foreach(var grid in gridGroup) {
-
-				List<IMySlimBlock> blockList = new List<IMySlimBlock>();
-				grid.GetBlocks(blockList);
-				//blockList = new List<IMySlimBlock>(blockList.Except(totalList).ToList());
-				totalList = new List<IMySlimBlock>(blockList.Concat(totalList).ToList());
-
-			}
-
-			return totalList;
-
-		}
+		
 
 		public static PlayerEntity GetClosestPlayerWithReputation(Vector3D coords, long factionId, TriggerProfile control) {
 
 			PlayerEntity closestPlayer = null;
 			double closestPlayerDistance = 0;
 
+			if (control == null)
+				return null;
+
 			foreach(var playerEnt in PlayerManager.Players) {
 
-				if (!playerEnt.ActiveEntity())
+				if (playerEnt == null || !playerEnt.ActiveEntity())
 					continue;
 
 				var player = playerEnt.Player;
 
-				if(player.Controller.ControlledEntity.Entity == null || player.IsBot == true) {
+				if(player?.Controller?.ControlledEntity?.Entity == null || player.IsBot == true) {
 
 					continue;
 
@@ -358,8 +344,6 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 
 				}
-
-				
 
 				if(closestPlayer == null) {
 

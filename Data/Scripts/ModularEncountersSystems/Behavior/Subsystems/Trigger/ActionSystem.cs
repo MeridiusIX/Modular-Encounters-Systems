@@ -65,6 +65,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			BehaviorLogger.Write(actions.ProfileSubtypeId + ": Performing Eligible Actions", BehaviorDebugEnum.Action);
 
+			//Debug Message
+			if (!string.IsNullOrWhiteSpace(actions.DebugMessage)) {
+
+				MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);
+			
+			}
+
 			//ChatBroadcast
 			if (actions.UseChatBroadcast == true) {
 
@@ -117,11 +124,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Changing AutoPilot Speed To: " + actions.NewAutopilotSpeed.ToString(), BehaviorDebugEnum.Action);
 				_autopilot.State.MaxSpeedOverride = actions.NewAutopilotSpeed;
-				var blockList = TargetHelper.GetAllBlocks(RemoteControl.SlimBlock.CubeGrid);
+				var blockList = BlockCollectionHelper.GetGridControllers(RemoteControl.SlimBlock.CubeGrid);
 
-				foreach (var block in blockList.Where(x => x.FatBlock != null)) {
+				foreach (var block in blockList) {
 
-					var tBlock = block.FatBlock as IMyRemoteControl;
+					var tBlock = block as IMyRemoteControl;
 
 					if (tBlock != null) {
 
@@ -171,28 +178,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.SelfDestruct == true) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting SelfDestruct", BehaviorDebugEnum.Action);
-				var blockList = TargetHelper.GetAllBlocks(RemoteControl.SlimBlock.CubeGrid);
+				var blockList = BlockCollectionHelper.GetBlocksOfType<IMyWarhead>(RemoteControl.SlimBlock.CubeGrid);
 				int totalWarheads = 0;
 
-				foreach (var block in blockList.Where(x => x.FatBlock != null)) {
+				foreach (var tblock in blockList) {
 
-					var tBlock = block.FatBlock as IMyWarhead;
+					var block = tblock as IMyWarhead;
 
-					if (tBlock != null) {
+					if (block != null) {
 
 						if (!actions.StaggerWarheadDetonation) {
 
-							tBlock.IsArmed = true;
-							tBlock.DetonationTime = 0 + actions.SelfDestructTimerPadding;
-							tBlock.Detonate();
+							block.IsArmed = true;
+							block.DetonationTime = 0 + actions.SelfDestructTimerPadding;
+							block.Detonate();
 							totalWarheads++;
 
 						} else {
 
 							totalWarheads++;
-							tBlock.IsArmed = true;
-							tBlock.DetonationTime = (totalWarheads * actions.SelfDestructTimeBetweenBlasts) + actions.SelfDestructTimerPadding;
-							tBlock.StartCountdown();
+							block.IsArmed = true;
+							block.DetonationTime = (totalWarheads * actions.SelfDestructTimeBetweenBlasts) + actions.SelfDestructTimerPadding;
+							block.StartCountdown();
 
 						}
 
@@ -235,6 +242,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Termination Of Behavior", BehaviorDebugEnum.Action);
 				_autopilot.ActivateAutoPilot(Vector3D.Zero, NewAutoPilotMode.None);
 				_behavior.BehaviorTerminated = true;
+				if (_behavior.CurrentGrid?.Npc != null)
+					_behavior.CurrentGrid.Npc.BehaviorTerminationReason = "Behavior Terminated By Trigger/Action";
 
 			}
 
@@ -255,7 +264,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					var newCommand = new Command();
 					newCommand.PrepareCommand(_behavior, commandProfile, actions, command, attackerEntityId, detectedEntity);
 					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Sending Command: " + newCommand.CommandCode, BehaviorDebugEnum.Action);
-					CommandHelper.CommandTrigger?.Invoke(newCommand);
+					CommandHelper.SendCommand(newCommand);
 
 				}
 			
@@ -287,7 +296,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					newCommand.CommandCode = actions.BroadcastSendCode;
 					newCommand.RemoteControl = RemoteControl;
 					newCommand.Radius = sendRadius;
-					CommandHelper.CommandTrigger?.Invoke(newCommand);
+					CommandHelper.SendCommand(newCommand);
 
 				}
 
@@ -320,7 +329,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					newCommand.RemoteControl = RemoteControl;
 					newCommand.Radius = sendRadius;
 					newCommand.TargetEntityId = detectedEntity;
-					CommandHelper.CommandTrigger?.Invoke(newCommand);
+					CommandHelper.SendCommand(newCommand);
 
 				}
 
@@ -460,6 +469,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						}
 
+
+					}
+
+				}
+
+			}
+
+			//ClearWaypoints
+			if (actions.ClearAllWaypoints) {
+
+				foreach (var waypoint in _behavior.AutoPilot.State.CargoShipWaypoints) {
+
+					waypoint.SetValid(false);
+				
+				}
+
+			}
+
+			//AddWaypoints
+			if (actions.AddWaypoints) {
+
+				foreach (var waypointName in actions.WaypointsToAdd) {
+
+					var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, waypointName);
+
+					if (waypoint != null && waypoint.Valid) {
+
+						_behavior.AutoPilot.State.CargoShipWaypoints.Add(waypoint);
 
 					}
 
@@ -620,7 +657,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.ChangeAttackerReputation == true && detectedEntity != 0) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Reputation Change for Attacker", BehaviorDebugEnum.Action);
-				FactionHelper.ChangeDamageOwnerReputation(actions.ChangeAttackerReputationFaction, detectedEntity, actions.ChangeAttackerReputationAmount, actions.ReputationChangesForAllAttackPlayerFactionMembers);
+				FactionHelper.ChangeDamageOwnerReputation(RemoteControl, actions.ChangeAttackerReputationFaction, detectedEntity, actions.ChangeAttackerReputationAmount, actions.ReputationChangesForAllAttackPlayerFactionMembers);
 
 			}
 
@@ -975,11 +1012,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				//CustomBools
 				if (actions.ZoneCustomBoolChange)
-					ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+					if(actions.ZoneCustomBoolChangeUseKPL)
+						ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+					else
+						ZoneManager.ChangeKPLBools(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
 
 				//CustomCounters
 				if (actions.ZoneCustomCounterChange)
-					ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+					if(actions.ZoneCustomCounterChangeUseKPL)
+						ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+					else
+						ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
 
 			}
 
@@ -1021,57 +1064,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
 						IMyCharacter character = null;
 						
-						BotSpawner.SpawnBotRequest(botProfile.SerializedData, matrix, out character, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, 0);
-
-						if (character != null) {
-
-							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Added To Grid", 3000);
-
-							/*
-							var botIdentity = character?.ControllerInfo?.ControllingIdentityId ?? 0;
-							
-							if (botIdentity != 0) {
-
-								var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(RemoteControl.OwnerId);
-
-								if (faction != null) {
-
-									var result = MyVisualScriptLogicProvider.SetPlayersFaction(botIdentity, faction?.Tag ?? "");
-
-									if (result) {
-									
-										//NA				
-									
-									} else {
-
-										//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Adding To Grid Faction Has Failed", 3000);
-
-									}
-
-								} else {
-
-									//MyVisualScriptLogicProvider.ShowNotificationToAll("Grid Does Not Have Faction", 3000);
-
-								}
-
-							} else {
-
-								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Doesn't Have Identity Id in [character.ControllerInfo.ControllingIdentityId]", 3000);
-
-							}
-							*/
-
-							if (character.Physics != null && _behavior.CurrentGrid.CubeGrid.Physics != null) {
-
-								character.Physics.LinearVelocity = _behavior.CurrentGrid.CubeGrid.Physics.LinearVelocity + (Vector3)(RemoteControl.WorldMatrix.Down * 2);
-
-							}
-
-						} else {
-
-							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Failed", 3000);
-
-						}
+						BotSpawner.SpawnBotRequest(botProfile.SerializedData, matrix, out character, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, RemoteControl.OwnerId);
 
 					} else {
 
@@ -1268,6 +1261,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//JumpToWaypoint
+			if (actions.JumpToWaypoint && _behavior.CurrentGrid != null) {
+
+				var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, actions.JumpWaypoint);
+				var jumpResult = _behavior.Grid.JumpToCoords(waypoint.GetCoords());
+
+				if (jumpResult) {
+
+					EventWatcher.GridJumped(0, "", RemoteControl.SlimBlock.CubeGrid.EntityId);
+
+				}
+
+				BehaviorLogger.Write("Attempt Jump To Target Entity Result: " + jumpResult, BehaviorDebugEnum.Action);
+
+			}
+
 			//SpawnPlanet
 			if (actions.SpawnPlanet) {
 
@@ -1314,6 +1323,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 			
+			}
+
+			if (actions.AddCustomDataToBlocks) {
+
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Custom Data To Blocks. [Block Names: " + actions.CustomDataBlockNames.Count + "] [CustomData TextTemplates: " + actions.CustomDataFiles.Count + "]", BehaviorDebugEnum.Action);
+				_behavior.Grid.AddCustomData(actions.CustomDataBlockNames, actions.CustomDataFiles);
+			
+			}
+
+			if (actions.ApplyLcdChanges) {
+
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding LCD Content To Blocks.", BehaviorDebugEnum.Action);
+				_behavior.Grid.ApplyLcdContents(actions.LcdTextTemplateFile, actions.LcdBlockNames, actions.LcdTemplateIndexes);
+
+			}
+
+			if (actions.ApplyContainerTypeToInventoryBlock) {
+
+				_behavior.Grid.ApplyContainerTypes(actions.ContainerTypeBlockNames, actions.ContainerTypeSubtypeIds);
+
 			}
 
 			if (actions.UseCurrentPositionAsPatrolReference) {
@@ -1378,14 +1407,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			//IncreaseSandboxCounters
 			foreach (var variable in actions.IncreaseSandboxCounters)
-				SetSandboxCounter(variable, 1);
+				SetSandboxCounter(variable, Math.Abs(actions.IncreaseSandboxCountersAmount));
 
 			//DecreaseSandboxCounters
 			foreach (var variable in actions.DecreaseSandboxCounters)
-				SetSandboxCounter(variable, -1);
+				SetSandboxCounter(variable, -Math.Abs(actions.DecreaseSandboxCountersAmount));
 
 			//ResetSandboxCounters
-			foreach (var variable in actions.ResetSandboxCounters)
+			foreach (var variable in actions.ResetSandboxCounters) 
 				SetSandboxCounter(variable, 0);
 
 			//SetSandboxCounters

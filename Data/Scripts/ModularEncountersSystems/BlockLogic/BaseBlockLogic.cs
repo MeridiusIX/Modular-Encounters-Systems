@@ -32,6 +32,8 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal bool _isServer;
 		internal bool _isDedicated;
 
+		internal bool _isClientPlayer { get { return !_isServer || _isServer && !_isDedicated; } }
+
 		internal bool _useTick1;
 		internal bool _useTick10;
 		internal bool _useTick60;
@@ -86,7 +88,9 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_registeredOwnershipCheck = true;
 			Block.Block.OwnershipChanged += NpcOwnerChanged;
-		
+			NpcOwnerChanged(null);
+
+
 		}
 
 		internal virtual void PhysicsChanged(IMyEntity entity = null) {

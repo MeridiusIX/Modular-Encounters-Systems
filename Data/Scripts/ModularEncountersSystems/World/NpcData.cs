@@ -80,6 +80,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(26)] public bool ConfigureTurretControllers;
 		[ProtoMember(27)] public bool ReceivedPlayerDamage;
 		[ProtoMember(28)] public bool AnnounceSpawnInApi;
+		[ProtoMember(29)] public bool ApplyContainerTypes;
+		[ProtoMember(30)] public bool UseEnergyDisable;
+		[ProtoMember(31)] public bool OwnershipValidation;
 
 		public NewNpcAttributes() {
 
@@ -111,6 +114,9 @@ namespace ModularEncountersSystems.World {
 			ConfigureTurretControllers = false;
 			ReceivedPlayerDamage = false;
 			AnnounceSpawnInApi = false;
+			ApplyContainerTypes = false;
+			UseEnergyDisable = false;
+			OwnershipValidation = false;
 
 		}
 
@@ -195,6 +201,15 @@ namespace ModularEncountersSystems.World {
 
 			if(AnnounceSpawnInApi)
 				sb.Append("AnnounceSpawnInApi").Append(", ");
+
+			if (ApplyContainerTypes)
+				sb.Append("ApplyContainerTypes").Append(", ");
+
+			if (UseEnergyDisable)
+				sb.Append("UseEnergyDisable").Append(", ");
+
+			if (OwnershipValidation)
+				sb.Append("OwnershipValidation").Append(", ");
 
 			if (OldFlagsProcessed)
 				sb.Append("OldFlagsProcessed").Append(", ");
@@ -356,6 +371,21 @@ namespace ModularEncountersSystems.World {
 
 		[ProtoMember(30)]
 		public string ChatAuthorName;
+
+		[ProtoMember(31)]
+		public List<string> CustomTags;
+
+		[ProtoMember(32)]
+		public SpawningType OriginalSpawnType;
+
+		[ProtoMember(33)]
+		public string BehaviorTerminationReason;
+
+		[ProtoMember(34)]
+		public string OriginalOwnerFaction;
+
+		[ProtoMember(35)]
+		public long OriginalOwnerId;
 
 		//Non-Serialized Data
 
@@ -522,6 +552,11 @@ namespace ModularEncountersSystems.World {
 			Forward = Vector3D.Forward;
 			Up = Vector3D.Up;
 			UniqueSpawnIdentifier = "";
+			CustomTags = new List<string>();
+			OriginalSpawnType = SpawningType.None;
+			BehaviorTerminationReason = "";
+			OriginalOwnerFaction = "";
+			OriginalOwnerId = 0;
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -641,7 +676,7 @@ namespace ModularEncountersSystems.World {
 				SpawnLogger.Write("Start Matrix Translation:    " + Grid.CubeGrid.WorldMatrix.Translation, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Forward:        " + Grid.CubeGrid.WorldMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Up:             " + Grid.CubeGrid.WorldMatrix.Up, SpawnerDebugEnum.Spawning);
-				*/
+				
 
 				var newMatrix = MatrixD.CreateWorld(StartCoords, Forward, Up);
 				Grid.CubeGrid.IsStatic = false;
@@ -649,7 +684,7 @@ namespace ModularEncountersSystems.World {
 				Grid.CubeGrid.IsStatic = true;
 				//MyVisualScriptLogicProvider.ShowNotificationToAll("Fix MAtrix", 1000);
 
-				/*
+				
 				SpawnLogger.Write("Provided Matrix Translation: " + newMatrix.Translation, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Provided Matrix Forward:     " + newMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Provided Matrix Up:          " + newMatrix.Up, SpawnerDebugEnum.Spawning);
@@ -801,6 +836,14 @@ namespace ModularEncountersSystems.World {
 
 			}
 
+			//ApplyContainerTypes
+			if (AttributeCheck(Attributes.ApplyContainerTypes, AppliedAttributes.ApplyContainerTypes)) {
+
+				AppliedAttributes.ApplyContainerTypes = true;
+				InventoryHelper.ApplyContainerTypes(Grid);
+
+			}
+
 			//ConfigureTurretControllers
 			if (AttributeCheck(Attributes.ConfigureTurretControllers, AppliedAttributes.ConfigureTurretControllers)) {
 
@@ -863,6 +906,38 @@ namespace ModularEncountersSystems.World {
 			}
 
 			Grid.RefreshSubGrids();
+
+			//OwnershipValidation
+			if (Attributes.OwnershipValidation && !AppliedAttributes.OwnershipValidation) {
+
+				AppliedAttributes.OwnershipValidation = true;
+
+				if (Grid.CubeGrid.BigOwners.Count == 0 && OriginalOwnerId != 0) {
+
+					var originalFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction(OriginalOwnerId)?.Tag ?? "Nobody";
+					var currentFactionTag = "Nobody";
+
+					SpawnLogger.Write(string.Format("Ship From " + SpawnGroupName + " Spawned With Wrong Ownership. Expected [{0}] ; Got [{1}]. Attempting Correction.", originalFactionTag, currentFactionTag), SpawnerDebugEnum.Error, true);
+
+					var gridList = new List<IMyCubeGrid>();
+					MyAPIGateway.GridGroups.GetGroup(Grid.CubeGrid, GridLinkTypeEnum.Physical, gridList);
+
+					foreach (var grid in gridList) {
+
+						grid.ChangeGridOwnership(OriginalOwnerId, VRage.Game.MyOwnershipShareModeEnum.Faction);
+
+					}
+
+				} else if (Grid.CubeGrid.BigOwners.Count > 0 && Grid.CubeGrid.BigOwners[0] != OriginalOwnerId) {
+
+					var originalFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction(OriginalOwnerId)?.Tag ?? "Nobody";
+					var currentFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction((Grid.CubeGrid.BigOwners.Count > 0) ? Grid.CubeGrid.BigOwners[0] : 0)?.Tag ?? "Nobody";
+					SpawnLogger.Write(string.Format("Ship From " + SpawnGroupName + " Spawned With Wrong Ownership. Expected [{0}] ; Got [{1}].", originalFactionTag, currentFactionTag), SpawnerDebugEnum.Error, true);
+
+				}
+
+
+			}
 
 			//InhibitorActivation
 			if (Attributes.UseJetpackDisable && !AppliedAttributes.UseJetpackDisable && !HasInhibitor("Jetpack")) {
@@ -1019,6 +1094,7 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - Attributes:          ").Append(Attributes.ToString()).AppendLine();
 			sb.Append(" - AppliedAttributes:   ").Append(AppliedAttributes.ToString()).AppendLine();
 			sb.Append(" - SpawnType:           ").Append(SpawnType.ToString()).AppendLine();
+			sb.Append(" - OriginalSpawnType:   ").Append(OriginalSpawnType.ToString()).AppendLine();
 			sb.Append(" - SpawnGroupName:      ").Append(!string.IsNullOrWhiteSpace(SpawnGroupName) ? SpawnGroupName : "N/A").AppendLine();
 			sb.Append(" - ConditionIndex:      ").Append(ConditionIndex.ToString()).AppendLine();
 			sb.Append(" - ZoneIndex:           ").Append(ZoneIndex.ToString()).AppendLine();
@@ -1044,6 +1120,8 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - PrefabSpeed:         ").Append(PrefabSpeed.ToString()).AppendLine();
 			sb.Append(" - DespawnSource:       ").Append(!string.IsNullOrWhiteSpace(DespawnSource) ? DespawnSource : "N/A").AppendLine();
 			sb.Append(" - SpawnedByMES:        ").Append(SpawnedByMES.ToString()).AppendLine();
+			sb.Append(" - OriginalFaction:     ").Append(OriginalOwnerFaction).AppendLine();
+			sb.Append(" - OriginalOwnerId:     ").Append(OriginalOwnerId).AppendLine();
 
 			return sb.ToString();
 			

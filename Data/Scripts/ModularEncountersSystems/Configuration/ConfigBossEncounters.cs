@@ -190,13 +190,13 @@ namespace ModularEncountersSystems.Configuration {
 			
 		}
 		
-		public string SaveSettings(ConfigBossEncounters settings){
+		public override string SaveSettings(){
 			
 			try{
 				
 				using (var writer = MyAPIGateway.Utilities.WriteFileInWorldStorage("Config-BossEncounters.xml", typeof(ConfigBossEncounters))){
 					
-					writer.Write(MyAPIGateway.Utilities.SerializeToXML<ConfigBossEncounters>(settings));
+					writer.Write(MyAPIGateway.Utilities.SerializeToXML<ConfigBossEncounters>(this));
 				
 				}
 				

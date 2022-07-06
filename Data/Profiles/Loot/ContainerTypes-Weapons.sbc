@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<!-- Created by enenra's ContainerType Editor on: 2019-08-20 17:43 -->
+<!-- https://docs.google.com/spreadsheets/d/1_s1o03enFuZxV-OrH-ufegozE_usZcfHkKI_JOXck7A/edit#gid=0 -->
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<ContainerTypes>
+	
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-PistolWeapons-1</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="2">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>SemiAutoPistolItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="20">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>SemiAutoPistolMagazine</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-PistolWeapons-2</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="3">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>FullAutoPistolItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="20">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>FullAutoPistolMagazine</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-PistolWeapons-3</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="3">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>ElitePistolItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="20">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>ElitePistolMagazine</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-RifleWeapons-1</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="3">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>AutomaticRifleItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="20">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>AutomaticRifleGun_Mag_20rd</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-RifleWeapons-2</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="3">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>RapidFireAutomaticRifleItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="20">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>RapidFireAutomaticRifleGun_Mag_50rd</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-RifleWeapons-3</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="3">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>PreciseAutomaticRifleItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="20">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>PreciseAutomaticRifleGun_Mag_5rd</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-RifleWeapons-4</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="3">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>UltimateAutomaticRifleItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="20">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>UltimateAutomaticRifleGun_Mag_30rd</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-LauncherWeapons-1</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="3">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>BasicHandHeldLauncherItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="6">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>Missile200mm</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+		<ContainerType CountMin="2" CountMax="2">
+			<Id>
+				<TypeId>ContainerTypeDefinition</TypeId>
+				<SubtypeId>MES-ContainerTypes-LauncherWeapons-2</SubtypeId>
+			</Id>
+			<Items>
+				<Item AmountMin="1" AmountMax="3">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>PhysicalGunObject</TypeId>
+						<SubtypeId>AdvancedHandHeldLauncherItem</SubtypeId>
+					</Id>
+				</Item>
+				<Item AmountMin="1" AmountMax="6">
+					<Frequency>1.0</Frequency>
+					<Id>
+						<TypeId>AmmoMagazine</TypeId>
+						<SubtypeId>Missile200mm</SubtypeId>
+					</Id>
+				</Item>
+			</Items>
+		</ContainerType>
+
+	</ContainerTypes>																									
+</Definitions>																										

@@ -1,0 +1,147 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditionsGroup-AllCargoShipA</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions Group]
+
+        [SpawnConditionProfiles:MES-SpawnConditions-AllCargoShipA-Escort]
+        [SpawnConditionProfiles:MES-SpawnConditions-AllCargoShipA]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditionsGroup-AllCargoShipB</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions Group]
+
+        [SpawnConditionProfiles:MES-SpawnConditions-AllCargoShipB-Escort]
+        [SpawnConditionProfiles:MES-SpawnConditions-AllCargoShipB]
+
+      </Description>
+
+    </EntityComponent>
+    
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditionsGroup-AtmoCargoShip</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions Group]
+
+        [SpawnConditionProfiles:MES-SpawnConditions-AtmoCargoShip-Escort]
+        [SpawnConditionProfiles:MES-SpawnConditions-AtmoCargoShip]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditionsGroup-SpaceCargoShip</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions Group]
+
+        [SpawnConditionProfiles:MES-SpawnConditions-SpaceCargoShip-Escort]
+        [SpawnConditionProfiles:MES-SpawnConditions-SpaceCargoShip]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditionsGroup-SpaceGravityCargoShip</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions Group]
+
+        [SpawnConditionProfiles:MES-SpawnConditions-SpaceGravityCargoShip-Escort]
+        [SpawnConditionProfiles:MES-SpawnConditions-SpaceGravityCargoShip]
+
+      </Description>
+
+    </EntityComponent>
+
+    <!-- Installations -->
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditionsGroup-InstallationSmall</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions Group]
+
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationSmall-Defense]
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationSmall-Patrol]
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationSmall]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditionsGroup-InstallationMedium</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions Group]
+
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationMedium-Defense]
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationMedium-Patrol]
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationMedium]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-SpawnConditionsGroup-InstallationLarge</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Spawn Conditions Group]
+
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationLarge-Defense]
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationLarge-Patrol]
+        [SpawnConditionProfiles:MES-SpawnConditions-InstallationLarge]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

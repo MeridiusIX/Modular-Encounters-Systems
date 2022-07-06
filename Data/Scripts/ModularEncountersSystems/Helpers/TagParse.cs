@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
@@ -165,6 +166,29 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			original = result;
+
+		}
+
+		public static void TagBehaviorSubclassEnumCheck(string tag, ref List<BehaviorSubclass> original) {
+
+			BehaviorSubclass result = BehaviorSubclass.None;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (BehaviorSubclass.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			} else {
+
+				return;
+
+			}
+
+			original.Add(result);
 
 		}
 
@@ -361,7 +385,26 @@ namespace ModularEncountersSystems.Helpers {
 			original.Add(result);
 
 		}
+		/*
+		public static void TagDayOfWeekEnumCheck(string tag, ref List<DayOfWeek> original) {
 
+			DayOfWeek result = DayOfWeek.Monday;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (DayOfWeek.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original.Add(result);
+
+		}
+		*/
 		public static void TagDirectionEnumCheck(string tag, ref Direction original) {
 
 			Direction result = Direction.None;
@@ -1154,6 +1197,48 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagTextTemplateCheck(string tag, ref TextTemplate original) {
+
+			TextTemplate result = null;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				result = ProfileManager.GetTextTemplate(tagSplit[1]);
+
+				if (result == null) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
+		public static void TagTextTemplateCheck(string tag, ref List<TextTemplate> original) {
+
+			TextTemplate result = null;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				result = ProfileManager.GetTextTemplate(tagSplit[1]);
+
+				if (result == null) {
+
+					return;
+
+				}
+
+			}
+
+			original.Add(result);
+
+		}
+
 		public static void TagMDIDictionaryCheck(string tag, ref Dictionary<MyDefinitionId, MyDefinitionId> result) {
 
 			var tagSplit = ProcessTag(tag);
@@ -1548,17 +1633,15 @@ namespace ModularEncountersSystems.Helpers {
 
 			var tagSplit = ProcessTag(tag);
 
-			if (tagSplit.Length < 2) {
+			if (tagSplit.Length == 2) {
 
-				return;
+				var key = tagSplit[1];
+				ZoneConditionsProfile result = null;
+
+				if (ProfileManager.ZoneConditionsProfiles.TryGetValue(key, out result))
+					original.Add(result);
 
 			}
-
-			var key = tagSplit[1];
-			ZoneConditionsProfile result = null;
-
-			if (ProfileManager.ZoneConditionsProfiles.TryGetValue(key, out result))
-				original.Add(result);
 
 		}
 

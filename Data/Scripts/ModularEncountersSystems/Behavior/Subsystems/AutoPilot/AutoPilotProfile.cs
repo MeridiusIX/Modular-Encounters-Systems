@@ -6,7 +6,6 @@ using System.Text;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
-	[ProtoContract]
 	public class AutoPilotProfile {
 
 		//Profile
@@ -37,6 +36,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double OffsetPlanetMaxDistFromTarget;
 		public double OffsetPlanetMinTargetAltitude;
 		public double OffsetPlanetMaxTargetAltitude;
+
+		//Circle Target Config
+		public bool CircleTargetClockwise;
+		public bool CircleTargetRadiusConstriction;
+		public double CircleTargetRadiusConstrictionAmount;
+		public bool CircleTargetAltitudeConstriction;
+		public double CircleTargetAltitudeConstrictionAmount;
+		public bool CircleTargetDriftExemption;
+		public double CircleTargetUpAngleLimit;
+		public bool CircleTargetUseWaypointAbandon;
 
 		//Collision Config
 		public bool Unused;
@@ -73,6 +82,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double DesiredAngleToTarget;
 
 		public bool DisableInertiaDampeners;
+		public bool ForceDampenersEnabled;
 
 		public bool ReverseOffsetDistAltAboveHeight;
 		public double ReverseOffsetHeight;
@@ -92,6 +102,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		public int WaypointWaitTimeTrigger;
 		public int WaypointAbandonTimeTrigger;
+
+		public int TargetApproachTimer;
+		public int TargetEngageTimer;
+
+		public int TimeBetweenNewTargetChecks;
+		public int LostTargetTimerTrigger;
+		public double DistanceToCheckEngagableTarget;
+
+		public bool EngageOnCameraDetection;
+		public bool EngageOnWeaponActivation;
+		public bool EngageOnTargetLineOfSight;
+
+		public double CameraDetectionMaxRange;
+
+		public bool RotateTowardsTargetWhileAtPosition;
 
 		public double AttackRunDistanceSpace;
 		public double AttackRunDistancePlanet;
@@ -122,14 +147,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public bool UseVerticalRetreat;
 		public bool UseWaterPatrolMode;
 
+		public bool EscortUsesRelativeDampening;
 		public double EscortSpeedMatchMinDistance;
 		public double EscortSpeedMatchMaxDistance;
+
+
+		public bool UseSubgridThrust;
+		public double MaxSubgridThrustAngle;
 
 		public AutoPilotProfile() {
 
 			ProfileSubtypeId = "";
 
 			DisableInertiaDampeners = false;
+			ForceDampenersEnabled = false;
 			IdealMaxSpeed = 100;
 			IdealMinSpeed = 10;
 			SlowDownOnWaypointApproach = false;
@@ -154,6 +185,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			ReverseOffsetDistAltAboveHeight = false;
 			ReverseOffsetHeight = 1300;
+
+			CircleTargetClockwise = true;
+			CircleTargetRadiusConstriction = false;
+			CircleTargetRadiusConstrictionAmount = 10;
+			CircleTargetAltitudeConstriction = false;
+			CircleTargetAltitudeConstrictionAmount = 10;
+			CircleTargetUpAngleLimit = 20;
+			CircleTargetDriftExemption = false;
 
 			PadDistanceFromTarget = 0;
 
@@ -198,6 +237,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			WaypointWaitTimeTrigger = 5;
 			WaypointAbandonTimeTrigger = 30;
 
+			TargetApproachTimer = 30;
+			TargetEngageTimer = 10;
+
+			TimeBetweenNewTargetChecks = 15;
+			LostTargetTimerTrigger = 30;
+			DistanceToCheckEngagableTarget = 1200;
+
+			EngageOnCameraDetection = false;
+			EngageOnWeaponActivation = false;
+			EngageOnTargetLineOfSight = false;
+
+			CameraDetectionMaxRange = 1800;
+
+			RotateTowardsTargetWhileAtPosition = false;
+
 			AttackRunDistanceSpace = 75;
 			AttackRunDistancePlanet = 100;
 			AttackRunBreakawayDistance = 450;
@@ -235,8 +289,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			UseWaterPatrolMode = false;
 
+			EscortUsesRelativeDampening = false;
 			EscortSpeedMatchMinDistance = 25;
 			EscortSpeedMatchMaxDistance = 150;
+
+			UseSubgridThrust = false;
+			MaxSubgridThrustAngle = 35;
 
 			UseVelocityCollisionEvasion = BoolEnum.True;
 
@@ -278,6 +336,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[DisableInertiaDampeners:") == true) {
 
 				TagParse.TagBoolCheck(tag, ref DisableInertiaDampeners);
+
+			}
+
+			//ForceDampenersEnabled
+			if (tag.Contains("[ForceDampenersEnabled:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref ForceDampenersEnabled);
 
 			}
 
@@ -418,6 +483,55 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[ReverseOffsetHeight:") == true) {
 
 				TagParse.TagDoubleCheck(tag, ref this.ReverseOffsetHeight);
+
+			}
+
+			//CircleTargetClockwise
+			if (tag.Contains("[CircleTargetClockwise:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref CircleTargetClockwise);
+
+			}
+
+			//CircleTargetRadiusConstriction
+			if (tag.Contains("[CircleTargetRadiusConstriction:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref CircleTargetRadiusConstriction);
+
+			}
+
+			//CircleTargetRadiusConstrictionAmount
+			if (tag.Contains("[CircleTargetRadiusConstrictionAmount:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.CircleTargetRadiusConstrictionAmount);
+
+			}
+
+			//CircleTargetAltitudeConstriction
+			if (tag.Contains("[CircleTargetAltitudeConstriction:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref CircleTargetAltitudeConstriction);
+
+			}
+
+			//CircleTargetAltitudeConstrictionAmount
+			if (tag.Contains("[CircleTargetAltitudeConstrictionAmount:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.CircleTargetAltitudeConstrictionAmount);
+
+			}
+
+			//CircleTargetUpAngleLimit
+			if (tag.Contains("[CircleTargetUpAngleLimit:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.CircleTargetUpAngleLimit);
+
+			}
+
+			//CircleTargetDriftExemption
+			if (tag.Contains("[CircleTargetDriftExemption:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref CircleTargetDriftExemption);
 
 			}
 
@@ -646,10 +760,80 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
+			//TargetApproachTimer
+			if (tag.Contains("[TargetApproachTimer:") == true) {
+
+				TagParse.TagIntCheck(tag, ref this.TargetApproachTimer);
+
+			}
+
+			//TargetEngageTimer
+			if (tag.Contains("[TargetEngageTimer:") == true) {
+
+				TagParse.TagIntCheck(tag, ref this.TargetEngageTimer);
+
+			}
+
+			//TimeBetweenNewTargetChecks
+			if (tag.Contains("[TimeBetweenNewTargetChecks:") == true) {
+
+				TagParse.TagIntCheck(tag, ref this.TimeBetweenNewTargetChecks);
+
+			}
+
+			//LostTargetTimerTrigger
+			if (tag.Contains("[LostTargetTimerTrigger:") == true) {
+
+				TagParse.TagIntCheck(tag, ref this.LostTargetTimerTrigger);
+
+			}
+
+			//DistanceToCheckEngagableTarget
+			if (tag.Contains("[DistanceToCheckEngagableTarget:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.DistanceToCheckEngagableTarget);
+
+			}
+
+			//EngageOnCameraDetection
+			if (tag.Contains("[EngageOnCameraDetection:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.EngageOnCameraDetection);
+
+			}
+
+			//EngageOnWeaponActivation
+			if (tag.Contains("[EngageOnWeaponActivation:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.EngageOnWeaponActivation);
+
+			}
+
+			//EngageOnTargetLineOfSight
+			if (tag.Contains("[EngageOnTargetLineOfSight:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.EngageOnTargetLineOfSight);
+
+			}
+
+			//CameraDetectionMaxRange
+			if (tag.Contains("[CameraDetectionMaxRange:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.CameraDetectionMaxRange);
+
+			}
+
 			//WaypointAbandonTimeTrigger
 			if (tag.Contains("[WaypointAbandonTimeTrigger:") == true) {
 
 				TagParse.TagIntCheck(tag, ref this.WaypointAbandonTimeTrigger);
+
+			}
+
+			//RotateTowardsTargetWhileAtPosition
+			if (tag.Contains("[RotateTowardsTargetWhileAtPosition:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.RotateTowardsTargetWhileAtPosition);
 
 			}
 
@@ -839,6 +1023,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[UseWaterPatrolMode:") == true) {
 
 				TagParse.TagBoolCheck(tag, ref UseWaterPatrolMode);
+
+			}
+
+			//UseSubgridThrust
+			if (tag.Contains("[UseSubgridThrust:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref UseSubgridThrust);
+
+			}
+
+			//MaxSubgridThrustAngle
+			if (tag.Contains("[MaxSubgridThrustAngle:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref MaxSubgridThrustAngle);
 
 			}
 

@@ -96,38 +96,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		public void SetReferences(IMyRemoteControl remoteControl, StoredSettings settings) {
+		public void SetReferences(IMyRemoteControl remoteControl, IBehavior behavior) {
 
 			_remoteControl = remoteControl;
-			_settings = settings;
+			_behavior = behavior;
+			_settings = _behavior?.BehaviorSettings;
 
 		}
 
 		public bool AreConditionsMets(Command command = null) {
 
-			if (ConditionReference == null)
+			if (ConditionReference == null) {
+
+				BehaviorLogger.Write(ProfileSubtypeId + ": Condition Reference Null", BehaviorDebugEnum.Condition);
 				return false;
-
-			if (!_gotWatchedBlocks)
-				SetupWatchedBlocks();
-
-			if (ConditionReference.UseConditions == false) {
-
-				return true;
 
 			}
 
-			int usedConditions = 0;
-			int satisfiedConditions = 0;
+			if (ConditionReference.UseConditions == false) {
+
+				BehaviorLogger.Write(ProfileSubtypeId + ": Condition Not In Use", BehaviorDebugEnum.Condition);
+				return true;
+
+			}
 
 			if (_behavior == null) {
 
 				_behavior = BehaviorManager.GetBehavior(_remoteControl);
 
-				if (_behavior == null)
+				if (_behavior == null) {
+
+					BehaviorLogger.Write(ProfileSubtypeId + ": Behavior Is Null, Cannot Continue With Conditions", BehaviorDebugEnum.Condition);
 					return false;
 
+				}
+					
 			}
+
+			if (!_gotWatchedBlocks)
+				SetupWatchedBlocks();
+
+			int usedConditions = 0;
+			int satisfiedConditions = 0;
 
 			if (ConditionReference.CheckAllLoadedModIDs == true) {
 
@@ -180,8 +190,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						BehaviorLogger.Write(ProfileSubtypeId + ": Boolean Not True: " + boolName, BehaviorDebugEnum.Condition);
 						failedCheck = true;
-						break;
 
+						if (!ConditionReference.AllowAnyTrueBoolean) {
+
+							failedCheck = true;
+							break;
+
+						}
+						
+					} else if (ConditionReference.AllowAnyTrueBoolean) {
+
+						failedCheck = false;
+						break;
+					
 					}
 
 				}
@@ -213,6 +234,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								failedCheck = true;
 								break;
 
+							} else if (ConditionReference.AllowAnyValidCounter) {
+
+								break;
+							
 							}
 
 						} catch (Exception e) {
@@ -254,6 +279,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							failedCheck = true;
 							break;
 
+						} else if (ConditionReference.AllowAnyTrueSandboxBoolean) {
+
+							break;
+						
 						}
 
 					} catch (Exception e) {
@@ -315,6 +344,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								failedCheck = true;
 								break;
 
+							} else if (ConditionReference.AllowAnyValidSandboxCounter) {
+
+								break;
+							
 							}
 
 						} catch (Exception e) {
@@ -570,6 +603,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.BehaviorSubclassCheck) {
+
+				usedConditions++;
+
+				if (ConditionReference.BehaviorSubclass.Contains(_behavior.ActiveBehavior.SubClass))
+					satisfiedConditions++;
+
+			}
+
 			if (ConditionReference.BehaviorModeCheck) {
 
 				usedConditions++;
@@ -670,6 +712,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.IsAttackerHostile) {
+
+				usedConditions++;
+
+				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+				if(rep <= -501)
+					satisfiedConditions++;
+
+			}
+
+			if (ConditionReference.IsAttackerNeutral) {
+
+				usedConditions++;
+
+				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+				if (rep >= -500 && rep <= 500)
+					satisfiedConditions++;
+
+			}
+
+			if (ConditionReference.IsAttackerFriendly) {
+
+				usedConditions++;//
+
+				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+				if (rep >= 501)
+					satisfiedConditions++;
+
+			}
+
 			if (ConditionReference.CheckCommandGridValue) {
 
 				usedConditions++;
@@ -690,8 +765,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (command != null) {
 
 					var myScore = (_behavior.CurrentGrid?.TargetValue() ?? 0) * ConditionReference.CompareCommandGridValueSelfMultiplier;
+					BehaviorLogger.Write(string.Format("Command Grid Value Compare: Self={0} // Other={1}", myScore, command.GridValueScore), BehaviorDebugEnum.Condition);
 
-					if (MathTools.CompareValues(command.GridValueScore, myScore, ConditionReference.CheckCommandGridValueCompare))
+					if (MathTools.CompareValues(command.GridValueScore, myScore, ConditionReference.CompareCommandGridValueMode))
+						satisfiedConditions++;
+
+				} else {
+
+					BehaviorLogger.Write("Command Was Null For CompareCommandGridValue", BehaviorDebugEnum.Condition);
+
+				}
+
+			}
+
+			if (ConditionReference.CommandGravityCheck) {
+
+				usedConditions++;
+
+				if (command != null) {
+
+					var match = command.Behavior.AutoPilot.InGravity() == _behavior.AutoPilot.InGravity();
+
+					if(match == ConditionReference.CommandGravityMatches)
 						satisfiedConditions++;
 
 				}
@@ -848,6 +943,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.CheckForPlanetaryLane) {
+
+				usedConditions++;
+				var laneResult = PlanetManager.IsPositionInsideLane(_behavior.RemoteControl.GetPosition()) == ConditionReference.PlanetaryLanePassValue;
+
+				if (laneResult)
+					satisfiedConditions++;
+
+			}
+
 			if (ConditionReference.MatchAnyCondition == false) {
 
 				bool result = satisfiedConditions >= usedConditions;
@@ -874,49 +979,56 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			_watchedAllBlocks.Clear();
 			_watchedNoneBlocks.Clear();
 
-			if (!ConditionReference.UseRequiredFunctionalBlocks)
+			if (!ConditionReference.UseRequiredFunctionalBlocks) {
+
+				BehaviorLogger.Write("Condition Not Using Required Functional Blocks", BehaviorDebugEnum.Condition);
 				return;
 
+			}
+
 			_remoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplitHandler;
-			var allBlocks = TargetHelper.GetAllBlocks(_remoteControl?.SlimBlock?.CubeGrid).Where(x => x.FatBlock != null);
+
+			var allBlocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(_behavior.CurrentGrid); ;
+
+			BehaviorLogger.Write("Monitoring Blocks Pre-Filtered Count: " + allBlocks.Count, BehaviorDebugEnum.Condition);
 
 			foreach (var block in allBlocks) {
 
-				var terminalBlock = block.FatBlock as IMyTerminalBlock;
-
-				if (terminalBlock == null)
+				if (block == null)
 					continue;
 
-				BehaviorLogger.Write(" - " + terminalBlock.CustomName.Trim(), BehaviorDebugEnum.Condition);
+				if (ConditionReference.RequiredAllFunctionalBlockNames.Contains(block.CustomName.Trim())) {
 
-				if (ConditionReference.RequiredAllFunctionalBlockNames.Contains(terminalBlock.CustomName.Trim())) {
-
-					BehaviorLogger.Write("Monitoring Required-All Block: " + terminalBlock.CustomName, BehaviorDebugEnum.Condition);
-					_watchedAllBlocks.Add(block.FatBlock);
-					block.FatBlock.IsWorkingChanged += CheckAllBlocks;
+					BehaviorLogger.Write("Monitoring Required-All Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+					_watchedAllBlocks.Add(block);
+					block.IsWorkingChanged += CheckAllBlocks;
 					_watchingAllBlocks = true;
 
 				}
 
-				if (ConditionReference.RequiredAnyFunctionalBlockNames.Contains(terminalBlock.CustomName.Trim())) {
+				if (ConditionReference.RequiredAnyFunctionalBlockNames.Contains(block.CustomName.Trim())) {
 
-					BehaviorLogger.Write("Monitoring Required-Any Block: " + terminalBlock.CustomName, BehaviorDebugEnum.Condition);
-					_watchedAnyBlocks.Add(block.FatBlock);
-					block.FatBlock.IsWorkingChanged += CheckAnyBlocks;
+					BehaviorLogger.Write("Monitoring Required-Any Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+					_watchedAnyBlocks.Add(block);
+					block.IsWorkingChanged += CheckAnyBlocks;
 					_watchingAnyBlocks = true;
 
 				}
 
-				if (ConditionReference.RequiredNoneFunctionalBlockNames.Contains(terminalBlock.CustomName.Trim())) {
+				if (ConditionReference.RequiredNoneFunctionalBlockNames.Contains(block.CustomName.Trim())) {
 
-					BehaviorLogger.Write("Monitoring Required-None Block: " + terminalBlock.CustomName, BehaviorDebugEnum.Condition);
-					_watchedNoneBlocks.Add(block.FatBlock);
-					block.FatBlock.IsWorkingChanged += CheckNoneBlocks;
+					BehaviorLogger.Write("Monitoring Required-None Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+					_watchedNoneBlocks.Add(block);
+					block.IsWorkingChanged += CheckNoneBlocks;
 					_watchingNoneBlocks = true;
 
 				}
 
 			}
+
+			BehaviorLogger.Write("Watch All Blocks Count:  " + _watchedAllBlocks.Count, BehaviorDebugEnum.Condition);
+			BehaviorLogger.Write("Watch Any Blocks Count:  " + _watchedAnyBlocks.Count, BehaviorDebugEnum.Condition);
+			BehaviorLogger.Write("Watch None Blocks Count: " + _watchedNoneBlocks.Count, BehaviorDebugEnum.Condition);
 
 			CheckAllBlocks();
 			CheckAnyBlocks();

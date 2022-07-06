@@ -55,6 +55,7 @@ namespace ModularEncountersSystems.Helpers {
         Escort,
         Patrol,
         Tunneller,
+        Vulture,
 
     }
 
@@ -193,6 +194,14 @@ namespace ModularEncountersSystems.Helpers {
     
     }
 
+    public enum RotationEnum {
+    
+        Pitch,
+        Yaw,
+        Roll,
+    
+    }
+
     public enum SwitchEnum {
     
         Off,
@@ -244,6 +253,7 @@ namespace ModularEncountersSystems.Helpers {
         Static,
         TargetValue,
         Underwater,
+        GravityThrust,
 
     }
 
@@ -282,6 +292,14 @@ namespace ModularEncountersSystems.Helpers {
 
     }
 
+    public enum Tolerence {
+    
+        None,
+        Lower,
+        Within,
+        Higher
+    
+    }
 
     [Flags]
     public enum TriggerAction {
@@ -329,7 +347,8 @@ namespace ModularEncountersSystems.Helpers {
         PlanetPathingAscend = 1 << 6,
         TargetPadding = 1 << 7,
         WaterPathing = 1 << 8,
-        EscortPathing = 1 << 9
+        EscortPathing = 1 << 9,
+        CircleTarget = 1 << 10,
 
 
     }

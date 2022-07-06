@@ -23,7 +23,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		internal Dictionary<string, AmmoDef> _ammoToDefinition = new Dictionary<string, AmmoDef>();
 		internal bool _requiresPhysicalAmmo;
 		internal bool _beamAmmo;
-		internal bool _homingAmmo;
+		
 		internal bool _flareAmmo;
 
 		internal WeaponDefinition _weaponDefinition;
@@ -356,7 +356,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (!IsValid())
 				return;
 
-			APIs.WeaponCore.SetAiFocus(_block, LockOnTarget);
+			APIs.WeaponCore.SetWeaponTarget(_block, LockOnTarget, _weaponId);
+			//APIs.WeaponCore.SetAiFocus(_block, LockOnTarget);
 
 		}
 
@@ -366,6 +367,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				return;
 
 			APIs.WeaponCore.SetWeaponTarget(_block, entity, _weaponId);
+			//APIs.WeaponCore.SetAiFocus(_block, entity);
 
 		}
 

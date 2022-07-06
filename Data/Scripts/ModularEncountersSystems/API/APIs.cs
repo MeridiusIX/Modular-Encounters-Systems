@@ -33,9 +33,14 @@ namespace ModularEncountersSystems.API {
         public static RemoteDragSettings Drag;
         public static bool DragApiLoaded { get { return Drag?.Heartbeat ?? false; } }
 
+        //Text Hud
+        public static HudAPIv2 TextHud;
+        public static bool TextHudApiLoaded { get { return TextHud?.Heartbeat ?? false; } }
+        public static HudAPIv2.HUDMessage HudMessage = null;
+
         public static void RegisterAPIs(int phase = 0) {
 
-            if (MES == null && phase == 0)
+            if (MES == null && phase == 0 && MES_SessionCore.IsServer)
                 MES = new MESApi();
 
             //Water Mod (LoadData)
@@ -45,21 +50,21 @@ namespace ModularEncountersSystems.API {
 
             }
 
-            if (AddonManager.NebulaMod && phase == 0) {
+            if (AddonManager.NebulaMod && phase == 0 && MES_SessionCore.IsServer) {
 
                 NebulaAPI.LoadData();
                 MES_SessionCore.UnloadActions += NebulaAPI.UnloadData;
 
             }
 
-            if (AddonManager.AiEnabled && phase == 0)
+            if (AddonManager.AiEnabled && phase == 0 && MES_SessionCore.IsServer)
                 AiEnabled = new RemoteBotAPI();
 
-            if (AddonManager.AerodynamicDrag && phase == 0)
+            if (AddonManager.AerodynamicDrag && phase == 0 && MES_SessionCore.IsServer)
                 Drag = new RemoteDragSettings();
 
             //WeaponCore (BeforeStart)
-            if (AddonManager.WeaponCore && phase == 2)
+            if (AddonManager.WeaponCore && phase == 2 && MES_SessionCore.IsServer)
                 WeaponCore.Load(AddonManager.WeaponCoreCallback, true);
 
             //DefenseShields (BeforeStart)

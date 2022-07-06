@@ -1,0 +1,50 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Loot-AdvancedContainers</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Loot]
+
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/SmallBlockMediumContainer]
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/SmallBlockLargeContainer]
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/LargeBlockSmallContainer]
+
+        [ContainerTypes:MES-ContainerTypes-AdvancedAmmo-1]
+        [ContainerTypes:MES-ContainerTypes-AdvancedAmmo-1]
+        [ContainerTypes:MES-ContainerTypes-AdvancedAmmo-2]
+
+        [ContainerTypes:MES-ContainerTypes-AdvancedComponents-1]
+        [ContainerTypes:MES-ContainerTypes-AdvancedComponents-1]
+        [ContainerTypes:MES-ContainerTypes-AdvancedComponents-2]
+
+        [ContainerTypes:MES-ContainerTypes-AdvancedIngots-1]
+        [ContainerTypes:MES-ContainerTypes-AdvancedIngots-1]
+        [ContainerTypes:MES-ContainerTypes-AdvancedIngots-2]
+
+        [ContainerTypes:MES-ContainerTypes-AdvancedOres-1]
+        [ContainerTypes:MES-ContainerTypes-AdvancedOres-1]
+        [ContainerTypes:MES-ContainerTypes-AdvancedOres-2]
+
+        [ContainerTypes:MES-ContainerTypes-Credits-2]
+        [ContainerTypes:MES-ContainerTypes-Credits-2]
+        [ContainerTypes:MES-ContainerTypes-Credits-3]
+
+        [ContainerTypes:MES-ContainerTypes-Explosives-1]
+        [ContainerTypes:MES-ContainerTypes-Explosives-2]
+        [ContainerTypes:MES-ContainerTypes-Explosives-3]
+
+        [MinBlocks:2]
+        [MaxBlocks:4]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

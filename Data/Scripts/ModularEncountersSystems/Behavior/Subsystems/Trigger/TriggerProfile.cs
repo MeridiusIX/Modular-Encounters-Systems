@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Entities;
+using SpaceEngineers.Game.ModAPI;
+using ModularEncountersSystems.Watchers;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -173,6 +175,42 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(51)]
 		public bool DetectSelfAsJumpedGrid;
 
+		[ProtoMember(52)]
+		public string ButtonPanelName;
+
+		[ProtoMember(53)]
+		public int ButtonPanelIndex;
+
+		[ProtoMember(54)]
+		public bool CameraDetectGrid;
+
+		[ProtoMember(55)]
+		public string FactionTag;
+
+		[ProtoMember(56)]
+		public bool UseCustomFactionTag;
+
+		[ProtoMember(57)]
+		public float PercentageOfWeaponsRemaining;
+
+		[ProtoMember(58)]
+		public float PercentageOfHealthRemaining;
+
+		[ProtoIgnore]
+		public IBehavior Behavior;
+
+		[ProtoIgnore]
+		public IMyButtonPanel ButtonPanel;
+
+		[ProtoIgnore]
+		public Action<int> ButtonPress;
+
+		[ProtoIgnore]
+		public bool ButtonPressedSuccess;
+
+		[ProtoIgnore]
+		public long ButtonPressPlayer;
+
 		[ProtoIgnore]
 		public GridEntity JumpedGrid;
 
@@ -219,6 +257,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MaxPlayerReputation = 1501;
 			AllPlayersMustMatchReputation = false;
 			CustomReputationRangeCheck = 5000;
+			UseCustomFactionTag = false;
+			FactionTag = "";
 
 			InventoryBlockName = "";
 			InventoryItemDefinitionId = "";
@@ -256,6 +296,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			JumpedGridsCanBeNonHostile = false;
 			DetectSelfAsJumpedGrid = false;
 
+			ButtonPanelName = "";
+			ButtonPanelIndex = 0;
+
+			PercentageOfWeaponsRemaining = 0;
+
 			ProfileSubtypeId = "";
 
 
@@ -264,6 +309,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		}
 
 		public void ActivateTrigger(Func<TriggerProfile, bool> mainTriggerCheck = null, Command command = null) {
+
+			ValidateTrigger(mainTriggerCheck, command);
+
+			if (!Triggered && UseElseActions && ElseActions.Count > 0) {
+
+				Triggered = true;
+				LastRunFailed = true;
+				BehaviorLogger.Write(ProfileSubtypeId + ": Else Actions Will Be Activated: " + Type, BehaviorDebugEnum.Trigger);
+
+			}
+
+		}
+
+		public void ValidateTrigger(Func<TriggerProfile, bool> mainTriggerCheck = null, Command command = null) {
 
 			if (MaxActions >= 0 && TriggerCount >= MaxActions) {
 
@@ -283,14 +342,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if ((!mainTriggerPass && !UseFailCondition) || (mainTriggerPass && UseFailCondition)) {
 
-						LastRunFailed = true;
 						return;
 
 					}
 
 					if ((Conditions.ConditionReference?.UseConditions ?? false) == true) {
 
-						var conditionsMet = Conditions.AreConditionsMets();
+						var conditionsMet = Conditions.AreConditionsMets(command);
 
 						if (conditionsMet || (!conditionsMet == UseFailCondition)) {
 
@@ -307,7 +365,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if (!Triggered) {
 
 							BehaviorLogger.Write(ProfileSubtypeId + ": Condition Profile Not Satisfied", BehaviorDebugEnum.Trigger);
-							LastRunFailed = true;
 
 						}
 
@@ -326,14 +383,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if ((!mainTriggerPass && !UseFailCondition) || (mainTriggerPass && UseFailCondition)) {
 
-					LastRunFailed = true;
 					return;
 
 				}
 
 				if ((Conditions.ConditionReference?.UseConditions ?? false) == true) {
 
-					var conditionsMet = Conditions.AreConditionsMets();
+					var conditionsMet = Conditions.AreConditionsMets(command);
 
 					if (conditionsMet || (!conditionsMet == UseFailCondition)) {
 
@@ -344,7 +400,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (!Triggered) {
 
-						LastRunFailed = true;
 						BehaviorLogger.Write(ProfileSubtypeId + ": Condition Profile Not Satisfied", BehaviorDebugEnum.Trigger);
 
 					}
@@ -582,6 +637,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
+					//UseCustomFactionTag
+					if (tag.Contains("[UseCustomFactionTag:") == true)
+					{
+
+						TagParse.TagBoolCheck(tag, ref UseCustomFactionTag);
+
+					}
+
+					//FactionTag
+					if (tag.Contains("[FactionTag:") == true)
+					{
+
+						TagParse.TagStringCheck(tag, ref FactionTag);
+
+					}
+
 					//Conditions
 					if (tag.Contains("[Conditions:") == true) {
 
@@ -706,6 +777,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
+					//UseElseActions
+					if (tag.Contains("[UseElseActions:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref UseElseActions);
+
+					}
+
 					//ElseActions
 					if (tag.Contains("[ElseActions:") == true) {
 
@@ -725,7 +803,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 									if (profile != null) {
 
-										Actions.Add(profile);
+										ElseActions.Add(profile);
 										gotAction = true;
 
 									}
@@ -777,6 +855,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[DetectSelfAsJumpedGrid:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref DetectSelfAsJumpedGrid);
+
+					}
+
+					//ButtonPanelName
+					if (tag.Contains("[ButtonPanelName:") == true) {
+
+						TagParse.TagStringCheck(tag, ref ButtonPanelName);
+
+					}
+
+					//ButtonPanelIndex
+					if (tag.Contains("[ButtonPanelIndex:") == true) {
+
+						TagParse.TagIntCheck(tag, ref ButtonPanelIndex);
+
+					}
+
+					//PercentageOfWeaponsRemaining
+					if (tag.Contains("[PercentageOfWeaponsRemaining:") == true) {
+
+						TagParse.TagFloatCheck(tag, ref PercentageOfWeaponsRemaining);
+
+					}
+
+					//PercentageOfHealthRemaining
+					if (tag.Contains("[PercentageOfHealthRemaining:") == true) {
+
+						TagParse.TagFloatCheck(tag, ref PercentageOfHealthRemaining);
 
 					}
 

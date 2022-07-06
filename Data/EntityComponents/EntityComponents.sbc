@@ -100,6 +100,16 @@
 				<guid>8823361C-E6A4-4BD6-8F1D-3C935D9D4AA7</guid>
 			</RegisteredStorageGuids>
 		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>MesContainerTypeKey</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>9E614A24-8027-4C66-8A7B-63A36AFE36EC</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
 		
 	</EntityComponents>
 </Definitions>

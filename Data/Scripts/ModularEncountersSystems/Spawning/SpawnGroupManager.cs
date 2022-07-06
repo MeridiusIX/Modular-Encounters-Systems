@@ -76,10 +76,12 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				if (spawnGroup.PersistentConditions != null) {
+				if (spawnGroup.PersistentConditions != null || spawnGroup.UseFirstConditionsAsPersistent) {
 
 					bool persistentCheckFailed = false;
-					SpawnLogger.Queue(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Persistent Conditions [" + spawnGroup.PersistentConditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
+					var persistentConditions = spawnGroup.UseFirstConditionsAsPersistent ? spawnGroup.SpawnConditionsProfiles[0] : spawnGroup.PersistentConditions;
+
+					SpawnLogger.Queue(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Persistent Conditions [" + persistentConditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
 					
 					//Eligible Names
 					if (eligibleNames != null && eligibleNames.Count > 0 && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
@@ -90,7 +92,7 @@ namespace ModularEncountersSystems.Spawning {
 					}
 
 					//AdminSpawn
-					if (!persistentCheckFailed && spawnGroup.PersistentConditions.AdminSpawnOnly && !adminSpawn) {
+					if (!persistentCheckFailed && persistentConditions.AdminSpawnOnly && !adminSpawn) {
 
 						SpawnLogger.Queue("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup);
 						continue;
@@ -98,7 +100,7 @@ namespace ModularEncountersSystems.Spawning {
 					}
 
 					//Common Checks
-					if (!persistentCheckFailed && !forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, spawnGroup.PersistentConditions, collection, environment, adminSpawn, type, spawnTypes, playerDroneTracker, ref commonConditionFailure)) {
+					if (!persistentCheckFailed && !forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, persistentConditions, collection, environment, adminSpawn, type, spawnTypes, playerDroneTracker, ref commonConditionFailure)) {
 
 						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
 						persistentCheckFailed = true;
@@ -112,7 +114,18 @@ namespace ModularEncountersSystems.Spawning {
 
 				int conditionsFailedBySpawnType = 0;
 
+
+
 				for (int c = 0; c < spawnGroup.SpawnConditionsProfiles.Count; c++) {
+
+					if (spawnGroup.UseFirstConditionsAsPersistent && c == 0) {
+
+						c++;
+
+						if (c >= spawnGroup.SpawnConditionsProfiles.Count)
+							break;
+					
+					}
 
 					var conditions = spawnGroup.SpawnConditionsProfiles[c];
 
@@ -310,7 +323,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				if (spawnGroup.SpawnConditionsProfiles.Count == conditionsFailedBySpawnType) {
+				if (spawnGroup.SpawnConditionsProfiles.Count == conditionsFailedBySpawnType || (adminSpawn && !eligibleNames.Contains(spawnGroup.SpawnGroupName))) {
 
 					SpawnLogger.QueuedItems.Clear();
 

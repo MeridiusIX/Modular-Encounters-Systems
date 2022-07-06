@@ -17,6 +17,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		bool PendingLockOn { get; set; }
 		bool HasLockOn { get; set; }
 		IMyCubeGrid LockOnTarget { get; set; }
+		bool IsHoming { get; set; }
 		double AmmoAcceleration();
 		double AmmoInitialVelocity();
 		double AmmoVelocity();

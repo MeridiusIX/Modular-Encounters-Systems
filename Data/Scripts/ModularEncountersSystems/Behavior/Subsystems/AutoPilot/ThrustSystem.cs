@@ -29,6 +29,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		private bool _minAngleDistanceStrafeAdjusted;
 		private Vector3D _collisionStrafeDirection;
 
+		private DateTime _lastGravityThrustCalc = DateTime.MinValue;
+		private float _lastGravityThrustValue = 0;
+
 		private ThrustAction _thrustToApply;
 
 
@@ -86,6 +89,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				CalculateStrafeThrust();
 
 			}
+
+		}
+
+		public float CalculateMaxGravity(bool useGravityOnly = false) {
+
+			if (_remoteControl == null)
+				return 0;
+
+			var time = MyAPIGateway.Session.GameDateTime - _lastGravityThrustCalc;
+			if (time.TotalMilliseconds < 2500)
+				return _lastGravityThrustValue;
+
+			float gravityMultiplier = 0;
+
+			while (gravityMultiplier < 20) {
+
+				gravityMultiplier += 0.1f;
+				double totalForceAvailable = 0;
+
+				foreach (var thrust in ThrustProfiles) {
+
+					if (thrust.ActiveDirection != Base6Directions.Direction.Down)
+						continue;
+
+					totalForceAvailable += (useGravityOnly ? thrust.MaxThrustForceInGravity : thrust.MaxThrustForceInAtmo) * thrust.Block.ThrustMultiplier;
+
+				}
+
+				var liftingAccel = totalForceAvailable / _remoteControl.CalculateShipMass().TotalMass;
+				var gravityAccel = gravityMultiplier * 9.81;
+
+				if ((liftingAccel / gravityAccel) < 1.25) {
+
+					gravityMultiplier -= 0.1f;
+					break;
+
+				}
+
+			}
+
+			_lastGravityThrustValue = gravityMultiplier;
+			return gravityMultiplier;
 
 		}
 
@@ -727,6 +772,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		//Main Thread
 		public void ApplyThrust() {
+
+			if (Data.ForceDampenersEnabled && !_remoteControl.DampenersOverride)
+				_remoteControl.DampenersOverride = true;
 
 			for (int i = ThrustProfiles.Count - 1; i >= 0; i--) {
 

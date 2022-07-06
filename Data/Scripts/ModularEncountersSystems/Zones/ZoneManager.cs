@@ -158,9 +158,17 @@ namespace ModularEncountersSystems.Zones {
 
 						var id = planet?.Planet?.Generator?.Id.SubtypeName ?? "";
 
-						if (string.IsNullOrWhiteSpace(id) || id != zone.PlanetName) {
+						if (string.IsNullOrWhiteSpace(id)) {
 
-							SpawnLogger.Write("Planet Id Null or Id doesn't Match PlanetName in Zone: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
+							SpawnLogger.Write("Planet Id Null: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
+							continue;
+
+						}
+
+						if (id != zone.PlanetName) {
+
+							SpawnLogger.Write("Planet Id doesn't Match PlanetName in Zone: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
+							SpawnLogger.Write(" - Planet Id: " + id + " // Zone Planet: " + zone.PlanetName ?? "null", SpawnerDebugEnum.Startup);
 							continue;
 
 						}
@@ -272,7 +280,7 @@ namespace ModularEncountersSystems.Zones {
 				
 				}
 
-				if (zone.Persistent && zone.UseLimitedFactions && zone.Factions.Count > 0) {
+				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseLimitedFactions && zone.Factions.Count > 0) {
 
 					foreach (var faction in zone.Factions) {
 
@@ -341,7 +349,7 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.Persistent || !zone.UseZoneAnnounce)
+				if (!zone.Persistent || !zone.Active || !zone.UseZoneAnnounce)
 					continue;
 
 				for (int j = 0; j < PlayerManager.Players.Count; j++) {
@@ -378,6 +386,56 @@ namespace ModularEncountersSystems.Zones {
 
 
 		}
+
+		public static void ChangeKPLBools(Vector3D coords, string faction, List<string> counterNames, List<bool> counterValues) {
+
+			bool updateZones = false;
+
+			for (int i = 0; i < ActiveZones.Count; i++) {
+
+				var zone = ActiveZones[i];
+
+				if (!zone.PlayerKnownLocation || !zone.Factions.Contains(faction))
+					continue;
+
+				if (zone.PositionInsideZone(coords))
+					continue;
+
+				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
+				updateZones = true;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
+		}
+
+
+		public static void ChangeKPLCounters(Vector3D coords, string faction, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers) {
+
+			bool updateZones = false;
+
+			for (int i = 0; i < ActiveZones.Count; i++) {
+
+				var zone = ActiveZones[i];
+
+				if (!zone.PlayerKnownLocation || !zone.Factions.Contains(faction))
+					continue;
+
+				if (zone.PositionInsideZone(coords))
+					continue;
+
+				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
+				updateZones = true;
+
+			}
+
+			if (updateZones)
+				UpdateZoneStorage();
+
+		}
+
 
 		public static void ChangeZoneRadius(Vector3D coords, string name, double radiusChange, ModifierEnum modifier) {
 
@@ -491,7 +549,6 @@ namespace ModularEncountersSystems.Zones {
 				zone.Active = mode;
 
 				updateZones = true;
-				break;
 
 			}
 
@@ -500,7 +557,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ToggleZones(string zoneName = null, bool mode = false) {
+		public static void ToggleZones(string zoneName = null, bool mode = false, Vector3D? coords = null) {
 
 			bool updateZones = false;
 
@@ -511,10 +568,12 @@ namespace ModularEncountersSystems.Zones {
 				if (zoneName != null && zone.PublicName != zoneName)
 					continue;
 
+				if (coords != null && !zone.PositionInsideZone(coords.Value))
+					continue;
+
 				zone.Active = mode;
 
 				updateZones = true;
-				break;
 
 			}
 

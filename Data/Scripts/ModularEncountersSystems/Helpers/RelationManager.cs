@@ -153,6 +153,12 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void SetReputation(long playerId, string factionTag) {
+		
+			
+		
+		}
+
 		public static void ScheduledRun() {
 
 			RunCount++;
@@ -186,7 +192,6 @@ namespace ModularEncountersSystems.Helpers {
 
 						var bytes = Convert.FromBase64String(previousRelationsArray);
 						PreviouslySetRelations = MyAPIGateway.Utilities.SerializeFromBinary<List<string>>(bytes);
-
 
 					}
 

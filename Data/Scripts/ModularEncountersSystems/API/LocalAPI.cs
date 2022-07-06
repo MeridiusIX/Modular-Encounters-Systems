@@ -52,11 +52,13 @@ namespace ModularEncountersSystems.API {
 			dict.Add("RegisterSuccessfulSpawnAction", new Action<Action<IMyCubeGrid>, bool>(RegisterSuccessfulSpawnAction));
 			dict.Add("RemoveKnownPlayerLocation", new Action<Vector3D, string, bool>(KnownPlayerLocationManager.RemoveLocation));
 			dict.Add("SetSpawnerIgnoreForDespawn", new Func<IMyCubeGrid, bool, bool>(SetSpawnerIgnoreForDespawn));
+			dict.Add("SetZoneEnabled", new Action<string, bool, Vector3D?>(SetZoneEnabled));
 			dict.Add("SpawnBossEncounter", new Func<Vector3D, List<string>, bool>(SpawnBossEncounter));
 			dict.Add("SpawnPlanetaryCargoShip", new Func<Vector3D, List<string>, bool>(SpawnPlanetaryCargoShip));
 			dict.Add("SpawnPlanetaryInstallation", new Func<Vector3D, List<string>, bool>(SpawnPlanetaryInstallation));
 			dict.Add("SpawnRandomEncounter", new Func<Vector3D, List<string>, bool>(SpawnRandomEncounter));
 			dict.Add("SpawnSpaceCargoShip", new Func<Vector3D, List<string>, bool>(SpawnSpaceCargoShip));
+			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
 
 			return dict;
 
@@ -217,6 +219,13 @@ namespace ModularEncountersSystems.API {
 
 		}
 
+		public static void SetZoneEnabled(string zoneName, bool enabled, Vector3D? zoneCoords) {
+
+			ZoneManager.ToggleZones(zoneName, enabled, zoneCoords);
+
+
+		}
+
 		//SpawnBossEncounter
 		public static bool SpawnBossEncounter(Vector3D coords, List<string> spawnGroups) {
 
@@ -257,6 +266,21 @@ namespace ModularEncountersSystems.API {
 
 			return SpawnRequest.CalculateSpawn(coords, "API Request", SpawningType.SpaceCargoShip, false, false, spawnGroups);
 
+		}
+
+		public static void ToggleSpawnGroupEnabled(string spawnGroupName, bool toggle) {
+
+			foreach (var spawnGroup in SpawnGroupManager.SpawnGroups) {
+
+				if (spawnGroup.SpawnGroupName == spawnGroupName) {
+
+					spawnGroup.SpawnGroupEnabled = toggle;
+					break;
+
+				}
+
+			}
+								
 		}
 
 	}

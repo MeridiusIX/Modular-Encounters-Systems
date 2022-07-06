@@ -1,115 +1,115 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-		<EntityComponents>
-		
-		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-						<Id>
-								<TypeId>Inventory</TypeId>
-								<SubtypeId>RivalAI-GenericTargetProfile-EnemyOverride</SubtypeId>
-						</Id>
-						<Description>
-			
-			[RivalAI Target]
-	
-			[UseCustomTargeting:true]
-			[Target:Override]
+  <EntityComponents>
 
-			[MaxDistance:10000]
-			
-			[MatchAllFilters:OutsideOfSafezone]
-			[MatchAllFilters:Owner]
-			[MatchAllFilters:Relation]
-			[GetTargetBy:ClosestDistance]
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RivalAI-GenericTargetProfile-EnemyOverride</SubtypeId>
+      </Id>
+      <Description>
 
-			[Owners:Player]
-			[Owners:NPC]
-			[Relations:Enemy]
+        [RivalAI Target]
 
-			</Description>
-				</EntityComponent>
-		
-		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-						<Id>
-								<TypeId>Inventory</TypeId>
-								<SubtypeId>RivalAI-GenericTargetProfile-EnemyPlayer</SubtypeId>
-						</Id>
-						<Description>
-			
-			[RivalAI Target]
-	
-			[UseCustomTargeting:true]
-			[Target:Player]
+        [UseCustomTargeting:true]
+        [Target:Override]
 
-			[MaxDistance:10000]
-			
-			[MatchAllFilters:OutsideOfSafezone]
-			[MatchAllFilters:Owner]
-			[MatchAllFilters:Relation]
-			[GetTargetBy:ClosestDistance]
+        [MaxDistance:10000]
 
-			[Owners:Player]
-			[Relations:Enemy]
+        [MatchAllFilters:OutsideOfSafezone]
+        [MatchAllFilters:Owner]
+        [MatchAllFilters:Relation]
+        [GetTargetBy:ClosestDistance]
 
-			</Description>
-				</EntityComponent>
-		
-		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-						<Id>
-								<TypeId>Inventory</TypeId>
-								<SubtypeId>RivalAI-GenericTargetProfile-EnemyGrid</SubtypeId>
-						</Id>
-						<Description>
-			
-			[RivalAI Target]
-	
-			[UseCustomTargeting:true]
-			[Target:Grid]
+        [Owners:Player]
+        [Owners:NPC]
+        [Relations:Enemy]
 
-			[MaxDistance:10000]
-			
-			[MatchAllFilters:OutsideOfSafezone]
-			[MatchAllFilters:Owner]
-			[MatchAllFilters:Relation]
-			[GetTargetBy:ClosestDistance]
+      </Description>
+    </EntityComponent>
 
-			[Owners:Player]
-			[Relations:Enemy]
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RivalAI-GenericTargetProfile-EnemyPlayer</SubtypeId>
+      </Id>
+      <Description>
 
-			</Description>
-				</EntityComponent>
-		
-		<EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
-						<Id>
-								<TypeId>Inventory</TypeId>
-								<SubtypeId>RivalAI-GenericTargetProfile-Hunter</SubtypeId>
-						</Id>
-						<Description>
-			
-			[RivalAI Target]
-	
-			[UseCustomTargeting:true]
-			[Target:Grid]
+        [RivalAI Target]
 
-			[MaxDistance:15000]
-			
-			[MatchAllFilters:OutsideOfSafezone]
-			[MatchAllFilters:Owner]
-			[MatchAllFilters:Relation]
-			
-			[MatchAnyFilters:Broadcasting]
-			[MatchAnyFilters:MovementScore]
-			
-			[Owners:Player]
-			[Owners:NPC]
-			[Relations:Enemy]
-			
-			[NonBroadcastVisualRange:2000]
-			[MinMovementScore:1000]
-			
-			[GetTargetBy:ClosestDistance]
+        [UseCustomTargeting:true]
+        [Target:Player]
 
-			</Description>
-				</EntityComponent>
-		
-	</EntityComponents>
+        [MaxDistance:10000]
+
+        [MatchAllFilters:OutsideOfSafezone]
+        [MatchAllFilters:Owner]
+        [MatchAllFilters:Relation]
+        [GetTargetBy:ClosestDistance]
+
+        [Owners:Player]
+        [Relations:Enemy]
+
+      </Description>
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RivalAI-GenericTargetProfile-EnemyGrid</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Target]
+
+        [UseCustomTargeting:true]
+        [Target:Grid]
+
+        [MaxDistance:10000]
+
+        [MatchAllFilters:OutsideOfSafezone]
+        [MatchAllFilters:Owner]
+        [MatchAllFilters:Relation]
+        [GetTargetBy:ClosestDistance]
+
+        [Owners:Player]
+        [Relations:Enemy]
+
+      </Description>
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>RivalAI-GenericTargetProfile-Hunter</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Target]
+
+        [UseCustomTargeting:true]
+        [Target:Grid]
+
+        [MaxDistance:15000]
+
+        [MatchAllFilters:OutsideOfSafezone]
+        [MatchAllFilters:Owner]
+        [MatchAllFilters:Relation]
+
+        [MatchAnyFilters:Broadcasting]
+        [MatchAnyFilters:MovementScore]
+
+        [Owners:Player]
+        [Owners:NPC]
+        [Relations:Enemy]
+
+        [NonBroadcastVisualRange:2000]
+        [MinMovementScore:1000]
+
+        [GetTargetBy:ClosestDistance]
+
+      </Description>
+    </EntityComponent>
+
+  </EntityComponents>
 </Definitions>

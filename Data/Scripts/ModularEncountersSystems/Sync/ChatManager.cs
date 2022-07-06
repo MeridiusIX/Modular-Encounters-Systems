@@ -91,7 +91,7 @@ namespace ModularEncountersSystems.Sync {
 
                 SpawnLogger.Write("Processing Chat Command", SpawnerDebugEnum.Settings);
 
-                if (newChatData.ProcessChat()) {
+                if (newChatData.Message != "/noprocessing" && newChatData.ProcessChat()) {
 
                     if (newChatData.Mode == ChatMsgMode.ReturnMessage) {
 
@@ -110,6 +110,12 @@ namespace ModularEncountersSystems.Sync {
                     if (!string.IsNullOrWhiteSpace(newChatData.ReturnMessage)) {
 
                         MyVisualScriptLogicProvider.ShowNotification(newChatData.ReturnMessage, 5000, "White", newChatData.PlayerId);
+
+                    }
+
+                    if (newChatData.Message == "/noprocessing") {
+
+                        SendChatDataOverNetwork(newChatData, false);
 
                     }
 

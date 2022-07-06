@@ -13,15 +13,26 @@ namespace ModularEncountersSystems.Behavior {
 	public class Hunter : IBehaviorSubClass{
 
 		//Configurable
-		public int TimeBetweenNewTargetChecks;
-		public int LostTargetTimerTrigger;
-		public double DistanceToCheckEngagableTarget;
 
-		public bool EngageOnCameraDetection;
-		public bool EngageOnWeaponActivation;
-		public bool EngageOnTargetLineOfSight;
+		public int TimeBetweenNewTargetChecks { get { return _timeBetweenNewTargetChecks != 0 ? _timeBetweenNewTargetChecks : _behavior.AutoPilot.Data.TimeBetweenNewTargetChecks; } }
+		public int LostTargetTimerTrigger { get { return _lostTargetTimerTrigger != 0 ? _lostTargetTimerTrigger : _behavior.AutoPilot.Data.LostTargetTimerTrigger; } }
+		public double DistanceToCheckEngagableTarget { get { return _distanceToCheckEngagableTarget != 0 ? _distanceToCheckEngagableTarget : _behavior.AutoPilot.Data.DistanceToCheckEngagableTarget; } }
 
-		public double CameraDetectionMaxRange;
+		public bool EngageOnCameraDetection { get { return _engageOnCameraDetection != false ? _engageOnCameraDetection : _behavior.AutoPilot.Data.EngageOnCameraDetection; } }
+		public bool EngageOnWeaponActivation { get { return _engageOnWeaponActivation != false ? _engageOnWeaponActivation : _behavior.AutoPilot.Data.EngageOnWeaponActivation; } }
+		public bool EngageOnTargetLineOfSight { get { return _engageOnTargetLineOfSight != false ? _engageOnTargetLineOfSight : _behavior.AutoPilot.Data.EngageOnTargetLineOfSight; } }
+
+		public double CameraDetectionMaxRange { get { return _cameraDetectionMaxRange != 0 ? _cameraDetectionMaxRange : _behavior.AutoPilot.Data.CameraDetectionMaxRange; } }
+
+		private int _timeBetweenNewTargetChecks;
+		private int _lostTargetTimerTrigger;
+		private double _distanceToCheckEngagableTarget;
+
+		private bool _engageOnCameraDetection;
+		private bool _engageOnWeaponActivation;
+		private bool _engageOnTargetLineOfSight;
+
+		private double _cameraDetectionMaxRange;
 
 		//Non-Config
 		private DateTime _checkActiveTargetTimer;
@@ -38,15 +49,15 @@ namespace ModularEncountersSystems.Behavior {
 			_subClass = BehaviorSubclass.Hunter;
 			_behavior = behavior;
 
-			TimeBetweenNewTargetChecks = 15;
-			LostTargetTimerTrigger = 30;
-			DistanceToCheckEngagableTarget = 1200;
+			_timeBetweenNewTargetChecks = 0;
+			_lostTargetTimerTrigger = 0;
+			_distanceToCheckEngagableTarget = 0;
 
-			EngageOnCameraDetection = false;
-			EngageOnWeaponActivation = false;
-			EngageOnTargetLineOfSight = false;
+			_engageOnCameraDetection = false;
+			_engageOnWeaponActivation = false;
+			_engageOnTargetLineOfSight = false;
 
-			CameraDetectionMaxRange = 1800;
+			_cameraDetectionMaxRange = 0;
 
 			_checkActiveTargetTimer = MyAPIGateway.Session.GameDateTime;
 			_lostTargetTimer = MyAPIGateway.Session.GameDateTime;
@@ -158,7 +169,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				var time = MyAPIGateway.Session.GameDateTime - _checkActiveTargetTimer;
 
-				if (time.TotalSeconds > TimeBetweenNewTargetChecks) {
+				if (time.TotalSeconds > _timeBetweenNewTargetChecks) {
 
 					_checkActiveTargetTimer = MyAPIGateway.Session.GameDateTime;
 
@@ -197,7 +208,7 @@ namespace ModularEncountersSystems.Behavior {
 					_behavior.AutoPilot.SetInitialWaypoint(_behavior.AutoPilot.Targeting.TargetLastKnownCoords);
 					var time = MyAPIGateway.Session.GameDateTime - _lostTargetTimer;
 
-					if (time.TotalSeconds > LostTargetTimerTrigger) {
+					if (time.TotalSeconds > _lostTargetTimerTrigger) {
 
 						BehaviorLogger.Write("Hunter Returning To Despawn", BehaviorDebugEnum.BehaviorSpecific);
 						ReturnToDespawn();
@@ -214,7 +225,7 @@ namespace ModularEncountersSystems.Behavior {
 				var targetDist = Vector3D.Distance(_behavior.RemoteControl.GetPosition(), _behavior.AutoPilot.Targeting.TargetLastKnownCoords);
 
 				//Check Turret
-				if (EngageOnWeaponActivation == true) {
+				if (_engageOnWeaponActivation == true) {
 
 					if (_behavior.AutoPilot.Weapons.GetTurretTarget() != 0) {
 
@@ -228,7 +239,7 @@ namespace ModularEncountersSystems.Behavior {
 				}
 
 				//Check Visual Range
-				if (!engageTarget && EngageOnCameraDetection && targetDist < CameraDetectionMaxRange) {
+				if (!engageTarget && _engageOnCameraDetection && targetDist < _cameraDetectionMaxRange) {
 
 					if (_behavior.Grid.RaycastGridCheck(_behavior.AutoPilot.Targeting.TargetLastKnownCoords)) {
 
@@ -240,7 +251,7 @@ namespace ModularEncountersSystems.Behavior {
 				}
 
 				//Check Collision Data
-				if (!engageTarget && EngageOnTargetLineOfSight && _behavior.AutoPilot.Targeting.Data.MaxLineOfSight > 0 && _behavior.AutoPilot.Collision.TargetResult.HasTarget(_behavior.AutoPilot.Targeting.Data.MaxLineOfSight)) {
+				if (!engageTarget && _engageOnTargetLineOfSight && _behavior.AutoPilot.Targeting.Data.MaxLineOfSight > 0 && _behavior.AutoPilot.Collision.TargetResult.HasTarget(_behavior.AutoPilot.Targeting.Data.MaxLineOfSight)) {
 
 					if (_behavior.AutoPilot.Targeting.Target.GetParentEntity().EntityId == _behavior.AutoPilot.Collision.TargetResult.GetCollisionEntity().EntityId) {
 
@@ -364,49 +375,49 @@ namespace ModularEncountersSystems.Behavior {
 					//TimeBetweenNewTargetChecks
 					if (tag.Contains("[TimeBetweenNewTargetChecks:")) {
 
-						TagParse.TagIntCheck(tag, ref this.TimeBetweenNewTargetChecks);
+						TagParse.TagIntCheck(tag, ref this._timeBetweenNewTargetChecks);
 
 					}
 
 					//LostTargetTimerTrigger
 					if (tag.Contains("[LostTargetTimerTrigger:")) {
 
-						TagParse.TagIntCheck(tag, ref this.LostTargetTimerTrigger);
+						TagParse.TagIntCheck(tag, ref this._lostTargetTimerTrigger);
 
 					}
 
 					//DistanceToCheckEngagableTarget
 					if (tag.Contains("[DistanceToCheckEngagableTarget:")) {
 
-						TagParse.TagDoubleCheck(tag, ref this.DistanceToCheckEngagableTarget);
+						TagParse.TagDoubleCheck(tag, ref this._distanceToCheckEngagableTarget);
 
 					}
 
 					//EngageOnCameraDetection
 					if (tag.Contains("[EngageOnCameraDetection:")) {
 
-						TagParse.TagBoolCheck(tag, ref EngageOnCameraDetection);
+						TagParse.TagBoolCheck(tag, ref _engageOnCameraDetection);
 
 					}
 
 					//EngageOnWeaponActivation
 					if (tag.Contains("[EngageOnWeaponActivation:")) {
 
-						TagParse.TagBoolCheck(tag, ref EngageOnWeaponActivation);
+						TagParse.TagBoolCheck(tag, ref _engageOnWeaponActivation);
 
 					}
 
 					//EngageOnTargetLineOfSight
 					if (tag.Contains("[EngageOnTargetLineOfSight:")) {
 
-						TagParse.TagBoolCheck(tag, ref EngageOnTargetLineOfSight);
+						TagParse.TagBoolCheck(tag, ref _engageOnTargetLineOfSight);
 
 					}
 
 					//CameraDetectionMaxRange
 					if (tag.Contains("[CameraDetectionMaxRange:")) {
 
-						TagParse.TagDoubleCheck(tag, ref this.CameraDetectionMaxRange);
+						TagParse.TagDoubleCheck(tag, ref this._cameraDetectionMaxRange);
 
 					}
 

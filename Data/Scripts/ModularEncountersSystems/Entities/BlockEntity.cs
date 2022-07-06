@@ -107,11 +107,21 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public double GetCurrentHealth() {
+
+			if (ActiveEntity() && Block?.SlimBlock != null)
+				return Math.Round(Block.SlimBlock.BuildIntegrity - Block.SlimBlock.CurrentDamage, 3);
+			return 0;
+		
+		}
+
 		public override EntityType GetEntityType() {
 
 			return EntityType.Grid;
 
 		}
+
+
 
 		public List<long> GetOwners(bool onlyGetCurrentEntity = false, bool includeMinorityOwners = false) {
 
@@ -133,7 +143,7 @@ namespace ModularEncountersSystems.Entities {
 
 			foreach (var grid in LinkedGrids) {
 
-				if (!grid.ActiveEntity())
+				if (grid == null || !grid.ActiveEntity())
 					continue;
 
 				if (onlyGetCurrentEntity && grid.CubeGrid != Block.SlimBlock.CubeGrid)
@@ -297,7 +307,14 @@ namespace ModularEncountersSystems.Entities {
 
 		public void RefreshSubGrids() {
 
-			LinkedGrids = EntityEvaluator.GetAttachedGrids(Block.SlimBlock.CubeGrid);
+			if (ParentGrid == null)
+				ParentGrid = GridManager.GetGridEntity(Block?.SlimBlock?.CubeGrid);
+
+			if (ParentGrid == null)
+				return;
+
+			EntityEvaluator.GetAttachedGrids(ParentGrid);
+			LinkedGrids = ParentGrid.LinkedGrids;
 
 		}
 

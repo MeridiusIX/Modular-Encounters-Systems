@@ -14,6 +14,7 @@ using VRageMath;
 namespace ModularEncountersSystems.Behavior {
 	public interface IBehavior {
 
+		IBehaviorSubClass ActiveBehavior { get; }
 		AutoPilotSystem AutoPilot { get; }
 		BroadcastSystem Broadcast { get; }
 		DamageSystem Damage { get; }

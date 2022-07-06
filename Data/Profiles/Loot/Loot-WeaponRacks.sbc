@@ -1,0 +1,35 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>Loot-WeaponRacks</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Loot]
+
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/LargeBlockWeaponRack]
+        [ContainerBlockTypes:MyObjectBuilder_CargoContainer/SmallBlockWeaponRack]
+
+        [ContainerTypes:MES-ContainerTypes-PistolWeapons-1]
+        [ContainerTypes:MES-ContainerTypes-PistolWeapons-2]
+        [ContainerTypes:MES-ContainerTypes-PistolWeapons-3]
+        [ContainerTypes:MES-ContainerTypes-RifleWeapons-1]
+        [ContainerTypes:MES-ContainerTypes-RifleWeapons-2]
+        [ContainerTypes:MES-ContainerTypes-RifleWeapons-3]
+        [ContainerTypes:MES-ContainerTypes-RifleWeapons-4]
+        [ContainerTypes:MES-ContainerTypes-LauncherWeapons-1]
+        [ContainerTypes:MES-ContainerTypes-LauncherWeapons-2]
+
+        [MinBlocks:5]
+        [MaxBlocks:10]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

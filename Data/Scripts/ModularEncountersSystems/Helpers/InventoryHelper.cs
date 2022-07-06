@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Spawning.Profiles;
 using Sandbox.Definitions;
 using Sandbox.Game;
@@ -499,6 +500,40 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+			}
+
+		}
+
+		public static void ApplyContainerTypes(GridEntity grid) {
+
+			var blocks = new List<IMySlimBlock>();
+			grid.GetAllFatBlocks(blocks);
+
+			foreach (var block in blocks) {
+
+				if (block.FatBlock as IMyCargoContainer != null)
+					continue;
+
+				if (!block.FatBlock.HasInventory)
+					continue;
+
+				if (!StorageTools.HasStorageKey(block.FatBlock, StorageTools.MesContainerTypeKey))
+					continue;
+
+				var entity = block.FatBlock as MyEntity;
+				var inventory = entity?.GetInventory();
+
+				if (inventory == null)
+					continue;
+
+				var containerTypeId = block.FatBlock.Storage[StorageTools.MesContainerTypeKey];
+				var containerType = MyDefinitionManager.Static.GetContainerTypeDefinition(containerTypeId);
+
+				if (containerType == null)
+					continue;
+
+				inventory.GenerateContent(containerType);
+			
 			}
 
 		}

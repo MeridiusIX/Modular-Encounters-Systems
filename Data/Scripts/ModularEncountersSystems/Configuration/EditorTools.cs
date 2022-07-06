@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Configuration.Editor;
+using Sandbox.Game;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,6 +8,7 @@ namespace ModularEncountersSystems.Configuration.Editor {
     public static class EditorTools {
 
         private static List<string> _stringList = new List<string>();
+        private static List<PlanetSpawnFilter> _filterList = new List<PlanetSpawnFilter>();
 
         public static string EditSettings(string receivedCommand) {
 
@@ -75,6 +77,9 @@ namespace ModularEncountersSystems.Configuration.Editor {
 
             if (receivedCommand.StartsWith("/MES.Settings.Creatures."))
                 return Settings.Creatures.EditFields(receivedCommand);
+
+            if (receivedCommand.StartsWith("/MES.Settings.DroneEncounters."))
+                return Settings.DroneEncounters.EditFields(receivedCommand);
 
             return "Command Not Recognized";
         
@@ -190,6 +195,70 @@ namespace ModularEncountersSystems.Configuration.Editor {
 
                 }
                 
+                return true;
+
+            }
+
+            return false;
+
+        }
+
+        //MES.Settings.Type.PlanetSpawnFilters.Add.1441243234234234.SpawnGroup
+        public static bool SetCommandValuePlanetFilter(string command, ref PlanetSpawnFilter[] target) {
+
+            var splitCommand = (command.Trim()).Split('.');
+
+            if (splitCommand.Length < 7) {
+
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("Bad Length", 3000);
+                return false;
+
+            }
+                
+
+            long id = 0;
+
+            if (!long.TryParse(splitCommand[5], out id))
+                return false;
+
+            PlanetSpawnFilter filter = null;
+
+            foreach (var existingFilter in target)
+                if (existingFilter.PlanetId == id)
+                    filter = existingFilter;
+
+            if (filter == null) {
+
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("Filter Null: ", 3000);
+                return false;
+
+            }
+
+            _stringList.Clear();
+            _stringList.AddArray<string>(filter.PlanetSpawnGroupBlacklist);
+
+            if (splitCommand[4] == "Add") {
+
+                if (!_stringList.Contains(splitCommand[6])) {
+
+                    _stringList.Add(splitCommand[6]);
+                    filter.PlanetSpawnGroupBlacklist = _stringList.ToArray();
+
+                }
+
+                return true;
+
+            }
+
+            if (splitCommand[4] == "Remove") {
+
+                if (_stringList.Contains(splitCommand[6])) {
+
+                    _stringList.Remove(splitCommand[6]);
+                    filter.PlanetSpawnGroupBlacklist = _stringList.ToArray();
+
+                }
+
                 return true;
 
             }

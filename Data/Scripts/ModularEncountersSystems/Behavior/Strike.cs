@@ -285,7 +285,10 @@ namespace ModularEncountersSystems.Behavior {
 			//Behavior Specific Defaults
 			_behavior.AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-Strike");
 			_behavior.Despawn.UseNoTargetTimer = true;
-			
+
+			if (_behavior.AutoPilot.Collision == null)
+				_behavior.AutoPilot.Collision = new Subsystems.AutoPilot.CollisionSystem(_behavior.RemoteControl, _behavior.AutoPilot);
+
 			_behavior.AutoPilot.Collision.CollisionTimeTrigger = 5;
 
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {

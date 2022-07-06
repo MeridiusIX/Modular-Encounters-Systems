@@ -998,20 +998,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 <<<<<<< Updated upstream
 			} else {
-=======
-				if (control.UseCustomFactionTag == true && customfaction != null)
-                {
-					var customfactionId = customfaction.FactionId;
-					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, customfactionId, control);
-				}
-                else
-                {
-					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, _owner.FactionId, control);
-				}
-
-			} 
-			else {
->>>>>>> Stashed changes
 
 				player = PlayerManager.GetNearestPlayer(remotePosition);
 

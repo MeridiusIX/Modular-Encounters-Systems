@@ -5,6 +5,7 @@ using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Watchers;
@@ -12,6 +13,7 @@ using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
 using Sandbox.Definitions;
 using Sandbox.Game;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -279,6 +281,34 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void DebugAttachShipyardProfile(ChatMessage msg) {
+
+			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
+
+			if (grid == null) {
+
+				msg.ReturnMessage = "No Grid in Camera Direction";
+				return;
+
+			}
+
+			foreach (var projector in grid.Projectors) {
+
+				if (!projector.ActiveEntity())
+					continue;
+
+				if (projector.Block.Storage == null)
+					projector.Block.Storage = new MyModStorageComponent();
+
+				projector.Block.Storage.Add(StorageTools.MesShipyardKey, "MES-Shipyard-TestProfile");
+
+			}
+
+			msg.ReturnMessage = "Shipyard Profiles Attached To Eligible Blocks";
+			return;
+
+		}
+
 		public static void DebugAutoPilot(ChatMessage msg) {
 
 			var line = new LineD(msg.CameraPosition, msg.CameraDirection * 10000 + msg.CameraPosition);
@@ -470,6 +500,38 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			msg.ReturnMessage = "Processed Linked Grids";
+			//grid.RefreshSubGrids();
+
+		}
+
+		public static void DebugTestSaveGrid(ChatMessage msg) {
+
+			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
+
+			if (grid == null) {
+
+				msg.ReturnMessage = "No Grid in Camera Direction";
+				return;
+
+			}
+
+			var ob = grid.CubeGrid.GetObjectBuilder() as MyObjectBuilder_CubeGrid;
+			
+			try {
+
+				using (var writer = MyAPIGateway.Utilities.WriteFileInWorldStorage("CubeGrid.mes", typeof(MyObjectBuilder_CubeGrid))) {
+
+					writer.Write(MyAPIGateway.Utilities.SerializeToBinary<MyObjectBuilder_CubeGrid>(ob));
+
+				}
+
+			} catch (Exception exc) {
+
+				msg.ReturnMessage = "Saved Grid As File";
+
+			}
+
+			msg.ReturnMessage = "Saved Grid As File";
 			//grid.RefreshSubGrids();
 
 		}

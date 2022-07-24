@@ -16,7 +16,7 @@ namespace ModularEncountersSystems.Tasks {
 
 			_tickTrigger = 10;
 			_isValid = true;
-		
+
 		}
 
 		public override void Run() {
@@ -82,12 +82,40 @@ namespace ModularEncountersSystems.Tasks {
 
 					}
 
-					foreach (var owner in grid.CubeGrid.BigOwners) {
+					if (!grid.ForceRemove) {
 
-						SpawnLogger.Write(string.Format(" - Grid Majority Owner [{0}]. NPC Ownership: {1}", owner, OwnershipHelper.IsNPC(owner)), SpawnerDebugEnum.CleanUp, true);
+						bool abort = false;
+
+						foreach (var owner in grid.CubeGrid.BigOwners) {
+
+							var npcOwner = OwnershipHelper.IsNPC(owner);
+							SpawnLogger.Write(string.Format(" - Grid Majority Owner [{0}]. NPC Ownership: {1}", owner, npcOwner), SpawnerDebugEnum.CleanUp, true);
+
+							if (!npcOwner)
+								abort = true;
+
+						}
+
+						foreach (var owner in grid.CubeGrid.SmallOwners) {
+
+							var npcOwner = OwnershipHelper.IsNPC(owner);
+							SpawnLogger.Write(string.Format(" - Grid Minority Owner [{0}]. NPC Ownership: {1}", owner, npcOwner), SpawnerDebugEnum.CleanUp, true);
+
+							if (!npcOwner)
+								abort = true;
+
+						}
+
+						if (abort) {
+
+							SpawnLogger.Write(grid.CubeGrid.CustomName + " Has Non-NPC Ownership. Cleaning Aborted.", SpawnerDebugEnum.CleanUp, true);
+							Cleaning.FlaggedForRemoval.RemoveAt(i);
+
+						}
 
 					}
 
+					cubeGrid.DismountAllCockpits();
 					cubeGrid.Close();
 					cleanedGrid = true;
 					SpawnLogger.Write(grid.CubeGrid.CustomName + " Grid is Closed.", SpawnerDebugEnum.CleanUp);

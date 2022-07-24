@@ -50,7 +50,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public bool InitializePrefabForSpawn(string subtypeId, int index) {
+		public bool InitializePrefabForSpawn(string subtypeId, int index, List<MyObjectBuilder_CubeGrid> gridListOverride = null) {
 
 			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(subtypeId);
 			OriginalPrefab = prefab;
@@ -61,14 +61,31 @@ namespace ModularEncountersSystems.Spawning {
 
 			GridList.Clear();
 
-			foreach (var grid in prefab.CubeGrids) {
+			if (gridListOverride == null) {
 
-				var clonedGrid = grid.Clone() as MyObjectBuilder_CubeGrid;
+				foreach (var grid in prefab.CubeGrids) {
 
-				if (clonedGrid == null)
-					return false;
+					var clonedGrid = grid.Clone() as MyObjectBuilder_CubeGrid;
 
-				GridList.Add(clonedGrid);
+					if (clonedGrid == null)
+						return false;
+
+					GridList.Add(clonedGrid);
+
+				}
+
+			} else {
+
+				foreach (var grid in gridListOverride) {
+
+					var clonedGrid = grid.Clone() as MyObjectBuilder_CubeGrid;
+
+					if (clonedGrid == null)
+						return false;
+
+					GridList.Add(clonedGrid);
+
+				}
 
 			}
 

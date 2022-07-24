@@ -1,10 +1,12 @@
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ProtoBuf;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Definitions;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -22,13 +24,18 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<MyDefinitionId, int> ComponentMinimumValues = new Dictionary<MyDefinitionId, int>();
 		public static Dictionary<MyDefinitionId, int> OtherItemMinimumValues = new Dictionary<MyDefinitionId, int>();
 		public static Dictionary<MyDefinitionId, int> BlockMinimumValues = new Dictionary<MyDefinitionId, int>();
+		public static Dictionary<MyDefinitionId, long> PrefabMinimumValues = new Dictionary<MyDefinitionId, long>();
 
-		public static Dictionary<MyDefinitionId, int> MinimumValuesMaster = new Dictionary<MyDefinitionId, int>();
+		public static Dictionary<MyDefinitionId, long> MinimumValuesMaster = new Dictionary<MyDefinitionId, long>();
 
 		public static List<MyDefinitionId> ItemsWithBadValue = new List<MyDefinitionId>();
 		public static List<MyDefinitionId> ForbiddenItems = new List<MyDefinitionId>();
 
 		public static Dictionary<MyDefinitionId, MyBlueprintDefinitionBase> ComponentBlueprints = new Dictionary<MyDefinitionId, MyBlueprintDefinitionBase>();
+
+		public static Dictionary<long, PrefabContainer> EconomyPrefabPlaceholders = new Dictionary<long, PrefabContainer>();
+		private static List<PrefabContainer> AvailableEconomyPrefabs = new List<PrefabContainer>();
+		private static List<PrefabContainer> UsedEconomyPrefabs = new List<PrefabContainer>();
 
 
 		public static void Setup() {
@@ -224,6 +231,19 @@ namespace ModularEncountersSystems.Helpers {
 
 			}
 
+			for (int i = 1; i < 31; i++) {
+
+				var name = "MES-Prefab-2-" + i.ToString();
+				var prefab = new PrefabContainer(name);
+
+				if (prefab != null && prefab.Valid) {
+
+					AvailableEconomyPrefabs.Add(prefab);
+
+				}
+
+			}
+
 		}
 
 		public static void AddToMasterReference(MyDefinitionId id, int amount) {
@@ -350,6 +370,45 @@ namespace ModularEncountersSystems.Helpers {
 
 			return -1;
 
+		}
+
+		public static long CalculatePrefabCost(string prefabId) {
+
+			//TODO: Check For Existing Prefab
+			var id = new MyDefinitionId(typeof(MyObjectBuilder_PrefabDefinition), prefabId);
+			long price = 0;
+
+			if (MinimumValuesMaster.TryGetValue(id, out price))
+				return price;
+
+			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(prefabId);
+
+			if (prefab?.CubeGrids == null)
+				return 0;
+
+			foreach (var grid in prefab.CubeGrids) {
+
+				if (grid.CubeBlocks == null)
+					continue;
+
+				foreach (var block in grid.CubeBlocks) {
+
+					long thisPrice = 0;
+					MinimumValuesMaster.TryGetValue(block.GetId(), out thisPrice);
+					price += thisPrice;
+
+				}
+			
+			}
+
+			if (price > 0) {
+
+				MinimumValuesMaster.Add(id, price);
+
+			}
+
+			return price;
+		
 		}
 
 		public static void InitNpcStoreBlock(IMyCubeGrid cubeGrid, ImprovedSpawnGroup spawnGroup) {
@@ -644,6 +703,77 @@ namespace ModularEncountersSystems.Helpers {
 				SpawnLogger.Write(errorLog.ToString(), SpawnerDebugEnum.Error, true);
 
 			}
+
+		}
+
+		public static long GetBlockRegularValue(IMySlimBlock block, Dictionary<string, int> missing, bool getInventoryValue) {
+
+			int result = 0;
+
+			if (!BlockMinimumValues.TryGetValue(block.BlockDefinition.Id, out result))
+				return result;
+
+			if (missing != null) {
+
+				missing.Clear();
+				block.GetMissingComponents(missing);
+
+				foreach (var compName in missing) {
+
+					var comp = new MyDefinitionId(typeof(MyObjectBuilder_Component), compName.Key);
+					int compValue = 0;
+					if (ComponentMinimumValues.TryGetValue(comp, out compValue))
+						result -= compValue * compName.Value;
+
+				}
+
+			}
+
+			if (getInventoryValue) {
+
+				if (block.FatBlock == null || !block.FatBlock.HasInventory)
+					return result;
+
+				var cubeBlock = block.FatBlock as MyCubeBlock;
+
+				for (int i = 0; i < block.FatBlock.InventoryCount; i++) {
+
+					var inventory = cubeBlock.GetInventory(i);
+
+					foreach (var item in inventory.GetItems()) {
+
+						int itemValue = 0;
+
+						if (ComponentMinimumValues.TryGetValue(item.Content.GetId(), out itemValue))
+							result += (int)Math.Floor(itemValue * (float)item.Amount);
+
+					}
+
+				}
+
+			}
+			
+			return result;
+
+		}
+
+		public static long GetBlockRepairValue(IMySlimBlock block, Dictionary<string, int> missing) {
+
+			int result = 0;
+
+			missing.Clear();
+			block.GetMissingComponents(missing);
+
+			foreach (var compName in missing) {
+
+				var comp = new MyDefinitionId(typeof(MyObjectBuilder_Component), compName.Key);
+				int compValue = 0;
+				if (ComponentMinimumValues.TryGetValue(comp, out compValue))
+					result += compValue * compName.Value;
+
+			}
+
+			return result;
 
 		}
 

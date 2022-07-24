@@ -254,6 +254,7 @@ namespace ModularEncountersSystems.Helpers {
         TargetValue,
         Underwater,
         GravityThrust,
+        IgnoreStealthDrive,
 
     }
 

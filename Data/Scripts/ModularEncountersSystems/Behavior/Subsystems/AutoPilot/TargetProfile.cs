@@ -153,6 +153,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		[ProtoMember(48)]
 		public bool ActivateTargetLockAfterPlayerDamage;
 
+		[ProtoMember(49)]
+		public double StealthDriveMinDistance;
+
 		public TargetProfile() {
 
 			UseCustomTargeting = false;
@@ -222,6 +225,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			GetTargetLockBy = TargetSortEnum.ClosestDistance;
 			ManualTargetLockOnly = false;
 			ActivateTargetLockAfterPlayerDamage = false;
+
+			StealthDriveMinDistance = 0;
 
 			ProfileSubtypeId = "";
 
@@ -561,6 +566,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					if (tag.Contains("[ActivateTargetLockAfterPlayerDamage:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref ActivateTargetLockAfterPlayerDamage);
+
+					}
+
+					//StealthDriveMinDistance
+					if (tag.Contains("[StealthDriveMinDistance:") == true) {
+
+						TagParse.TagDoubleCheck(tag, ref StealthDriveMinDistance);
 
 					}
 

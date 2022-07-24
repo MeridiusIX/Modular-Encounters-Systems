@@ -247,6 +247,17 @@ namespace ModularEncountersSystems.BlockLogic {
 
             }
 
+            if (block.Block as IMyProjector != null && block.Block.SlimBlock.BlockDefinition.Id.SubtypeName == "LargeBlockConsole") {
+
+                if (block.Block.Storage != null && block.Block.Storage.ContainsKey(StorageTools.MesShipyardKey)) {
+
+                    LogicBlocks.Add(block.Block.EntityId, new PrefabConsoleTable(block));
+                    return;
+
+                }
+                
+            }
+
         }
 
         public static void Unload() {

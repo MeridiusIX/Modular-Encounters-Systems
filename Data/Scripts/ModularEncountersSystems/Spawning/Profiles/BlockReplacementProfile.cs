@@ -9,29 +9,43 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public List<MyDefinitionId> OldBlock;
 		public List<MyDefinitionId> NewBlock;
+		public List<int> Limit;
 
 		public Dictionary<MyDefinitionId, MyDefinitionId> Replacement;
+		public Dictionary<MyDefinitionId, int> CountReplacement;
 
 		public BlockReplacementProfile(string data = null) {
 
 			OldBlock = new List<MyDefinitionId>();
 			NewBlock = new List<MyDefinitionId>();
+			Limit = new List<int>();
 
 			InitTags(data);
 
 			Replacement = new Dictionary<MyDefinitionId, MyDefinitionId>();
+			CountReplacement = new Dictionary<MyDefinitionId, int>();
 
 			if (OldBlock.Count == 0 || NewBlock.Count == 0)
 				return;
 
 			int count = OldBlock.Count <= NewBlock.Count ? OldBlock.Count : NewBlock.Count;
 
-			for (int i = 0; i < count; i++) {
+			for (int i = 0; i < OldBlock.Count && i < NewBlock.Count; i++) {
 
 				if (!Replacement.ContainsKey(OldBlock[i]))
 					Replacement.Add(OldBlock[i], NewBlock[i]);
 
 			}
+
+			for (int i = 0; i < OldBlock.Count && i < Limit.Count; i++) {
+
+				if (!CountReplacement.ContainsKey(OldBlock[i]))
+					CountReplacement.Add(OldBlock[i], Limit[i]);
+
+			}
+
+			if (CountReplacement.Count == 0)
+				CountReplacement = null;
 
 		}
 
@@ -56,6 +70,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.Contains("[NewBlock:")) {
 
 					TagParse.TagMyDefIdCheck(tag, ref NewBlock);
+					continue;
+
+				}
+
+				//Limit
+				if (tag.Contains("[Limit:")) {
+
+					TagParse.TagIntListCheck(tag, ref Limit);
 					continue;
 
 				}

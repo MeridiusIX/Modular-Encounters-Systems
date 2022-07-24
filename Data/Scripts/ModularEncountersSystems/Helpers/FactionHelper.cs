@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Sync;
+using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,15 @@ namespace ModularEncountersSystems.Helpers {
 		}
 
 		public static long GetFactionOwner(IMyFaction faction) {
+
+			if (faction.Members.Count == 0) {
+
+				var factionDef = MyDefinitionManager.Static.TryGetFactionDefinition(faction.Tag);
+				MyAPIGateway.Session.Factions.AddNewNPCToFaction(faction.FactionId, factionDef?.Founder ?? faction.Name + " Leader");
+				foreach (var member in faction.Members) 
+					MyAPIGateway.Session.Factions.PromoteMember(faction.FactionId, member.Value.PlayerId);
+
+			}
 
 			if (faction.FounderId != 0)
 				return faction.FounderId;
@@ -158,7 +168,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static void ChangeDamageOwnerReputation(IMyRemoteControl remoteControl, List<string> factions, long attackingEntity, List<int> amounts, bool applyChangeToAttackerFaction) {
+		public static void ChangeDamageOwnerReputation(IMyRemoteControl remoteControl, List<string> factions, long attackingEntity, List<int> amounts, bool applyChangeToAttackerFaction, int minRep, int maxRep) {
 
 			if (amounts.Count != factions.Count) {
 
@@ -178,11 +188,11 @@ namespace ModularEncountersSystems.Helpers {
 
 			var ownerList = new List<long>();
 			ownerList.Add(owner);
-			ChangePlayerReputationWithFactions(remoteControl, amounts, ownerList, factions, applyChangeToAttackerFaction);
+			ChangePlayerReputationWithFactions(remoteControl, amounts, ownerList, factions, applyChangeToAttackerFaction, minRep, maxRep);
 
 		}
 
-		public static void ChangeReputationWithPlayersInRadius(IMyRemoteControl remoteControl, double radius, List<int> amounts, List<string> factions, bool applyReputationChangeToFactionMembers) {
+		public static void ChangeReputationWithPlayersInRadius(IMyRemoteControl remoteControl, double radius, List<int> amounts, List<string> factions, bool applyReputationChangeToFactionMembers, int minRep, int maxRep) {
 
 			if (amounts.Count != factions.Count) {
 
@@ -209,11 +219,11 @@ namespace ModularEncountersSystems.Helpers {
 
 			}
 
-			ChangePlayerReputationWithFactions(remoteControl, amounts, playerIds, factions, applyReputationChangeToFactionMembers);
+			ChangePlayerReputationWithFactions(remoteControl, amounts, playerIds, factions, applyReputationChangeToFactionMembers, minRep, maxRep);
 
 		}
 
-		public static void ChangePlayerReputationWithFactions(IMyRemoteControl remoteControl, List<int> amounts, List<long> players, List<string> factionTags, bool applyReputationChangeToFactionMembers) {
+		public static void ChangePlayerReputationWithFactions(IMyRemoteControl remoteControl, List<int> amounts, List<long> players, List<string> factionTags, bool applyReputationChangeToFactionMembers, int minRep, int maxRep) {
 
 			var allPlayerIds = new List<long>(players.ToList());
 
@@ -268,7 +278,19 @@ namespace ModularEncountersSystems.Helpers {
 
 					}
 
-					var newRep = oldRep + amount;
+					int proposedRep = oldRep + amount;
+
+					int newRep = oldRep;
+
+					if (proposedRep >= minRep && proposedRep <= maxRep)
+						newRep = MathHelper.Clamp(oldRep + amount, minRep, maxRep);
+					else {
+					
+						if((proposedRep < minRep && Math.Sign(amount) == 1) || (proposedRep > minRep && Math.Sign(amount) == -1))
+							newRep = oldRep + amount;
+
+					}
+
 					MyAPIGateway.Session.Factions.SetReputationBetweenPlayerAndFaction(playerId, faction.FactionId, newRep);
 					//MyVisualScriptLogicProvider.ShowNotification(string.Format("Reputation With {0} {1} By: {2}", faction.Tag, modifier, amount.ToString()), 2000, color, playerId);
 

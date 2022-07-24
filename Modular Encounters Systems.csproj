@@ -61,7 +61,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Prefabs\" />
-    <Folder Include="Data\Scripts\ModularEncountersSystems\Sync\" />
     <Folder Include="Audio\" />
     <Folder Include="Models\" />
     <Folder Include="VoxelMaps\" />

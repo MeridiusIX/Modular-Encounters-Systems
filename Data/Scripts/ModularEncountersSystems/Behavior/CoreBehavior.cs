@@ -1549,18 +1549,6 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Primary Targeting:   ").Append(AutoPilot.Targeting.NormalData?.ProfileSubtypeId ?? "N/A").AppendLine();
 			sb.Append(" - Override Targeting:  ").Append(AutoPilot.Targeting.OverrideData?.ProfileSubtypeId ?? "N/A").AppendLine();
 
-			/*
-			sb.Append(" - Triggers:            ").Append(Trigger.Triggers.Count).AppendLine();
-			sb.Append("   - Trigger:           ").Append("").AppendLine();
-			sb.Append("   - Condition:         ").Append("").AppendLine();
-			sb.Append("   - Actions:           ").Append("").AppendLine();
-			sb.Append("     - Action:          ").Append("").AppendLine();
-			sb.Append("     - Chats:           ").Append("").AppendLine();
-			sb.Append("       - Chat:          ").Append("").AppendLine();
-			sb.Append("     - Spawns:          ").Append("").AppendLine();
-			sb.Append("       - Spawn:         ").Append("").AppendLine();
-			*/
-
 			var totalTriggerCount = Trigger.Triggers.Count + Trigger.DamageTriggers.Count + Trigger.CommandTriggers.Count + Trigger.CompromisedTriggers.Count;
 
 			if (totalTriggerCount > 0) {
@@ -1601,6 +1589,25 @@ namespace ModularEncountersSystems.Behavior {
 				sb.Append(" - UseFlyLevelWithGravity:     ").Append(AutoPilot.State.UseFlyLevelWithGravity).AppendLine();
 				sb.Append(" - UseFlyLevelWithGravityIdle: ").Append(AutoPilot.State.UseFlyLevelWithGravityIdle).AppendLine();
 				sb.AppendLine();
+
+				//WeaponCore Gun Readiness
+				if (APIs.WeaponCoreApiLoaded) {
+
+					sb.Append("::: WeaponCore Guns Ready :::").AppendLine();
+
+					foreach (var weapon in AutoPilot.Weapons.AllWeapons) {
+
+						if (weapon?.Block() == null)
+							continue;
+
+						sb.Append(weapon.Block().CustomName).Append(" /// ").Append(weapon.Status.ToString()).AppendLine();
+
+					}
+
+					sb.AppendLine();
+
+				}
+
 
 			}
 

@@ -12,12 +12,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<MyDefinitionId> Blocks;
 		public List<Type> Types;
 		public bool MatchOnlyTypeId;
-		public bool UseSeparatePercentages;
-
+		
 		public int Chance;
 
 		public int MinPercentage;
 		public int MaxPercentage;
+
+		public bool UseSeparatePercentages;
 
 		public int MinIntegrityPercentage;
 		public int MaxIntegrityPercentage;

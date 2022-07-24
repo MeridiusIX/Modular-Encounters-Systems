@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
+﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -606,6 +607,32 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				return false;
 			
+			}
+
+			//Stealth
+			if (AddonManager.StealthMod) {
+
+				if (target.GetParentEntity() != null && ((uint)target.GetParentEntity().Flags & 0x1000000) > 0) {
+
+					if (!AllUniqueFilters.Contains(TargetFilterEnum.IgnoreStealthDrive)) {
+
+						if (distance > data.StealthDriveMinDistance) {
+
+							var range = target.BroadcastRange(data.BroadcastOnlyAntenna);
+
+							if (range < distance) {
+
+								BehaviorLogger.Write(string.Format(" - Evaluated Stealth Detection: {0}", false), BehaviorDebugEnum.TargetEvaluation);
+								return false;
+
+							}
+
+						}
+
+					}
+
+				}
+
 			}
 
 			//Altitude

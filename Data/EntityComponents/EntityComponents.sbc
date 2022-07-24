@@ -110,6 +110,16 @@
 				<guid>9E614A24-8027-4C66-8A7B-63A36AFE36EC</guid>
 			</RegisteredStorageGuids>
 		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>MesShipyardKey</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>88334D52-3F3B-47CB-83C7-426FBC0553FA</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
 		
 	</EntityComponents>
 </Definitions>

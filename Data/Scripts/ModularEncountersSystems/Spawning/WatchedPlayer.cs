@@ -53,7 +53,7 @@ namespace ModularEncountersSystems.Spawning {
 
             CreatureCheckTimer = MathTools.RandomBetween(Settings.Creatures.MinCreatureSpawnTime, Settings.Creatures.MaxCreatureSpawnTime);
 
-            DroneEncounterTimer = 30;
+            DroneEncounterTimer = Settings.DroneEncounters.SpawnTimerTrigger;
             DroneEncounterTimerCooldownTimer = 0;
             DroneEncounterTracker = new Dictionary<string, DateTime>();
 

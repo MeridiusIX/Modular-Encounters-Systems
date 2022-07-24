@@ -1,7 +1,9 @@
+using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
 using System;
+using VRage;
 using VRage.Game;
 using VRage.Game.Components;
 using VRage.ModAPI;
@@ -39,9 +41,9 @@ namespace ModularEncountersSystems.BlockLogic {
 					var content = (MyObjectBuilder_PhysicalObject)MyObjectBuilderSerializer.CreateNewObject(fuelId);
 					var fuelItem = new MyObjectBuilder_InventoryItem { Amount = 1, Content = content };
 
-					if (Reactor.GetInventory().CanItemsBeAdded(100, fuelId) == true && MyAPIGateway.Multiplayer.IsServer == true) {
+					if (Reactor.GetInventory().CanItemsBeAdded((MyFixedPoint)Settings.CustomBlocks.ProprietaryReactorFuelAmount, fuelId) == true && MyAPIGateway.Multiplayer.IsServer == true) {
 
-						Reactor.GetInventory().AddItems(100, fuelItem.Content);
+						Reactor.GetInventory().AddItems((MyFixedPoint)Settings.CustomBlocks.ProprietaryReactorFuelAmount, fuelItem.Content);
 
 					}
 

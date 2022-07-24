@@ -87,6 +87,30 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public static IMyTerminalBlock GetBlockByEntityIds(long gridEntityId, long blockEntityId) {
+
+			for (int i = Grids.Count - 1; i >= 0; i--) {
+
+				var grid = GetSafeGridFromIndex(i);
+
+				if (grid == null || !grid.ActiveEntity() || grid.CubeGrid.EntityId != gridEntityId)
+					continue;
+
+				for (int j = grid.AllTerminalBlocks.Count - 1; j >= 0; j--) {
+
+					var block = grid.AllTerminalBlocks[j];
+
+					if (block.Block.EntityId == blockEntityId)
+						return block.Block;
+
+				}
+
+			}
+
+			return null;
+
+		}
+
 		public static GridEntity GetClosestGridInDirection(MatrixD cameraMatrix, double distance) {
 
 			var line = new LineD(cameraMatrix.Translation, cameraMatrix.Forward * distance + cameraMatrix.Translation);
@@ -107,13 +131,16 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public static GridEntity GetGridEntity(IMyCubeGrid cubeGrid) {
+		public static GridEntity GetGridEntity(IMyCubeGrid cubeGrid, bool getNonActive = false) {
+
+			if (cubeGrid == null)
+				return null;
 
 			for (int i = Grids.Count - 1; i >= 0; i--) {
 
-				var grid = Grids[i];
+				var grid = GetSafeGridFromIndex(i);
 
-				if (grid.ActiveEntity() && grid.CubeGrid == cubeGrid)
+				if ((grid.ActiveEntity() || (getNonActive && !grid.Closed)) && grid.CubeGrid == cubeGrid)
 					return grid;
 
 			}
@@ -134,6 +161,24 @@ namespace ModularEncountersSystems.Entities {
 			}
 
 			return null;
+
+		}
+
+		public static void GetGridsWithinDistance(Vector3D coords, double distance, List<GridEntity> grids) {
+
+			for (int i = Grids.Count - 1; i >= 0; i--) {
+
+				var grid = GetSafeGridFromIndex(i);
+
+				if (grid == null || !grid.ActiveEntity())
+					continue;
+
+				if (grid.Distance(coords) > distance)
+					continue;
+
+				grids.Add(grid);
+
+			}
 
 		}
 
@@ -305,8 +350,11 @@ namespace ModularEncountersSystems.Entities {
 
 			try {
 
-				MyAPIGateway.GridGroups.OnGridGroupCreated -= OnGridGroupChanged;
-				MyAPIGateway.GridGroups.OnGridGroupDestroyed -= OnGridGroupChanged;
+				if(MyAPIGateway.GridGroups != null)
+					MyAPIGateway.GridGroups.OnGridGroupCreated -= OnGridGroupChanged;
+
+				if (MyAPIGateway.GridGroups != null)
+					MyAPIGateway.GridGroups.OnGridGroupDestroyed -= OnGridGroupChanged;
 
 			} catch (Exception) {
 			

@@ -90,6 +90,30 @@ namespace ModularEncountersSystems.Sync {
 
                 }
 
+                if (container.Mode == SyncMode.ShipyardTransaction) {
+
+                    var shipYardData = MyAPIGateway.Utilities.SerializeFromBinary<ShipyardTransaction>(container.Data);
+
+                    if (shipYardData != null) {
+
+                        shipYardData.ProcessTransaction(sender);
+
+                    }
+
+                }
+
+                if (container.Mode == SyncMode.ShipyardTransactionResult) {
+
+                    var shipYardData = MyAPIGateway.Utilities.SerializeFromBinary<ShipyardTransactionResult>(container.Data);
+
+                    if (shipYardData != null) {
+
+                        shipYardData.ProcessMessage();
+
+                    }
+
+                }
+
             } catch(Exception exc) {
 
                 SpawnLogger.Write("Exception in NetworkMessageReceiver", SpawnerDebugEnum.Error, true);

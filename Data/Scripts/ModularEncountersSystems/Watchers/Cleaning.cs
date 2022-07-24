@@ -287,6 +287,19 @@ namespace ModularEncountersSystems.Watchers {
 		
 		}
 
+		public static void ForceRemoveGrid(GridEntity grid) {
+
+			grid.ForceRemove = true;
+			SpawnLogger.Write(grid.CubeGrid.CustomName + " Force Remove Request. Marking For Removal.", SpawnerDebugEnum.CleanUp);
+			RemoveGrid(grid);
+			GridCleanupData.RemoveData(grid);
+
+			if (grid.Npc != null)
+				grid.Npc.DespawnSource = "ForceRemove";
+
+
+		}
+
 		public static bool IsKeenEconomyStation(GridEntity grid) {
 
 			bool spawnedByOther = false;

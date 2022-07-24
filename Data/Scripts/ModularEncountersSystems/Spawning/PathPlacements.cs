@@ -888,7 +888,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		private static void CalculateDroneEncounterPath(PathDetails path, SpawnGroupCollection collection, EnvironmentEvaluation environment) {
 
-			path.SpawnType = SpawningType.OtherNPC;
+			path.SpawnType = SpawningType.DroneEncounter;
 
 			var voxelList = new List<MyVoxelBase>();
 			var voxelSphere = new BoundingSphereD(environment.Position, 20000);

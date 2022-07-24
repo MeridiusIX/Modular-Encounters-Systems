@@ -1,38 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sandbox.Common;
-using Sandbox.Common.ObjectBuilders;
-using Sandbox.Common.ObjectBuilders.Definitions;
-using Sandbox.Definitions;
-using Sandbox.Game;
-using Sandbox.Game.Entities;
-using Sandbox.Game.EntityComponents;
-using Sandbox.Game.GameSystems;
-using Sandbox.ModAPI;
-using Sandbox.ModAPI.Interfaces;
-using Sandbox.ModAPI.Weapons;
-using SpaceEngineers.Game.ModAPI;
-using ProtoBuf;
-using VRage.Game;
-using VRage.Game.Components;
-using VRage.Game.Entity;
-using VRage.Game.ModAPI;
-using VRage.ModAPI;
-using VRage.ObjectBuilders;
-using VRage.Game.ObjectBuilders.Definitions;
-using VRage.Utils;
-using VRageMath;
-using ModularEncountersSystems;
-using ModularEncountersSystems.Behavior;
-using ModularEncountersSystems.Helpers;
-using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
-using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Sync;
+using Sandbox.Game;
+using Sandbox.ModAPI;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using VRage.Game.ModAPI;
+using VRageMath;
 
 namespace ModularEncountersSystems.Behavior.Subsystems {
 
@@ -269,21 +247,32 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				var authorColor = chat.Color;
 
-				var faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(factionTag);
-				var factionId = faction.FactionId;
+				
 				if (authorColor == "{PlayerRelation}")
-                {
-					var PlayerFactionRelation = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(playerId, factionId);
-					if(PlayerFactionRelation>=-1500 && PlayerFactionRelation <= -501)
-						authorColor = "Red";
-					if (PlayerFactionRelation >= -500 && PlayerFactionRelation <= 500)
-						authorColor = "White";
-					if (PlayerFactionRelation >= 501 && PlayerFactionRelation <= 1500)
-						authorColor = "Green";
+				{
+
+					var faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(factionTag);
+
+					if (faction != null) {
+
+						var factionId = faction.FactionId;
+						var PlayerFactionRelation = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(playerId, factionId);
+
+						if (PlayerFactionRelation <= -501)
+							authorColor = "Red";
+
+						if (PlayerFactionRelation >= -500 && PlayerFactionRelation <= 500)
+							authorColor = "White";
+
+						if (PlayerFactionRelation >= 501)
+							authorColor = "Green";
+
+					}
+
 				}
 				
 
-				if (authorColor != "White" && authorColor != "Red" && authorColor != "Green" && authorColor != "Blue") {
+				if (authorColor != "White" && authorColor != "Red" && authorColor != "Green" && authorColor != "Blue" && authorColor != "{PlayerRelation}") {
 
 					authorColor = "White";
 

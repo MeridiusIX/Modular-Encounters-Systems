@@ -15,8 +15,24 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
+
+	public enum WeaponStatusEnum{
+	
+		Unknown,
+		ReadyToFire,
+		StaticWeaponNotAligned,
+		NoIncomingHomingProjectiles,
+		OutsideHomingRange,
+		NoHomingTarget,
+		NonActiveEntity,
+		NoAmmo,
+
+
+	}
+
 	public abstract class BaseWeapon {
 
+		public WeaponStatusEnum Status { get { return _status; } set { _status = value; } }
 		public List<IWeapon> SubWeapons { get { return _subWeapons; } }
 		public bool PendingAmmoRefill { get { return _pendingAmmoRefill; } }
 		public bool IsWeaponCore { get { return _isWeaponCore; } }
@@ -27,6 +43,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		public bool UsesTurretController { get { return _usesTurretController; } set { _usesTurretController = value; } }
 		public bool IsHoming { get { return _homingAmmo; } set { _homingAmmo = value; } }
+
+		internal WeaponStatusEnum _status;
 
 		internal List<IWeapon> _subWeapons;
 		internal List<IMyFunctionalBlock> _subWeaponBlocks;
@@ -242,6 +260,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			BehaviorLogger.Write("WeaponCore Static Must Contact Hostile: " + mustContactHostile, BehaviorDebugEnum.Weapon);
 			*/
 
+			Status = WeaponStatusEnum.StaticWeaponNotAligned;
 			if (!canShootWaypoint && !canShootTarget)
 				return false;
 
@@ -251,6 +270,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (mustContactHostile && !hostile)
 				return false;
 
+			Status = WeaponStatusEnum.ReadyToFire;
 			return true;
 		
 		}

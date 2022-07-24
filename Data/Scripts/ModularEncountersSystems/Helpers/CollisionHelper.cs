@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using VRage.Game.Entity;
 using VRage.Game.ModAPI;
+using VRage.Game.ModAPI.Interfaces;
 using VRage.ModAPI;
 using VRage.Voxels;
 using VRageMath;
@@ -19,13 +20,15 @@ namespace ModularEncountersSystems.Helpers {
 
 		public CollisionType HitType;
 		public IMyEntity HitEntity;
+		public IMyDestroyableObject HitObject;
 		public Vector3D HitPosition;
 
-		public CollisionResultSimple(CollisionType type, IMyEntity ent, Vector3D pos) {
+		public CollisionResultSimple(CollisionType type, IMyEntity ent, Vector3D pos, IMyDestroyableObject obj) {
 
 			HitType = type;
 			HitEntity = ent;
 			HitPosition = pos;
+			HitObject = obj;
 
 		}
 	
@@ -123,6 +126,7 @@ namespace ModularEncountersSystems.Helpers {
 			Vector3D hitPosition = Vector3D.Zero;
 			Vector3D closestHit = Vector3D.Zero;
 			IMyEntity hitEntity = null;
+			IMyDestroyableObject hitObject = null;
 			double closestDistance = 0;
 			CollisionType hitType = CollisionType.None;
 
@@ -137,7 +141,7 @@ namespace ModularEncountersSystems.Helpers {
 				if (grid.Distance(start) > dist * 2)
 					continue;
 
-				if (grid.LineIntersection(line, ray, ref hitPosition) && ComparePositions(hitType, start, hitPosition, ref closestDistance)) {
+				if (grid.LineIntersection(line, ray, ref hitPosition, ref hitObject) && ComparePositions(hitType, start, hitPosition, ref closestDistance)) {
 
 					hitType = CollisionType.Grid;
 					closestHit = hitPosition;
@@ -226,6 +230,7 @@ namespace ModularEncountersSystems.Helpers {
 						hitType = CollisionType.Player;
 						closestHit = hitPosition;
 						hitEntity = player.Player.Character;
+						hitObject = player.Player.Character;
 
 					}
 
@@ -310,7 +315,7 @@ namespace ModularEncountersSystems.Helpers {
 			
 			}
 
-			return new CollisionResultSimple(hitType, hitEntity, closestHit);
+			return new CollisionResultSimple(hitType, hitEntity, closestHit, hitObject);
 
 		}
 

@@ -786,6 +786,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
+		public void RazeBlocksWithTypes(List<MyDefinitionId> types) {
+
+			for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+				var block = AllBlocks[i];
+
+				if (!CheckBlockValid(block)) {
+
+					AllTerminalBlocks.RemoveAt(i);
+					continue;
+
+				}
+
+				if (types.Contains(block.BlockDefinition.Id))
+					block.CubeGrid.RazeBlock(block.Min);
+
+			}
+
+		}
+
 		public void RecolorBlocks(IMyCubeGrid grid, List<Vector3D> oldColors, List<Vector3D> newColors, List<string> newSkins) {
 
 			for (int j = AllBlocks.Count - 1; j >= 0; j--) {

@@ -111,6 +111,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckIfTargetIsPlayerOwned;
 		public bool CheckIfTargetIsNpcOwned;
 
+		public bool IsTargetPlayer;
+		public bool IsTargetGrid;
+
 		public bool IsAttackerHostile;
 		public bool IsAttackerNeutral;
 		public bool IsAttackerFriendly;
@@ -230,6 +233,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckIfTargetIsPlayerOwned = false;
 			CheckIfTargetIsNpcOwned = false;
 
+			IsTargetPlayer = false;
+			IsTargetGrid = false;
+
 			IsAttackerHostile = false;
 			IsAttackerNeutral = false;
 			IsAttackerFriendly = false;
@@ -335,6 +341,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckIfDamagerIsNpc", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfDamagerIsNpc) },
 				{"CheckIfTargetIsPlayerOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsPlayerOwned) },
 				{"CheckIfTargetIsNpcOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsNpcOwned) },
+				{"IsTargetGrid", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetGrid) },
+				{"IsTargetPlayer", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetPlayer) },
 				{"IsAttackerHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerHostile) }, //
 				{"IsAttackerNeutral", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerNeutral) },
 				{"IsAttackerFriendly", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerFriendly) },

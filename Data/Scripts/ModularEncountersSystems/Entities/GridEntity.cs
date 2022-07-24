@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
+using VRage.Game.ModAPI.Interfaces;
 using VRage.ModAPI;
 using VRageMath;
 
@@ -62,6 +63,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> NanoBots;
 		public List<BlockEntity> Parachutes;
 		public List<BlockEntity> Production;
+		public List<BlockEntity> Projectors;
 		public List<BlockEntity> Power;
 		public List<BlockEntity> RivalAi;
 		public List<BlockEntity> Seats;
@@ -91,6 +93,11 @@ namespace ModularEncountersSystems.Entities {
 		public Action UnloadEntities;
 
 		public StringBuilder DebugData;
+
+		public bool ForceRemove;
+
+		internal Dictionary<string, int> _missingComponents;
+		internal List<IMySlimBlock> _projectedBlocks;
 
 		public object NpcWatcher { get; private set; }
 
@@ -122,6 +129,7 @@ namespace ModularEncountersSystems.Entities {
 			NanoBots = new List<BlockEntity>();
 			Parachutes = new List<BlockEntity>();
 			Production = new List<BlockEntity>();
+			Projectors = new List<BlockEntity>();
 			Power = new List<BlockEntity>();
 			RivalAi = new List<BlockEntity>();
 			Seats = new List<BlockEntity>();
@@ -132,6 +140,8 @@ namespace ModularEncountersSystems.Entities {
 			TurretControllers = new List<BlockEntity>();
 
 			AllBlocks = new List<IMySlimBlock>();
+			_missingComponents = new Dictionary<string, int>();
+			_projectedBlocks = new List<IMySlimBlock>();
 
 			BlockListReference = new Dictionary<BlockTypeEnum, List<BlockEntity>>();
 			BlockListReference.Add(BlockTypeEnum.All, AllTerminalBlocks);
@@ -150,6 +160,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.NanoBots, NanoBots);
 			BlockListReference.Add(BlockTypeEnum.Parachutes, Parachutes);
 			BlockListReference.Add(BlockTypeEnum.Production, Production);
+			BlockListReference.Add(BlockTypeEnum.Projectors, Projectors);
 			BlockListReference.Add(BlockTypeEnum.Power, Power);
 			BlockListReference.Add(BlockTypeEnum.RivalAi, RivalAi);
 			BlockListReference.Add(BlockTypeEnum.Seats, Seats);
@@ -209,6 +220,8 @@ namespace ModularEncountersSystems.Entities {
 				Npc.ProcessPrimaryAttributes();
 
 			}
+
+			ForceRemove = false;
 
 			TaskProcessor.Tasks.Add(new NewGrid(this));
 
@@ -406,6 +419,13 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+			//Projectors
+			if (terminalBlock as IMyProjector != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Projectors);
+
+			}
+
 			//Power
 			if (terminalBlock as IMyPowerProducer != null) {
 
@@ -507,6 +527,140 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public int AutoConstuctProjectedBlocks(bool skipSound = false) {
+
+			if (!ActiveEntity())
+				return 0;
+
+			long owner = 0;
+			int affectedBlocks = 0;
+
+			if (CubeGrid?.BigOwners != null && CubeGrid.BigOwners.Count > 0)
+				owner = CubeGrid.BigOwners[0];
+
+			int particlesDisplayed = 0;
+			bool playedSound = skipSound;
+
+			lock (Projectors) {
+
+				foreach (var block in Projectors) {
+
+					if (!block.ActiveEntity())
+						continue;
+
+					var projector = block.Block as IMyProjector;
+
+					if (!projector.IsProjecting || projector.ProjectedGrid == null)
+						continue;
+
+					_projectedBlocks.Clear();
+					projector.ProjectedGrid.GetBlocks(_projectedBlocks);
+
+					for (int i = _projectedBlocks.Count - 1; i >= 0; i--) {
+
+						var proBlock = _projectedBlocks[i];
+
+						if (projector.CanBuild(proBlock, true) != BuildCheckResult.OK) {
+
+							_projectedBlocks.RemoveAt(i);
+
+						}
+
+					}
+
+					foreach (var proBlock in _projectedBlocks) {
+
+						if (particlesDisplayed < 6) {
+
+							if (MathTools.RandomChance(4)) {
+
+								particlesDisplayed++;
+								Vector3D worldCenter = Vector3D.Zero;
+								proBlock.ComputeWorldCenter(out worldCenter);
+								MyVisualScriptLogicProvider.CreateParticleEffectAtPosition("OxyLeakLarge", worldCenter);
+
+							}
+
+						}
+
+						if (!playedSound) {
+
+							playedSound = true;
+							MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardConstruct", GetPosition());
+
+						}
+
+						projector.Build(proBlock, owner, owner, true, owner);
+						affectedBlocks++;
+
+					}
+
+				}
+
+			}
+
+			return affectedBlocks;
+
+		}
+
+		public int AutoRepairBlocks(bool skipSound = false) {
+
+			if (!ActiveEntity())
+				return 0;
+
+			long owner = 0;
+			int affectedBlocks = 0;
+
+			if (CubeGrid?.BigOwners != null && CubeGrid.BigOwners.Count > 0)
+				owner = CubeGrid.BigOwners[0];
+
+			int particlesDisplayed = 0;
+			bool playedSound = skipSound;
+
+			lock (AllBlocks) {
+
+				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+					var block = AllBlocks[i];
+
+					if (block == null)
+						continue;
+
+					if (!block.IsFullIntegrity || block.CurrentDamage > 0)
+						block.IncreaseMountLevel(float.MaxValue, owner);
+
+					block.FixBones(99999, 99999);
+
+					affectedBlocks++;
+
+					if (particlesDisplayed < 6) {
+
+						if (MathTools.RandomChance(4)) {
+
+							particlesDisplayed++;
+							Vector3D worldCenter = Vector3D.Zero;
+							block.ComputeWorldCenter(out worldCenter);
+							MyVisualScriptLogicProvider.CreateParticleEffectAtPosition("OxyLeakLarge", worldCenter);
+
+						}
+
+					}
+
+					if (!playedSound) {
+
+						playedSound = true;
+						MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardConstruct", GetPosition());
+
+					}
+
+				}
+
+			}
+
+			return affectedBlocks;
+
+		}
+
 		private void BlockRemoved(IMySlimBlock block) {
 
 			AllBlocks.Remove(block);
@@ -557,6 +711,98 @@ namespace ModularEncountersSystems.Entities {
 
 			base.CloseEntity(entity);
 			Unload();
+
+		}
+
+		public long CreditValueRegular(bool countInventoryItems = false, bool allowNonActiveEntity = false) {
+
+			long result = 0;
+
+			if (!ActiveEntity()) {
+
+				if (!allowNonActiveEntity || Closed) {
+
+					return result;
+				
+				}
+			
+			}
+				
+
+			lock (AllBlocks) {
+
+				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+					result += EconomyHelper.GetBlockRegularValue(AllBlocks[i], _missingComponents, countInventoryItems);
+
+				}
+
+			}
+
+			return result;
+
+		}
+
+		public long CreditValueProjectedBlocksBuildable(out int buildableBlocks) {
+
+			long result = 0;
+			buildableBlocks = 0;
+
+			if (!ActiveEntity())
+				return 0;
+
+			lock (Projectors) {
+
+				foreach (var block in Projectors) {
+
+					if (!block.ActiveEntity())
+						continue;
+
+					var projector = block.Block as IMyProjector;
+
+					if (!projector.IsProjecting || projector.ProjectedGrid == null)
+						continue;
+
+					_projectedBlocks.Clear();
+					projector.ProjectedGrid.GetBlocks(_projectedBlocks);
+
+					foreach (var proBlock in _projectedBlocks) {
+
+						if (projector.CanBuild(proBlock, true) == BuildCheckResult.OK) {
+
+							buildableBlocks++;
+							result += EconomyHelper.GetBlockRegularValue(proBlock, null, false);
+
+						}
+					
+					}
+
+				}
+			
+			}
+
+			return result;
+
+		}
+
+		public long CreditValueRepair() {
+
+			long result = 0;
+
+			if (!ActiveEntity())
+				return 0;
+
+			lock (AllBlocks) {
+
+				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+					result += EconomyHelper.GetBlockRepairValue(AllBlocks[i], _missingComponents);
+
+				}
+
+			}
+
+			return result;
 
 		}
 
@@ -722,6 +968,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(NanoBots);
 				CleanBlockList(Parachutes);
 				CleanBlockList(Production);
+				CleanBlockList(Projectors);
 				CleanBlockList(Power);
 				CleanBlockList(Seats);
 				CleanBlockList(Shields);
@@ -738,7 +985,7 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public bool LineIntersection(LineD line, RayD ray, ref Vector3D hitPosition) {
+		public bool LineIntersection(LineD line, RayD ray, ref Vector3D hitPosition, ref IMyDestroyableObject hitBlock) {
 
 			if (!ActiveEntity())
 				return false;
@@ -767,6 +1014,7 @@ namespace ModularEncountersSystems.Entities {
 			}
 
 			slimBlock.ComputeWorldCenter(out hitPosition);
+			hitBlock = slimBlock;
 			return true;
 
 		}

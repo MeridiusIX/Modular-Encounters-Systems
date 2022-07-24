@@ -712,6 +712,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.IsTargetPlayer) {
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Player) {
+
+					satisfiedConditions++;
+
+				}
+
+			}
+
+			if (ConditionReference.IsTargetGrid) {
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.GetEntityType() != EntityType.Player) {
+
+					satisfiedConditions++;
+
+				}
+
+			}
+
 			if (ConditionReference.IsAttackerHostile) {
 
 				usedConditions++;

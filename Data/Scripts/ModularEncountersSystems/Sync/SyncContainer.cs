@@ -10,7 +10,9 @@ namespace ModularEncountersSystems.Sync {
         Effect,
         ChatCommand,
         ReputationAlert,
-        ClipboardRequest
+        ClipboardRequest,
+        ShipyardTransaction,
+        ShipyardTransactionResult,
 
     }
 

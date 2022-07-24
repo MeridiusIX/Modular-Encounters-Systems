@@ -113,6 +113,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 						if (!threatMatch) {
 
+							Status = WeaponStatusEnum.NoHomingTarget;
 							//BehaviorLogger.Write(" - No Autopilot Target To assign For Homing Ammo", BehaviorDebugEnum.Weapon);
 							_readyToFire = false;
 							return;
@@ -121,6 +122,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 					} else {
 
+						Status = WeaponStatusEnum.NoHomingTarget;
 						//BehaviorLogger.Write(" - No Autopilot Target To assign For Homing Ammo", BehaviorDebugEnum.Weapon);
 						_readyToFire = false;
 						return;
@@ -132,6 +134,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 					if (trajectory < _behavior.AutoPilot.Targeting.Target.Distance(_block.GetPosition())) {
 
+						Status = WeaponStatusEnum.OutsideHomingRange;
 						//BehaviorLogger.Write(" - Target Out Of Range For Homing Ammo", BehaviorDebugEnum.Weapon);
 						_readyToFire = false;
 						return;
@@ -140,6 +143,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				
 				}
 
+				Status = WeaponStatusEnum.ReadyToFire;
 				//BehaviorLogger.Write(" - Got Target For Homing Shot", BehaviorDebugEnum.Weapon);
 				return;
 
@@ -150,12 +154,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				if (!_weaponSystem.Data.UseAntiSmartWeapons || !_weaponSystem.IncomingHomingProjectiles) {
 
+					Status = WeaponStatusEnum.NoIncomingHomingProjectiles;
 					//BehaviorLogger.Write(" - No Incoming Homing Weapons For Firing Flares", BehaviorDebugEnum.Weapon);
 					_readyToFire = false;
 					return;
 
 				}
 
+				Status = WeaponStatusEnum.ReadyToFire;
 				//BehaviorLogger.Write(" - Homing Threats Detected For Firing Flares", BehaviorDebugEnum.Weapon);
 				return;
 			
@@ -297,6 +303,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (!IsValid() || !IsActive()) {
 
 				BehaviorLogger.Write(string.Format(" - Core Valid/Active Check Failed: {0} / {1}", IsValid(), IsActive()), BehaviorDebugEnum.Weapon);
+				Status = WeaponStatusEnum.NonActiveEntity;
 				_readyToFire = false;
 				return;
 
@@ -306,6 +313,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (!HasAmmo()) {
 
 				BehaviorLogger.Write(string.Format(" - AmmoRound: {0} /// AmmoMag: {1}", _ammoRound ?? "null", _currentAmmoMagazine.SubtypeName ?? "null"), BehaviorDebugEnum.Weapon);
+				Status = WeaponStatusEnum.NoAmmo;
 				_readyToFire = false;
 				return;
 

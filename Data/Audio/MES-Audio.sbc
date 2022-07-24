@@ -20,6 +20,38 @@
         </Wave>
       </Waves>
     </Sound>
+	
+	<Sound>
+      <Id>
+        <TypeId>MyObjectBuilder_AudioDefinition</TypeId>
+        <SubtypeId>MES-ShipyardConstruct</SubtypeId>
+      </Id>
+      <Category>HUD</Category>
+      <MaxDistance>250</MaxDistance>
+      <PreventSynchronization>0</PreventSynchronization>
+      <Volume>1</Volume>
+      <Waves>
+        <Wave Type="D3">
+          <Start>Audio\ShipyardConstruct.xwm</Start>
+        </Wave>
+      </Waves>
+    </Sound>
+	
+	<Sound>
+      <Id>
+        <TypeId>MyObjectBuilder_AudioDefinition</TypeId>
+        <SubtypeId>MES-ShipyardSell</SubtypeId>
+      </Id>
+      <Category>HUD</Category>
+      <MaxDistance>250</MaxDistance>
+      <PreventSynchronization>0</PreventSynchronization>
+      <Volume>1</Volume>
+      <Waves>
+        <Wave Type="D3">
+          <Start>Audio\ShipyardSell.xwm</Start>
+        </Wave>
+      </Waves>
+    </Sound>
 
   </Sounds>
   

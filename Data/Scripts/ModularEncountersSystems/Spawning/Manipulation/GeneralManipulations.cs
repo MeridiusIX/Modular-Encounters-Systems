@@ -292,6 +292,27 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				}
 
+				//Shipyard Settings
+				if (profile.ShipyardSetup) {
+
+					var projector = termBlock as MyObjectBuilder_Projector;
+
+					if (projector != null && !string.IsNullOrWhiteSpace(termBlock.CustomName)) {
+
+						for (int i = 0; i < profile.ShipyardConsoleBlockNames.Count && i < profile.ShipyardProfileNames.Count; i++) {
+
+							if (projector.CustomName == profile.ShipyardConsoleBlockNames[i]) {
+
+								StorageTools.ApplyCustomBlockStorage(projector, StorageTools.MesShipyardKey, profile.ShipyardProfileNames[i]);
+							
+							}
+						
+						}
+
+					}
+
+				}
+
 				//Turret Settings
 				if (profile.ChangeTurretSettings == true) {
 

@@ -23,6 +23,8 @@ namespace ModularEncountersSystems.Entities {
 
 		public static List<IMyCubeGrid> GridsOnLoad = new List<IMyCubeGrid>();
 
+		public static Action<GridEntity> GridAdded;
+
 		public static Action UnloadEntities;
 
 		public static void RegisterWatcher() {
@@ -71,6 +73,7 @@ namespace ModularEncountersSystems.Entities {
 					var gridEntity = new GridEntity(entity);
 					UnloadEntities += gridEntity.Unload;
 					GridManager.Grids.Add(gridEntity);
+					GridAdded?.Invoke(gridEntity);
 
 				}
 				

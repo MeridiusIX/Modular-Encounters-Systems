@@ -96,6 +96,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> ReputationChangeFactions;
 		public bool ReputationChangesForAllRadiusPlayerFactionMembers;
 		public bool ReputationChangesForAllAttackPlayerFactionMembers;
+		public int ReputationMinCap;
+		public int ReputationMaxCap;
 
 		public string ProfileSubtypeId;
 
@@ -182,6 +184,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool RazeBlocksWithNames;
 		public List<string> RazeBlocksNames;
+
+		public bool RazeBlocksOfType;
+		public List<MyDefinitionId> RazeBlocksTypes;
 
 		public bool SendCommandWithoutAntenna;
 		public double SendCommandWithoutAntennaRadius;
@@ -404,6 +409,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ChangeAttackerReputationFaction = new List<string>();
 			ChangeAttackerReputationAmount = new List<int>();
 			ReputationChangesForAllAttackPlayerFactionMembers = false;
+			ReputationMinCap = -1500;
+			ReputationMaxCap = 1500;
 
 			ActivateAssertiveAntennas = false;
 
@@ -519,6 +526,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			RazeBlocksWithNames = false;
 			RazeBlocksNames = new List<string>();
+
+			RazeBlocksOfType = false;
+			RazeBlocksTypes = new List<MyDefinitionId>();
 
 			ManuallyActivateTrigger = false;
 			ManuallyActivatedTriggerNames = new List<string>();
@@ -806,6 +816,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"DamageMultiplierValues", (s, o) => TagParse.TagIntListCheck(s, ref DamageMultiplierValues) },
 				{"RazeBlocksWithNames", (s, o) => TagParse.TagBoolCheck(s, ref RazeBlocksWithNames) },
 				{"RazeBlocksNames", (s, o) => TagParse.TagStringListCheck(s, ref RazeBlocksNames) },
+				{"RazeBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref RazeBlocksOfType) },
+				{"RazeBlocksTypes", (s, o) => TagParse.TagMyDefIdCheck(s, ref RazeBlocksTypes) },
 				{"ManuallyActivateTrigger", (s, o) => TagParse.TagBoolCheck(s, ref ManuallyActivateTrigger) },
 				{"ManuallyActivatedTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref ManuallyActivatedTriggerNames) },
 				{"SendCommandWithoutAntenna", (s, o) => TagParse.TagBoolCheck(s, ref SendCommandWithoutAntenna) },

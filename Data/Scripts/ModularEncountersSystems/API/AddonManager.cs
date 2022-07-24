@@ -91,6 +91,10 @@ namespace ModularEncountersSystems.API {
         public static bool TextHudApi = false;
         private static ulong _textHudApiSteamId = 758597413;
 
+        //Stealth Mod
+        public static bool StealthMod = false;
+        private static ulong _stealthModSteamId = 2805859069;
+
         public static void DetectAddons() {
 
             ConfigInstance = MyAPIGateway.Utilities.GamePaths.ModScopeName;
@@ -251,6 +255,14 @@ namespace ModularEncountersSystems.API {
 
                 }
 
+                if (id == _stealthModSteamId) {
+
+                    SpawnLogger.Write("Stealth Drive Mod Detected", SpawnerDebugEnum.Startup);
+                    StealthMod = true;
+                    continue;
+
+                }
+
             }
 
         }
@@ -296,8 +308,6 @@ namespace ModularEncountersSystems.API {
                     }
                 
                 }
-
-
 
             }
 

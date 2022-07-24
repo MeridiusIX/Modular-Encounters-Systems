@@ -10,6 +10,7 @@ using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
@@ -25,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.1.64";
+		public static string ModVersion = "2.66.0";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -89,8 +90,10 @@ namespace ModularEncountersSystems.Core {
 			Settings.InitSettings("BeforeStart"); //Get Existing Settings From XML or Create New
 			BlockLogicManager.Setup();
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
+			ControlManager.Setup();
 			SetDefaultSettings();
 			APIs.RegisterAPIs(2); //Register Any Applicable APIs
+			
 
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;

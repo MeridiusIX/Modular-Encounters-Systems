@@ -16,6 +16,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 	public static class PrefabManipulation {
 
+		internal static Dictionary<MyDefinitionId, int> _blockReplacementCountLimits = new Dictionary<MyDefinitionId, int>();
+
 		public static void Setup() {
 
 			WeaponRandomizer.Setup();
@@ -257,11 +259,13 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					BlockReplacement.ApplyBlockReplacements(grid, null, profile.ReplaceBlockReference, profile.AlwaysRemoveBlock, profile.RelaxReplacedBlocksSize);
+					BlockReplacement.ApplyBlockReplacements(grid, null, profile.ReplaceBlockReference, null, profile.AlwaysRemoveBlock, profile.RelaxReplacedBlocksSize);
 
 				}
 
 			}
+
+			_blockReplacementCountLimits.Clear();
 
 			//Block Replacer Profiles
 			if (profile.UseBlockReplacerProfile == true) {
@@ -272,7 +276,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 					foreach (var name in profile.BlockReplacerProfileNames) {
 
-						BlockReplacement.ApplyBlockReplacements(grid, name, null, profile.AlwaysRemoveBlock, profile.RelaxReplacedBlocksSize);
+						BlockReplacement.ApplyBlockReplacements(grid, name, null, _blockReplacementCountLimits, profile.AlwaysRemoveBlock, profile.RelaxReplacedBlocksSize);
 
 					}
 
@@ -304,7 +308,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 					foreach (var name in Settings.Grids.GlobalBlockReplacerProfiles) {
 
-						BlockReplacement.ApplyBlockReplacements(grid, name, null);
+						BlockReplacement.ApplyBlockReplacements(grid, name, null, _blockReplacementCountLimits);
 
 					}
 

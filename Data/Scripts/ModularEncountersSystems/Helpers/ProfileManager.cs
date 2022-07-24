@@ -27,6 +27,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, ManipulationGroup> ManipulationGroups = new Dictionary<string, ManipulationGroup>();
 		public static Dictionary<string, ManipulationProfile> ManipulationProfiles = new Dictionary<string, ManipulationProfile>();
 		public static Dictionary<string, PrefabDataProfile> PrefabDataProfiles = new Dictionary<string, PrefabDataProfile>();
+		public static Dictionary<string, ShipyardProfile> ShipyardProfiles = new Dictionary<string, ShipyardProfile>();
 		public static Dictionary<string, SpawnConditionsGroup> SpawnConditionGroups = new Dictionary<string, SpawnConditionsGroup>();
 		public static Dictionary<string, SpawnConditionsProfile> SpawnConditionProfiles = new Dictionary<string, SpawnConditionsProfile>();
 		public static Dictionary<string, StaticEncounter> StaticEncounters = new Dictionary<string, StaticEncounter>();
@@ -88,6 +89,16 @@ namespace ModularEncountersSystems.Helpers {
 					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					LootProfiles.Add(component.Id.SubtypeName, profile);
+					continue;
+
+				}
+
+				if (!LootProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Shipyard]")) {
+
+					var profile = new ShipyardProfile();
+					profile.InitTags(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					ShipyardProfiles.Add(component.Id.SubtypeName, profile);
 					continue;
 
 				}

@@ -9,6 +9,7 @@ using VRage.ModAPI;
 namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 	public interface IWeapon {
 
+		WeaponStatusEnum Status { get; set; }
 		bool IsWeaponCore { get; }
 		bool PendingAmmoRefill { get; }
 		bool ReadyToFire { get; set; }

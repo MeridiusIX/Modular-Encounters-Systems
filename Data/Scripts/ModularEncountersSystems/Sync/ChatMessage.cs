@@ -450,6 +450,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.AttachShipyardProfile
+			if (array[2] == "AttachShipyardProfile") {
+
+				LoggerTools.DebugAttachShipyardProfile(this);
+				return true;
+
+			}
+
 			//MES.Debug.Autopilot
 			if (array[2] == "Autopilot") {
 
@@ -689,6 +697,14 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "RotationData") {
 
 				LoggerTools.RotationData(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.SaveGridTest
+			if (array[2] == "SaveGridTest") {
+
+				LoggerTools.DebugTestSaveGrid(this);
 				return true;
 
 			}

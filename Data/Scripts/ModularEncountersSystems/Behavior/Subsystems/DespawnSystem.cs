@@ -279,6 +279,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				foreach (var grid in _behavior.CurrentGrid.LinkedGrids) {
 
+					grid.ForceRemove = true;
 					Cleaning.RemoveGrid(grid);
 
 					if (grid.Npc != null)

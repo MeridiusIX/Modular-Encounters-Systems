@@ -29,10 +29,11 @@ namespace ModularEncountersSystems.Files {
 		public double PadDistanceFromOrigin;
 		public bool BarrageCapable;
 
+		public bool TurretBlock;
+		public SerializableVector3 TurretBeamOffset;
+
 		public short PrefireTicks;
-
 		public short FireTicks;
-
 		public short PostfireTicks;
 
 		public BeamBehavior(bool init = false) {
@@ -40,6 +41,9 @@ namespace ModularEncountersSystems.Files {
 			MaxRange = 800;
 			PadDistanceFromOrigin = 0;
 			BarrageCapable = false;
+
+			TurretBlock = false;
+			TurretBeamOffset = new SerializableVector3(0, 0, 0);
 
 			PrefireTicks = 0;
 
@@ -109,37 +113,49 @@ namespace ModularEncountersSystems.Files {
 
 		public bool RegularDamage;
 		public float RegularDamageAmount;
+		public short RegularDamageCooldown;
 
 		public bool PenetrativeDamage;
 
 		public bool ExplosionDamage;
 		public float ExplosionDamageAmount;
 		public float ExplosionDamageRadius;
+		public short ExplosionDamageCooldown;
+		public float ExplosionImpulse;
+		public bool ExplosiveDamagesVoxels;
 
 		public bool TeslaDamage;
 		public int TeslaDamageBlockCount;
 		public int TeslaDamageEffectDuration;
+		public short TeslaDamageCooldown;
 
 		public bool ShieldDamage;
 		public float ShieldDamageAmount;
+		public short ShieldDamageCooldown;
 
 		public BeamDamage(bool init = false) {
 
 			RegularDamage = false;
 			RegularDamageAmount = 100;
+			RegularDamageCooldown = 10;
 
 			PenetrativeDamage = false;
 
 			ExplosionDamage = false;
 			ExplosionDamageAmount = 300;
 			ExplosionDamageRadius = 5;
+			ExplosionDamageCooldown = 60;
+			ExplosionImpulse = 0;
+			ExplosiveDamagesVoxels = true;
 
 			TeslaDamage = false;
 			TeslaDamageBlockCount = 5;
 			TeslaDamageEffectDuration = 10;
+			TeslaDamageCooldown = 60;
 
 			ShieldDamage = false;
 			ShieldDamageAmount = 1000;
+			ShieldDamageCooldown = 60;
 
 		}
 

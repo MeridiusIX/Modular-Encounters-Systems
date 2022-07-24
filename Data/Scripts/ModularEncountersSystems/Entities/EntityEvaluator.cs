@@ -37,6 +37,7 @@ namespace ModularEncountersSystems.Entities {
 		Power,
 		Parachutes,
 		Production,
+		Projectors,
 		RivalAi,
 		Seats,
 		Shields,

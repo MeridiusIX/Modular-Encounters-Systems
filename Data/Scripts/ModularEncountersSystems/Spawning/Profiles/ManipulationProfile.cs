@@ -178,6 +178,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool TurretTargetStations;
 		public bool TurretTargetNeutrals;
 
+		public bool ShipyardSetup;
+		public List<string> ShipyardConsoleBlockNames;
+		public List<string> ShipyardProfileNames;
+
 		public bool ClearAuthorship;
 
 		public bool AttachModStorageComponentToGrid;
@@ -353,6 +357,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			TurretTargetLargeGrids = true;
 			TurretTargetStations = true;
 			TurretTargetNeutrals = true;
+
+			ShipyardSetup = false;
+			ShipyardConsoleBlockNames = new List<string>();
+			ShipyardProfileNames = new List<string>();
 
 			ClearAuthorship = false;
 
@@ -1259,6 +1267,27 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[TurretTargetNeutrals:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.TurretTargetNeutrals);
+
+				}
+
+				//ShipyardSetup
+				if (tag.StartsWith("[ShipyardSetup:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.ShipyardSetup);
+
+				}
+
+				//ShipyardConsoleBlockNames
+				if (tag.StartsWith("[ShipyardConsoleBlockNames:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.ShipyardConsoleBlockNames);
+
+				}
+
+				//ShipyardProfileNames
+				if (tag.StartsWith("[ShipyardProfileNames:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.ShipyardProfileNames);
 
 				}
 

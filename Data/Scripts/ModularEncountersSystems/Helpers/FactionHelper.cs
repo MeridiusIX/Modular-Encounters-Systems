@@ -22,6 +22,8 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<string> EconomyFactionTags = new List<string>();
 		public static List<string> EconomyStationTypes = new List<string>();
 
+		internal static List<MyFactionMember> _memberList = new List<MyFactionMember>();
+
 		public static bool IsIdentityNPC(long id) {
 
 			return !IsIdentityPlayer(id);
@@ -38,11 +40,18 @@ namespace ModularEncountersSystems.Helpers {
 
 			if (faction.Members.Count == 0) {
 
-				var factionDef = MyDefinitionManager.Static.TryGetFactionDefinition(faction.Tag);
-				MyAPIGateway.Session.Factions.AddNewNPCToFaction(faction.FactionId, factionDef?.Founder ?? faction.Name + " Leader");
-				foreach (var member in faction.Members) 
-					MyAPIGateway.Session.Factions.PromoteMember(faction.FactionId, member.Value.PlayerId);
+				lock (_memberList) {
 
+					_memberList.Clear();
+					foreach (var member in faction.Members)
+						_memberList.Add(member.Value);
+					var factionDef = MyDefinitionManager.Static.TryGetFactionDefinition(faction.Tag);
+					MyAPIGateway.Session.Factions.AddNewNPCToFaction(faction.FactionId, factionDef?.Founder ?? faction.Name + " Leader");
+					foreach (var member in _memberList)
+						MyAPIGateway.Session.Factions.PromoteMember(faction.FactionId, member.PlayerId);
+
+				}
+				
 			}
 
 			if (faction.FounderId != 0)

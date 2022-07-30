@@ -10,6 +10,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 	public class ImprovedSpawnGroup {
 
 		public bool SpawnGroupEnabled;
+		public bool MesSpawnGroup;
 		public string SpawnGroupName;
 		public MySpawnGroupDefinition SpawnGroup;
 
@@ -45,6 +46,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public ImprovedSpawnGroup() {
 
 			SpawnGroupEnabled = true;
+			MesSpawnGroup = false;
 			SpawnGroupName = "";
 			SpawnGroup = null;
 
@@ -90,6 +92,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				return;
 
 			var improveSpawnGroup = this;
+			MesSpawnGroup = true;
 			var descSplit = spawnGroup.DescriptionText.Split('\n');
 
 			improveSpawnGroup.SpawnGroup = spawnGroup;

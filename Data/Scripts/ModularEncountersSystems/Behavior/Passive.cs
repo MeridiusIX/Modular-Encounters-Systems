@@ -17,10 +17,14 @@ namespace ModularEncountersSystems.Behavior {
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
 
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
+
 		public Passive(IBehavior behavior){
 
 			_subClass = BehaviorSubclass.Passive;
 			_behavior = behavior;
+			_defaultWeaponProfile = "MES-Weapons-GenericPassive";
 
 			FighterEngageDistanceSpace = 300;
 			FighterEngageDistancePlanet = 600;
@@ -44,7 +48,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
-				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericPassive";
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
 
 			}
 		}

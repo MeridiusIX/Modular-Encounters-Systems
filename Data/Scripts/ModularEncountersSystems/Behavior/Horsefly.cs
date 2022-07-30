@@ -53,10 +53,16 @@ namespace ModularEncountersSystems.Behavior {
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
 
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
+
 		public Horsefly(IBehavior behavior) {
 
 			_subClass = BehaviorSubclass.Horsefly;
 			_behavior = behavior;
+
+			_defaultWeaponProfile = "MES-Weapons-GenericStandard";
+
 			_horseflyWaypointWaitTimeTrigger = -1;
 			_horseflyWaypointAbandonTimeTrigger = -1;
 
@@ -189,6 +195,12 @@ namespace ModularEncountersSystems.Behavior {
 
 			_behavior.AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-Horsefly");
 			_behavior.Despawn.UseNoTargetTimer = true;
+
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
+
+			}
 
 		}
 

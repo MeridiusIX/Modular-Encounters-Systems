@@ -176,17 +176,17 @@ namespace ModularEncountersSystems.Sync {
 			if (Message.StartsWith("/MES.IGLSD"))
 				Message = Message.Replace("/MES.IGLSD", "/MES.Info.GetLogging.SpawnDebug");
 
-			if (Message.StartsWith("/MES.DSD"))
-				Message = Message.Replace("/MES.DSD", "/MES.Debug.SpawnDebug");
-
-			if (Message.StartsWith("/MES.DBD"))
-				Message = Message.Replace("/MES.DBD", "/MES.Debug.BehaviorDebug");
-
 			if (Message.StartsWith("/MES.IGLBD"))
 				Message = Message.Replace("/MES.IGLBD", "/MES.Info.GetLogging.BehaviorDebug");
 
-			if (Message.StartsWith("/MES.IGBD"))
-				Message = Message.Replace("/MES.IGBD", "/MES.Info.GetBehaviorData");
+			if (Message.StartsWith("/MES.IGGB"))
+				Message = Message.Replace("/MES.IGBD", "/MES.Info.GetGridBehavior");
+
+			if (Message.StartsWith("/MES.IGGD"))
+				Message = Message.Replace("/MES.IGBD", "/MES.Info.GetGridData");
+
+			if (Message.StartsWith("/MES.IGD"))
+				Message = Message.Replace("/MES.IGBD", "/MES.Info.GetDiagnostics");
 
 		}
 

@@ -170,6 +170,8 @@ namespace ModularEncountersSystems.Sync {
 			
 			}
 
+			//Check Merchant Credits
+
 			//Build Item
 
 			//Register Prefab
@@ -212,12 +214,47 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(projector.OwnerId);
+
+			//Merchant Credits
+			if (profile.TransactionsUseNpcFactionBalance) {
+
+				if (faction == null) {
+
+					ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.MerchantInsufficientCredits, Mode, sender, ProjectorId);
+					return;
+
+				}
+
+				long balance = 0;
+				faction.TryGetBalanceInfo(out balance);
+
+				if(balance < serverFinalCost) {
+
+					ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.MerchantInsufficientCredits, Mode, sender, ProjectorId);
+					return;
+
+				}
+
+			}
+
 			//Remove Ship
 			MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardSell", grid.GetPosition());
 			Cleaning.ForceRemoveGrid(grid);
 
 			//Credit Player
 			player.Player.RequestChangeBalance(serverFinalCost);
+
+			//Charge Merchant
+			if (profile.TransactionsUseNpcFactionBalance) {
+
+				if (faction != null) {
+
+					faction.RequestChangeBalance(-serverFinalCost);
+				
+				}
+			
+			}
 
 			ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.TransactionSuccessful, Mode, sender, ProjectorId, serverFinalCost);
 
@@ -282,6 +319,19 @@ namespace ModularEncountersSystems.Sync {
 
 			//Remove Credits From Player
 			player.Player.RequestChangeBalance(-serverFinalCost);
+
+			//Credit Merchant
+			if (profile.TransactionsUseNpcFactionBalance) {
+
+				var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(projector.OwnerId);
+
+				if (faction != null) {
+
+					faction.RequestChangeBalance(serverFinalCost);
+
+				}
+
+			}
 
 			//Disable Safezones
 			var safezones = new List<SafeZoneEntity>();

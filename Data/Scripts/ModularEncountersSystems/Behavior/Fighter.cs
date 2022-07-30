@@ -82,8 +82,12 @@ namespace ModularEncountersSystems.Behavior {
 		internal CoreBehavior _behavior;
 
 		public byte Counter;
+
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
+
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
 
 		public Fighter(CoreBehavior behavior){
 
@@ -95,7 +99,9 @@ namespace ModularEncountersSystems.Behavior {
 
 			_fighterDisengageDistanceSpace = -1;
 			_fighterDisengageDistancePlanet = -1;
-			
+
+			_defaultWeaponProfile = "MES-Weapons-GenericStandard";
+
 			Counter = 0;
 
 		}
@@ -222,7 +228,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
-				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
 
 			}
 

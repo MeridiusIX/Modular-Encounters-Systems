@@ -28,6 +28,8 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void Setup(BlockEntity block) {
 
+			base.Setup(block);
+
 			if (!_isServer) {
 
 				_isValid = false;

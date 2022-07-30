@@ -13,6 +13,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int MinReputation;
 
 		public int ReputationNeededForDiscount;
+		public bool TransactionsUseNpcFactionBalance;
 		
 		public bool AllowBlueprintBuilding;
 		public int BlueprintBuildingSmallGridBlockLimit;

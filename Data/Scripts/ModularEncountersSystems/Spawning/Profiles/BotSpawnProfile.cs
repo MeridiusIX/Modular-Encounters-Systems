@@ -26,6 +26,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool WaterNodesOnly;
 		public bool CanUseLadders;
 		public bool CanUseSeats;
+		public bool CanDamageGrids;
 
 		public uint DespawnTicks;
 
@@ -61,6 +62,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			WaterNodesOnly = false;
 			CanUseLadders = false;
 			CanUseSeats = false;
+			CanDamageGrids = false;
 
 			DespawnTicks = 0;
 
@@ -173,6 +175,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				if (tag.Contains("[CanDamageGrids:")) {
+
+					TagParse.TagBoolCheck(tag, ref CanDamageGrids);
+					continue;
+
+				}
+
 				if (tag.Contains("[DespawnTicks:")) {
 
 					TagParse.TagUintCheck(tag, ref DespawnTicks);
@@ -267,6 +276,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			Data.WaterNodesOnly = this.WaterNodesOnly;
 			Data.CanUseLadders = this.CanUseLadders;
 			Data.CanUseSeats = this.CanUseSeats;
+			Data.CanDamageGrids = this.CanDamageGrids;
 			Data.DespawnTicks = this.DespawnTicks;
 			Data.DeathSound = this.DeathSound;
 			Data.AttackSounds = this.AttackSounds;

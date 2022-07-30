@@ -17,12 +17,16 @@ namespace ModularEncountersSystems.Behavior {
 		private DateTime _waypointWaitTime;
 		private DateTime _waypointAbandonTime;
 
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
+
 		public Patrol(IBehavior behavior) {
 
 			_subClass = BehaviorSubclass.Patrol;
 			_behavior = behavior;
 			_waypointWaitTime = MyAPIGateway.Session.GameDateTime;
 			_waypointAbandonTime = MyAPIGateway.Session.GameDateTime;
+			_defaultWeaponProfile = "MES-Weapons-GenericStandard";
 			WaitTime = MyAPIGateway.Session.GameDateTime;
 
 		}
@@ -132,7 +136,8 @@ namespace ModularEncountersSystems.Behavior {
 			
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
-				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
+				//_behavior.BehaviorSettings.WeaponsSystemProfile
 
 			}
 

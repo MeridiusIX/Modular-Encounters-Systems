@@ -128,7 +128,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		}
 
-		public void InitTags() {
+		public void InitTags(string existingWeaponSystem) {
 
 			if (string.IsNullOrWhiteSpace(_remoteControl?.CustomData) == false) {
 

@@ -33,6 +33,7 @@ namespace ModularEncountersSystems.Sync {
 		ServerRawCostZero,
 		ServerClientPriceMismatch,
 		PlayerInsufficientCredits,
+		MerchantInsufficientCredits,
 		TransactionSuccessful,
 	
 	}
@@ -187,7 +188,13 @@ namespace ModularEncountersSystems.Sync {
 
 				if (Result == ShipyardTransactionResultEnum.PlayerInsufficientCredits) {
 
-					sb.Append("You Don't Have Enough Credits For Transaction.");
+					sb.Append("You Don't Have Enough Credits For This Transaction.");
+
+				}
+
+				if (Result == ShipyardTransactionResultEnum.MerchantInsufficientCredits) {
+
+					sb.Append("The Merchant Doesn't Have Enough Credits For This Transaction.");
 
 				}
 

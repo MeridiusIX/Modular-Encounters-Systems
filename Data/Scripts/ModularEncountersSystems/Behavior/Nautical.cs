@@ -12,11 +12,16 @@ namespace ModularEncountersSystems.Behavior {
 		IBehavior _behavior;
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
+
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
+
 		public Nautical(IBehavior behavior) {
 
 			_subClass = BehaviorSubclass.Nautical;
 			_behavior = behavior;
 			WaitTime = MyAPIGateway.Session.GameDateTime;
+			_defaultWeaponProfile = "MES-Weapons-GenericStandard";
 
 		}
 
@@ -173,7 +178,7 @@ namespace ModularEncountersSystems.Behavior {
 			
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
-				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
 
 			}
 

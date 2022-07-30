@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Terminal;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;

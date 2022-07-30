@@ -15,12 +15,18 @@ namespace ModularEncountersSystems.Behavior {
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
 
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
+
 		internal DateTime _timeOutsideRadius;
 
 		public Vulture(IBehavior behavior) {
 
 			_subClass = BehaviorSubclass.Vulture;
 			_behavior = behavior;
+
+			_defaultWeaponProfile = "MES-Weapons-GenericStandard";
+
 			_timeOutsideRadius = MyAPIGateway.Session.GameDateTime;
 
 
@@ -138,6 +144,12 @@ namespace ModularEncountersSystems.Behavior {
 
 			_behavior.AutoPilot.Data = ProfileManager.GetAutopilotProfile("RAI-Generic-Autopilot-Vulture");
 			_behavior.Despawn.UseNoTargetTimer = true;
+
+			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
+
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
+
+			}
 
 		}
 

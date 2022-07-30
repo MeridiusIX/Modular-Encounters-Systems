@@ -76,7 +76,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			foreach (var player in _playersInBlockRange) {
 
-				if (player?.Player?.Character == null || !player.ActiveEntity() || player.IsParentEntitySeat)
+				if (!player.IsPlayerStandingCharacter())
 					continue;
 
 				float distanceRatio = 1 - (float)(Vector3D.Distance(player.GetPosition(), Entity.GetPosition()) / _antennaRange);
@@ -110,14 +110,10 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				var characterPos = player.GetCharacterPosition();
 
-				if (player?.Player?.Character != null && player.IsParentEntityGrid) {
+				if (!player.IsPlayerStandingCharacter()) {
 
-					if (player.Player.Character.CurrentMovementState.HasFlag(VRage.Game.MyCharacterMovementEnum.Sitting)) {
-
-						RemovePlayer(player);
-						continue;
-
-					}
+					RemovePlayer(player);
+					continue;
 
 				} else if(characterPos == Vector3D.Zero) {
 

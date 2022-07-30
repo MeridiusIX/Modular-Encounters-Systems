@@ -17,6 +17,9 @@ namespace ModularEncountersSystems.Behavior {
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
 
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
+
 		private NewAutoPilotMode WaterNav { get { return (_behavior.AutoPilot.Data.UseWaterPatrolMode ? NewAutoPilotMode.WaterNavigation : NewAutoPilotMode.None); } }
 
 		private DateTime _waitForParent;
@@ -27,6 +30,8 @@ namespace ModularEncountersSystems.Behavior {
 			_subClass = BehaviorSubclass.Escort;
 			_behavior = behavior;
 			_controller = behavior.RemoteControl as MyShipController;
+
+			_defaultWeaponProfile = "MES-Weapons-GenericStandard";
 
 		}
 
@@ -147,7 +152,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
-				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
 
 			}
 

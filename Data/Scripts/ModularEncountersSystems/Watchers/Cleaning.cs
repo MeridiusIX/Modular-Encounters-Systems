@@ -244,7 +244,7 @@ namespace ModularEncountersSystems.Watchers {
 
 			for (int i = grid.LinkedGrids.Count - 1; i >= 0; i--) {
 
-				var linkedGrid = GridManager.GetSafeGridFromIndex(i);
+				var linkedGrid = GridManager.GetSafeGridFromIndex(i, grid.LinkedGrids);
 
 				if (linkedGrid == null || !linkedGrid.ActiveEntity()) {
 

@@ -22,6 +22,7 @@ namespace ModularEncountersSystems.Configuration {
 		public static ConfigDroneEncounters DroneEncounters = new ConfigDroneEncounters();
 		public static ConfigCustomBlocks CustomBlocks = new ConfigCustomBlocks();
 		public static ConfigCreatures Creatures = new ConfigCreatures();
+		public static SavedInternalData SavedData = null;
 
 		public static void InitSettings(string phase) {
 
@@ -60,6 +61,9 @@ namespace ModularEncountersSystems.Configuration {
 
 			if (!Creatures.ConfigLoaded)
 				Creatures = Creatures.LoadSettings(phase);
+
+			if (SavedData == null)
+				SavedData = SavedInternalData.LoadSettings(phase);
 
 			CheckGlobalEvents();
 

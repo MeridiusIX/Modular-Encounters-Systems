@@ -800,6 +800,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Planetary Cargo Ships:      ").Append(Settings.PlanetaryCargoShips.UseCleanupSettings).AppendLine();
 			sb.Append(" - Planetary Installations:    ").Append(Settings.PlanetaryInstallations.UseCleanupSettings).AppendLine();
 			sb.Append(" - Boss Encounters:            ").Append(Settings.BossEncounters.UseCleanupSettings).AppendLine();
+			sb.Append(" - Drone Encounters:           ").Append(Settings.DroneEncounters.UseCleanupSettings).AppendLine();
 			sb.Append(" - Other NPCs:                 ").Append(Settings.OtherNPCs.UseCleanupSettings).AppendLine();
 			sb.AppendLine();
 

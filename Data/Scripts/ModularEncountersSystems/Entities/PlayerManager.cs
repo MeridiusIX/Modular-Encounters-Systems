@@ -1,4 +1,5 @@
-﻿using Sandbox.ModAPI;
+﻿using ModularEncountersSystems.Terminal;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +13,8 @@ namespace ModularEncountersSystems.Entities {
 
 		public static List<IMyPlayer> ActivePlayers = new List<IMyPlayer>();
 		public static List<PlayerEntity> Players = new List<PlayerEntity>();
+
+		public static Dictionary<ulong, SuitMods> SuitModMaster = new Dictionary<ulong, SuitMods>();
 
 		public static Action<PlayerEntity> NewPlayerDetected;
 		public static Action UnloadEntities;

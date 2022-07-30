@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.66.1";
+		public static string ModVersion = "2.66.4";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -35,6 +35,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool AreaTestStart;
 
+		public static Action SaveActions;
 		public static Action UnloadActions;
 
 		public override void LoadData() {
@@ -128,6 +129,19 @@ namespace ModularEncountersSystems.Core {
 
 			TaskProcessor.Process();
 
+		}
+
+		public override MyObjectBuilder_SessionComponent GetObjectBuilder() {
+
+			MyAPIGateway.Utilities.InvokeOnGameThread(() => { 
+
+				SaveActions?.Invoke();
+
+				if(Settings.SavedData != null && Settings.SavedData.DataChanged)
+					Settings.SavedData.SaveSettings();
+			
+			}); 
+			return base.GetObjectBuilder();
 		}
 
 		protected override void UnloadData() {

@@ -794,7 +794,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				if (!CheckBlockValid(block)) {
 
-					AllTerminalBlocks.RemoveAt(i);
+					AllBlocks.RemoveAt(i);
 					continue;
 
 				}

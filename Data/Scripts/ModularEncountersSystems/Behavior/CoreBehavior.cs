@@ -23,6 +23,25 @@ using VRageMath;
 
 namespace ModularEncountersSystems.Behavior {
 
+	[Flags]
+	public enum BehaviorProcessState {
+	
+		None = 0,
+		Start = 1 << 0,
+		CollisionParallel = 1 << 1,
+		TargetingParallel = 1 << 2,
+		AutopilotParallel = 1 << 3,
+		WeaponsParallel = 1 << 4,
+		TriggersParallel = 1 << 5,
+		AutopilotMain = 1 << 6,
+		WeaponsMain = 1 << 7,
+		TriggersMain = 1 << 8,
+		DespawnMain = 1 << 9,
+		BehaviorMain = 1 << 10,
+		Complete = 1 << 11,
+	
+	}
+
 	public class CoreBehavior : IBehavior {
 
 		public IMyRemoteControl RemoteControl { get { return _remoteControl; } set { _remoteControl = value; } }
@@ -33,6 +52,8 @@ namespace ModularEncountersSystems.Behavior {
 		//public BaseSystems Systems;
 
 		private bool _behaviorTerminated;
+		private BehaviorProcessState _previousProcessingState;
+		private BehaviorProcessState _currentProcessingState;
 
 		private bool _registeredRemoteCode;
 		private bool _despawnTriggersRegistered;
@@ -292,12 +313,17 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void ProcessCollisionChecks() {
 
+			_previousProcessingState = _currentProcessingState;
+			_currentProcessingState = BehaviorProcessState.None;
+			_currentProcessingState |= BehaviorProcessState.CollisionParallel;
+
 			AutoPilot.Collision.PrepareCollisionChecks();
 
 		}
 
 		public void ProcessTargetingChecks() {
 
+			_currentProcessingState |= BehaviorProcessState.TargetingParallel;
 			AutoPilot.Targeting.CheckForTarget();
 			AutoPilot.Targeting.PrepareTargetLockOn();
 
@@ -305,6 +331,7 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void ProcessAutoPilotChecks() {
 
+			_currentProcessingState |= BehaviorProcessState.AutopilotParallel;
 			AutoPilot.ThreadedAutoPilotCalculations();
 			AutoPilot.PrepareAutopilot();
 
@@ -312,19 +339,21 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void ProcessWeaponChecks() {
 
-			//BehaviorLogger.Write("Prepare Weapons", BehaviorDebugEnum.Weapon);
+			_currentProcessingState |= BehaviorProcessState.WeaponsParallel;
 			AutoPilot.Weapons.PrepareWeapons();
 
 		}
 
 		public void ProcessTriggerChecks() {
 
+			_currentProcessingState |= BehaviorProcessState.TriggersParallel;
 			Trigger.ProcessTriggerWatchers();
 
 		}
 
 		public void EngageAutoPilot() {
 
+			_currentProcessingState |= BehaviorProcessState.AutopilotMain;
 			AutoPilot.Targeting.ProcessTargetLockOn();
 			AutoPilot.EngageAutoPilot();
 
@@ -340,8 +369,9 @@ namespace ModularEncountersSystems.Behavior {
 		}
 
 		public void SetInitialWeaponReadiness() {
-			
+
 			//Attempt Weapon Reloads
+			_currentProcessingState |= BehaviorProcessState.WeaponsMain;
 			AutoPilot.Weapons.ProcessWeaponReloads();
 
 		}
@@ -360,12 +390,14 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void ProcessActivatedTriggers() {
 
+			_currentProcessingState |= BehaviorProcessState.TriggersMain;
 			Trigger.ProcessActivatedTriggers();
 
 		}
 		
 		public void CheckDespawnConditions() {
 
+			_currentProcessingState |= BehaviorProcessState.DespawnMain;
 			var timeDifference = MyAPIGateway.Session.GameDateTime - _despawnCheckTimer;
 
 			if (timeDifference.TotalMilliseconds <= 999)
@@ -387,6 +419,7 @@ namespace ModularEncountersSystems.Behavior {
 
 		public void RunMainBehavior() {
 
+			_currentProcessingState |= BehaviorProcessState.BehaviorMain;
 			if (!_firstRun) {
 
 				_firstRun = true;
@@ -402,7 +435,7 @@ namespace ModularEncountersSystems.Behavior {
 			_behaviorRunTimer = MyAPIGateway.Session.GameDateTime; //
 
 			MainBehavior();
-
+			_currentProcessingState |= BehaviorProcessState.Complete;
 		}
 
 		public void FirstRun() {
@@ -553,9 +586,12 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			if (ActiveBehavior != null && ActiveBehavior.SubClass == BehaviorSettings.ActiveBehaviorType)
+			if (ActiveBehavior != null && ActiveBehavior.SubClass == BehaviorSettings.ActiveBehaviorType) {
+
+				_mainBehaviorRunCount++;
 				ActiveBehavior.ProcessBehavior();
-			else {
+
+			} else {
 
 				if (BehaviorSettings.ActiveBehaviorType == BehaviorSubclass.None)
 					BehaviorSettings.ActiveBehaviorType = BehaviorManager.GetSubclassFromCustomData(RemoteControl?.CustomData);
@@ -1029,10 +1065,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			CoreTags();
 			AutoPilot.InitTags();
-
-			if(string.IsNullOrWhiteSpace(BehaviorSettings.WeaponsSystemProfile))
-				AutoPilot.Weapons.InitTags();
-
+			InitWeaponProfile();
 			Damage.InitTags();
 			Despawn.InitTags();
 			Escort.InitTags();
@@ -1041,10 +1074,9 @@ namespace ModularEncountersSystems.Behavior {
 
 			PostTagsSetup();
 
-
 		}
 
-		public void CoreTags() {
+		internal void CoreTags() {
 
 			if (string.IsNullOrWhiteSpace(this.RemoteControl.CustomData) == false) {
 
@@ -1064,9 +1096,15 @@ namespace ModularEncountersSystems.Behavior {
 			}
 
 		}
+
+		internal virtual void InitWeaponProfile() {
+
+			if(string.IsNullOrWhiteSpace(BehaviorSettings.WeaponsSystemProfile) || BehaviorSettings.WeaponsSystemProfile == ActiveBehavior.DefaultWeaponProfile)
+				AutoPilot.Weapons.InitTags(BehaviorSettings.WeaponsSystemProfile);
+
+		}
 		
-		
-		public void PostTagsSetup() {
+		internal void PostTagsSetup() {
 
 
 			if (BehaviorSettings.ActiveBehaviorType != BehaviorSubclass.Passive) {
@@ -1500,6 +1538,8 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Behavior Mode:       ").Append(Mode).AppendLine();
 			sb.Append(" - Active Behavior:     ").Append(ActiveBehavior != null ? ActiveBehavior.SubClass.ToString() : "(null)").AppendLine();
 			sb.Append(" - Behavior Run Count:  ").Append(_mainBehaviorRunCount.ToString()).AppendLine();
+			sb.Append(" - Previous State:      ").Append(_previousProcessingState.ToString()).AppendLine();
+			sb.Append(" - Current State:       ").Append(_currentProcessingState.ToString()).AppendLine();
 			sb.Append(" - Terminated:          ").Append(BehaviorTerminated).AppendLine();
 			sb.Append(" - Next Run Time:       ").Append(timeDifference.TotalMilliseconds).AppendLine();
 			sb.Append(" - Vanilla Autopilot:   ").Append(RemoteControl.IsAutoPilotEnabled).AppendLine();
@@ -1513,9 +1553,10 @@ namespace ModularEncountersSystems.Behavior {
 			sb.AppendLine();
 
 			sb.Append("::: Active Profiles and Targeting :::").AppendLine();
-			sb.Append(" - Current Autopilot:   ").Append(AutoPilot?.Data?.ProfileSubtypeId ?? "N/A").AppendLine();
-			sb.Append(" - Current Target Data: ").Append(AutoPilot?.Targeting?.Data?.ProfileSubtypeId ?? "N/A").AppendLine();
-			sb.Append(" - Current Target:      ").Append((AutoPilot?.Targeting?.HasTarget() ?? false) ? AutoPilot.Targeting.Target.Name() ?? "N/A" : "No Target").AppendLine();
+			sb.Append(" - Current Autopilot:      ").Append(AutoPilot?.Data?.ProfileSubtypeId ?? "N/A").AppendLine();
+			sb.Append(" - Current Weapon Profile: ").Append(AutoPilot?.Weapons?.ProfileSubtypeId ?? "N/A").AppendLine();
+			sb.Append(" - Current Target Data:    ").Append(AutoPilot?.Targeting?.Data?.ProfileSubtypeId ?? "N/A").AppendLine();
+			sb.Append(" - Current Target:         ").Append((AutoPilot?.Targeting?.HasTarget() ?? false) ? AutoPilot.Targeting.Target.Name() ?? "N/A" : "No Target").AppendLine();
 
 			if (AutoPilot?.Targeting?.Data != null) {
 

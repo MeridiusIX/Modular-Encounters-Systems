@@ -161,6 +161,11 @@ namespace ModularEncountersSystems.API {
             /// These sounds are played randomly when the bot is pursuing a target
             /// </summary>
             [ProtoMember(23)] public List<string> TauntSounds;
+
+            /// <summary>
+            /// If true, bots will be able to attack doors and weapon systems
+            /// </summary>
+            [ProtoMember(24)] public bool CanDamageGrids;
         }
 
         /////////////////////////////////////////////
@@ -356,15 +361,34 @@ namespace ModularEncountersSystems.API {
         public bool TryRemoveBotFromSeat(long botEntityId) => _tryRemoveBotFromSeat?.Invoke(botEntityId) ?? false;
 
         /// <summary>
+        /// Determines whether or not the supplied grid can be walked on by AiEnabled bots (ie it has at least one large grid connected to it)
+        /// </summary>
+        /// <param name="gridToCheck">the initial grid to check</param>
+        /// <returns>true if the grid can be used by AiEnabled bots, otherwise false</returns>
+        public bool IsValidForPathfinding(IMyCubeGrid gridToCheck) => _isGridValidForPathfinding?.Invoke(gridToCheck) ?? false;
+
+
+        /// <summary>
         /// Attempts to find valid grid nodes to spawn NPCs at
         /// </summary>
         /// <param name="grid">The grid to spawn on</param>
         /// <param name="numberOfNodesNeeded">The number of bots you want to spawn</param>
-        /// <param name="nodeList">The list to fill with world positions (the method will clear the list)</param>
+        /// <param name="nodeList">The list to fill with World Positions. This will only be valid for one frame unless grid doesn't move!</param>
         /// <param name="upVector">The normalized Up direction for the grid, if known</param>
         /// <param name="onlyAirtightNodes">If only pressurized areas should be considered</param>
         /// <returns></returns>
         public void GetAvailableGridNodes(MyCubeGrid grid, int numberOfNodesNeeded, List<Vector3D> nodeList, Vector3D? upVector = null, bool onlyAirtightNodes = false) => _getAvailableGridNodes?.Invoke(grid, numberOfNodesNeeded, nodeList, upVector, onlyAirtightNodes);
+
+        /// <summary>
+        /// Attempts to find interior nodes based on how many airtight blocks are found in all directions of a given point
+        /// </summary>
+        /// <param name="grid">The main grid. All connected grids will also be considered.</param>
+        /// <param name="nodeList">The list to fill with local points. Convert to world using mainGrid.GridIntegerToWorld(point).</param>
+        /// <param name="enclosureRating">How many sides need to be found to consider a point inside. Default is 5.</param>
+        /// <param name="allowAirNodes">Whether or not to consider air nodes for inside-ness.</param>
+        /// <param name="onlyAirtightNodes">Whether or not to only accept airtight nodes.</param>
+        /// <param name="callBack">The Action to be invoked when the thread finishes</param>
+        public void GetInteriorNodes(MyCubeGrid grid, List<Vector3I> nodeList, int enclosureRating = 5, bool allowAirNodes = true, bool onlyAirtightNodes = false, Action callBack = null) => _getInteriorNodes?.Invoke(grid, nodeList, enclosureRating, allowAirNodes, onlyAirtightNodes, callBack);
 
         /// <summary>
         /// Attempts to get the closest valid node to a given grid position
@@ -454,6 +478,30 @@ namespace ModularEncountersSystems.API {
         /// <returns>true if the change is successful, otherwise false</returns>
         public bool SwitchBotRole(long botEntityId, string newRole, List<string> toolSubtypes) => _switchBotRoleSlim?.Invoke(botEntityId, newRole, toolSubtypes) ?? false;
 
+        /// <summary>
+        /// Attempts to switch a bot's weapon. The weapon will be added if not found in the bot's inventory. Ammo is NOT included.
+        /// </summary>
+        /// <param name="botEntityId">The EntityId of the Bot's Character</param>
+        /// <param name="toolSubtypeId">The SubtypeId for the weapon or tool you want the bot to use</param>
+        /// <returns>true if the switch is successful, otherwise false</returns>
+        public bool SwitchBotWeapon(long botEntityId, string toolSubtypeId) => _switchBotWeapon?.Invoke(botEntityId, toolSubtypeId) ?? false;
+
+        /// <summary>
+        /// Gets the bot's owner's IdentityId (Player Id)
+        /// </summary>
+        /// <param name="botEntityId">The EntityId of the Bot's Character</param>
+        /// <returns>the IdentityId of the bot's owner if found, otherwise 0</returns>
+        public long GetBotOwnerId(long botEntityId) => _getBotOwnerId?.Invoke(botEntityId) ?? 0L;
+
+        /// <summary>
+        /// Adds AiEnabled bots to a user-supplied dictionary
+        /// </summary>
+        /// <param name="botDict">the dictionary to add bots to. Key is the bot's IdentityId. The method will create and/or clear the dictionary before use</param>
+        /// <param name="includeFriendly">whether or not to include all player-owned bots</param>
+        /// <param name="includeEnemy">whether or not to include all enemy bots</param>
+        /// <param name="includeNeutral">whether or not to include Nomad bots</param>
+        public void GetBots(Dictionary<long, IMyCharacter> botDict, bool includeFriendly = true, bool includeEnemy = true, bool includeNeutral = true) => _getBots?.Invoke(botDict, includeFriendly, includeEnemy, includeNeutral);
+
 
         /////////////////////////////////////////////
         //API Methods End
@@ -494,6 +542,11 @@ namespace ModularEncountersSystems.API {
         private GetClosestNodeDelegate _getClosestValidNode;
         private GetClosestNodeDelegateNew _getClosestValidNodeNew;
         private GetBotAndRelationTo _getBotAndRelationTo;
+        private Func<long, long> _getBotOwnerId;
+        private Func<long, string, bool> _switchBotWeapon;
+        private Action<Dictionary<long, IMyCharacter>, bool, bool, bool> _getBots;
+        private Action<MyCubeGrid, List<Vector3I>, int, bool, bool, Action> _getInteriorNodes;
+        private Func<IMyCubeGrid, bool> _isGridValidForPathfinding;
 
         private void ReceiveModMessage(object payload) {
             if (Valid)
@@ -539,6 +592,11 @@ namespace ModularEncountersSystems.API {
                 _switchBotRole = dict["SwitchBotRole"] as Func<long, SpawnData, bool>;
                 _getClosestValidNodeNew = dict["GetClosestValidNodeNew"] as GetClosestNodeDelegateNew;
                 _switchBotRoleSlim = dict["SwitchBotRoleSlim"] as Func<long, string, List<string>, bool>;
+                _switchBotWeapon = dict["SwitchBotWeapon"] as Func<long, string, bool>;
+                _getBotOwnerId = dict["GetBotOwnerId"] as Func<long, long>;
+                _getBots = dict["GetBots"] as Action<Dictionary<long, IMyCharacter>, bool, bool, bool>;
+                _getInteriorNodes = dict["GetInteriorNodes"] as Action<MyCubeGrid, List<Vector3I>, int, bool, bool, Action>;
+                _isGridValidForPathfinding = dict["IsValidForPathfinding"] as Func<IMyCubeGrid, bool>;
 
             } catch {
 

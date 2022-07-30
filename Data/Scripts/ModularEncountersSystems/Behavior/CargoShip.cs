@@ -31,6 +31,9 @@ namespace ModularEncountersSystems.Behavior {
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
 
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
+
 		private EncounterWaypoint _cargoShipWaypoint { 
 			
 			get {
@@ -69,6 +72,8 @@ namespace ModularEncountersSystems.Behavior {
 			_subClass = BehaviorSubclass.CargoShip;
 			_behavior = behavior;
 			_waypointIsDespawn = false;
+
+			_defaultWeaponProfile = "MES-Weapons-GenericPassive";
 
 			CustomWaypoints = new List<Vector3D>();
 
@@ -357,7 +362,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
-				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericPassive";
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
 
 			}
 

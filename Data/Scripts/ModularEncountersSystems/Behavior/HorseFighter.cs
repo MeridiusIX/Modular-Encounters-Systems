@@ -38,10 +38,15 @@ namespace ModularEncountersSystems.Behavior {
 		public BehaviorSubclass SubClass { get { return _subClass; } set { _subClass = value; } }
 		private BehaviorSubclass _subClass;
 
+		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
+		private string _defaultWeaponProfile;
+
 		public HorseFighter(IBehavior behavior){
 
 			_subClass = BehaviorSubclass.HorseFighter;
 			_behavior = behavior;
+
+			_defaultWeaponProfile = "MES-Weapons-GenericStandard";
 
 			HorseFighterEngageDistanceSpace = 400;
 			HorseFighterEngageDistancePlanet = 600;
@@ -242,7 +247,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (string.IsNullOrWhiteSpace(_behavior.BehaviorSettings.WeaponsSystemProfile)) {
 
-				_behavior.BehaviorSettings.WeaponsSystemProfile = "MES-Weapons-GenericStandard";
+				_behavior.BehaviorSettings.WeaponsSystemProfile = _defaultWeaponProfile;
 
 			}
 

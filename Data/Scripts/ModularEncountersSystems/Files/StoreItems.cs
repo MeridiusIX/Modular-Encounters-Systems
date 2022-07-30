@@ -33,6 +33,7 @@ namespace ModularEncountersSystems.Files {
 		public string StoreItemId;
 		public StoreItemTypes ItemType;
 		public string ItemSubtypeId;
+		public ulong RequiredMod;
 
 		public int Frequency;
 

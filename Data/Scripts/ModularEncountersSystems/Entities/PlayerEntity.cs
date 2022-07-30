@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Terminal;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -28,6 +29,22 @@ namespace ModularEncountersSystems.Entities {
 		public ConsumableItemTimer DrillInhibitorNullifier;
 		public ConsumableItemTimer PlayerInhibitorNullifier;
 		public ConsumableItemTimer EnergyInhibitorNullifier;
+
+		public SuitMods Mods { get {
+
+				if (_suitMods == null) {
+
+					_suitMods = new SuitMods();
+					_suitMods.IdentityId = Player?.IdentityId ?? 0;
+					_suitMods.SteamId = Player?.SteamUserId ?? 0;
+
+				}
+					
+				return _suitMods;
+			
+			} 
+		}
+		internal SuitMods _suitMods;
 
 		public List<GridEntity> LinkedGrids;
 
@@ -133,6 +150,23 @@ namespace ModularEncountersSystems.Entities {
 		public Vector3D GetCharacterPosition() {
 
 			return Player?.Character?.GetPosition() ?? Vector3D.Zero;
+		
+		}
+
+		public bool IsPlayerStandingCharacter() {
+
+			if (!ActiveEntity())
+				return false;
+
+			if (Player?.Character == null)
+				return false;
+
+			/*
+			if (Player.Character.CurrentMovementState.HasFlag(VRage.Game.MyCharacterMovementEnum.Sitting))
+				return false;
+			*/
+
+			return Player.Character == Player.Controller.ControlledEntity.Entity;
 		
 		}
 

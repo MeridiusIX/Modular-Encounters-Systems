@@ -83,7 +83,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			foreach (var player in _playersInDampenerRange) {
 
-				if (player?.Player?.Character == null || !player.ActiveEntity() || player.IsParentEntitySeat)
+				if (!player.IsPlayerStandingCharacter())
 					continue;
 
 				if (player.Player.Character.EnabledDamping)
@@ -93,7 +93,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			foreach (var player in _playersInDisableRange) {
 
-				if (player?.Player?.Character == null || !player.ActiveEntity() || player.IsParentEntitySeat)
+				if (!player.IsPlayerStandingCharacter())
 					continue;
 
 				if (player.Player.Character.EnabledThrusts)
@@ -130,14 +130,10 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				var characterPos = player.GetCharacterPosition();
 
-				if (player?.Player?.Character != null && player.IsParentEntityGrid) {
+				if (!player.IsPlayerStandingCharacter()) {
 
-					if (player.Player.Character.CurrentMovementState.HasFlag(VRage.Game.MyCharacterMovementEnum.Sitting)) {
-
-						RemovePlayer(player);
-						continue;
-
-					}
+					RemovePlayer(player);
+					continue;
 
 				} else if (characterPos == Vector3D.Zero) {
 

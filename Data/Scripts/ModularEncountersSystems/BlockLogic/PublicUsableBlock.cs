@@ -10,16 +10,14 @@ using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class PrefabConsoleTable : BaseBlockLogic, IBlockLogic {
+	public class PublicUsableBlock : BaseBlockLogic, IBlockLogic {
 
 		private BlockEntity _block;
 		private IMyCubeGrid _grid;
 
-		public IMyProjector Projector;
-		public IMyStoreBlock Store;
-		public StoreTableLink Link;
+		public IMyTerminalBlock TerminalBlock;
 
-		public PrefabConsoleTable(BlockEntity block) {
+		public PublicUsableBlock(BlockEntity block) {
 
 			Setup(block);
 
@@ -37,51 +35,10 @@ namespace ModularEncountersSystems.BlockLogic {
 			}
 
 			_block = block;
-			Projector = block.Block as IMyProjector;
-
-			if (Projector == null) {
-
-				_isValid = false;
-				return;
-
-			}
-
-			/*
-			if (Link == null)
-				return;
-
-			if (Link.StoreEntityId == 0) {
-
-				var storeSlim = Projector.SlimBlock.CubeGrid.GetCubeBlock(Link.StoreMinPosition);
-
-				if (storeSlim?.FatBlock != null) {
-
-					Store = storeSlim.FatBlock as IMyStoreBlock;
-					Link.StoreEntityId = storeSlim.FatBlock.EntityId;
-
-				}
-
-			} else {
-
-				IMyEntity storeEntity = null;
-
-				if (MyAPIGateway.Entities.TryGetEntityById(Link.StoreEntityId, out storeEntity))
-					Store = storeEntity as IMyStoreBlock;
-
-			}
-
-			if (Store == null || (Store.CubeGrid != Projector.CubeGrid && !Store.IsInSameLogicalGroupAs(Projector))) {
-
-				_isValid = false;
-				return;
-
-			}
-
-			RemoveFromStore();
-			*/
+			TerminalBlock = block.Block;
 
 			//Pass
-			_grid = Projector.SlimBlock.CubeGrid;
+			_grid = TerminalBlock.SlimBlock.CubeGrid;
 			_grid.OnBlockOwnershipChanged += OwnershipChange;
 			_grid.OnGridSplit += GridSplit;
 
@@ -118,7 +75,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			_grid.OnGridSplit -= GridSplit;
 			_grid.OnBlockOwnershipChanged -= OwnershipChange;
 
-			_grid = Projector.SlimBlock.CubeGrid;
+			_grid = TerminalBlock.SlimBlock.CubeGrid;
 
 			_grid.OnGridSplit += GridSplit;
 			_grid.OnBlockOwnershipChanged += OwnershipChange;
@@ -137,27 +94,6 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_isValid = false;
 		
-		}
-
-	}
-
-	[ProtoContract]
-	public class StoreTableLink {
-
-		[ProtoMember(1)] public SerializableVector3I StoreMinPosition;
-		[ProtoMember(2)] public long StoreEntityId;
-		[ProtoMember(3)] public int BlockLimit;
-		[ProtoMember(4)] public string GridSize;
-		[ProtoMember(5)] public long StoreItemId;
-
-		public StoreTableLink() {
-
-			StoreMinPosition = new SerializableVector3I();
-			StoreEntityId = 0;
-			BlockLimit = 2000;
-			GridSize = "Both";
-			StoreItemId = 0;
-
 		}
 
 	}

@@ -25,7 +25,7 @@
 			<MaximumOfferAmount>500</MaximumOfferAmount>
 			<MinimumOrderAmount>50</MinimumOrderAmount>
 			<MaximumOrderAmount>500</MaximumOrderAmount>
-			<CanPlayerOrder>true</CanPlayerOrder>
+			<CanPlayerOrder>false</CanPlayerOrder>
 
 			<MinimumAcquisitionAmount>10</MinimumAcquisitionAmount>
 			<MaximumAcquisitionAmount>100</MaximumAcquisitionAmount>

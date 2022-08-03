@@ -1,8 +1,8 @@
 ﻿using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Tasks;
-using ModularEncountersSystems.Terminal;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -30,21 +30,32 @@ namespace ModularEncountersSystems.Entities {
 		public ConsumableItemTimer PlayerInhibitorNullifier;
 		public ConsumableItemTimer EnergyInhibitorNullifier;
 
-		public SuitMods Mods { get {
+		public ProgressionContainer Progression { 
 
-				if (_suitMods == null) {
+			get {
 
-					_suitMods = new SuitMods();
-					_suitMods.IdentityId = Player?.IdentityId ?? 0;
-					_suitMods.SteamId = Player?.SteamUserId ?? 0;
+				if (_progression == null) {
+
+					_progression = new ProgressionContainer();
+					_progression.IdentityId = Player?.IdentityId ?? 0;
+					_progression.SteamId = Player?.SteamUserId ?? 0;
+					PlayerManager.ProgressionContainers.Add(_progression);
 
 				}
 					
-				return _suitMods;
+				return _progression;
 			
-			} 
+			}
+
+			set { 
+				
+				if(value != null)
+					_progression = value; 
+			
+			}
 		}
-		internal SuitMods _suitMods;
+
+		internal ProgressionContainer _progression;
 
 		public List<GridEntity> LinkedGrids;
 
@@ -158,7 +169,7 @@ namespace ModularEncountersSystems.Entities {
 			if (!ActiveEntity())
 				return false;
 
-			if (Player?.Character == null)
+			if (Player?.Character == null || Player.Controller?.ControlledEntity?.Entity == null)
 				return false;
 
 			/*

@@ -14,20 +14,6 @@ using VRageMath;
 
 namespace ModularEncountersSystems.Behavior.Subsystems {
 
-	public struct ChatDetails {
-
-		public bool UseChat;
-		public double ChatTriggerDistance;
-		public int ChatMinTime;
-		public int ChatMaxTime;
-		public int ChatChance;
-		public int MaxChats;
-		public List<string> ChatMessages;
-		public List<string> ChatAudio;
-		public List<BroadcastType> BroadcastChatType;
-
-	}
-
 	public class BroadcastSystem {
 
 		//Configurable
@@ -154,8 +140,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				}
 
 			}
-
-
 
 			var playerList = new List<IMyPlayer>();
 			MyAPIGateway.Players.GetPlayers(playerList);

@@ -11,20 +11,14 @@ using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class NanobotInhibitor : BaseBlockLogic, IBlockLogic {
-
-		internal IMyRadioAntenna _antenna;
-		internal IMyTerminalBlock _block;
-
-		internal double _disableRange;
-		internal double _antennaRange;
+	public class NanobotInhibitor : InhibitorBase, IBlockLogic {
 
 		internal List<MyDefinitionId> _targetedBlocks;
 
 		internal List<BlockEntity> _potentialBlocks;
 		internal List<BlockEntity> _blocksInRange;
 
-		internal List<PlayerEntity> _playersInRange;
+		internal List<PlayerEntity> _messagePlayersInRange;
 
 		public NanobotInhibitor(BlockEntity block) {
 
@@ -34,7 +28,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void Setup(BlockEntity block) {
 
-			_tamperCheck = true;
+			_fixCheck = true;
 			base.Setup(block);
 
 			if (!_isServer) {
@@ -47,13 +41,10 @@ namespace ModularEncountersSystems.BlockLogic {
 			_blocksInRange = new List<BlockEntity>();
 			_potentialBlocks = new List<BlockEntity>();
 
-			_playersInRange = new List<PlayerEntity>();
+			_messagePlayersInRange = new List<PlayerEntity>();
 
 			BlockManager.GetBlocksOfTypes(_potentialBlocks, BlockManager.NanobotBlockIds);
 			BlockManager.BlockAdded += GetNewBlock;
-
-			_antenna = block.Block as IMyRadioAntenna;
-			_block = block.Block as IMyTerminalBlock;
 
 			if (_antenna != null) {
 
@@ -69,6 +60,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			}
 
 			_logicType = "Nanobot Inhibitor";
+			_inhibitor = InhibitorTypes.Nanobots;
 			_useTick100 = true;
 
 		}
@@ -153,18 +145,18 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				if (player.Distance(Entity.GetPosition()) < _disableRange) {
 
-					if (!_playersInRange.Contains(player)) {
+					if (!_messagePlayersInRange.Contains(player)) {
 
 						MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disable Nanobot Functionality!", 4000, "Red", player.Player.IdentityId);
-						_playersInRange.Add(player);
+						_messagePlayersInRange.Add(player);
 
 					}
 
 				} else {
 
-					if (_playersInRange.Contains(player)) {
+					if (_messagePlayersInRange.Contains(player)) {
 
-						_playersInRange.Remove(player);
+						_messagePlayersInRange.Remove(player);
 
 					}
 

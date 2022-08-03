@@ -35,12 +35,12 @@ namespace ModularEncountersSystems.Configuration {
 
 		public static SavedInternalData LoadSettings(string phase) {
 
-			if (MyAPIGateway.Utilities.FileExistsInWorldStorage("SavedInternalData.mes", typeof(SavedInternalData)) == true) {
+			if (MyAPIGateway.Utilities.FileExistsInLocalStorage("SavedInternalData.mes", typeof(SavedInternalData)) == true) {
 
 				try {
 
 					SavedInternalData config = null;
-					var reader = MyAPIGateway.Utilities.ReadFileInWorldStorage("SavedInternalData.mes", typeof(SavedInternalData));
+					var reader = MyAPIGateway.Utilities.ReadFileInLocalStorage("SavedInternalData.mes", typeof(SavedInternalData));
 					string configcontents = reader.ReadToEnd();
 					config = MyAPIGateway.Utilities.SerializeFromXML<SavedInternalData>(configcontents);
 					SpawnLogger.Write("Loaded Existing Settings From SavedInternalData.mes. Phase: " + phase, SpawnerDebugEnum.Startup, true);
@@ -64,7 +64,7 @@ namespace ModularEncountersSystems.Configuration {
 
 			try {
 
-				using (var writer = MyAPIGateway.Utilities.WriteFileInWorldStorage("SavedInternalData.mes", typeof(SavedInternalData))) {
+				using (var writer = MyAPIGateway.Utilities.WriteFileInLocalStorage("SavedInternalData.mes", typeof(SavedInternalData))) {
 
 					writer.Write(MyAPIGateway.Utilities.SerializeToXML<SavedInternalData>(settings));
 
@@ -86,7 +86,7 @@ namespace ModularEncountersSystems.Configuration {
 
 			try {
 
-				using (var writer = MyAPIGateway.Utilities.WriteFileInWorldStorage("SavedInternalData.mes", typeof(SavedInternalData))) {
+				using (var writer = MyAPIGateway.Utilities.WriteFileInLocalStorage("SavedInternalData.mes", typeof(SavedInternalData))) {
 
 					writer.Write(MyAPIGateway.Utilities.SerializeToXML<SavedInternalData>(this));
 

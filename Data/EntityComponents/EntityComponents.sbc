@@ -120,6 +120,16 @@
 				<guid>88334D52-3F3B-47CB-83C7-426FBC0553FA</guid>
 			</RegisteredStorageGuids>
 		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>MesSuitModsKey</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>A4F21767-C33B-4523-B40B-148498BDAFED</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
 		
 	</EntityComponents>
 </Definitions>

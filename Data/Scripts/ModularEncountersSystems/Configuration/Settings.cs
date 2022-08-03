@@ -62,7 +62,7 @@ namespace ModularEncountersSystems.Configuration {
 			if (!Creatures.ConfigLoaded)
 				Creatures = Creatures.LoadSettings(phase);
 
-			if (SavedData == null)
+			if (MyAPIGateway.Multiplayer.IsServer && SavedData == null)
 				SavedData = SavedInternalData.LoadSettings(phase);
 
 			CheckGlobalEvents();

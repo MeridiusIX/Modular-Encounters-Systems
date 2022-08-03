@@ -22,7 +22,7 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal bool _entityActive;
 		internal bool _physicsActive;
 
-		internal bool _tamperCheck;
+		internal bool _fixCheck;
 		internal DateTime _createTime;
 		internal IMyCubeGrid _parentGrid;
 		internal Vector3I _blockCell;
@@ -77,7 +77,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			
 			}
 
-			if(_tamperCheck)
+			if(_fixCheck)
 				TaskProcessor.Tasks.Add(new FixBlock(this));
 
 			TaskProcessor.Tasks.Add(this);

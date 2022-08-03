@@ -10,15 +10,8 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class DrillInhibitor : BaseBlockLogic, IBlockLogic {
+	public class DrillInhibitor : InhibitorBase, IBlockLogic {
 
-		internal IMyRadioAntenna _antenna;
-		internal IMyTerminalBlock _block;
-
-		internal double _disableRange;
-		internal double _antennaRange;
-
-		internal bool _playersInRange;
 		internal Dictionary<PlayerEntity, DateTime> _playersInDisableRange;
 		internal Dictionary<PlayerEntity, int> _toolbarIndexes;
 
@@ -30,7 +23,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void Setup(BlockEntity block) {
 
-			_tamperCheck = true;
+			_fixCheck = true;
 			base.Setup(block);
 
 			if (!_isServer) {
@@ -40,10 +33,11 @@ namespace ModularEncountersSystems.BlockLogic {
 			
 			}
 
+			BaseSetup(block);
+
 			_playersInDisableRange = new Dictionary<PlayerEntity, DateTime>();
 			_toolbarIndexes = new Dictionary<PlayerEntity, int>();
-			_antenna = block.Block as IMyRadioAntenna;
-			_block = block.Block as IMyTerminalBlock;
+			
 
 			if (_antenna != null) {
 
@@ -59,6 +53,8 @@ namespace ModularEncountersSystems.BlockLogic {
 			}
 
 			_logicType = "HandDrill Inhibitor";
+			_inhibitor = InhibitorTypes.Drill;
+
 			_useTick10 = true;
 			_useTick100 = true;
 			
@@ -128,11 +124,15 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				if (distance <= _disableRange) {
 
-					if (!_playersInDisableRange.ContainsKey(player)) {
+					if (!ProcessInhibitorSuitUpgrades(player)) {
 
-						MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Hand Drills!", 4000, "Red", player.Player.IdentityId);
-						_playersInDisableRange.Add(player, MyAPIGateway.Session.GameDateTime);
-						_toolbarIndexes.Add(player, 0);
+						if (!_playersInDisableRange.ContainsKey(player)) {
+
+							MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Hand Drills!", 4000, "Red", player.Player.IdentityId);
+							_playersInDisableRange.Add(player, MyAPIGateway.Session.GameDateTime);
+							_toolbarIndexes.Add(player, 0);
+
+						}
 
 					}
 

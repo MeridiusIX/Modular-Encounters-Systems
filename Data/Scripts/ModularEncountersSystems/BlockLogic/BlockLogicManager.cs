@@ -251,11 +251,22 @@ namespace ModularEncountersSystems.BlockLogic {
 
                 if (block.Block.Storage != null && block.Block.Storage.ContainsKey(StorageTools.MesShipyardKey)) {
 
-                    LogicBlocks.Add(block.Block.EntityId, new PrefabConsoleTable(block));
+                    LogicBlocks.Add(block.Block.EntityId, new PublicUsableBlock(block));
                     return;
 
                 }
                 
+            }
+
+            if (block.Block as IMyTextPanel != null && block.Block.SlimBlock.BlockDefinition.Id.SubtypeName == "MedicalStation") {
+
+                if (block.Block.Storage != null && block.Block.Storage.ContainsKey(StorageTools.MesSuitModsKey)) {
+
+                    LogicBlocks.Add(block.Block.EntityId, new PublicUsableBlock(block));
+                    return;
+
+                }
+
             }
 
         }

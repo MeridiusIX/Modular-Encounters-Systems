@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Tasks;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,6 +13,7 @@ namespace ModularEncountersSystems.Events {
 			//Register Any Actions/Events
 			MES_SessionCore.SaveActions += SaveData;
 			MES_SessionCore.UnloadActions += UnloadData;
+			TaskProcessor.Tick30.Tasks += ProcessEvents;
 
 			if (!string.IsNullOrWhiteSpace(Settings.SavedData?.EventData)) {
 
@@ -22,8 +24,9 @@ namespace ModularEncountersSystems.Events {
 				//TODO: Since no existing event data exists, create event data from scratch
 			
 			}
-			
 
+
+			
 		}
 
 		public static void SaveData() {
@@ -34,11 +37,32 @@ namespace ModularEncountersSystems.Events {
 
 		}
 
+		public static void ProcessEvents() {
+			
+			//Loop Events
+
+				//Check Event is On
+
+				//Check Times
+
+				//Check Conditions
+
+				//If Satisfied, Set Triggered = true
+
+			//Loop Events Again
+				
+				//If Triggered == false, Skip
+
+				//Run Actions
+		
+		}
+
 		public static void UnloadData() {
 
 			//Unregister Any Actions/Events That Were Registered in Setup()
 			MES_SessionCore.SaveActions -= SaveData;
 			MES_SessionCore.UnloadActions -= UnloadData;
+			TaskProcessor.Tick30.Tasks -= ProcessEvents;
 
 		}
 

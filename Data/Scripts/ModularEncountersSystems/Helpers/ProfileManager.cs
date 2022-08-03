@@ -31,6 +31,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, SpawnConditionsGroup> SpawnConditionGroups = new Dictionary<string, SpawnConditionsGroup>();
 		public static Dictionary<string, SpawnConditionsProfile> SpawnConditionProfiles = new Dictionary<string, SpawnConditionsProfile>();
 		public static Dictionary<string, StaticEncounter> StaticEncounters = new Dictionary<string, StaticEncounter>();
+		public static Dictionary<string, SuitUpgradesProfile> SuitModificationProfiles = new Dictionary<string, SuitUpgradesProfile>();
 		public static Dictionary<MyDefinitionId, WeaponModRulesProfile> WeaponModRulesProfiles = new Dictionary<MyDefinitionId, WeaponModRulesProfile>();
 		public static Dictionary<string, Zone> ZoneProfiles = new Dictionary<string, Zone>();
 		public static Dictionary<string, ZoneConditionsProfile> ZoneConditionsProfiles = new Dictionary<string, ZoneConditionsProfile>();
@@ -218,6 +219,16 @@ namespace ModularEncountersSystems.Helpers {
 				}
 
 				if (!StaticEncounters.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Static Encounter]")) {
+
+					var profile = new StaticEncounter();
+					profile.InitTags(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					StaticEncounters.Add(component.Id.SubtypeName, profile);
+					continue;
+
+				}
+
+				if (!SuitModificationProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Suit Upgrades]")) {
 
 					var profile = new StaticEncounter();
 					profile.InitTags(component.DescriptionText);

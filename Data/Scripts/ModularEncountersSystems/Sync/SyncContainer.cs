@@ -13,6 +13,7 @@ namespace ModularEncountersSystems.Sync {
         ClipboardRequest,
         ShipyardTransaction,
         ShipyardTransactionResult,
+        SuitUpgradePlayerStats,
 
     }
 

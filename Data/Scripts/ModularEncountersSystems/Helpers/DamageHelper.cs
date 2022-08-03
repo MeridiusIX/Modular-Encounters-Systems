@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems.Profiles;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Sync;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game;
@@ -27,7 +28,24 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static void Setup() {
 
+			MyAPIGateway.Session.DamageSystem.RegisterBeforeDamageHandler(75, BeforeDamageHandler);
 			MyAPIGateway.Session.DamageSystem.RegisterAfterDamageHandler(75, DamageHelper.DamageHandler);
+
+		}
+
+		public static void BeforeDamageHandler(object target, ref MyDamageInformation info) {
+
+			if (target as IMyCharacter == null)
+				return;
+
+			var player = PlayerManager.GetPlayerWithCharacter(target as IMyCharacter);
+
+			if (player == null || player.Progression.DamageReductionSuitUpgradeLevel == 0)
+				return;
+
+			float multiplier = (float)player.Progression.DamageReductionSuitUpgradeLevel * 0.15f;
+			float reduction = info.Amount * multiplier;
+			info.Amount -= reduction;
 
 		}
 

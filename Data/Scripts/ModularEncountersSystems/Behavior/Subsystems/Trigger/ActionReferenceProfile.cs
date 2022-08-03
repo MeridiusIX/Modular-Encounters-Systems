@@ -9,6 +9,7 @@ using VRage.ObjectBuilders;
 using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Files;
+using ModularEncountersSystems.Progression;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -361,6 +362,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string LcdTextTemplateFile;
 		public List<string> LcdBlockNames;
 		public List<int> LcdTemplateIndexes;
+
+		public bool AddResearchPoints;
+		public List<string> ResearchType;
+		public List<int> ResearchPointsAmount;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 

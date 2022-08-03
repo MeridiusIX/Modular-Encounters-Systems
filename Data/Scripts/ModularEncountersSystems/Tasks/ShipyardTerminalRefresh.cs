@@ -14,14 +14,15 @@ using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.Tasks {
-    public class TerminalRefresh : TaskItem, ITaskItem {
+    public class ShipyardTerminalRefresh : TaskItem, ITaskItem {
 
         internal bool _screenClosed;
         internal byte _tickCounts;
         internal IMyTerminalBlock _block;
 
 
-        public TerminalRefresh(IMyTerminalBlock block) {
+        public 
+            ShipyardTerminalRefresh(IMyTerminalBlock block) {
 
             _isValid = true;
             _tickTrigger = 1;
@@ -43,7 +44,7 @@ namespace ModularEncountersSystems.Tasks {
 
             ShipyardControls.GetPriceQuote(_block);
             _block.RefreshCustomInfo();
-            ShipyardControls.RefreshMenu(_block);
+            ControlManager.RefreshMenu(_block);
 
         }
 
@@ -51,7 +52,7 @@ namespace ModularEncountersSystems.Tasks {
 
             ShipyardControls.GetPriceQuote(_block);
             _block.RefreshCustomInfo();
-            ShipyardControls.RefreshMenu(_block);
+            ControlManager.RefreshMenu(_block);
             _isValid = false;
 
         }

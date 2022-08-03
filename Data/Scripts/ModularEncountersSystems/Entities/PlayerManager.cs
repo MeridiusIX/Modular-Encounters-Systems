@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Terminal;
+﻿using ModularEncountersSystems.Progression;
+using ModularEncountersSystems.Terminal;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,10 @@ namespace ModularEncountersSystems.Entities {
 		public static List<IMyPlayer> ActivePlayers = new List<IMyPlayer>();
 		public static List<PlayerEntity> Players = new List<PlayerEntity>();
 
-		public static Dictionary<ulong, SuitMods> SuitModMaster = new Dictionary<ulong, SuitMods>();
-
 		public static Action<PlayerEntity> NewPlayerDetected;
 		public static Action UnloadEntities;
+
+		public static List<ProgressionContainer> ProgressionContainers = new List<ProgressionContainer>();
 
 		public static PlayerEntity GetNearestPlayer(Vector3D coords) {
 
@@ -45,8 +46,6 @@ namespace ModularEncountersSystems.Entities {
 
 		public static PlayerEntity GetPlayerUsingTool(IMyEntity entity) {
 
-			PlayerEntity result = null;
-
 			foreach (var player in Players) {
 
 				if (!player.ActiveEntity())
@@ -57,13 +56,27 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
-			return result;
+			return null;
+
+		}
+
+		public static PlayerEntity GetPlayerWithCharacter(IMyCharacter character) {
+
+			foreach (var player in Players) {
+
+				if (!player.ActiveEntity())
+					continue;
+
+				if (player.Player.Character == character)
+					return player;
+
+			}
+
+			return null;
 
 		}
 
 		public static PlayerEntity GetPlayerWithIdentityId(long id) {
-
-			PlayerEntity result = null;
 
 			foreach (var player in Players) {
 
@@ -75,7 +88,7 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
-			return result;
+			return null;
 
 		}
 
@@ -139,6 +152,7 @@ namespace ModularEncountersSystems.Entities {
 					if (!player.IsBot && player.SteamUserId > 0) {
 
 						var playerEntity = new PlayerEntity(player);
+						playerEntity.Progression = GetProgressionContainer(player.IdentityId, player.SteamUserId);
 						UnloadEntities += playerEntity.Unload;
 						Players.Add(playerEntity);
 						NewPlayerDetected?.Invoke(playerEntity);
@@ -148,6 +162,22 @@ namespace ModularEncountersSystems.Entities {
 				}
 
 			}
+
+		}
+
+		public static ProgressionContainer GetProgressionContainer(long identityId, ulong steamId) {
+
+			foreach (var container in ProgressionContainers) {
+
+				if (container.IdentityId == identityId && container.SteamId == steamId) {
+
+					return container;
+
+				}
+
+			}
+
+			return null;
 
 		}
 

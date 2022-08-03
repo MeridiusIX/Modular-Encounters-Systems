@@ -8,6 +8,7 @@ using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
@@ -305,6 +306,34 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			msg.ReturnMessage = "Shipyard Profiles Attached To Eligible Blocks";
+			return;
+
+		}
+
+		public static void DebugAttachSuitUpgradeModule(ChatMessage msg) {
+
+			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
+
+			if (grid == null) {
+
+				msg.ReturnMessage = "No Grid in Camera Direction";
+				return;
+
+			}
+
+			foreach (var block in grid.AllTerminalBlocks) {
+
+				if (!block.ActiveEntity() || ControlManager.SuitUpgradeBlockId != block.Block.SlimBlock.BlockDefinition.Id)
+					continue;
+
+				if (block.Block.Storage == null)
+					block.Block.Storage = new MyModStorageComponent();
+
+				block.Block.Storage.Add(StorageTools.MesSuitModsKey, "1");
+
+			}
+
+			msg.ReturnMessage = "Suit Upgrade Module Attached To Eligible Blocks";
 			return;
 
 		}
@@ -1677,6 +1706,14 @@ namespace ModularEncountersSystems.Logging {
 
 			var result = RelationManager.ResetFactionReputation(msgSplit[3]);
 			MyVisualScriptLogicProvider.ShowNotification("Faction [" + msgSplit[3] + "] Reputation Reset Result: " + result, 5000, "White", msg.PlayerId);
+			return;
+
+		}
+
+		public static void ResetZones(ChatMessage msg) {
+
+			ZoneManager.ResetAllZones();
+			MyVisualScriptLogicProvider.ShowNotification("All Zone Data Reset", 5000, "White", msg.PlayerId);
 			return;
 
 		}

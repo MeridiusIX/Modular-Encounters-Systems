@@ -4,6 +4,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Events;
 using ModularEncountersSystems.Spawning.Profiles;
 using System;
 using System.Collections.Generic;
@@ -1642,6 +1643,28 @@ namespace ModularEncountersSystems.Helpers {
 					original.Add(result);
 
 			}
+
+		}
+
+
+
+
+		//Events
+		public static void TagEventProfileCheck(string tag, ref List<Event> original)
+		{
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length < 2)
+			{
+				return;
+			}
+
+			var key = tagSplit[1];
+			Event result = null;
+
+			if (ProfileManager.Events.TryGetValue(key, out result))
+				original.Add(result);
 
 		}
 

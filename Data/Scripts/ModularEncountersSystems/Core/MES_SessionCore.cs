@@ -4,6 +4,7 @@ using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Events;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
@@ -60,6 +61,7 @@ namespace ModularEncountersSystems.Core {
 			ProfileManager.Setup();
 			SpawnGroupManager.CreateSpawnLists();
 			BotSpawner.Setup();
+			EventManager.Setup();
 			APIs.RegisterAPIs(0); //Register Any Applicable APIs
 
 			if (!IsServer)

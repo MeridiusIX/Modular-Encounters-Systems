@@ -7,6 +7,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Zones;
+using ModularEncountersSystems.Events;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -61,6 +62,17 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<string> ErrorProfiles = new List<string>();
 
 		public static AutoPilotProfile DefaultAutoPilotSettings = new AutoPilotProfile();
+
+		//Events 
+		public static Dictionary<string, MainEvent> MainEvents = new Dictionary<string, MainEvent>();
+		public static Dictionary<string, Event> Events = new Dictionary<string, Event>();
+		public static Dictionary<string, EventCondition> EventConditions = new Dictionary<string, EventCondition>();
+		public static Dictionary<string, EventAction> EventActions = new Dictionary<string, EventAction>();
+
+
+
+
+
 
 		public static void Setup() {
 
@@ -177,6 +189,11 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+
+
+
+
+
 			}
 
 			//Second Phase
@@ -276,6 +293,29 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+
+				if (!EventActions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Action]"))
+				{
+
+					var EventAction = new EventAction();
+					EventAction.InitTags(component.DescriptionText);
+					EventAction.ProfileSubtypeId = component.Id.SubtypeName;
+					EventActions.Add(component.Id.SubtypeName, EventAction);
+					continue;
+
+				}
+
+				if (!EventConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Condition]"))
+				{
+
+					var EventCondition = new EventCondition();
+					EventCondition.InitTags(component.DescriptionText);
+					EventCondition.ProfileSubtypeId = component.Id.SubtypeName;
+					EventConditions.Add(component.Id.SubtypeName, EventCondition);
+					continue;
+				}
+
+
 			}
 
 			//Third Phase
@@ -309,6 +349,16 @@ namespace ModularEncountersSystems.Helpers {
 					TriggerObjectTemplates.Add(component.Id.SubtypeName, triggerBytes);
 					continue;
 
+				}
+
+				if (!Events.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event]"))
+				{
+
+					var Event = new Event();
+					Event.InitTags(component.DescriptionText);
+					Event.ProfileSubtypeId = component.Id.SubtypeName;
+					Events.Add(component.Id.SubtypeName, Event);
+					continue;
 				}
 
 			}
@@ -384,6 +434,19 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 
 				}
+
+
+
+				if (!MainEvents.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES MainEvent]"))
+				{
+
+					var MainEvent = new MainEvent();
+					MainEvent.InitTags(component.DescriptionText);
+					MainEvent.ProfileSubtypeId = component.Id.SubtypeName;
+					MainEvents.Add(component.Id.SubtypeName, MainEvent);
+					continue;
+				}
+
 
 			}
 

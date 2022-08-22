@@ -7,6 +7,7 @@ namespace ModularEncountersSystems.Tasks {
 
         public static SubscribeTask Tick1 = new SubscribeTask(1);
         public static SubscribeTask Tick10 = new SubscribeTask(10);
+        public static SubscribeTask Tick30 = new SubscribeTask(30);
         public static SubscribeTask Tick60 = new SubscribeTask(60);
         public static SubscribeTask Tick100 = new SubscribeTask(100);
 
@@ -30,6 +31,7 @@ namespace ModularEncountersSystems.Tasks {
 
             Tasks.Add(Tick1);
             Tasks.Add(Tick10);
+            Tasks.Add(Tick30);
             Tasks.Add(Tick60);
             Tasks.Add(Tick100);
 

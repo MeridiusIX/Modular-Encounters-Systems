@@ -208,7 +208,7 @@ namespace ModularEncountersSystems.Sync {
 
 				if (projector != null) {
 
-					var task = new ShipyardTerminalRefresh(projector);
+					var task = new TerminalTransactionRefresh(projector, ShipyardControls.GetPriceQuote);
 					TaskProcessor.Tasks.Add(task);
 					MyAPIGateway.Utilities.ShowMissionScreen(screenTitle, "", objective, sb.ToString(), task.ScreenClose);
 

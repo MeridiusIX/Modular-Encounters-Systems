@@ -73,6 +73,8 @@ namespace ModularEncountersSystems.Configuration {
 
 		public bool AerodynamicsModAdvLiftOverride;
 
+		public bool StopCompromisedAiMovement;
+
 		[XmlIgnore]
 		public bool ConfigLoaded;
 
@@ -111,6 +113,8 @@ namespace ModularEncountersSystems.Configuration {
 
 			GlobalReplenishmentProfiles = new string[] { "MES-Replenishment-BaseRules" };
 
+			StopCompromisedAiMovement = true;
+
 			EditorReference = new Dictionary<string, Func<string, object, bool>> {
 
 				{"EnableGlobalNPCWeaponRandomizer", (s, o) => EditorTools.SetCommandValueBool(s, ref EnableGlobalNPCWeaponRandomizer) },
@@ -133,6 +137,7 @@ namespace ModularEncountersSystems.Configuration {
 				{"WeaponReplacerTotalGridMassMultiplier", (s, o) => EditorTools.SetCommandValueFloat(s, ref WeaponReplacerTotalGridMassMultiplier) },
 				{"GlobalReplenishmentProfiles", (s, o) => EditorTools.SetCommandValueStringArray(s, ref GlobalReplenishmentProfiles) },
 				{"AerodynamicsModAdvLiftOverride", (s, o) => EditorTools.SetCommandValueBool(s, ref AerodynamicsModAdvLiftOverride) },
+				{"StopCompromisedAiMovement", (s, o) => EditorTools.SetCommandValueBool(s, ref StopCompromisedAiMovement) },
 
 			};
 

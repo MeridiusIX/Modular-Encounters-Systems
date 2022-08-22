@@ -54,6 +54,8 @@ namespace ModularEncountersSystems.Events {
 				//If Triggered == false, Skip
 
 				//Run Actions
+
+				//Set Triggered = false
 		
 		}
 

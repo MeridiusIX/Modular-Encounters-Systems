@@ -364,8 +364,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<int> LcdTemplateIndexes;
 
 		public bool AddResearchPoints;
-		public List<string> ResearchType;
-		public List<int> ResearchPointsAmount;
+		public int ResearchPointsAmount;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -710,6 +709,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			LcdBlockNames = new List<string>();
 			LcdTemplateIndexes = new List<int>();
 
+			AddResearchPoints = false;
+			ResearchPointsAmount = 0;
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -956,6 +958,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"LcdTextTemplateFile", (s, o) => TagParse.TagStringCheck(s, ref LcdTextTemplateFile) },
 				{"LcdBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref LcdBlockNames) },
 				{"LcdTemplateIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref LcdTemplateIndexes) },
+
+				{"AddResearchPoints", (s, o) => TagParse.TagBoolCheck(s, ref AddResearchPoints) },
+				{"ResearchPointsAmount", (s, o) => TagParse.TagIntCheck(s, ref ResearchPointsAmount) },
 
 			};
 

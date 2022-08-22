@@ -5,21 +5,22 @@
     <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
       <Id>
         <TypeId>Inventory</TypeId>
-        <SubtypeId>MES-Trigger-DummyDespawn</SubtypeId>
+        <SubtypeId>MES-Trigger-NoTargetRetreatInitialCheck</SubtypeId>
       </Id>
       <Description>
 
         [RivalAI Trigger]
 
         [UseTrigger:true]
-        [Type:Timer]
+        [Type:NoTarget]
 
-        [MinCooldownMs:1]
-        [MaxCooldownMs:2]
-        [StartsReady:true]
+        [MinCooldownMs:1000]
+        [MaxCooldownMs:1001]
+        [StartsReady:false]
 
-        [MaxActions:1]
-        [Actions:MES-Action-DummyDespawn]
+        [MaxActions:-1]
+
+        [Actions:MES-Action-NoTargetRetreatInitialCheck]
 
       </Description>
 
@@ -28,18 +29,24 @@
     <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
       <Id>
         <TypeId>Inventory</TypeId>
-        <SubtypeId>MES-Action-DummyDespawn</SubtypeId>
+        <SubtypeId>MES-Action-NoTargetRetreatInitialCheck</SubtypeId>
       </Id>
       <Description>
 
         [RivalAI Action]
 
-        [ForceDespawn:true]
+        [DisableTriggers:true]
+        [DisableTriggerNames:MES-Trigger-NoTargetRetreatInitialCheck]
+
+        [EnableTriggers:true]
+        [EnableTriggerNames:MES-Trigger-NoTargetRetreatCheck]
+
+        [ResetCooldownTimeOfTriggers:true]
+        [ResetTriggerCooldownNames:MES-Trigger-NoTargetRetreatCheck]
 
       </Description>
 
     </EntityComponent>
 
   </EntityComponents>
-  
 </Definitions>

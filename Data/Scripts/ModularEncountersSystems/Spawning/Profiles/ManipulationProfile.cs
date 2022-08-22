@@ -182,6 +182,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> ShipyardConsoleBlockNames;
 		public List<string> ShipyardProfileNames;
 
+		public bool UseResearchPointButtons;
+		public List<string> ResearchPointButtonNames;
+
 		public bool ClearAuthorship;
 
 		public bool AttachModStorageComponentToGrid;

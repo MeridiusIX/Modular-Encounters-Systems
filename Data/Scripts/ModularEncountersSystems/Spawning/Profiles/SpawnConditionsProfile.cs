@@ -316,6 +316,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<int> PrefabIndexGroupValues;
 		public int PrefabFixedCount;
 		public List<Vector3D> PrefabOffsetOverrides;
+		public bool UseSpawnGroupPrefabSpawningMode;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -620,6 +621,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PrefabIndexGroupValues = new List<int>();
 			PrefabFixedCount = 1;
 			PrefabOffsetOverrides = new List<Vector3D>();
+			UseSpawnGroupPrefabSpawningMode = false;
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
@@ -863,6 +865,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"PrefabIndexGroupValues", (s, o) => TagParse.TagIntListCheck(s, true, ref PrefabIndexGroupValues) },
 				{"PrefabFixedCount", (s, o) => TagParse.TagIntCheck(s, ref PrefabFixedCount) },
 				{"PrefabOffsetOverrides", (s, o) => TagParse.TagVector3DListCheck(s, ref PrefabOffsetOverrides) },
+				{"UseSpawnGroupPrefabSpawningMode", (s, o) => TagParse.TagBoolCheck(s, ref UseSpawnGroupPrefabSpawningMode) },
 
 			};
 

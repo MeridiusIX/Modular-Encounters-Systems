@@ -1,0 +1,70 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Trigger-NoTargetRetreatCheck</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Trigger]
+
+        [UseTrigger:true]
+        [Type:NoTarget]
+
+        [MinCooldownMs:15000]
+        [MaxCooldownMs:15001]
+        [StartsReady:false]
+
+        [MaxActions:-1]
+
+        [Actions:MES-Action-NoTargetRetreatCheck]
+
+        [UseElseActions:true]
+        [ElseActions:MES-ElseAction-NoTargetRetreatCheck]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Action-NoTargetRetreatCheck</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Action]
+
+        [Retreat:true]
+
+      </Description>
+
+    </EntityComponent>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-ElseAction-NoTargetRetreatCheck</SubtypeId>
+      </Id>
+      <Description>
+
+        [RivalAI Action]
+
+        [DisableTriggers:true]
+        [DisableTriggerNames:MES-Trigger-NoTargetRetreatCheck]
+
+        [EnableTriggers:true]
+        [EnableTriggerNames:MES-Trigger-NoTargetRetreatInitialCheck]
+
+        [ResetCooldownTimeOfTriggers:true]
+        [ResetTriggerCooldownNames:MES-Trigger-NoTargetRetreatInitialCheck]
+
+      </Description>
+
+    </EntityComponent>
+
+  </EntityComponents>
+</Definitions>

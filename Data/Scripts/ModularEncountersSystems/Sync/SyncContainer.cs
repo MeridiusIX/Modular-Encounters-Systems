@@ -14,6 +14,7 @@ namespace ModularEncountersSystems.Sync {
         ShipyardTransaction,
         ShipyardTransactionResult,
         SuitUpgradePlayerStats,
+        SuitUpgradeTransaction,
 
     }
 

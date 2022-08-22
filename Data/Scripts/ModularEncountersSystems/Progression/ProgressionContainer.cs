@@ -1,4 +1,6 @@
-﻿using ProtoBuf;
+﻿using ModularEncountersSystems.Configuration;
+using ProtoBuf;
+using Sandbox.Game;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -89,7 +91,39 @@ namespace ModularEncountersSystems.Progression {
 
 		}
 
-		public string GetUpgradeName(SuitUpgradeTypes type) {
+		public void ApplyUpgrade(SuitUpgradeTypes type) {
+
+			if (type == SuitUpgradeTypes.None) {
+
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Fails with None", 4000);
+				return;
+
+			}
+				
+			if (type == SuitUpgradeTypes.JetpackInhibitor)
+				JetpackInhibitorSuitUpgradeLevel++;
+
+			if (type == SuitUpgradeTypes.HandDrillInhibitor)
+				DrillInhibitorSuitUpgradeLevel++;
+
+			if (type == SuitUpgradeTypes.PersonnelInhibitor)
+				PersonnelInhibitorSuitUpgradeLevel++;
+
+			if (type == SuitUpgradeTypes.EnergyInhibitor)
+				EnergyInhibitorSuitUpgradeLevel++;
+
+			if (type == SuitUpgradeTypes.SolarCharging)
+				SolarChargingSuitUpgradeLevel++;
+
+			if (type == SuitUpgradeTypes.DamageReduction) 
+				DamageReductionSuitUpgradeLevel++;
+
+
+
+
+		}
+
+		public static string GetUpgradeName(SuitUpgradeTypes type) {
 
 			if (type == SuitUpgradeTypes.None)
 				return "None";
@@ -116,7 +150,7 @@ namespace ModularEncountersSystems.Progression {
 
 		}
 
-		public string GetUpgradeDescriptions(SuitUpgradeTypes type) {
+		public static string GetUpgradeDescriptions(SuitUpgradeTypes type) {
 
 			if (type == SuitUpgradeTypes.None)
 				return "No upgrade selected";
@@ -164,7 +198,7 @@ namespace ModularEncountersSystems.Progression {
 				return SolarChargingSuitUpgradeLevel;
 
 			if (type == SuitUpgradeTypes.DamageReduction)
-				return DrillInhibitorSuitUpgradeLevel;
+				return DamageReductionSuitUpgradeLevel;
 
 			return 0;
 
@@ -175,140 +209,12 @@ namespace ModularEncountersSystems.Progression {
 			if (type == SuitUpgradeTypes.None)
 				return 0;
 
-			if (type == SuitUpgradeTypes.JetpackInhibitor) {
+			long nextLevel = GetUpgradeLevel(type) + 1;
 
-				if (JetpackInhibitorSuitUpgradeLevel == 0)
-					return 100000000;
+			if (nextLevel > 5)
+				return 0;
 
-				if (JetpackInhibitorSuitUpgradeLevel == 1)
-					return 200000000;
-
-				if (JetpackInhibitorSuitUpgradeLevel == 2)
-					return 300000000;
-
-				if (JetpackInhibitorSuitUpgradeLevel == 3)
-					return 400000000;
-
-				if (JetpackInhibitorSuitUpgradeLevel == 4)
-					return 500000000;
-
-				if (JetpackInhibitorSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-				
-
-			if (type == SuitUpgradeTypes.HandDrillInhibitor) {
-
-				if (DrillInhibitorSuitUpgradeLevel == 0)
-					return 100000000;
-
-				if (DrillInhibitorSuitUpgradeLevel == 1)
-					return 200000000;
-
-				if (DrillInhibitorSuitUpgradeLevel == 2)
-					return 300000000;
-
-				if (DrillInhibitorSuitUpgradeLevel == 3)
-					return 400000000;
-
-				if (DrillInhibitorSuitUpgradeLevel == 4)
-					return 500000000;
-
-				if (DrillInhibitorSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			if (type == SuitUpgradeTypes.PersonnelInhibitor) {
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 0)
-					return 100000000;
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 1)
-					return 200000000;
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 2)
-					return 300000000;
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 3)
-					return 400000000;
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 4)
-					return 500000000;
-
-				if (PersonnelInhibitorSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			if (type == SuitUpgradeTypes.EnergyInhibitor) {
-
-				if (EnergyInhibitorSuitUpgradeLevel == 0)
-					return 100000000;
-
-				if (EnergyInhibitorSuitUpgradeLevel == 1)
-					return 200000000;
-
-				if (EnergyInhibitorSuitUpgradeLevel == 2)
-					return 300000000;
-
-				if (EnergyInhibitorSuitUpgradeLevel == 3)
-					return 400000000;
-
-				if (EnergyInhibitorSuitUpgradeLevel == 4)
-					return 500000000;
-
-				if (EnergyInhibitorSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			if (type == SuitUpgradeTypes.SolarCharging) {
-
-				if (SolarChargingSuitUpgradeLevel == 0)
-					return 100000000;
-
-				if (SolarChargingSuitUpgradeLevel == 1)
-					return 200000000;
-
-				if (SolarChargingSuitUpgradeLevel == 2)
-					return 300000000;
-
-				if (SolarChargingSuitUpgradeLevel == 3)
-					return 400000000;
-
-				if (SolarChargingSuitUpgradeLevel == 4)
-					return 500000000;
-
-				if (SolarChargingSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			if (type == SuitUpgradeTypes.DamageReduction) {
-
-				if (DamageReductionSuitUpgradeLevel == 0)
-					return 100000000;
-
-				if (DamageReductionSuitUpgradeLevel == 1)
-					return 200000000;
-
-				if (DamageReductionSuitUpgradeLevel == 2)
-					return 300000000;
-
-				if (DamageReductionSuitUpgradeLevel == 3)
-					return 400000000;
-
-				if (DamageReductionSuitUpgradeLevel == 4)
-					return 500000000;
-
-				if (DamageReductionSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			return 0;
+			return 100000000 * nextLevel;
 
 		}
 
@@ -317,140 +223,64 @@ namespace ModularEncountersSystems.Progression {
 			if (type == SuitUpgradeTypes.None)
 				return 0;
 
-			if (type == SuitUpgradeTypes.JetpackInhibitor) {
+			byte nextLevel = GetUpgradeLevel(type);
+			nextLevel++;
 
-				if (JetpackInhibitorSuitUpgradeLevel == 0)
-					return 1;
+			if (nextLevel > 5)
+				return 0;
 
-				if (JetpackInhibitorSuitUpgradeLevel == 1)
-					return 1;
+			return nextLevel;
 
-				if (JetpackInhibitorSuitUpgradeLevel == 2)
-					return 2;
+		}
 
-				if (JetpackInhibitorSuitUpgradeLevel == 3)
-					return 2;
+		public float GetSolarEnergyIncrease() {
 
-				if (JetpackInhibitorSuitUpgradeLevel == 4)
-					return 3;
+			if (SolarChargingSuitUpgradeLevel == 0)
+				return 0;
 
-				if (JetpackInhibitorSuitUpgradeLevel > 4)
-					return 0;
+			if (SolarChargingSuitUpgradeLevel == 1)
+				return 0.0015f;
 
-			}
+			if (SolarChargingSuitUpgradeLevel == 2)
+				return 0.0035f;
 
+			if (SolarChargingSuitUpgradeLevel == 3)
+				return 0.0055f;
 
-			if (type == SuitUpgradeTypes.HandDrillInhibitor) {
+			if (SolarChargingSuitUpgradeLevel == 4)
+				return 0.075f;
 
-				if (DrillInhibitorSuitUpgradeLevel == 0)
-					return 1;
-
-				if (DrillInhibitorSuitUpgradeLevel == 1)
-					return 1;
-
-				if (DrillInhibitorSuitUpgradeLevel == 2)
-					return 2;
-
-				if (DrillInhibitorSuitUpgradeLevel == 3)
-					return 2;
-
-				if (DrillInhibitorSuitUpgradeLevel == 4)
-					return 3;
-
-				if (DrillInhibitorSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			if (type == SuitUpgradeTypes.PersonnelInhibitor) {
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 0)
-					return 1;
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 1)
-					return 1;
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 2)
-					return 2;
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 3)
-					return 2;
-
-				if (PersonnelInhibitorSuitUpgradeLevel == 4)
-					return 3;
-
-				if (PersonnelInhibitorSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			if (type == SuitUpgradeTypes.EnergyInhibitor) {
-
-				if (EnergyInhibitorSuitUpgradeLevel == 0)
-					return 1;
-
-				if (EnergyInhibitorSuitUpgradeLevel == 1)
-					return 1;
-
-				if (EnergyInhibitorSuitUpgradeLevel == 2)
-					return 2;
-
-				if (EnergyInhibitorSuitUpgradeLevel == 3)
-					return 2;
-
-				if (EnergyInhibitorSuitUpgradeLevel == 4)
-					return 3;
-
-				if (EnergyInhibitorSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			if (type == SuitUpgradeTypes.SolarCharging) {
-
-				if (SolarChargingSuitUpgradeLevel == 0)
-					return 1;
-
-				if (SolarChargingSuitUpgradeLevel == 1)
-					return 1;
-
-				if (SolarChargingSuitUpgradeLevel == 2)
-					return 2;
-
-				if (SolarChargingSuitUpgradeLevel == 3)
-					return 2;
-
-				if (SolarChargingSuitUpgradeLevel == 4)
-					return 3;
-
-				if (SolarChargingSuitUpgradeLevel > 4)
-					return 0;
-
-			}
-
-			if (type == SuitUpgradeTypes.DamageReduction) {
-
-				if (DamageReductionSuitUpgradeLevel == 0)
-					return 1;
-
-				if (DamageReductionSuitUpgradeLevel == 1)
-					return 1;
-
-				if (DamageReductionSuitUpgradeLevel == 2)
-					return 2;
-
-				if (DamageReductionSuitUpgradeLevel == 3)
-					return 2;
-
-				if (DamageReductionSuitUpgradeLevel == 4)
-					return 3;
-
-				if (DamageReductionSuitUpgradeLevel > 4)
-					return 0;
-
-			}
+			if (SolarChargingSuitUpgradeLevel >= 5)
+				return 0.01f;
 
 			return 0;
+
+		}
+
+		public static bool IsUpgradeAllowedInConfig(SuitUpgradeTypes upgrade) {
+
+			if (upgrade == SuitUpgradeTypes.None)
+				return false;
+
+			if (upgrade == SuitUpgradeTypes.JetpackInhibitor && !Settings.Progression.AllowAntiJetpackInhibitorSuitUpgrade)
+				return false;
+
+			if (upgrade == SuitUpgradeTypes.HandDrillInhibitor && !Settings.Progression.AllowAntiHandDrillInhibitorSuitUpgrade)
+				return false;
+
+			if (upgrade == SuitUpgradeTypes.PersonnelInhibitor && !Settings.Progression.AllowAntiPersonnelInhibitorSuitUpgrade)
+				return false;
+
+			if (upgrade == SuitUpgradeTypes.EnergyInhibitor && !Settings.Progression.AllowAntiEnergyInhibitorSuitUpgrade)
+				return false;
+
+			if (upgrade == SuitUpgradeTypes.SolarCharging && !Settings.Progression.AllowSolarChargingSuitUpgrade)
+				return false;
+
+			if (upgrade == SuitUpgradeTypes.DamageReduction && !Settings.Progression.AllowDamageReductionSuitUpgrade)
+				return false;
+
+			return true;
 
 		}
 

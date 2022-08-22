@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Progression;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -63,28 +64,28 @@ namespace ModularEncountersSystems.BlockLogic {
 			if (energy < 0.5f)
 				return false;
 
-			if (_inhibitor == InhibitorTypes.Jetpack && (player.Progression?.JetpackInhibitorSuitUpgradeLevel ?? 0) > 0) {
+			if (_inhibitor == InhibitorTypes.Jetpack && (player.Progression?.JetpackInhibitorSuitUpgradeLevel ?? 0) > 0 && ProgressionContainer.IsUpgradeAllowedInConfig(SuitUpgradeTypes.JetpackInhibitor)) {
 
 				ApplyInhibitorSuitUpgradeEffect(player, energy, player.Progression.JetpackInhibitorSuitUpgradeLevel);
 				return true;
 
 			}
 				
-			if (_inhibitor == InhibitorTypes.Drill && (player.Progression?.DrillInhibitorSuitUpgradeLevel ?? 0) > 0) {
+			if (_inhibitor == InhibitorTypes.Drill && (player.Progression?.DrillInhibitorSuitUpgradeLevel ?? 0) > 0 && ProgressionContainer.IsUpgradeAllowedInConfig(SuitUpgradeTypes.HandDrillInhibitor)) {
 
 				ApplyInhibitorSuitUpgradeEffect(player, energy, player.Progression.DrillInhibitorSuitUpgradeLevel);
 				return true;
 
 			}
 
-			if (_inhibitor == InhibitorTypes.Energy && (player.Progression?.EnergyInhibitorSuitUpgradeLevel ?? 0) > 0) {
+			if (_inhibitor == InhibitorTypes.Energy && (player.Progression?.EnergyInhibitorSuitUpgradeLevel ?? 0) > 0 && ProgressionContainer.IsUpgradeAllowedInConfig(SuitUpgradeTypes.PersonnelInhibitor)) {
 
 				ApplyInhibitorSuitUpgradeEffect(player, energy, player.Progression.EnergyInhibitorSuitUpgradeLevel);
 				return true;
 
 			}
 
-			if (_inhibitor == InhibitorTypes.Personnel && (player.Progression?.PersonnelInhibitorSuitUpgradeLevel ?? 0) > 0) {
+			if (_inhibitor == InhibitorTypes.Personnel && (player.Progression?.PersonnelInhibitorSuitUpgradeLevel ?? 0) > 0 && ProgressionContainer.IsUpgradeAllowedInConfig(SuitUpgradeTypes.EnergyInhibitor)) {
 
 				ApplyInhibitorSuitUpgradeEffect(player, energy, player.Progression.PersonnelInhibitorSuitUpgradeLevel);
 				return true;

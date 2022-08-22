@@ -1,5 +1,7 @@
 ﻿using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Progression;
+using ModularEncountersSystems.Sync;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using Sandbox.ModAPI.Interfaces.Terminal;
 using System;
@@ -84,15 +86,15 @@ namespace ModularEncountersSystems.Terminal {
 				_purchasableMods.Title = MyStringId.GetOrCompute("Suit Mod Selection");
 				_purchasableMods.SupportsMultipleBlocks = false;
 				_purchasableMods.Multiselect = false;
-				_purchasableMods.VisibleRowsCount = 4;
+				_purchasableMods.VisibleRowsCount = 10;
 				_purchasableMods.ListContent = GetSuitModsList;
 				_purchasableMods.ItemSelected = SelectSuitModeFromList;
 
 				_confirmPurchase = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlButton, IMyTerminalBlock>("MES-SuitMods-ConfirmPurchase");
 				_confirmPurchase.Enabled = (b) => { return true; };
-				_confirmPurchase.Title = MyStringId.GetOrCompute("Send To Store");
+				_confirmPurchase.Title = MyStringId.GetOrCompute("Purchase Upgrade");
 				_confirmPurchase.SupportsMultipleBlocks = false;
-				_confirmPurchase.Tooltip = MyStringId.GetOrCompute("Purchases currently selected suit modification.");
+				_confirmPurchase.Tooltip = MyStringId.GetOrCompute("Purchases currently selected suit upgrade.");
 				_confirmPurchase.Action = ConfirmPurchase;
 
 				_separatorA = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlSeparator, IMyTerminalBlock>("MES-SuitMods-SeparatorA");
@@ -116,7 +118,6 @@ namespace ModularEncountersSystems.Terminal {
 						controls.RemoveAt(i);
 					}
 
-
 				}
 
 			}
@@ -136,31 +137,70 @@ namespace ModularEncountersSystems.Terminal {
 			controls.Insert(3, _purchasableMods);
 			controls.Insert(4, _confirmPurchase);
 
-			//Refresh Progression Container
-
-			//TODO: Send To Server
 			_lastSelectedBlock = block;
 
+			if (_progressionStats != null) {
+
+				var serializedProgression = MyAPIGateway.Utilities.SerializeToBinary<ProgressionContainer>(_progressionStats);
+				var syncContainer = new SyncContainer(SyncMode.SuitUpgradePlayerStats, serializedProgression);
+				SyncManager.SendSyncMesage(syncContainer, 0, true);
+
+			}
+			
 		}
 
 		public static void GetSuitModsList(IMyTerminalBlock block, List<MyTerminalControlListBoxItem> items, List<MyTerminalControlListBoxItem> selected) {
 
 			if (_progressionStats == null)
 				return;
-		
+
+			SuitUpgradeTypes selectedType = SuitUpgradeTypes.None;
+			SelectedSuitMod.TryGetValue(block, out selectedType);
+
+			foreach (SuitUpgradeTypes type in Enum.GetValues(typeof(SuitUpgradeTypes))) {
+
+				var name = ProgressionContainer.GetUpgradeName(type);
+
+				if (string.IsNullOrWhiteSpace(name) || !ProgressionContainer.IsUpgradeAllowedInConfig(type))
+					continue;
+
+				var item = new MyTerminalControlListBoxItem(MyStringId.GetOrCompute(name), MyStringId.GetOrCompute(ProgressionContainer.GetUpgradeDescriptions(type)), type);
+				items.Add(item);
+
+				if (selectedType == type)
+					selected.Add(item);
+
+			}
+
 		}
 
 		public static void SelectSuitModeFromList(IMyTerminalBlock block, List<MyTerminalControlListBoxItem> selected) {
 
-			if (_progressionStats == null)
+			if (_progressionStats == null || selected.Count == 0)
 				return;
 
+			SelectedSuitMod[block] = (SuitUpgradeTypes)selected[0].UserData;
+			block.RefreshCustomInfo();
+			MyAPIGateway.Utilities.InvokeOnGameThread(() => { ControlManager.RefreshMenu(block); });
+			
 		}
 
 		public static void ConfirmPurchase(IMyTerminalBlock block) {
 
 			if (_progressionStats == null)
 				return;
+
+			var upgrade = SelectedSuitMod[block];
+
+			if (upgrade == SuitUpgradeTypes.None)
+				return;
+
+			var transaction = new SuitUpgradeTransaction();
+			transaction.BlockId = block.EntityId;
+			transaction.IdentityId = _progressionStats.IdentityId;
+			transaction.Upgrade = upgrade;
+			var syncContainer = new SyncContainer(SyncMode.SuitUpgradeTransaction, MyAPIGateway.Utilities.SerializeToBinary<SuitUpgradeTransaction>(transaction));
+			SyncManager.SendSyncMesage(syncContainer, 0, true);
 
 		}
 
@@ -177,15 +217,16 @@ namespace ModularEncountersSystems.Terminal {
 			sb.Clear();
 
 			var upgrade = SelectedSuitMod[block];
+			var name = ProgressionContainer.GetUpgradeName(upgrade);
 			var credits = _progressionStats.GetUpgradeCreditCost(upgrade);
 			var points = _progressionStats.GetUpgradeResearchCost(upgrade);
 			var level = _progressionStats.GetUpgradeLevel(upgrade);
 
-			sb.Append("Selected Upgrade: ").AppendLine().Append(upgrade.ToString() ?? "Error").AppendLine().AppendLine();
+			sb.Append("Selected Upgrade: ").AppendLine().Append(name ?? "Error").AppendLine().AppendLine();
 			sb.Append("Credit Cost: ").AppendLine().Append(credits > 0 ? credits.ToString("C0") : "N/A").AppendLine();
-			sb.Append("Research Points Cost: ").Append(points > 0 ? points.ToString() : "N/A").AppendLine().AppendLine();
-			sb.Append("Current Upgrade Level: ").Append(level >= 4 ? "MAX" : level.ToString()).AppendLine();
-			sb.Append("Next Upgrade Level: ").Append(level + 1 >= 4 ? "MAX" : (level + 1).ToString()).AppendLine();
+			sb.Append("Research Points Balance / Cost: ").Append(points > 0 ? (_progressionStats.Points.ToString() + " / " + points.ToString()) : "N/A").AppendLine().AppendLine();
+			sb.Append("Current Upgrade Level: ").Append(level >= 5 ? "MAX" : level.ToString()).AppendLine();
+			sb.Append("Next Upgrade Level: ").Append(level + 1 >= 5 ? "MAX" : (level + 1).ToString()).AppendLine();
 
 		}
 

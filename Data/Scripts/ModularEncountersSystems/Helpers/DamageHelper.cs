@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems.Profiles;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Sync;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game;
@@ -40,10 +41,10 @@ namespace ModularEncountersSystems.Helpers {
 
 			var player = PlayerManager.GetPlayerWithCharacter(target as IMyCharacter);
 
-			if (player == null || player.Progression.DamageReductionSuitUpgradeLevel == 0)
+			if (player == null || player.Progression.DamageReductionSuitUpgradeLevel == 0 || !ProgressionContainer.IsUpgradeAllowedInConfig(SuitUpgradeTypes.DamageReduction))
 				return;
 
-			float multiplier = (float)player.Progression.DamageReductionSuitUpgradeLevel * 0.15f;
+			float multiplier = (float)player.Progression.DamageReductionSuitUpgradeLevel * 0.10f;
 			float reduction = info.Amount * multiplier;
 			info.Amount -= reduction;
 

@@ -1,4 +1,6 @@
-﻿using ModularEncountersSystems.Progression;
+﻿using ModularEncountersSystems.Configuration;
+using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Terminal;
 using Sandbox.ModAPI;
 using System;
@@ -18,7 +20,7 @@ namespace ModularEncountersSystems.Entities {
 		public static Action<PlayerEntity> NewPlayerDetected;
 		public static Action UnloadEntities;
 
-		public static List<ProgressionContainer> ProgressionContainers = new List<ProgressionContainer>();
+		
 
 		public static PlayerEntity GetNearestPlayer(Vector3D coords) {
 
@@ -152,7 +154,8 @@ namespace ModularEncountersSystems.Entities {
 					if (!player.IsBot && player.SteamUserId > 0) {
 
 						var playerEntity = new PlayerEntity(player);
-						playerEntity.Progression = GetProgressionContainer(player.IdentityId, player.SteamUserId);
+						var progression = playerEntity.Progression;
+						playerEntity.InitSolarModule();
 						UnloadEntities += playerEntity.Unload;
 						Players.Add(playerEntity);
 						NewPlayerDetected?.Invoke(playerEntity);
@@ -167,14 +170,23 @@ namespace ModularEncountersSystems.Entities {
 
 		public static ProgressionContainer GetProgressionContainer(long identityId, ulong steamId) {
 
-			foreach (var container in ProgressionContainers) {
+			lock (Players) {
 
-				if (container.IdentityId == identityId && container.SteamId == steamId) {
+				foreach (var player in Players) {
 
-					return container;
+					if (player?.Player == null)
+						continue;
+
+					var container = player.Progression;
+
+					if (container.IdentityId == identityId && container.SteamId == steamId) {
+
+						return container;
+
+					}
 
 				}
-
+			
 			}
 
 			return null;

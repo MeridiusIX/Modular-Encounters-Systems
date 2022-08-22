@@ -14,7 +14,7 @@ namespace ModularEncountersSystems.Terminal {
 	public static class ControlManager {
 
 		public static MyDefinitionId ShipyardBlockId = new MyDefinitionId(typeof(MyObjectBuilder_Projector), "LargeBlockConsole");
-		public static MyDefinitionId SuitUpgradeBlockId = new MyDefinitionId(typeof(MyObjectBuilder_LCDPanelsBlock), "MedicalStation");
+		public static MyDefinitionId SuitUpgradeBlockId = new MyDefinitionId(typeof(MyObjectBuilder_LCDPanelsBlock), "MES-MedicalStation");
 
 		public static void Setup() {
 
@@ -38,6 +38,9 @@ namespace ModularEncountersSystems.Terminal {
 		}
 
 		public static void ModifyControls(IMyTerminalBlock block, List<IMyTerminalControl> controls) {
+
+			//TODO: Remove on Release of Feature
+			return;
 
 			if (block.Storage == null)
 				return;

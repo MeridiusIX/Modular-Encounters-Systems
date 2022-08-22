@@ -101,8 +101,9 @@ namespace ModularEncountersSystems.BlockLogic {
             EnergyInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Small"));
             EnergyInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
 
-            if (ArmorModuleReplacement.SmallModules.Count == 0) {
+            if (ArmorModuleReplacement.SmallModules.Count != 6) {
 
+                ArmorModuleReplacement.SmallModules.Clear();
                 ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Small"));
                 ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Small"));
                 ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Small"));
@@ -112,8 +113,9 @@ namespace ModularEncountersSystems.BlockLogic {
 
             }
 
-            if (ArmorModuleReplacement.LargeModules.Count == 0) {
+            if (ArmorModuleReplacement.LargeModules.Count != 6) {
 
+                ArmorModuleReplacement.LargeModules.Clear();
                 ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Large"));
                 ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Large"));
                 ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Large"));
@@ -258,7 +260,7 @@ namespace ModularEncountersSystems.BlockLogic {
                 
             }
 
-            if (block.Block as IMyTextPanel != null && block.Block.SlimBlock.BlockDefinition.Id.SubtypeName == "MedicalStation") {
+            if (block.Block as IMyTextPanel != null && block.Block.SlimBlock.BlockDefinition.Id.SubtypeName == "MES-MedicalStation") {
 
                 if (block.Block.Storage != null && block.Block.Storage.ContainsKey(StorageTools.MesSuitModsKey)) {
 

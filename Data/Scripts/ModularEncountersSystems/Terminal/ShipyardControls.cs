@@ -130,9 +130,6 @@ namespace ModularEncountersSystems.Terminal {
 
 		public static void DisplayControls(IMyTerminalBlock block, List<IMyTerminalControl> controls) {
 
-			if (block != null)
-				return;
-
 			if (!_setupDone) {
 
 				_setupDone = true;

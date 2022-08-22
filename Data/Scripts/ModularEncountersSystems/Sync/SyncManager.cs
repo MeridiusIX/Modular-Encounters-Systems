@@ -155,6 +155,34 @@ namespace ModularEncountersSystems.Sync {
 
                 }
 
+                if (container.Mode == SyncMode.SuitUpgradeTransaction) {
+
+                    var suitData = MyAPIGateway.Utilities.SerializeFromBinary<SuitUpgradeTransaction>(container.Data);
+
+                    if (suitData == null) {
+
+                        return;
+
+                    }
+
+                    if (suitData.Result == SuitUpgradeTransactionResult.None) {
+
+                        suitData.ProcessTransaction(sender);
+
+                        if (suitData.Result == SuitUpgradeTransactionResult.None)
+                            suitData.Result = SuitUpgradeTransactionResult.NotProcessedOnServer;
+
+                        container.Data = MyAPIGateway.Utilities.SerializeToBinary<SuitUpgradeTransaction>(suitData);
+                        SendSyncMesage(container, sender);
+
+                    } else {
+
+                        suitData.ProcessResult();
+
+                    }
+
+                }
+
             } catch(Exception exc) {
 
                 SpawnLogger.Write("Exception in NetworkMessageReceiver", SpawnerDebugEnum.Error, true);

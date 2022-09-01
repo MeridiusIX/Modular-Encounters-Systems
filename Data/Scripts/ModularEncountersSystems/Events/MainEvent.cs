@@ -23,7 +23,7 @@ namespace ModularEncountersSystems.Events
         public List<Event> Events;
         public DateTime StartDate;
 
-        //Protoignore
+        //Protoignore?
         public List<string> ExistingEvents;
 
         public MainEvent()
@@ -48,7 +48,7 @@ namespace ModularEncountersSystems.Events
 
                 var tag = tagRaw.Trim();
 
-                //Active
+                
                 if (tag.StartsWith("[Active:") == true)
                 {
 
@@ -57,7 +57,7 @@ namespace ModularEncountersSystems.Events
 
                 }
 
-                //SpawnConditionProfiles
+               
                 if (tag.Contains("[Events:"))
                 {
 

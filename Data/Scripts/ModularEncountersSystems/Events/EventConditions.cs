@@ -24,7 +24,7 @@ namespace ModularEncountersSystems.Events
         public bool AllowAnyFalseBoolean;
 
         public bool CheckMainEventDaysPassed;
-        public int DaysPassed ;
+        public int DaysPassed;
 
 
 
@@ -132,7 +132,7 @@ namespace ModularEncountersSystems.Events
 
         }
 
-            public static bool IsConditionMet(MainEvent MainEvent, EventCondition Profile)
+        public static bool IsConditionMet(MainEvent MainEvent, EventCondition Profile)
         {
             int usedConditions = 0;
             int satisfiedConditions = 0;

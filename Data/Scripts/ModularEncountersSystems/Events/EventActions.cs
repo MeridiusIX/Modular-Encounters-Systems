@@ -193,7 +193,7 @@ namespace ModularEncountersSystems.Events
 
 
 
-                //DecreaseSandboxCounters
+                //DebugHudMessage
                 if (tag.StartsWith("[DebugHudMessage:") == true)
                 {
 
@@ -207,102 +207,85 @@ namespace ModularEncountersSystems.Events
 
         }
 
-        public static void ExecuteActions(Event Event, List<EventAction> Profiles)
+        public static void ExecuteActions(Event Event)
         {
+            var Actions = Event.Actions;
             if (Event.ActionExecution == EventActionExecutionEnum.AtOnce)
             {
-                for (int i = 0; i < Profiles.Count; i++)
+                for (int i = 0; i < Actions.Count; i++)
                 {
-                    ExecuteAction(Profiles[i]);
+                    ExecuteAction(Actions[i]);
                 }
             }
 
             if (Event.ActionExecution == EventActionExecutionEnum.SingleRandom)
             {
-                var tja = MathTools.RandomBetween(0, (Profiles.Count-1));
-                ExecuteAction(Profiles[tja]);
+                var tja = MathTools.RandomBetween(0, (Actions.Count-1));
+                ExecuteAction(Actions[tja]);
             }
 
             if (Event.ActionExecution == EventActionExecutionEnum.Sequential)
             {
-                if (Profiles.Count <= 0)
-                    return;
 
-                if (Event.AtAction >= Profiles.Count)
-                    Event.AtAction = 0;
-
-                ExecuteAction(Profiles[Event.AtAction]);
-                Event.AtAction++;
-
-                var EventTime = new EventTime();
-                EventTime.Event = Event;
-                EventTime.StartDate = MyAPIGateway.Session.GameDateTime;
-                EventTime.Timeinms = Event.TimeTillNextAction;
-                EventTime.Type = CheckType.ExecuteAction;
-                EventManager.EventTimes.Add(EventTime);
-
-
-
-
-
+                for (int i = 0; i < (Actions.Count ); i++)
+                {
+                    var EventTime = new EventTime();
+                    EventTime.Event = Event;
+                    EventTime.StartDate = MyAPIGateway.Session.GameDateTime;
+                    EventTime.Timeinms = (i * Event.TimeTillNextAction);
+                    EventTime.Type = CheckType.ExecuteAction;
+                    EventTime.ActionIndex = i;
+                    EventManager.EventTimes.Add(EventTime);
+                }
             }
-
         }
 
 
 
-            public static void ExecuteAction(EventAction Profile)
+            public static void ExecuteAction(EventAction ActionProfile)
             {
-            //Booleans
-            if (Profile.ChangeBooleans == true)
-            {
-                for (int i = 0; i < Profile.SetSandboxBooleansTrue.Count; i++)
+                var EventBroadcastSystem = new EventBroadcastSystem();
+                //Booleans
+                if (ActionProfile.ChangeBooleans == true)
                 {
-                    MyAPIGateway.Utilities.SetVariable<bool>(Profile.SetSandboxBooleansTrue[i], true);
+                    for (int i = 0; i < ActionProfile.SetSandboxBooleansTrue.Count; i++)
+                    {
+                        MyAPIGateway.Utilities.SetVariable<bool>(ActionProfile.SetSandboxBooleansTrue[i], true);
 
-                }
-                for (int i = 0; i < Profile.SetSandboxBooleansFalse.Count; i++)
-                {
-                    MyAPIGateway.Utilities.SetVariable<bool>(Profile.SetSandboxBooleansFalse[i], false);
-                }
-
-            }
-
-            //Counter
-            if (Profile.ChangeCounters)
-            {
-                for (int i = 0; i < Profile.IncreaseSandboxCounters.Count; i++)
-                {
-                    MyAPIGateway.Utilities.SetVariable<int>(Profile.IncreaseSandboxCounters[i], Profile.IncreaseSandboxCountersAmount);
-
-                }
-                for (int i = 0; i < Profile.SetSandboxBooleansFalse.Count; i++)
-                {
-                    MyAPIGateway.Utilities.SetVariable<int>(Profile.DecreaseSandboxCounters[i], Profile.DecreaseSandboxCountersAmount);
-                }
-            }
-
-
-            //ChatBroadcast
-            if (Profile.UseChatBroadcast == true)
-            {
-
-                foreach (var chatData in Profile.ChatData)
-                {
-
-                    //BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
-
-                    BroadcastSystem.
-
-
-                    .BroadcastRequest(chatData);
+                    }
+                    for (int i = 0; i < ActionProfile.SetSandboxBooleansFalse.Count; i++)
+                    {
+                        MyAPIGateway.Utilities.SetVariable<bool>(ActionProfile.SetSandboxBooleansFalse[i], false);
+                    }
 
                 }
 
-            }
+                //Counter
+                if (ActionProfile.ChangeCounters)
+                {
+                    for (int i = 0; i < ActionProfile.IncreaseSandboxCounters.Count; i++)
+                    {
+                        MyAPIGateway.Utilities.SetVariable<int>(ActionProfile.IncreaseSandboxCounters[i], ActionProfile.IncreaseSandboxCountersAmount);
+
+                    }
+                    for (int i = 0; i < ActionProfile.SetSandboxBooleansFalse.Count; i++)
+                    {
+                        MyAPIGateway.Utilities.SetVariable<int>(ActionProfile.DecreaseSandboxCounters[i], ActionProfile.DecreaseSandboxCountersAmount);
+                    }
+
+                }
 
 
-            MyVisualScriptLogicProvider.ShowNotificationToAll(Profile.DebugHudMessage, 3000);
+                //ChatBroadcast
+                if (ActionProfile.UseChatBroadcast == true)
+                {
+                    foreach (var chatData in ActionProfile.ChatData)
+                    {
+                        EventBroadcastSystem.BroadcastRequest(chatData);
+                    }
+                }
+
+                MyVisualScriptLogicProvider.ShowNotificationToAll(ActionProfile.DebugHudMessage, 3000);
         }
 
 

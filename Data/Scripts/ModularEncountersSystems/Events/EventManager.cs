@@ -49,16 +49,16 @@ namespace ModularEncountersSystems.Events {
 
 				for (int i = 0; i < MainEvent.Value.Events.Count; i++)
 				{
-					//Check Times
+					//Did the event already happen once? && Is the event a unique event?
+					if (MainEvent.Value.Events[i].Happend > 0 && MainEvent.Value.Events[i].UniqueEvent == true)
+						break;
 
 					//Check Conditions
 					if (!EventCondition.AreConditionsMet(MainEvent.Value, MainEvent.Value.Events[i].Conditions))
 						break;
 
-					//Did the event already happen? && Is the event a unique event?
-					if (MainEvent.Value.Events[i].Happend == true && MainEvent.Value.Events[i].UniqueEvent == true)
-						break;
 
+					//Check Cooldowns
 
 					MainEvent.Value.Events[i].Ready = true;
 					ReadyEvents.Add(MainEvent.Value.Events[i]);
@@ -69,9 +69,11 @@ namespace ModularEncountersSystems.Events {
 			{
 				if (ReadyEvents[i].Ready == true)
 				{
-					ReadyEvents[i].Happend = true;
 					ReadyEvents[i].Ready = false;
-					EventAction.ExecuteActions(ReadyEvents[i], ReadyEvents[i].Actions);
+					EventAction.ExecuteActions(ReadyEvents[i]);
+					ReadyEvents[i].Happend++;
+					ReadyEvents.Remove(ReadyEvents[i]);
+
 				}
 			}
 
@@ -85,7 +87,7 @@ namespace ModularEncountersSystems.Events {
                 {
 					if(EventTimes[i].Type == CheckType.ExecuteAction)
                     {
-						EventAction.ExecuteActions(EventTimes[i].Event, EventTimes[i].Event.Actions);
+						EventAction.ExecuteAction(EventTimes[i].Event.Actions[EventTimes[i].ActionIndex]);
 						EventTimes.Remove(EventTimes[i]);
 					}
                 }

@@ -16,19 +16,13 @@ namespace ModularEncountersSystems.Events
         SingleRandom
     }
 
-    public enum EventType
-    {
-        Global,
-        Location
-    }
 
     public class Event
     {
         public string ProfileSubtypeId;
         public bool Ready;
-        public bool Happend;
+        public int Happend; 
 
-        public EventType Type;
         public bool UniqueEvent;
 
         public List<EventCondition> Conditions;
@@ -38,19 +32,11 @@ namespace ModularEncountersSystems.Events
         public int AtAction;
         public List<EventAction> Actions;
 
-        //EventType Location
-        public Vector3D Coordinates;
-        public string GPSLabel;
-        public Vector3D GPSColor;
-
-        
-
         public Event()
         {
             ProfileSubtypeId = "";
             Ready = false;
-            Happend = false;
-            Type = EventType.Global;
+            Happend = 0;
             UniqueEvent = true;
             Conditions = new List<EventCondition>();
 
@@ -58,10 +44,6 @@ namespace ModularEncountersSystems.Events
             TimeTillNextAction = 3;
             AtAction = 0;
             Actions = new List<EventAction>();
-
-            Coordinates = new Vector3D(0, 0, 0);
-            GPSLabel = "Event";
-            GPSColor = new Vector3D(255, 0, 255);
         }
 
 

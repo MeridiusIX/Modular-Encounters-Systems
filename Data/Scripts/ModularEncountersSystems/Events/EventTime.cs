@@ -12,6 +12,7 @@ namespace ModularEncountersSystems.Events
 
     public enum CheckType
     {
+        ExecuteEvent,
         ExecuteAction
     }
 
@@ -21,6 +22,7 @@ namespace ModularEncountersSystems.Events
         public DateTime StartDate;
         public int Timeinms;
         public CheckType Type;
+        public int ActionIndex;
      
 
         
@@ -30,7 +32,8 @@ namespace ModularEncountersSystems.Events
             Event = new Event();
             StartDate = new DateTime();
             Timeinms = 5000;
-            Type = CheckType.ExecuteAction;
+            Type = CheckType.ExecuteEvent;
+            ActionIndex = 0;
         }
     }
 

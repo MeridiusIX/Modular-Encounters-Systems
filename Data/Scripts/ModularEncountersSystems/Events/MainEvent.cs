@@ -15,16 +15,20 @@ using ModularEncountersSystems.Logging;
 
 namespace ModularEncountersSystems.Events
 {
-    //ProtoContract stuff
+    //SAVE the whole class?
     public class MainEvent
     {
+        //SAVE
         public string ProfileSubtypeId;
-        public bool Active;
-        public List<Event> Events;
-        public DateTime StartDate;
 
-        //Protoignore?
-        public List<string> ExistingEvents;
+        //SAVE
+        public bool Active;
+
+        //SAVE
+        public List<Event> Events;
+        
+        //SAVE
+        public DateTime StartDate;
 
         public MainEvent()
         {
@@ -54,7 +58,7 @@ namespace ModularEncountersSystems.Events
 
                     TagParse.TagBoolCheck(tag, ref this.Active);
 
-
+                   
                 }
 
                

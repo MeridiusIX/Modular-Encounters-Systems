@@ -51,11 +51,16 @@ namespace ModularEncountersSystems.Events {
 				{
 					//Did the event already happen once? && Is the event a unique event?
 					if (MainEvent.Value.Events[i].Happend > 0 && MainEvent.Value.Events[i].UniqueEvent == true)
-						break;
+						continue;
 
 					//Check Conditions
 					if (!EventCondition.AreConditionsMet(MainEvent.Value, MainEvent.Value.Events[i].Conditions))
-						break;
+						continue;
+
+					//Check the cooldown
+					if (!MainEvent.Value.Events[i].ValidateCooldown())
+						continue;
+
 
 
 					//Check Cooldowns
@@ -70,7 +75,7 @@ namespace ModularEncountersSystems.Events {
 				if (ReadyEvents[i].Ready == true)
 				{
 					ReadyEvents[i].Ready = false;
-					EventAction.ExecuteActions(ReadyEvents[i]);
+					ReadyEvents[i].TriggerEvent();
 					ReadyEvents[i].Happend++;
 					ReadyEvents.Remove(ReadyEvents[i]);
 
@@ -87,7 +92,7 @@ namespace ModularEncountersSystems.Events {
                 {
 					if(EventTimes[i].Type == CheckType.ExecuteAction)
                     {
-						EventAction.ExecuteAction(EventTimes[i].Event.Actions[EventTimes[i].ActionIndex]);
+						EventActionProfile.ExecuteAction(EventTimes[i].Event.Actions[EventTimes[i].ActionIndex]);
 						EventTimes.Remove(EventTimes[i]);
 					}
                 }

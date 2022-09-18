@@ -14,6 +14,7 @@ using VRageMath;
 
 namespace ModularEncountersSystems.Events
 {
+    //Noting to safe? This is techniqually all "references"
     public class EventCondition{
         public string ProfileSubtypeId;
         public bool CheckTrueBooleans;

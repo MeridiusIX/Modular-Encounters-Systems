@@ -64,10 +64,15 @@ namespace ModularEncountersSystems.Helpers {
 		public static AutoPilotProfile DefaultAutoPilotSettings = new AutoPilotProfile();
 
 		//Events 
+
+		public static Dictionary<string, byte[]> EventActionObjectTemplates = new Dictionary<string, byte[]>();
+
+
+
 		public static Dictionary<string, MainEvent> MainEvents = new Dictionary<string, MainEvent>();
 		public static Dictionary<string, Event> Events = new Dictionary<string, Event>();
 		public static Dictionary<string, EventCondition> EventConditions = new Dictionary<string, EventCondition>();
-		public static Dictionary<string, EventAction> EventActions = new Dictionary<string, EventAction>();
+		public static Dictionary<string, EventActionReferenceProfile> EventActionReferenceProfiles = new Dictionary<string, EventActionReferenceProfile>();
 
 
 
@@ -294,14 +299,21 @@ namespace ModularEncountersSystems.Helpers {
 				}
 
 
-				if (!EventActions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Action]"))
+				if (!EventActionReferenceProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Action]"))
 				{
 
-					var EventAction = new EventAction();
-					EventAction.InitTags(component.DescriptionText);
-					EventAction.ProfileSubtypeId = component.Id.SubtypeName;
-					EventActions.Add(component.Id.SubtypeName, EventAction);
-					continue;
+					var actionObject = new EventActionProfile();
+					actionObject.InitTags(component.DescriptionText);
+					actionObject.ProfileSubtypeId = component.Id.SubtypeName;
+
+					var actionReference = new EventActionReferenceProfile();
+					actionReference.InitTags(component.DescriptionText);
+					actionReference.ProfileSubtypeId = component.Id.SubtypeName;
+
+					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<EventActionProfile>(actionObject);
+					//Logger.WriteLog("Action Profile Added: " + component.Id.SubtypeName);
+					EventActionObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
+					EventActionReferenceProfiles.Add(component.Id.SubtypeName, actionReference);
 
 				}
 

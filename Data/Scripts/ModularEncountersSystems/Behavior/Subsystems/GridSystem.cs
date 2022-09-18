@@ -465,7 +465,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		}
 
 		public bool JumpToCoords(Vector3D coords) {
-
+			return false;
+			/*
 			if (RemoteControl?.SlimBlock?.CubeGrid?.JumpSystem == null)
 				return false;
 
@@ -485,7 +486,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			var offset = new Vector3D(2000, 2000, 2000);
 			var box = new BoundingBoxD(coords - offset, coords + offset);
-
+			
 			foreach (var corner in box.GetCorners()) {
 
 				safeCoords = RemoteControl.SlimBlock.CubeGrid.JumpSystem.FindSuitableJumpLocation(corner);
@@ -503,7 +504,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			return result;
-
+			*/
 		}
 
 		public void ToggleBlocksOfType(List<SerializableDefinitionId> types, List<SwitchEnum> toggles) {

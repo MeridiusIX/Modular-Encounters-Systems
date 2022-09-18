@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Helpers;
+using Sandbox.Game;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,18 +20,43 @@ namespace ModularEncountersSystems.Events
 
     public class Event
     {
+        //SAVE
         public string ProfileSubtypeId;
         public bool Ready;
         public int Happend; 
 
+
+        //REF
         public bool UniqueEvent;
 
+
+        //?
         public List<EventCondition> Conditions;
 
+
+        //REF
         public EventActionExecutionEnum ActionExecution;
         public int TimeTillNextAction;
+
+        //Store
         public int AtAction;
-        public List<EventAction> Actions;
+
+        //?
+        public List<EventActionProfile> Actions;
+
+        //REF
+        public float MinCooldownMs;
+        public float MaxCooldownMs;
+
+
+        //Store
+        public int CooldownTime;
+
+        //Store
+        public DateTime LastTriggerTime;
+
+        //ProtoIgnore
+        public Random Rnd;
 
         public Event()
         {
@@ -43,8 +69,42 @@ namespace ModularEncountersSystems.Events
             ActionExecution = EventActionExecutionEnum.AtOnce;
             TimeTillNextAction = 3;
             AtAction = 0;
-            Actions = new List<EventAction>();
+            Actions = new List<EventActionProfile>();
+
+            MinCooldownMs = 0;
+            MaxCooldownMs = 1;
+            CooldownTime = 0;
+            LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+            Rnd = new Random();
         }
+
+        public void TriggerEvent()
+        {
+            this.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+            this.CooldownTime = Rnd.Next((int)MinCooldownMs, (int)MaxCooldownMs);
+            EventActionProfile.ExecuteActions(this);
+            							
+        }
+
+        public bool ValidateCooldown()
+        {
+            if (this.CooldownTime > 0)
+            {
+
+
+                var duration = MyAPIGateway.Session.GameDateTime - this.LastTriggerTime;
+
+                if (duration.TotalMilliseconds > this.CooldownTime)
+                    return true;
+                else
+                    return false;
+            }
+
+
+
+            return true;
+        }
+
 
 
         public void InitTags(string data = null)
@@ -84,22 +144,49 @@ namespace ModularEncountersSystems.Events
                         this.Conditions.Add(result);
                 }
 
+
                 //Actions
-                if (tag.StartsWith("[Actions:") == true)
+                if (tag.Contains("[Actions:") == true)
                 {
 
-                    var tagSplit = TagParse.ProcessTag(tag);
+                    string tempValue = "";
+                    TagParse.TagStringCheck(tag, ref tempValue);
+                    bool gotAction = false;
 
-                    if (tagSplit.Length < 2)
+                    if (string.IsNullOrWhiteSpace(tempValue) == false)
                     {
-                        return;
+
+                        byte[] byteData = { };
+
+                        if (ProfileManager.EventActionObjectTemplates.TryGetValue(tempValue, out byteData) == true)
+                        {
+
+                            try
+                            {
+
+                                var profile = MyAPIGateway.Utilities.SerializeFromBinary<EventActionProfile>(byteData);
+
+                                if (profile != null)
+                                {
+
+                                    this.Actions.Add(profile);
+                                    gotAction = true;
+
+                                }
+
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+
+                        }
+
                     }
 
-                    var key = tagSplit[1];
-                    EventAction result = null;
+                    if (!gotAction)
+                        ProfileManager.ReportProfileError(tempValue, "Could Not Load Action Profile From Trigger: " + ProfileSubtypeId);
 
-                    if (ProfileManager.EventActions.TryGetValue(key, out result))
-                        this.Actions.Add(result);
                 }
 
                 //ActionExecution
@@ -127,7 +214,21 @@ namespace ModularEncountersSystems.Events
                     TagParse.TagIntCheck(tag, ref this.TimeTillNextAction);
                 }
 
+                //MinCooldown
+                if (tag.Contains("[MinCooldownMs:") == true)
+                {
 
+                    TagParse.TagFloatCheck(tag, ref MinCooldownMs);
+
+                }
+
+                //MaxCooldown
+                if (tag.Contains("[MaxCooldownMs:") == true)
+                {
+
+                    TagParse.TagFloatCheck(tag, ref MaxCooldownMs);
+
+                }
 
             }
         }

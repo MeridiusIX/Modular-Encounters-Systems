@@ -120,6 +120,26 @@
 				<guid>88334D52-3F3B-47CB-83C7-426FBC0553FA</guid>
 			</RegisteredStorageGuids>
 		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>MesSuitModsKey</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>A4F21767-C33B-4523-B40B-148498BDAFED</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>MesButtonPointsKey</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>076C26A3-CCE9-4979-8356-E5A14D02A038</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
 		
 	</EntityComponents>
 </Definitions>

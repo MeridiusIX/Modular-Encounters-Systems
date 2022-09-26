@@ -14,18 +14,20 @@ using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.Tasks {
-    public class TerminalRefresh : TaskItem, ITaskItem {
+    public class TerminalTransactionRefresh : TaskItem, ITaskItem {
 
         internal bool _screenClosed;
         internal byte _tickCounts;
         internal IMyTerminalBlock _block;
+        internal Action<IMyTerminalBlock> _additionalAction;
 
 
-        public TerminalRefresh(IMyTerminalBlock block) {
+        public TerminalTransactionRefresh(IMyTerminalBlock block, Action<IMyTerminalBlock> additionalAction = null) {
 
             _isValid = true;
             _tickTrigger = 1;
             _block = block;
+            _additionalAction = additionalAction;
 
         }
 
@@ -41,17 +43,18 @@ namespace ModularEncountersSystems.Tasks {
 
         public void ScreenClose(ResultEnum result) {
 
-            ShipyardControls.GetPriceQuote(_block);
+            _additionalAction?.Invoke(_block);
             _block.RefreshCustomInfo();
-            ShipyardControls.RefreshMenu(_block);
+            ControlManager.RefreshMenu(_block);
+            _screenClosed = true;
 
         }
 
         public void Refresh() {
 
-            ShipyardControls.GetPriceQuote(_block);
+            _additionalAction?.Invoke(_block);
             _block.RefreshCustomInfo();
-            ShipyardControls.RefreshMenu(_block);
+            ControlManager.RefreshMenu(_block);
             _isValid = false;
 
         }

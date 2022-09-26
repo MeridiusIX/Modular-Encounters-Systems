@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Zones;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game;
@@ -114,6 +115,7 @@ namespace ModularEncountersSystems.Entities {
 
 			MyAPIGateway.Entities.OnEntityAdd -= NewEntityDetected;
 			MyAPIGateway.Players.ItemConsumed -= PlayerManager.ItemConsumedEvent;
+			MES_SessionCore.SaveActions -= ProgressionManager.SaveProgression;
 
 			UnloadEntities?.Invoke();
 

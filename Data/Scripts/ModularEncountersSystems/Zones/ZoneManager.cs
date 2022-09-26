@@ -532,6 +532,14 @@ namespace ModularEncountersSystems.Zones {
 		
 		}
 
+		public static void ResetAllZones() {
+
+			MyAPIGateway.Utilities.RemoveVariable("MES-ZoneData");
+			ActiveZones.Clear();
+			Setup();
+		
+		}
+
 		public static void ToggleZonesAtPosition(Vector3D coords, string zoneName = null, bool mode = false) {
 
 			bool updateZones = false;

@@ -1,6 +1,9 @@
 ﻿using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Terminal;
 using Sandbox.ModAPI;
 using System;
 
@@ -109,6 +112,72 @@ namespace ModularEncountersSystems.Sync {
                     if (shipYardData != null) {
 
                         shipYardData.ProcessMessage();
+
+                    }
+
+                }
+
+                if (container.Mode == SyncMode.SuitUpgradePlayerStats) {
+
+                    var suitData = MyAPIGateway.Utilities.SerializeFromBinary<ProgressionContainer>(container.Data);
+
+                    if (suitData == null) {
+
+                        return;
+
+                    }
+
+                    if (MyAPIGateway.Multiplayer.IsServer) {
+
+                        if (MyAPIGateway.Session.LocalHumanPlayer == null || MyAPIGateway.Session.LocalHumanPlayer.SteamUserId != sender) {
+
+                            var newContainer = PlayerManager.GetProgressionContainer(suitData.IdentityId, sender);
+
+                            if (newContainer == null)
+                                return;
+
+                            var serializedContainer = MyAPIGateway.Utilities.SerializeToBinary<ProgressionContainer>(newContainer);
+                            container.Data = serializedContainer;
+                            SendSyncMesage(container, sender);
+
+
+                        } else {
+
+                            SuitModificationControls.UpdateProgressionContainer(suitData);
+
+                        }
+                    
+                    } else {
+
+                        SuitModificationControls.UpdateProgressionContainer(suitData);
+                    
+                    }
+
+                }
+
+                if (container.Mode == SyncMode.SuitUpgradeTransaction) {
+
+                    var suitData = MyAPIGateway.Utilities.SerializeFromBinary<SuitUpgradeTransaction>(container.Data);
+
+                    if (suitData == null) {
+
+                        return;
+
+                    }
+
+                    if (suitData.Result == SuitUpgradeTransactionResult.None) {
+
+                        suitData.ProcessTransaction(sender);
+
+                        if (suitData.Result == SuitUpgradeTransactionResult.None)
+                            suitData.Result = SuitUpgradeTransactionResult.NotProcessedOnServer;
+
+                        container.Data = MyAPIGateway.Utilities.SerializeToBinary<SuitUpgradeTransaction>(suitData);
+                        SendSyncMesage(container, sender);
+
+                    } else {
+
+                        suitData.ProcessResult();
 
                     }
 

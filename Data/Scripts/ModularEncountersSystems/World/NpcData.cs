@@ -1096,6 +1096,8 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - SpawnType:           ").Append(SpawnType.ToString()).AppendLine();
 			sb.Append(" - OriginalSpawnType:   ").Append(OriginalSpawnType.ToString()).AppendLine();
 			sb.Append(" - SpawnGroupName:      ").Append(!string.IsNullOrWhiteSpace(SpawnGroupName) ? SpawnGroupName : "N/A").AppendLine();
+			sb.Append(" - Mod Name:            ").Append(SpawnGroup?.SpawnGroup?.Context?.ModName ?? "Unknown or Vanilla").AppendLine();
+			sb.Append(" - Mod ID:              ").Append(SpawnGroup?.SpawnGroup?.Context?.ModId ?? "0").AppendLine();
 			sb.Append(" - ConditionIndex:      ").Append(ConditionIndex.ToString()).AppendLine();
 			sb.Append(" - ZoneIndex:           ").Append(ZoneIndex.ToString()).AppendLine();
 			sb.Append(" - ZoneCondition:       ").Append(ZoneIndex >= 0 ? (!string.IsNullOrWhiteSpace(ZoneConditions?.ProfileSubtypeId) ? ZoneConditions.ProfileSubtypeId : "Profile Id Null or Empty") : "N/A").AppendLine();

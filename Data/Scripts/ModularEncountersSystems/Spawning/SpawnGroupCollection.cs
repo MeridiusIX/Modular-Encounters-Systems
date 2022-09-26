@@ -216,11 +216,11 @@ namespace ModularEncountersSystems.Spawning {
 			if (Conditions == null)
 				return;
 
+			SpawnConditionsProfile conditions = Conditions.UseSpawnGroupPrefabSpawningMode ? SpawnGroup.SpawnConditionsProfiles[0] : Conditions;
 			var spawnGroup = SpawnGroup.SpawnGroup;
+			SpawnLogger.Write("Prefab Spawning Mode: " + conditions.PrefabSpawningMode, SpawnerDebugEnum.Spawning);
 
-			SpawnLogger.Write("Prefab Spawning Mode: " + Conditions.PrefabSpawningMode, SpawnerDebugEnum.Spawning);
-
-			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.All) {
+			if (conditions.PrefabSpawningMode == PrefabSpawnMode.All) {
 
 				for (int i = 0; i < spawnGroup.Prefabs.Count; i++) {
 
@@ -230,7 +230,7 @@ namespace ModularEncountersSystems.Spawning {
 			
 			}
 
-			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.Random) {
+			if (conditions.PrefabSpawningMode == PrefabSpawnMode.Random) {
 
 				if (spawnGroup.Prefabs.Count == 1) {
 
@@ -244,23 +244,23 @@ namespace ModularEncountersSystems.Spawning {
 			
 			}
 
-			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.SelectedIndexes) {
+			if (conditions.PrefabSpawningMode == PrefabSpawnMode.SelectedIndexes) {
 
-				for (int i = 0; i < Conditions.PrefabIndexes.Count; i++) {
+				for (int i = 0; i < conditions.PrefabIndexes.Count; i++) {
 
-					if (!PrefabIndexes.Contains(Conditions.PrefabIndexes[i]) || Conditions.AllowPrefabIndexReuse)
-						PrefabIndexes.Add(Conditions.PrefabIndexes[i]);
+					if (!PrefabIndexes.Contains(conditions.PrefabIndexes[i]) || conditions.AllowPrefabIndexReuse)
+						PrefabIndexes.Add(conditions.PrefabIndexes[i]);
 
 				}
 
 			}
 
-			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.RandomSelectedIndexes) {
+			if (conditions.PrefabSpawningMode == PrefabSpawnMode.RandomSelectedIndexes) {
 
-				foreach (var group in Conditions.PrefabIndexGroups.Keys) {
+				foreach (var group in conditions.PrefabIndexGroups.Keys) {
 
 					int indexToAdd = -1;
-					var list = Conditions.PrefabIndexGroups[group];
+					var list = conditions.PrefabIndexGroups[group];
 
 					if (spawnGroup.Prefabs.Count == 1) {
 
@@ -272,7 +272,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					if (list[indexToAdd] >= 0 && (!PrefabIndexes.Contains(list[indexToAdd]) || Conditions.AllowPrefabIndexReuse)) {
+					if (list[indexToAdd] >= 0 && (!PrefabIndexes.Contains(list[indexToAdd]) || conditions.AllowPrefabIndexReuse)) {
 
 						SpawnLogger.Write("Prefab Index Selected: " + list[indexToAdd], SpawnerDebugEnum.Spawning);
 						PrefabIndexes.Add(list[indexToAdd]);
@@ -283,9 +283,9 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (Conditions.PrefabSpawningMode == PrefabSpawnMode.RandomFixedCount) {
+			if (conditions.PrefabSpawningMode == PrefabSpawnMode.RandomFixedCount) {
 
-				for (int i = 0; i < Conditions.PrefabFixedCount; i++) {
+				for (int i = 0; i < conditions.PrefabFixedCount; i++) {
 
 					int indexToAdd = -1;
 
@@ -293,7 +293,7 @@ namespace ModularEncountersSystems.Spawning {
 
 						indexToAdd = MathTools.RandomBetween(0, spawnGroup.Prefabs.Count);
 
-						if (indexToAdd >= 0 && (!PrefabIndexes.Contains(indexToAdd) || Conditions.AllowPrefabIndexReuse)) {
+						if (indexToAdd >= 0 && (!PrefabIndexes.Contains(indexToAdd) || conditions.AllowPrefabIndexReuse)) {
 
 							SpawnLogger.Write("Prefab Index Selected: " + indexToAdd, SpawnerDebugEnum.Spawning);
 							PrefabIndexes.Add(indexToAdd);

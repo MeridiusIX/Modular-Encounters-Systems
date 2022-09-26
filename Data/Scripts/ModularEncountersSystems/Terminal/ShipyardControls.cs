@@ -130,9 +130,6 @@ namespace ModularEncountersSystems.Terminal {
 
 		public static void DisplayControls(IMyTerminalBlock block, List<IMyTerminalControl> controls) {
 
-			if (block != null)
-				return;
-
 			if (!_setupDone) {
 
 				_setupDone = true;
@@ -240,7 +237,7 @@ namespace ModularEncountersSystems.Terminal {
 					ctrls.ConstructNewBlocks = val;
 					GetPriceQuote(b);
 					b.RefreshCustomInfo();
-					RefreshMenu(b);
+					ControlManager.RefreshMenu(b);
 
 				};
 
@@ -259,7 +256,7 @@ namespace ModularEncountersSystems.Terminal {
 					ctrls.RepairBlocks = val;
 					GetPriceQuote(b);
 					b.RefreshCustomInfo();
-					RefreshMenu(b);
+					ControlManager.RefreshMenu(b);
 
 				};
 
@@ -638,7 +635,7 @@ namespace ModularEncountersSystems.Terminal {
 			controls.SelectedGridItem = null;
 			GetPriceQuote(block);
 			block.RefreshCustomInfo();
-			RefreshMenu(block);
+			ControlManager.RefreshMenu(block);
 
 		}
 
@@ -731,7 +728,7 @@ namespace ModularEncountersSystems.Terminal {
 			controls.SelectedGridItem = (GridEntity)selected[0].UserData;
 			GetPriceQuote(block);
 			block.RefreshCustomInfo();
-			RefreshMenu(block);
+			ControlManager.RefreshMenu(block);
 
 		}
 
@@ -751,7 +748,7 @@ namespace ModularEncountersSystems.Terminal {
 
 								controls.SelectedGridItem = grid;
 								projector.RefreshCustomInfo();
-								RefreshMenu(projector);
+								ControlManager.RefreshMenu(projector);
 								break;
 
 							}
@@ -766,20 +763,7 @@ namespace ModularEncountersSystems.Terminal {
 		
 		}
 
-		public static void RefreshMenu(IMyTerminalBlock block) {
-
-			var cubeBlock = block as MyCubeBlock;
-
-			if (cubeBlock?.IDModule != null) {
-
-				var share = cubeBlock.IDModule.ShareMode;
-				var owner = cubeBlock.IDModule.Owner;
-				cubeBlock.ChangeOwner(0, share == MyOwnershipShareModeEnum.None ? MyOwnershipShareModeEnum.Faction : MyOwnershipShareModeEnum.None);
-				cubeBlock.ChangeOwner(owner, share);
-
-			}
-
-		}
+		
 
 
 	}

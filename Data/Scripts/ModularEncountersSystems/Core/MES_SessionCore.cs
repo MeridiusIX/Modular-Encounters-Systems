@@ -7,6 +7,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Events;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Sync;
@@ -15,6 +16,7 @@ using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using VRage.Game;
@@ -27,7 +29,7 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 
-		public static string ModVersion = "2.66.4";
+		public static string ModVersion = "2.67.0";
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -92,6 +94,7 @@ namespace ModularEncountersSystems.Core {
 
 			Settings.InitSettings("BeforeStart"); //Get Existing Settings From XML or Create New
 			BlockLogicManager.Setup();
+			ProgressionManager.Setup();
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			ControlManager.Setup();
 			SetDefaultSettings();
@@ -101,6 +104,7 @@ namespace ModularEncountersSystems.Core {
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
 
+			ProgressionManager.ButtonPanelStartupValidation();
 			ProgramBlockControls.SpawnProgramBlockForControls();
 			LocalApi.SendApiToMods();
 			FactionHelper.PopulateNpcFactionLists();

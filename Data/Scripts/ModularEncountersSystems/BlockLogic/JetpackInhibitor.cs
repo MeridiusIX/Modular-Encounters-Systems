@@ -12,16 +12,10 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class JetpackInhibitor : BaseBlockLogic, IBlockLogic {
-
-		internal IMyRadioAntenna _antenna;
-		internal IMyTerminalBlock _block;
+	public class JetpackInhibitor : InhibitorBase, IBlockLogic {
 
 		internal double _dampenerRange;
-		internal double _disableRange;
-		internal double _antennaRange;
 
-		internal bool _playersInRange;
 		internal List<PlayerEntity> _playersInDampenerRange;
 		internal List<PlayerEntity> _playersInDisableRange;
 
@@ -33,7 +27,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void Setup(BlockEntity block) {
 
-			_tamperCheck = true;
+			_fixCheck = true;
 			base.Setup(block);
 
 			if (!_isServer) {
@@ -45,8 +39,6 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_playersInDampenerRange = new List<PlayerEntity>();
 			_playersInDisableRange = new List<PlayerEntity>();
-			_antenna = block.Block as IMyRadioAntenna;
-			_block = block.Block as IMyTerminalBlock;
 
 			if (_antenna != null) {
 
@@ -64,6 +56,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			}
 
 			_logicType = "Jetpack Inhibitor";
+			_inhibitor = InhibitorTypes.Jetpack;
 			_useTick1 = true;
 			_useTick100 = true;
 
@@ -152,28 +145,32 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				if (distance <= _dampenerRange) {
 
-					if (distance <= _disableRange) {
+					if (!ProcessInhibitorSuitUpgrades(player)) {
 
-						if (!_playersInDisableRange.Contains(player)) {
+						if (distance <= _disableRange) {
 
-							MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Jetpack!", 4000, "Red", player.Player.IdentityId);
-							_playersInDisableRange.Add(player);
-							_playersInDampenerRange.Remove(player);
+							if (!_playersInDisableRange.Contains(player)) {
 
-						}
-					
-					} else {
+								MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Jetpack!", 4000, "Red", player.Player.IdentityId);
+								_playersInDisableRange.Add(player);
+								_playersInDampenerRange.Remove(player);
 
-						if (!_playersInDampenerRange.Contains(player)) {
+							}
 
-							MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Jetpack Dampeners!", 4000, "Red", player.Player.IdentityId);
-							_playersInDampenerRange.Add(player);
-							_playersInDisableRange.Remove(player);
+						} else {
+
+							if (!_playersInDampenerRange.Contains(player)) {
+
+								MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Jetpack Dampeners!", 4000, "Red", player.Player.IdentityId);
+								_playersInDampenerRange.Add(player);
+								_playersInDisableRange.Remove(player);
+
+							}
 
 						}
 
 					}
-				
+
 				}
 			
 			}

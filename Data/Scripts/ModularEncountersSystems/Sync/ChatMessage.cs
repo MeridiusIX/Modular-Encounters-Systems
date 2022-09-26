@@ -458,6 +458,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.AttachSuitUpgradeModule
+			if (array[2] == "AttachSuitUpgradeModule") {
+
+				LoggerTools.DebugAttachSuitUpgradeModule(this);
+				return true;
+
+			}
+
 			//MES.Debug.Autopilot
 			if (array[2] == "Autopilot") {
 
@@ -689,6 +697,14 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "ResetReputation") {
 
 				LoggerTools.ResetReputation(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.ResetZones
+			if (array[2] == "ResetZones") {
+
+				LoggerTools.ResetZones(this);
 				return true;
 
 			}

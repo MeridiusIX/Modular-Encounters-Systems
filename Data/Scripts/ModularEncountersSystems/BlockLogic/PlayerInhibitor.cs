@@ -10,14 +10,8 @@ using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class PlayerInhibitor : BaseBlockLogic, IBlockLogic {
+	public class PlayerInhibitor : InhibitorBase, IBlockLogic {
 
-		internal IMyRadioAntenna _antenna;
-		internal IMyTerminalBlock _block;
-
-		internal double _antennaRange;
-
-		internal bool _playersInRange;
 		internal List<PlayerEntity> _playersInBlockRange;
 
 		internal float _damageAtZeroDistance = 10;
@@ -30,7 +24,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void Setup(BlockEntity block) {
 
-			_tamperCheck = true;
+			_fixCheck = true;
 			base.Setup(block);
 
 			if (!_isServer) {
@@ -41,8 +35,6 @@ namespace ModularEncountersSystems.BlockLogic {
 			}
 
 			_playersInBlockRange = new List<PlayerEntity>();
-			_antenna = block.Block as IMyRadioAntenna;
-			_block = block.Block as IMyTerminalBlock;
 
 			if (_antenna != null) {
 
@@ -57,6 +49,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			}
 
 			_logicType = "Player Inhibitor";
+			_inhibitor = InhibitorTypes.Personnel;
 			_useTick60 = true;
 			_useTick100 = true;
 
@@ -132,10 +125,14 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				if (distance <= _antennaRange) {
 
-					if (!_playersInBlockRange.Contains(player)) {
+					if (!ProcessInhibitorSuitUpgrades(player)) {
 
-						MyVisualScriptLogicProvider.ShowNotification("WARNING: Prolonged Exposure To Personnel Inhibitor Field May Be Fatal!", 5000, "Red", player.Player.IdentityId);
-						_playersInBlockRange.Add(player);
+						if (!_playersInBlockRange.Contains(player)) {
+
+							MyVisualScriptLogicProvider.ShowNotification("WARNING: Prolonged Exposure To Personnel Inhibitor Field May Be Fatal!", 5000, "Red", player.Player.IdentityId);
+							_playersInBlockRange.Add(player);
+
+						}
 
 					}
 

@@ -1376,6 +1376,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (actions.AddResearchPoints && command != null) {
+
+				var player = PlayerManager.GetPlayerWithIdentityId(command.PlayerIdentity);
+
+				if (player != null) {
+
+					player.Progression.Points += (byte)actions.ResearchPointsAmount;
+				
+				}
+			
+			}
+
 			//SetBooleansTrue
 			foreach (var variable in actions.SetBooleansTrue)
 				_settings.SetCustomBool(variable, true);

@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string Type;
 
 		[ProtoMember(2)]
-		public bool UseTrigger;
+		public bool UseTrigger; //Stored
 
 		[ProtoMember(3)]
 		public double TargetDistance;
@@ -56,13 +56,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool Triggered;
 
 		[ProtoMember(12)]
-		public int CooldownTime;
+		public int CooldownTime; //Stored
 
 		[ProtoMember(13)]
-		public int TriggerCount;
+		public int TriggerCount; //Stored
 
 		[ProtoMember(14)]
-		public DateTime LastTriggerTime;
+		public DateTime LastTriggerTime; //Stored
 
 		[ProtoMember(15)]
 		public int MinPlayerReputation;
@@ -71,7 +71,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public int MaxPlayerReputation;
 
 		[ProtoMember(17)]
-		public ConditionProfile Conditions;
+		public ConditionProfile Conditions; //Stored
 
 		[ProtoMember(18)]
 		public bool ConditionCheckResetsTimer;
@@ -83,7 +83,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string CommandReceiveCode;
 
 		[ProtoMember(21)]
-		public string ProfileSubtypeId;
+		public string ProfileSubtypeId; //Stored
 
 		[ProtoMember(22)]
 		public Vector3D PlayerNearPositionOffset;
@@ -113,7 +113,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> ExcludedDamageTypes;
 
 		[ProtoMember(31)]
-		public List<ActionProfile> Actions;
+		public List<ActionProfile> Actions; //Stored
 
 		[ProtoMember(32)]
 		public int NextActionIndex;
@@ -155,7 +155,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool UseElseActions;
 
 		[ProtoMember(45)]
-		public List<ActionProfile> ElseActions;
+		public List<ActionProfile> ElseActions; //Stored
 
 		[ProtoMember(46)]
 		public bool LastRunFailed; //Non Configurable

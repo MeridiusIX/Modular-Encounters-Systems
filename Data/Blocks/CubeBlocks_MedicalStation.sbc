@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CubeBlocks>
+
+    <Definition xsi:type="MyObjectBuilder_LCDPanelsBlockDefinition">
+      <Id>
+        <TypeId>LCDPanelsBlock</TypeId>
+        <SubtypeId>MES-MedicalStation</SubtypeId>
+      </Id>
+      <DisplayName>Suit Upgrade Station</DisplayName>
+      <Icon>Textures\GUI\Icons\Cubes\MedicalStation.dds</Icon>
+      <Description>A station that allows players to upgrade their suit with new abilities</Description>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <Public>false</Public>
+      <GuiVisible>false</GuiVisible>
+      <Model>Models\Cubes\Large\MedicalStation.mwm</Model>
+      <ModelOffset x="0" y="0" z="0" />
+      <Components>
+        <Component Subtype="InteriorPlate" Count="15" />
+        <Component Subtype="Construction" Count="10" />
+        <Component Subtype="Motor" Count="2" />
+        <Component Subtype="Medical" Count="1" />
+        <Component Subtype="Display" Count="2" />
+        <Component Subtype="Computer" Count="5" />
+        <Component Subtype="Construction" Count="5" />
+      </Components>
+      <CriticalComponent Subtype="Computer" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="0.1" Default="true" />
+        <MountPoint Side="Left" StartX="0" StartY="0" EndX="0.1" EndY="0.32" />
+        <MountPoint Side="Left" StartX="0" StartY="0.32" EndX="0.3" EndY="0.37" />
+        <MountPoint Side="Right" StartX="0.9" StartY="0" EndX="1" EndY="0.32" />
+        <MountPoint Side="Right" StartX="0.7" StartY="0.32" EndX="1" EndY="0.37" />
+        <MountPoint Side="Front" StartX="0" StartY="0" EndX="1" EndY="0.37" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\MedicalStationConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\MedicalStationConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\MedicalStationConstruction_3.mwm" />
+      </BuildProgressModels>
+      <ScreenAreas>
+        <ScreenArea Name="CockpitScreen_01" DisplayName="DisplayName_Screen_Large" TextureResolution="512" ScreenWidth="15" ScreenHeight="9" />
+        <ScreenArea Name="CockpitScreen_02" DisplayName="DisplayName_Screen_Keyboard" TextureResolution="512" ScreenWidth="15" ScreenHeight="9" />
+      </ScreenAreas>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <RequiredPowerInput>0.0001</RequiredPowerInput>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <HasInventory>false</HasInventory>
+      <BuildTimeSeconds>12</BuildTimeSeconds>
+      <PCU>1</PCU>
+      <DLC>DecorativeBlocks2</DLC>
+      <IsAirTight>false</IsAirTight>
+    </Definition>
+
+    <!-- End of Decorative Blocks 2 -->
+  </CubeBlocks>
+</Definitions>

@@ -9,6 +9,7 @@ using VRage.ObjectBuilders;
 using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Files;
+using ModularEncountersSystems.Progression;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -362,6 +363,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> LcdBlockNames;
 		public List<int> LcdTemplateIndexes;
 
+		public bool AddResearchPoints;
+		public int ResearchPointsAmount;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -705,6 +709,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			LcdBlockNames = new List<string>();
 			LcdTemplateIndexes = new List<int>();
 
+			AddResearchPoints = false;
+			ResearchPointsAmount = 0;
+
 			ProfileSubtypeId = "";
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -951,6 +958,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"LcdTextTemplateFile", (s, o) => TagParse.TagStringCheck(s, ref LcdTextTemplateFile) },
 				{"LcdBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref LcdBlockNames) },
 				{"LcdTemplateIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref LcdTemplateIndexes) },
+
+				{"AddResearchPoints", (s, o) => TagParse.TagBoolCheck(s, ref AddResearchPoints) },
+				{"ResearchPointsAmount", (s, o) => TagParse.TagIntCheck(s, ref ResearchPointsAmount) },
 
 			};
 

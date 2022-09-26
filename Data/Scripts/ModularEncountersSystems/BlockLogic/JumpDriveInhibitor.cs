@@ -10,18 +10,12 @@ using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class JumpDriveInhibitor : BaseBlockLogic, IBlockLogic {
-
-		internal IMyRadioAntenna _antenna;
-		internal IMyTerminalBlock _block;
-
-		internal double _disableRange;
-		internal double _antennaRange;
+	public class JumpDriveInhibitor : InhibitorBase, IBlockLogic {
 
 		internal List<BlockEntity> _potentialBlocks;
 		internal List<BlockEntity> _blocksInRange;
 
-		internal List<PlayerEntity> _playersInRange;
+		internal List<PlayerEntity> _messagePlayersInRange;
 
 		public JumpDriveInhibitor(BlockEntity block) {
 
@@ -31,7 +25,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		internal override void Setup(BlockEntity block) {
 
-			_tamperCheck = true;
+			_fixCheck = true;
 			base.Setup(block);
 
 			if (!_isServer) {
@@ -44,12 +38,10 @@ namespace ModularEncountersSystems.BlockLogic {
 			_blocksInRange = new List<BlockEntity>();
 			_potentialBlocks = new List<BlockEntity>();
 
-			_playersInRange = new List<PlayerEntity>();
+			_messagePlayersInRange = new List<PlayerEntity>();
 
 			BlockManager.GetBlocksOfType<IMyJumpDrive>(_potentialBlocks);
 			BlockManager.BlockAdded += GetNewBlock;
-
-			_antenna = block.Block as IMyRadioAntenna;
 
 			if (_antenna != null) {
 
@@ -65,6 +57,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			}
 
 			_logicType = "Jump Drive Inhibitor";
+			_inhibitor = InhibitorTypes.JumpDrive;
 			_useTick100 = true;
 
 		}
@@ -149,18 +142,18 @@ namespace ModularEncountersSystems.BlockLogic {
 
 				if (player.Distance(Entity.GetPosition()) < _disableRange) {
 
-					if (!_playersInRange.Contains(player)) {
+					if (!_messagePlayersInRange.Contains(player)) {
 
 						MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disable Jump Drive Functionality!", 4000, "Red", player.Player.IdentityId);
-						_playersInRange.Add(player);
+						_messagePlayersInRange.Add(player);
 
 					}
 
 				} else {
 
-					if (_playersInRange.Contains(player)) {
+					if (_messagePlayersInRange.Contains(player)) {
 
-						_playersInRange.Remove(player);
+						_messagePlayersInRange.Remove(player);
 
 					}
 

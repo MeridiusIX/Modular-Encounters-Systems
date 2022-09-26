@@ -1,8 +1,8 @@
 ﻿using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Tasks;
-using ModularEncountersSystems.Terminal;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -30,21 +30,58 @@ namespace ModularEncountersSystems.Entities {
 		public ConsumableItemTimer PlayerInhibitorNullifier;
 		public ConsumableItemTimer EnergyInhibitorNullifier;
 
-		public SuitMods Mods { get {
+		public PlayerSolarModule SolarModule;
 
-				if (_suitMods == null) {
+		public ProgressionContainer Progression { 
 
-					_suitMods = new SuitMods();
-					_suitMods.IdentityId = Player?.IdentityId ?? 0;
-					_suitMods.SteamId = Player?.SteamUserId ?? 0;
+			get {
+
+				if (_progression == null) {
+
+					if (Player != null) {
+
+						foreach (var progression in ProgressionManager.ProgressionContainers) {
+
+							if (Player.IdentityId == progression.IdentityId && Player.SteamUserId == progression.SteamId) {
+
+								_progression = progression;
+								return _progression;
+
+							}
+
+						}
+
+					}
+
+					_progression = new ProgressionContainer();
+					_progression.IdentityId = Player?.IdentityId ?? 0;
+					_progression.SteamId = Player?.SteamUserId ?? 0;
+					ProgressionManager.ProgressionContainers.Add(_progression);
 
 				}
 					
-				return _suitMods;
+				return _progression;
 			
-			} 
+			}
+
+			set {
+
+				if (value != null)
+					_progression = value;
+				else if (_progression == null) {
+
+					_progression = new ProgressionContainer();
+					_progression.IdentityId = Player?.IdentityId ?? 0;
+					_progression.SteamId = Player?.SteamUserId ?? 0;
+					ProgressionManager.ProgressionContainers.Add(_progression);
+
+				}
+
+			
+			}
 		}
-		internal SuitMods _suitMods;
+
+		internal ProgressionContainer _progression;
 
 		public List<GridEntity> LinkedGrids;
 
@@ -57,6 +94,8 @@ namespace ModularEncountersSystems.Entities {
 			IsValidEntity = true;
 			Player = player;
 			Online = true;
+
+			_progression = null;
 
 			LinkedGrids = new List<GridEntity>();
 
@@ -149,8 +188,18 @@ namespace ModularEncountersSystems.Entities {
 
 		public Vector3D GetCharacterPosition() {
 
-			return Player?.Character?.GetPosition() ?? Vector3D.Zero;
+			return Player?.Character?.WorldAABB.Center ?? Vector3D.Zero;
 		
+		}
+
+		public void InitSolarModule() {
+
+			if (Progression.SolarChargingSuitUpgradeLevel == 0 || SolarModule != null)
+				return;
+
+			SolarModule = new PlayerSolarModule(this);
+			TaskProcessor.Tasks.Add(SolarModule);
+
 		}
 
 		public bool IsPlayerStandingCharacter() {
@@ -158,7 +207,7 @@ namespace ModularEncountersSystems.Entities {
 			if (!ActiveEntity())
 				return false;
 
-			if (Player?.Character == null)
+			if (Player?.Character == null || Player.Controller?.ControlledEntity?.Entity == null)
 				return false;
 
 			/*

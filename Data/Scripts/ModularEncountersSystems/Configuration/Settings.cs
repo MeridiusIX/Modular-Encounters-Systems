@@ -11,6 +11,8 @@ using VRage.Game;
 namespace ModularEncountersSystems.Configuration {
 	public static class Settings {
 
+		public static string UniqueModId = "";
+
 		public static ConfigGeneral General = new ConfigGeneral();
 		public static ConfigGrids Grids = new ConfigGrids();
 		public static ConfigSpaceCargoShips SpaceCargoShips = new ConfigSpaceCargoShips();
@@ -22,12 +24,24 @@ namespace ModularEncountersSystems.Configuration {
 		public static ConfigDroneEncounters DroneEncounters = new ConfigDroneEncounters();
 		public static ConfigCustomBlocks CustomBlocks = new ConfigCustomBlocks();
 		public static ConfigCreatures Creatures = new ConfigCreatures();
+		public static ConfigProgression Progression = new ConfigProgression();
 		public static SavedInternalData SavedData = null;
 
 		public static void InitSettings(string phase) {
 
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
+
+			if (phase == "BeforeStart" && string.IsNullOrWhiteSpace(UniqueModId)) {
+
+				if (!MyAPIGateway.Utilities.GetVariable<string>("MES-SavedDataId", out UniqueModId)) {
+
+					UniqueModId = DateTime.Now.Ticks.ToString();
+					MyAPIGateway.Utilities.SetVariable<string>("MES-SavedDataId", UniqueModId);
+
+				}
+			
+			}
 
 			if(!General.ConfigLoaded)
 				General = General.LoadSettings(phase);
@@ -62,7 +76,7 @@ namespace ModularEncountersSystems.Configuration {
 			if (!Creatures.ConfigLoaded)
 				Creatures = Creatures.LoadSettings(phase);
 
-			if (SavedData == null)
+			if (MyAPIGateway.Multiplayer.IsServer && SavedData == null && phase == "BeforeStart")
 				SavedData = SavedInternalData.LoadSettings(phase);
 
 			CheckGlobalEvents();

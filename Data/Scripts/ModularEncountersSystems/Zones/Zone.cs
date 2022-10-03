@@ -373,6 +373,13 @@ namespace ModularEncountersSystems.Zones {
 					TagParse.TagBoolCheck(tag, ref this.Strict);
 
 				}
+				
+				//NoSpawnZone
+				if (tag.StartsWith("[NoSpawnZone:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.NoSpawnZone);
+
+				}
 
 				//PlayerKnownLocation
 				if (tag.StartsWith("[PlayerKnownLocation:") == true) {

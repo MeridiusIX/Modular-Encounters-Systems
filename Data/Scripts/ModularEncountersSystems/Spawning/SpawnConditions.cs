@@ -1188,7 +1188,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					if (action?.Invoke(spawnGroup.SpawnGroupName, conditions.ProfileSubtypeId, type.ToString(), environment.Position) ?? false == false) {
+					if ((action?.Invoke(spawnGroup.SpawnGroupName, conditions.ProfileSubtypeId, type.ToString(), environment.Position) ?? false) == false) {
 
 						result = false;
 						failReason = "   - Custom API Spawn Condition Not Satisfied: " + methodName;

@@ -295,7 +295,7 @@ namespace ModularEncountersSystems.Helpers {
 						newRep = MathHelper.Clamp(oldRep + amount, minRep, maxRep);
 					else {
 					
-						if((proposedRep < minRep && Math.Sign(amount) == 1) || (proposedRep > minRep && Math.Sign(amount) == -1))
+						if((proposedRep < maxRep && Math.Sign(amount) == 1) || (proposedRep > minRep && Math.Sign(amount) == -1))
 							newRep = oldRep + amount;
 
 					}

@@ -121,14 +121,25 @@ namespace ModularEncountersSystems.Spawning {
 
 		public static void SpawnPrefab(SpawnGroupCollection spawnCollection, PathDetails path, EnvironmentEvaluation environment) {
 
+			string spawnGroupTimeStamp = DateTime.Now.ToString();
 			string faction = spawnCollection.SelectRandomFaction();
 			long factionOwner = FactionHelper.GetFactionMemberIdFromTag(faction);
 
-			if (factionOwner == 0 && faction != "Nobody")
-				SpawnLogger.Write(spawnCollection.SpawnGroup.SpawnGroupName + " Expected To Spawn With Faction: " + (faction ?? "Null") + ", But Got Ownership ID 0 / Nobody", SpawnerDebugEnum.Error, true);
+			if (spawnCollection.OwnerOverride == -1) {
+
+				if (factionOwner == 0 && faction != "Nobody")
+					SpawnLogger.Write(spawnCollection.SpawnGroup.SpawnGroupName + " Expected To Spawn With Faction: " + (faction ?? "Null") + ", But Got Ownership ID 0 / Nobody", SpawnerDebugEnum.Error, true);
+
+				SpawnLogger.Write("Spawning " + spawnCollection.PrefabIndexes.Count + " Prefabs With Ownership: " + faction + " / " + factionOwner.ToString(), SpawnerDebugEnum.Spawning);
+
+			} else {
+
+				factionOwner = spawnCollection.OwnerOverride;
+				faction = "";
+
+			}
 
 			environment.GetThreat(spawnCollection.Conditions.ThreatLevelCheckRange, spawnCollection.Conditions.ThreatIncludeOtherNpcOwners);
-			SpawnLogger.Write("Spawning " + spawnCollection.PrefabIndexes.Count + " Prefabs With Ownership: " + faction + " / " + factionOwner.ToString(), SpawnerDebugEnum.Spawning);
 
 			for (int i = 0; i < spawnCollection.PrefabIndexes.Count; i++) {
 
@@ -429,12 +440,12 @@ namespace ModularEncountersSystems.Spawning {
 			Vector3D coords = Vector3D.Zero;
 
 			if (box == null || !box.HasValue || boxMatrix == null || !boxMatrix.HasValue)
-				coords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
+				coords = prefab.BoundingSphere.Radius * 2.5 * matrix.Forward + matrix.Translation;
 			else {
 
 				var existingSphere = BoundingSphereD.CreateFromBoundingBox(box.Value);
 				var prefabSphere = prefab.BoundingSphere;
-				coords = ((existingSphere.Radius * 1.2) + (prefabSphere.Radius)) * boxMatrix.Value.Forward + existingSphere.Center;
+				coords = ((existingSphere.Radius * 2.5) + (prefabSphere.Radius)) * boxMatrix.Value.Forward + existingSphere.Center;
 
 			}
 

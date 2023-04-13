@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		private Vector3D _collisionStrafeDirection;
 
 		private DateTime _lastGravityThrustCalc = DateTime.MinValue;
-		private float _lastGravityThrustValue = 0;
+		private float _lastGravityThrustValue = -999;
 
 		private ThrustAction _thrustToApply;
 
@@ -98,9 +99,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				return 0;
 
 			var time = MyAPIGateway.Session.GameDateTime - _lastGravityThrustCalc;
-			if (time.TotalMilliseconds < 2500)
+			if (time.TotalMilliseconds < 2500 && _lastGravityThrustValue != -999)
 				return _lastGravityThrustValue;
 
+			_lastGravityThrustCalc = MyAPIGateway.Session.GameDateTime;
 			float gravityMultiplier = 0;
 
 			while (gravityMultiplier < 20) {
@@ -120,7 +122,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				var liftingAccel = totalForceAvailable / _remoteControl.CalculateShipMass().TotalMass;
 				var gravityAccel = gravityMultiplier * 9.81;
 
-				if ((liftingAccel / gravityAccel) < 1.25) {
+				if ((liftingAccel / gravityAccel) < 1) {
 
 					gravityMultiplier -= 0.1f;
 					break;

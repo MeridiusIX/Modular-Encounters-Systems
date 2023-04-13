@@ -8,27 +8,45 @@ using VRageMath;
 
 namespace ModularEncountersSystems.Spawning {
 
+
+	public struct PendingSpawn {
+
+		public SpawnProfile Spawn;
+		public long OwnerOverride;
+
+		public PendingSpawn(SpawnProfile spawn, long owner) {
+
+			Spawn = spawn;
+			OwnerOverride = owner;
+		
+		}
+	
+	}
+
 	public static class BehaviorSpawnHelper {
 
 		private static bool _spawnInProgress = false;
-		private static List<SpawnProfile> _pendingSpawns = new List<SpawnProfile>();
+		private static List <PendingSpawn> _pendingSpawns = new List<PendingSpawn>();
 
 		private static SpawnProfile _currentSpawn;
+		private static long _ownerOverride;
 		private static MatrixD _spawnMatrix;
 
 
-		public static void BehaviorSpawnRequest(SpawnProfile spawn = null) {
+		public static void BehaviorSpawnRequest(SpawnProfile spawn = null, long ownerOverride = -1) {
 
 			if (spawn != null) {
 
-				_pendingSpawns.Add(spawn);
+				_pendingSpawns.Add(new PendingSpawn(spawn, ownerOverride));
 
 			}
 
 			if (_spawnInProgress == true || _pendingSpawns.Count == 0)
 				return;
 
-			_currentSpawn = _pendingSpawns[0];
+			_currentSpawn = _pendingSpawns[0].Spawn;
+			_ownerOverride = _pendingSpawns[0].OwnerOverride;
+
 			_pendingSpawns.RemoveAt(0);
 			_spawnInProgress = true;
 			MyAPIGateway.Parallel.Start(SpawningParallelChecks, CompleteSpawning);
@@ -114,7 +132,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending CustomSpawn Data to Spawner", SpawnerDebugEnum.Spawning);
 				var velocity = Vector3D.Transform(_currentSpawn.RelativeSpawnVelocity, _spawnMatrix) - _spawnMatrix.Translation;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, false, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity, _currentSpawn.IgnoreSafetyChecks);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, false, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity, _currentSpawn.IgnoreSafetyChecks, ownerOverride:_ownerOverride);
 
 				if (result == true) {
 

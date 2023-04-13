@@ -268,6 +268,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> SandboxVariables;
 		public List<string> FalseSandboxVariables;
 
+		public bool CheckCustomSandboxCounters;
+		public List<string> CustomSandboxCounters;
+		public List<int> CustomSandboxCountersTargets;
+		public List<CounterCompareEnum> SandboxCounterCompareTypes;
+
+
+
 		public bool UseRemoteControlCodeRestrictions;
 		public string RemoteControlCode;
 		public double RemoteControlCodeMinDistance;
@@ -321,6 +328,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int PrefabFixedCount;
 		public List<Vector3D> PrefabOffsetOverrides;
 		public bool UseSpawnGroupPrefabSpawningMode;
+
+		public bool UseEventController;
+		public List<string> EventControllerId;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -485,6 +495,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseDateTimeDaysOfWeek = false;
 			//DateTimeDaysOfWeek = new List<DayOfWeek>();
 
+			CheckCustomSandboxCounters= false;
+			CustomSandboxCounters = new List<string>();
+			CustomSandboxCountersTargets = new List<int>();
+			SandboxCounterCompareTypes = new List<CounterCompareEnum>();
+
 			SandboxVariables = new List<string>();
 			FalseSandboxVariables = new List<string>();
 
@@ -630,12 +645,15 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PrefabFixedCount = 1;
 			PrefabOffsetOverrides = new List<Vector3D>();
 			UseSpawnGroupPrefabSpawningMode = false;
+			UseEventController = false;
+			EventControllerId = new List<string>();
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"SpaceCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref SpaceCargoShip) },
 				{"LunarCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref LunarCargoShip) },
 				{"AtmosphericCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref AtmosphericCargoShip) },
+				{"PlanetaryCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref AtmosphericCargoShip) },
 				{"GravityCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref GravityCargoShip) },
 				{"SkipAirDensityCheck", (s, o) => TagParse.TagBoolCheck(s, ref SkipAirDensityCheck) },
 				{"CargoShipTerrainPath", (s, o) => TagParse.TagBoolCheck(s, ref CargoShipTerrainPath) },
@@ -877,8 +895,16 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"PrefabFixedCount", (s, o) => TagParse.TagIntCheck(s, ref PrefabFixedCount) },
 				{"PrefabOffsetOverrides", (s, o) => TagParse.TagVector3DListCheck(s, ref PrefabOffsetOverrides) },
 				{"UseSpawnGroupPrefabSpawningMode", (s, o) => TagParse.TagBoolCheck(s, ref UseSpawnGroupPrefabSpawningMode) },
+				{"UseEventController", (s, o) => TagParse.TagBoolCheck(s, ref UseEventController) },
+				{"EventControllerId", (s, o) => TagParse.TagStringListCheck(s, ref EventControllerId) },
+				{"CheckCustomSandboxCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomSandboxCounters) },
+				{"CustomSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomSandboxCounters) },
+				{"CustomSandboxCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomSandboxCountersTargets) },
+				{"SandboxCounterCompareTypes", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref SandboxCounterCompareTypes) },
 
-			};
+
+
+		};
 
 		}
 

@@ -52,7 +52,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public Action OnComplete;
 		public Action<IMyCubeGrid, string> DespawnFromMES;
-		
+
+		public Command command;
+
+
+
 		public TriggerSystem(IMyRemoteControl remoteControl) {
 
 			RemoteControl = null;
@@ -109,16 +113,31 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				//PlayerNear
 				if (trigger.Type == "PlayerNear") {
+					command = new Command();
+					if (trigger.UsePlayerFilterProfile)
+						trigger.ActivateTrigger(CheckPlayerNearFilter, command);
+					else
+						trigger.ActivateTrigger(CheckPlayerNear);
 
-					trigger.ActivateTrigger(CheckPlayerNear);
+					if (trigger.Triggered == true)
+						ProcessTrigger(trigger, 0, command);
+
+
 					continue;
 
 				}
 
 				//PlayerFar
 				if (trigger.Type == "PlayerFar") {
+					command = new Command();
+					if (trigger.UsePlayerFilterProfile) 
+						trigger.ActivateTrigger(CheckPlayerFarFilter, command);
+					else
+						trigger.ActivateTrigger(CheckPlayerFar, command);
 
-					trigger.ActivateTrigger(CheckPlayerFar);
+					if (trigger.Triggered == true)
+						ProcessTrigger(trigger, 0, command);
+
 					continue;
 
 				}
@@ -625,7 +644,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				_behavior.AutoPilot.StopAllThrust();
 
 			}
-			
 			LocalApi.CompromisedRemoteEvent?.Invoke(RemoteControl, _behavior.CurrentGrid?.CubeGrid);
 
 			for (int i = 0; i < CompromisedTriggers.Count; i++) {
@@ -790,33 +808,33 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (_behavior?.RemoteControl == null || !_behavior.IsAIReady()) {
 
 						EventWatcher.ButtonPressed -= ProcessButtonTriggers;
-						return;
+						continue;
 
 					}
 
 					if (index != trigger.ButtonPanelIndex)
-						return;
+						continue;
 
 					if (panel.CustomName == null || panel.CustomName != trigger.ButtonPanelName)
-						return;
+						continue;
 
 					if (panel.SlimBlock.CubeGrid != _behavior.RemoteControl.SlimBlock.CubeGrid && panel.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(_behavior.RemoteControl.SlimBlock.CubeGrid))
-						return;
+						continue;
 
 					if (trigger.MinPlayerReputation >= -1500 || trigger.MaxPlayerReputation <= 1500) {
 
 						var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(playerId, _behavior.Owner.FactionId);
 
 						if ((trigger.MinPlayerReputation >= -1500 && rep < trigger.MinPlayerReputation) || (trigger.MaxPlayerReputation <= 1500 && rep > trigger.MaxPlayerReputation))
-							return;
+							continue;
 					
 					}
 
-					trigger.ActivateTrigger();
+					trigger.ActivateTrigger(command: Command.PlayerRelatedCommand(playerId));
 
 					if (trigger.Triggered == true) {
 
-						ProcessTrigger(trigger, 0, Command.ButtonPressCommand(playerId));
+						ProcessTrigger(trigger, 0, Command.PlayerRelatedCommand(playerId));
 
 					}
 
@@ -1034,11 +1052,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void SetSandboxBool(string boolName, bool mode) {
 
-			MyAPIGateway.Utilities.SetVariable(boolName, mode);
+			if (boolName.Contains("{SpawnGroupName}") && _behavior.CurrentGrid?.Npc.SpawnGroupName != null)
+			{
+				boolName = boolName.Replace("{SpawnGroupName}", _behavior.CurrentGrid?.Npc.SpawnGroupName);
+			}
 
+			if (boolName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
+			{
+				boolName = boolName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
+			}
+
+			MyAPIGateway.Utilities.SetVariable(boolName, mode);
+			
 		}
 
 		public void SetSandboxCounter(string counterName, int amount, bool hardSet = false) {
+
+			if (counterName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
+			{
+				counterName = counterName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
+			}
+
+
+
 
 			if (hardSet) {
 
@@ -1146,9 +1182,82 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			command.PlayerIdentity = player.GetEntityId();
+
 			return true;
 
 		}
+
+		public bool IsPlayerNearbyWithFilter(TriggerProfile control, bool playerOutsideDistance = false)
+		{
+
+			var remotePosition = Vector3D.Transform(control.PlayerNearPositionOffset, RemoteControl.WorldMatrix);
+
+
+			PlayerEntity result = null;
+			double distance = -1;
+
+			foreach (var player in PlayerManager.Players)
+			{
+
+				if (player == null || !player.ActiveEntity())
+					continue;
+
+				var dist = player.Distance(remotePosition);
+
+				if (distance > -1 && dist > distance)
+					continue;
+
+				if (!PlayerFilter.ArePlayerFiltersMet(control.PlayerFilterProfileIds, control, player.Player.IdentityId))
+					continue;
+
+				distance = dist;
+				result = player;
+			}
+
+			if (result == null || !result.ActiveEntity())
+			{
+
+				//BehaviorLogger.Write(control.ProfileSubtypeId + ": No Eligible Player for PlayerNear Check", BehaviorDebugEnum.Trigger);
+				return false;
+
+			}
+
+			var playerDist = Vector3D.Distance(result.GetPosition(), remotePosition);
+
+
+
+			if (playerOutsideDistance)
+			{
+
+				if (playerDist < control.TargetDistance)
+				{
+
+					return false;
+
+				}
+
+			}
+			else
+			{
+
+				if (playerDist > control.TargetDistance)
+				{
+
+					return false;
+
+				}
+
+			}
+
+
+
+			command.PlayerIdentity = result.Player.IdentityId;
+			return true;
+
+		}
+
+
 
 		public void Setup(IMyRemoteControl remoteControl) {
 

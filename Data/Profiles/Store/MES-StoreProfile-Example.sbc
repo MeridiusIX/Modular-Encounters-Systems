@@ -1,0 +1,35 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-StoreProfile-Example</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Store]
+
+        [FileSource:MES-StoreItems-Example.xml]
+        
+        [MinOfferItems:4]
+        [MaxOfferItems:4]
+        [MinOrderItems:4]
+        [MaxOrderItems:4]
+
+        [ItemsRequireInventory:false]
+
+        [Offers:IllegalUranium]
+        [Offers:HydrogenStores]
+        [Offers:OxygenStores]
+        [Offers:StolenCursor]
+
+        [Orders:IllegalUranium]
+
+      </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

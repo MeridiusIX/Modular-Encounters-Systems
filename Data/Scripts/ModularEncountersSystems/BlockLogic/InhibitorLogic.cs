@@ -47,10 +47,37 @@ namespace ModularEncountersSystems.BlockLogic {
 				_antenna.EnabledChanged += EnabledChanged;
 
 			}
-				
+
 
 			_block = block.Block as IMyTerminalBlock;
 			_safeToggleTime = MyAPIGateway.Session.GameDateTime;
+
+		}
+
+		public static InhibitorTypes GetInhibitorType(string inh) {
+
+			if (inh == "Drill")
+				return InhibitorTypes.Drill;
+
+			if (inh == "Energy")
+				return InhibitorTypes.Energy;
+
+			if (inh == "Jetpack")
+				return InhibitorTypes.Jetpack;
+
+			if (inh == "JumpDrive")
+				return InhibitorTypes.JumpDrive;
+
+			if (inh == "Nanobots")
+				return InhibitorTypes.Nanobots;
+
+			if (inh == "Personnel")
+				return InhibitorTypes.Personnel;
+
+			if (inh == "None")
+				return InhibitorTypes.None;
+
+			return InhibitorTypes.None;
 
 		}
 
@@ -135,6 +162,7 @@ namespace ModularEncountersSystems.BlockLogic {
 				return;
 
 			}
+
 
 			if (_safeToggle || !FactionHelper.IsIdentityNPC(_antenna.OwnerId)) {
 

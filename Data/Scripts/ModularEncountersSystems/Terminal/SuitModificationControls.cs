@@ -29,6 +29,12 @@ namespace ModularEncountersSystems.Terminal {
 		internal static IMyTerminalControlSeparator _separatorB;
 		internal static IMyTerminalControlButton _confirmPurchase;
 
+		internal static IMyTerminalAction _actionA;
+		internal static IMyTerminalAction _actionB;
+		internal static IMyTerminalAction _actionC;
+		internal static IMyTerminalAction _actionD;
+		internal static IMyTerminalAction _actionE;
+
 		public static void DisplayControls(IMyTerminalBlock block, List<IMyTerminalControl> controls) {
 
 			if (!_setupDone) {
@@ -68,6 +74,10 @@ namespace ModularEncountersSystems.Terminal {
 				_privateControls.Add("GetOwnership");
 				_privateControls.Add("NumberOfProjections");
 				_privateControls.Add("NumberOfBlocks");
+				_privateControls.Add("AnyoneCanUse");
+				_privateControls.Add("Open Toolbar");
+				_privateControls.Add("ButtonText");
+				_privateControls.Add("ButtonName");
 
 				//Create Controls
 				_labelControls = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlLabel, IMyTerminalBlock>("MES-SuitMods-Label");
@@ -99,6 +109,37 @@ namespace ModularEncountersSystems.Terminal {
 
 				_separatorA = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlSeparator, IMyTerminalBlock>("MES-SuitMods-SeparatorA");
 				_separatorB = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlSeparator, IMyTerminalBlock>("MES-SuitMods-SeparatorB");
+
+				_actionA = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionA");
+				_actionA.Enabled = (b) => { return true; };
+				_actionA.ValidForGroups = false;
+				_actionA.Name = new StringBuilder("Up");
+				_actionA.Action = BlankAction;
+
+				_actionB = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionB");
+				_actionB.Enabled = (b) => { return true; };
+				_actionB.ValidForGroups = false;
+				_actionB.Name = new StringBuilder("Down");
+				_actionB.Action = BlankAction;
+
+				_actionC = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionC");
+				_actionC.Enabled = (b) => { return true; };
+				_actionC.ValidForGroups = false;
+				_actionC.Name = new StringBuilder("Left");
+				_actionC.Action = BlankAction;
+
+				_actionD = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionD");
+				_actionD.Enabled = (b) => { return true; };
+				_actionD.ValidForGroups = false;
+				_actionD.Name = new StringBuilder("Right");
+				_actionD.Action = BlankAction;
+
+				_actionE = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionE");
+				_actionE.Enabled = (b) => { return true; };
+				_actionE.ValidForGroups = false;
+				_actionE.Name = new StringBuilder("Enter");
+				_actionE.Action = BlankAction;
+
 
 				if (MyAPIGateway.Session.LocalHumanPlayer != null) {
 
@@ -148,6 +189,8 @@ namespace ModularEncountersSystems.Terminal {
 			}
 			
 		}
+
+		public static void BlankAction(IMyTerminalBlock block) { }
 
 		public static void GetSuitModsList(IMyTerminalBlock block, List<MyTerminalControlListBoxItem> items, List<MyTerminalControlListBoxItem> selected) {
 

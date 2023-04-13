@@ -6,12 +6,14 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Spawning.Procedural;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
+using ModularEncountersSystems.Events;
 using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.Game.EntityComponents;
@@ -533,6 +535,86 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void DebugRotateBlockYaw(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var block = GridManager.GetClosestBlockInDirection(matrix, 10000);
+
+			if (block == null) {
+
+				msg.ReturnMessage = "No Grid / Block in Camera Direction";
+				return;
+
+			}
+
+			var ob = block.GetObjectBuilder(true);
+			var grid = block.CubeGrid;
+			grid.RemoveBlock(block);
+			var orientation = BuilderTools.RotateYaw(ob.BlockOrientation);
+			ob.BlockOrientation = orientation;
+			ob.EntityId = 0;
+			grid.AddBlock(ob, true);
+		
+		}
+
+		public static void DebugRotateBlockPitch(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var block = GridManager.GetClosestBlockInDirection(matrix, 10000);
+
+			if (block == null) {
+
+				msg.ReturnMessage = "No Grid / Block in Camera Direction";
+				return;
+
+			}
+
+
+			MyVisualScriptLogicProvider.ShowNotification("F: " + block.Orientation.Forward, 5000, "White", msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("U: " + block.Orientation.Up, 5000, "White", msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("L: " + block.Orientation.Left, 5000, "White", msg.PlayerId);
+			var ob = block.GetObjectBuilder(true);
+			var grid = block.CubeGrid;
+			grid.RemoveBlock(block);
+			var orientation = BuilderTools.RotatePitch(ob.BlockOrientation);
+			ob.BlockOrientation = orientation;
+			ob.EntityId = 0;
+			grid.AddBlock(ob, true);
+
+		}
+
+		public static void DebugRotateBlockRoll(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var block = GridManager.GetClosestBlockInDirection(matrix, 10000);
+
+			if (block == null) {
+
+				msg.ReturnMessage = "No Grid / Block in Camera Direction";
+				return;
+
+			}
+
+
+			MyVisualScriptLogicProvider.ShowNotification("F: " + block.Orientation.Forward, 5000, "White", msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("U: " + block.Orientation.Up, 5000, "White", msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("L: " + block.Orientation.Left, 5000, "White", msg.PlayerId);
+			var ob = block.GetObjectBuilder(true);
+			var grid = block.CubeGrid;
+			grid.RemoveBlock(block);
+			var orientation = BuilderTools.RotateRoll(ob.BlockOrientation);
+			ob.BlockOrientation = orientation;
+			ob.EntityId = 0;
+			grid.AddBlock(ob, true);
+
+		}
+
+		public static void DebugSpawnAllSingleBlocks(ChatMessage msg) {
+
+			TaskProcessor.Tasks.Add(new DebugSpawnSingleBlocks(MatrixD.CreateWorld(msg.PlayerPosition, Vector3D.Forward, Vector3D.Up)));
+		
+		}
+
 		public static void DebugTestSaveGrid(ChatMessage msg) {
 
 			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
@@ -562,6 +644,53 @@ namespace ModularEncountersSystems.Logging {
 
 			msg.ReturnMessage = "Saved Grid As File";
 			//grid.RefreshSubGrids();
+
+		}
+
+		public static void DebugTestSpawnGrid() {
+
+			var grid = new MyObjectBuilder_CubeGrid();
+
+		
+		}
+
+		public static void DeleteGrid(ChatMessage message) {
+
+			var line = new LineD(message.CameraPosition, message.CameraDirection * 10000 + message.CameraPosition);
+			GridEntity thisGrid = null;
+
+			var sb = new StringBuilder();
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				message.ReturnMessage = "Could Not Locate Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return;
+
+			}
+
+			thisGrid.CubeGrid.Close();
+			var list = new List<IMyCubeGrid>();
+			MyAPIGateway.GridGroups.GetGroup(thisGrid.CubeGrid, GridLinkTypeEnum.Physical, list);
+			int phys = list.Count;
+			list.Clear();
+			MyAPIGateway.GridGroups.GetGroup(thisGrid.CubeGrid, GridLinkTypeEnum.NoContactDamage, list);
+			int nc = list.Count;
+
+			message.ReturnMessage = "Grid Marked as Closed. " + phys.ToString() + " | " + nc.ToString();
+			return;
 
 		}
 
@@ -973,6 +1102,7 @@ namespace ModularEncountersSystems.Logging {
 				sb.Append("Item Id:     ").Append(item).AppendLine();
 				sb.Append("Item Value:  ").Append(EconomyHelper.MinimumValuesMaster[item]).AppendLine();
 				sb.Append("Item Source: ").Append(itemDef.Context?.ModName != null ? itemDef.Context.ModName : "None").AppendLine();
+				sb.Append("Craftable:   ").Append(EconomyHelper.AssemblerCraftableItems.Contains(item).ToString()).AppendLine();
 				sb.AppendLine();
 
 			}
@@ -1292,6 +1422,51 @@ namespace ModularEncountersSystems.Logging {
 
 			}
 
+			return sb.ToString();
+
+		}
+
+		public static string GetBlockData(ChatMessage message) {
+
+			var line = new LineD(message.CameraPosition, message.CameraDirection * 10000 + message.CameraPosition);
+			GridEntity thisGrid = null;
+
+			var sb = new StringBuilder();
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				message.ReturnMessage = "Could Not Locate Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return sb.ToString() ?? "No Data";
+
+			}
+
+			var cell = thisGrid.CubeGrid.RayCastBlocks(line.From, line.To);
+
+			if (!cell.HasValue) {
+
+				message.ReturnMessage = "Could Not Locate Block At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return sb.ToString() ?? "No Data";
+
+			}
+
+			var block = thisGrid.CubeGrid.GetCubeBlock(cell.Value);
+
+			sb.Append("SubtypeID: ").Append(block.BlockDefinition.Id.SubtypeName).AppendLine();
+			sb.Append("Min:       ").Append(block.Min).AppendLine();
+			message.ReturnMessage = sb.ToString();
 			return sb.ToString();
 
 		}
@@ -1648,6 +1823,53 @@ namespace ModularEncountersSystems.Logging {
 		
 		}
 
+		public static void GetEvents(ChatMessage msg)
+		{
+
+			var sb = new StringBuilder();
+			sb.Append("::::: Event Data :::::").AppendLine();
+			sb.Append("Current time: ").Append(MyAPIGateway.Session.GameDateTime).AppendLine();
+			sb.Append("Corrected time: ").Append(Helpers.Time.GetRealIngameTime()).AppendLine();
+
+			/*
+			for (int i = EventManager.EventControllersList.Count - 1; i >= 0; i--)
+			{
+
+				var EventControllersList = EventManager.EventControllersList[i];
+
+				if (EventControllersList == null || !EventControllersList.Active)
+					continue;
+
+				sb.Append(EventControllersList.GetInfo()).AppendLine();
+
+			}
+			*/
+
+			for (int i = EventManager.EventsList.Count - 1; i >= 0; i--)
+			{
+
+				var Event = EventManager.EventsList[i];
+
+				if (Event == null)
+					continue;
+
+				sb.Append(Event.GetInfo()).AppendLine();
+
+			}
+
+
+			msg.ClipboardPayload = sb.ToString();
+			msg.Mode = ChatMsgMode.ReturnMessage;
+			msg.ReturnMessage = "Event Data Copied To Clipboard";
+
+		}
+
+
+
+
+
+
+
 		public static void ProcessPrefabs(ChatMessage msg, string[] array) {
 
 			if (MyAPIGateway.Session.LocalHumanPlayer == null || MyAPIGateway.Utilities.IsDedicated) {
@@ -1846,6 +2068,25 @@ namespace ModularEncountersSystems.Logging {
 
 			var prefabProcess = new SpawnAllPrefabs(array[3]);
 			TaskProcessor.Tasks.Add(prefabProcess);
+
+		}
+
+		public static void YeetGrid(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var grid = GridManager.GetClosestGridInDirection(matrix, 10000);
+
+			if (grid?.CubeGrid?.Physics == null) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "No Grid In Camera Direction";
+				return;
+			
+			}
+
+			var linear = msg.CameraDirection * 100;
+			var angular = Vector3.One;
+			grid.CubeGrid.Physics.SetSpeeds(linear, angular);
 
 		}
 

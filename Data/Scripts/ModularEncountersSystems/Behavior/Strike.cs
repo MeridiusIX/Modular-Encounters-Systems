@@ -7,6 +7,14 @@ using System;
 
 namespace ModularEncountersSystems.Behavior {
 
+	//Trigger Notes
+
+	//BehaviorTriggerA - ApproachTarget initiated
+	//BehaviorTriggerB - EngageTarget initiated
+
+	//BehaviorActionA - Initiates Immediate ApproachTarget & Offset Recalculation
+	//BehaviorActionB - Initiates Immediate EngageTarget Attempt (may revert to ApproachTarget if autopilot parameters are already at limit)
+
 	public class Strike : IBehaviorSubClass {
 
 		//Configurable
@@ -170,9 +178,17 @@ namespace ModularEncountersSystems.Behavior {
 				
 				}
 
+				if (_behavior.BehaviorActionB) {
+
+					engageOverride = true;
+					_behavior.BehaviorActionB = false;
+
+				}
+
 				if ((engageOverride || _behavior.AutoPilot.DistanceToCurrentWaypoint <= distance) && _behavior.AutoPilot.Targeting.Target.Distance(_behavior.RemoteControl.GetPosition()) > this.StrikeBreakawayDistance && !_behavior.AutoPilot.IsAvoidingCollision()) {
 
 					ChangeCoreBehaviorMode(BehaviorMode.EngageTarget);
+					EngageOverrideTimer = MyAPIGateway.Session.GameDateTime;
 					_behavior.AutoPilot.ActivateAutoPilot(_behavior.RemoteControl.GetPosition(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | (StrikeEngageUseSafePlanetPathing ? NewAutoPilotMode.PlanetaryPathing : NewAutoPilotMode.None) | NewAutoPilotMode.WaypointFromTarget);
 					skipEngageCheck = true;
 					_behavior.BehaviorTriggerB = true;
@@ -218,13 +234,28 @@ namespace ModularEncountersSystems.Behavior {
 			//Engage Target
 			if (_behavior.Mode == BehaviorMode.EngageTarget && !skipEngageCheck) {
 
+				bool timeUp = false;
+
+				if (_behavior.AutoPilot.Data.AttackRunMaxTimeTrigger > 0) {
+
+					var time = MyAPIGateway.Session.GameDateTime - EngageOverrideTimer;
+
+					if (time.TotalSeconds > _behavior.AutoPilot.Data.AttackRunMaxTimeTrigger) {
+
+						timeUp = true;
+
+					}
+
+				}
+
 				BehaviorLogger.Write("Strike: " + StrikeBreakawayDistance.ToString() + " - " + _behavior.AutoPilot.DistanceToInitialWaypoint, BehaviorDebugEnum.General);
-				if (_behavior.AutoPilot.DistanceToInitialWaypoint <= StrikeBreakawayDistance || (_behavior.AutoPilot.Data.Unused && _behavior.AutoPilot.Collision.VelocityResult.CollisionImminent())) {
+				if (timeUp || _behavior.BehaviorActionA || _behavior.AutoPilot.DistanceToInitialWaypoint <= StrikeBreakawayDistance || (_behavior.AutoPilot.Data.Unused && _behavior.AutoPilot.Collision.VelocityResult.CollisionImminent())) {
 
 					EngageOverrideTimer = MyAPIGateway.Session.GameDateTime;
 					ChangeCoreBehaviorMode(BehaviorMode.ApproachTarget);
 					CreateAndMoveToOffset();
 					_behavior.BehaviorTriggerA = true;
+					_behavior.BehaviorActionA = false;
 
 				}
 			

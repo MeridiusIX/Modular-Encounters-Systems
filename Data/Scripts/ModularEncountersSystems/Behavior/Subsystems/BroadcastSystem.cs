@@ -35,6 +35,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public double HighestRadius;
 		public string HighestAntennaRangeName;
 		public Vector3D AntennaCoords;
+		public List<long> SpecificPlayerIds;
 		public Random Rnd;
 
 
@@ -56,6 +57,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			HighestRadius = 0;
 			HighestAntennaRangeName = "";
 			AntennaCoords = Vector3D.Zero;
+			SpecificPlayerIds = new List<long>();
 			Rnd = new Random();
 
 			Setup(remoteControl);
@@ -76,7 +78,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
-		public void BroadcastRequest(ChatProfile chat) {
+		public void BroadcastRequest(ChatProfile chat, Command command, List<long> specificPlayerIds = null) {
 
 			string message = "";
 			string sound = "";
@@ -173,7 +175,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			bool sentToAll = false;
 
+			SpecificPlayerIds.Clear();
+
+			if (command != null && chat.SendToCommandPlayer) {
+
+				SpecificPlayerIds.Add(command.PlayerIdentity);
+			
+			}
+
+			if (specificPlayerIds != null) {
+
+				foreach (var id in specificPlayerIds)
+					SpecificPlayerIds.Add(id);
+			
+			}
+
 			foreach (var player in playerList) {
+
+				if (chat.SendToCommandPlayer || chat.SendToSpecificPlayers) {
+
+					if (!SpecificPlayerIds.Contains(player.IdentityId))
+						continue;
+
+				}
 
 				var playerId = chat.SendToAllOnlinePlayers ? 0 : player.IdentityId;
 				var playerName = chat.SendToAllOnlinePlayers ? "Player" : player.DisplayName;

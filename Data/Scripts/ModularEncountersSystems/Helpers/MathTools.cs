@@ -125,6 +125,23 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static float ApplyNonFloatMultiplier(float value, float multiplier) {
+
+            return value * multiplier / 100f;
+        
+        }
+
+        public static float Average(params float[] numbers) {
+
+            float total = 0;
+
+            foreach (var number in numbers)
+                total += number;
+
+            return total / numbers.Length;
+        
+        }
+
         public static bool CompareValues(float providedValue, float comparedValue, CounterCompareEnum compare) {
 
             if (compare == CounterCompareEnum.GreaterOrEqual)

@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.Configuration {
 			
 			ModVersion = MES_SessionCore.ModVersion;
 
-			EnableCombatPhaseSystem = false;
+			EnableCombatPhaseSystem = true;
 
 			MinCombatPhaseSeconds = 900;
 			MaxCombatPhaseSeconds = 1800;
@@ -90,7 +90,7 @@ namespace ModularEncountersSystems.Configuration {
 			UseCombatPhaseSpawnTimerMultiplier = false;
 			CombatPhaseSpawnTimerMultiplier = 1.5f;
 
-			AnnouncePhaseChanges = true;
+			AnnouncePhaseChanges = false;
 
 			EditorReference = new Dictionary<string, Func<string, object, bool>> {
 

@@ -8,6 +8,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public string ProfileSubtypeId;
 
+		public string BlockName;
+
 		public string StoreBlockName;
 		public double InteractionRadius;
 		public int MinReputation;
@@ -40,6 +42,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			ProfileSubtypeId = "";
 
+			BlockName = "";
 			StoreBlockName = "";
 			InteractionRadius = 250;
 			MinReputation = -500;
@@ -66,6 +69,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RepairAndConstructionReputationDiscount = 7;
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
+
+				{"BlockName", (s, o) => TagParse.TagStringCheck(s, ref BlockName) },
 
 				{"InteractionRadius", (s, o) => TagParse.TagDoubleCheck(s, ref InteractionRadius) },
 				{"MinReputation", (s, o) => TagParse.TagIntCheck(s, ref MinReputation) },

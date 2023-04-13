@@ -1,11 +1,12 @@
 ﻿using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Events;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
-using ModularEncountersSystems.Events;
 using ModularEncountersSystems.Spawning.Profiles;
+using Sandbox.Common.ObjectBuilders;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -422,6 +423,22 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			original = result;
+
+		}
+
+		public static void TagEventProfileCheck(string tag, ref List<EventProfile> original) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length < 2) {
+				return;
+			}
+
+			var key = tagSplit[1];
+			EventProfile result = null;
+
+			if (ProfileManager.EventProfiles.TryGetValue(key, out result))
+				original.Add(result);
 
 		}
 
@@ -858,6 +875,63 @@ namespace ModularEncountersSystems.Helpers {
 			if (tagSplit.Length == 2) {
 
 				if (WaypointType.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
+		public static void TagSafeZoneShapeEnumCheck(string tag, ref MySafeZoneShape original) {
+
+			MySafeZoneShape result = MySafeZoneShape.Sphere;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (MySafeZoneShape.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
+		public static void TagSafeZoneAccessTypeEnumCheck(string tag, ref SafeZoneAccessType original) {
+
+			SafeZoneAccessType result = SafeZoneAccessType.Blacklist;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (SafeZoneAccessType.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
+		public static void TagSafeZoneActionEnumCheck(string tag, ref SafeZoneAction original) {
+
+			SafeZoneAction result = SafeZoneAction.None;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (SafeZoneAction.TryParse(tagSplit[1], out result) == false) {
 
 					return;
 
@@ -1406,6 +1480,29 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagVector3Check(string tag, ref Vector3 original) {
+
+			Vector3D result = Vector3D.Zero;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (Vector3D.TryParse(FixVectorString(tagSplit[1]), out result) == false) {
+
+					return;
+
+				}
+
+			} else {
+
+				return;
+
+			}
+
+			original = ((Vector3)result);
+
+		}
+
 		public static void TagVector3Check(string tag, ref List<Vector3> original) {
 
 			Vector3D result = Vector3D.Zero;
@@ -1643,28 +1740,6 @@ namespace ModularEncountersSystems.Helpers {
 					original.Add(result);
 
 			}
-
-		}
-
-
-
-
-		//Events
-		public static void TagEventProfileCheck(string tag, ref List<Event> original)
-		{
-
-			var tagSplit = ProcessTag(tag);
-
-			if (tagSplit.Length < 2)
-			{
-				return;
-			}
-
-			var key = tagSplit[1];
-			Event result = null;
-
-			if (ProfileManager.Events.TryGetValue(key, out result))
-				original.Add(result);
 
 		}
 

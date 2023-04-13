@@ -14,7 +14,6 @@ using VRageMath;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.API;
-using ModularEncountersSystems.BlockLogic;
 
 namespace ModularEncountersSystems.Spawning {
 	public static class SpawnGroupManager {
@@ -168,7 +167,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Factions
 					var validFactionsList = SpawnConditions.ValidNpcFactions(spawnGroup, conditions, environment.Position, overrideFaction, forceSpawn, collection);
 
-					if (validFactionsList.Count == 0) {
+					if (validFactionsList.Count == 0 && collection.OwnerOverride < 0) {
 
 						SpawnLogger.Queue("   - Could Not Get Valid NPC Faction.", SpawnerDebugEnum.SpawnGroup);
 						continue;

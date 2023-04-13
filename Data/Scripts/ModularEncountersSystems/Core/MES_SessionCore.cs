@@ -10,6 +10,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Spawning.Procedural;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Terminal;
@@ -19,6 +20,7 @@ using ModularEncountersSystems.Zones;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
 using VRage.Game.Components;
@@ -32,13 +34,16 @@ namespace ModularEncountersSystems.Core {
 		public static bool OfflineDetected = false;
 		public bool FinalSetup = false;
 
-		public static string ModVersion = "2.68.4";
-		public static int ModVersionValue = 200680004;
+		public static string ModVersion = "2.69.0";
+		public static int ModVersionValue = 200690000;
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
 		public static bool IsDedicated;
 		public static DateTime SessionStartTime;
+
+		public static bool DeveloperMode;
+		public static List<ulong> Developers = new List<ulong> { 76561197995523659, 76561198058958866 };
 
 		public static bool AreaTestStart;
 
@@ -70,7 +75,6 @@ namespace ModularEncountersSystems.Core {
 			ProfileManager.Setup();
 			SpawnGroupManager.CreateSpawnLists();
 			BotSpawner.Setup();
-			EventManager.Setup();
 			APIs.RegisterAPIs(0); //Register Any Applicable APIs
 
 			if (!IsServer)
@@ -104,10 +108,11 @@ namespace ModularEncountersSystems.Core {
 			Settings.InitSettings("BeforeStart"); //Get Existing Settings From XML or Create New
 			BlockLogicManager.Setup();
 			ProgressionManager.Setup();
+			ControlManager.Setup();
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();
 			APIs.RegisterAPIs(2); //Register Any Applicable APIs
-			TaskProcessor.Tasks.Add(new AfNotify());
+			
 
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
@@ -126,7 +131,9 @@ namespace ModularEncountersSystems.Core {
 			WaveManager.Setup();
 			DamageHelper.Setup();
 			PrefabManipulation.Setup();
+			ProceduralShipManager.Setup();
 			CombatPhaseManager.Setup();
+			EventManager.Setup();
 
 			SessionStartTime = MyAPIGateway.Session.GameDateTime;
 			//AttributeApplication
@@ -139,7 +146,7 @@ namespace ModularEncountersSystems.Core {
 
 				FinalSetup = true;
 				MyAPIGateway.Utilities.UnregisterMessageHandler(21521905890, CompareVersions);
-
+			
 			}
 
 			if (!ModEnabled) {
@@ -157,7 +164,7 @@ namespace ModularEncountersSystems.Core {
 				UnloadActions?.Invoke();
 				MyAPIGateway.Utilities.InvokeOnGameThread(() => { this.UpdateOrder = MyUpdateOrder.NoUpdate; });
 				return;
-
+			
 			}
 
 			TaskProcessor.Process();
@@ -222,7 +229,7 @@ namespace ModularEncountersSystems.Core {
 			}
 
 			return true;
-
+		
 		}
 
 		private static void CompareVersions(object data) {

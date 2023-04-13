@@ -1243,17 +1243,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 
-			if (spawnTypes.HasFlag(SpawningType.StaticEncounterSpace)) {
-
-				path.SpawnType = SpawningType.StaticEncounterSpace;
-
-				if (generateDirections) {
-
-					matrix.Translation = collection.StaticEncounterInstance.ExactLocationCoords;
-
-				}
-
-			} else {
+			if (spawnTypes.HasFlag(SpawningType.StaticEncounterPlanet) && environment.IsOnPlanet) {
 
 				path.SpawnType = SpawningType.StaticEncounterPlanet;
 
@@ -1263,6 +1253,16 @@ namespace ModularEncountersSystems.Spawning {
 					var up = environment.NearestPlanet.UpAtPosition(coords);
 					var forward = VectorHelper.RandomPerpendicular(up);
 					matrix = MatrixD.CreateWorld(coords, forward, up);
+
+				}
+
+			} else {
+
+				path.SpawnType = SpawningType.StaticEncounterSpace;
+
+				if (generateDirections) {
+
+					matrix.Translation = collection.StaticEncounterInstance.ExactLocationCoords;
 
 				}
 

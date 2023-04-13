@@ -13,8 +13,10 @@ using VRage.Game;
 namespace ModularEncountersSystems.Terminal {
 	public static class ControlManager {
 
-		public static MyDefinitionId ShipyardBlockId = new MyDefinitionId(typeof(MyObjectBuilder_Projector), "LargeBlockConsole");
-		public static MyDefinitionId SuitUpgradeBlockId = new MyDefinitionId(typeof(MyObjectBuilder_LCDPanelsBlock), "MES-MedicalStation");
+		public static MyDefinitionId ShipyardBlockId = new MyDefinitionId(typeof(MyObjectBuilder_Projector), "MES-Blocks-ShipyardTerminal");
+		public static MyDefinitionId SuitUpgradeBlockId = new MyDefinitionId(typeof(MyObjectBuilder_ButtonPanel), "MES-Blocks-SuitUpgradeStation");
+		public static MyDefinitionId ResearchTerminalBlockId = new MyDefinitionId(typeof(MyObjectBuilder_ButtonPanel), "MES-Blocks-ResearchTerminal");
+		public static MyDefinitionId ProceduralGridBlockId = new MyDefinitionId(typeof(MyObjectBuilder_Projector), "LargeBlockConsole");
 
 		public static void Setup() {
 
@@ -38,9 +40,6 @@ namespace ModularEncountersSystems.Terminal {
 		}
 
 		public static void ModifyControls(IMyTerminalBlock block, List<IMyTerminalControl> controls) {
-
-			//TODO: Remove on Release of Feature
-			return;
 
 			if (block.Storage == null)
 				return;

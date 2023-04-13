@@ -3,7 +3,9 @@ using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning.Profiles;
+using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
@@ -567,6 +569,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+			//Economy Stuff
+			ProcessEconomyBlocks(prefab, collection, profile, environment, data);
+
 			//Random Name Generator
 			if (profile.UseRandomNameGenerator && profile.RandomGridNamePattern.Count > 0) {
 
@@ -650,10 +655,145 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				}
 					
-				StorageTools.ApplyCustomGridStorage(prefab.Prefab.CubeGrids[0], StorageTools.NpcDataKey, SerializationHelper.ConvertClassToString<NpcData>(data));
+				StorageTools.ApplyCustomEntityStorage(prefab.Prefab.CubeGrids[0], StorageTools.NpcDataKey, SerializationHelper.ConvertClassToString<NpcData>(data));
 
 			}
 		
+		}
+
+		public static void ProcessEconomyBlocks(PrefabContainer prefab, SpawnGroupCollection collection, ManipulationProfile profile, EnvironmentEvaluation environment, NpcData data) {
+
+			//Custom Economy
+			if (profile.ShipyardSetup || profile.SuitUpgradeSetup || profile.UseResearchPointButtons) {
+
+				foreach (var grid in prefab.Prefab.CubeGrids) {
+
+					if (grid?.CubeBlocks == null)
+						continue;
+
+					foreach (var block in grid.CubeBlocks) {
+
+						var id = block.GetId();
+
+						//Shipyard
+						if (profile.ShipyardSetup && id == ControlManager.ShipyardBlockId) {
+
+							var tblock = block as MyObjectBuilder_TerminalBlock;
+
+							if (tblock == null)
+								continue;
+
+							for (int i = 0; i < profile.ShipyardConsoleBlockNames.Count && i < profile.ShipyardProfileNames.Count; i++) {
+
+								if (profile.ShipyardConsoleBlockNames[i] == "{Any}" || (profile.ShipyardConsoleBlockNames[i] == tblock.CustomName && tblock.CustomName != null)) {
+
+									StorageTools.ApplyCustomBlockStorage(tblock, StorageTools.MesShipyardKey, profile.ShipyardProfileNames[i]);
+
+								}
+
+							}
+
+						}
+
+						//Suit Upgrade
+						if (profile.SuitUpgradeSetup && id == ControlManager.SuitUpgradeBlockId) {
+
+							var tblock = block as MyObjectBuilder_TerminalBlock;
+
+							if (tblock == null)
+								continue;
+
+							for (int i = 0; i < profile.SuitUpgradeBlockNames.Count && i < profile.SuitUpgradeProfileNames.Count; i++) {
+
+								if (profile.SuitUpgradeBlockNames[i] == "{Any}" || (profile.SuitUpgradeBlockNames[i] == tblock.CustomName && tblock.CustomName != null)) {
+
+									StorageTools.ApplyCustomBlockStorage(tblock, StorageTools.MesSuitModsKey, profile.SuitUpgradeProfileNames[i]);
+
+								}
+
+							}
+
+						}
+
+						if (profile.UseResearchPointButtons && id == ControlManager.ResearchTerminalBlockId) {
+
+							var button = block as MyObjectBuilder_ButtonPanel;
+
+							if (button != null) {
+
+								StorageTools.ApplyCustomBlockStorage(block, StorageTools.MesButtonPointsKey, ProgressionManager.GetResearchPoint().ToString());
+								button.AnyoneCanUse = true;
+
+								//SpawnLogger.Write("Debug Check for null TextPanels", SpawnerDebugEnum.Error, true);
+								if (button.TextPanelsNew == null) {
+
+									//SpawnLogger.Write("Debug: null TextPanels start", SpawnerDebugEnum.Error, true);
+									button.TextPanelsNew = new List<VRage.Game.ObjectBuilders.MySerializedTextPanelData>();
+									var panel = new VRage.Game.ObjectBuilders.MySerializedTextPanelData();
+									panel.SelectedImages = new List<string>();
+									button.TextPanelsNew.Add(panel);
+									//SpawnLogger.Write("Debug: null TextPanels end", SpawnerDebugEnum.Error, true);
+
+								}
+
+								//SpawnLogger.Write("Debug TextPanels loop start", SpawnerDebugEnum.Error, true);
+								foreach (var panel in button.TextPanelsNew) {
+
+									panel.ChangeInterval = 0.5f;
+
+									if(panel.SelectedImages == null)
+										panel.SelectedImages = new List<string>();
+
+									panel.SelectedImages.Clear();
+									panel.SelectedImages.Add("LCD_Economy_SC_Blueprint");
+									panel.SelectedImages.Add("LCD_Economy_Blueprint_2");
+									panel.SelectedImages.Add("LCD_Economy_Blueprint_3");
+									panel.FontSize = 2.093f;
+									panel.Text = "Research Available";
+									panel.ShowText = VRage.Game.GUI.TextPanel.ShowTextOnScreenFlag.NONE;
+									panel.FontColor.PackedValue = 4287823757;
+									panel.FontColor.X = 141;
+									panel.FontColor.Y = 255;
+									panel.FontColor.Z = 146;
+									panel.FontColor.R = 141;
+									panel.FontColor.G = 255;
+									panel.FontColor.B = 146;
+									panel.FontColor.A = 255;
+									panel.Alignment = 2;
+									panel.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
+									panel.TextPadding = 50;
+
+
+								}
+
+								if (button.Toolbar == null)
+									button.Toolbar = new MyObjectBuilder_Toolbar();
+
+								button.Toolbar.ToolbarType = MyToolbarType.Character;
+								button.Toolbar.Slots.Clear();
+								var slot = new MyObjectBuilder_Toolbar.Slot();
+								slot.Index = 0;
+								var slotdata = new MyObjectBuilder_ToolbarItemTerminalBlock();
+								slotdata._Action = "OnOff_Off";
+								slotdata.BlockEntityId = button.EntityId;
+								slot.Data = slotdata;
+								button.Toolbar.Slots.Add(slot);
+
+								if (button.CustomButtonNames.Dictionary.ContainsKey(0))
+									button.CustomButtonNames.Dictionary[0] = "Download Research";
+								else
+									button.CustomButtonNames.Dictionary.Add(0, "Download Research");
+
+							}
+
+						}
+
+					}
+
+				}
+
+			}
+
 		}
 
 		public static void Unload() {

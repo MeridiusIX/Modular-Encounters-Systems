@@ -101,6 +101,12 @@ namespace ModularEncountersSystems.Spawning {
 		[ProtoMember(27)]
 		public bool IsBoss;
 
+		[ProtoMember(28)]
+		public bool PreviouslySpawnedEncounter;
+
+		[ProtoMember(29)]
+		public List<string> PreviouslySpawnedPrefabs;
+
 		//Non-Serialized
 
 		[ProtoIgnore]
@@ -180,6 +186,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			SpawnType = SpawningType.None;
 			SpecificType = SpawningType.None;
+
+			PreviouslySpawnedPrefabs = new List<string>();
 
 		}
 
@@ -302,6 +310,12 @@ namespace ModularEncountersSystems.Spawning {
 			SpawnType = SpawningType.StaticEncounter;
 			IsValid = true;
 
+		}
+
+		public void InitPreviouslySpawnedEncounter() {
+		
+			
+		
 		}
 
 		public void ProcessEncounter(ref bool update) {

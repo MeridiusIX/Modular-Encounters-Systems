@@ -45,6 +45,8 @@ namespace ModularEncountersSystems.BlockLogic {
 		public IMyEntity Entity;
 		public bool FunctionalOverride;
 
+		public IMyCubeBlock CubeBlock { get { return Entity as IMyCubeBlock; } }
+
 		internal bool _registeredOwnershipCheck = false;
 		internal bool _invalidOwnership = false;
 

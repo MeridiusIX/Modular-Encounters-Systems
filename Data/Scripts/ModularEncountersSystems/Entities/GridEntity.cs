@@ -68,6 +68,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> RivalAi;
 		public List<BlockEntity> Seats;
 		public List<BlockEntity> Shields;
+		public List<BlockEntity> Stores;
 		public List<BlockEntity> Thrusters;
 		public List<BlockEntity> Tools;
 		public List<BlockEntity> Turrets;
@@ -136,6 +137,7 @@ namespace ModularEncountersSystems.Entities {
 			RivalAi = new List<BlockEntity>();
 			Seats = new List<BlockEntity>();
 			Shields = new List<BlockEntity>();
+			Stores = new List<BlockEntity>();
 			Thrusters = new List<BlockEntity>();
 			Tools = new List<BlockEntity>();
 			Turrets = new List<BlockEntity>();
@@ -167,6 +169,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.RivalAi, RivalAi);
 			BlockListReference.Add(BlockTypeEnum.Seats, Seats);
 			BlockListReference.Add(BlockTypeEnum.Shields, Shields);
+			BlockListReference.Add(BlockTypeEnum.Stores, Stores);
 			BlockListReference.Add(BlockTypeEnum.Thrusters, Thrusters);
 			BlockListReference.Add(BlockTypeEnum.Tools, Tools);
 			BlockListReference.Add(BlockTypeEnum.Turrets, Turrets);
@@ -440,6 +443,13 @@ namespace ModularEncountersSystems.Entities {
 			if (terminalBlock as IMyCockpit != null) {
 
 				assignedBlock = AddBlock(terminalBlock, Seats);
+
+			}
+
+			//Stores
+			if (terminalBlock as IMyStoreBlock != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Stores);
 
 			}
 
@@ -975,6 +985,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(Power);
 				CleanBlockList(Seats);
 				CleanBlockList(Shields);
+				CleanBlockList(Stores);
 				CleanBlockList(Thrusters);
 				CleanBlockList(Tools);
 				CleanBlockList(Turrets);

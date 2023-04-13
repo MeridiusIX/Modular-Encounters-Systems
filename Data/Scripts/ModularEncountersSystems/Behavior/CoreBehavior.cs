@@ -1110,7 +1110,7 @@ namespace ModularEncountersSystems.Behavior {
 			if (BehaviorSettings.ActiveBehaviorType != BehaviorSubclass.Passive) {
 
 				BehaviorLogger.Write("Setting Inertia Dampeners: " + (AutoPilot.Data.DisableInertiaDampeners ? "False" : "True"), BehaviorDebugEnum.BehaviorSetup);
-				RemoteControl.DampenersOverride = !AutoPilot.Data.DisableInertiaDampeners;
+				MyAPIGateway.Utilities.InvokeOnGameThread(() => { RemoteControl.DampenersOverride = !AutoPilot.Data.DisableInertiaDampeners; });
 
 			}
 	
@@ -1372,6 +1372,22 @@ namespace ModularEncountersSystems.Behavior {
 
 			_currentGrids = MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
 			AssignGridEntity();
+
+			if (RemoteControl.SlimBlock.CubeGrid.Storage == null)
+				RemoteControl.SlimBlock.CubeGrid.Storage = new MyModStorageComponent();
+
+			if (!RemoteControl.SlimBlock.CubeGrid.Storage.ContainsKey(StorageTools.NpcDataKey)) {
+
+				var dataSource = RemoteControl.SlimBlock.CubeGrid == b ? a : b;
+				string data = "";
+
+				if (dataSource.Storage != null && dataSource.Storage.TryGetValue(StorageTools.NpcDataKey, out data))
+					RemoteControl.SlimBlock.CubeGrid.Storage.Add(StorageTools.NpcDataKey, data);
+
+
+			}
+
+
 
 		}
 

@@ -6,6 +6,10 @@ using Sandbox.ModAPI;
 
 namespace ModularEncountersSystems.Behavior {
 
+	//BehaviorTriggerA - Engaging Target
+	//BehaviorTriggerB - Had been engaging target, now approaching target.
+
+
 	public class Fighter : IBehaviorSubClass{
 
 		//Configurable

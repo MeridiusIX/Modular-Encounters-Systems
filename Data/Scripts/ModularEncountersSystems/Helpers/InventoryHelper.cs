@@ -288,7 +288,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static void WeaponCoreReplenishment(IMyTerminalBlock block, MyInventory inventory, ImprovedSpawnGroup spawnGroup) {
 
 			//SpawnLogger.Write(string.Format("Replenishing WeaponCore Ammo For Block: {0}", block.SlimBlock.BlockDefinition.Id), SpawnerDebugEnum.PostSpawn);
-			APIs.WeaponCore.DisableRequiredPower(block);
+			APIs.WeaponCore.DisableRequiredPower(block as MyEntity);
 			var ammoList = GetCompatibleWeaponCoreAmmos(block);
 
 			if (ammoList.Count == 0) {
@@ -406,7 +406,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				foreach (var definition in APIs.WeaponCore.WeaponDefinitions) {
 
-					if (definition.HardPoint.WeaponName == weaponName) {
+					if (definition.HardPoint.PartName == weaponName) {
 
 						weaponDef = definition;
 						break;

@@ -850,6 +850,12 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			if(conditions.CheckCustomSandboxCounters && !CheckSandboxCounters(conditions.CustomSandboxCounters, conditions.CustomSandboxCountersTargets, conditions.SandboxCounterCompareTypes))
+			{
+				failReason = "   - Sandbox Variable Check Failed";
+				return false;
+			}
+
 			if (conditions.ModBlockExists.Count > 0) {
 
 				foreach (var modID in conditions.ModBlockExists) {
@@ -1228,7 +1234,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					if (action?.Invoke(spawnGroup.SpawnGroupName, conditions.ProfileSubtypeId, type.ToString(), environment.Position) ?? false == false) {
+					if ((action?.Invoke(spawnGroup.SpawnGroupName, conditions.ProfileSubtypeId, type.ToString(), environment.Position) ?? false) == false) {
 
 						result = false;
 						failReason = "   - Custom API Spawn Condition Not Satisfied: " + methodName;
@@ -1242,6 +1248,39 @@ namespace ModularEncountersSystems.Spawning {
 					return false;
 			
 			}
+
+			/*
+			if (conditions.UseEventController)
+			{
+				bool result = false;
+				for (int i = 0; i < Events.EventManager.EventControllersList.Count; i++)
+				{
+					var thisEventControllers = Events.EventManager.EventControllersList[i];
+
+					if (!thisEventControllers.Active)
+					{
+						continue;
+					}
+
+					if(conditions.EventControllerId.Contains(thisEventControllers.ProfileSubtypeId))
+					{
+						result = true;
+						break;
+					}
+
+				}
+
+				if (!result)
+				{
+					failReason = "   - EventController Check Failed";
+					return false;
+				}
+					
+				
+
+
+			}
+			*/
 
 			//Logger.Write(spawnGroup.SpawnGroupName + " Passed Common Conditions", true);
 			return true;
@@ -1348,6 +1387,77 @@ namespace ModularEncountersSystems.Spawning {
 			return true;
 
 		}
+
+		public static bool CheckSandboxCounters(List<string> CustomSandboxCounters, List<int> CustomSandboxCountersTargets, List<CounterCompareEnum> SandboxCounterCompareTypes)
+		{
+
+				if (CustomSandboxCounters.Count == CustomSandboxCountersTargets.Count)
+				{
+
+					for (int i = 0; i < CustomSandboxCounters.Count; i++)
+					{
+
+						try
+						{
+
+							int counter = 0;
+							var result = MyAPIGateway.Utilities.GetVariable(CustomSandboxCounters[i], out counter);
+
+							var compareType = CounterCompareEnum.GreaterOrEqual;
+
+							if (i <= SandboxCounterCompareTypes.Count - 1)
+								compareType = SandboxCounterCompareTypes[i];
+
+							bool counterResult = false;
+
+							if (compareType == CounterCompareEnum.GreaterOrEqual)
+								counterResult = (counter >= CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.Greater)
+								counterResult = (counter > CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.Equal)
+								counterResult = (counter == CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.NotEqual)
+								counterResult = (counter != CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.Less)
+								counterResult = (counter < CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.LessOrEqual)
+								counterResult = (counter <= CustomSandboxCountersTargets[i]);
+
+							if (!result || !counterResult)
+							{
+								//BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Amount Condition Not Satisfied: " + ConditionReference.CustomSandboxCounters[i], BehaviorDebugEnum.Condition);
+								return false;
+
+							}
+						}
+						catch (Exception e)
+						{
+							//BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+							//BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+						}
+					}
+
+				}
+				else
+				{
+				//BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Names and Targets List Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
+				return false;
+				}
+			
+			return true;
+
+		}
+
+
+
+
+
+
 
 		public static bool CheckRemoteControlCode(SpawnConditionsProfile spawnGroup, Vector3D coords, ref string failReason) {
 

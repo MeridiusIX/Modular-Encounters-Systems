@@ -235,6 +235,7 @@ namespace ModularEncountersSystems.Helpers {
     public enum TargetFilterEnum {
 
         None,
+        AirDensity,
         Altitude,
         Broadcasting,
         Faction,

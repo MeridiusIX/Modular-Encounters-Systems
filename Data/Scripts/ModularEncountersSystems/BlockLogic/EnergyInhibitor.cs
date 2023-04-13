@@ -133,6 +133,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 							MyVisualScriptLogicProvider.ShowNotification("WARNING: Energy Inhibitor Detected. Suit Energy Rapidly Depleting.", 5000, "Red", player.Player.IdentityId);
 							_playersInBlockRange.Add(player);
+							player.AddInhibitorToPlayer(_antenna, _inhibitor);
 
 						}
 
@@ -149,6 +150,7 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal void RemovePlayer(PlayerEntity player) {
 
 			_playersInBlockRange.Remove(player);
+			player.RemoveInhibitorFromPlayer(_antenna, _inhibitor);
 		
 		}
 

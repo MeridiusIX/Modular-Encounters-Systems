@@ -14,15 +14,31 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckPlayerNear(TriggerProfile trigger) {
 
 			return IsPlayerNearby(trigger);
-
 		}
+
+
+		public bool CheckPlayerNearFilter(TriggerProfile trigger)
+		{
+			return IsPlayerNearbyWithFilter(trigger);
+		}
+
+
+
+
 
 		//PlayerFar
 		public bool CheckPlayerFar(TriggerProfile trigger) {
-
 			return IsPlayerNearby(trigger, true);
+		}
+
+		public bool CheckPlayerFarFilter(TriggerProfile trigger)
+		{
+			return IsPlayerNearbyWithFilter(trigger, true);
 
 		}
+
+
+
 
 		//TargetNear
 		public bool CheckTargetNear(TriggerProfile trigger) {

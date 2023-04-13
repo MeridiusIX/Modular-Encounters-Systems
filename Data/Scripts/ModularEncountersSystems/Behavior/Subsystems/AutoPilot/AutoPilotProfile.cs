@@ -37,6 +37,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double OffsetPlanetMinTargetAltitude;
 		public double OffsetPlanetMaxTargetAltitude;
 
+		//Offset Misc Config
+		public bool ReverseOffsetDistAltAboveHeight;
+		public double ReverseOffsetHeight;
+		public int WaypointWaitTimeTrigger;
+		public int WaypointAbandonTimeTrigger;
+
 		//Circle Target Config
 		public bool CircleTargetClockwise;
 		public bool CircleTargetRadiusConstriction;
@@ -56,13 +62,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public bool CollisionEvasionWaypointCalculatedAwayFromEntity;
 		public double CollisionEvasionWaypointFromEntityMaxAngle;
 
-		//Lead Config
+		//Target Lead Config
 		public bool UseProjectileLeadPrediction;
 		public bool UseCollisionLeadPrediction;
 
 		//Thrust Settings
 		public double AngleAllowedForForwardThrust;
 		public double MaxVelocityAngleForSpeedControl;
+		public bool UseSubgridThrust;
+		public double MaxSubgridThrustAngle;
 
 		//Strafe Settings
 		public bool AllowStrafing;
@@ -78,30 +86,32 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		//Rotation Settings
 
 		public float RotationMultiplier;
-
 		public double DesiredAngleToTarget;
+		public double RotationSlowdownAngle;
+		public bool UseForcedRotationDampening;
+		public float ForcedRotationDampeningAmount;
+		public bool LimitRotationSpeed;
+		public double MaxRotationMagnitude;
+		public bool UseRotationBoostUp;
+		public float RotationBoostUpAmount;
 
+		//Dampener Control
 		public bool DisableInertiaDampeners;
 		public bool ForceDampenersEnabled;
 
-		public bool ReverseOffsetDistAltAboveHeight;
-		public double ReverseOffsetHeight;
-
 		public double PadDistanceFromTarget;
 
+		//Special Maneuvers
 		public int BarrelRollMinDurationMs;
 		public int BarrelRollMaxDurationMs;
-
 		public int RamMinDurationMs;
 		public int RamMaxDurationMs;
 
+		//Engage Distances
 		public double EngageDistanceSpace;
 		public double EngageDistancePlanet;
 		public double DisengageDistanceSpace;
 		public double DisengageDistancePlanet;
-
-		public int WaypointWaitTimeTrigger;
-		public int WaypointAbandonTimeTrigger;
 
 		public int TargetApproachTimer;
 		public int TargetEngageTimer;
@@ -118,6 +128,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		public bool RotateTowardsTargetWhileAtPosition;
 
+		//Attack Run
 		public double AttackRunDistanceSpace;
 		public double AttackRunDistancePlanet;
 		public double AttackRunBreakawayDistance;
@@ -127,6 +138,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public bool AttackRunUseCollisionEvasionPlanet;
 		public bool AttackRunOverrideWithDistanceAndTimer;
 		public int AttackRunOverrideTimerTrigger;
+		public int AttackRunMaxTimeTrigger;
 		public double AttackRunOverrideDistance;
 
 		public double DespawnCoordsMinDistance;
@@ -135,8 +147,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double DespawnCoordsMaxAltitude;
 		public double MinAngleForLeveledDescent;
 		public double MaxAngleForLeveledAscent;
-		public bool LimitRotationSpeed;
-		public double MaxRotationMagnitude;
+
 		public double MinGravity;
 		public double MaxGravity;
 		public bool AvoidPlayerCollisions;
@@ -151,9 +162,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double EscortSpeedMatchMinDistance;
 		public double EscortSpeedMatchMaxDistance;
 
-
-		public bool UseSubgridThrust;
-		public double MaxSubgridThrustAngle;
 
 		public AutoPilotProfile() {
 
@@ -222,6 +230,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			StrafeMinimumSafeAngleFromTarget = 25;
 
 			RotationMultiplier = 1;
+			RotationSlowdownAngle = 70;
+			UseForcedRotationDampening = false;
+			ForcedRotationDampeningAmount = 0.15f;
+			UseRotationBoostUp = false;
+			RotationBoostUpAmount = 3.14f;
 
 			BarrelRollMinDurationMs = 3000;
 			BarrelRollMaxDurationMs = 5000;
@@ -261,6 +274,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			AttackRunUseCollisionEvasionPlanet = false;
 			AttackRunOverrideWithDistanceAndTimer = true;
 			AttackRunOverrideTimerTrigger = 20;
+			AttackRunMaxTimeTrigger = -1;
 			AttackRunOverrideDistance = 1200;
 
 			DespawnCoordsMinDistance = 8000;
@@ -606,6 +620,41 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[RotationMultiplier:") == true) {
 
 				TagParse.TagFloatCheck(tag, ref this.RotationMultiplier);
+
+			}
+
+			//RotationSlowdownAngle
+			if (tag.Contains("[RotationSlowdownAngle:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.RotationSlowdownAngle);
+
+			}
+
+			//UseForcedRotationDampening
+			if (tag.Contains("[UseForcedRotationDampening:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.UseForcedRotationDampening);
+
+			}
+
+			//ForcedRotationDampeningAmount
+			if (tag.Contains("[ForcedRotationDampeningAmount:") == true) {
+
+				TagParse.TagFloatCheck(tag, ref this.ForcedRotationDampeningAmount);
+
+			}
+
+			//UseRotationBoostUp
+			if (tag.Contains("[UseRotationBoostUp:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.UseRotationBoostUp);
+
+			}
+
+			//RotationBoostUpAmount
+			if (tag.Contains("[RotationBoostUpAmount:") == true) {
+
+				TagParse.TagFloatCheck(tag, ref this.RotationBoostUpAmount);
 
 			}
 

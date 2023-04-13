@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Helpers;
+﻿using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -156,6 +157,12 @@ namespace ModularEncountersSystems.Sync {
 
                 DefinitionHelper.UnlockNpcBlocks();
 
+            }
+
+            if (chatData.ReturnMessage.StartsWith("Developer Mode Set")) {
+
+                MES_SessionCore.DeveloperMode = chatData.DeveloperMode;
+            
             }
 
         }

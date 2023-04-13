@@ -4,6 +4,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Terminal;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
@@ -153,7 +154,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
                 }
 
-                if (remoteControl.CustomData.Contains("[RivalAI Behavior]") == false && remoteControl.CustomData.Contains("[Rival AI Behavior]") == false && remoteControl.CustomData.Contains("[RivalAI Behaviour]") == false && remoteControl.CustomData.Contains("[Rival AI Behaviour]") == false) {
+                if (!remoteControl.CustomData.Contains("[RivalAI Behavior]") && !remoteControl.CustomData.Contains("[Rival AI Behavior]") && !remoteControl.CustomData.Contains("[MES AI Behavior]") && remoteControl.CustomData.Contains("[RivalAI Behaviour]") == false && remoteControl.CustomData.Contains("[Rival AI Behaviour]") == false) {
 
                     BehaviorLogger.Write("Remote Control CustomData Does Not Contain Initializer.", BehaviorDebugEnum.BehaviorSetup);
                     return;
@@ -249,25 +250,17 @@ namespace ModularEncountersSystems.BlockLogic {
 
             }
 
-            if (block.Block as IMyProjector != null && block.Block.SlimBlock.BlockDefinition.Id.SubtypeName == "LargeBlockConsole") {
+            if (block.Block.SlimBlock.BlockDefinition.Id == ControlManager.ShipyardBlockId) {
 
-                if (block.Block.Storage != null && block.Block.Storage.ContainsKey(StorageTools.MesShipyardKey)) {
+                LogicBlocks.Add(block.Block.EntityId, new PublicUsableBlock(block));
+                return;
 
-                    LogicBlocks.Add(block.Block.EntityId, new PublicUsableBlock(block));
-                    return;
-
-                }
-                
             }
 
-            if (block.Block as IMyTextPanel != null && block.Block.SlimBlock.BlockDefinition.Id.SubtypeName == "MES-MedicalStation") {
+            if (block.Block.SlimBlock.BlockDefinition.Id == ControlManager.SuitUpgradeBlockId) {
 
-                if (block.Block.Storage != null && block.Block.Storage.ContainsKey(StorageTools.MesSuitModsKey)) {
-
-                    LogicBlocks.Add(block.Block.EntityId, new PublicUsableBlock(block));
-                    return;
-
-                }
+                LogicBlocks.Add(block.Block.EntityId, new PublicUsableBlock(block));
+                return;
 
             }
 

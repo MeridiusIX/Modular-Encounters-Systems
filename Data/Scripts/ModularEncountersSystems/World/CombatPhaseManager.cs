@@ -111,7 +111,6 @@ namespace ModularEncountersSystems.World {
 
 			}
 				
-		
 		}
 
 		internal static void Save() {

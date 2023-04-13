@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Sandbox.ModAPI;
+using VRage;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRage.Utils;
@@ -21,6 +22,7 @@ namespace ModularEncountersSystems.API {
 		private Func<List<string>, MatrixD, Vector3, bool, string, string, bool> _customSpawnRequest;
 		private Func<IMyCubeGrid, Vector3D> _getDespawnCoords;
 		private Func<List<string>> _getSpawnGroupBlackList;
+		private Action<long, string, List<MyTuple<IMyRadioAntenna, DateTime>>> _getPlayerInhibitorData;
 		private Func<List<string>> _getNpcNameBlackList;
 		private Func<Vector3D, bool, string, bool> _isPositionInKnownPlayerLocation;
 		private Func<IMyCubeGrid, Vector3D> _getNpcStartCoordinates;
@@ -105,6 +107,14 @@ namespace ModularEncountersSystems.API {
 		/// <param name="cubeGrid">The cubegrid of the NPC you want to check Despawn Coords For</param>
 		/// <returns></returns>
 		public Vector3D GetDespawnCoords(IMyCubeGrid cubeGrid) => _getDespawnCoords?.Invoke(cubeGrid) ?? Vector3D.Zero;
+
+		/// <summary>
+		/// Gets all active inhibitors in range of a provided player identity id
+		/// </summary>
+		/// <param name="playerIdentityId">The identity id of the player you want to check against</param>
+		/// <param name="inhibitorType">The type of inhibitor you want to check for. "Drill", "Energy", "Jetpack", "Personnel"</param>
+		/// <param name="inhibitorData">The collection the data will be sent to.</param>
+		public void GetPlayerInhibitorData(long playerIdentityId, string inhibitorType, List<MyTuple<IMyRadioAntenna, DateTime>> inhibitorData) => _getPlayerInhibitorData(playerIdentityId, inhibitorType, inhibitorData);
 
 		/// <summary>
 		/// Get a String List of all Current SpawnGroup SubtypeNames Currently in the MES Blacklist

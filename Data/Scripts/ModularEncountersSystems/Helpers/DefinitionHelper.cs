@@ -503,7 +503,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				if (!string.IsNullOrWhiteSpace(block?.Context?.ModId)) {
 
-					if (block.Context.ModId.Contains("1521905890") || block.Context.ModId.Contains("Modular Encounters Systems")) {
+					if (block.Context.ModId.Contains("1521905890") || block.Context.ModId.Contains("Modular Encounters Systems") || (block.Context?.ModId ?? "") == (MES_SessionCore.Instance.ModContext?.ModId ?? "N/A")) {
 
 						block.Public = true;
 					

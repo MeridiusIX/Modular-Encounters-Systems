@@ -1,138 +1,307 @@
 ﻿using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Tasks;
-
 using ModularEncountersSystems.Helpers;
-
 using System;
 using System.Collections.Generic;
 using Sandbox.ModAPI;
 using Sandbox.Game;
 using System.Text;
+using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Events.Condition;
 
 namespace ModularEncountersSystems.Events {
+
+	public enum CheckType {
+		ExecuteEvent,
+		ExecuteAction
+	}
+
 	public static class EventManager {
 
-		public static List<EventTime> EventTimes = new List<EventTime>();
+		public static List<Event> EventsList = new List<Event>();
 
+		/*
+		public static List<EventController> EventControllersList = new List<EventController>();
+		*/
+
+		private static string _saveEventsListName = "MES-EventsList";
+		private static string _saveEventControllersListName = "MES-EventControllersList";
+
+		private static List<Event> _readyEvents = new List<Event>();
 
 		public static void Setup() {
 
+			//SpawnLogger.Write("Start", SpawnerDebugEnum.Dev, true);
 			//Register Any Actions/Events
 			MES_SessionCore.SaveActions += SaveData;
 			MES_SessionCore.UnloadActions += UnloadData;
 			TaskProcessor.Tick30.Tasks += ProcessEvents;
 
-			if (!string.IsNullOrWhiteSpace(Settings.SavedData?.EventData)) {
+			//SpawnLogger.Write("Existing Event Data", SpawnerDebugEnum.Dev, true);
+			//Get Existing Event Data
+			string eventsListString = "";
 
-				//TODO: Get Serialized Data From Settings.SavedData.EventData and Deserialize it. Cache it in this class
+			if (MyAPIGateway.Utilities.GetVariable<string>(_saveEventsListName, out eventsListString)) {
 
-			} else {
-			
-				//TODO: Since no existing event data exists, create event data from scratch
+				var eventsListSerialized = Convert.FromBase64String(eventsListString);
+				EventsList = MyAPIGateway.Utilities.SerializeFromBinary<List<Event>>(eventsListSerialized);
+
+			}
+
+			if (EventsList == null)
+				EventsList = new List<Event>();
+
+			foreach (var existingEvent in EventsList) {
+
+				existingEvent.Init();
 			
 			}
 
+			/*
+			//SpawnLogger.Write("Existing EventController Data", SpawnerDebugEnum.Dev, true);
+			//Get Existing EventController Data
+			string eventControllersListString = "";
 
-			
-		}
+			if (MyAPIGateway.Utilities.GetVariable<string>(_saveEventControllersListName, out eventControllersListString)) {
 
-		public static void ProcessEvents()
-		{
-			DateTime currentDateTime;
-			List<Event> ReadyEvents = new List<Event>();
+				var eventsListSerialized = Convert.FromBase64String(eventControllersListString);
+				EventControllersList = MyAPIGateway.Utilities.SerializeFromBinary<List<EventController>>(eventsListSerialized);
 
-
-			//Which Main Events are on
-			foreach (KeyValuePair<string, MainEvent> MainEvent in ProfileManager.MainEvents)
-			{
-				//Check if MainEvent is on
-				if (!MainEvent.Value.Active)
-					break;
-
-				for (int i = 0; i < MainEvent.Value.Events.Count; i++)
-				{
-					//Did the event already happen once? && Is the event a unique event?
-					if (MainEvent.Value.Events[i].Happend > 0 && MainEvent.Value.Events[i].UniqueEvent == true)
-						continue;
-
-					//Check Conditions
-					if (!EventCondition.AreConditionsMet(MainEvent.Value, MainEvent.Value.Events[i].Conditions))
-						continue;
-
-					//Check the cooldown
-					if (!MainEvent.Value.Events[i].ValidateCooldown())
-						continue;
-
-
-
-					//Check Cooldowns
-
-					MainEvent.Value.Events[i].Ready = true;
-					ReadyEvents.Add(MainEvent.Value.Events[i]);
-				}
 			}
+			*/
 
-			for (int i = 0; i < ReadyEvents.Count; i++)
-			{
-				if (ReadyEvents[i].Ready == true)
-				{
-					ReadyEvents[i].Ready = false;
-					ReadyEvents[i].TriggerEvent();
-					ReadyEvents[i].Happend++;
-					ReadyEvents.Remove(ReadyEvents[i]);
+			if (EventsList == null)
+				EventsList = new List<Event>();
 
-				}
-			}
+			//SpawnLogger.Write("Create New Events", SpawnerDebugEnum.Dev, true);
+			//Create New Events
+			foreach (var eventProfile in ProfileManager.EventProfiles) {
 
+				bool foundEvent = false;
 
-			//CheckTimers
-			for (int i = 0; i < EventTimes.Count; i++)
-			{
-				currentDateTime = MyAPIGateway.Session.GameDateTime;
-				var timeSpan = currentDateTime - EventTimes[i].StartDate;
-				if (timeSpan.TotalMilliseconds > EventTimes[i].Timeinms)
-                {
-					if(EventTimes[i].Type == CheckType.ExecuteAction)
-                    {
-						EventActionProfile.ExecuteAction(EventTimes[i].Event.Actions[EventTimes[i].ActionIndex]);
-						EventTimes.Remove(EventTimes[i]);
+				foreach (var existingEvent in EventsList) {
+
+					if (existingEvent.ProfileSubtypeId == eventProfile.Value.ProfileSubtypeId) {
+
+						foundEvent = true;
+						break;
+					
 					}
-                }
+				
+				}
+
+				if (foundEvent)
+					continue;
+
+				EventsList.Add(new Event(eventProfile.Value.ProfileSubtypeId));
 
 			}
+
+			/*
+			//SpawnLogger.Write("Create New Controllers", SpawnerDebugEnum.Dev, true);
+			//Create New Event Controllers
+			foreach (var existingEvent in EventsList) {
+
+				if (string.IsNullOrWhiteSpace(existingEvent?.Profile?.EventControllerId))
+					continue;
+
+				bool gotController = false;
+
+				foreach (var controller in EventControllersList) {
+
+					if (controller.ProfileSubtypeId == existingEvent.ProfileSubtypeId) {
+
+						gotController = true;
+						break;
+					
+					}
 				
+				}
 
-		}
+				if (gotController)
+					continue;
 
+				
+				EventControllersList.Add(EventController.CreateController(existingEvent.Profile.EventControllerId));
+				
+			
+			}
+			*/
 
-		public static void SaveData() {
+			//SpawnLogger.Write("Delete Old Events", SpawnerDebugEnum.Dev, true);
+			//Delete Old Events
+			for (int i = EventsList.Count - 1; i >= 0; i--) {
 
-			//TODO: Serialize Event Data
+				bool foundEvent = false;
 
-			//TODO: Use Following Method To Save Data: Settings.SavedData.UpdateData(serializedEventData, ref Settings.SavedData.EventData);
+				foreach (var eventProfile in ProfileManager.EventProfiles) {
+
+					if (eventProfile.Value.ProfileSubtypeId == EventsList[i].ProfileSubtypeId) {
+
+						foundEvent = true;
+						break;
+					
+					}
+				
+				}
+
+				if (foundEvent)
+					continue;
+
+				EventsList.RemoveAt(i);
+
+			}
+
+			//SpawnLogger.Write("Save Data", SpawnerDebugEnum.Dev, true);
+			//Save Current Data
+			SaveData();
+			
 
 		}
 
 		public static void ProcessEvents() {
 			
-			//Loop Events
+			DateTime currentDateTime = MyAPIGateway.Session.GameDateTime;
+			_readyEvents.Clear();
 
-				//Check Event is On
+			//MyVisualScriptLogicProvider.ShowNotificationToAll("EventList Count: " + EventsList.Count, 500);
 
-				//Check Times
+			for (int i = 0; i < EventsList.Count; i++) {
+
+				var thisEvent = EventsList[i];
+
+				if (!thisEvent.Valid) {
+
+					continue;
+				
+				}
+
+				//Process Sequential Actions
+				if (thisEvent.ProcessingSequentialActions) {
+
+					ProcessSequentialActions(thisEvent, currentDateTime);
+					continue;
+				
+				}
+
+				/*
+				//Does this event have an Event Controller (previously MainEvent)? If so, check it.
+				if (!string.IsNullOrWhiteSpace(thisEvent.Profile.EventControllerId)) {
+
+					if (thisEvent.Controller == null) {
+
+						continue;
+					
+					}
+
+					//TODO: Maybe we move all EventController checks to the class itself and check with a single method sometime down the road.
+					//TODO: Better yet, we move all the checks against Active, Time, etc into the Condition Profile. That way you could have events that trigger when its Inactive
+					if (!thisEvent.Controller.Active) {
+
+						continue;
+					
+					}
+				
+				}
+				*/
+
+				//Did the event already happen once? && Is the event a unique event?
+				if (thisEvent.RunCount > 0 && thisEvent.Profile.UniqueEvent == true) {
+
+					continue;
+
+				}
+
+
+				//Check the cooldown
+				if (!thisEvent.ValidateCooldown()) {
+
+					continue;
+
+				}
 
 				//Check Conditions
+				if (!EventCondition.AreConditionsMet(thisEvent.Profile.UseAnyPassingCondition, thisEvent.Conditions)) {
 
-				//If Satisfied, Set Triggered = true
+					continue;
 
-			//Loop Events Again
+				}
 				
-				//If Triggered == false, Skip
+				thisEvent.Ready = true;
+				_readyEvents.Add(thisEvent);
+			}
 
-				//Run Actions
+			for (int i = _readyEvents.Count - 1; i >= 0; i--) {
 
-				//Set Triggered = false
+				var thisEvent = _readyEvents[i];
+
+				if (thisEvent.Ready == true) {
+
+					thisEvent.Ready = false;
+					thisEvent.ActivateEventActions();
+					thisEvent.RunCount++;
+					_readyEvents.Remove(thisEvent);
+
+				}
+
+			}
+
+		}
+
+		public static void ProcessSequentialActions(Event currentEvent, DateTime currentDateTime) {
+
+			var timeSpan = currentDateTime - currentEvent.ActionStartTime;
+
+			if (timeSpan.TotalMilliseconds > currentEvent.IncrementMs * currentEvent.ActionIndex) {
+
+				if (currentEvent.ActionIndex >= currentEvent.Actions.Count) {
+
+					currentEvent.ActionIndex = 0;
+					currentEvent.ProcessingSequentialActions = false;
+					return;
+
+				}
+
+				if (currentEvent.CheckingType == CheckType.ExecuteAction) {
+
+					currentEvent.Actions[currentEvent.ActionIndex].ExecuteAction();
+					currentEvent.ActionIndex++;
+
+					if (currentEvent.ActionIndex >= currentEvent.Actions.Count) {
+
+						currentEvent.ActionIndex = 0;
+						currentEvent.ProcessingSequentialActions = false;
+
+					}
+
+				}
+
+			}
+
+		}
+
+		public static void SaveData() {
+
+			//Events
+			var eventsListSerialized = MyAPIGateway.Utilities.SerializeToBinary<List<Event>>(EventsList);
+			var eventsListString = Convert.ToBase64String(eventsListSerialized);
+			MyAPIGateway.Utilities.SetVariable<string>(_saveEventsListName, eventsListString);
+
+			/*
+			//EventControllers
+			var eventControllersListSerialized = MyAPIGateway.Utilities.SerializeToBinary<List<EventController>>(EventControllersList);
+			var eventControllersListString = Convert.ToBase64String(eventControllersListSerialized);
+			MyAPIGateway.Utilities.SetVariable<string>(_saveEventControllersListName, eventControllersListString);
+			*/
+
+		}
+
+		public static string GetEventData() {
+
+			var sb = new StringBuilder();
+
+			return sb.ToString();
 		
 		}
 
@@ -142,8 +311,8 @@ namespace ModularEncountersSystems.Events {
 			MES_SessionCore.SaveActions -= SaveData;
 			MES_SessionCore.UnloadActions -= UnloadData;
 			TaskProcessor.Tick30.Tasks -= ProcessEvents;
-
 		}
 
 	}
+
 }

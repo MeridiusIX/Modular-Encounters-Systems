@@ -12,7 +12,7 @@
 
         [MES Shipyard]
 
-        [StoreBlockName:Store Block (Shipyard)]
+        [BlockName:Store Block (Shipyard)]
 
         [AllowBlueprintBuilding:false]
         [AllowScrapPurchasing:true]

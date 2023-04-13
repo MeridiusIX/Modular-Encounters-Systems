@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Helpers;
+﻿using ModularEncountersSystems.BlockLogic;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
@@ -8,6 +9,7 @@ using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage;
 using VRage.Game;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
@@ -22,6 +24,8 @@ namespace ModularEncountersSystems.Entities {
 		public bool IsParentEntitySeat;
 		public bool RemoteControlling;
 
+		public Dictionary<InhibitorTypes, List<MyTuple<IMyRadioAntenna, DateTime>>> InhibitorIdsInRange;
+
 		public bool PlayerEntityChanged;
 
 		public bool ItemConsumeEventRegistered;
@@ -32,7 +36,7 @@ namespace ModularEncountersSystems.Entities {
 
 		public PlayerSolarModule SolarModule;
 
-		public ProgressionContainer Progression { 
+		public ProgressionContainer Progression {
 
 			get {
 
@@ -59,9 +63,9 @@ namespace ModularEncountersSystems.Entities {
 					ProgressionManager.ProgressionContainers.Add(_progression);
 
 				}
-					
+
 				return _progression;
-			
+
 			}
 
 			set {
@@ -77,7 +81,7 @@ namespace ModularEncountersSystems.Entities {
 
 				}
 
-			
+
 			}
 		}
 
@@ -87,7 +91,7 @@ namespace ModularEncountersSystems.Entities {
 
 		public PlayerEntity(IMyPlayer player, IMyEntity entity = null) : base(entity) {
 
-			if (player == null) 
+			if (player == null)
 				return;
 
 			Type = EntityType.Player;
@@ -96,6 +100,15 @@ namespace ModularEncountersSystems.Entities {
 			Online = true;
 
 			_progression = null;
+
+			InhibitorIdsInRange = new Dictionary<InhibitorTypes, List<MyTuple<IMyRadioAntenna, DateTime>>>{
+
+				{InhibitorTypes.Drill, new List<MyTuple<IMyRadioAntenna, DateTime>>() },
+				{InhibitorTypes.Energy, new List<MyTuple<IMyRadioAntenna, DateTime>>() },
+				{InhibitorTypes.Jetpack, new List<MyTuple<IMyRadioAntenna, DateTime>>() },
+				{InhibitorTypes.Personnel, new List<MyTuple<IMyRadioAntenna, DateTime>>() },
+
+			};
 
 			LinkedGrids = new List<GridEntity>();
 
@@ -112,6 +125,32 @@ namespace ModularEncountersSystems.Entities {
 
 			RefreshPlayerEntity();
 			SpawnLogger.Write("New Player Added To Watcher: " + player.DisplayName, SpawnerDebugEnum.Entity);
+
+		}
+
+		public void AddInhibitorToPlayer(IMyRadioAntenna id, InhibitorTypes type) {
+
+			foreach (var block in InhibitorIdsInRange[type])
+				if (block.Item1 == id)
+					return;
+
+			InhibitorIdsInRange[type].Add(new MyTuple<IMyRadioAntenna, DateTime>(id, MyAPIGateway.Session.GameDateTime));
+
+		}
+
+		public void RemoveInhibitorFromPlayer(IMyRadioAntenna id, InhibitorTypes type) {
+
+			for (int i = InhibitorIdsInRange[type].Count - 1; i >= 0; i--) {
+
+				var block = InhibitorIdsInRange[type][i];
+
+				if (block.Item1 == id) {
+
+					InhibitorIdsInRange[type].RemoveAt(i);
+
+				}
+
+			}
 
 		}
 

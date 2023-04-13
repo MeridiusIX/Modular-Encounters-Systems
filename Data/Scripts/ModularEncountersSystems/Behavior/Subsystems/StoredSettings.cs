@@ -134,6 +134,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		[ProtoMember(40)]
 		public double InitialGridIntegrity; //Block Health = BuildIntegrity - CurrentDamage
 
+		[ProtoMember(41)]
+		public long SavedPlayerIdentityId;
+
 		[ProtoIgnore]
 		public EscortProfile ParentEscort { get {
 
@@ -205,6 +208,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			WeaponsSystemProfile = "";
 
+			SavedPlayerIdentityId = 0;
+
 		}
 
 		public StoredSettings(StoredSettings oldSettings, bool preserveSettings, bool preserveTriggers, bool preserveTargetProfile) : base() {
@@ -231,6 +236,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			this.HomingWeaponRangeOverride = oldSettings.HomingWeaponRangeOverride;
 			this.PatrolOverrideLocation = oldSettings.PatrolOverrideLocation;
 			this.ActiveEscorts = oldSettings.ActiveEscorts;
+			this.WeaponsSystemProfile = oldSettings.WeaponsSystemProfile;
+			this.SavedPlayerIdentityId = oldSettings.SavedPlayerIdentityId;
 
 			//Triggers
 			if (preserveTriggers) {

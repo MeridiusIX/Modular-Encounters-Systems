@@ -1,4 +1,5 @@
-﻿<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<EntityComponents>
 	
 		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
@@ -139,6 +140,56 @@
 			<RegisteredStorageGuids>
 				<guid>076C26A3-CCE9-4979-8356-E5A14D02A038</guid>
 			</RegisteredStorageGuids>
+		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_ModStorageComponentDefinition">
+			<Id>
+				<TypeId>ModStorageComponent</TypeId>
+				<SubtypeId>MesSafeZoneLinkedEntity</SubtypeId>
+			</Id>
+			<RegisteredStorageGuids>
+				<guid>6968A9BE-87A3-439F-9B33-27A5A9F220CF</guid>
+			</RegisteredStorageGuids>
+		</EntityComponent>
+
+		
+
+		<EntityComponent xsi:type="MyObjectBuilder_AutopilotComponentDefinition">
+			<Id>
+				<TypeId>AutopilotComponent</TypeId>
+				<SubtypeId>RivalAIRemoteControlSmall</SubtypeId>
+			</Id>
+			<MinHeightAlignmentEnabled>false</MinHeightAlignmentEnabled>
+			<CoastingTestEnabled>false</CoastingTestEnabled>
+			<CourseCorrectionMaxDistanceSmallGrid>5</CourseCorrectionMaxDistanceSmallGrid>
+			<CourseCorrectionMaxDistanceLargeGrid>10</CourseCorrectionMaxDistanceLargeGrid>
+			<CourseCorrectionMaxThrustPercentage>50</CourseCorrectionMaxThrustPercentage>
+			<CourseCorrectionMaxRemainingRotationBeforeThrust>0.5</CourseCorrectionMaxRemainingRotationBeforeThrust>
+			<CourseCorrectionMaxRemainingRotationBeforeThrustInPrecisionMode>0.2</CourseCorrectionMaxRemainingRotationBeforeThrustInPrecisionMode>
+			<CourseCorrectionMaxDistanceInPrecisionModeGridSizeMultiple>0.3</CourseCorrectionMaxDistanceInPrecisionModeGridSizeMultiple>
+			<PrecisionModeRotationVelocitySlowFactor>4</PrecisionModeRotationVelocitySlowFactor>
+			<RotationVelocitySlowFactorAutomaticBehavior>3</RotationVelocitySlowFactorAutomaticBehavior>
+			<RotationVelocitySlowFactorAutomaticBehaviorTreshold>0.1</RotationVelocitySlowFactorAutomaticBehaviorTreshold>
+
+		</EntityComponent>
+
+		<EntityComponent xsi:type="MyObjectBuilder_AutopilotComponentDefinition">
+			<Id>
+				<TypeId>AutopilotComponent</TypeId>
+				<SubtypeId>RivalAIRemoteControlLarge</SubtypeId>
+			</Id>
+			<MinHeightAlignmentEnabled>false</MinHeightAlignmentEnabled>
+			<CoastingTestEnabled>false</CoastingTestEnabled>
+			<CourseCorrectionMaxDistanceSmallGrid>5</CourseCorrectionMaxDistanceSmallGrid>
+			<CourseCorrectionMaxDistanceLargeGrid>10</CourseCorrectionMaxDistanceLargeGrid>
+			<CourseCorrectionMaxThrustPercentage>50</CourseCorrectionMaxThrustPercentage>
+			<CourseCorrectionMaxRemainingRotationBeforeThrust>0.5</CourseCorrectionMaxRemainingRotationBeforeThrust>
+			<CourseCorrectionMaxRemainingRotationBeforeThrustInPrecisionMode>0.2</CourseCorrectionMaxRemainingRotationBeforeThrustInPrecisionMode>
+			<CourseCorrectionMaxDistanceInPrecisionModeGridSizeMultiple>0.3</CourseCorrectionMaxDistanceInPrecisionModeGridSizeMultiple>
+			<PrecisionModeRotationVelocitySlowFactor>4</PrecisionModeRotationVelocitySlowFactor>
+			<RotationVelocitySlowFactorAutomaticBehavior>3</RotationVelocitySlowFactorAutomaticBehavior>
+			<RotationVelocitySlowFactorAutomaticBehaviorTreshold>0.1</RotationVelocitySlowFactorAutomaticBehaviorTreshold>
+
 		</EntityComponent>
 		
 	</EntityComponents>

@@ -8,6 +8,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public string ProfileSubtypeId;
 
+		public string BlockName;
+
 		public bool AllowJetpackInhibitorMod;
 		public bool AllowHandDrillInhibitorMod;
 		public bool AllowPersonnelInhibitorMod;
@@ -21,6 +23,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			ProfileSubtypeId = "";
 
+			BlockName = "";
+
 			AllowJetpackInhibitorMod = false;
 			AllowHandDrillInhibitorMod = false;
 			AllowPersonnelInhibitorMod = false;
@@ -30,6 +34,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
+				{"BlockName", (s, o) => TagParse.TagStringCheck(s, ref BlockName) },
 				{"AllowJetpackInhibitorMod", (s, o) => TagParse.TagBoolCheck(s, ref AllowJetpackInhibitorMod) },
 				{"AllowHandDrillInhibitorMod", (s, o) => TagParse.TagBoolCheck(s, ref AllowHandDrillInhibitorMod) },
 				{"AllowPersonnelInhibitorMod", (s, o) => TagParse.TagBoolCheck(s, ref AllowPersonnelInhibitorMod) },

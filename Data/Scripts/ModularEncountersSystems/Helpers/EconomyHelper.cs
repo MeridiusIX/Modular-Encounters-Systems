@@ -14,24 +14,38 @@ using System.Linq;
 using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
+using VRage.Game.ObjectBuilders.Definitions;
 
 namespace ModularEncountersSystems.Helpers {
 
 	public static class EconomyHelper {
 
-		public static Dictionary<MyDefinitionId, int> OreMinimumValues = new Dictionary<MyDefinitionId, int>();
-		public static Dictionary<MyDefinitionId, int> IngotMinimumValues = new Dictionary<MyDefinitionId, int>();
+		public static List<MyDefinitionId> AllItemIds = new List<MyDefinitionId>();
+
+		public static List<MyDefinitionId> PublicItems = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> PublicOres = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> PublicIngots = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> PublicComponents = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> PublicAmmos = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> PublicTools = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> PublicConsumables = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> PublicOtherItems = new List<MyDefinitionId>();
+
 		public static Dictionary<MyDefinitionId, int> ComponentMinimumValues = new Dictionary<MyDefinitionId, int>();
-		public static Dictionary<MyDefinitionId, int> OtherItemMinimumValues = new Dictionary<MyDefinitionId, int>();
 		public static Dictionary<MyDefinitionId, int> BlockMinimumValues = new Dictionary<MyDefinitionId, int>();
 		public static Dictionary<MyDefinitionId, long> PrefabMinimumValues = new Dictionary<MyDefinitionId, long>();
-
 		public static Dictionary<MyDefinitionId, long> MinimumValuesMaster = new Dictionary<MyDefinitionId, long>();
 
 		public static List<MyDefinitionId> ItemsWithBadValue = new List<MyDefinitionId>();
 		public static List<MyDefinitionId> ForbiddenItems = new List<MyDefinitionId>();
 
 		public static Dictionary<MyDefinitionId, MyBlueprintDefinitionBase> ComponentBlueprints = new Dictionary<MyDefinitionId, MyBlueprintDefinitionBase>();
+		public static List<MyAssemblerDefinition> Assemblers = new List<MyAssemblerDefinition>();
+		public static List<MyDefinitionId> AssemblerCraftableItems = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> CraftableComponents = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> CraftableAmmo = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> CraftableTools = new List<MyDefinitionId>();
+		public static List<MyDefinitionId> CraftableConsumables = new List<MyDefinitionId>();
 
 		public static Dictionary<long, PrefabContainer> EconomyPrefabPlaceholders = new Dictionary<long, PrefabContainer>();
 		private static List<PrefabContainer> AvailableEconomyPrefabs = new List<PrefabContainer>();
@@ -46,7 +60,13 @@ namespace ModularEncountersSystems.Helpers {
 			var allItems = MyDefinitionManager.Static.GetPhysicalItemDefinitions();
 			List<MyBlueprintDefinitionBase> usedBlueprints = new List<MyBlueprintDefinitionBase>();
 
+			//Gas
+			AddToMasterReference(new MyDefinitionId(typeof(MyObjectBuilder_GasProperties), "Hydrogen"), 180);
+			AddToMasterReference(new MyDefinitionId(typeof(MyObjectBuilder_GasProperties), "Oxygen"), 180);
+
 			foreach (var item in allItems) {
+
+				AllItemIds.Add(item.Id);
 
 				if (ForbiddenItems.Contains(item.Id) == true) {
 
@@ -62,10 +82,16 @@ namespace ModularEncountersSystems.Helpers {
 
 					int itemPrice = 0;
 
-					if (OreMinimumValues.ContainsKey(item.Id) == false) {
+					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
-						OreMinimumValues.Add(item.Id, itemPrice);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicOres.Add(item.Id);
+
+						}
+
 						AddToMasterReference(item.Id, itemPrice);
 
 					}
@@ -76,10 +102,17 @@ namespace ModularEncountersSystems.Helpers {
 
 					int itemPrice = 0;
 
-					if (IngotMinimumValues.ContainsKey(item.Id) == false) {
+					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
-						IngotMinimumValues.Add(item.Id, itemPrice);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicIngots.Add(item.Id);
+
+						}
+
 						AddToMasterReference(item.Id, itemPrice);
 
 					}
@@ -90,9 +123,17 @@ namespace ModularEncountersSystems.Helpers {
 
 					int itemPrice = 0;
 
-					if (ComponentMinimumValues.ContainsKey(item.Id) == false) {
+					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicComponents.Add(item.Id);
+
+						}
+
 						ComponentMinimumValues.Add(item.Id, itemPrice);
 						AddToMasterReference(item.Id, itemPrice);
 
@@ -108,7 +149,14 @@ namespace ModularEncountersSystems.Helpers {
 					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
-						OtherItemMinimumValues.Add(item.Id, itemPrice);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicTools.Add(item.Id);
+
+						}
+
 						AddToMasterReference(item.Id, itemPrice);
 
 					}
@@ -122,7 +170,14 @@ namespace ModularEncountersSystems.Helpers {
 					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
-						OtherItemMinimumValues.Add(item.Id, itemPrice);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicOtherItems.Add(item.Id);
+
+						}
+
 						AddToMasterReference(item.Id, itemPrice);
 
 					}
@@ -136,7 +191,14 @@ namespace ModularEncountersSystems.Helpers {
 					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
-						OtherItemMinimumValues.Add(item.Id, itemPrice);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicOtherItems.Add(item.Id);
+
+						}
+
 						AddToMasterReference(item.Id, itemPrice);
 
 					}
@@ -150,7 +212,14 @@ namespace ModularEncountersSystems.Helpers {
 					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
-						OtherItemMinimumValues.Add(item.Id, itemPrice);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicAmmos.Add(item.Id);
+
+						}
+
 						AddToMasterReference(item.Id, itemPrice);
 
 					}
@@ -164,7 +233,14 @@ namespace ModularEncountersSystems.Helpers {
 					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
-						OtherItemMinimumValues.Add(item.Id, itemPrice);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicConsumables.Add(item.Id);
+
+						}
+
 						AddToMasterReference(item.Id, itemPrice);
 
 					}
@@ -178,7 +254,14 @@ namespace ModularEncountersSystems.Helpers {
 					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
 
 						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
-						OtherItemMinimumValues.Add(item.Id, itemPrice);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicOtherItems.Add(item.Id);
+
+						}
+
 						AddToMasterReference(item.Id, itemPrice);
 
 					}
@@ -229,6 +312,72 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (blockDefinition as MyAssemblerDefinition != null)
+					Assemblers.Add(blockDefinition as MyAssemblerDefinition);
+
+			}
+
+			var blueprints = MyDefinitionManager.Static.GetBlueprintDefinitions().ToList();
+
+			foreach (var assembler in Assemblers) {
+
+				foreach (var blueprintClass in assembler.BlueprintClasses) {
+
+					//TODO: Make this for loop, prune bad blueprints
+					for (int i = blueprints.Count - 1; i >= 0; i--) {
+
+						var blueprint = blueprints[i];
+
+						if (!blueprintClass.ContainsBlueprint(blueprint))
+							continue;
+
+						var id = new MyDefinitionId();
+						MyDefinitionId.TryParse("MyObjectBuilder_" + blueprint.Id.SubtypeName, out id);
+
+						if (MyAPIGateway.Reflection.IsAssignableFrom(typeof(MyObjectBuilder_CubeBlock), id.TypeId)) {
+
+							blueprints.RemoveAt(i);
+							continue;
+
+						}
+							
+						foreach (var outputItem in blueprint.Results) {
+
+							if (!AssemblerCraftableItems.Contains(outputItem.Id) && !ItemsWithBadValue.Contains(outputItem.Id)) {
+
+								/*
+								if (outputItem.Id.SubtypeName.Contains("ZoneChip")) {
+
+									SpawnLogger.Write(outputItem.Id.ToString(), SpawnerDebugEnum.Startup, true);
+									SpawnLogger.Write(blueprint.Id.ToString(), SpawnerDebugEnum.Startup, true);
+									SpawnLogger.Write(blueprintClass.Id.ToString(), SpawnerDebugEnum.Startup, true);
+									SpawnLogger.Write(assembler.Id.ToString(), SpawnerDebugEnum.Startup, true);
+
+								}
+								*/
+
+								AssemblerCraftableItems.Add(outputItem.Id);
+
+								if (outputItem.Id.TypeId == typeof(MyObjectBuilder_Component))
+									CraftableComponents.Add(outputItem.Id);
+
+								if (outputItem.Id.TypeId == typeof(MyObjectBuilder_AmmoMagazine))
+									CraftableAmmo.Add(outputItem.Id);
+
+								if (outputItem.Id.TypeId == typeof(MyObjectBuilder_PhysicalGunObject))
+									CraftableTools.Add(outputItem.Id);
+
+								if (outputItem.Id.TypeId == typeof(MyObjectBuilder_ConsumableItem))
+									CraftableConsumables.Add(outputItem.Id);
+
+							}
+								
+						}
+					
+					}
+				
+				}
+			
 			}
 
 			for (int i = 1; i < 31; i++) {

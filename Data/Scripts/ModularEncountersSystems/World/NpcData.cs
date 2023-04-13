@@ -387,6 +387,12 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(35)]
 		public long OriginalOwnerId;
 
+		[ProtoMember(36)]
+		public DateTime SpawnGroupTimeStamp;
+
+		[ProtoMember(37)]
+		public List<int> ManipulationsUsed;
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -557,6 +563,8 @@ namespace ModularEncountersSystems.World {
 			BehaviorTerminationReason = "";
 			OriginalOwnerFaction = "";
 			OriginalOwnerId = 0;
+			SpawnGroupTimeStamp = DateTime.MinValue;
+			ManipulationsUsed = new List<int>();
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -812,14 +820,6 @@ namespace ModularEncountersSystems.World {
 
 			}
 
-			//InitEconomyBlocks
-			if (AttributeCheck(Attributes.InitEconomyBlocks, AppliedAttributes.InitEconomyBlocks)) {
-
-				AppliedAttributes.InitEconomyBlocks = true;
-				EconomyHelper.InitNpcStoreBlock(Grid.CubeGrid, SpawnGroup);
-
-			}
-
 			//NonPhysicalAmmo
 			if (AttributeCheck(Attributes.NonPhysicalAmmo, AppliedAttributes.NonPhysicalAmmo)) {
 
@@ -936,6 +936,14 @@ namespace ModularEncountersSystems.World {
 
 				}
 
+
+			}
+
+			//InitEconomyBlocks
+			if (AttributeCheck(Attributes.InitEconomyBlocks, AppliedAttributes.InitEconomyBlocks)) {
+
+				AppliedAttributes.InitEconomyBlocks = true;
+				EconomyHelper.InitNpcStoreBlock(Grid.CubeGrid, SpawnGroup);
 
 			}
 

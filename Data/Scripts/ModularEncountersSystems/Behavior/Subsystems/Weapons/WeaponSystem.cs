@@ -11,6 +11,7 @@ using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using VRage;
 using VRage.Game;
+using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
@@ -187,7 +188,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 						foreach (var definition in APIs.WeaponCore.WeaponDefinitions) {
 
-							if (definition.HardPoint.WeaponName == weaponName) {
+							if (definition.HardPoint.PartName == weaponName) {
 
 								weaponDef = definition;
 								break;
@@ -223,7 +224,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 					}
 
-					APIs.WeaponCore.DisableRequiredPower(block);
+					APIs.WeaponCore.DisableRequiredPower(block as MyEntity);
 
 					continue;
 
@@ -427,7 +428,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (!Data.UseAntiSmartWeapons || !APIs.WeaponCoreApiLoaded)
 				return;
 
-			IncomingHomingProjectiles = APIs.WeaponCore.GetProjectilesLockedOn(_remoteControl).Item1;
+			IncomingHomingProjectiles = APIs.WeaponCore.GetProjectilesLockedOn(_remoteControl as MyEntity).Item1;
 
 		}
 
@@ -624,9 +625,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				if (_behavior.AutoPilot.Targeting.HasTarget()) {
 
-					if (_behavior.AutoPilot.Targeting.Target?.GetEntity() != APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid)) {
+					if (_behavior.AutoPilot.Targeting.Target?.GetEntity() != APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity)) {
 
-						APIs.WeaponCore.SetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid, _behavior.AutoPilot.Targeting.Target?.GetEntity());
+						APIs.WeaponCore.SetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity, _behavior.AutoPilot.Targeting.Target?.GetEntity() as MyEntity);
 
 					}
 				

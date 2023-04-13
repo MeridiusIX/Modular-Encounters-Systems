@@ -463,9 +463,8 @@ namespace ModularEncountersSystems.Configuration {
 			} catch (Exception e) {
 
 				SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error, true);
-			
+
 			}
-			
 
 		}
 

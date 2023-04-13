@@ -262,7 +262,7 @@ namespace ModularEncountersSystems.Spawning {
 		
 		}
 
-		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false) {
+		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false, long ownerOverride = -1) {
 
 			SpawnLogger.Write("Spawn Request Received From: " + source, SpawnerDebugEnum.Spawning);
 
@@ -349,6 +349,7 @@ namespace ModularEncountersSystems.Spawning {
 			//Get SpawnGroups and Valid Factions
 			var spawnGroupCollection = new SpawnGroupCollection();
 			spawnGroupCollection.IgnoreAllSafetyChecks = ignoreSafetyChecks;
+			spawnGroupCollection.OwnerOverride = ownerOverride;
 			SpawnLogger.SpawnGroup.Clear();
 			SpawnGroupManager.GetSpawnGroups(type, source, environment, factionOverride, spawnGroupCollection, forceSpawn, adminSpawn, eligibleNames, dronePlayerTracker);
 

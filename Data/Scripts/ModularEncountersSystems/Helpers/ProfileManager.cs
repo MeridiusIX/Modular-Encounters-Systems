@@ -7,6 +7,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Zones;
+using ModularEncountersSystems.Events;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -62,6 +63,22 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<string> ErrorProfiles = new List<string>();
 
 		public static AutoPilotProfile DefaultAutoPilotSettings = new AutoPilotProfile();
+
+		//Events 
+
+		public static Dictionary<string, byte[]> EventActionObjectTemplates = new Dictionary<string, byte[]>();
+
+
+
+		public static Dictionary<string, MainEvent> MainEvents = new Dictionary<string, MainEvent>();
+		public static Dictionary<string, Event> Events = new Dictionary<string, Event>();
+		public static Dictionary<string, EventCondition> EventConditions = new Dictionary<string, EventCondition>();
+		public static Dictionary<string, EventActionReferenceProfile> EventActionReferenceProfiles = new Dictionary<string, EventActionReferenceProfile>();
+
+
+
+
+
 
 		public static void Setup() {
 
@@ -178,6 +195,11 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+
+
+
+
+
 			}
 
 			//Second Phase
@@ -287,6 +309,36 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+
+				if (!EventActionReferenceProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Action]"))
+				{
+
+					var actionObject = new EventActionProfile();
+					actionObject.InitTags(component.DescriptionText);
+					actionObject.ProfileSubtypeId = component.Id.SubtypeName;
+
+					var actionReference = new EventActionReferenceProfile();
+					actionReference.InitTags(component.DescriptionText);
+					actionReference.ProfileSubtypeId = component.Id.SubtypeName;
+
+					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<EventActionProfile>(actionObject);
+					//Logger.WriteLog("Action Profile Added: " + component.Id.SubtypeName);
+					EventActionObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
+					EventActionReferenceProfiles.Add(component.Id.SubtypeName, actionReference);
+
+				}
+
+				if (!EventConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Condition]"))
+				{
+
+					var EventCondition = new EventCondition();
+					EventCondition.InitTags(component.DescriptionText);
+					EventCondition.ProfileSubtypeId = component.Id.SubtypeName;
+					EventConditions.Add(component.Id.SubtypeName, EventCondition);
+					continue;
+				}
+
+
 			}
 
 			//Third Phase
@@ -320,6 +372,16 @@ namespace ModularEncountersSystems.Helpers {
 					TriggerObjectTemplates.Add(component.Id.SubtypeName, triggerBytes);
 					continue;
 
+				}
+
+				if (!Events.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event]"))
+				{
+
+					var Event = new Event();
+					Event.InitTags(component.DescriptionText);
+					Event.ProfileSubtypeId = component.Id.SubtypeName;
+					Events.Add(component.Id.SubtypeName, Event);
+					continue;
 				}
 
 			}
@@ -395,6 +457,19 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 
 				}
+
+
+
+				if (!MainEvents.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES MainEvent]"))
+				{
+
+					var MainEvent = new MainEvent();
+					MainEvent.InitTags(component.DescriptionText);
+					MainEvent.ProfileSubtypeId = component.Id.SubtypeName;
+					MainEvents.Add(component.Id.SubtypeName, MainEvent);
+					continue;
+				}
+
 
 			}
 

@@ -31,6 +31,7 @@ namespace ModularEncountersSystems.Tasks {
 
             Tasks.Add(Tick1);
             Tasks.Add(Tick10);
+            Tasks.Add(Tick30);
             Tasks.Add(Tick60);
             Tasks.Add(Tick100);
 

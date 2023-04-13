@@ -234,6 +234,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int MinDifficulty;
 		public int MaxDifficulty;
 
+		public bool UseCombatPhase;
+		public bool IgnoreCombatPhase;
+		public bool CombatPhaseChecksInPersistentCondition;
+
 		public bool UsePlayerCredits;
 		public bool IncludeAllPlayersInRadius;
 		public bool IncludeFactionBalance;
@@ -541,6 +545,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			MinDifficulty = -1;
 			MaxDifficulty = -1;
 
+			UseCombatPhase = false;
+			IgnoreCombatPhase = false;
+			CombatPhaseChecksInPersistentCondition = false;
+
 			UsePlayerCredits = false;
 			IncludeAllPlayersInRadius = false;
 			IncludeFactionBalance = false;
@@ -800,6 +808,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"UseDifficulty", (s, o) => TagParse.TagBoolCheck(s, ref UseDifficulty) },
 				{"MinDifficulty", (s, o) => TagParse.TagIntCheck(s, ref MinDifficulty) },
 				{"MaxDifficulty", (s, o) => TagParse.TagIntCheck(s, ref MaxDifficulty) },
+				{"UseCombatPhase", (s, o) => TagParse.TagBoolCheck(s, ref UseCombatPhase) },
+				{"IgnoreCombatPhase", (s, o) => TagParse.TagBoolCheck(s, ref IgnoreCombatPhase) },
+				{"CombatPhaseChecksInPersistentCondition", (s, o) => TagParse.TagBoolCheck(s, ref CombatPhaseChecksInPersistentCondition) },
 				{"UsePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref UsePlayerCredits) },
 				{"IncludeAllPlayersInRadius", (s, o) => TagParse.TagBoolCheck(s, ref IncludeAllPlayersInRadius) },
 				{"IncludeFactionBalance", (s, o) => TagParse.TagBoolCheck(s, ref IncludeFactionBalance) },

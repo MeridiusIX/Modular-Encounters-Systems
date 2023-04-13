@@ -458,9 +458,19 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					if (!data.Attributes.ReplenishSystems)
 						data.Attributes.ReplenishSystems = true;
 
-					if (!data.Attributes.WeaponRandomizationAdjustments)
+					if (!data.Attributes.WeaponRandomizationAdjustments) {
+
 						data.Attributes.WeaponRandomizationAdjustments = true;
 
+						if (Settings.Grids.RandomizedWeaponsUseFullRange) {
+
+							data.Attributes.WeaponRandomizationAggression = true;
+							data.AppliedAttributes.WeaponRandomizationAggression = true;
+
+						}
+							
+					}
+						
 				}
 
 			}

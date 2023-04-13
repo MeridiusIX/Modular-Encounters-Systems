@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Progression;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -9,7 +10,7 @@ using System.Text;
 namespace ModularEncountersSystems.BlockLogic {
 
 	public enum InhibitorTypes {
-	
+
 		None,
 		Jetpack,
 		Personnel,
@@ -17,10 +18,11 @@ namespace ModularEncountersSystems.BlockLogic {
 		Drill,
 		JumpDrive,
 		Nanobots,
-	
+
 	}
 
-	public abstract class InhibitorBase : BaseBlockLogic {
+	//The carrot is ready to be composted
+	public class InhibitorLogic : BaseBlockLogic {
 
 		internal InhibitorTypes _inhibitor;
 
@@ -31,12 +33,24 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal IMyTerminalBlock _block;
 
 		internal bool _playersInRange;
-		
+
+		internal bool _safeToggle;
+		internal int _safeToggleTriggers;
+		internal DateTime _safeToggleTime;
+
 		internal void BaseSetup(BlockEntity block) {
 
-			
 			_antenna = block.Block as IMyRadioAntenna;
+
+			if (_antenna != null) {
+
+				_antenna.EnabledChanged += EnabledChanged;
+
+			}
+				
+
 			_block = block.Block as IMyTerminalBlock;
+			_safeToggleTime = MyAPIGateway.Session.GameDateTime;
 
 		}
 
@@ -70,7 +84,7 @@ namespace ModularEncountersSystems.BlockLogic {
 				return true;
 
 			}
-				
+
 			if (_inhibitor == InhibitorTypes.Drill && (player.Progression?.DrillInhibitorSuitUpgradeLevel ?? 0) > 0 && ProgressionContainer.IsUpgradeAllowedInConfig(SuitUpgradeTypes.HandDrillInhibitor)) {
 
 				ApplyInhibitorSuitUpgradeEffect(player, energy, player.Progression.DrillInhibitorSuitUpgradeLevel);
@@ -108,10 +122,59 @@ namespace ModularEncountersSystems.BlockLogic {
 
 		}
 
+		internal void EnabledChanged(IMyTerminalBlock block) {
+
+			MyAPIGateway.Utilities.InvokeOnGameThread(CheckInhibitorStates);
+
+		}
+
+		internal void CheckInhibitorStates() {
+
+			if (_antenna.Enabled || FunctionalOverride) {
+
+				return;
+
+			}
+
+			if (_safeToggle || !FactionHelper.IsIdentityNPC(_antenna.OwnerId)) {
+
+				_safeToggle = false;
+				return;
+
+			}
+
+			if (_safeToggleTriggers >= 5) {
+
+				FunctionalOverride = true;
+				_isWorking = true;
+				_antenna.Enabled = true;
+				return;
+
+			}
+
+			if ((MyAPIGateway.Session.GameDateTime - _safeToggleTime).TotalMilliseconds > 125) {
+
+				_safeToggleTime = MyAPIGateway.Session.GameDateTime;
+				return;
+
+			}
+
+			_safeToggleTriggers++;
+			_antenna.Enabled = true;
+
+		}
+
 		internal void SetInhibitorRange() {
-		
-			
-		
+
+
+
+		}
+
+		internal void Toggle(bool toggle) {
+
+			_safeToggle = !toggle;
+			_antenna.Enabled = toggle;
+
 		}
 
 	}

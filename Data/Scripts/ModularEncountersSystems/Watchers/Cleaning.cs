@@ -13,7 +13,7 @@ using System.Text;
 namespace ModularEncountersSystems.Watchers {
 
 	public static class Cleaning {
-
+		
 		public static List<GridCleanupExemption> ExemptGrids = new List<GridCleanupExemption>();
 
 		public static bool PendingGridsForRemoval = false;
@@ -161,7 +161,7 @@ namespace ModularEncountersSystems.Watchers {
 						GridCleanupData.RemoveData(grid);
 
 						if (grid.Npc != null)
-							grid.Npc.DespawnSource = "CleanUp-BlockCount";
+							grid.DespawnSource = "CleanUp-BlockCount";
 
 						continue;
 
@@ -185,7 +185,7 @@ namespace ModularEncountersSystems.Watchers {
 						GridCleanupData.RemoveData(grid);
 
 						if (grid.Npc != null)
-							grid.Npc.DespawnSource = "CleanUp-Distance";
+							grid.DespawnSource = "CleanUp-Distance";
 
 						continue;
 
@@ -221,7 +221,7 @@ namespace ModularEncountersSystems.Watchers {
 						GridCleanupData.RemoveData(grid);
 
 						if (grid.Npc != null)
-							grid.Npc.DespawnSource = "CleanUp-Timer";
+							grid.DespawnSource = "CleanUp-Timer";
 
 						continue;
 
@@ -287,7 +287,7 @@ namespace ModularEncountersSystems.Watchers {
 		
 		}
 
-		public static void ForceRemoveGrid(GridEntity grid) {
+		public static void ForceRemoveGrid(GridEntity grid, string reason = null) {
 
 			grid.ForceRemove = true;
 			SpawnLogger.Write(grid.CubeGrid.CustomName + " Force Remove Request. Marking For Removal.", SpawnerDebugEnum.CleanUp);
@@ -295,7 +295,7 @@ namespace ModularEncountersSystems.Watchers {
 			GridCleanupData.RemoveData(grid);
 
 			if (grid.Npc != null)
-				grid.Npc.DespawnSource = "ForceRemove";
+				grid.DespawnSource = reason != null ? reason : "ForceRemove";
 
 
 		}

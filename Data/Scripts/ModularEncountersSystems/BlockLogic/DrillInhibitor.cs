@@ -10,7 +10,7 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class DrillInhibitor : InhibitorBase, IBlockLogic {
+	public class DrillInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal Dictionary<PlayerEntity, DateTime> _playersInDisableRange;
 		internal Dictionary<PlayerEntity, int> _toolbarIndexes;

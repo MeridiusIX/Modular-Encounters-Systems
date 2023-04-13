@@ -995,6 +995,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append("::: Spawn Data Near Player :::").AppendLine();
 			sb.Append(" - Threat Score: ").Append(threatLevel.ToString()).AppendLine();
 			sb.Append(" - PCU Score:    ").Append(pcuLevel.ToString()).AppendLine();
+			sb.Append(" - Combat Phase: ").Append(!Settings.Combat.EnableCombatPhaseSystem ? "Disabled In Settings" : (CombatPhaseManager.Active ? "Active" : "Inactive")).AppendLine();
 
 			sb.AppendLine();
 
@@ -1043,7 +1044,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Space Cargo
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.SpaceCargoShip, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.SpaceCargoShip, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1061,7 +1062,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Random Encounter
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.RandomEncounter, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.RandomEncounter, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1079,7 +1080,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Planetary Cargo
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryCargoShip, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryCargoShip, "Debug", environment, "", collection);
 
 			if (environment.PlanetaryCargoShipsEligible) {
 
@@ -1111,7 +1112,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Planetary Installation
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryInstallation, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryInstallation, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1129,7 +1130,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Boss
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.BossEncounter, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.BossEncounter, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1147,7 +1148,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Creature
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.Creature, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.Creature, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1165,7 +1166,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Drone Encounters
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.DroneEncounter, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.DroneEncounter, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1747,6 +1748,66 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			TaskProcessor.Tasks.Add(new DebugRotationData(grid, rotation, msg));
+
+		}
+
+		public static void SetGridOwnership(ChatMessage message, string[] msgSplit) {
+
+			if (msgSplit.Length < 4) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", message.PlayerId);
+				return;
+
+			}
+
+			var line = new LineD(message.CameraPosition, message.CameraDirection * 2000 + message.CameraPosition);
+			GridEntity thisGrid = null;
+
+			var faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(msgSplit[3]);
+
+			if (faction == null) {
+
+				message.ReturnMessage = "Could Not Locate Faction With ID.";
+				return;
+
+			}
+
+			var owner = FactionHelper.GetFactionMemberIdFromTag(faction.Tag);
+
+			for (int i = GridManager.Grids.Count - 1; i >= 0; i--) {
+
+				var grid = GridManager.GetSafeGridFromIndex(i);
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid?.CubeGrid?.CustomName == null) {
+
+				message.ReturnMessage = "Could Not Locate Grid At Player Camera Position.";
+				return;
+
+			}
+
+			thisGrid.RefreshSubGrids();
+			foreach (var linkedGrid in thisGrid.LinkedGrids) {
+
+				if (linkedGrid == null)
+					continue;
+
+				linkedGrid.CubeGrid.ChangeGridOwnership(owner, MyOwnershipShareModeEnum.Faction);
+			
+			}
+
+			message.ReturnMessage = "Grid [" + thisGrid.CubeGrid.CustomName + "] Ownership Changed To [" + msgSplit[3] + "]";
+			return;
 
 		}
 

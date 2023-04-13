@@ -12,7 +12,7 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class JetpackInhibitor : InhibitorBase, IBlockLogic {
+	public class JetpackInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal double _dampenerRange;
 
@@ -37,6 +37,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			}
 
+			BaseSetup(block);
 			_playersInDampenerRange = new List<PlayerEntity>();
 			_playersInDisableRange = new List<PlayerEntity>();
 

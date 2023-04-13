@@ -11,9 +11,14 @@ namespace ModularEncountersSystems.Sync {
     public static class SyncManager {
 
         public static ushort NetworkId = 42007;
+        public static bool SetupDone = false;
 
         public static void Setup() {
 
+            if (SetupDone)
+                return;
+
+            SetupDone = true;
             MyAPIGateway.Multiplayer.RegisterSecureMessageHandler(NetworkId, NetworkMessageReceiver);
             MyAPIGateway.Utilities.MessageEntered += ChatManager.ChatReceived;
             TaskProcessor.Tick10.Tasks += EffectManager.ProcessPlayerSoundEffect;

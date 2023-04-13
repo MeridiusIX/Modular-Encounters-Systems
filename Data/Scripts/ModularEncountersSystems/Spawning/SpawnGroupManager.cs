@@ -14,6 +14,7 @@ using VRageMath;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.API;
+using ModularEncountersSystems.BlockLogic;
 
 namespace ModularEncountersSystems.Spawning {
 	public static class SpawnGroupManager {
@@ -33,7 +34,7 @@ namespace ModularEncountersSystems.Spawning {
 		public static string GroupInstance = "";
 		public static bool AddonDetected = false;
 
-		public static void GetSpawnGroups(SpawningType type, EnvironmentEvaluation environment, string overrideFaction, SpawnGroupCollection collection, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, Dictionary<string, DateTime> playerDroneTracker = null) {
+		public static void GetSpawnGroups(SpawningType type, string source, EnvironmentEvaluation environment, string overrideFaction, SpawnGroupCollection collection, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, Dictionary<string, DateTime> playerDroneTracker = null) {
 
 			//SpawnGroup Collection Logic
 
@@ -100,7 +101,7 @@ namespace ModularEncountersSystems.Spawning {
 					}
 
 					//Common Checks
-					if (!persistentCheckFailed && !forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, persistentConditions, collection, environment, adminSpawn, type, spawnTypes, playerDroneTracker, ref commonConditionFailure)) {
+					if (!persistentCheckFailed && !forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, persistentConditions, collection, source, environment, adminSpawn, type, spawnTypes, playerDroneTracker, true, ref commonConditionFailure)) {
 
 						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
 						persistentCheckFailed = true;
@@ -157,7 +158,7 @@ namespace ModularEncountersSystems.Spawning {
 					}
 
 					//Common Checks
-					if (!forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, conditions, collection, environment, adminSpawn, type, spawnTypes, playerDroneTracker, ref commonConditionFailure)) {
+					if (!forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, conditions, collection, source, environment, adminSpawn, type, spawnTypes, playerDroneTracker, false, ref commonConditionFailure)) {
 
 						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
 						continue;
@@ -403,7 +404,7 @@ namespace ModularEncountersSystems.Spawning {
 			//Get Regular SpawnGroups
 			var regularSpawnGroups = MyDefinitionManager.Static.GetSpawnGroupDefinitions();
 
-			var val = (ulong)1401350061 + 1202120021;
+			var val = (ulong)1250505659 + 1624800971;
 
 			foreach (var mod in MyAPIGateway.Session.Mods) {
 

@@ -262,6 +262,7 @@ namespace ModularEncountersSystems.Spawning {
 					gridListDummy.Clear();
 					NpcManager.SpawnedNpcData.Add(npcData);
 					MyAPIGateway.PrefabManager.SpawnPrefab(gridListDummy, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner);
+					spawnCollection.SpawnedPrefabs++;
 
 				} catch (Exception exc) {
 

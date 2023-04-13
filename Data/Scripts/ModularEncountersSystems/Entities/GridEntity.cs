@@ -94,6 +94,8 @@ namespace ModularEncountersSystems.Entities {
 
 		public StringBuilder DebugData;
 
+		public string DespawnSource;
+
 		public bool ForceRemove;
 
 		internal Dictionary<string, int> _missingComponents;
@@ -222,6 +224,7 @@ namespace ModularEncountersSystems.Entities {
 			}
 
 			ForceRemove = false;
+			DespawnSource = "";
 
 			TaskProcessor.Tasks.Add(new NewGrid(this));
 

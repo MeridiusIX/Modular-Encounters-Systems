@@ -10,7 +10,7 @@ using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class PlayerInhibitor : InhibitorBase, IBlockLogic {
+	public class PlayerInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal List<PlayerEntity> _playersInBlockRange;
 

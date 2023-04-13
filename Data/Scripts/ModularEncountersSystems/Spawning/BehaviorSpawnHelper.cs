@@ -114,7 +114,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending CustomSpawn Data to Spawner", SpawnerDebugEnum.Spawning);
 				var velocity = Vector3D.Transform(_currentSpawn.RelativeSpawnVelocity, _spawnMatrix) - _spawnMatrix.Translation;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, false, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity, _currentSpawn.IgnoreSafetyChecks);
 
 				if (result == true) {
 

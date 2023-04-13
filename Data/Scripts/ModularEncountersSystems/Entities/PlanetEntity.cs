@@ -21,7 +21,7 @@ namespace ModularEncountersSystems.Entities {
 		public bool HasGravity;
 		public bool HasOxygen;
 
-		public long? Water;
+		public MyPlanet Water;
 
 		public MyGravityProviderComponent Gravity;
 
@@ -170,7 +170,7 @@ namespace ModularEncountersSystems.Entities {
 			}
 				
 
-			if (!WaterAPI.HasWater(Planet.EntityId)) {
+			if (!WaterAPI.HasWater(Planet)) {
 
 				//SpawnLogger.Write("Water API Says Planet Does Not Have Water", SpawnerDebugEnum.API);
 				Water = null;
@@ -180,7 +180,7 @@ namespace ModularEncountersSystems.Entities {
 
 			if (Water == null) {
 
-				Water = Planet.EntityId;
+				Water = Planet;
 
 			}
 		

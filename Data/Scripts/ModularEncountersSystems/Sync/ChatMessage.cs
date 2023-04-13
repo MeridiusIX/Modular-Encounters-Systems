@@ -619,6 +619,22 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.ForceCombatPhase
+			if (array[2] == "ForceCombatPhase") {
+
+				CombatPhaseManager.ForcePhase(true);
+				return true;
+
+			}
+
+			//MES.Debug.ForcePeacePhase
+			if (array[2] == "ForcePeacePhase") {
+
+				CombatPhaseManager.ForcePhase(false);
+				return true;
+
+			}
+
 			//MES.Debug.Lanes
 			if (array[2] == "Lanes") {
 
@@ -721,6 +737,14 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "SaveGridTest") {
 
 				LoggerTools.DebugTestSaveGrid(this);
+				return true;
+
+			}
+
+			//MES.Debug.SetGridOwnership
+			if (array[2] == "SetGridOwnership") {
+
+				LoggerTools.SetGridOwnership(this, array);
 				return true;
 
 			}

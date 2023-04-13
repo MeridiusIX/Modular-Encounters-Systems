@@ -62,7 +62,7 @@ namespace ModularEncountersSystems.Tasks {
 
 						foreach (var despawnAction in grid.Npc.DespawnActions) {
 
-							despawnAction?.Invoke(cubeGrid, grid.Npc.DespawnSource);
+							despawnAction?.Invoke(cubeGrid, grid.DespawnSource);
 
 						}
 
@@ -72,13 +72,13 @@ namespace ModularEncountersSystems.Tasks {
 
 					SpawnLogger.Write(grid.CubeGrid.CustomName + " Grid is being Closed.", SpawnerDebugEnum.CleanUp, true);
 
-					if (!string.IsNullOrWhiteSpace(grid?.Npc?.DespawnSource)) {
+					if (!string.IsNullOrWhiteSpace(grid?.DespawnSource)) {
 
-						SpawnLogger.Write(string.Format(" - Despawn Source: [{0}]", grid.Npc.DespawnSource), SpawnerDebugEnum.CleanUp, true);
+						SpawnLogger.Write(string.Format(" - Despawn Source: [{0}]", grid.DespawnSource), SpawnerDebugEnum.CleanUp);
 
 					} else {
 
-						SpawnLogger.Write(string.Format(" - Despawn Source: Unknown"), SpawnerDebugEnum.CleanUp, true);
+						SpawnLogger.Write(string.Format(" - Despawn Source: Unknown"), SpawnerDebugEnum.CleanUp);
 
 					}
 
@@ -113,6 +113,10 @@ namespace ModularEncountersSystems.Tasks {
 
 						}
 
+					} else {
+					
+						
+					
 					}
 
 					cubeGrid.DismountAllCockpits();

@@ -44,6 +44,9 @@ namespace ModularEncountersSystems.Configuration.Editor {
                 Settings.OtherNPCs = new ConfigOtherNPCs();
                 Settings.OtherNPCs.SaveSettings();
 
+                Settings.Combat = new ConfigCombat();
+                Settings.Combat.SaveSettings();
+
                 return "All Settings Have Been Reset";
             
             }
@@ -53,6 +56,9 @@ namespace ModularEncountersSystems.Configuration.Editor {
 
             if (receivedCommand.StartsWith("/MES.Settings.Grids."))
                 return Settings.Grids.EditFields(receivedCommand);
+
+            if (receivedCommand.StartsWith("/MES.Settings.Combat."))
+                return Settings.Combat.EditFields(receivedCommand);
 
             if (receivedCommand.StartsWith("/MES.Settings.CustomBlocks."))
                 return Settings.CustomBlocks.EditFields(receivedCommand);

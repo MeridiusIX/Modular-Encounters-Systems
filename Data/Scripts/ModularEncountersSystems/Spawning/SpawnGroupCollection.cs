@@ -56,6 +56,36 @@ namespace ModularEncountersSystems.Spawning {
 		public List<string> AllowedZoneFactions;
 		public List<string> RestrictedZoneSpawnGroups;
 
+		public bool IgnoreAllSafetyChecks = false;
+		public bool SkipGridSpawnChecks { get {
+
+				if (IgnoreAllSafetyChecks)
+					return true;
+
+				if (Conditions == null)
+					return false;
+
+				return Conditions.SkipGridSpawnChecks;
+
+			} 
+
+		}
+
+		public bool SkipVoxelSpawnChecks {
+			get {
+
+				if (IgnoreAllSafetyChecks)
+					return true;
+
+				if (Conditions == null)
+					return false;
+
+				return Conditions.SkipVoxelSpawnChecks;
+
+			}
+
+		}
+
 		public SpawnGroupCollection() {
 
 			SpawnGroup = null;

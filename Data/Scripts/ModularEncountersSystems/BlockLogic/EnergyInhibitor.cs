@@ -10,7 +10,7 @@ using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class EnergyInhibitor : InhibitorBase, IBlockLogic {
+	public class EnergyInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal float _damageAtZeroDistance = 0.20f;
 		internal List<PlayerEntity> _playersInBlockRange;

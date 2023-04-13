@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Entities;
+﻿using ModularEncountersSystems.BlockLogic;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -402,6 +403,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				if (string.IsNullOrWhiteSpace(block.CustomName))
 					continue;
 
+
+				IBlockLogic logic = null;
+				BlockLogicManager.LogicBlocks.TryGetValue(block.EntityId, out logic);
+
+
 				for (int j = 0; j < names.Count; j++) {
 
 					if (block.CustomName == names[j]) {
@@ -416,6 +422,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 						if (states[j] == SwitchEnum.Toggle)
 							changeTo = changeTo ? false : true;
+
+						if (logic as InhibitorLogic != null) {
+
+							var inhibitor = logic as InhibitorLogic;
+							inhibitor.Toggle(changeTo);
+							break;
+
+						}
 
 						block.Enabled = changeTo;
 						break;

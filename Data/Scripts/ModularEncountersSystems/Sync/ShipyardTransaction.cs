@@ -240,7 +240,7 @@ namespace ModularEncountersSystems.Sync {
 
 			//Remove Ship
 			MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardSell", grid.GetPosition());
-			Cleaning.ForceRemoveGrid(grid);
+			Cleaning.ForceRemoveGrid(grid, "Despawn-SoldToShipyard");
 
 			//Credit Player
 			player.Player.RequestChangeBalance(serverFinalCost);

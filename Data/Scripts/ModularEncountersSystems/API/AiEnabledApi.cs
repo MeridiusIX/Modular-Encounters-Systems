@@ -26,7 +26,7 @@ namespace ModularEncountersSystems.API {
             try {
                 MyAPIGateway.Utilities.UnregisterMessageHandler(_botControllerModChannel, ReceiveModMessage);
             } catch (Exception ex) {
-                MyLog.Default.WriteLineAndConsole($"Exception in AiEnabled.RemoteBotAPI.Close: {ex.Message}\n{ex.StackTrace}");
+                MyLog.Default.WriteLineAndConsole($"Exception in AiEnabled.RemoteBotAPI.Close: {ex}");
             }
         }
 
@@ -166,6 +166,21 @@ namespace ModularEncountersSystems.API {
             /// If true, bots will be able to attack doors and weapon systems
             /// </summary>
             [ProtoMember(24)] public bool CanDamageGrids;
+
+            /// <summary>
+            /// If true, the bot will be killed if it's found outside of its starting map area
+            /// </summary>
+            [ProtoMember(25)] public bool ConfineToMap;
+
+            /// <summary>
+            /// If true, the bot's helmet visor will open / close automatically depending on oxygen level
+            /// </summary>
+            [ProtoMember(26)] public bool AllowHelmetVisorChanges = true;
+
+            /// <summary>
+            /// If true, the bot will be able to roam freely. Also requires server setting to be true.
+            /// </summary>
+            [ProtoMember(27)] public bool AllowMapTransitions = true;
         }
 
         /////////////////////////////////////////////
@@ -277,8 +292,15 @@ namespace ModularEncountersSystems.API {
         /// <param name="relationBetween">The relationship between the bot and the identity, defaults to NoOwnership</param>
         /// <returns>true if the EntityId is an AiEnabled bot, otherwise false</returns>
         public bool CheckBotRelationTo(long botEntityId, long otherIdentityId, out MyRelationsBetweenPlayerAndBlock relationBetween) {
+            var result = _getBotAndRelationTo?.Invoke(botEntityId, otherIdentityId);
+
+            if (result.HasValue) {
+                relationBetween = result.Value;
+                return true;
+            }
+
             relationBetween = MyRelationsBetweenPlayerAndBlock.NoOwnership;
-            return _getBotAndRelationTo?.Invoke(botEntityId, otherIdentityId, out relationBetween) ?? false;
+            return false;
         }
 
         /// <summary>
@@ -400,8 +422,15 @@ namespace ModularEncountersSystems.API {
         /// <returns>true if able to find a valid node nearby, otherwise false</returns>
         [Obsolete("Use the overload that takes in a Vector3D for startPosition to avoid subgrid issues")]
         public bool GetClosestValidNode(long botEntityId, MyCubeGrid grid, Vector3I startPosition, Vector3D? upVec, out Vector3D validWorldPosition) {
+            var result = _getClosestValidNode?.Invoke(botEntityId, grid, startPosition, upVec);
+
+            if (result.HasValue) {
+                validWorldPosition = result.Value;
+                return true;
+            }
+
             validWorldPosition = Vector3D.Zero;
-            return _getClosestValidNode?.Invoke(botEntityId, grid, startPosition, upVec, out validWorldPosition) ?? false;
+            return false;
         }
 
         /// <summary>
@@ -413,8 +442,15 @@ namespace ModularEncountersSystems.API {
         /// <param name="validWorldPosition">The returned world position</param>
         /// <returns>true if able to find a valid node nearby, otherwise false</returns>
         public bool GetClosestValidNode(long botEntityId, MyCubeGrid grid, Vector3D startPosition, Vector3D? upVec, out Vector3D validWorldPosition, bool allowAirNodes) {
+            var result = _getClosestValidNodeNew?.Invoke(botEntityId, grid, startPosition, upVec, allowAirNodes);
+
+            if (result.HasValue) {
+                validWorldPosition = result.Value;
+                return true;
+            }
+
             validWorldPosition = Vector3D.Zero;
-            return _getClosestValidNodeNew?.Invoke(botEntityId, grid, startPosition, upVec, out validWorldPosition, allowAirNodes) ?? false;
+            return false;
         }
 
         /// <summary>
@@ -467,7 +503,7 @@ namespace ModularEncountersSystems.API {
         /// <param name="botEntityId">The EntityId of the Bot's Character</param>
         /// <param name="spawnData">The serialized <see cref="SpawnData"/> object</param>
         /// <returns>true if the change is successful, otherwise false</returns>
-        public bool SwitchBotRole(long botEntityId, SpawnData spawnData) => _switchBotRole?.Invoke(botEntityId, spawnData) ?? false;
+        public bool SwitchBotRole(long botEntityId, byte[] spawnData) => _switchBotRole?.Invoke(botEntityId, spawnData) ?? false;
 
         /// <summary>
         /// Changes the bot's role and potential tooltype
@@ -502,14 +538,22 @@ namespace ModularEncountersSystems.API {
         /// <param name="includeNeutral">whether or not to include Nomad bots</param>
         public void GetBots(Dictionary<long, IMyCharacter> botDict, bool includeFriendly = true, bool includeEnemy = true, bool includeNeutral = true) => _getBots?.Invoke(botDict, includeFriendly, includeEnemy, includeNeutral);
 
+        /// <summary>
+        /// Used to generate new characters in order to relieve the invisible bot issue. USE ONLY IN MULTIPLAYER!
+        /// </summary>
+        /// <param name="gridEntityId">the EntityId of the grid to work on</param>
+        /// <param name="callBackAction">this method will be called at some point in the future, after all bots are created and seated. The list will contain all new bot characters.</param>
+        public void ReSyncBotCharacters(long gridEntityId, Action<List<IMyCharacter>> callBackAction) => _reSyncBotCharacters?.Invoke(gridEntityId, callBackAction);
+
+        /// <summary>
+        /// Attempts to throw a grenade at the bot's current target. Does nothing if the target is not an IMyEntity or is friendly.
+        /// </summary>
+        /// <param name="botEntityId">The EntityId of the Bot's Character</param>
+        public void ThrowGrenade(long botEntityId) => _throwGrenade?.Invoke(botEntityId);
 
         /////////////////////////////////////////////
         //API Methods End
         /////////////////////////////////////////////
-
-        delegate bool GetClosestNodeDelegate(long botEntityId, MyCubeGrid grid, Vector3I start, Vector3D? up, out Vector3D result);
-        delegate bool GetClosestNodeDelegateNew(long botEntityId, MyCubeGrid grid, Vector3D start, Vector3D? up, out Vector3D result, bool allowAirNodes);
-        delegate bool GetBotAndRelationTo(long botEntityId, long otherIdentityId, out MyRelationsBetweenPlayerAndBlock relationBetween);
 
         private const long _botControllerModChannel = 2408831996; //This is the channel this object will receive API methods at. Sender should also use this.
         private Func<string, string, MyPositionAndOrientation, MyCubeGrid, string, long?, Color?, IMyCharacter> _spawnBot;
@@ -537,16 +581,18 @@ namespace ModularEncountersSystems.API {
         private Func<string, string, bool> _canBotUseTool;
         private Action<string, string, MyPositionAndOrientation, MyCubeGrid, string, long?, Color?, Action<IMyCharacter>> _spawnBotQueued;
         private Action<MyPositionAndOrientation, byte[], MyCubeGrid, long?, Action<IMyCharacter>> _spawnBotCustomQueued;
-        private Func<long, SpawnData, bool> _switchBotRole;
+        private Func<long, byte[], bool> _switchBotRole;
         private Func<long, string, List<string>, bool> _switchBotRoleSlim;
-        private GetClosestNodeDelegate _getClosestValidNode;
-        private GetClosestNodeDelegateNew _getClosestValidNodeNew;
-        private GetBotAndRelationTo _getBotAndRelationTo;
+        private Func<long, MyCubeGrid, Vector3I, Vector3D?, Vector3D?> _getClosestValidNode;
+        private Func<long, MyCubeGrid, Vector3D, Vector3D?, bool, Vector3D?> _getClosestValidNodeNew;
+        private Func<long, long, MyRelationsBetweenPlayerAndBlock?> _getBotAndRelationTo;
         private Func<long, long> _getBotOwnerId;
         private Func<long, string, bool> _switchBotWeapon;
         private Action<Dictionary<long, IMyCharacter>, bool, bool, bool> _getBots;
         private Action<MyCubeGrid, List<Vector3I>, int, bool, bool, Action> _getInteriorNodes;
         private Func<IMyCubeGrid, bool> _isGridValidForPathfinding;
+        private Action<long, Action<List<IMyCharacter>>> _reSyncBotCharacters;
+        private Action<long> _throwGrenade;
 
         private void ReceiveModMessage(object payload) {
             if (Valid)
@@ -576,7 +622,8 @@ namespace ModularEncountersSystems.API {
                 _trySeatBot = dict["TrySeatBot"] as Func<long, IMyCockpit, bool>;
                 _trySeatBotOnGrid = dict["TrySeatBotOnGrid"] as Func<long, IMyCubeGrid, bool>;
                 _getAvailableGridNodes = dict["GetAvailableGridNodes"] as Action<MyCubeGrid, int, List<Vector3D>, Vector3D?, bool>;
-                _getClosestValidNode = dict["GetClosestValidNode"] as GetClosestNodeDelegate;
+                _getClosestValidNode = dict["GetClosestValidNode"] as Func<long, MyCubeGrid, Vector3I, Vector3D?, Vector3D?>;
+                _getClosestValidNodeNew = dict["GetClosestValidNodeNew"] as Func<long, MyCubeGrid, Vector3D, Vector3D?, bool, Vector3D?>;
                 _createGridMap = dict["CreateGridMap"] as Func<MyCubeGrid, MatrixD?, bool>;
                 _isGridMapReady = dict["IsGridMapReady"] as Func<MyCubeGrid, bool>;
                 _removeBot = dict["RemoveBot"] as Func<long, bool>;
@@ -584,19 +631,20 @@ namespace ModularEncountersSystems.API {
                 _speak = dict["Speak"] as Action<long, string>;
                 _isBot = dict["IsBot"] as Func<long, bool>;
                 _getRelationshipBetween = dict["GetRelationshipBetween"] as Func<long, long, MyRelationsBetweenPlayerAndBlock>;
-                _getBotAndRelationTo = dict["GetBotAndRelationTo"] as GetBotAndRelationTo;
+                _getBotAndRelationTo = dict["GetBotAndRelationTo"] as Func<long, long, MyRelationsBetweenPlayerAndBlock?>;
                 _spawnBotQueued = dict["SpawnBotQueued"] as Action<string, string, MyPositionAndOrientation, MyCubeGrid, string, long?, Color?, Action<IMyCharacter>>;
                 _spawnBotCustomQueued = dict["SpawnBotCustomQueued"] as Action<MyPositionAndOrientation, byte[], MyCubeGrid, long?, Action<IMyCharacter>>;
                 _setBotPatrol = dict["SetBotPatrol"] as Func<long, List<Vector3D>, bool>;
                 _canBotUseTool = dict["CanRoleUseTool"] as Func<string, string, bool>;
-                _switchBotRole = dict["SwitchBotRole"] as Func<long, SpawnData, bool>;
-                _getClosestValidNodeNew = dict["GetClosestValidNodeNew"] as GetClosestNodeDelegateNew;
+                _switchBotRole = dict["SwitchBotRole"] as Func<long, byte[], bool>;
                 _switchBotRoleSlim = dict["SwitchBotRoleSlim"] as Func<long, string, List<string>, bool>;
                 _switchBotWeapon = dict["SwitchBotWeapon"] as Func<long, string, bool>;
                 _getBotOwnerId = dict["GetBotOwnerId"] as Func<long, long>;
                 _getBots = dict["GetBots"] as Action<Dictionary<long, IMyCharacter>, bool, bool, bool>;
                 _getInteriorNodes = dict["GetInteriorNodes"] as Action<MyCubeGrid, List<Vector3I>, int, bool, bool, Action>;
                 _isGridValidForPathfinding = dict["IsValidForPathfinding"] as Func<IMyCubeGrid, bool>;
+                _reSyncBotCharacters = dict["ReSyncBotCharacters"] as Action<long, Action<List<IMyCharacter>>>;
+                _throwGrenade = dict["ThrowGrenade"] as Action<long>;
 
             } catch {
 

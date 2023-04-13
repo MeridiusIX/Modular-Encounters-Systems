@@ -184,6 +184,18 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+			if (id.SubtypeName == "SkeletonKey") {
+			
+				
+			
+			}
+
+			if (id.SubtypeName == "HackingModule") {
+
+
+
+			}
+
 		}
 
 		public Vector3D GetCharacterPosition() {

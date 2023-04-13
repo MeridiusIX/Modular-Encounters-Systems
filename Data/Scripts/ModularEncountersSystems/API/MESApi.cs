@@ -33,6 +33,7 @@ namespace ModularEncountersSystems.API {
 		private Action<Action<IMyCubeGrid>, bool> _registerSuccessfulSpawnAction;
 		private Action<Vector3D, string, bool> _removeKnownPlayerLocation;
 		private Action<IMyCubeGrid, bool> _setCargoShipOverride;
+		private Action<bool> _setCombatPhase;
 		private Func<IMyCubeGrid, bool, bool> _setSpawnerIgnoreForDespawn;
 		private Action<string, bool, Vector3D?> _setZoneEnabled;
 		private Func<Vector3D, List<string>, bool> _spawnBossEncounter;
@@ -214,6 +215,12 @@ namespace ModularEncountersSystems.API {
 		public void SetCargoShipOverride(IMyCubeGrid cubeGrid, bool enabled) => _setCargoShipOverride(cubeGrid, enabled);
 
 		/// <summary>
+		/// Allows you to enable or disable Combat Phase in the world.
+		/// </summary>
+		/// <param name="enabled">false disables combat phase, true enables combat phase</param>
+		public void SetCombatPhase(bool enabled) => _setCombatPhase(enabled);
+
+		/// <summary>
 		/// Allows you to enable or disable an MES Zone by name, and optionally at a set of coords in case there are multiple zones with same name
 		/// </summary>
 		/// <param name="zoneName">Zone Name</param>
@@ -314,6 +321,7 @@ namespace ModularEncountersSystems.API {
 				_registerRemoteControlCode = (Action<IMyRemoteControl, string>)dict["RegisterRemoteControlCode"];
 				_registerSuccessfulSpawnAction = (Action<Action<IMyCubeGrid>, bool>)dict["RegisterSuccessfulSpawnAction"];
 				_removeKnownPlayerLocation = (Action<Vector3D, string, bool>)dict["RemoveKnownPlayerLocation"];
+				_setCombatPhase = (Action<bool>)dict["SetCombatPhase"];
 				_setSpawnerIgnoreForDespawn = (Func<IMyCubeGrid, bool, bool>)dict["SetSpawnerIgnoreForDespawn"];
 				_setZoneEnabled = (Action<string, bool, Vector3D?>)dict["SetZoneEnabled"];
 				_spawnBossEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnBossEncounter"];

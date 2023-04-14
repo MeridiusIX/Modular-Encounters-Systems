@@ -373,6 +373,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool ActivateEvent;
 		public List<string> EventId;
+		public List<string> EventTag;
 
 		public bool CreateSafeZone;
 		public string SafeZoneProfile;
@@ -389,6 +390,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SavePlayerIdentityToSandboxList;
 		public bool RemovePlayerIdentityFromSandboxList;
 		public string PlayerIdentitySandboxList;
+
+		public bool ResetCooldownTimeOfEvents;
+		public List<string> ResetEventCooldownNames;
+		public List<string> ResetEventCooldownTags;
+
+	
 
 		public bool ResetThisStaticEncounter;
 
@@ -745,6 +752,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ActivateEvent = false;
 			EventId = new List<string>();
+			EventTag = new List<string>();
 
 			CreateSafeZone = false;
 
@@ -763,6 +771,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SavePlayerIdentityToSandboxList = false;
 			RemovePlayerIdentityFromSandboxList = false;
 			PlayerIdentitySandboxList = "";
+
+			ResetCooldownTimeOfEvents = false;
+			ResetEventCooldownNames = new List<string>();
+			ResetEventCooldownTags = new List<string>();
+
 
 			ResetThisStaticEncounter = false;
 
@@ -1021,6 +1034,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				{"ActivateEvent", (s, o) => TagParse.TagBoolCheck(s, ref ActivateEvent) },
 				{"EventId", (s, o) => TagParse.TagStringListCheck(s, ref EventId) },
+				{"EventTag", (s, o) => TagParse.TagStringListCheck(s, ref EventTag) },
+
+
+
 
 				{"CreateSafeZone", (s, o) => TagParse.TagBoolCheck(s, ref CreateSafeZone) },
 				{"SafeZoneProfile", (s, o) => TagParse.TagStringCheck(s, ref SafeZoneProfile) },
@@ -1037,10 +1054,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"SavePlayerIdentityToSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref SavePlayerIdentityToSandboxList) },
 				{"RemovePlayerIdentityFromSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentityFromSandboxList) },
 				{"PlayerIdentitySandboxList", (s, o) => TagParse.TagStringCheck(s, ref PlayerIdentitySandboxList) },
+				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
+				{"ResetEventCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownNames) },
+				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
+
+
 				{"ResetThisStaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref ResetThisStaticEncounter) },
 
-				
-			};
+
+
+	};
 
 		}
 

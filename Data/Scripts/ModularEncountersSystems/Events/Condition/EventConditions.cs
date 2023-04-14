@@ -10,6 +10,7 @@ using VRage.Game.ModAPI;
 using VRage.Game;
 using VRage.Game.Components;
 using VRage.Utils;
+using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using VRageMath;
 
 namespace ModularEncountersSystems.Events.Condition
@@ -24,6 +25,22 @@ namespace ModularEncountersSystems.Events.Condition
         public bool CheckFalseBooleans;
         public List<string> FalseBooleans;
         public bool AllowAnyFalseBoolean;
+
+        public bool CheckCustomCounters;
+        public List<string> CustomCounters;
+        public List<int> CustomCountersTargets;
+        public List<CounterCompareEnum> CounterCompareTypes;
+
+        public bool CheckPlayerNear;
+        public bool CheckPlayerFar;
+        public int Distance;
+        public Vector3D vector3;
+        public List<string> PlayerFilterIds;
+
+
+
+
+
 
         public bool CheckMainEventDaysPassed;
         public int DaysPassed;
@@ -42,6 +59,11 @@ namespace ModularEncountersSystems.Events.Condition
             CheckMainEventDaysPassed = false;
             DaysPassed = 1;
             UseAnyPassingCondition = false;
+
+            CheckCustomCounters = false;
+            CustomCounters = new List<string>();
+            CustomCountersTargets = new List<int>();
+            CounterCompareTypes = new List<CounterCompareEnum>();
 
 
         }
@@ -117,6 +139,36 @@ namespace ModularEncountersSystems.Events.Condition
                     TagParse.TagBoolCheck(tag, ref this.UseAnyPassingCondition);
 
                 }
+                //CheckCustomCounters
+                if (tag.StartsWith("[CheckCustomCounters:") == true)
+                {
+
+                    TagParse.TagBoolCheck(tag, ref this.CheckCustomCounters);
+
+                }
+                //CustomCounters
+                if (tag.StartsWith("[CustomCounters:") == true)
+                {
+
+                    TagParse.TagStringListCheck(tag, ref this.CustomCounters);
+
+                }
+                //CustomCountersTargets
+                if (tag.StartsWith("[CustomCountersTargets:") == true)
+                {
+
+                    TagParse.TagIntListCheck(tag, ref this.CustomCountersTargets);
+
+                }
+                //CounterCompareTypes
+                if (tag.StartsWith("[CounterCompareTypes:") == true)
+                {
+
+                    TagParse.TagCounterCompareEnumCheck(tag, ref this.CounterCompareTypes);
+
+                }
+
+
 
             }
 
@@ -166,7 +218,7 @@ namespace ModularEncountersSystems.Events.Condition
                         if (!result || !output)
                         {
 
-                            //BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Boolean False: " + boolName, BehaviorDebugEnum.Condition);
+                            //BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
                             failedCheck = true;
                             continue;
 
@@ -217,7 +269,7 @@ namespace ModularEncountersSystems.Events.Condition
                         if (output)
                         {
 
-                            //BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Boolean False: " + boolName, BehaviorDebugEnum.Condition);
+                            //BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
                             failedCheck = true;
                             continue;
 
@@ -243,6 +295,104 @@ namespace ModularEncountersSystems.Events.Condition
                 if (!failedCheck)
                     satisfiedConditions++;
             }
+
+            if (Profile.CheckCustomCounters == true)
+            {
+                bool Satisfied = true;
+
+                if (Profile.CustomCounters.Count == Profile.CustomCountersTargets.Count)
+                {
+
+                    for (int i = 0; i < Profile.CustomCounters.Count; i++)
+                    {
+
+                        try
+                        {
+
+                            int counter = 0;
+                            var result = MyAPIGateway.Utilities.GetVariable(Profile.CustomCounters[i], out counter);
+
+                            var compareType = CounterCompareEnum.GreaterOrEqual;
+
+                            if (i <= Profile.CounterCompareTypes.Count - 1)
+                                compareType = Profile.CounterCompareTypes[i];
+
+                            bool counterResult = false;
+
+                            if (compareType == CounterCompareEnum.GreaterOrEqual)
+                                counterResult = (counter >= Profile.CustomCountersTargets[i]);
+
+                            if (compareType == CounterCompareEnum.Greater)
+                                counterResult = (counter > Profile.CustomCountersTargets[i]);
+
+                            if (compareType == CounterCompareEnum.Equal)
+                                counterResult = (counter == Profile.CustomCountersTargets[i]);
+
+                            if (compareType == CounterCompareEnum.NotEqual)
+                                counterResult = (counter != Profile.CustomCountersTargets[i]);
+
+                            if (compareType == CounterCompareEnum.Less)
+                                counterResult = (counter < Profile.CustomCountersTargets[i]);
+
+                            if (compareType == CounterCompareEnum.LessOrEqual)
+                                counterResult = (counter <= Profile.CustomCountersTargets[i]);
+
+                            if (!result || !counterResult)
+                            {
+                                //BehaviorLogger.Write(ProfileSubtypeId + ":  Counter Amount Condition Not Satisfied: " + ConditionReference.CustomCounters[i], BehaviorDebugEnum.Condition);
+                                Satisfied =  false;
+
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            //BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+                            //BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+                        }
+                    }
+
+                }
+                else
+                {
+                    //BehaviorLogger.Write(ProfileSubtypeId + ":  Counter Names and Targets List Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
+                    Satisfied = false;
+                }
+
+
+
+                if (Satisfied)
+                    satisfiedConditions++;
+            }
+
+
+            if (Profile.CheckPlayerNear)
+            {
+                usedConditions++;
+
+                List<IMyPlayer> ListOfPlayersinRange = null;
+                List<long> ListOfPlayerIds = new List<long>();
+
+                //int amountofplayersmatch = 0;
+
+                ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(Profile.vector3, Profile.Distance);
+                //int amountofPlayers = ListOfPlayersinRange.Count;
+
+                foreach (IMyPlayer Player in ListOfPlayersinRange)
+                {
+                    ListOfPlayerIds.Add(Player.IdentityId);
+                }
+
+                foreach (var id in ListOfPlayerIds)
+                {
+                    if (PlayerFilter.ArePlayerFiltersMet(Profile.PlayerFilterIds, id))
+                        satisfiedConditions++;
+                }
+
+                //if (amountofPlayers == amountofplayersmatch)
+                    
+
+            }
+
 
             //Date thingy
 

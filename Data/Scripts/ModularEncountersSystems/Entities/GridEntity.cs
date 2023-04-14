@@ -34,6 +34,16 @@ namespace ModularEncountersSystems.Entities {
 
 	}
 
+	public enum GridConfigurationEnum
+	{
+
+		All,
+		Static,
+		Mobile
+
+	}
+
+
 	public class GridEntity : EntityBase, ITarget{
 
 		public IMyCubeGrid CubeGrid;

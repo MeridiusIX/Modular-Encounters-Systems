@@ -132,7 +132,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					command = new Command();
 					if (trigger.UsePlayerFilterProfile) 
 						trigger.ActivateTrigger(CheckPlayerFarFilter, command);
-					else
+                    else
 						trigger.ActivateTrigger(CheckPlayerFar, command);
 
 					if (trigger.Triggered == true)
@@ -1052,8 +1052,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void SetSandboxBool(string boolName, bool mode) {
 
-			if (boolName.Contains("{SpawnGroupName}") && _behavior.CurrentGrid?.Npc.SpawnGroupName != null)
-			{
+            if (boolName.Contains("{SpawnGroupName}") && _behavior.CurrentGrid?.Npc.SpawnGroupName != null)
+            {
 				boolName = boolName.Replace("{SpawnGroupName}", _behavior.CurrentGrid?.Npc.SpawnGroupName);
 			}
 
@@ -1068,7 +1068,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void SetSandboxCounter(string counterName, int amount, bool hardSet = false) {
 
-			if (counterName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
+            if (counterName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
 			{
 				counterName = counterName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
 			}
@@ -1208,7 +1208,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (distance > -1 && dist > distance)
 					continue;
 
-				if (!PlayerFilter.ArePlayerFiltersMet(control.PlayerFilterProfileIds, control, player.Player.IdentityId))
+				if (!PlayerFilter.ArePlayerFiltersMet(control.PlayerFilterProfileIds, player.Player.IdentityId))
 					continue;
 
 				distance = dist;

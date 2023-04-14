@@ -21,18 +21,23 @@ namespace ModularEncountersSystems.Events.Action {
 
 		public string ProfileSubtypeId;
 		public bool ChangeBooleans;
-		public List<string> SetSandboxBooleansTrue;
-		public List<string> SetSandboxBooleansFalse;
+		public List<string> SetBooleansTrue;
+		public List<string> SetBooleansFalse;
 
 		public bool ChangeCounters;
-		public List<string> IncreaseSandboxCounters;
-		public List<string> DecreaseSandboxCounters;
-		public List<int> IncreaseSandboxCountersAmount;
-		public List<int> DecreaseSandboxCountersAmount;
+		public List<string> IncreaseCounters;
+		public List<string> DecreaseCounters;
+		public List<int> IncreaseCountersAmount;
+		public List<int> DecreaseCountersAmount;
 
-		public bool SetCounters;
-		public List<string> SetSandboxCounters;
-		public List<int> SetSandboxCountersAmount;
+		public List<string> SetCounters;
+		public List<int> SetCountersAmount;
+
+
+		public bool ResetCooldownTimeOfEvents;
+		public List<string> ResetEventCooldownNames;
+		public List<string> ResetEventCooldownTags;
+
 
 
 
@@ -52,19 +57,22 @@ namespace ModularEncountersSystems.Events.Action {
 
 			ProfileSubtypeId = "";
 			ChangeBooleans = false;
-			SetSandboxBooleansTrue = new List<string>();
-			SetSandboxBooleansFalse = new List<string>();
+			SetBooleansTrue = new List<string>();
+			SetBooleansFalse = new List<string>();
 
 			ChangeCounters = false;
-			IncreaseSandboxCounters = new List<string>();
-			DecreaseSandboxCounters = new List<string>();
-			IncreaseSandboxCountersAmount = new List<int>();
-			DecreaseSandboxCountersAmount = new List<int>();
+			IncreaseCounters = new List<string>();
+			DecreaseCounters = new List<string>();
+			IncreaseCountersAmount = new List<int>();
+			DecreaseCountersAmount = new List<int>();
 
+			SetCounters = new List<string>();
+			SetCountersAmount = new List<int>();
 
-			SetCounters = false;
-			SetSandboxCounters = new List<string>();
-			SetSandboxCountersAmount = new List<int>();
+			ResetCooldownTimeOfEvents = false;
+			ResetEventCooldownNames = new List<string>();
+			ResetEventCooldownTags = new List<string>();
+
 
 			UseChatBroadcast = false;
 			ChatData = new List<ChatProfile>();
@@ -79,17 +87,20 @@ namespace ModularEncountersSystems.Events.Action {
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"ChangeBooleans", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBooleans) },
-				{"SetSandboxBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansTrue) },
-				{"SetSandboxBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansFalse) },
+				{"SetBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansTrue) },
+				{"SetBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansFalse) },
 				{"ChangeCounters", (s, o) => TagParse.TagBoolCheck(s, ref ChangeCounters) },
-				{"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
-				{"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
-				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref IncreaseSandboxCountersAmount) },
-				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref DecreaseSandboxCountersAmount) },
-				{"SetCounters", (s, o) => TagParse.TagBoolCheck(s, ref SetCounters) },
-				{"SetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxCounters) },
-				{"SetSandboxCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref SetSandboxCountersAmount) },
+				{"IncreaseCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseCounters) },
+				{"DecreaseCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseCounters) },
+				{"IncreaseCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref IncreaseCountersAmount) },
+				{"DecreaseCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref DecreaseCountersAmount) },
+				{"SetCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetCounters) },
+				{"SetCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersAmount) },
+				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
+				{"ResetEventCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownNames) },
+				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
 
+				
 				{"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
 				{"DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },
 				{"SetEventControllers", (s, o) => TagParse.TagBoolCheck(s, ref SetEventControllers) },

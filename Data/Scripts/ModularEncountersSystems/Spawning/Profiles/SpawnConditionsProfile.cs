@@ -224,6 +224,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int ThreatScoreMinimum;
 		public int ThreatScoreMaximum;
 		public int ThreatScorePlanetaryHandicap;
+		public Entities.GridConfigurationEnum ThreatScoreGridConfiguration;
 
 		public bool UsePCUCheck;
 		public double PCUCheckRadius;
@@ -550,6 +551,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ThreatScoreMinimum = -1;
 			ThreatScoreMaximum = -1;
 			ThreatScorePlanetaryHandicap = 0;
+			ThreatScoreGridConfiguration = Entities.GridConfigurationEnum.All;
 
 			UsePCUCheck = false;
 			PCUCheckRadius = 5000;
@@ -819,6 +821,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"ThreatScoreMinimum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMinimum) },
 				{"ThreatScoreMaximum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMaximum) },
 				{"ThreatScorePlanetaryHandicap", (s, o) => TagParse.TagIntCheck(s, ref ThreatScorePlanetaryHandicap) },
+				{"ThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref ThreatScoreGridConfiguration) },
+
 				{"UsePCUCheck", (s, o) => TagParse.TagBoolCheck(s, ref UsePCUCheck) },
 				{"PCUCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PCUCheckRadius) },
 				{"PCUMinimum", (s, o) => TagParse.TagIntCheck(s, ref PCUMinimum) },

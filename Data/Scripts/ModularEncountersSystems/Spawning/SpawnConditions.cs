@@ -1084,7 +1084,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (conditions.UseThreatLevelCheck == true) {
 
-				var threatLevel = GetThreatLevel(conditions.ThreatLevelCheckRange, conditions.ThreatIncludeOtherNpcOwners, environment.Position);
+				var threatLevel = GetThreatLevel(conditions.ThreatLevelCheckRange, conditions.ThreatIncludeOtherNpcOwners, environment.Position, conditions.ThreatScoreGridConfiguration);
 				var gravityHandicap = environment.IsOnPlanet ? conditions.ThreatScorePlanetaryHandicap : 0;
 
 				if (threatLevel < (float)conditions.ThreatScoreMinimum + gravityHandicap && (float)conditions.ThreatScoreMinimum > 0) {
@@ -1685,7 +1685,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static float GetThreatLevel(double checkRange, bool includeNpcs, Vector3D coords) {
+		public static float GetThreatLevel(double checkRange, bool includeNpcs, Vector3D coords, GridConfigurationEnum gridconfigurationenum = GridConfigurationEnum.All) {
 
 			float totalThreatLevel = 0;
 
@@ -1693,6 +1693,8 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (!grid.ActiveEntity() || grid.Distance(coords) > checkRange)
 					continue;
+
+
 
 				bool validOwner = false;
 
@@ -1703,6 +1705,14 @@ namespace ModularEncountersSystems.Spawning {
 
 				if(includeNpcs && ownership.HasFlag(GridOwnershipEnum.NpcMajority))
 					validOwner = true;
+
+				if (grid.CubeGrid.IsStatic && gridconfigurationenum.HasFlag(GridConfigurationEnum.Mobile))
+					validOwner = false;
+
+				if (!grid.CubeGrid.IsStatic && gridconfigurationenum.HasFlag(GridConfigurationEnum.Static))
+					validOwner = false;
+
+
 
 				if (!validOwner)
 					continue;

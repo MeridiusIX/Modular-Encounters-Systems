@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Events.Action;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
@@ -1335,7 +1336,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (actions.ActivateEvent)
 			{
-
+				//Something doesn't feel right here - CPT
 				for (int i = 0; i < Events.EventManager.EventsList.Count; i++)
 				{
 					var thisEvent = Events.EventManager.EventsList[i];
@@ -1343,7 +1344,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (!thisEvent.Valid)
 					{
 						continue;
+					}
 
+					for (int j = 0; j < actions.EventTag.Count; j++)
+					{
+						var thisEventTag = actions.EventTag[j];
+
+						if (thisEvent.Profile.Tags.Contains(thisEventTag))
+						{
+							thisEvent.ActivateEventActions();
+							thisEvent.RunCount++;
+						}
 					}
 
 
@@ -1356,8 +1367,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							thisEvent.ActivateEventActions();
 							thisEvent.RunCount++;
 						}
-
 					}
+
+
+
 				}
 			}
 
@@ -1524,6 +1537,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+            if (actions.ResetCooldownTimeOfEvents)
+            {
+				EventActionProfile.ResetCooldownTimeOfEvents(actions.ResetEventCooldownNames, actions.ResetEventCooldownTags, _behavior.CurrentGrid?.Npc.SpawnGroupName);
+			}
 
 			if (actions.ResetThisStaticEncounter)
 			{

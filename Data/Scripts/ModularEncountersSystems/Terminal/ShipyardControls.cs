@@ -21,6 +21,7 @@ namespace ModularEncountersSystems.Terminal {
 		BlueprintBuilding,
 		ScrapPurchasing,
 		RepairAndConstruction,
+		GridTakeover,
 
 	}
 
@@ -553,6 +554,8 @@ namespace ModularEncountersSystems.Terminal {
 			sb.Append(" - This allows the Merchant Shipyard to purchase one of your grids as scrap, and providing a percentage of the grid's estimated value to the player that initiates the transaction. Some merchants may also include the value of the cargo in the grid as well. To initiate this transaction, choose [Scrap Purchasing] from the mode select. A terminal control will appear that will allow you to select a grid. Only grids that are a short distance from the merchant, and are also majority-owned by the player requesting the transaction will appear in this list. Once you've selected a grid, you will get a price quote in the info pane of the terminal (bottom right). If the price is agreeable to you, then press the [Sell Grid as Scrap] button to complete the transaction. The credits will be deposited into your player balance and the grid will be removed from the world.").AppendLine().AppendLine();
 			sb.Append("[Repair and Construction]").AppendLine();
 			sb.Append(" - This allows you to use the Merchant Shipyard for repairing damaged / incomplete blocks, or constructing new block from a projection on one of your near-by grids. When requesting this work, the Shipyard will attempt to repair/construct as many blocks as it currently can in one transaction. To initiate this transaction, choose [Repair and Construction] from the mode select. A terminal control will appear that will allow you to select a grid. Only grids that are a short distance from the merchant, and are also majority-owned by the player requesting the transaction will appear in this list. Once you've chosen a grid, select the types of work you want done on your ship by using the [] and [] checkboxes. Once you've made your selections, you will get a price quote in the info pane of the terminal (bottom right). If the price is agreeable to you, then press the [Construct / Repair Blocks] button to complete the transaction. The credits will be withdrawn from your player account, and the requested work will be performed on your selected grid.").AppendLine().AppendLine();
+			sb.Append("[Grid Takeover]").AppendLine();
+			sb.Append(" - This allows you to use the Merchant Shipyard to take complete ownership of another grid. The grid being taken over must have at least 1 block owned by an identity other than yourself (and is also not part of your faction). The cost of the takeover operation is based on the amount of computer components present in the blocks you do not already control. Taking ownership of an NPC faction grid can also result in a reputation penalty with that faction. To initiate this transaction, choose [Grid Takeover] from the mode select. A terminal control will appear that will allow you to select a nearby grid with mixed ownership. Once you have selected a grid, you will receive a price quite in the info pane of the terminal (bottom right), along with a reputation penalty (if applicable). If the terms are agreeable to you, then press the [Take Ownership of Grid] button to complete the transaction. The credits will be removed from your player balance, any reputation penalties will be applied, and the grid will now be fully under your ownership.").AppendLine().AppendLine();
 			MyAPIGateway.Utilities.ShowMissionScreen("Shipyard System (MES)", "", "Information and Help", sb.ToString());
 
 		}
@@ -613,6 +616,22 @@ namespace ModularEncountersSystems.Terminal {
 					controls.SmallGridLimit.Append(controls.Profile.RepairAndConstructionSmallGridBlockLimit.ToString());
 					controls.LargeGridLimit.Clear();
 					controls.LargeGridLimit.Append(controls.Profile.RepairAndConstructionLargeGridBlockLimit.ToString());
+
+					if (controls.Mode == ShipyardModes.RepairAndConstruction)
+						selected.Add(item);
+
+				}
+
+				//AllowGridTakeover
+				if (controls.Profile.AllowGridTakeover) {
+
+					var item = new MyTerminalControlListBoxItem(MyStringId.GetOrCompute("Grid Takeover"), MyStringId.GetOrCompute("Grid Takeover"), ShipyardModes.GridTakeover);
+					items.Add(item);
+
+					controls.SmallGridLimit.Clear();
+					controls.SmallGridLimit.Append(controls.Profile.GridTakeoverSmallGridBlockLimit.ToString());
+					controls.LargeGridLimit.Clear();
+					controls.LargeGridLimit.Append(controls.Profile.GridTakeoverLargeGridBlockLimit.ToString());
 
 					if (controls.Mode == ShipyardModes.RepairAndConstruction)
 						selected.Add(item);
@@ -710,6 +729,16 @@ namespace ModularEncountersSystems.Terminal {
 					return false;
 
 				if (size == MyCubeSize.Large && count > profile.RepairAndConstructionLargeGridBlockLimit)
+					return false;
+
+			}
+
+			if (mode == ShipyardModes.GridTakeover) {
+
+				if (size == MyCubeSize.Small && count > profile.GridTakeoverSmallGridBlockLimit)
+					return false;
+
+				if (size == MyCubeSize.Large && count > profile.GridTakeoverLargeGridBlockLimit)
 					return false;
 
 			}

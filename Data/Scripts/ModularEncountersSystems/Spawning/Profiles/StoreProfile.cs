@@ -280,8 +280,24 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				
 					_tempSecondItem = _tempItems[j];
 
+					if (_tempFirstItem.Amount == 0)
+						continue;
+
 					if (_tempSecondItem == _tempFirstItem || _tempFirstItem.StoreItemType != _tempSecondItem.StoreItemType)
 						continue;
+
+					if (_tempFirstItem.ItemType == ItemTypes.Hydrogen || _tempFirstItem.ItemType == ItemTypes.Oxygen) {
+
+						if (_tempFirstItem.ItemType == _tempSecondItem.ItemType) {
+
+							//BehaviorLogger.Write(" - Gas Concat: Id" + _tempFirstItem.Id, BehaviorDebugEnum.Action);
+							_tempFirstItem.Amount += _tempSecondItem.Amount;
+							_tempSecondItem.Amount = 0;
+							continue;
+
+						}
+
+					}
 
 					if (!_tempFirstItem.Item.HasValue || !_tempSecondItem.Item.HasValue)
 						continue;

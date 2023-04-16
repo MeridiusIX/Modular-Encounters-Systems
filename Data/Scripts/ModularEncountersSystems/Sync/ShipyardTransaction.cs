@@ -25,6 +25,7 @@ namespace ModularEncountersSystems.Sync {
 		[ProtoMember(5)] public bool ConstructBlocks;
 		[ProtoMember(6)] public bool RepairBlocks;
 		[ProtoMember(7)] public bool UseServerPrice;
+		[ProtoMember(8)] public int ReputationPenalty;
 
 		public ShipyardTransaction() {
 
@@ -35,6 +36,7 @@ namespace ModularEncountersSystems.Sync {
 			ConstructBlocks = false;
 			RepairBlocks = false;
 			UseServerPrice = false;
+			ReputationPenalty = 0;
 
 		}
 
@@ -371,6 +373,82 @@ namespace ModularEncountersSystems.Sync {
 					continue;
 
 				safezone.SafeZone.Enabled = true;
+
+			}
+
+			ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.TransactionSuccessful, Mode, sender, ProjectorId, serverFinalCost);
+
+		}
+
+		internal void ProcessGridTakeover(PlayerEntity player, GridEntity grid, IMyProjector projector, ShipyardProfile profile, int reputation, ulong sender) {
+
+			//Calculate Work Eligiblity
+			if (!ShipyardControls.GridSelectionRules(projector, grid, ShipyardModes.GridTakeover, profile)) {
+
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ShipyardRulesNotSatisfied, Mode, sender, ProjectorId);
+				return;
+
+			}
+
+			//Calculate Cost Of Work
+			var serverRawCost = grid.CreditValueRegular(profile.ScrapPurchasingIncludeInventory);
+
+			if (serverRawCost <= 0) {
+
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerRawCostZero, Mode, sender, ProjectorId);
+				return;
+
+			}
+
+			var serverFinalCost = profile.GetScrapPrice(serverRawCost, reputation);
+
+			//Compare To ClientPrice
+			if (serverFinalCost != ClientPrice) {
+
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
+				return;
+
+			}
+
+			var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(projector.OwnerId);
+
+			//Merchant Credits
+			if (profile.TransactionsUseNpcFactionBalance) {
+
+				if (faction == null) {
+
+					ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.MerchantInsufficientCredits, Mode, sender, ProjectorId);
+					return;
+
+				}
+
+				long balance = 0;
+				faction.TryGetBalanceInfo(out balance);
+
+				if (balance < serverFinalCost) {
+
+					ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.MerchantInsufficientCredits, Mode, sender, ProjectorId);
+					return;
+
+				}
+
+			}
+
+			//Remove Ship
+			MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardSell", grid.GetPosition());
+			Cleaning.ForceRemoveGrid(grid, "Despawn-SoldToShipyard");
+
+			//Credit Player
+			player.Player.RequestChangeBalance(serverFinalCost);
+
+			//Charge Merchant
+			if (profile.TransactionsUseNpcFactionBalance) {
+
+				if (faction != null) {
+
+					faction.RequestChangeBalance(-serverFinalCost);
+
+				}
 
 			}
 

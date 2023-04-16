@@ -727,6 +727,68 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public int ComputerCount(long ownership = -1, bool allowNonActiveEntity = false) {
+
+			int result = 0;
+
+			if (!ActiveEntity()) {
+
+				if (!allowNonActiveEntity) {
+
+					return result;
+
+				}
+
+			}
+
+			lock (AllBlocks) {
+
+				IMySlimBlock slimBlock = null;
+				IMyTerminalBlock termBlock = null;
+				MyCubeBlockDefinition def = null;
+				Dictionary<string, int> dict = new Dictionary<string, int>();
+
+				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+					slimBlock = AllBlocks[i];
+					def = slimBlock?.BlockDefinition as MyCubeBlockDefinition;
+					termBlock = slimBlock?.FatBlock as IMyTerminalBlock;
+
+					if (def == null || termBlock == null)
+						continue;
+
+					if (ownership != -1 && termBlock.OwnerId != ownership)
+						continue;
+
+					foreach (var comp in def.Components) {
+
+						if (comp.Definition.Id.SubtypeName != "Computer")
+							continue;
+
+						result += comp.Count;
+
+					}
+
+					dict.Clear();
+					slimBlock.GetMissingComponents(dict);
+
+					foreach (var comp in dict.Keys) {
+
+						if (comp != "Computer")
+							continue;
+
+						result -= dict[comp];
+
+					}
+
+				}
+
+			}
+
+			return result;
+
+		}
+
 		public long CreditValueRegular(bool countInventoryItems = false, bool allowNonActiveEntity = false) {
 
 			long result = 0;

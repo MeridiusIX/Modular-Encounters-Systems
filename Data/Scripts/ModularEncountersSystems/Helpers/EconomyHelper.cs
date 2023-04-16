@@ -1,4 +1,5 @@
 using ModularEncountersSystems.Configuration;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
@@ -926,6 +927,8 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		
+
 		public static void OnSaleComplete(int amtSold, int amtRemain, long cost, long storeOwner, long customer) {
 
 			if (customer == 0) {
@@ -1008,6 +1011,41 @@ namespace ModularEncountersSystems.Helpers {
 			var newByteData = MyAPIGateway.Utilities.SerializeToBinary(playerSales);
 			var newStringData = Convert.ToBase64String(newByteData);
 			MyAPIGateway.Utilities.SetVariable("MES-SaleTracker-" + customer.ToString(), newStringData);
+
+		}
+
+		public static long GridTakeoverCost(GridEntity grid, long newOwnerIdentity, int costPerComputer) {
+
+			if (grid == null || !grid.ActiveEntity())
+				return 0;
+
+			long result = 0;
+			IMyFaction faction = null;
+
+			if (grid.CubeGrid.BigOwners != null) {
+
+				foreach (var owner in grid.CubeGrid.BigOwners) {
+
+					if (owner == 0 || owner == newOwnerIdentity)
+						continue;
+
+					faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(owner);
+
+					if (faction != null) {
+
+						//Player Faction Check
+						if (faction.IsMember(newOwnerIdentity))
+							continue;
+
+					}
+
+					result += grid.ComputerCount(owner) * costPerComputer;
+
+				}
+
+			}
+
+			return result;
 
 		}
 

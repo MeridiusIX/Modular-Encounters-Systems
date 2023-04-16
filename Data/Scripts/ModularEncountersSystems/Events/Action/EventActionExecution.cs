@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Events.Condition;
+using ModularEncountersSystems.Helpers;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -20,14 +21,14 @@ namespace ModularEncountersSystems.Events.Action {
 			//Booleans
 			if (actions.ChangeBooleans == true) {
 
-				for (int i = 0; i < actions.SetSandboxBooleansTrue.Count; i++) {
+				for (int i = 0; i < actions.SetBooleansTrue.Count; i++) {
 
-					MyAPIGateway.Utilities.SetVariable<bool>(actions.SetSandboxBooleansTrue[i], true);
+					MyAPIGateway.Utilities.SetVariable<bool>(actions.SetBooleansTrue[i], true);
 
 				}
-				for (int i = 0; i < actions.SetSandboxBooleansFalse.Count; i++) {
+				for (int i = 0; i < actions.SetBooleansFalse.Count; i++) {
 
-					MyAPIGateway.Utilities.SetVariable<bool>(actions.SetSandboxBooleansFalse[i], false);
+					MyAPIGateway.Utilities.SetVariable<bool>(actions.SetBooleansFalse[i], false);
 
 				}
 
@@ -36,40 +37,40 @@ namespace ModularEncountersSystems.Events.Action {
 			//Change Counter
 			if (actions.ChangeCounters) {
 
-				if (actions.IncreaseSandboxCounters.Count != actions.IncreaseSandboxCountersAmount.Count)
+				if (actions.IncreaseCounters.Count != actions.IncreaseCountersAmount.Count)
 					return;
 
-				if (actions.DecreaseSandboxCounters.Count != actions.DecreaseSandboxCountersAmount.Count)
+				if (actions.DecreaseCounters.Count != actions.DecreaseCountersAmount.Count)
 					return;
 
-
-				for (int i = 0; i < actions.IncreaseSandboxCounters.Count; i++) {
-					SetSandboxCounter(actions.IncreaseSandboxCounters[i], Math.Abs(actions.IncreaseSandboxCountersAmount[i]), false);
+				if (actions.SetCounters.Count != actions.SetCountersAmount.Count)
+				{
+					return;
 				}
 
-				for (int i = 0; i < actions.DecreaseSandboxCounters.Count; i++) {
 
-					SetSandboxCounter(actions.DecreaseSandboxCounters[i], - Math.Abs(actions.DecreaseSandboxCountersAmount[i]), false);
+				for (int i = 0; i < actions.SetCounters.Count; i++)
+				{
+					SetCounter(actions.SetCounters[i], actions.SetCountersAmount[i], true);
+				}
+
+
+				for (int i = 0; i < actions.IncreaseCounters.Count; i++) {
+					SetCounter(actions.IncreaseCounters[i], Math.Abs(actions.IncreaseCountersAmount[i]), false);
+				}
+
+				for (int i = 0; i < actions.DecreaseCounters.Count; i++) {
+
+					SetCounter(actions.DecreaseCounters[i], - Math.Abs(actions.DecreaseCountersAmount[i]), false);
 				}
 
 			}
 
 
-			//Set Counter
-			if (actions.SetCounters)
-			{
 
-				if (actions.SetSandboxCounters.Count != actions.SetSandboxCountersAmount.Count)
-				{
-					return;
-				}
-
-
-				for (int i = 0; i < actions.SetSandboxCounters.Count; i++)
-				{
-					SetSandboxCounter(actions.SetSandboxCounters[i], actions.SetSandboxCountersAmount[i], true);
-				}
-
+            if (actions.ResetCooldownTimeOfEvents)
+            {
+				ResetCooldownTimeOfEvents(actions.ResetEventCooldownNames, actions.ResetEventCooldownTags);
 			}
 
 			//ChatBroadcast
@@ -128,7 +129,7 @@ namespace ModularEncountersSystems.Events.Action {
 		}
 		*/
 
-		public void SetSandboxCounter(string counterName, int amount, bool hardSet = false)
+		public void SetCounter(string counterName, int amount, bool hardSet = false)
 		{
 
 			if (hardSet)
@@ -143,7 +144,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 			MyAPIGateway.Utilities.GetVariable(counterName, out existingCounter);
 
-			//This is for ResetSandboxCounters
+			//This is for ResetCounters
 			if (amount == 0)
 			{
 
@@ -161,6 +162,43 @@ namespace ModularEncountersSystems.Events.Action {
 			}
 
 		}
+
+
+		public static void ResetCooldownTimeOfEvents(List<string> ResetEventCooldownNames, List<string> ResetEventCooldownTags, string SpawnGroupName = "")
+		{
+			foreach (var EventName in ResetEventCooldownNames)
+			{
+				var Name = EventName;
+				if (EventName.Contains("{SpawnGroupName}") && SpawnGroupName != null)
+				{
+					Name = EventName.Replace("{SpawnGroupName}", SpawnGroupName);
+				}
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Name == Event.ProfileSubtypeId)
+					{
+						Event.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+						Event.CooldownTimeTrigger = MathTools.RandomBetween(Event.Profile.MinCooldownMs, Event.Profile.MaxCooldownMs);
+					}
+				}
+			}
+
+			foreach (var Tag in ResetEventCooldownTags)
+			{
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Event.Profile.Tags.Contains(Tag))
+					{
+						Event.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+						Event.CooldownTimeTrigger = MathTools.RandomBetween(Event.Profile.MinCooldownMs, Event.Profile.MaxCooldownMs);
+					}
+				}
+			}
+
+		}
+
+
+
 
 
 

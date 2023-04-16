@@ -1156,6 +1156,30 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagGridConfigurationCheck(string tag, ref GridConfigurationEnum original)
+		{
+
+			GridConfigurationEnum result = GridConfigurationEnum.All;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2)
+			{
+
+				if (GridConfigurationEnum.TryParse(tagSplit[1], out result) == false)
+				{
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+
+		}
+
+
 		public static void TagTargetFilterEnumCheck(string tag, ref List<TargetFilterEnum> original) {
 
 			TargetFilterEnum result = TargetFilterEnum.None;

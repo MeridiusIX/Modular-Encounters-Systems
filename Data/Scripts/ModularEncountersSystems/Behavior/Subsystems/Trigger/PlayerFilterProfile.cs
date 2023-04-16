@@ -95,7 +95,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
 
-        public static bool ArePlayerFiltersMet(List<string> ProfilesIds, TriggerProfile control, long PlayerId)
+        public static bool ArePlayerFiltersMet(List<string> ProfilesIds,  long PlayerId)
         {
 
             List<PlayerFilter> Profiles = new List<PlayerFilter>();
@@ -120,7 +120,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             for (int i = 0; i < Profiles.Count; i++)
             {
                 usedProfileConditions++;
-                if (IsPlayerFiltersMet(Profiles[i], control, PlayerId))
+                if (IsPlayerFiltersMet(Profiles[i], PlayerId))
                     satisfieddProfileConditions++;
             }
 
@@ -132,7 +132,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
         }
 
-        public static bool IsPlayerFiltersMet(PlayerFilter profile, TriggerProfile control, long PlayerId)
+        public static bool IsPlayerFiltersMet(PlayerFilter profile, long PlayerId)
         {
             int usedConditions = 0;
             int satisfiedConditions = 0;

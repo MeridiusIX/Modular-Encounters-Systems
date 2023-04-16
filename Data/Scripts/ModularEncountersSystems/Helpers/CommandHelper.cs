@@ -140,7 +140,7 @@ namespace ModularEncountersSystems.Helpers {
             double sendRadius = 0;
 
             if (profile.CommandCode.Contains("{FactionTag}")){
-                this.CommandCode = profile.CommandCode.Replace("{FAC}", behavior.RemoteControl.GetOwnerFactionTag());
+                this.CommandCode = profile.CommandCode.Replace("{FactionTag}", behavior.RemoteControl.GetOwnerFactionTag());
             }
             else
             {

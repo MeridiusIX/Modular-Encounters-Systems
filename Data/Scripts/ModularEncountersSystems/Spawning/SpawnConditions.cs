@@ -1706,7 +1706,7 @@ namespace ModularEncountersSystems.Spawning {
 				if(includeNpcs && ownership.HasFlag(GridOwnershipEnum.NpcMajority))
 					validOwner = true;
 
-				if (grid.CubeGrid.IsStatic && gridconfigurationenum.HasFlag(GridConfigurationEnum.Mobile))
+				if (grid.CubeGrid.IsStatic && gridconfigurationenum.HasFlag(GridConfigurationEnum.Dynamic))
 					validOwner = false;
 
 				if (!grid.CubeGrid.IsStatic && gridconfigurationenum.HasFlag(GridConfigurationEnum.Static))

@@ -298,6 +298,7 @@ namespace ModularEncountersSystems.Events.Condition
 
             if (Profile.CheckCustomCounters == true)
             {
+                usedConditions++;
                 bool Satisfied = true;
 
                 if (Profile.CustomCounters.Count == Profile.CustomCountersTargets.Count)
@@ -311,6 +312,8 @@ namespace ModularEncountersSystems.Events.Condition
 
                             int counter = 0;
                             var result = MyAPIGateway.Utilities.GetVariable(Profile.CustomCounters[i], out counter);
+
+
 
                             var compareType = CounterCompareEnum.GreaterOrEqual;
 
@@ -346,6 +349,7 @@ namespace ModularEncountersSystems.Events.Condition
                         }
                         catch (Exception e)
                         {
+                            Satisfied = false;
                             //BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
                             //BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
                         }

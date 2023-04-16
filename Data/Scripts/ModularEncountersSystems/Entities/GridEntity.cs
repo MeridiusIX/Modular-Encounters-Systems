@@ -39,7 +39,7 @@ namespace ModularEncountersSystems.Entities {
 
 		All,
 		Static,
-		Mobile
+		Dynamic
 
 	}
 

@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Events.Condition;
+using ModularEncountersSystems.Helpers;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -177,6 +178,7 @@ namespace ModularEncountersSystems.Events.Action {
 					if (Name == Event.ProfileSubtypeId)
 					{
 						Event.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+						Event.CooldownTimeTrigger = MathTools.RandomBetween(Event.Profile.MinCooldownMs, Event.Profile.MaxCooldownMs);
 					}
 				}
 			}
@@ -188,6 +190,7 @@ namespace ModularEncountersSystems.Events.Action {
 					if (Event.Profile.Tags.Contains(Tag))
 					{
 						Event.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+						Event.CooldownTimeTrigger = MathTools.RandomBetween(Event.Profile.MinCooldownMs, Event.Profile.MaxCooldownMs);
 					}
 				}
 			}

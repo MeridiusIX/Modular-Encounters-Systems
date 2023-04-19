@@ -102,6 +102,8 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//TODO: Distance Check
+
 			//Get Shipyard Profile
 			ShipyardProfile shipyardProfile = null;
 			string shipyardProfileName = null;
@@ -132,6 +134,9 @@ namespace ModularEncountersSystems.Sync {
 
 			if (Mode == ShipyardModes.RepairAndConstruction)
 				ProcessRepairAndConstruct(player, grid, projector, shipyardProfile, rep, sender);
+
+			if (Mode == ShipyardModes.GridTakeover)
+				ProcessGridTakeover(player, grid, projector, shipyardProfile, rep, sender);
 
 		}
 
@@ -165,7 +170,7 @@ namespace ModularEncountersSystems.Sync {
 			var serverFinalCost = profile.GetBlueprintPrice(serverRawCost, reputation);
 
 			//Compare To ClientPrice
-			if (serverFinalCost != ClientPrice) {
+			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
 				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
 				return;
@@ -209,7 +214,7 @@ namespace ModularEncountersSystems.Sync {
 			var serverFinalCost = profile.GetScrapPrice(serverRawCost, reputation);
 
 			//Compare To ClientPrice
-			if (serverFinalCost != ClientPrice) {
+			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
 				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
 				return;
@@ -391,7 +396,7 @@ namespace ModularEncountersSystems.Sync {
 			}
 
 			//Calculate Cost Of Work
-			var serverRawCost = grid.CreditValueRegular(profile.ScrapPurchasingIncludeInventory);
+			var serverRawCost = EconomyHelper.GridTakeoverCost(grid, player.Player.IdentityId, profile.GridTakeoverPricePerComputerMultiplier); //grid.CreditValueRegular(profile.ScrapPurchasingIncludeInventory);
 
 			if (serverRawCost <= 0) {
 
@@ -400,10 +405,10 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-			var serverFinalCost = profile.GetScrapPrice(serverRawCost, reputation);
+			var serverFinalCost = profile.GetTakeoverPrice(serverRawCost, reputation);
 
 			//Compare To ClientPrice
-			if (serverFinalCost != ClientPrice) {
+			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
 				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
 				return;
@@ -412,41 +417,32 @@ namespace ModularEncountersSystems.Sync {
 
 			var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(projector.OwnerId);
 
-			//Merchant Credits
-			if (profile.TransactionsUseNpcFactionBalance) {
+			//Check Player Credits
+			long playerBalance = 0;
+			player.Player.TryGetBalanceInfo(out playerBalance);
 
-				if (faction == null) {
+			if (playerBalance < serverFinalCost) {
 
-					ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.MerchantInsufficientCredits, Mode, sender, ProjectorId);
-					return;
-
-				}
-
-				long balance = 0;
-				faction.TryGetBalanceInfo(out balance);
-
-				if (balance < serverFinalCost) {
-
-					ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.MerchantInsufficientCredits, Mode, sender, ProjectorId);
-					return;
-
-				}
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.PlayerInsufficientCredits, Mode, sender, ProjectorId);
+				return;
 
 			}
 
-			//Remove Ship
+			//Remove Credits From Player
+			player.Player.RequestChangeBalance(-serverFinalCost);
+
+			//Switch Ownership
 			MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardSell", grid.GetPosition());
-			Cleaning.ForceRemoveGrid(grid, "Despawn-SoldToShipyard");
+			grid.CubeGrid.ChangeGridOwnership(player.Player.IdentityId, VRage.Game.MyOwnershipShareModeEnum.Faction);
 
-			//Credit Player
-			player.Player.RequestChangeBalance(serverFinalCost);
-
-			//Charge Merchant
+			//Credit Merchant
 			if (profile.TransactionsUseNpcFactionBalance) {
 
-				if (faction != null) {
+				var npcfaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(projector.OwnerId);
 
-					faction.RequestChangeBalance(-serverFinalCost);
+				if (npcfaction != null) {
+
+					npcfaction.RequestChangeBalance(serverFinalCost);
 
 				}
 

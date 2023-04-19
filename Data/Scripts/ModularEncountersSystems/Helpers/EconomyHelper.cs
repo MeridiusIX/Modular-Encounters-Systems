@@ -1021,6 +1021,8 @@ namespace ModularEncountersSystems.Helpers {
 
 			long result = 0;
 			IMyFaction faction = null;
+			long computerBaseValue = 0;
+			EconomyHelper.MinimumValuesMaster.TryGetValue(new MyDefinitionId(typeof(MyObjectBuilder_Component), "Computer"), out computerBaseValue);
 
 			if (grid.CubeGrid.BigOwners != null) {
 
@@ -1039,7 +1041,30 @@ namespace ModularEncountersSystems.Helpers {
 
 					}
 
-					result += grid.ComputerCount(owner) * costPerComputer;
+					result += grid.ComputerCount(owner) * (costPerComputer * computerBaseValue);
+
+				}
+
+			}
+
+			if (grid.CubeGrid.SmallOwners != null) {
+
+				foreach (var owner in grid.CubeGrid.SmallOwners) {
+
+					if (owner == 0 || owner == newOwnerIdentity)
+						continue;
+
+					faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(owner);
+
+					if (faction != null) {
+
+						//Player Faction Check
+						if (faction.IsMember(newOwnerIdentity))
+							continue;
+
+					}
+
+					result += grid.ComputerCount(owner) * (costPerComputer * computerBaseValue);
 
 				}
 

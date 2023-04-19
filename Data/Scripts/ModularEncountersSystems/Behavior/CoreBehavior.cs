@@ -586,6 +586,10 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
+			if (BehaviorSettings.InitialGridIntegrity == 0)
+				BehaviorSettings.InitialGridIntegrity = CurrentGrid?.GetCurrentHealth() ?? 0;
+
+
 			if (ActiveBehavior != null && ActiveBehavior.SubClass == BehaviorSettings.ActiveBehaviorType) {
 
 				_mainBehaviorRunCount++;
@@ -1197,7 +1201,7 @@ namespace ModularEncountersSystems.Behavior {
 				BehaviorSettings.InitialWeaponCount = (short)AutoPilot.Weapons.GetActiveWeaponCount();
 				BehaviorSettings.InitialTurretCount = (short)AutoPilot.Weapons.GetActiveTurretCount();
 				BehaviorSettings.InitialGunCount = (short)AutoPilot.Weapons.GetActiveGunCount();
-				BehaviorSettings.InitialGridIntegrity = CurrentGrid.GetCurrentHealth();
+				BehaviorSettings.InitialGridIntegrity = CurrentGrid?.GetCurrentHealth() ?? 0;
 
 			} else {
 

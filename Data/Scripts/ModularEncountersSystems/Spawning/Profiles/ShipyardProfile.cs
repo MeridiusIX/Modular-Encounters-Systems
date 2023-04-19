@@ -39,9 +39,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool AllowGridTakeover;
 		public int GridTakeoverSmallGridBlockLimit;
 		public int GridTakeoverLargeGridBlockLimit;
-		public int GridTakeoverPricePerComputer;
+		public int GridTakeoverPricePerComputerMultiplier;
 		public int GridTakeoverReputationDiscount;
-		public int GridTakeoverNpcReputationDamagePerBlock;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -78,9 +77,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			AllowGridTakeover = false;
 			GridTakeoverSmallGridBlockLimit = 2500;
 			GridTakeoverLargeGridBlockLimit = 5000;
-			GridTakeoverPricePerComputer = 2500;
+			GridTakeoverPricePerComputerMultiplier = 100;
 			GridTakeoverReputationDiscount = 10;
-			GridTakeoverNpcReputationDamagePerBlock = 1;
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
@@ -113,9 +111,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"AllowGridTakeover", (s, o) => TagParse.TagBoolCheck(s, ref AllowGridTakeover) },
 				{"GridTakeoverSmallGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverSmallGridBlockLimit) },
 				{"GridTakeoverLargeGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverLargeGridBlockLimit) },
-				{"GridTakeoverPricePerComputer", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverPricePerComputer) },
+				{"GridTakeoverPricePerComputerMultiplier", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverPricePerComputerMultiplier) },
 				{"GridTakeoverReputationDiscount", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverReputationDiscount) },
-				{"GridTakeoverNpcReputationDamagePerBlock", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverNpcReputationDamagePerBlock) },
 
 			};
 
@@ -147,7 +144,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public long GetTakeoverPrice(long rawValue, int rep) {
 
-			int percentage = rep >= ReputationNeededForDiscount ? GridTakeoverReputationDiscount : 0;
+			int percentage = 100 - (rep >= ReputationNeededForDiscount ? GridTakeoverReputationDiscount : 0);
 			float multiplier = ((float)percentage / 100);
 			return (long)Math.Floor(rawValue * multiplier);
 

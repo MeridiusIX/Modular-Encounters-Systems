@@ -41,15 +41,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool AddedItemsCombineQuantity;
 		public bool AddedItemsAveragePrice;
 
-		public int MaxOre;
-		public int MaxIngots;
-		public int MaxComponents;
-		public int MaxAmmo;
-		public int MaxTools;
-		public int MaxConsumables;
-		public int MaxGas;
-
 		public bool EqualizeOffersAndOrders;
+
+		private static StoreItemsContainer _storeContainer;
+		private static StoreLimits _storeLimits;
 
 		private static List<IMyStoreItem> _tempItems;
 		private static List<int> _tempOfferIndexes;
@@ -91,14 +86,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			AddedItemsCombineQuantity = false;
 			AddedItemsAveragePrice = false;
 
-			MaxOre = 100000;
-			MaxIngots = 50000;
-			MaxComponents = 10000;
-			MaxAmmo = 1000;
-			MaxTools = 50;
-			MaxConsumables = 250;
-			MaxGas = 100000;
-
 			EqualizeOffersAndOrders = false;
 
 			_tempItems = new List<IMyStoreItem>();
@@ -120,13 +107,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"RequiredOrders", (s, o) => TagParse.TagStringListCheck(s, ref RequiredOrders) },
 				{"AddedItemsCombineQuantity", (s, o) => TagParse.TagBoolCheck(s, ref AddedItemsCombineQuantity) },
 				{"AddedItemsAveragePrice", (s, o) => TagParse.TagBoolCheck(s, ref AddedItemsAveragePrice) },
-				{"MaxOre", (s, o) => TagParse.TagIntCheck(s, ref MaxOre) },
-				{"MaxIngots", (s, o) => TagParse.TagIntCheck(s, ref MaxIngots) },
-				{"MaxComponents", (s, o) => TagParse.TagIntCheck(s, ref MaxComponents) },
-				{"MaxAmmo", (s, o) => TagParse.TagIntCheck(s, ref MaxAmmo) },
-				{"MaxTools", (s, o) => TagParse.TagIntCheck(s, ref MaxTools) },
-				{"MaxConsumables", (s, o) => TagParse.TagIntCheck(s, ref MaxConsumables) },
-				{"MaxGas", (s, o) => TagParse.TagIntCheck(s, ref MaxGas) },
 				{"EqualizeOffersAndOrders", (s, o) => TagParse.TagBoolCheck(s, ref EqualizeOffersAndOrders) },
 
 			};
@@ -147,18 +127,21 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			
 			}
 
-			StoreItemsContainer container = ProfileManager.GetStoreItemContainer(FileSource);
+			StoreItemsContainer _storeContainer = ProfileManager.GetStoreItemContainer(FileSource);
 
-			if (container == null) {
+			if (_storeContainer == null) {
 
 				SpawnLogger.Write("StoreProfile with ID [" + ProfileSubtypeId + "] using FileSource [" + FileSource + "] returned null StoreItemContainer.", SpawnerDebugEnum.Error);
 				return;
 
 			}
 
-			SpawnLogger.Write("StoreProfile with ID [" + ProfileSubtypeId + "] Contains Store Item Count: " + container.StoreItems.Length, SpawnerDebugEnum.Dev);
+			if (_storeContainer.StoreItemLimits != null && _storeContainer.StoreItemLimits.Length > 0)
+				_storeLimits = _storeContainer.StoreItemLimits[0];
 
-			foreach (var item in container.StoreItems) {
+			SpawnLogger.Write("StoreProfile with ID [" + ProfileSubtypeId + "] Contains Store Item Count: " + _storeContainer.StoreItems.Length, SpawnerDebugEnum.Dev);
+
+			foreach (var item in _storeContainer.StoreItems) {
 
 				SpawnLogger.Write(item.StoreItemId, SpawnerDebugEnum.Dev);
 
@@ -363,7 +346,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			}
 
 			newItem.IsCustomStoreItem = item.IsCustomItem;
-			LimitMaximumAmount(newItem);
+			ApplyItemLimits(newItem);
 
 
 			if (AddedItemsAveragePrice) {
@@ -465,6 +448,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 					if (_tempFirstItem.Item.Value.SubtypeId != _tempSecondItem.Item.Value.SubtypeId)
 						continue;
 
+					var avgPrice = (_tempFirstItem.PricePerUnit + _tempSecondItem.PricePerUnit) / 2;
+					_tempFirstItem.PricePerUnit = avgPrice;
+					_tempSecondItem.PricePerUnit = avgPrice;
+
+					/*
 					if (_tempFirstItem.Amount > _tempSecondItem.Amount) {
 
 						_tempFirstItem.Amount -= _tempSecondItem.Amount;
@@ -475,12 +463,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 						_tempSecondItem.Amount -= _tempFirstItem.Amount;
 						_tempFirstItem.Amount = 0;
 
-					} else {
-
-						_tempFirstItem.Amount = 0;
-						_tempSecondItem.Amount = 0;
-
 					}
+					*/
 
 				}
 
@@ -488,37 +472,94 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		}
 
-		private void LimitMaximumAmount(IMyStoreItem item) {
+		private void ApplyItemLimits(IMyStoreItem item) {
 
-			int amountMax = -1;
-
-			if (amountMax < 0 && item.Item.HasValue && item.Item.Value.TypeId == typeof(MyObjectBuilder_Ore))
-				amountMax = MaxOre;
-
-			if (amountMax < 0 && item.Item.HasValue && item.Item.Value.TypeId == typeof(MyObjectBuilder_Ingot))
-				amountMax = MaxIngots;
-
-			if (amountMax < 0 && item.Item.HasValue && item.Item.Value.TypeId == typeof(MyObjectBuilder_Component))
-				amountMax = MaxComponents;
-
-			if (amountMax < 0 && item.Item.HasValue && item.Item.Value.TypeId == typeof(MyObjectBuilder_AmmoMagazine))
-				amountMax = MaxAmmo;
-
-			if (amountMax < 0 && item.Item.HasValue && item.Item.Value.TypeId == typeof(MyObjectBuilder_PhysicalGunObject))
-				amountMax = MaxTools;
-
-			if (amountMax < 0 && item.Item.HasValue && item.Item.Value.TypeId == typeof(MyObjectBuilder_ConsumableItem))
-				amountMax = MaxConsumables;
-
-			if (amountMax < 0 && item.Item.HasValue && item.Item.Value.TypeId == typeof(MyObjectBuilder_GasProperties))
-				amountMax = MaxGas;
-
-			if (amountMax < 0)
+			if (_storeLimits == null)
 				return;
 
-			if (item.Amount > amountMax)
-				item.Amount = amountMax;
-		
+			if (item.Item.HasValue) {
+
+				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_Ore)) {
+
+					LimitAmountAndValue(item, _storeLimits.MaxOreAmount, _storeLimits.MaxOreValue);
+					return;
+				
+				}
+
+				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_Ingot)) {
+
+					LimitAmountAndValue(item, _storeLimits.MaxIngotAmount, _storeLimits.MaxIngotAmount);
+					return;
+
+				}
+
+				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_Component)) {
+
+					LimitAmountAndValue(item, _storeLimits.MaxComponentAmount, _storeLimits.MaxComponentValue);
+					return;
+
+				}
+
+				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_AmmoMagazine)) {
+
+					LimitAmountAndValue(item, _storeLimits.MaxAmmoAmount, _storeLimits.MaxAmmoValue);
+					return;
+
+				}
+
+				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_PhysicalGunObject)) {
+
+					LimitAmountAndValue(item, _storeLimits.MaxToolAmount, _storeLimits.MaxToolValue);
+					return;
+
+				}
+
+				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_ConsumableItem)) {
+
+					LimitAmountAndValue(item, _storeLimits.MaxConsumableAmount, _storeLimits.MaxConsumableValue);
+					return;
+
+				}
+
+			}
+
+			if (item.ItemType == ItemTypes.Hydrogen || item.ItemType == ItemTypes.Oxygen) {
+
+				LimitAmountAndValue(item, _storeLimits.MaxGasAmount, _storeLimits.MaxGasValue);
+				return;
+
+			}
+
+		}
+
+		private void LimitAmountAndValue(IMyStoreItem item, int maxAmount, int maxValue) {
+
+			var actualAmount = item.Amount - item.RemovedAmount;
+			var totalValue = (actualAmount * item.PricePerUnit);
+
+			if (maxAmount > -1) {
+
+				if (actualAmount > maxAmount) {
+
+					var difference = maxAmount - actualAmount;
+					item.Amount += difference;
+
+				}
+			
+			}
+
+			if (maxValue > -1) {
+
+				if (totalValue > maxValue) {
+
+					var valueDiff = (int)Math.Abs(maxValue - totalValue);
+					var amountToRemove = valueDiff / item.PricePerUnit;
+					item.Amount -= amountToRemove;
+
+				}
+
+			}
+
 		}
 
 		private MyDefinitionId? RandomCraftableItemId(StoreItem item, List<MyDefinitionId> exclusionList) {

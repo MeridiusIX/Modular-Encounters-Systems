@@ -32,6 +32,58 @@ namespace ModularEncountersSystems.Files {
 		[XmlArrayItem("StoreItem")]	public StoreItem[] StoreItems;
 		public List<StoreItem> StoreItemsList;
 
+		[XmlArrayItem("ItemLimits")] public StoreLimits[] StoreItemLimits;
+
+	}
+
+	public class StoreLimits {
+
+		public int MaxOreAmount = -1;
+		public int MaxOreValue = -1;
+
+		public int MaxIngotAmount = -1;
+		public int MaxIngotValue = -1;
+
+		public int MaxComponentAmount = -1;
+		public int MaxComponentValue = -1;
+
+		public int MaxToolAmount = -1;
+		public int MaxToolValue = -1;
+
+		public int MaxConsumableAmount = -1;
+		public int MaxConsumableValue = -1;
+
+		public int MaxGasAmount = -1;
+		public int MaxGasValue = -1;
+
+		public int MaxAmmoAmount = -1;
+		public int MaxAmmoValue = -1;
+
+		public StoreLimits() {
+
+			MaxOreAmount = -1;
+			MaxOreValue = -1;
+
+			MaxIngotAmount = -1;
+			MaxIngotValue = -1;
+
+			MaxComponentAmount = -1;
+			MaxComponentValue = -1;
+
+			MaxToolAmount = -1;
+			MaxToolValue = -1;
+
+			MaxConsumableAmount = -1;
+			MaxConsumableValue = -1;
+
+			MaxGasAmount = -1;
+			MaxGasValue = -1;
+
+			MaxAmmoAmount = -1;
+			MaxAmmoValue = -1;
+
+		}
+
 	}
 
 	public class StoreItem {

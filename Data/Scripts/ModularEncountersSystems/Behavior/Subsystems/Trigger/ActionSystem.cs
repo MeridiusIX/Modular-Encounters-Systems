@@ -1546,10 +1546,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			{
 				var spawngroupname = _behavior.CurrentGrid?.Npc.SpawnGroupName;
 
-				if(NpcManager.UniqueGroupsSpawned.Contains(spawngroupname))
-				{
-					NpcManager.UniqueGroupsSpawned.Remove(spawngroupname);
-				}
+				if (!NpcManager.UniqueGroupsSpawned.Contains(spawngroupname))
+					return;
+
+
+				NpcManager.UniqueGroupsSpawned.Remove(spawngroupname);
+
 
 				for (int i = SpawnGroupManager.SpawnGroups.Count - 1; i >= 0; i--)
 				{

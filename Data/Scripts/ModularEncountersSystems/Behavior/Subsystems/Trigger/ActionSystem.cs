@@ -1546,57 +1546,60 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			{
 				var spawngroupname = _behavior.CurrentGrid?.Npc.SpawnGroupName;
 
-				if (!NpcManager.UniqueGroupsSpawned.Contains(spawngroupname))
-					return;
+				if (NpcManager.UniqueGroupsSpawned.Contains(spawngroupname))
+                {
+					NpcManager.UniqueGroupsSpawned.Remove(spawngroupname);
 
 
-				NpcManager.UniqueGroupsSpawned.Remove(spawngroupname);
-
-
-				for (int i = SpawnGroupManager.SpawnGroups.Count - 1; i >= 0; i--)
-				{
-
-					var spawnGroup = SpawnGroupManager.SpawnGroups[i];
-					if(spawnGroup.SpawnGroupName== spawngroupname)
+					for (int i = SpawnGroupManager.SpawnGroups.Count - 1; i >= 0; i--)
 					{
-						SpawnConditionsProfile activeConditions = null;
 
-						foreach (var condition in spawnGroup.SpawnConditionsProfiles)
+						var spawnGroup = SpawnGroupManager.SpawnGroups[i];
+						if (spawnGroup.SpawnGroupName == spawngroupname)
 						{
+							SpawnConditionsProfile activeConditions = null;
 
-							if (condition.StaticEncounter)
+							foreach (var condition in spawnGroup.SpawnConditionsProfiles)
 							{
 
-								SpawnLogger.Write(spawnGroup.SpawnGroupName + " Found as Potential Static Encounter", SpawnerDebugEnum.Startup);
-								activeConditions = condition;
+								if (condition.StaticEncounter)
+								{
+
+									SpawnLogger.Write(spawnGroup.SpawnGroupName + " Found as Potential Static Encounter", SpawnerDebugEnum.Startup);
+									activeConditions = condition;
+								}
+
+							}
+
+							//Create Static Encounter
+							var activeEncounter = new StaticEncounter();
+
+							activeEncounter.InitStaticEncounter(spawnGroup, activeConditions);
+
+							if (activeEncounter.IsValid)
+							{
+
+								SpawnLogger.Write("Adding Static Encounter: " + (!string.IsNullOrWhiteSpace(activeEncounter.SpawnGroupName) ? activeEncounter.SpawnGroupName : "(invalid)"), SpawnerDebugEnum.Startup);
+								NpcManager.StaticEncounters.Add(activeEncounter);
+
+							}
+							else
+							{
+
+								SpawnLogger.Write(spawnGroup.SpawnGroupName + " Static Encounter Init Failed", SpawnerDebugEnum.Startup);
 							}
 
 						}
 
-						//Create Static Encounter
-						var activeEncounter = new StaticEncounter();
-
-						activeEncounter.InitStaticEncounter(spawnGroup, activeConditions);
-
-						if (activeEncounter.IsValid)
-						{
-
-							SpawnLogger.Write("Adding Static Encounter: " + (!string.IsNullOrWhiteSpace(activeEncounter.SpawnGroupName) ? activeEncounter.SpawnGroupName : "(invalid)"), SpawnerDebugEnum.Startup);
-							NpcManager.StaticEncounters.Add(activeEncounter);
-
-						}
-						else
-						{
-
-							SpawnLogger.Write(spawnGroup.SpawnGroupName + " Static Encounter Init Failed", SpawnerDebugEnum.Startup);
-						}
-
 					}
 
+					NpcManager.UpdateStaticEncounters();
+					MyVisualScriptLogicProvider.ShowNotificationToAll($"{spawngroupname} despawned, and reset", 5000, "Red");
 				}
+					
 
-				NpcManager.UpdateStaticEncounters();
-				MyVisualScriptLogicProvider.ShowNotificationToAll($"{spawngroupname} despawned, and reset", 5000, "Red");
+
+
 
 
 			}

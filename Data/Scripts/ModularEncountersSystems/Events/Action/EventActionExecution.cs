@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Zones;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -85,13 +86,33 @@ namespace ModularEncountersSystems.Events.Action {
 			}
 
 
-			/*
-			//SetEventControllers
-			if (actions.SetEventControllers)
-				EventControllerSettings(actions.EventControllerNames, actions.EventControllersActive, actions.EventControllersSetCurrentTime);
-			*/
+			if (actions.ChangeZoneAtPosition)
+			{
 
-		}
+				if (actions.ZoneNames.Count != actions.ZoneCoords.Count)
+					return;
+
+
+				if (actions.ZoneNames.Count != actions.ZoneToggleActiveModes.Count)
+					return;
+
+
+				for (int i = 0; i < actions.ZoneNames.Count; i++)
+				{
+					ZoneManager.ToggleZonesAtPosition(actions.ZoneCoords[i], actions.ZoneNames[i], actions.ZoneToggleActiveModes[i]);
+				}
+
+
+			}
+
+
+				/*
+				//SetEventControllers
+				if (actions.SetEventControllers)
+					EventControllerSettings(actions.EventControllerNames, actions.EventControllersActive, actions.EventControllersSetCurrentTime);
+				*/
+
+			}
 
 		/*
 		private void EventControllerSettings(List<string> names, List<bool> active, List<bool> setCurrentTime) {

@@ -38,7 +38,10 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<string> ResetEventCooldownNames;
 		public List<string> ResetEventCooldownTags;
 
-
+		public bool ChangeZoneAtPosition;
+		public List<string> ZoneNames;
+		public List<Vector3D> ZoneCoords;
+		public List<bool> ZoneToggleActiveModes;
 
 
 		public bool UseChatBroadcast;
@@ -73,8 +76,13 @@ namespace ModularEncountersSystems.Events.Action {
 			ResetEventCooldownNames = new List<string>();
 			ResetEventCooldownTags = new List<string>();
 
+			ChangeZoneAtPosition = false;
+			ZoneNames = new List<string>();
+			ZoneCoords = new List<Vector3D>();
+			ZoneToggleActiveModes = new List<bool>();
 
-			UseChatBroadcast = false;
+
+		UseChatBroadcast = false;
 			ChatData = new List<ChatProfile>();
 
 			DebugHudMessage = "";
@@ -100,7 +108,11 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ResetEventCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownNames) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
 
-				
+				{"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+				{"ZoneNames", (s, o) => TagParse.TagStringListCheck(s, ref ZoneNames) },
+				{"ZoneCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref ZoneCoords) },
+				{"ZoneToggleActiveModes", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneToggleActiveModes) },
+
 				{"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
 				{"DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },
 				{"SetEventControllers", (s, o) => TagParse.TagBoolCheck(s, ref SetEventControllers) },

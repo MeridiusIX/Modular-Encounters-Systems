@@ -395,7 +395,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> ResetEventCooldownNames;
 		public List<string> ResetEventCooldownTags;
 
-	
+		public bool DisableAutopilot;
+		public bool EnableAutopilot;
 
 		public bool ResetThisStaticEncounter;
 
@@ -776,6 +777,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ResetEventCooldownNames = new List<string>();
 			ResetEventCooldownTags = new List<string>();
 
+			DisableAutopilot = false;
+			EnableAutopilot = false;
 
 			ResetThisStaticEncounter = false;
 
@@ -1036,9 +1039,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"EventId", (s, o) => TagParse.TagStringListCheck(s, ref EventId) },
 				{"EventTag", (s, o) => TagParse.TagStringListCheck(s, ref EventTag) },
 
-
-
-
 				{"CreateSafeZone", (s, o) => TagParse.TagBoolCheck(s, ref CreateSafeZone) },
 				{"SafeZoneProfile", (s, o) => TagParse.TagStringCheck(s, ref SafeZoneProfile) },
 				{"LinkSafeZoneToRemoteControl", (s, o) => TagParse.TagBoolCheck(s, ref LinkSafeZoneToRemoteControl) },
@@ -1058,10 +1058,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ResetEventCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownNames) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
 
-
 				{"ResetThisStaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref ResetThisStaticEncounter) },
 
-
+				{"DisableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref DisableAutopilot) },
+				{"EnableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref EnableAutopilot) },
 
 	};
 

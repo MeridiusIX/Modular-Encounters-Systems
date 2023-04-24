@@ -305,10 +305,17 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				_tempFirstItem = _tempItems[i];
 
-				if (_tempFirstItem.Amount == 0)
+				if ((_tempFirstItem.Amount - _tempFirstItem.RemovedAmount) <= 0)
 					block.RemoveStoreItem(_tempFirstItem);
 
 			}
+
+			var vendingMachine = block as IMyVendingMachine;
+
+			if (vendingMachine == null)
+				return;
+
+			vendingMachine.SelectNextItem();
 
 		}
 

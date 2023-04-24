@@ -324,6 +324,32 @@ namespace ModularEncountersSystems.Entities {
 		
 		}
 
+		public void DisconnectSubgrids() {
+
+			lock (AllTerminalBlocks) {
+
+				foreach (var block in AllTerminalBlocks) {
+
+					if (!block.ActiveEntity())
+						continue;
+
+					var connector = block?.Block as IMyShipConnector;
+					var gear = block?.Block as IMyLandingGear;
+
+					if (connector != null)
+						connector.Disconnect();
+
+					if (gear != null)
+						gear.Unlock();
+				
+				}
+			
+			}
+
+			RefreshSubGrids();
+		
+		}
+
 		private void NewBlockAdded(IMySlimBlock block) {
 
 			if (!AllBlocks.Contains(block))

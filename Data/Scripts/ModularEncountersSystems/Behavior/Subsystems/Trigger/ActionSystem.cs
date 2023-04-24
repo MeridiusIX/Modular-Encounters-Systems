@@ -1008,6 +1008,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//DisableAutopilot
+			if (actions.DisableAutopilot && _autopilot.State != null)
+				_autopilot.State.DisableAutopilot = true;
+
+			//EnableAutopilot
+			if (actions.EnableAutopilot && _autopilot.State != null)
+				_autopilot.State.DisableAutopilot = false;
+
 			//Zone Related (While Inside Zone)
 			if (actions.ChangeZoneAtPosition) {
 
@@ -1537,8 +1545,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-            if (actions.ResetCooldownTimeOfEvents)
-            {
+			if (actions.ResetCooldownTimeOfEvents)
+			{
 				EventActionProfile.ResetCooldownTimeOfEvents(actions.ResetEventCooldownNames, actions.ResetEventCooldownTags, _behavior.CurrentGrid?.Npc.SpawnGroupName);
 			}
 
@@ -1547,7 +1555,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				var spawngroupname = _behavior.CurrentGrid?.Npc.SpawnGroupName;
 
 				if (NpcManager.UniqueGroupsSpawned.Contains(spawngroupname))
-                {
+				{
 					NpcManager.UniqueGroupsSpawned.Remove(spawngroupname);
 
 

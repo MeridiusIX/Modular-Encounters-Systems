@@ -6,6 +6,7 @@ using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using ProtoBuf;
 using Sandbox.Game;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -245,8 +246,12 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//Connected To Station
+
 			//Remove Ship
 			MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardSell", grid.GetPosition());
+			grid.DisconnectSubgrids();
+			((MyCubeGrid)grid.CubeGrid).DismountAllCockpits();
 			Cleaning.ForceRemoveGrid(grid, "Despawn-SoldToShipyard");
 
 			//Credit Player
@@ -345,12 +350,16 @@ namespace ModularEncountersSystems.Sync {
 
 			foreach (var safezone in SafeZoneManager.SafeZones) {
 
-				if (!safezone.ValidEntity() || safezone.SafeZone == null || !safezone.SafeZone.Enabled)
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Active Entity:" + safezone.ActiveEntity(), 10000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Null:" + (safezone.SafeZone == null), 10000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Enabled:" + safezone.SafeZone.Enabled, 10000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("In Zone:" + safezone.InZone(projector.GetPosition()), 10000);
+
+				if (!safezone.ActiveEntity() || safezone.SafeZone == null || !safezone.SafeZone.Enabled || !safezone.InZone(projector.GetPosition()))
 					continue;
 
 				safezone.SafeZone.Enabled = false;
 				safezones.Add(safezone);
-
 
 			}
 
@@ -374,7 +383,7 @@ namespace ModularEncountersSystems.Sync {
 			//Enable Safezones
 			foreach (var safezone in safezones) {
 
-				if (!safezone.ValidEntity() || safezone.SafeZone == null || !safezone.SafeZone.Enabled)
+				if (!safezone.ActiveEntity() || safezone.SafeZone == null || safezone.SafeZone.Enabled)
 					continue;
 
 				safezone.SafeZone.Enabled = true;

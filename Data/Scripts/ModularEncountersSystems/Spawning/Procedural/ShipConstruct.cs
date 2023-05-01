@@ -15,8 +15,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		None = 0,
 		Block = 1,
 		ThrustExhaust = 1 << 1,
-
-	
+		
 	}
 
 	public class ShipConstruct {
@@ -61,10 +60,13 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 				return false;
 
 			//Check if placement is possible
-			if (CanPlaceBlockAtMin(min, max, useXSymmetry, useYSymmetry, allowedRestrictions))
+			if (!CanPlaceBlockAtMin(min, max, useXSymmetry, useYSymmetry, allowedRestrictions))
 				return false;
 
 			//Create Blocks
+			var block = CreateBlock(id, min, max, orientation);
+
+			//TODO: Create block of code for create/place/register, then copy it for each symmetry case
 
 			//Place block
 
@@ -74,23 +76,126 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
-		public void CreateAndRegisterBlock(MyDefinitionId id, Vector3I min, Vector3I max, MyBlockOrientation orientation) {
+		public MyObjectBuilder_CubeBlock CreateBlock(MyDefinitionId id, Vector3I min, Vector3I max, MyBlockOrientation orientation) {
 
 			var newBlockBuilder = MyObjectBuilderSerializer.CreateNewObject(id);
 			var block = newBlockBuilder as MyObjectBuilder_CubeBlock;
 
 			if (block == null)
-				return;
+				return null;
 
 			block.BlockOrientation = orientation;
 			block.Min = min;
 
+			return block;
+
 		}
 
-		public void CreateCellList() {
-		
+		public void CreateCellList(Vector3I min, Vector3I max, bool symmetryX, bool symmetryY) {
+
+			_tempCellList.Clear();
+			var actualMin = min;
+			var actualMax = max;
+
+			if (symmetryX && !symmetryY) {
+
+				actualMin = CalculateSymmetryX(min, max, false);
+				actualMax = CalculateSymmetryX(min, max, true);
+
+			}
+
+			if (!symmetryX && symmetryY) {
+
+				actualMin = CalculateSymmetryY(min, max, false);
+				actualMax = CalculateSymmetryY(min, max, true);
+
+			}
+
+			if (symmetryX && symmetryY) {
+
+				actualMin = CalculateSymmetryXY(min, max, false);
+				actualMax = CalculateSymmetryXY(min, max, true);
+
+			}
+
+			for (int x = actualMin.X; x <= actualMax.X; x++) {
+
+				for (int y = actualMin.Y; y <= actualMax.Y; y++) {
+
+					for (int z = actualMin.Z; z <= actualMax.Z; z++) {
+
+						_tempCellList.Add(new Vector3I(x, y, z));
+
+					}
+
+				}
+
+			}
+
+		}
+
+		private Vector3I CalculateSymmetryX(Vector3I min, Vector3I max, bool calcMax = false) {
+
+			var xSignInverted = Math.Sign(min.X) * -1;
+			var localMaxX = max.X + (xSignInverted * min.X);
+			var calculatedX = 0;
+			if (!calcMax) {
+
+				calculatedX = (min.X * -1) - localMaxX;
+				return new Vector3I(calculatedX, min.Y, min.Z);
+
+			} else {
+
+				calculatedX = (max.X * -1) + localMaxX;
+				return new Vector3I(calculatedX, max.Y, max.Z);
+
+			}
 			
-		
+		}
+
+		private Vector3I CalculateSymmetryY(Vector3I min, Vector3I max, bool calcMax = false) {
+
+			var ySignInverted = Math.Sign(min.Y) * -1;
+			var localMaxY = max.Y + (ySignInverted * min.Y);
+			var calculatedY = 0;
+			if (!calcMax) {
+
+				calculatedY = (min.Y * -1) - localMaxY;
+				return new Vector3I(min.X, calculatedY, min.Z);
+
+			} else {
+
+				calculatedY = (max.X * -1) + localMaxY;
+				return new Vector3I(min.X, calculatedY, max.Z);
+
+			}
+
+		}
+
+		private Vector3I CalculateSymmetryXY(Vector3I min, Vector3I max, bool calcMax = false) {
+
+			var xSignInverted = Math.Sign(min.X) * -1;
+			var localMaxX = max.X + (xSignInverted * min.X);
+			var calculatedX = 0;
+
+			var ySignInverted = Math.Sign(min.Y) * -1;
+			var localMaxY = max.Y + (ySignInverted * min.Y);
+			var calculatedY = 0;
+
+			if (!calcMax) {
+
+				calculatedX = (min.X * -1) - localMaxX;
+				calculatedY = (min.Y * -1) - localMaxY;
+				return new Vector3I(calculatedX, calculatedY, min.Z);
+
+			} else {
+
+				calculatedX = (max.X * -1) + localMaxX;
+				calculatedY = (max.X * -1) + localMaxY;
+				return new Vector3I(calculatedX, calculatedY, max.Z);
+
+			}
+
 		}
 
 		public bool CanPlaceBlockAtMin(Vector3I min, Vector3I max, bool checkXSymmetry = false, bool checkYSymmetry = false, RestrictedCellType allowedRestrictions = RestrictedCellType.None) {
@@ -169,7 +274,8 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 					return false;
 			
 			}
-				
+			
+			/*
 			if ((Math.Abs(min.X) + Rules.MaxOverageTolerance) > _maxWidthX)
 				return false;
 
@@ -178,6 +284,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			if ((Math.Abs(min.Z) + Rules.MaxOverageTolerance) > _maxLengthZ)
 				return false;
+			*/
 
 			return true;
 

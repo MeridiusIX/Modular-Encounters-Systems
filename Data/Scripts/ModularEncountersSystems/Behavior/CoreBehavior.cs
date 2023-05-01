@@ -65,6 +65,7 @@ namespace ModularEncountersSystems.Behavior {
 		private DiagnosticSystem _diagnostic;
 		private EscortSystem _escortSystem;
 		private GridSystem _extras;
+		private HeartbeatSystem _heartbeat;
 		private OwnerSystem _owner;
 		private StoredSettings _settings;
 		private TriggerSystem _trigger;
@@ -124,6 +125,7 @@ namespace ModularEncountersSystems.Behavior {
 		public DiagnosticSystem Diagnostic { get { return _diagnostic; } set { _diagnostic = value; } }
 		public EscortSystem Escort { get { return _escortSystem; } set { _escortSystem = value; } }
 		public GridSystem Grid { get { return _extras; } set { _extras = value; } }
+		public HeartbeatSystem Heartbeat { get { return _heartbeat; } set { _heartbeat = value; } }
 		public OwnerSystem Owner { get { return _owner; } set { _owner = value; } }
 		public StoredSettings BehaviorSettings { get { return _settings; } set { _settings = value; } }
 		public TriggerSystem Trigger { get { return _trigger; } set { _trigger = value; } }
@@ -700,6 +702,7 @@ namespace ModularEncountersSystems.Behavior {
 			Diagnostic = new DiagnosticSystem(this, remoteControl);
 			Escort = new EscortSystem(this, remoteControl);
 			Grid = new GridSystem(remoteControl);
+			Heartbeat = new HeartbeatSystem();
 			Owner = new OwnerSystem(remoteControl);
 			//Spawning = new SpawningSystem(remoteControl);
 			Trigger = new TriggerSystem(remoteControl);
@@ -1569,6 +1572,24 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Weapons:             ").Append(AutoPilot?.Weapons?.GetActiveWeaponCount() ?? 0).Append(" / ").Append(BehaviorSettings.InitialWeaponCount).AppendLine();
 			sb.Append(" - Turrets:             ").Append(AutoPilot?.Weapons?.GetActiveTurretCount() ?? 0).Append(" / ").Append(BehaviorSettings.InitialTurretCount).AppendLine();
 			sb.Append(" - Guns:                ").Append(AutoPilot?.Weapons?.GetActiveGunCount() ?? 0).Append(" / ").Append(BehaviorSettings.InitialGunCount).AppendLine();
+
+			sb.AppendLine();
+
+			sb.Append("::: Behavior Systems Heartbeat :::").AppendLine();
+			sb.Append("Parallel Thread Systems ").AppendLine();
+			sb.Append(" - Collision:           ").Append(Heartbeat.CollisionParallel).AppendLine();
+			sb.Append(" - Targeting:           ").Append(Heartbeat.TargetingParallel).AppendLine();
+			sb.Append(" - Autopilot:           ").Append(Heartbeat.AutopilotParallel).AppendLine();
+			sb.Append(" - Weapons:             ").Append(Heartbeat.WeaponsParallel).AppendLine();
+			sb.Append(" - Triggers:            ").Append(Heartbeat.TriggersParallel).AppendLine();
+
+			sb.Append("Main Thread Systems").AppendLine();
+			sb.Append(" - Autopilot:           ").Append(Heartbeat.AutopilotMain).AppendLine();
+			sb.Append(" - Weapons:             ").Append(Heartbeat.WeaponsMain).AppendLine();
+			sb.Append(" - Triggers:            ").Append(Heartbeat.TriggersMain).AppendLine();
+			sb.Append(" - Despawn:             ").Append(Heartbeat.DespawnMain).AppendLine();
+			sb.Append(" - Behavior:            ").Append(Heartbeat.BehaviorMain).AppendLine();
+
 
 			sb.AppendLine();
 

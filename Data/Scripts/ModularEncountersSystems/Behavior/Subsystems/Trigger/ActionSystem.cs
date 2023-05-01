@@ -548,38 +548,37 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 			//ChangePlayerCredits
-			if (actions.ChangePlayerCredits && command != null && command.Type == CommandType.PlayerChat) {
+			if (actions.ChangePlayerCredits && command != null) {
 
 				if (command.PlayerIdentity != 0) {
 
-					var playerList = new List<IMyPlayer>();
-					MyAPIGateway.Players.GetPlayers(playerList, p => p.IdentityId == command.PlayerIdentity);
+					var player = PlayerManager.GetPlayerWithIdentityId(command.PlayerIdentity);
 
-					foreach (var player in playerList) {
+					if (player != null) {
 
 						long credits = 0;
-						player.TryGetBalanceInfo(out credits);
+						player.Player.TryGetBalanceInfo(out credits);
 
 						if (actions.ChangePlayerCreditsAmount > 0) {
 
-							player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+							player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
 							PaymentSuccessTriggered = true;
-						
+
 						} else {
 
 							if (actions.ChangePlayerCreditsAmount > credits) {
 
 								PaymentFailureTriggered = true;
-							
+
 							} else {
 
-								player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+								player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
 								PaymentSuccessTriggered = true;
 
 							}
-						
+
 						}
-					
+
 					}
 
 				}
@@ -1338,6 +1337,53 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					
 					}
 
+				}
+			
+			}
+
+			//ChangeBlocksShareModeAll
+			if (actions.ChangeBlocksShareModeAll) {
+
+				if (_behavior?.CurrentGrid != null) {
+
+					lock (_behavior.CurrentGrid.LinkedGrids) {
+
+						for (int i = _behavior.CurrentGrid.LinkedGrids.Count - 1; i >= 0; i--) {
+
+							var grid = GridManager.GetSafeGridFromIndex(i, _behavior.CurrentGrid.LinkedGrids);
+
+							if (grid == null || !grid.ActiveEntity())
+								continue;
+
+							lock (grid.AllTerminalBlocks) {
+
+								for (int j = grid.AllTerminalBlocks.Count - 1; j >= 0; j--) {
+
+									var block = grid.AllTerminalBlocks[i];
+
+									if (block == null || !block.ActiveEntity())
+										continue;
+
+									foreach (var name in actions.BlockNamesShareModeAll) {
+
+										if (name == block.Block.CustomName) {
+
+											var cubeBlock = block.Block as MyCubeBlock;
+											cubeBlock.ChangeBlockOwnerRequest(block.Block.OwnerId, VRage.Game.MyOwnershipShareModeEnum.All);
+											break;
+
+										}
+									
+									}
+
+								}
+							
+							}
+						
+						}
+					
+					}
+				
 				}
 			
 			}

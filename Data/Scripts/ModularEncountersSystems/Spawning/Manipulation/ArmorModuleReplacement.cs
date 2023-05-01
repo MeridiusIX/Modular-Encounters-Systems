@@ -53,6 +53,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Small"));
 			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Small"));
 			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Small"));
+			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_DefensiveCombatBlock), "SmallDefensiveCombat"));
+			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_FlightMovementBlock), "SmallFlightMovement"));
 
 			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Nanobots-Large"));
 			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large"));
@@ -60,6 +62,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Large"));
 			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
 			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
+			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_DefensiveCombatBlock), "LargeDefensiveCombat"));
+			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_FlightMovementBlock), "LargeFlightMovement"));
 
 			foreach (var id in SmallModules)
 				ModuleSubtypes.Add(id.SubtypeName);
@@ -74,6 +78,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				var id = new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), subtype);
 				var def = MyDefinitionManager.Static.GetCubeBlockDefinition(id);
 				var block = def as MyRadioAntennaDefinition;
+
+				if (def == null)
+					continue;
+
 				block.Enabled = true;
 				block.MaxBroadcastRadius = 50000;
 				block.Size = new Vector3I(1, 1, 1);

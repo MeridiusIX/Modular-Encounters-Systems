@@ -401,6 +401,12 @@ namespace ModularEncountersSystems.Spawning {
 
 			SpawnLogger.Write("Pathing Successful", SpawnerDebugEnum.Spawning);
 
+			if (Vector3D.Distance(Vector3D.Zero, coords) > 6500000) {
+
+				SpawnLogger.Write("WARNING: Spawning NPC Grids beyond 6500km from world center may result in loss of precision when grids are placed in the world or when they utilize path finding. This is because of game engine limitations.", SpawnerDebugEnum.SpawnRecord, true);
+
+			}
+
 			//Create Boss Encounter
 			if (type.HasFlag(SpawningType.BossEncounter)) {
 

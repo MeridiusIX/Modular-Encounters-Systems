@@ -366,6 +366,18 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			block.InsertStoreItem(newItem);
 			BehaviorLogger.Write(" - Item Added", BehaviorDebugEnum.Action);
 
+			if (!offer) {
+				
+				var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(block.OwnerId);
+
+				if (faction != null)
+					faction.RequestChangeBalance(newItem.PricePerUnit * (newItem.Amount - newItem.RemovedAmount));
+				
+				//MyAPIGateway.Players.RequestChangeBalance(block.OwnerId, (newItem.PricePerUnit * (newItem.Amount - newItem.RemovedAmount)));
+
+			}
+				
+
 		}
 
 		private IMyStoreItem CreateStoreItem(IMyStoreBlock block, StoreItem item, StoreItemTypes types, int extra) {

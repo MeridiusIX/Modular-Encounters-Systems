@@ -274,7 +274,6 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 				
-
 			var grid = block.CubeGrid as MyCubeGrid;
 
 			if (grid == null) {
@@ -283,7 +282,6 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 				
-
 			if (RestrictedBlocks.Contains(block.BlockDefinition.Id)) {
 
 				grid.RazeBlock(block.Min);

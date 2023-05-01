@@ -400,6 +400,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool ResetThisStaticEncounter;
 
+		public bool ChangeBlocksShareModeAll;
+		public List<string> BlockNamesShareModeAll;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -780,6 +783,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			DisableAutopilot = false;
 			EnableAutopilot = false;
 
+			ChangeBlocksShareModeAll = false;
+			BlockNamesShareModeAll = new List<string>();
+
 			ResetThisStaticEncounter = false;
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
@@ -1063,7 +1069,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"DisableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref DisableAutopilot) },
 				{"EnableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref EnableAutopilot) },
 
-	};
+				{"ChangeBlocksShareModeAll", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlocksShareModeAll) },
+				{"BlockNamesShareModeAll", (s, o) => TagParse.TagStringListCheck(s, ref BlockNamesShareModeAll) },
+
+			};
 
 		}
 

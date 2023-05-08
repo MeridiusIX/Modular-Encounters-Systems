@@ -141,7 +141,7 @@ namespace ModularEncountersSystems.Terminal {
 				_actionE.Action = BlankAction;
 
 
-				if (MyAPIGateway.Session.LocalHumanPlayer != null) {
+				if (MyAPIGateway.Session.LocalHumanPlayer != null && _progressionStats == null) {
 
 					_progressionStats = PlayerManager.GetProgressionContainer(MyAPIGateway.Session.LocalHumanPlayer.IdentityId, MyAPIGateway.Session.LocalHumanPlayer.SteamUserId);
 				
@@ -157,6 +157,7 @@ namespace ModularEncountersSystems.Terminal {
 					if (_privateControls.Contains(controls[i].Id)) {
 
 						controls.RemoveAt(i);
+
 					}
 
 				}
@@ -184,6 +185,12 @@ namespace ModularEncountersSystems.Terminal {
 
 				var serializedProgression = MyAPIGateway.Utilities.SerializeToBinary<ProgressionContainer>(_progressionStats);
 				var syncContainer = new SyncContainer(SyncMode.SuitUpgradePlayerStats, serializedProgression);
+				SyncManager.SendSyncMesage(syncContainer, 0, true);
+
+			} else {
+
+				//Request New Progression Stats
+				var syncContainer = new SyncContainer(SyncMode.SuitUpgradeNewPlayerStats, null);
 				SyncManager.SendSyncMesage(syncContainer, 0, true);
 
 			}

@@ -208,7 +208,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				return;
 
 			}
-				
+
 			_tempItems.Clear();
 			_tempUniqueOffers.Clear();
 			_tempUniqueOrders.Clear();

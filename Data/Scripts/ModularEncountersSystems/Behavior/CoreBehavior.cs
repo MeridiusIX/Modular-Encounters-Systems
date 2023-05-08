@@ -1573,6 +1573,16 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Turrets:             ").Append(AutoPilot?.Weapons?.GetActiveTurretCount() ?? 0).Append(" / ").Append(BehaviorSettings.InitialTurretCount).AppendLine();
 			sb.Append(" - Guns:                ").Append(AutoPilot?.Weapons?.GetActiveGunCount() ?? 0).Append(" / ").Append(BehaviorSettings.InitialGunCount).AppendLine();
 
+			if (RemoteControl.Storage != null) {
+
+				sb.AppendLine();
+				string targetString = null;
+				sb.Append("::: 3rd Party Mod Influence :::").AppendLine();
+				sb.Append(" - Crew Enabled Disabled AI Block:           ").Append(RemoteControl.Storage.TryGetValue(StorageTools.CrewEnabledDamagedRemoteKey, out targetString)).AppendLine();
+				sb.Append(" - Infestation Enabled Disabled AI Block:    ").Append(RemoteControl.Storage.TryGetValue(StorageTools.InfestationEnabledDamagedRemoteKey, out targetString)).AppendLine();
+
+			}
+
 			sb.AppendLine();
 
 			sb.Append("::: Behavior Systems Heartbeat :::").AppendLine();

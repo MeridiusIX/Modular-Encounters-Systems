@@ -202,6 +202,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int LootChanceOverride;
 
 		public bool SetDoorsAnyoneCanUse;
+		public bool SetStoresAnyoneCanUse;
 		public bool SetConnectorsTradeMode;
 
 		public ManipulationProfile(string data = null) {
@@ -391,6 +392,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			LootChanceOverride = 100;
 
 			SetDoorsAnyoneCanUse = false;
+			SetStoresAnyoneCanUse = false;
 			SetConnectorsTradeMode = false;
 
 			InitTags(data);
@@ -1411,6 +1413,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[SetDoorsAnyoneCanUse:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.SetDoorsAnyoneCanUse);
+
+				}
+
+				//SetStoresAnyoneCanUse
+				if (tag.StartsWith("[SetStoresAnyoneCanUse:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.SetStoresAnyoneCanUse);
 
 				}
 

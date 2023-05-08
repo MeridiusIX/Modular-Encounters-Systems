@@ -22,6 +22,8 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		public ShipRules Rules;
 
+		public MyObjectBuilder_CubeGrid CubeGrid;
+
 		internal Dictionary<Vector3I, MyObjectBuilder_CubeBlock> _blockMap;
 		internal Dictionary<Vector3I, RestrictedCellType> _restrictedCells;
 
@@ -32,13 +34,15 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		internal MyObjectBuilder_CubeBlock _lastPrimaryBlockPlaced;
 		internal MyObjectBuilder_CubeBlock _lastMirroredBlockX;
 		internal MyObjectBuilder_CubeBlock _lastMirroredBlockY;
-		internal MyObjectBuilder_CubeBlock _lastMirroredBlockYX;
+		internal MyObjectBuilder_CubeBlock _lastMirroredBlockXY;
 
 		private List<Vector3I> _tempCellList;
 
 		public ShipConstruct(ShipRules rules) {
 
 			Rules = rules;
+
+			CubeGrid = new MyObjectBuilder_CubeGrid();
 
 			_blockMap = new Dictionary<Vector3I, MyObjectBuilder_CubeBlock>();
 			_restrictedCells = new Dictionary<Vector3I, RestrictedCellType>();
@@ -51,7 +55,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
-		public bool PlaceBlock(MyDefinitionId id, Vector3I min, Vector3I max, MyBlockOrientation orientation, bool useXSymmetry = false, bool useYSymmetry = false, RestrictedCellType allowedRestrictions = RestrictedCellType.None) {
+		public bool PlaceBlock(MyDefinitionId id, Vector3I min, Vector3I max, int pitch, int yaw, int roll, bool useXSymmetry = false, bool useYSymmetry = false, RestrictedCellType allowedRestrictions = RestrictedCellType.None) {
 
 			//Get Block Definition
 			MyCubeBlockDefinition blockDef = null;
@@ -63,15 +67,101 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			if (!CanPlaceBlockAtMin(min, max, useXSymmetry, useYSymmetry, allowedRestrictions))
 				return false;
 
-			//Create Blocks
+			//Orientation
+			MyBlockOrientation baseOrientation;
+
+			if (BuilderTools.CubeShapedBlocks.Contains(id)) {
+
+				baseOrientation = BuilderTools.DefaultOrientation;
+
+
+			} else if (BuilderTools.OrientationMasterReference.TryGetValue(id, out baseOrientation)){
+
+				//TODO: raise error to log
+				return false;
+
+			}
+
+			var orientation = BuilderTools.RotateOrientation(baseOrientation, pitch, yaw, roll);
+
+			//Main Block First
+			CreateAndRegisterBlock(id, min, max, orientation, ref _lastPrimaryBlockPlaced);
+
+			if (useXSymmetry) {
+
+				var actualMin = CalculateSymmetryX(min, max, false);
+				var actualMax = CalculateSymmetryX(min, max, true);
+				var newOrientation = BuilderTools.GetSymmetryOrientation(id, orientation, true, false);
+				CreateAndRegisterBlock(id, actualMin, actualMax, newOrientation, ref _lastMirroredBlockX);
+
+			}
+
+			if (useYSymmetry) {
+
+				var actualMin = CalculateSymmetryY(min, max, false);
+				var actualMax = CalculateSymmetryY(min, max, true);
+				var newOrientation = BuilderTools.GetSymmetryOrientation(id, orientation, false, true);
+				CreateAndRegisterBlock(id, actualMin, actualMax, newOrientation, ref _lastMirroredBlockY);
+
+			}
+
+			if (useXSymmetry && useYSymmetry) {
+
+				var actualMin = CalculateSymmetryXY(min, max, false);
+				var actualMax = CalculateSymmetryXY(min, max, true);
+				var newOrientation = BuilderTools.GetSymmetryOrientation(id, orientation, true, true);
+				CreateAndRegisterBlock(id, actualMin, actualMax, newOrientation, ref _lastMirroredBlockXY);
+
+			}
+
+			return true;
+
+		}
+
+		private bool CreateAndRegisterBlock(MyDefinitionId id, Vector3I min, Vector3I max, MyBlockOrientation orientation, ref MyObjectBuilder_CubeBlock lastBlock) {
+
 			var block = CreateBlock(id, min, max, orientation);
 
-			//TODO: Create block of code for create/place/register, then copy it for each symmetry case
+			if (block == null) {
 
-			//Place block
+				//TODO: raise error to log
+				return false;
 
-			//Register placement in Block Map
+			}
 
+			block.BlockOrientation = orientation;
+			block.Min = min;
+
+			CreateCellList(min, max);
+			bool cellOverlap = false;
+			//Precheck
+			foreach (var cell in _tempCellList) {
+
+				if (_blockMap.ContainsKey(cell) || _restrictedCells.ContainsKey(cell)) {
+
+					cellOverlap = true;
+					break;
+
+				}
+			
+			}
+
+			if (cellOverlap) {
+
+				//TODO: raise error to log
+				return false;
+			
+			}
+
+			foreach (var cell in _tempCellList) {
+
+				_blockMap.Add(cell, block);
+				_restrictedCells.Add(cell, RestrictedCellType.Block);
+
+			}
+
+			CubeGrid.CubeBlocks.Add(block);
+			lastBlock = block;
 			return true;
 
 		}
@@ -91,12 +181,13 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
-		public void CreateCellList(Vector3I min, Vector3I max, bool symmetryX, bool symmetryY) {
+		public void CreateCellList(Vector3I min, Vector3I max) {
 
 			_tempCellList.Clear();
 			var actualMin = min;
 			var actualMax = max;
 
+			/*
 			if (symmetryX && !symmetryY) {
 
 				actualMin = CalculateSymmetryX(min, max, false);
@@ -117,6 +208,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 				actualMax = CalculateSymmetryXY(min, max, true);
 
 			}
+			*/
 
 			for (int x = actualMin.X; x <= actualMax.X; x++) {
 

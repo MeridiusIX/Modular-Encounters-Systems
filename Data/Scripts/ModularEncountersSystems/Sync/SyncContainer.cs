@@ -15,6 +15,7 @@ namespace ModularEncountersSystems.Sync {
         ShipyardTransactionResult,
         SuitUpgradePlayerStats,
         SuitUpgradeTransaction,
+        SuitUpgradeNewPlayerStats,
 
     }
 
@@ -29,6 +30,12 @@ namespace ModularEncountersSystems.Sync {
 
         [ProtoMember(3)]
         public string Sender;
+
+        [ProtoMember(4)]
+        public long IdentityId;
+
+        [ProtoMember(5)]
+        public ulong SteamId;
 
         public SyncContainer() {
 

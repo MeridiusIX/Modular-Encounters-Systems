@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Helpers;
+using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,21 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		public static Dictionary<MyDefinitionId, MyBlockOrientation> OrientationMasterReference = new Dictionary<MyDefinitionId, MyBlockOrientation>();
 		public static Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> SymmetryXReference = new Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>>();
 		public static Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> SymmetryYReference = new Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>>();
+
+		public static MyDefinitionId ArmorBlock = new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorBlock");
+		public static MyDefinitionId ArmorSlope = new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorSlope");
+		public static MyDefinitionId ArmorCorner = new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorCorner");
+		public static MyDefinitionId ArmorInvCorner = new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorCornerInv");
+
 		private static SerializableVector3 _colorMask = new SerializableVector3(0.122222222f, 0.05f, 0.46f);
 
 		private static Dictionary<MyBlockOrientation, MyBlockOrientation> _tempDict = new Dictionary<MyBlockOrientation, MyBlockOrientation>();
 		private static MyObjectBuilder_CubeBlock _symmetryXBlock = null;
 		private static MyObjectBuilder_CubeBlock _symmetryYBlock = null;
+
+		public static MyBlockOrientation DefaultOrientation;
+
+		public static List<MyDefinitionId> CubeShapedBlocks = new List<MyDefinitionId>();
 
 		public static MyObjectBuilder_CubeBlock AddBlockToGrid(MyObjectBuilder_CubeGrid grid, MyDefinitionId id, Vector3I? pos = null, SerializableBlockOrientation? orientation = null, Vector3? color = null, string skin = null) {
 			
@@ -56,6 +67,59 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
+		public static MyBlockOrientation GetSymmetryOrientation(MyDefinitionId id, MyBlockOrientation orientation, bool xSymmetry, bool ySymmetry) {
+
+			if (!xSymmetry && !ySymmetry)
+				return orientation;
+
+			if (xSymmetry && !ySymmetry) {
+
+				return GetSymmetryOrientation(id, orientation, SymmetryXReference);
+
+			}
+
+			if (!xSymmetry && ySymmetry) {
+
+				return GetSymmetryOrientation(id, orientation, SymmetryYReference);
+
+			}
+
+			if (xSymmetry && ySymmetry) {
+
+				var xOrientation = GetSymmetryOrientation(id, orientation, SymmetryXReference);
+				return GetSymmetryOrientation(id, xOrientation, SymmetryYReference);
+
+			}
+
+			//TODO: raise error in log
+			return orientation;
+
+		}
+
+		private static MyBlockOrientation GetSymmetryOrientation(MyDefinitionId id, MyBlockOrientation orientation, Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> referenceDict) {
+
+			_tempDict = null;
+
+			if (!referenceDict.TryGetValue(id, out _tempDict)) {
+
+				//TODO: raise error in log
+				return orientation;
+
+			}
+
+			MyBlockOrientation newOrientation;
+
+			if (_tempDict.TryGetValue(orientation, out newOrientation)) {
+
+				return newOrientation;
+
+			}
+
+			//TODO: raise error in log
+			return orientation;
+
+		}
+
 		public static MyObjectBuilder_CubeBlock GetBlockAtMinPosition(Vector3I min, MyObjectBuilder_CubeGrid grid) {
 
 			if (grid.CubeBlocks == null)
@@ -70,6 +134,23 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			return null;
 		
+		}
+
+		public static MyBlockOrientation RotateOrientation(MyBlockOrientation baseOrientation, int pitch, int yaw, int roll) {
+
+			var orientation = baseOrientation;
+
+			if (pitch > 0)
+				orientation = RotatePitch(orientation, pitch);
+
+			if (yaw > 0)
+				orientation = RotateYaw(orientation, yaw);
+
+			if (roll > 0)
+				orientation = RotateRoll(orientation, roll);
+
+			return orientation;
+
 		}
 
 		public static MyBlockOrientation RotateYaw(MyBlockOrientation original, int steps = 1) {
@@ -441,8 +522,20 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		public static void Setup() {
 
 			//Master Orientation Reference
-			MasterReferenceSetup();
 
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorBlock"));
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeHeavyBlockArmorBlock"));
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_VirtualMass), "VirtualMassLarge"));
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_Conveyor), "LargeBlockConveyor"));
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_Decoy), "LargeDecoy"));
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_Warhead), "LargeWarhead"));
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_CargoContainer), "LargeBlockSmallContainer"));
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_BatteryBlock), "LargeBlockBatteryBlock"));
+			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_BatteryBlock), "LargeBlockBatteryBlockWarfare2"));
+
+			DefaultOrientation = new MyBlockOrientation(Base6Directions.Direction.Forward, Base6Directions.Direction.Up);
+			MasterReferenceSetup();
+			SymmetryReferenceSetup();
 
 
 		}

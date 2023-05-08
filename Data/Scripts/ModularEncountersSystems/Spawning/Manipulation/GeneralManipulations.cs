@@ -196,6 +196,18 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				
 				}
 
+				if (profile.SetStoresAnyoneCanUse) {
+
+					var store = block as MyObjectBuilder_StoreBlock;
+
+					if (store != null) {
+
+						store.AnyoneCanUse = true;
+
+					}
+
+				}
+
 				if (profile.SetConnectorsTradeMode) {
 
 					var connector = block as MyObjectBuilder_ShipConnector;

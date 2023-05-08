@@ -27,6 +27,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static Guid MesButtonPointsKey = new Guid("076C26A3-CCE9-4979-8356-E5A14D02A038");
 		public static Guid MesSafeZoneLinkedEntity = new Guid("6968A9BE-87A3-439F-9B33-27A5A9F220CF");
 
+		//3rd Party Keys
+		public static Guid CrewEnabledDamagedRemoteKey = new Guid("E4E173B9-6080-42C1-BD0A-4EC1E8041CE0");
+		public static Guid InfestationEnabledDamagedRemoteKey = new Guid("00FCF301-6FBE-44F2-99C9-350880AF3621");
+
 
 		public static List<Guid> CustomStorageKeys = new List<Guid>();
 

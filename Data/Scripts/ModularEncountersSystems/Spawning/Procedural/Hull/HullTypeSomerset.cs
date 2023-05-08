@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace ModularEncountersSystems.Spawning.Procedural.Hull {
-	public class HullTypeSomerset : IHullType {
+	public class HullTypeSomerset : HullTypeBase, IHullType {
 
-		public void InitialHullSetup(ShipConstruct construct) {
+		public void InitialHullSetup() {
 
 			//Hull Outline
 
 			//Origin:   1
+
 			//AngleOut: 1-3
 			//Straight: 4-8
 			//AngleOut: 2-4
@@ -24,31 +25,31 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 		}
 
-		public void ThrusterPlacement(ShipConstruct construct) {
+		public void ThrusterPlacement() {
 
 
 
 		}
 
-		public void InteriorPlacement(ShipConstruct construct) {
+		public void InteriorPlacement() {
 
 
 
 		}
 
-		public void SystemsPlacement(ShipConstruct construct) {
+		public void SystemsPlacement() {
 		
 			
 		
 		}
 
-		public void GreebleHull(ShipConstruct construct) {
+		public void GreebleHull() {
 		
 			
 		
 		}
 
-		public void PaintingAndSkins(ShipConstruct construct) {
+		public void PaintingAndSkins() {
 
 
 

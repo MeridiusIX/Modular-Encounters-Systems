@@ -122,6 +122,24 @@ namespace ModularEncountersSystems.Sync {
 
                 }
 
+                if (container.Mode == SyncMode.SuitUpgradeNewPlayerStats) {
+
+                    if (MyAPIGateway.Multiplayer.IsServer) {
+
+                        var newContainer = PlayerManager.GetProgressionContainer(container.IdentityId, sender);
+
+                        if (newContainer == null)
+                            return;
+
+                        var serializedContainer = MyAPIGateway.Utilities.SerializeToBinary<ProgressionContainer>(newContainer);
+                        container.Data = serializedContainer;
+                        container.Mode = SyncMode.SuitUpgradePlayerStats;
+                        SendSyncMesage(container, sender);
+
+                    }
+
+                }
+
                 if (container.Mode == SyncMode.SuitUpgradePlayerStats) {
 
                     var suitData = MyAPIGateway.Utilities.SerializeFromBinary<ProgressionContainer>(container.Data);

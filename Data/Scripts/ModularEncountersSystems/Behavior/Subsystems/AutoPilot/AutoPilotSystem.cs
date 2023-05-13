@@ -764,6 +764,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		private void ApplyAutopilot() {
 
+			if (State?.DisableAutopilot ?? false)
+				return;
+
 			ApplyGyroRotation();
 			ApplyThrust();
 

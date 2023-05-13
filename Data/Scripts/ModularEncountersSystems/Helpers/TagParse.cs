@@ -939,7 +939,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			}
 
-			original = result;
+			original |= result;
 
 		}
 

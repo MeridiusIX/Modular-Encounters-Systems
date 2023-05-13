@@ -34,8 +34,8 @@ namespace ModularEncountersSystems.Core {
 		public static bool OfflineDetected = false;
 		public bool FinalSetup = false;
 
-		public static string ModVersion = "2.69.0";
-		public static int ModVersionValue = 200690000;
+		public static string ModVersion = "2.69.6";
+		public static int ModVersionValue = 200690006;
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -49,6 +49,8 @@ namespace ModularEncountersSystems.Core {
 
 		public static Action SaveActions;
 		public static Action UnloadActions;
+
+		public static string SaveName;
 
 		public override void LoadData() {
 
@@ -138,6 +140,8 @@ namespace ModularEncountersSystems.Core {
 			SessionStartTime = MyAPIGateway.Session.GameDateTime;
 			//AttributeApplication
 
+			SaveName = MyAPIGateway.Session.Name;
+
 		}
 
 		public override void UpdateBeforeSimulation() {
@@ -173,12 +177,23 @@ namespace ModularEncountersSystems.Core {
 
 		public override MyObjectBuilder_SessionComponent GetObjectBuilder() {
 
-			MyAPIGateway.Utilities.InvokeOnGameThread(() => { 
+			if (!MyAPIGateway.Multiplayer.IsServer)
+				return base.GetObjectBuilder();
+
+			MyAPIGateway.Utilities.InvokeOnGameThread(() => {
 
 				SaveActions?.Invoke();
 
 				if(Settings.SavedData != null && Settings.SavedData.DataChanged)
 					Settings.SavedData.SaveSettings();
+
+				if (SaveName != MyAPIGateway.Session.Name) {
+
+					SaveName = MyAPIGateway.Session.Name;
+					Settings.SaveAll();
+
+				}
+					
 			
 			}); 
 			return base.GetObjectBuilder();

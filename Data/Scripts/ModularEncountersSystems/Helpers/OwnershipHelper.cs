@@ -299,11 +299,12 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static bool IsNPC(long identity) {
+		public static bool IsNPC(long identity, bool unownedAllowed = false) {
 
 			if(MyAPIGateway.Players.TryGetSteamId(identity) > 0 || identity == 0) {
 
-				return false;
+				if(!unownedAllowed)
+					return false;
 
 			}
 

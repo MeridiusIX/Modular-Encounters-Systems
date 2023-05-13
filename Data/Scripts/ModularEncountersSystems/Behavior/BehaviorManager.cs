@@ -385,6 +385,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].ProcessCollisionChecks();
+				Behaviors[i].Heartbeat.CollisionParallel++;
 
 			}
 
@@ -398,6 +399,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].ProcessTargetingChecks();
+				Behaviors[i].Heartbeat.TargetingParallel++;
 
 			}
 
@@ -411,6 +413,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].ProcessAutoPilotChecks();
+				Behaviors[i].Heartbeat.AutopilotParallel++;
 
 			}
 
@@ -424,6 +427,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].EngageAutoPilot();
+				Behaviors[i].Heartbeat.AutopilotMain++;
 
 			}
 
@@ -437,6 +441,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].ProcessWeaponChecks();
+				Behaviors[i].Heartbeat.WeaponsParallel++;
 
 			}
 
@@ -451,6 +456,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				Behaviors[i].SetInitialWeaponReadiness();
 				Behaviors[i].FireWeapons();
+				Behaviors[i].Heartbeat.WeaponsMain++;
 
 			}
 
@@ -495,6 +501,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].ProcessTriggerChecks();
+				Behaviors[i].Heartbeat.TriggersParallel++;
 
 			}
 
@@ -508,6 +515,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].ProcessActivatedTriggers();
+				Behaviors[i].Heartbeat.TriggersMain++;
 
 			}
 
@@ -537,6 +545,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].CheckDespawnConditions();
+				Behaviors[i].Heartbeat.DespawnMain++;
 
 			}
 
@@ -550,6 +559,7 @@ namespace ModularEncountersSystems.Behavior {
 					continue;
 
 				Behaviors[i].RunMainBehavior();
+				Behaviors[i].Heartbeat.BehaviorMain++;
 
 			}
 

@@ -22,6 +22,7 @@ namespace ModularEncountersSystems.Behavior {
 		DiagnosticSystem Diagnostic { get; }
 		EscortSystem Escort { get; }
 		GridSystem Grid { get; }
+		HeartbeatSystem Heartbeat { get; }
 		OwnerSystem Owner { get; }
 		StoredSettings BehaviorSettings { get; }
 		TriggerSystem Trigger { get; }

@@ -19,10 +19,14 @@ namespace ModularEncountersSystems.Entities {
 
 			SafeZone = entity as MySafeZone;
 
+			if (SafeZone != null)
+				IsValidEntity = true;
+
 			if (SafeZone.Storage == null)
 				return;
 
 			var entityIdString = "";
+			
 
 			if (SafeZone.Storage.TryGetValue(StorageTools.MesSafeZoneLinkedEntity, out entityIdString))
 				if (long.TryParse(entityIdString, out LinkedSafezoneEntityId)) {
@@ -32,6 +36,12 @@ namespace ModularEncountersSystems.Entities {
 				}
 				
 
+		}
+
+		public bool ActiveEntity() {
+
+			return SafeZone != null && !IsClosed();
+		
 		}
 
 		public bool InZone(Vector3D coords) {

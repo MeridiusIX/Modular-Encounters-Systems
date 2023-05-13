@@ -79,6 +79,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		[ProtoMember(17)]
 		public NewAutoPilotMode NormalAutopilotFlags;
 
+		[ProtoMember(18)]
+		public bool DisableAutopilot;
+
 		public AutoPilotState() {
 
 			PrimaryAutopilotId = "";
@@ -105,6 +108,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			UseFlyLevelWithGravity = false;
 			UseFlyLevelWithGravityIdle = false;
 			NormalAutopilotFlags = NewAutoPilotMode.None;
+
+			DisableAutopilot = false;
 
 		}
 

@@ -184,6 +184,43 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				}
 
+				if (profile.SetDoorsAnyoneCanUse) {
+
+					var door = block as MyObjectBuilder_Door;
+
+					if (door != null) {
+
+						door.AnyoneCanUse = true;
+					
+					}
+				
+				}
+
+				if (profile.SetStoresAnyoneCanUse) {
+
+					var store = block as MyObjectBuilder_StoreBlock;
+
+					if (store != null) {
+
+						store.AnyoneCanUse = true;
+
+					}
+
+				}
+
+				if (profile.SetConnectorsTradeMode) {
+
+					var connector = block as MyObjectBuilder_ShipConnector;
+
+					if (connector != null) {
+
+						connector.TradingEnabled = true;
+						connector.AutoUnlockTime = 600;
+
+					}
+
+				}
+
 				if (!string.IsNullOrWhiteSpace(termBlock.CustomName) && funcBlock != null) {
 
 					//Enable Blocks By Name

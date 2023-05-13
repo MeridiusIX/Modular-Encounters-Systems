@@ -232,6 +232,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoIgnore]
 		public Random Rnd;
 
+		[ProtoIgnore]
+		public Command TempCommand;
+
 		public TriggerProfile() {
 
 			Type = "";

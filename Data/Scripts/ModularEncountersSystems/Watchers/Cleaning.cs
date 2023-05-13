@@ -172,8 +172,8 @@ namespace ModularEncountersSystems.Watchers {
 				var player = PlayerManager.GetNearestPlayer(grid.GetPosition());
 				var distance = player?.Distance(grid.GetPosition()) ?? 0;
 				var powered = grid.IsPowered();
-				var distanceTrigger = !config.CleanupUnpoweredOverride ? config.CleanupDistanceTrigger : config.CleanupUnpoweredDistanceTrigger;
-				var timerTrigger = !config.CleanupUnpoweredOverride ? config.CleanupTimerTrigger : config.CleanupUnpoweredTimerTrigger;
+				var distanceTrigger = (!config.CleanupUnpoweredOverride || !powered) ? config.CleanupDistanceTrigger : config.CleanupUnpoweredDistanceTrigger;
+				var timerTrigger = (!config.CleanupUnpoweredOverride || !powered) ? config.CleanupTimerTrigger : config.CleanupUnpoweredTimerTrigger;
 
 				//Determine Distance
 				if (config.CleanupUseDistance && player != null) {
@@ -290,7 +290,7 @@ namespace ModularEncountersSystems.Watchers {
 		public static void ForceRemoveGrid(GridEntity grid, string reason = null) {
 
 			grid.ForceRemove = true;
-			SpawnLogger.Write(grid.CubeGrid.CustomName + " Force Remove Request. Marking For Removal.", SpawnerDebugEnum.CleanUp);
+			SpawnLogger.Write(grid.CubeGrid.CustomName + " Force Remove Request. Marking For Removal. Reason: " + reason ?? "null", SpawnerDebugEnum.CleanUp, true);
 			RemoveGrid(grid);
 			GridCleanupData.RemoveData(grid);
 
@@ -398,6 +398,9 @@ namespace ModularEncountersSystems.Watchers {
 		}
 
 		public static void RemoveGrid(GridEntity grid) {
+
+			if (!FlaggedForRemoval.Contains(grid))
+				FlaggedForRemoval.Add(grid);
 
 			foreach (var gridEntity in grid.LinkedGrids) {
 

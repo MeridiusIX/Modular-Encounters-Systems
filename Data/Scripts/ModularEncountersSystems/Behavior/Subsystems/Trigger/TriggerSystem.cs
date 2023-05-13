@@ -53,10 +53,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public Action OnComplete;
 		public Action<IMyCubeGrid, string> DespawnFromMES;
 
-		public Command command;
-
-
-
 		public TriggerSystem(IMyRemoteControl remoteControl) {
 
 			RemoteControl = null;
@@ -113,15 +109,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				//PlayerNear
 				if (trigger.Type == "PlayerNear") {
-					command = new Command();
+
 					if (trigger.UsePlayerFilterProfile)
-						trigger.ActivateTrigger(CheckPlayerNearFilter, command);
+						trigger.ActivateTrigger(CheckPlayerNearFilter);
 					else
 						trigger.ActivateTrigger(CheckPlayerNear);
-
-					if (trigger.Triggered == true)
-						ProcessTrigger(trigger, 0, command);
-
 
 					continue;
 
@@ -129,14 +121,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				//PlayerFar
 				if (trigger.Type == "PlayerFar") {
-					command = new Command();
-					if (trigger.UsePlayerFilterProfile) 
-						trigger.ActivateTrigger(CheckPlayerFarFilter, command);
-                    else
-						trigger.ActivateTrigger(CheckPlayerFar, command);
 
-					if (trigger.Triggered == true)
-						ProcessTrigger(trigger, 0, command);
+					if (trigger.UsePlayerFilterProfile) 
+						trigger.ActivateTrigger(CheckPlayerFarFilter);
+					else
+						trigger.ActivateTrigger(CheckPlayerFar);
 
 					continue;
 
@@ -511,7 +500,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		public void ProcessCommandReceiveTriggerWatcher(Command command) {
+		public void ProcessCommandReceiveTriggerWatcher(Command receivedCommand) {
 
 			if (_behavior == null || !_behavior.IsAIReady()) {
 
@@ -521,14 +510,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (command == null) {
+			if (receivedCommand == null) {
 
 				BehaviorLogger.Write("Command Null", BehaviorDebugEnum.Command);
 				return;
 
 			}
 
-			if (string.IsNullOrWhiteSpace(command.CommandCode)) {
+			if (string.IsNullOrWhiteSpace(receivedCommand.CommandCode)) {
 
 				BehaviorLogger.Write("Command Code Null or Blank", BehaviorDebugEnum.Command);
 				return;
@@ -543,25 +532,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
-			if (command.SenderEntity?.PositionComp == null || RemoteControl?.SlimBlock?.CubeGrid == null) {
+			if (receivedCommand.SenderEntity?.PositionComp == null || RemoteControl?.SlimBlock?.CubeGrid == null) {
 
 				BehaviorLogger.Write("Sender Remote CubeGrid Null or Receiver Remote CubeGrid Null", BehaviorDebugEnum.Command);
 				return;
 
 			}
 
-			if (command.SingleRecipient && command.Recipient > 0 && command.Recipient != RemoteControl.EntityId) {
+			if (receivedCommand.SingleRecipient && receivedCommand.Recipient > 0 && receivedCommand.Recipient != RemoteControl.EntityId) {
 
 				BehaviorLogger.Write("Code Is Single Recipient and Already Processed By Another Entity", BehaviorDebugEnum.Command);
 				return;
 
 			}
 
-			var dist = Vector3D.Distance(RemoteControl.GetPosition(), command.SenderEntity.GetPosition());
+			var dist = Vector3D.Distance(RemoteControl.GetPosition(), receivedCommand.SenderEntity.GetPosition());
 
-			if (!command.UseTriggerTargetDistance) {
+			if (!receivedCommand.UseTriggerTargetDistance) {
 
-				if (!command.IgnoreAntennaRequirement && !command.IgnoreReceiverAntennaRequirement) {
+				if (!receivedCommand.IgnoreAntennaRequirement && !receivedCommand.IgnoreReceiverAntennaRequirement) {
 
 					var antenna = _behavior.Grid.GetActiveAntenna();
 
@@ -574,18 +563,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				if (dist > command.Radius) {
+				if (dist > receivedCommand.Radius) {
 
-					BehaviorLogger.Write("Receiver Out Of Code Broadcast Range. Distance: " + dist + " // Command Radius: " + command.Radius, BehaviorDebugEnum.Command);
+					BehaviorLogger.Write("Receiver Out Of Code Broadcast Range. Distance: " + dist + " // Command Radius: " + receivedCommand.Radius, BehaviorDebugEnum.Command);
 					return;
 
 				}
 
 			}
 
-			if (command.MatchSenderReceiverOwners) {
+			if (receivedCommand.MatchSenderReceiverOwners) {
 
-				if (command.CommandOwnerId != RemoteControl.OwnerId) {
+				if (receivedCommand.CommandOwnerId != RemoteControl.OwnerId) {
 
 					BehaviorLogger.Write("Receiver Owner Doesn't Match Sender Owner", BehaviorDebugEnum.Command);
 					return;
@@ -600,25 +589,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				var trigger = CommandTriggers[i];
 
-				if (trigger.CommandCodeType != command.Type)
+				if (trigger.CommandCodeType != receivedCommand.Type)
 					continue;
 
-				if (command.UseTriggerTargetDistance && dist > trigger.TargetDistance)
+				if (receivedCommand.UseTriggerTargetDistance && dist > trigger.TargetDistance)
 					continue;
 
-				if (string.IsNullOrWhiteSpace(command.CommandCode))
+				if (string.IsNullOrWhiteSpace(receivedCommand.CommandCode))
 					continue;
 
-				bool commandCodePass = !trigger.AllowCommandCodePartialMatch ? (command.CommandCode.ToLower() == trigger.CommandReceiveCode.ToLower()) : (command.CommandCode.ToLower().Contains(trigger.CommandReceiveCode.ToLower()));
+				bool commandCodePass = !trigger.AllowCommandCodePartialMatch ? (receivedCommand.CommandCode.ToLower() == trigger.CommandReceiveCode.ToLower()) : (receivedCommand.CommandCode.ToLower().Contains(trigger.CommandReceiveCode.ToLower()));
 
 				if (trigger.UseTrigger == true && commandCodePass) {
 
-					trigger.ActivateTrigger(null, command);
+					trigger.ActivateTrigger(null, receivedCommand);
 
 					if (trigger.Triggered) {
 
 						processed = true;
-						ProcessTrigger(trigger, 0, command);
+						ProcessTrigger(trigger, 0, receivedCommand);
 
 					}
 
@@ -626,8 +615,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if (command.SingleRecipient && processed)
-				command.Recipient = RemoteControl.EntityId;
+			if (receivedCommand.SingleRecipient && processed)
+				receivedCommand.Recipient = RemoteControl.EntityId;
 
 		}
 
@@ -973,12 +962,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+
+
 			//Action Execution
 			if (trigger.ActionExecution == ActionExecutionEnum.All) {
 
 				foreach (var actions in actionList) {
 
-					ProcessAction(trigger, actions, attackerEntityId, detectedEntity, command);
+					ProcessAction(trigger, actions, attackerEntityId, detectedEntity, command != null ? command : trigger.TempCommand);
 
 				}
 
@@ -989,7 +980,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (trigger.NextActionIndex >= actionList.Count)
 					trigger.NextActionIndex = 0;
 
-				ProcessAction(trigger, actionList[trigger.NextActionIndex], attackerEntityId, detectedEntity, command);
+				ProcessAction(trigger, actionList[trigger.NextActionIndex], attackerEntityId, detectedEntity, command != null ? command : trigger.TempCommand);
 				trigger.NextActionIndex++;
 
 			}
@@ -998,11 +989,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (actionList.Count == 1) {
 
-					ProcessAction(trigger, actionList[0], attackerEntityId, detectedEntity, command);
+					ProcessAction(trigger, actionList[0], attackerEntityId, detectedEntity, command != null ? command : trigger.TempCommand);
 
 				} else {
 
-					ProcessAction(trigger, actionList[MathTools.RandomBetween(0, actionList.Count)], attackerEntityId, detectedEntity, command);
+					ProcessAction(trigger, actionList[MathTools.RandomBetween(0, actionList.Count)], attackerEntityId, detectedEntity, command != null ? command : trigger.TempCommand);
 
 				}
 
@@ -1053,8 +1044,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public void SetSandboxBool(string boolName, bool mode) {
 
 
-            if (boolName.Contains("{SpawnGroupName}") && _behavior?.CurrentGrid?.Npc.SpawnGroupName != null)
-            {
+      if (boolName.Contains("{SpawnGroupName}") && _behavior?.CurrentGrid?.Npc.SpawnGroupName != null)
+      {
 				boolName = boolName.Replace("{SpawnGroupName}", _behavior?.CurrentGrid?.Npc.SpawnGroupName);
 			}
 
@@ -1064,20 +1055,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 			MyAPIGateway.Utilities.SetVariable(boolName, mode);
-			
 		}
 
 		public void SetSandboxCounter(string counterName, int amount, bool hardSet = false) {
 
-			if (_behavior == null)
+			if (counterName.Contains("{Faction}") && _behavior?.Owner?.Faction.Tag != null)
 			{
-				MyVisualScriptLogicProvider.ShowNotificationToAll("SetSandboxCounter", 5000, "Red");
-				return;
-			}
-
-			if (counterName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
-			{
-				counterName = counterName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
+				counterName = counterName.Replace("{Faction}", _behavior?.Owner?.Faction.Tag);
 			}
 
 
@@ -1186,7 +1170,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			command.PlayerIdentity = player.GetEntityId();
+			if (control.TempCommand == null)
+				control.TempCommand = new Command();
+
+			control.TempCommand.PlayerIdentity = player.Player.IdentityId;
 
 			return true;
 
@@ -1232,31 +1219,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 			if (playerOutsideDistance)
-			{
-
 				if (playerDist < control.TargetDistance)
-				{
-
 					return false;
+				else
+					if (playerDist > control.TargetDistance)
+							return false;
 
-				}
+			if (control.TempCommand == null)
+				control.TempCommand = new Command();
 
-			}
-			else
-			{
-
-				if (playerDist > control.TargetDistance)
-				{
-
-					return false;
-
-				}
-
-			}
-
-
-
-			command.PlayerIdentity = result.Player.IdentityId;
+			control.TempCommand.PlayerIdentity = result.Player.IdentityId;
 			return true;
 
 		}

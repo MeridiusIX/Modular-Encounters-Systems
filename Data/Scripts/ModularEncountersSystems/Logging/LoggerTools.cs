@@ -517,21 +517,85 @@ namespace ModularEncountersSystems.Logging {
 
 			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
 
-			if (grid == null) {
+			if (grid == null || grid.ActiveEntity() == false) {
 
 				msg.ReturnMessage = "No Grid in Camera Direction";
 				return;
 
 			}
 
-			foreach (var link in grid.LinkedGrids) {
+			var sb = new StringBuilder();
+			sb.Append("Primary Grid: ").Append(grid?.CubeGrid?.CustomName ?? "null").AppendLine().AppendLine();
+			var gridGroupList = new List<IMyCubeGrid>();
 
-				MyVisualScriptLogicProvider.ShowNotificationToAll(link.RefreshLinkedGrids + " / " + link.CubeGrid?.CustomName ?? "null", 6000);
-			
+			//Electrical
+			sb.Append("Electrical").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.Electrical, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
 			}
 
-			msg.ReturnMessage = "Processed Linked Grids";
-			//grid.RefreshSubGrids();
+			sb.AppendLine();
+
+			//Logical
+			sb.Append("Logical").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.Logical, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
+			}
+
+			sb.AppendLine();
+
+			//Mechanical
+			sb.Append("Mechanical").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.Mechanical, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
+			}
+
+			sb.AppendLine();
+
+			//NoContactDamage
+			sb.Append("NoContactDamage").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.NoContactDamage, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
+			}
+
+			sb.AppendLine();
+
+			//Physical
+			sb.Append("Physical").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.Physical, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
+			}
+
+			sb.AppendLine();
+
+			msg.ReturnMessage = "Processed Linked Grids. Clipboard Updated";
+			msg.Mode = ChatMsgMode.ReturnMessage;
+			msg.ClipboardPayload = sb.ToString();
 
 		}
 
@@ -681,15 +745,9 @@ namespace ModularEncountersSystems.Logging {
 
 			}
 
-			thisGrid.CubeGrid.Close();
-			var list = new List<IMyCubeGrid>();
-			MyAPIGateway.GridGroups.GetGroup(thisGrid.CubeGrid, GridLinkTypeEnum.Physical, list);
-			int phys = list.Count;
-			list.Clear();
-			MyAPIGateway.GridGroups.GetGroup(thisGrid.CubeGrid, GridLinkTypeEnum.NoContactDamage, list);
-			int nc = list.Count;
-
-			message.ReturnMessage = "Grid Marked as Closed. " + phys.ToString() + " | " + nc.ToString();
+			thisGrid.DespawnSource = "Despawn-Debug";
+			Cleaning.RemoveGrid(thisGrid);
+			message.ReturnMessage = "Grid Marked for Removal. " + thisGrid.CubeGrid.CustomName ?? "null";
 			return;
 
 		}
@@ -1212,7 +1270,7 @@ namespace ModularEncountersSystems.Logging {
 			collection = new SpawnGroupCollection();
 			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryCargoShip, "Debug", environment, "", collection);
 
-			if (environment.PlanetaryCargoShipsEligible) {
+			if (environment.PlanetaryCargoShipsEligible || environment.GravityCargoShipsEligible) {
 
 				sb.Append("::: Planetary / Gravity Cargo Ship Eligible Spawns :::").AppendLine();
 

@@ -6,6 +6,7 @@ using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using ProtoBuf;
 using Sandbox.Game;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace ModularEncountersSystems.Sync {
 		[ProtoMember(5)] public bool ConstructBlocks;
 		[ProtoMember(6)] public bool RepairBlocks;
 		[ProtoMember(7)] public bool UseServerPrice;
+		[ProtoMember(8)] public int ReputationPenalty;
 
 		public ShipyardTransaction() {
 
@@ -35,6 +37,7 @@ namespace ModularEncountersSystems.Sync {
 			ConstructBlocks = false;
 			RepairBlocks = false;
 			UseServerPrice = false;
+			ReputationPenalty = 0;
 
 		}
 
@@ -100,6 +103,8 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//TODO: Distance Check
+
 			//Get Shipyard Profile
 			ShipyardProfile shipyardProfile = null;
 			string shipyardProfileName = null;
@@ -130,6 +135,9 @@ namespace ModularEncountersSystems.Sync {
 
 			if (Mode == ShipyardModes.RepairAndConstruction)
 				ProcessRepairAndConstruct(player, grid, projector, shipyardProfile, rep, sender);
+
+			if (Mode == ShipyardModes.GridTakeover)
+				ProcessGridTakeover(player, grid, projector, shipyardProfile, rep, sender);
 
 		}
 
@@ -163,7 +171,7 @@ namespace ModularEncountersSystems.Sync {
 			var serverFinalCost = profile.GetBlueprintPrice(serverRawCost, reputation);
 
 			//Compare To ClientPrice
-			if (serverFinalCost != ClientPrice) {
+			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
 				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
 				return;
@@ -207,7 +215,7 @@ namespace ModularEncountersSystems.Sync {
 			var serverFinalCost = profile.GetScrapPrice(serverRawCost, reputation);
 
 			//Compare To ClientPrice
-			if (serverFinalCost != ClientPrice) {
+			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
 				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
 				return;
@@ -238,8 +246,12 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//Connected To Station
+
 			//Remove Ship
 			MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardSell", grid.GetPosition());
+			grid.DisconnectSubgrids();
+			((MyCubeGrid)grid.CubeGrid).DismountAllCockpits();
 			Cleaning.ForceRemoveGrid(grid, "Despawn-SoldToShipyard");
 
 			//Credit Player
@@ -338,12 +350,16 @@ namespace ModularEncountersSystems.Sync {
 
 			foreach (var safezone in SafeZoneManager.SafeZones) {
 
-				if (!safezone.ValidEntity() || safezone.SafeZone == null || !safezone.SafeZone.Enabled)
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Active Entity:" + safezone.ActiveEntity(), 10000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Null:" + (safezone.SafeZone == null), 10000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Enabled:" + safezone.SafeZone.Enabled, 10000);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("In Zone:" + safezone.InZone(projector.GetPosition()), 10000);
+
+				if (!safezone.ActiveEntity() || safezone.SafeZone == null || !safezone.SafeZone.Enabled || !safezone.InZone(projector.GetPosition()))
 					continue;
 
 				safezone.SafeZone.Enabled = false;
 				safezones.Add(safezone);
-
 
 			}
 
@@ -367,10 +383,77 @@ namespace ModularEncountersSystems.Sync {
 			//Enable Safezones
 			foreach (var safezone in safezones) {
 
-				if (!safezone.ValidEntity() || safezone.SafeZone == null || !safezone.SafeZone.Enabled)
+				if (!safezone.ActiveEntity() || safezone.SafeZone == null || safezone.SafeZone.Enabled)
 					continue;
 
 				safezone.SafeZone.Enabled = true;
+
+			}
+
+			ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.TransactionSuccessful, Mode, sender, ProjectorId, serverFinalCost);
+
+		}
+
+		internal void ProcessGridTakeover(PlayerEntity player, GridEntity grid, IMyProjector projector, ShipyardProfile profile, int reputation, ulong sender) {
+
+			//Calculate Work Eligiblity
+			if (!ShipyardControls.GridSelectionRules(projector, grid, ShipyardModes.GridTakeover, profile)) {
+
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ShipyardRulesNotSatisfied, Mode, sender, ProjectorId);
+				return;
+
+			}
+
+			//Calculate Cost Of Work
+			var serverRawCost = EconomyHelper.GridTakeoverCost(grid, player.Player.IdentityId, profile.GridTakeoverPricePerComputerMultiplier); //grid.CreditValueRegular(profile.ScrapPurchasingIncludeInventory);
+
+			if (serverRawCost <= 0) {
+
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerRawCostZero, Mode, sender, ProjectorId);
+				return;
+
+			}
+
+			var serverFinalCost = profile.GetTakeoverPrice(serverRawCost, reputation);
+
+			//Compare To ClientPrice
+			if (serverFinalCost != ClientPrice && !UseServerPrice) {
+
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
+				return;
+
+			}
+
+			var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(projector.OwnerId);
+
+			//Check Player Credits
+			long playerBalance = 0;
+			player.Player.TryGetBalanceInfo(out playerBalance);
+
+			if (playerBalance < serverFinalCost) {
+
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.PlayerInsufficientCredits, Mode, sender, ProjectorId);
+				return;
+
+			}
+
+			//Remove Credits From Player
+			player.Player.RequestChangeBalance(-serverFinalCost);
+
+			//Switch Ownership
+			MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardSell", grid.GetPosition());
+			grid.CubeGrid.ChangeGridOwnership(player.Player.IdentityId, VRage.Game.MyOwnershipShareModeEnum.Faction);
+
+			//Credit Merchant
+			if (profile.TransactionsUseNpcFactionBalance) {
+
+				var npcfaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(projector.OwnerId);
+
+				if (npcfaction != null) {
+
+					npcfaction.RequestChangeBalance(serverFinalCost);
+
+				}
 
 			}
 

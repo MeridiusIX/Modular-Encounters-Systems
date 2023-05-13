@@ -13,13 +13,22 @@ using VRage.Utils;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Spawning;
 using VRageMath;
+using ModularEncountersSystems.Entities;
 
 namespace ModularEncountersSystems.Events.Condition
 {
+    public enum ThreatScoreTypeEnum
+    {
+        Player = 0,
+        PlayerLocation = 1,
+        Location = 2
+    }
+
     //Noting to safe? This is techniqually all "references"
     public class EventCondition {
 
         public string ProfileSubtypeId;
+        public bool UseFailCondition;
         public bool CheckTrueBooleans;
         public List<string> TrueBooleans;
         public bool AllowAnyTrueBoolean;
@@ -33,15 +42,17 @@ namespace ModularEncountersSystems.Events.Condition
         public List<CounterCompareEnum> CounterCompareTypes;
 
         public bool CheckPlayerNear;
-        public bool CheckPlayerFar;
-        public int Distance;
-        public Vector3D vector3;
+        public Vector3D PlayerNearVector3;
+        public int PlayerNearDistanceFromVector3;
         public List<string> PlayerFilterIds;
 
-        public bool CheckPlayerReachedThreatScore;
-        public int PlayerReachedThreatScoreAmount;
-        public int PlayerReachedThreatScoreDistance;
-
+        public bool CheckThreatScore;
+        public int ThreatScoreAmount;
+        public int ThreatScoreDistance;
+        public Vector3D ThreatScoreVector3;
+        public int ThreatScoreDistanceFromVector3;
+        public ThreatScoreTypeEnum ThreatScoreType;
+        public GridConfigurationEnum ThreatScoreGridConfiguration;
 
         public bool CheckMainEventDaysPassed;
         public int DaysPassed;
@@ -53,6 +64,7 @@ namespace ModularEncountersSystems.Events.Condition
         public EventCondition()
         {
             ProfileSubtypeId = "";
+            UseFailCondition = false;
             CheckTrueBooleans = false;
             TrueBooleans = new List<string>();
             AllowAnyTrueBoolean = false;
@@ -69,18 +81,23 @@ namespace ModularEncountersSystems.Events.Condition
             CounterCompareTypes = new List<CounterCompareEnum>();
 
             CheckPlayerNear = false;
-            CheckPlayerFar = false;
-            Distance = 0;
-            vector3 = new Vector3D();
+            PlayerNearDistanceFromVector3 = 1000;
+            PlayerNearVector3 = new Vector3D();
             PlayerFilterIds = new List<string>();
 
-            CheckPlayerReachedThreatScore = false;
-            PlayerReachedThreatScoreAmount = 0;
-            PlayerReachedThreatScoreDistance = 5000;
+            CheckThreatScore = false;
+            ThreatScoreAmount = 1000;
+            ThreatScoreDistance = 5000;
+            ThreatScoreVector3 = new Vector3D(0,0,0);
+            ThreatScoreDistanceFromVector3 = 50000;
+            ThreatScoreType = ThreatScoreTypeEnum.Player;
+            ThreatScoreGridConfiguration = GridConfigurationEnum.All;
+
 
             EditorReference = new Dictionary<string, Action<string, object>>
             {
                 {"CheckTrueBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckTrueBooleans) },
+                {"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },
                 {"TrueBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueBooleans) },
                 {"AllowAnyTrueBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyTrueBoolean) },
                 {"CheckFalseBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckFalseBooleans) },
@@ -94,13 +111,20 @@ namespace ModularEncountersSystems.Events.Condition
                 {"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomCountersTargets) },
                 {"CounterCompareTypes", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CounterCompareTypes) },
                 {"CheckPlayerNear", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerNear) },
-                {"CheckPlayerFar", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerFar) },
-                {"Distance", (s, o) => TagParse.TagIntCheck(s, ref Distance) },
-                {"Coords", (s, o) => TagParse.TagVector3DCheck(s, ref vector3) },
+                {"PlayerNearCoords", (s, o) => TagParse.TagVector3DCheck(s, ref PlayerNearVector3) },
+                {"PlayerNearDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearDistanceFromVector3) },
                 {"PlayerFilterIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerFilterIds) },
-                {"CheckPlayerReachedThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerReachedThreatScore) },
-                {"PlayerReachedThreatScoreAmount", (s, o) => TagParse.TagIntCheck(s, ref PlayerReachedThreatScoreAmount) },
-                {"PlayerReachedThreatScoreDistance", (s, o) => TagParse.TagIntCheck(s, ref PlayerReachedThreatScoreDistance) }
+
+
+                {"CheckThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScore) },
+                {"ThreatScoreAmount", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreAmount) },
+                {"ThreatScoreDistance", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreDistance) },
+                {"ThreatScoreCoords", (s, o) => TagParse.TagVector3DCheck(s, ref ThreatScoreVector3) },
+                {"ThreatScoreDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreDistanceFromVector3) },
+                {"ThreatScoreType", (s, o) => TagParse.TagThreatScoreTypeEnumCheck(s, ref ThreatScoreType) },
+                {"ThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref ThreatScoreGridConfiguration) },
+
+                
             };
 
         }
@@ -347,7 +371,7 @@ namespace ModularEncountersSystems.Events.Condition
 
                 //int amountofplayersmatch = 0;
 
-                ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(Profile.vector3, Profile.Distance);
+                ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(Profile.PlayerNearVector3, Profile.PlayerNearDistanceFromVector3);
                 //int amountofPlayers = ListOfPlayersinRange.Count;
 
                 foreach (IMyPlayer Player in ListOfPlayersinRange)
@@ -368,24 +392,42 @@ namespace ModularEncountersSystems.Events.Condition
                     }
 
                 }
-
-                //if (amountofPlayers == amountofplayersmatch)
-                    
-
             }
 
-            if (Profile.CheckPlayerReachedThreatScore)
+
+
+
+            if (Profile.CheckThreatScore)
             {
                 usedConditions++;
-                var playerList = new List<IMyPlayer>();
-                MyAPIGateway.Players.GetPlayers(playerList);
 
-                foreach (IMyPlayer Player in playerList)
+                var comparetype = Profile.ThreatScoreType;
+                if(comparetype == ThreatScoreTypeEnum.Location)
                 {
-                    if (SpawnConditions.GetThreatLevel(Profile.PlayerReachedThreatScoreDistance, false, Player.GetPosition()) > Profile.PlayerReachedThreatScoreAmount)
+                    if (SpawnConditions.GetThreatLevel(Profile.ThreatScoreDistance, false, Profile.ThreatScoreVector3, Profile.ThreatScoreGridConfiguration) >= Profile.ThreatScoreAmount)
                     {
                         satisfiedConditions++;
-                        break;
+                    }
+                }
+                else
+                {
+                    var playerList = new List<IMyPlayer>();
+                    if (comparetype == ThreatScoreTypeEnum.Player)
+                    {
+                        MyAPIGateway.Players.GetPlayers(playerList);
+                    }
+                    if (comparetype == ThreatScoreTypeEnum.PlayerLocation)
+                    {
+                        playerList = TargetHelper.GetPlayersWithinDistance(Profile.ThreatScoreVector3, Profile.ThreatScoreDistanceFromVector3);
+                    }
+
+                    foreach (IMyPlayer Player in playerList)
+                    {
+                        if (SpawnConditions.GetThreatLevel(Profile.ThreatScoreDistance, false, Player.GetPosition(), Profile.ThreatScoreGridConfiguration) >= Profile.ThreatScoreAmount)
+                        {
+                            satisfiedConditions++;
+                            break;
+                        }
                     }
                 }
             }
@@ -423,6 +465,12 @@ namespace ModularEncountersSystems.Events.Condition
 
             //Vector3D coords = player?.Character?.PositionComp?.WorldAABB.Center ?? Vector3D.Zero;
 
+            if (Profile.UseFailCondition)
+            {
+                if(usedConditions != satisfiedConditions)
+                    return true;
+                return false;
+            }
             return Profile.UseAnyPassingCondition ? satisfiedConditions >= 1 : usedConditions == satisfiedConditions;
 
         }

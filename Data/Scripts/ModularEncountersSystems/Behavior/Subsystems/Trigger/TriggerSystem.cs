@@ -1052,14 +1052,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void SetSandboxBool(string boolName, bool mode) {
 
-            if (boolName.Contains("{SpawnGroupName}") && _behavior.CurrentGrid?.Npc.SpawnGroupName != null)
+
+            if (boolName.Contains("{SpawnGroupName}") && _behavior?.CurrentGrid?.Npc.SpawnGroupName != null)
             {
-				boolName = boolName.Replace("{SpawnGroupName}", _behavior.CurrentGrid?.Npc.SpawnGroupName);
+				boolName = boolName.Replace("{SpawnGroupName}", _behavior?.CurrentGrid?.Npc.SpawnGroupName);
 			}
 
-			if (boolName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
+			if (boolName.Contains("{Faction}") && _behavior?.Owner?.Faction.Tag != null)
 			{
-				boolName = boolName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
+				boolName = boolName.Replace("{Faction}", _behavior?.Owner?.Faction.Tag);
 			}
 
 			MyAPIGateway.Utilities.SetVariable(boolName, mode);
@@ -1068,19 +1069,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void SetSandboxCounter(string counterName, int amount, bool hardSet = false) {
 
-            if (counterName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
+			if (_behavior == null)
+			{
+				MyVisualScriptLogicProvider.ShowNotificationToAll("SetSandboxCounter", 5000, "Red");
+				return;
+			}
+
+			if (counterName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
 			{
 				counterName = counterName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
 			}
-
-
 
 
 			if (hardSet) {
 
 				MyAPIGateway.Utilities.SetVariable(counterName, amount);
 				return;
-
 			}
 
 			int existingCounter = 0;

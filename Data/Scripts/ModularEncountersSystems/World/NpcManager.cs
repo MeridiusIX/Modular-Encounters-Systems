@@ -6,6 +6,7 @@ using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Watchers;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -260,6 +261,66 @@ namespace ModularEncountersSystems.World {
 				UpdateStaticEncounters();
 
 		}
+
+		public static void ResetThisResetThisStaticEncounter(string spawnGroupName)
+		{
+			if (NpcManager.UniqueGroupsSpawned.Contains(spawnGroupName))
+			{
+				NpcManager.UniqueGroupsSpawned.Remove(spawnGroupName);
+
+
+				for (int i = SpawnGroupManager.SpawnGroups.Count - 1; i >= 0; i--)
+				{
+
+					var spawnGroup = SpawnGroupManager.SpawnGroups[i];
+					if (spawnGroup.SpawnGroupName == spawnGroupName)
+					{
+						SpawnConditionsProfile activeConditions = null;
+
+						foreach (var condition in spawnGroup.SpawnConditionsProfiles)
+						{
+
+							if (condition.StaticEncounter)
+							{
+
+								SpawnLogger.Write(spawnGroup.SpawnGroupName + " Found as Potential Static Encounter", SpawnerDebugEnum.Startup);
+								activeConditions = condition;
+							}
+
+						}
+
+						//Create Static Encounter
+						var activeEncounter = new StaticEncounter();
+
+						activeEncounter.InitStaticEncounter(spawnGroup, activeConditions);
+
+						if (activeEncounter.IsValid)
+						{
+
+							SpawnLogger.Write("Adding Static Encounter: " + (!string.IsNullOrWhiteSpace(activeEncounter.SpawnGroupName) ? activeEncounter.SpawnGroupName : "(invalid)"), SpawnerDebugEnum.Startup);
+							NpcManager.StaticEncounters.Add(activeEncounter);
+
+						}
+						else
+						{
+
+							SpawnLogger.Write(spawnGroup.SpawnGroupName + " Static Encounter Init Failed", SpawnerDebugEnum.Startup);
+						}
+
+					}
+
+				}
+
+				UpdateStaticEncounters();
+				MyVisualScriptLogicProvider.ShowNotificationToAll($"{spawnGroupName} despawned, and reset", 5000, "Red");
+			}
+
+		}
+
+
+
+
+
 
 		public static void UpdateStaticEncounters() {
 

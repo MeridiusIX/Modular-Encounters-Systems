@@ -128,6 +128,52 @@ namespace ModularEncountersSystems.Events.Action {
 
                 }
 
+
+                //Spawner
+                if (tag.Contains("[SpawnData:") == true)
+                {
+
+                    string tempValue = "";
+                    TagParse.TagStringCheck(tag, ref tempValue);
+                    bool gotSpawn = false;
+
+                    if (string.IsNullOrWhiteSpace(tempValue) == false)
+                    {
+
+                        byte[] byteData = { };
+
+                        if (ProfileManager.SpawnerObjectTemplates.TryGetValue(tempValue, out byteData) == true)
+                        {
+
+                            try
+                            {
+
+                                var profile = MyAPIGateway.Utilities.SerializeFromBinary<SpawnProfile>(byteData);
+
+                                if (profile != null)
+                                {
+
+                                    Spawner.Add(profile);
+                                    gotSpawn = true;
+
+                                }
+
+                            }
+                            catch (Exception)
+                            {
+
+
+
+                            }
+
+                        }
+
+                    }
+
+                    if (!gotSpawn)
+                        ProfileManager.ReportProfileError(tempValue, "Provided Spawn Profile Could Not Be Loaded In Profile: " + ProfileSubtypeId);
+
+                }
             }
 
         }

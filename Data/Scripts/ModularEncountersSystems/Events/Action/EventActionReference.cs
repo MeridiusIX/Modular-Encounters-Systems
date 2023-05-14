@@ -44,6 +44,25 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<bool> ZoneToggleActiveModes;
 
 
+
+		//To do GPS for specific players only
+		public bool AddGPSForAll;
+		public bool RemoveGPSForAll;
+
+		public bool UseGPSObjective;
+		public List<string> GPSNames;
+		public List<string> GPSDescriptions;
+		public List<Vector3D> GPSVector3Ds;
+		public List<Vector3D> GPSColors;
+
+
+
+		public bool SpawnEncounter;
+		//public List<SpawnProfile> SpawnData;
+		public List<Vector3D> SpawnVector3Ds;
+		public List<string> SpawnFactionTags;
+
+
 		public bool UseChatBroadcast;
 		public List<ChatProfile> ChatData;
 
@@ -81,8 +100,22 @@ namespace ModularEncountersSystems.Events.Action {
 			ZoneCoords = new List<Vector3D>();
 			ZoneToggleActiveModes = new List<bool>();
 
+			AddGPSForAll = false;
+			RemoveGPSForAll = false;
+			UseGPSObjective = false;
+			GPSNames = new List<string>();
+			GPSDescriptions = new List<string>();
+			GPSVector3Ds = new List<Vector3D>();
+			GPSColors = new List<Vector3D>();
 
-		UseChatBroadcast = false;
+
+
+			SpawnEncounter = true;
+			//SpawnData = new List<SpawnProfile>();
+			SpawnVector3Ds = new List<Vector3D>();
+			SpawnFactionTags = new List<string>();
+
+			UseChatBroadcast = false;
 			ChatData = new List<ChatProfile>();
 
 			DebugHudMessage = "";
@@ -108,6 +141,18 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ResetEventCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownNames) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
 
+				{"AddGPSForAll", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSForAll) },
+				{"RemoveGPSForAll", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSForAll) },
+				{"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
+				{"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
+				{"GPSDescriptions", (s, o) => TagParse.TagStringListCheck(s, ref GPSDescriptions) },
+				{"GPSCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
+				{"GPSColors", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSColors) },
+
+				{"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
+				{"SpawnCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref SpawnVector3Ds) },
+				{"SpawnFactionTags", (s, o) => TagParse.TagStringListCheck(s, ref SpawnFactionTags) },
+
 				{"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
 				{"ZoneNames", (s, o) => TagParse.TagStringListCheck(s, ref ZoneNames) },
 				{"ZoneCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref ZoneCoords) },
@@ -122,7 +167,6 @@ namespace ModularEncountersSystems.Events.Action {
 			};
 
 		}
-
 
 
 		public void EditValue(string receivedValue)

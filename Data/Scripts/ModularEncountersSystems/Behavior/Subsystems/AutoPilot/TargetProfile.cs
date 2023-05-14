@@ -156,6 +156,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		[ProtoMember(49)]
 		public double StealthDriveMinDistance;
 
+		[ProtoMember(50)]
+		public double MinAirDensity;
+
+		[ProtoMember(51)]
+		public double MaxAirDensity;
+
 		public TargetProfile() {
 
 			UseCustomTargeting = false;
@@ -227,6 +233,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			ActivateTargetLockAfterPlayerDamage = false;
 
 			StealthDriveMinDistance = 0;
+
+			MinAirDensity = -1;
+			MaxAirDensity = -1;
 
 			ProfileSubtypeId = "";
 
@@ -573,6 +582,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					if (tag.Contains("[StealthDriveMinDistance:") == true) {
 
 						TagParse.TagDoubleCheck(tag, ref StealthDriveMinDistance);
+
+					}
+
+					//MinAirDensity
+					if (tag.Contains("[MinAirDensity:") == true) {
+
+						TagParse.TagDoubleCheck(tag, ref MinAirDensity);
+
+					}
+
+					//MaxAirDensity
+					if (tag.Contains("[MaxAirDensity:") == true) {
+
+						TagParse.TagDoubleCheck(tag, ref MaxAirDensity);
 
 					}
 

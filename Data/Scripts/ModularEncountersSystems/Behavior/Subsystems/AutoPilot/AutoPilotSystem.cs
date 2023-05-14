@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.API;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Behavior.Subsystems.Weapons;
+using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -246,7 +247,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		private Vector3D _upDirection;
 		private double _gravityStrength;
 		private double _surfaceDistance;
-		private float _airDensity;
+		public float AirDensity;
 
 		public Action OnComplete; //After Autopilot is done everything, it starts a new task elsewhere.
 
@@ -261,6 +262,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public string DebugDataA;
 		public string DebugDataB;
 		public string DebugDataC;
+		private static HudAPIv2.HUDMessage _hudText;
 
 		public AutoPilotSystem(IMyRemoteControl remoteControl, IBehavior behavior) {
 
@@ -316,7 +318,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			_upDirection = Vector3D.Zero;
 			_gravityStrength = 0;
 			_surfaceDistance = 0;
-			_airDensity = 0;
+			AirDensity = 0;
 
 			_debugThrustForwardMode = "";
 			_debugThrustUpMode = "";
@@ -762,17 +764,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		private void ApplyAutopilot() {
 
+			if (State?.DisableAutopilot ?? false)
+				return;
+
 			ApplyGyroRotation();
 			ApplyThrust();
 
-			/*
-			if (BehaviorLogger.CurrentDebugTypeList.Contains(BehaviorDebugEnum.Terminal)) {
+
+			if (BehaviorLogger.ActiveDebug.HasFlag(BehaviorDebugEnum.Dev)) {
 
 				try {
 
 					var sbStats = new StringBuilder();
 					sbStats.Append("Ship:          ").Append(_remoteControl.SlimBlock.CubeGrid.CustomName).AppendLine().AppendLine();
-					sbStats.Append("Behavior Type: ").Append(_behavior.BehaviorType).AppendLine();
 					sbStats.Append("Behavior Mode: ").Append(_behavior.Mode).AppendLine();
 					sbStats.Append("Speed:         ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
 					sbStats.Append("Profile:       ").Append(Data.ProfileSubtypeId).AppendLine();
@@ -795,70 +799,49 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 
 					sbStats.AppendLine();
-					sbStats.Append("ForwardDir:       ").Append(_behavior.Settings.RotationDirection.ToString()).AppendLine();
+					/*
 					sbStats.Append("Pitch: ").AppendLine();
 					sbStats.Append(" - Angle:         ").Append(Math.Round(PitchAngleDifference, 2)).AppendLine();
 					sbStats.Append(" - Target Diff:   ").Append(Math.Round(PitchTargetAngleResult, 2)).AppendLine();
 					sbStats.Append(" - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.X, 4)).AppendLine();
 					sbStats.Append(" - Magnitude:     ").Append(Math.Round(ExistingPitchMagnitude, 4)).AppendLine();
+					*/
 					sbStats.Append("Yaw: ").AppendLine();
-					sbStats.Append(" - Angle:         ").Append(Math.Round(YawAngleDifference, 2)).AppendLine();
-					sbStats.Append(" - Target Diff:   ").Append(Math.Round(YawTargetAngleResult, 2)).AppendLine();
-					sbStats.Append(" - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.Y, 4)).AppendLine();
-					sbStats.Append(" - Magnitude:     ").Append(Math.Round(ExistingYawMagnitude, 4)).AppendLine();
+					sbStats.Append(" - Actual Target Angle:   ").Append(Math.Round(AngleToCurrentWaypoint, 2)).AppendLine();
+					sbStats.Append(" - Angle Difference:      ").Append(Math.Round(YawAngleDifference, 2)).AppendLine();
+					sbStats.Append(" - Target Angle Result:   ").Append(Math.Round(YawTargetAngleResult, 2)).AppendLine();
+					sbStats.Append(" - Gyro Rotation:         ").Append(Math.Round(ActiveGyro.RawValues.Y, 4)).AppendLine();
+					sbStats.Append(" - Magnitude:             ").Append(Math.Round(ExistingYawMagnitude, 4)).AppendLine();
+					sbStats.Append(" - Tgt A Left:            ").Append(Math.Round(DebugYawAngleLeft, 4)).AppendLine();
+					sbStats.Append(" - Tgt A Right:           ").Append(Math.Round(DebugYawAngleRight, 4)).AppendLine();
+					/*
 					sbStats.Append("Roll: ").AppendLine();
 					sbStats.Append(" - Angle:         ").Append(Math.Round(RollAngleDifference, 2)).AppendLine();
 					sbStats.Append(" - Target Diff:   ").Append(Math.Round(RollTargetAngleResult, 2)).AppendLine();
 					sbStats.Append(" - Gyro Rotation: ").Append(Math.Round(ActiveGyro.RawValues.Z, 4)).AppendLine();
 					sbStats.Append(" - Magnitude:     ").Append(Math.Round(ExistingRollMagnitude, 4)).AppendLine();
+					*/
+					if (APIs.TextHud.Heartbeat) {
 
-					if (RAI_SessionCore.Instance.TextHudApi.Heartbeat) {
+						if (_hudText == null) {
 
-						if (RAI_SessionCore.Instance.HudText == null) {
-
-							RAI_SessionCore.Instance.HudText = new HudAPIv2.HUDMessage(sbStats, new Vector2D(-0.75, 0.75));
+							_hudText = new HudAPIv2.HUDMessage(sbStats, new Vector2D(-0.75, 0.75));
 
 						} else {
 
-							RAI_SessionCore.Instance.HudText.Message = sbStats;
+							_hudText.Message = sbStats;
 
 						}
-					
-					}
-
-					var sbRotation = new StringBuilder();
-
-					for (int i = _behavior.DebugCockpits.Count - 1; i >= 0; i--) {
-
-						var cockpit = _behavior.DebugCockpits[i];
-
-						if (cockpit == null || cockpit.MarkedForClose || !cockpit.IsFunctional)
-							continue;
-
-						var screenA = (cockpit as IMyTextSurfaceProvider).GetSurface(0);
-						var screenB = (cockpit as IMyTextSurfaceProvider).GetSurface(1);
-						var screenC = (cockpit as IMyTextSurfaceProvider).GetSurface(2);
-
-						screenA.ContentType = ContentType.TEXT_AND_IMAGE;
-						screenB.ContentType = ContentType.TEXT_AND_IMAGE;
-						screenC.ContentType = ContentType.TEXT_AND_IMAGE;
-
-						screenA.WriteText(sbStats.ToString());
-
 
 					}
 
 				} catch (Exception e) {
-				
-				
-				
+
+
+
 				}
-	
+
 			}
-			*/
-
-			return;
-
 
 		}
 
@@ -934,7 +917,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				_upDirection = CurrentPlanet.UpAtPosition(_myPosition);
 				_gravityStrength = CurrentPlanet.Gravity.GetWorldGravity(_myPosition).Length();
 				_surfaceDistance = Vector3D.Distance(CurrentPlanet.SurfaceCoordsAtPosition(_myPosition), _myPosition);
-				_airDensity = CurrentPlanet.Planet.GetAirDensity(_myPosition);
+				AirDensity = CurrentPlanet.Planet.GetAirDensity(_myPosition);
 
 				if (!_inGravityLastUpdate && (_offsetType == WaypointOffsetType.RandomOffsetFixed || _offsetType == WaypointOffsetType.RandomOffsetRelativeEntity)) {
 
@@ -947,7 +930,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				_upDirection = Vector3D.Zero;
 				_gravityStrength = 0;
-				_airDensity = 0;
+				AirDensity = 0;
 
 				if (_inGravityLastUpdate && (_offsetType == WaypointOffsetType.RandomOffsetFixed || _offsetType == WaypointOffsetType.RandomOffsetRelativeEntity)) {
 
@@ -1152,7 +1135,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 					gotLead = true;
 					DirectWaypointType |= WaypointModificationEnum.CollisionLeading;
-					_pendingWaypoint = VectorHelper.FirstOrderIntercept((Vector3)_myPosition, (Vector3)MyVelocity, (float)MyVelocity.Length(), (Vector3)_pendingWaypoint, (Vector3)Targeting.Target.CurrentVelocity());
+					_pendingWaypoint = VectorHelper.FirstOrderIntercept((Vector3)_myPosition, (Vector3)MyVelocity, 0, (Vector3)_pendingWaypoint, (Vector3)Targeting.Target.CurrentVelocity());
+					//_pendingWaypoint = VectorHelper.FirstOrderIntercept((Vector3)_myPosition, (Vector3)MyVelocity, (float)MyVelocity.Length(), (Vector3)_pendingWaypoint, (Vector3)Targeting.Target.CurrentVelocity());
 					_calculatedWeaponPredictionWaypoint = _pendingWaypoint;
 
 				}
@@ -2113,6 +2097,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public void SetAutoPilotDataMode(AutoPilotDataMode mode) {
 
 			State.DataMode = mode;
+			State.UseFlyLevelWithGravity = Data.FlyLevelWithGravity;
+			State.UseFlyLevelWithGravityIdle = Data.LevelWithGravityWhenIdle;
 			ActivateAutoPilot(_initialWaypoint, State.NormalAutopilotFlags);
 		
 		}

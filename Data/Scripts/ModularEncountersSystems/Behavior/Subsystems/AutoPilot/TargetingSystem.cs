@@ -926,6 +926,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
+			//AirDensity
+			if (AllUniqueFilters.Contains(TargetFilterEnum.AirDensity)) {
+
+				bool result = false;
+
+				if (_behavior.AutoPilot.CurrentPlanet != null && !_behavior.AutoPilot.CurrentPlanet.Planet.Closed) {
+
+					if ((Data.MinAirDensity > -1 || _behavior.AutoPilot.AirDensity >= Data.MinAirDensity) && (Data.MaxAirDensity > -1 || _behavior.AutoPilot.AirDensity <= Data.MaxAirDensity))
+						result = true;
+				
+				} else
+					result = Data.MinAirDensity <= 0 && Data.MaxAirDensity <= 0;
+
+				if (result)
+					FilterHits.Add(TargetFilterEnum.Underwater);
+
+				BehaviorLogger.Write(string.Format(" - Evaluated AirDensity: {0}", result), BehaviorDebugEnum.TargetEvaluation);
+
+			}
+
 			//GravityThrust
 			if (AllUniqueFilters.Contains(TargetFilterEnum.GravityThrust)) {
 
@@ -1043,7 +1063,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public ITarget GetTargetFromSorting(List<ITarget> targets, TargetProfile data) {
 
-			//List Empty, you get null soup!
+			//List Empty, null soup for you!
 			if (targets.Count == 0)
 				return null;
 
@@ -1058,7 +1078,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			
 			}
 
-
+			//Closest - You can probably smell them from where you are
 			if (data.GetTargetBy == TargetSortEnum.ClosestDistance) {
 
 				int index = -1;
@@ -1081,6 +1101,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
+			//Furthest - You might need to squint
 			if (data.GetTargetBy == TargetSortEnum.FurthestDistance) {
 
 				int index = -1;
@@ -1103,6 +1124,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
+			//Toughest - Make an example out of the big guy
 			if (data.GetTargetBy == TargetSortEnum.HighestTargetValue) {
 
 				int index = -1;
@@ -1125,6 +1147,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
+			//Weakest - A bully is you.
 			if (data.GetTargetBy == TargetSortEnum.LowestTargetValue) {
 
 				int index = -1;

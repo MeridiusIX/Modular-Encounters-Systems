@@ -11,9 +11,14 @@ namespace ModularEncountersSystems.Sync {
     public static class SyncManager {
 
         public static ushort NetworkId = 42007;
+        public static bool SetupDone = false;
 
         public static void Setup() {
 
+            if (SetupDone)
+                return;
+
+            SetupDone = true;
             MyAPIGateway.Multiplayer.RegisterSecureMessageHandler(NetworkId, NetworkMessageReceiver);
             MyAPIGateway.Utilities.MessageEntered += ChatManager.ChatReceived;
             TaskProcessor.Tick10.Tasks += EffectManager.ProcessPlayerSoundEffect;
@@ -112,6 +117,24 @@ namespace ModularEncountersSystems.Sync {
                     if (shipYardData != null) {
 
                         shipYardData.ProcessMessage();
+
+                    }
+
+                }
+
+                if (container.Mode == SyncMode.SuitUpgradeNewPlayerStats) {
+
+                    if (MyAPIGateway.Multiplayer.IsServer) {
+
+                        var newContainer = PlayerManager.GetProgressionContainer(container.IdentityId, sender);
+
+                        if (newContainer == null)
+                            return;
+
+                        var serializedContainer = MyAPIGateway.Utilities.SerializeToBinary<ProgressionContainer>(newContainer);
+                        container.Data = serializedContainer;
+                        container.Mode = SyncMode.SuitUpgradePlayerStats;
+                        SendSyncMesage(container, sender);
 
                     }
 

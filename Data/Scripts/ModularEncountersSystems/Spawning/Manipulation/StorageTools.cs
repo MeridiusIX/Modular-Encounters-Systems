@@ -5,6 +5,7 @@ using VRage.Game;
 using VRage.Game.ModAPI;
 using VRage.Game.ObjectBuilders.ComponentSystem;
 using VRage.ModAPI;
+using VRage.ObjectBuilders;
 using VRage.Serialization;
 
 namespace ModularEncountersSystems.Spawning.Manipulation {
@@ -24,6 +25,11 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static Guid MesShipyardKey = new Guid("88334D52-3F3B-47CB-83C7-426FBC0553FA");
 		public static Guid MesSuitModsKey = new Guid("A4F21767-C33B-4523-B40B-148498BDAFED");
 		public static Guid MesButtonPointsKey = new Guid("076C26A3-CCE9-4979-8356-E5A14D02A038");
+		public static Guid MesSafeZoneLinkedEntity = new Guid("6968A9BE-87A3-439F-9B33-27A5A9F220CF");
+
+		//3rd Party Keys
+		public static Guid CrewEnabledDamagedRemoteKey = new Guid("E4E173B9-6080-42C1-BD0A-4EC1E8041CE0");
+		public static Guid InfestationEnabledDamagedRemoteKey = new Guid("00FCF301-6FBE-44F2-99C9-350880AF3621");
 
 
 		public static List<Guid> CustomStorageKeys = new List<Guid>();
@@ -90,23 +96,23 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		}
 
-		public static void ApplyCustomGridStorage(MyObjectBuilder_CubeGrid grid, Guid storageKey, string storageValue) {
+		public static void ApplyCustomEntityStorage(MyObjectBuilder_EntityBase entity, Guid storageKey, string storageValue) {
 
-			if (grid.ComponentContainer == null) {
+			if (entity.ComponentContainer == null) {
 
-				grid.ComponentContainer = new MyObjectBuilder_ComponentContainer();
+				entity.ComponentContainer = new MyObjectBuilder_ComponentContainer();
 
 			}
 
-			if (grid.ComponentContainer.Components == null) {
+			if (entity.ComponentContainer.Components == null) {
 
-				grid.ComponentContainer.Components = new List<MyObjectBuilder_ComponentContainer.ComponentData>();
+				entity.ComponentContainer.Components = new List<MyObjectBuilder_ComponentContainer.ComponentData>();
 
 			}
 
 			bool foundModStorage = false;
 
-			foreach (var component in grid.ComponentContainer.Components) {
+			foreach (var component in entity.ComponentContainer.Components) {
 
 				if (component.TypeId != "MyModStorageComponentBase") {
 
@@ -146,7 +152,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				var componentData = new MyObjectBuilder_ComponentContainer.ComponentData();
 				componentData.TypeId = "MyModStorageComponentBase";
 				componentData.Component = modStorage;
-				grid.ComponentContainer.Components.Add(componentData);
+				entity.ComponentContainer.Components.Add(componentData);
 
 			}
 

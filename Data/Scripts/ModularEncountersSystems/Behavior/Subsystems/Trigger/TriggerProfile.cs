@@ -196,6 +196,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(58)]
 		public float PercentageOfHealthRemaining;
 
+		[ProtoMember(59)]
+		public List<string> PlayerFilterProfileIds;
+
+		[ProtoMember(60)]
+		public bool UsePlayerFilterProfile;
+
 		[ProtoIgnore]
 		public IBehavior Behavior;
 
@@ -225,6 +231,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		[ProtoIgnore]
 		public Random Rnd;
+
+		[ProtoIgnore]
+		public Command TempCommand;
 
 		public TriggerProfile() {
 
@@ -300,6 +309,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ButtonPanelIndex = 0;
 
 			PercentageOfWeaponsRemaining = 0;
+
+
+			PlayerFilterProfileIds = new List<string>();
+			UsePlayerFilterProfile = false;
 
 			ProfileSubtypeId = "";
 
@@ -885,6 +898,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						TagParse.TagFloatCheck(tag, ref PercentageOfHealthRemaining);
 
 					}
+
+
+					//PlayerFilterProfile
+					if (tag.Contains("[PlayerFilterProfileIds:") == true)
+					{
+						TagParse.TagStringListCheck(tag, ref PlayerFilterProfileIds);
+					}
+
+					//UsePlayerFilterProfile
+					if (tag.Contains("[UsePlayerFilterProfile:") == true)
+					{
+						TagParse.TagBoolCheck(tag, ref UsePlayerFilterProfile);
+
+					}
+
+
 
 				}
 

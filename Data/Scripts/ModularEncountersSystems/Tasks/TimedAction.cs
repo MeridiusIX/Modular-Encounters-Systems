@@ -14,12 +14,14 @@ namespace ModularEncountersSystems.Tasks {
 
 		internal int _secondsToTrigger;
 		internal int _elapsedTime;
+		internal bool _repeat;
 		internal Action _action;
 
-		public TimedAction(int secondsToTrigger, Action action) {
+		public TimedAction(int secondsToTrigger, Action action, bool repeat = false) {
 
 			_tickTrigger = 60;
 			_isValid = true;
+			_repeat = repeat;
 			_secondsToTrigger = secondsToTrigger;
 			_elapsedTime = 0;
 			_action += action;
@@ -34,7 +36,11 @@ namespace ModularEncountersSystems.Tasks {
 				return;
 
 			_action?.Invoke();
-			_isValid = false;
+
+			if (!_repeat)
+				_isValid = false;
+			else
+				_elapsedTime = 0;
 
 
 		}

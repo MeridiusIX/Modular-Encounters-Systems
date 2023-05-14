@@ -10,6 +10,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Spawning.Procedural;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Terminal;
@@ -19,6 +20,8 @@ using ModularEncountersSystems.Zones;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
+using System.Collections.Generic;
+using System.Text;
 using VRage.Game;
 using VRage.Game.Components;
 
@@ -28,18 +31,26 @@ namespace ModularEncountersSystems.Core {
 	public class MES_SessionCore : MySessionComponentBase {
 
 		public static bool ModEnabled = true;
+		public static bool OfflineDetected = false;
+		public bool FinalSetup = false;
 
-		public static string ModVersion = "2.67.0";
+		public static string ModVersion = "2.69.6";
+		public static int ModVersionValue = 200690006;
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
 		public static bool IsDedicated;
 		public static DateTime SessionStartTime;
 
+		public static bool DeveloperMode;
+		public static List<ulong> Developers = new List<ulong> { 76561197995523659, 76561198058958866 };
+
 		public static bool AreaTestStart;
 
 		public static Action SaveActions;
 		public static Action UnloadActions;
+
+		public static string SaveName;
 
 		public override void LoadData() {
 
@@ -52,6 +63,9 @@ namespace ModularEncountersSystems.Core {
 			if (!ModEnabled)
 				return;
 
+			//Register Version Checker
+			MyAPIGateway.Utilities.RegisterMessageHandler(21521905890, CompareVersions);
+
 			SpawnLogger.Setup();
 			BehaviorLogger.Setup();
 			TaskProcessor.Setup();
@@ -63,7 +77,6 @@ namespace ModularEncountersSystems.Core {
 			ProfileManager.Setup();
 			SpawnGroupManager.CreateSpawnLists();
 			BotSpawner.Setup();
-			EventManager.Setup();
 			APIs.RegisterAPIs(0); //Register Any Applicable APIs
 
 			if (!IsServer)
@@ -92,11 +105,13 @@ namespace ModularEncountersSystems.Core {
 			if (!ModEnabled)
 				return;
 
+			MyAPIGateway.Utilities.SendModMessage(21521905890, ModVersionValue);
+
 			Settings.InitSettings("BeforeStart"); //Get Existing Settings From XML or Create New
 			BlockLogicManager.Setup();
 			ProgressionManager.Setup();
-			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			ControlManager.Setup();
+			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();
 			APIs.RegisterAPIs(2); //Register Any Applicable APIs
 			
@@ -118,16 +133,39 @@ namespace ModularEncountersSystems.Core {
 			WaveManager.Setup();
 			DamageHelper.Setup();
 			PrefabManipulation.Setup();
+			ProceduralShipManager.Setup();
+			CombatPhaseManager.Setup();
+			EventManager.Setup();
 
 			SessionStartTime = MyAPIGateway.Session.GameDateTime;
 			//AttributeApplication
+
+			SaveName = MyAPIGateway.Session.Name;
 
 		}
 
 		public override void UpdateBeforeSimulation() {
 
+			if (!FinalSetup) {
+
+				FinalSetup = true;
+				MyAPIGateway.Utilities.UnregisterMessageHandler(21521905890, CompareVersions);
+			
+			}
+
 			if (!ModEnabled) {
 
+				if (!MyAPIGateway.Utilities.IsDedicated && OfflineDetected) {
+
+					var sb = new StringBuilder();
+					sb.Append("WARNING!!!").AppendLine().AppendLine();
+					sb.Append("Modular Encounters System is current not running because this session is using the config option [SelectivePhysicsUpdates] while also using a [SyncDistance] value of less than 10000. This causes most NPCs to behave incorrectly, so as a result the entire mod disables when it detects this configuration.").AppendLine().AppendLine();
+					sb.Append("To fix this, either set your Server [SyncDistance] value to 10000 or higher, or disable the [SelectivePhysicsUpdates] option entirely.");
+					MyAPIGateway.Utilities.ShowMissionScreen("Modular Encounters Systems", "", "", sb.ToString());
+
+				}
+
+				UnloadActions?.Invoke();
 				MyAPIGateway.Utilities.InvokeOnGameThread(() => { this.UpdateOrder = MyUpdateOrder.NoUpdate; });
 				return;
 			
@@ -139,12 +177,23 @@ namespace ModularEncountersSystems.Core {
 
 		public override MyObjectBuilder_SessionComponent GetObjectBuilder() {
 
-			MyAPIGateway.Utilities.InvokeOnGameThread(() => { 
+			if (!MyAPIGateway.Multiplayer.IsServer)
+				return base.GetObjectBuilder();
+
+			MyAPIGateway.Utilities.InvokeOnGameThread(() => {
 
 				SaveActions?.Invoke();
 
 				if(Settings.SavedData != null && Settings.SavedData.DataChanged)
 					Settings.SavedData.SaveSettings();
+
+				if (SaveName != MyAPIGateway.Session.Name) {
+
+					SaveName = MyAPIGateway.Session.Name;
+					Settings.SaveAll();
+
+				}
+					
 			
 			}); 
 			return base.GetObjectBuilder();
@@ -153,6 +202,7 @@ namespace ModularEncountersSystems.Core {
 		protected override void UnloadData() {
 
 			UnloadActions?.Invoke();
+			Settings.SaveAll();
 
 		}
 
@@ -169,6 +219,7 @@ namespace ModularEncountersSystems.Core {
 						if (MyAPIGateway.Utilities.FileExistsInModLocation("ModularEncountersSystemsMod.txt", mod)) {
 
 							SpawnLogger.Write("Detected Offline / Local Version of MES loaded with Workshop Version of MES. Disabling Workshop Version", SpawnerDebugEnum.Startup, true);
+							OfflineDetected = true;
 							ModEnabled = false;
 							return false;
 
@@ -194,6 +245,20 @@ namespace ModularEncountersSystems.Core {
 
 			return true;
 		
+		}
+
+		private static void CompareVersions(object data) {
+
+			int version = (int)data;
+
+			if (version > ModVersionValue) {
+
+				ModEnabled = false;
+				SpawnLogger.Write("Another Version of MES Detected With Higher Version Number: " + version, SpawnerDebugEnum.Startup, true);
+				SpawnLogger.Write("Shutting Down Duplicate Instance of MES. Mod With Version " + version + " Will Continue To Run.", SpawnerDebugEnum.Startup, true);
+
+			}
+
 		}
 
 		private static void SetDefaultSettings() {

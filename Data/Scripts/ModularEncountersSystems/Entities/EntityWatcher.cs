@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Progression;
+using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Zones;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game;
@@ -60,6 +61,12 @@ namespace ModularEncountersSystems.Entities {
 			UnloadEntities += GridManager.UnloadData;
 
 			MES_SessionCore.UnloadActions += UnregisterWatcher;
+
+			if (MyAPIGateway.Multiplayer.IsServer) {
+
+				TaskProcessor.Tasks.Add(new TimedAction(9, SafeZoneManager.MonitorEntitySafezones, true));
+			
+			}
 
 		}
 

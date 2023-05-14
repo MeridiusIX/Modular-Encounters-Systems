@@ -86,8 +86,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> SetSandboxBooleansFalse;
 		public List<string> IncreaseSandboxCounters;
 		public List<string> DecreaseSandboxCounters;
-		public int IncreaseSandboxCountersAmount;      //CPT
-		public int DecreaseSandboxCountersAmount;      //CPT
+		public int IncreaseSandboxCountersAmount;      
+		public int DecreaseSandboxCountersAmount;      
 
 		public List<string> ResetSandboxCounters;
 
@@ -366,6 +366,43 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool AddResearchPoints;
 		public int ResearchPointsAmount;
 
+		public bool ApplyStoreProfiles;
+		public bool ClearStoreContentsFirst;
+		public List<string> StoreBlocks;
+		public List<string> StoreProfiles;
+
+		public bool ActivateEvent;
+		public List<string> EventId;
+		public List<string> EventTag;
+
+		public bool CreateSafeZone;
+		public string SafeZoneProfile;
+		public bool LinkSafeZoneToRemoteControl;
+		public bool SafeZonePositionGridCenter;
+		public bool SafeZonePositionTerrainSurface;
+		public bool IgnoreOtherSafeZonesDuringCreation;
+
+		public bool RemoveSafeZonesAtPosition;
+
+		public bool SavePlayerIdentity;
+		public bool RemovePlayerIdentity;
+
+		public bool SavePlayerIdentityToSandboxList;
+		public bool RemovePlayerIdentityFromSandboxList;
+		public string PlayerIdentitySandboxList;
+
+		public bool ResetCooldownTimeOfEvents;
+		public List<string> ResetEventCooldownNames;
+		public List<string> ResetEventCooldownTags;
+
+		public bool DisableAutopilot;
+		public bool EnableAutopilot;
+
+		public bool ResetThisStaticEncounter;
+
+		public bool ChangeBlocksShareModeAll;
+		public List<string> BlockNamesShareModeAll;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -454,7 +491,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SetSandboxCounters = new List<string>();
 			SetSandboxCountersValues = new List<int>();
 
-			//CPT
+			
 			IncreaseSandboxCountersAmount = 1;
 			DecreaseSandboxCountersAmount = -1;
 
@@ -712,7 +749,44 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			AddResearchPoints = false;
 			ResearchPointsAmount = 0;
 
+			ApplyStoreProfiles = false;
+			ClearStoreContentsFirst = false;
+			StoreBlocks = new List<string>();
+			StoreProfiles = new List<string>();
+
+			ActivateEvent = false;
+			EventId = new List<string>();
+			EventTag = new List<string>();
+
+			CreateSafeZone = false;
+
 			ProfileSubtypeId = "";
+			SafeZoneProfile = "";
+			LinkSafeZoneToRemoteControl = false;
+			SafeZonePositionGridCenter = false;
+			SafeZonePositionTerrainSurface = false;
+			IgnoreOtherSafeZonesDuringCreation = false;
+
+			RemoveSafeZonesAtPosition = false;
+
+			SavePlayerIdentity = false;
+			RemovePlayerIdentity = false;
+
+			SavePlayerIdentityToSandboxList = false;
+			RemovePlayerIdentityFromSandboxList = false;
+			PlayerIdentitySandboxList = "";
+
+			ResetCooldownTimeOfEvents = false;
+			ResetEventCooldownNames = new List<string>();
+			ResetEventCooldownTags = new List<string>();
+
+			DisableAutopilot = false;
+			EnableAutopilot = false;
+
+			ChangeBlocksShareModeAll = false;
+			BlockNamesShareModeAll = new List<string>();
+
+			ResetThisStaticEncounter = false;
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
@@ -771,8 +845,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"SetSandboxBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansFalse) },
 				{"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
 				{"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
-				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) }, //CPT
-				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) }, //CPT
+				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) }, 
+				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) }, 
 				{"ResetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetSandboxCounters) },
 				{"ChangeAttackerReputation", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackerReputation) },
 				{"ChangeAttackerReputationFaction", (s, o) => TagParse.TagStringListCheck(s, ref ChangeAttackerReputationFaction) },
@@ -961,6 +1035,42 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				{"AddResearchPoints", (s, o) => TagParse.TagBoolCheck(s, ref AddResearchPoints) },
 				{"ResearchPointsAmount", (s, o) => TagParse.TagIntCheck(s, ref ResearchPointsAmount) },
+
+				{"ApplyStoreProfiles", (s, o) => TagParse.TagBoolCheck(s, ref ApplyStoreProfiles) },
+				{"ClearStoreContentsFirst", (s, o) => TagParse.TagBoolCheck(s, ref ClearStoreContentsFirst) },
+				{"StoreBlocks", (s, o) => TagParse.TagStringListCheck(s, ref StoreBlocks) },
+				{"StoreProfiles", (s, o) => TagParse.TagStringListCheck(s, ref StoreProfiles) },
+
+				{"ActivateEvent", (s, o) => TagParse.TagBoolCheck(s, ref ActivateEvent) },
+				{"EventId", (s, o) => TagParse.TagStringListCheck(s, ref EventId) },
+				{"EventTag", (s, o) => TagParse.TagStringListCheck(s, ref EventTag) },
+
+				{"CreateSafeZone", (s, o) => TagParse.TagBoolCheck(s, ref CreateSafeZone) },
+				{"SafeZoneProfile", (s, o) => TagParse.TagStringCheck(s, ref SafeZoneProfile) },
+				{"LinkSafeZoneToRemoteControl", (s, o) => TagParse.TagBoolCheck(s, ref LinkSafeZoneToRemoteControl) },
+				{"SafeZonePositionGridCenter", (s, o) => TagParse.TagBoolCheck(s, ref SafeZonePositionGridCenter) },
+				{"SafeZonePositionTerrainSurface", (s, o) => TagParse.TagBoolCheck(s, ref SafeZonePositionTerrainSurface) },
+				{"IgnoreOtherSafeZonesDuringCreation", (s, o) => TagParse.TagBoolCheck(s, ref IgnoreOtherSafeZonesDuringCreation) },
+
+				{"SavePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref SavePlayerIdentity) },
+				{"RemovePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentity) },
+
+				{"RemoveSafeZonesAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref RemoveSafeZonesAtPosition) },
+
+				{"SavePlayerIdentityToSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref SavePlayerIdentityToSandboxList) },
+				{"RemovePlayerIdentityFromSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentityFromSandboxList) },
+				{"PlayerIdentitySandboxList", (s, o) => TagParse.TagStringCheck(s, ref PlayerIdentitySandboxList) },
+				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
+				{"ResetEventCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownNames) },
+				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
+
+				{"ResetThisStaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref ResetThisStaticEncounter) },
+
+				{"DisableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref DisableAutopilot) },
+				{"EnableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref EnableAutopilot) },
+
+				{"ChangeBlocksShareModeAll", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlocksShareModeAll) },
+				{"BlockNamesShareModeAll", (s, o) => TagParse.TagStringListCheck(s, ref BlockNamesShareModeAll) },
 
 			};
 

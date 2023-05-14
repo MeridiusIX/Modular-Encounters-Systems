@@ -283,7 +283,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					Cleaning.RemoveGrid(grid);
 
 					if (grid.Npc != null)
-						grid.Npc.DespawnSource = "Despawn-Behavior";
+						grid.DespawnSource = "Despawn-Behavior";
 
 				}
 			

@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.World;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -307,7 +308,12 @@ namespace ModularEncountersSystems.Spawning {
 
         private void ApplyDecrement(ref int setting) {
 
-            setting -= Settings.General.PlayerWatcherTimerTrigger;
+            float increment = Settings.General.PlayerWatcherTimerTrigger;
+
+            if (Settings.Combat.UseCombatPhaseSpawnTimerMultiplier && CombatPhaseManager.Active)
+                increment *= Settings.Combat.CombatPhaseSpawnTimerMultiplier;
+
+            setting -= (int)Math.Round(increment);
 
         }
 

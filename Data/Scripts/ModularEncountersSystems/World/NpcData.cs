@@ -340,7 +340,7 @@ namespace ModularEncountersSystems.World {
 		public double PrefabSpeed;
 
 		[ProtoMember(20)]
-		public string DespawnSource;
+		private string DespawnSource;
 
 		[ProtoMember(21)]
 		public bool SpawnedByMES;
@@ -386,6 +386,12 @@ namespace ModularEncountersSystems.World {
 
 		[ProtoMember(35)]
 		public long OriginalOwnerId;
+
+		[ProtoMember(36)]
+		public DateTime SpawnGroupTimeStamp;
+
+		[ProtoMember(37)]
+		public List<int> ManipulationsUsed;
 
 		//Non-Serialized Data
 
@@ -557,6 +563,8 @@ namespace ModularEncountersSystems.World {
 			BehaviorTerminationReason = "";
 			OriginalOwnerFaction = "";
 			OriginalOwnerId = 0;
+			SpawnGroupTimeStamp = DateTime.MinValue;
+			ManipulationsUsed = new List<int>();
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -812,14 +820,6 @@ namespace ModularEncountersSystems.World {
 
 			}
 
-			//InitEconomyBlocks
-			if (AttributeCheck(Attributes.InitEconomyBlocks, AppliedAttributes.InitEconomyBlocks)) {
-
-				AppliedAttributes.InitEconomyBlocks = true;
-				EconomyHelper.InitNpcStoreBlock(Grid.CubeGrid, SpawnGroup);
-
-			}
-
 			//NonPhysicalAmmo
 			if (AttributeCheck(Attributes.NonPhysicalAmmo, AppliedAttributes.NonPhysicalAmmo)) {
 
@@ -939,6 +939,14 @@ namespace ModularEncountersSystems.World {
 
 			}
 
+			//InitEconomyBlocks
+			if (AttributeCheck(Attributes.InitEconomyBlocks, AppliedAttributes.InitEconomyBlocks)) {
+
+				AppliedAttributes.InitEconomyBlocks = true;
+				EconomyHelper.InitNpcStoreBlock(Grid.CubeGrid, SpawnGroup);
+
+			}
+
 			//InhibitorActivation
 			if (Attributes.UseJetpackDisable && !AppliedAttributes.UseJetpackDisable && !HasInhibitor("Jetpack")) {
 
@@ -1047,18 +1055,10 @@ namespace ModularEncountersSystems.World {
 					if (!block.Block.SlimBlock.BlockDefinition.Id.SubtypeName.Contains(type))
 						continue;
 
-					var entity = block.Block as MyEntity;
+					var functional = block.Block as IMyFunctionalBlock;
 
-					if (entity.GameLogic != null) {
-
-						if (entity.GameLogic.GetType().ToString().ToUpper().Contains("INHIBITOR")) {
-
-							Grid.LinkedGrids[i].CubeGrid.RemoveBlock(block.Block.SlimBlock);
-							continue;
-
-						}
-
-					}
+					if (functional != null)
+						functional.Enabled = true;
 
 					return true;
 

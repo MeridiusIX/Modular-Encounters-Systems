@@ -1,4 +1,6 @@
-﻿using ModularEncountersSystems.Configuration;
+﻿using ModularEncountersSystems.BlockLogic;
+using ModularEncountersSystems.Configuration;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Sync;
@@ -8,6 +10,7 @@ using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VRage;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
@@ -37,6 +40,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("ChatCommand", new Action<string, MatrixD, long, ulong>(ChatManager.ChatFromApi));
 			dict.Add("CustomSpawnRequest", new Func<List<string>, MatrixD, Vector3, bool, string, string, bool>(CustomSpawnRequest));
 			dict.Add("GetDespawnCoords", new Func<IMyCubeGrid, Vector3D>(GetDespawnCoords));
+			dict.Add("GetPlayerInhibitorData", new Action<long, string, List<MyTuple<IMyRadioAntenna, DateTime>>>(GetPlayerInhibitorData));
 			dict.Add("GetSpawnGroupBlackList", new Func<List<string>>(GetSpawnGroupBlackList));
 			dict.Add("GetNpcNameBlackList", new Func<List<string>>(GetNpcNameBlackList));
 			//GetZonesAtPosition
@@ -51,6 +55,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("RegisterRemoteControlCode", new Action<IMyRemoteControl, string>(RegisterRemoteControlCode));
 			dict.Add("RegisterSuccessfulSpawnAction", new Action<Action<IMyCubeGrid>, bool>(RegisterSuccessfulSpawnAction));
 			dict.Add("RemoveKnownPlayerLocation", new Action<Vector3D, string, bool>(KnownPlayerLocationManager.RemoveLocation));
+			dict.Add("SetCombatPhase", new Action<bool>(CombatPhaseManager.ForcePhase));
 			dict.Add("SetSpawnerIgnoreForDespawn", new Func<IMyCubeGrid, bool, bool>(SetSpawnerIgnoreForDespawn));
 			dict.Add("SetZoneEnabled", new Action<string, bool, Vector3D?>(SetZoneEnabled));
 			dict.Add("SpawnBossEncounter", new Func<Vector3D, List<string>, bool>(SpawnBossEncounter));
@@ -126,6 +131,28 @@ namespace ModularEncountersSystems.API {
 				return Vector3D.Zero;
 
 			return npcGrid.Npc.EndCoords;
+
+		}
+
+		public static void GetPlayerInhibitorData(long playerIdentityId, string inhibitorType, List<MyTuple<IMyRadioAntenna, DateTime>> inhibitorData) {
+
+			var player = PlayerManager.GetPlayerWithIdentityId(playerIdentityId);
+
+			if (player == null)
+				return;
+
+			if (inhibitorData == null)
+				inhibitorData = new List<MyTuple<IMyRadioAntenna, DateTime>>();
+
+			inhibitorData.Clear();
+
+			var inhibType = InhibitorLogic.GetInhibitorType(inhibitorType);
+
+			if (!player.InhibitorIdsInRange.ContainsKey(inhibType))
+				return;
+
+			foreach (var block in player.InhibitorIdsInRange[inhibType])
+				inhibitorData.Add(block);
 
 		}
 
@@ -222,7 +249,6 @@ namespace ModularEncountersSystems.API {
 		public static void SetZoneEnabled(string zoneName, bool enabled, Vector3D? zoneCoords) {
 
 			ZoneManager.ToggleZones(zoneName, enabled, zoneCoords);
-
 
 		}
 

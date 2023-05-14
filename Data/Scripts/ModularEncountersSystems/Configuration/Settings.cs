@@ -25,6 +25,7 @@ namespace ModularEncountersSystems.Configuration {
 		public static ConfigCustomBlocks CustomBlocks = new ConfigCustomBlocks();
 		public static ConfigCreatures Creatures = new ConfigCreatures();
 		public static ConfigProgression Progression = new ConfigProgression();
+		public static ConfigCombat Combat = new ConfigCombat();
 		public static SavedInternalData SavedData = null;
 
 		public static void InitSettings(string phase) {
@@ -75,6 +76,9 @@ namespace ModularEncountersSystems.Configuration {
 
 			if (!Creatures.ConfigLoaded)
 				Creatures = Creatures.LoadSettings(phase);
+
+			if (!Combat.ConfigLoaded)
+				Combat = Combat.LoadSettings(phase);
 
 			if (MyAPIGateway.Multiplayer.IsServer && SavedData == null && phase == "BeforeStart")
 				SavedData = SavedInternalData.LoadSettings(phase);
@@ -432,6 +436,35 @@ namespace ModularEncountersSystems.Configuration {
 				return BossEncounters.MaxSpawnGroupFrequency;
 
 			return -1;
+
+		}
+
+		public static void SaveAll() {
+
+			if (!MyAPIGateway.Multiplayer.IsServer)
+				return;
+
+			try {
+
+				BossEncounters.SaveSettings();
+				Combat.SaveSettings();
+				Creatures.SaveSettings();
+				CustomBlocks.SaveSettings();
+				DroneEncounters.SaveSettings();
+				General.SaveSettings();
+				Grids.SaveSettings();
+				OtherNPCs.SaveSettings();
+				PlanetaryCargoShips.SaveSettings();
+				PlanetaryInstallations.SaveSettings();
+				Progression.SaveSettings();
+				RandomEncounters.SaveSettings();
+				SpaceCargoShips.SaveSettings();
+
+			} catch (Exception e) {
+
+				SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error, true);
+
+			}
 
 		}
 

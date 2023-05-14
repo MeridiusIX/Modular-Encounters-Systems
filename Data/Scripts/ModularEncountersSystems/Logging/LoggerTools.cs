@@ -6,12 +6,14 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Spawning.Procedural;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
+using ModularEncountersSystems.Events;
 using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.Game.EntityComponents;
@@ -515,22 +517,166 @@ namespace ModularEncountersSystems.Logging {
 
 			var grid = GridManager.GetClosestGridInDirection(MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection)), 10000);
 
-			if (grid == null) {
+			if (grid == null || grid.ActiveEntity() == false) {
 
 				msg.ReturnMessage = "No Grid in Camera Direction";
 				return;
 
 			}
 
-			foreach (var link in grid.LinkedGrids) {
+			var sb = new StringBuilder();
+			sb.Append("Primary Grid: ").Append(grid?.CubeGrid?.CustomName ?? "null").AppendLine().AppendLine();
+			var gridGroupList = new List<IMyCubeGrid>();
 
-				MyVisualScriptLogicProvider.ShowNotificationToAll(link.RefreshLinkedGrids + " / " + link.CubeGrid?.CustomName ?? "null", 6000);
-			
+			//Electrical
+			sb.Append("Electrical").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.Electrical, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
 			}
 
-			msg.ReturnMessage = "Processed Linked Grids";
-			//grid.RefreshSubGrids();
+			sb.AppendLine();
 
+			//Logical
+			sb.Append("Logical").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.Logical, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
+			}
+
+			sb.AppendLine();
+
+			//Mechanical
+			sb.Append("Mechanical").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.Mechanical, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
+			}
+
+			sb.AppendLine();
+
+			//NoContactDamage
+			sb.Append("NoContactDamage").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.NoContactDamage, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
+			}
+
+			sb.AppendLine();
+
+			//Physical
+			sb.Append("Physical").AppendLine();
+			gridGroupList.Clear();
+			MyAPIGateway.GridGroups.GetGroup(grid.CubeGrid, GridLinkTypeEnum.Physical, gridGroupList);
+
+			foreach (var cg in gridGroupList) {
+
+				sb.Append(" - ").Append(cg?.CustomName ?? "null").AppendLine();
+
+			}
+
+			sb.AppendLine();
+
+			msg.ReturnMessage = "Processed Linked Grids. Clipboard Updated";
+			msg.Mode = ChatMsgMode.ReturnMessage;
+			msg.ClipboardPayload = sb.ToString();
+
+		}
+
+		public static void DebugRotateBlockYaw(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var block = GridManager.GetClosestBlockInDirection(matrix, 10000);
+
+			if (block == null) {
+
+				msg.ReturnMessage = "No Grid / Block in Camera Direction";
+				return;
+
+			}
+
+			var ob = block.GetObjectBuilder(true);
+			var grid = block.CubeGrid;
+			grid.RemoveBlock(block);
+			var orientation = BuilderTools.RotateYaw(ob.BlockOrientation);
+			ob.BlockOrientation = orientation;
+			ob.EntityId = 0;
+			grid.AddBlock(ob, true);
+		
+		}
+
+		public static void DebugRotateBlockPitch(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var block = GridManager.GetClosestBlockInDirection(matrix, 10000);
+
+			if (block == null) {
+
+				msg.ReturnMessage = "No Grid / Block in Camera Direction";
+				return;
+
+			}
+
+
+			MyVisualScriptLogicProvider.ShowNotification("F: " + block.Orientation.Forward, 5000, "White", msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("U: " + block.Orientation.Up, 5000, "White", msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("L: " + block.Orientation.Left, 5000, "White", msg.PlayerId);
+			var ob = block.GetObjectBuilder(true);
+			var grid = block.CubeGrid;
+			grid.RemoveBlock(block);
+			var orientation = BuilderTools.RotatePitch(ob.BlockOrientation);
+			ob.BlockOrientation = orientation;
+			ob.EntityId = 0;
+			grid.AddBlock(ob, true);
+
+		}
+
+		public static void DebugRotateBlockRoll(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var block = GridManager.GetClosestBlockInDirection(matrix, 10000);
+
+			if (block == null) {
+
+				msg.ReturnMessage = "No Grid / Block in Camera Direction";
+				return;
+
+			}
+
+
+			MyVisualScriptLogicProvider.ShowNotification("F: " + block.Orientation.Forward, 5000, "White", msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("U: " + block.Orientation.Up, 5000, "White", msg.PlayerId);
+			MyVisualScriptLogicProvider.ShowNotification("L: " + block.Orientation.Left, 5000, "White", msg.PlayerId);
+			var ob = block.GetObjectBuilder(true);
+			var grid = block.CubeGrid;
+			grid.RemoveBlock(block);
+			var orientation = BuilderTools.RotateRoll(ob.BlockOrientation);
+			ob.BlockOrientation = orientation;
+			ob.EntityId = 0;
+			grid.AddBlock(ob, true);
+
+		}
+
+		public static void DebugSpawnAllSingleBlocks(ChatMessage msg) {
+
+			TaskProcessor.Tasks.Add(new DebugSpawnSingleBlocks(MatrixD.CreateWorld(msg.PlayerPosition, Vector3D.Forward, Vector3D.Up)));
+		
 		}
 
 		public static void DebugTestSaveGrid(ChatMessage msg) {
@@ -562,6 +708,47 @@ namespace ModularEncountersSystems.Logging {
 
 			msg.ReturnMessage = "Saved Grid As File";
 			//grid.RefreshSubGrids();
+
+		}
+
+		public static void DebugTestSpawnGrid() {
+
+			var grid = new MyObjectBuilder_CubeGrid();
+
+		
+		}
+
+		public static void DeleteGrid(ChatMessage message) {
+
+			var line = new LineD(message.CameraPosition, message.CameraDirection * 10000 + message.CameraPosition);
+			GridEntity thisGrid = null;
+
+			var sb = new StringBuilder();
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				message.ReturnMessage = "Could Not Locate Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return;
+
+			}
+
+			thisGrid.DespawnSource = "Despawn-Debug";
+			Cleaning.RemoveGrid(thisGrid);
+			message.ReturnMessage = "Grid Marked for Removal. " + thisGrid.CubeGrid.CustomName ?? "null";
+			return;
 
 		}
 
@@ -973,6 +1160,7 @@ namespace ModularEncountersSystems.Logging {
 				sb.Append("Item Id:     ").Append(item).AppendLine();
 				sb.Append("Item Value:  ").Append(EconomyHelper.MinimumValuesMaster[item]).AppendLine();
 				sb.Append("Item Source: ").Append(itemDef.Context?.ModName != null ? itemDef.Context.ModName : "None").AppendLine();
+				sb.Append("Craftable:   ").Append(EconomyHelper.AssemblerCraftableItems.Contains(item).ToString()).AppendLine();
 				sb.AppendLine();
 
 			}
@@ -995,6 +1183,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append("::: Spawn Data Near Player :::").AppendLine();
 			sb.Append(" - Threat Score: ").Append(threatLevel.ToString()).AppendLine();
 			sb.Append(" - PCU Score:    ").Append(pcuLevel.ToString()).AppendLine();
+			sb.Append(" - Combat Phase: ").Append(!Settings.Combat.EnableCombatPhaseSystem ? "Disabled In Settings" : (CombatPhaseManager.Active ? "Active" : "Inactive")).AppendLine();
 
 			sb.AppendLine();
 
@@ -1043,7 +1232,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Space Cargo
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.SpaceCargoShip, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.SpaceCargoShip, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1061,7 +1250,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Random Encounter
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.RandomEncounter, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.RandomEncounter, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1079,9 +1268,9 @@ namespace ModularEncountersSystems.Logging {
 
 			//Planetary Cargo
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryCargoShip, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryCargoShip, "Debug", environment, "", collection);
 
-			if (environment.PlanetaryCargoShipsEligible) {
+			if (environment.PlanetaryCargoShipsEligible || environment.GravityCargoShipsEligible) {
 
 				sb.Append("::: Planetary / Gravity Cargo Ship Eligible Spawns :::").AppendLine();
 
@@ -1111,7 +1300,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Planetary Installation
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryInstallation, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.PlanetaryInstallation, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1129,7 +1318,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Boss
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.BossEncounter, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.BossEncounter, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1147,7 +1336,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Creature
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.Creature, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.Creature, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1165,7 +1354,7 @@ namespace ModularEncountersSystems.Logging {
 
 			//Drone Encounters
 			collection = new SpawnGroupCollection();
-			SpawnGroupManager.GetSpawnGroups(SpawningType.DroneEncounter, environment, "", collection);
+			SpawnGroupManager.GetSpawnGroups(SpawningType.DroneEncounter, "Debug", environment, "", collection);
 
 			if (collection.SpawnGroups.Count > 0) {
 
@@ -1291,6 +1480,51 @@ namespace ModularEncountersSystems.Logging {
 
 			}
 
+			return sb.ToString();
+
+		}
+
+		public static string GetBlockData(ChatMessage message) {
+
+			var line = new LineD(message.CameraPosition, message.CameraDirection * 10000 + message.CameraPosition);
+			GridEntity thisGrid = null;
+
+			var sb = new StringBuilder();
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				message.ReturnMessage = "Could Not Locate Grid At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return sb.ToString() ?? "No Data";
+
+			}
+
+			var cell = thisGrid.CubeGrid.RayCastBlocks(line.From, line.To);
+
+			if (!cell.HasValue) {
+
+				message.ReturnMessage = "Could Not Locate Block At Player Camera Position. Point Camera Cursor At Target Within 10KM. Check Clipboard For Results.";
+				return sb.ToString() ?? "No Data";
+
+			}
+
+			var block = thisGrid.CubeGrid.GetCubeBlock(cell.Value);
+
+			sb.Append("SubtypeID: ").Append(block.BlockDefinition.Id.SubtypeName).AppendLine();
+			sb.Append("Min:       ").Append(block.Min).AppendLine();
+			message.ReturnMessage = sb.ToString();
 			return sb.ToString();
 
 		}
@@ -1647,6 +1881,53 @@ namespace ModularEncountersSystems.Logging {
 		
 		}
 
+		public static void GetEvents(ChatMessage msg)
+		{
+
+			var sb = new StringBuilder();
+			sb.Append("::::: Event Data :::::").AppendLine();
+			sb.Append("Current time: ").Append(MyAPIGateway.Session.GameDateTime).AppendLine();
+			sb.Append("Corrected time: ").Append(Helpers.Time.GetRealIngameTime()).AppendLine();
+
+			/*
+			for (int i = EventManager.EventControllersList.Count - 1; i >= 0; i--)
+			{
+
+				var EventControllersList = EventManager.EventControllersList[i];
+
+				if (EventControllersList == null || !EventControllersList.Active)
+					continue;
+
+				sb.Append(EventControllersList.GetInfo()).AppendLine();
+
+			}
+			*/
+
+			for (int i = EventManager.EventsList.Count - 1; i >= 0; i--)
+			{
+
+				var Event = EventManager.EventsList[i];
+
+				if (Event == null)
+					continue;
+
+				sb.Append(Event.GetInfo()).AppendLine();
+
+			}
+
+
+			msg.ClipboardPayload = sb.ToString();
+			msg.Mode = ChatMsgMode.ReturnMessage;
+			msg.ReturnMessage = "Event Data Copied To Clipboard";
+
+		}
+
+
+
+
+
+
+
 		public static void ProcessPrefabs(ChatMessage msg, string[] array) {
 
 			if (MyAPIGateway.Session.LocalHumanPlayer == null || MyAPIGateway.Utilities.IsDedicated) {
@@ -1750,6 +2031,66 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void SetGridOwnership(ChatMessage message, string[] msgSplit) {
+
+			if (msgSplit.Length < 4) {
+
+				MyVisualScriptLogicProvider.ShowNotification("Invalid Command Received", 5000, "White", message.PlayerId);
+				return;
+
+			}
+
+			var line = new LineD(message.CameraPosition, message.CameraDirection * 2000 + message.CameraPosition);
+			GridEntity thisGrid = null;
+
+			var faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(msgSplit[3]);
+
+			if (faction == null) {
+
+				message.ReturnMessage = "Could Not Locate Faction With ID.";
+				return;
+
+			}
+
+			var owner = FactionHelper.GetFactionMemberIdFromTag(faction.Tag);
+
+			for (int i = GridManager.Grids.Count - 1; i >= 0; i--) {
+
+				var grid = GridManager.GetSafeGridFromIndex(i);
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid?.CubeGrid?.CustomName == null) {
+
+				message.ReturnMessage = "Could Not Locate Grid At Player Camera Position.";
+				return;
+
+			}
+
+			thisGrid.RefreshSubGrids();
+			foreach (var linkedGrid in thisGrid.LinkedGrids) {
+
+				if (linkedGrid == null)
+					continue;
+
+				linkedGrid.CubeGrid.ChangeGridOwnership(owner, MyOwnershipShareModeEnum.Faction);
+			
+			}
+
+			message.ReturnMessage = "Grid [" + thisGrid.CubeGrid.CustomName + "] Ownership Changed To [" + msgSplit[3] + "]";
+			return;
+
+		}
+
 		public static void SetReputation(ChatMessage msg, string[] msgSplit) {
 
 			if (msgSplit.Length != 4) {
@@ -1785,6 +2126,25 @@ namespace ModularEncountersSystems.Logging {
 
 			var prefabProcess = new SpawnAllPrefabs(array[3]);
 			TaskProcessor.Tasks.Add(prefabProcess);
+
+		}
+
+		public static void YeetGrid(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var grid = GridManager.GetClosestGridInDirection(matrix, 10000);
+
+			if (grid?.CubeGrid?.Physics == null) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "No Grid In Camera Direction";
+				return;
+			
+			}
+
+			var linear = msg.CameraDirection * 100;
+			var angular = Vector3.One;
+			grid.CubeGrid.Physics.SetSpeeds(linear, angular);
 
 		}
 

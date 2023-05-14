@@ -12,7 +12,7 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class JetpackInhibitor : InhibitorBase, IBlockLogic {
+	public class JetpackInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal double _dampenerRange;
 
@@ -29,6 +29,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_fixCheck = true;
 			base.Setup(block);
+			
 
 			if (!_isServer) {
 
@@ -37,6 +38,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			}
 
+			BaseSetup(block);
 			_playersInDampenerRange = new List<PlayerEntity>();
 			_playersInDisableRange = new List<PlayerEntity>();
 
@@ -154,6 +156,7 @@ namespace ModularEncountersSystems.BlockLogic {
 								MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Jetpack!", 4000, "Red", player.Player.IdentityId);
 								_playersInDisableRange.Add(player);
 								_playersInDampenerRange.Remove(player);
+								player.AddInhibitorToPlayer(_antenna, _inhibitor);
 
 							}
 
@@ -164,6 +167,7 @@ namespace ModularEncountersSystems.BlockLogic {
 								MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Jetpack Dampeners!", 4000, "Red", player.Player.IdentityId);
 								_playersInDampenerRange.Add(player);
 								_playersInDisableRange.Remove(player);
+								player.AddInhibitorToPlayer(_antenna, _inhibitor);
 
 							}
 
@@ -183,7 +187,8 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_playersInDampenerRange.Remove(player);
 			_playersInDisableRange.Remove(player);
-		
+			player.RemoveInhibitorFromPlayer(_antenna, _inhibitor);
+
 		}
 
 		internal override void Unload(IMyEntity entity = null) {

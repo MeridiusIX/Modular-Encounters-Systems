@@ -182,8 +182,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> ShipyardConsoleBlockNames;
 		public List<string> ShipyardProfileNames;
 
+		public bool SuitUpgradeSetup;
+		public List<string> SuitUpgradeBlockNames;
+		public List<string> SuitUpgradeProfileNames;
+
 		public bool UseResearchPointButtons;
-		public List<string> ResearchPointButtonNames;
 
 		public bool ClearAuthorship;
 
@@ -197,6 +200,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool ClearExistingContainerTypes;
 		public bool OverrideLootChance;
 		public int LootChanceOverride;
+
+		public bool SetDoorsAnyoneCanUse;
+		public bool SetStoresAnyoneCanUse;
+		public bool SetConnectorsTradeMode;
 
 		public ManipulationProfile(string data = null) {
 
@@ -365,6 +372,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ShipyardConsoleBlockNames = new List<string>();
 			ShipyardProfileNames = new List<string>();
 
+			SuitUpgradeSetup = false;
+			SuitUpgradeBlockNames = new List<string>();
+			SuitUpgradeProfileNames = new List<string>();
+
+			UseResearchPointButtons = false;
+
 			ClearAuthorship = false;
 
 			AttachModStorageComponentToGrid = false;
@@ -377,6 +390,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ClearExistingContainerTypes = false;
 			OverrideLootChance = false;
 			LootChanceOverride = 100;
+
+			SetDoorsAnyoneCanUse = false;
+			SetStoresAnyoneCanUse = false;
+			SetConnectorsTradeMode = false;
 
 			InitTags(data);
 
@@ -1294,6 +1311,34 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//SuitUpgradeSetup
+				if (tag.StartsWith("[SuitUpgradeSetup:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.SuitUpgradeSetup);
+
+				}
+
+				//SuitUpgradeBlockNames
+				if (tag.StartsWith("[SuitUpgradeBlockNames:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.SuitUpgradeBlockNames);
+
+				}
+
+				//SuitUpgradeProfileNames
+				if (tag.StartsWith("[SuitUpgradeProfileNames:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.SuitUpgradeProfileNames);
+
+				}
+
+				//UseResearchPointButtons
+				if (tag.StartsWith("[UseResearchPointButtons:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseResearchPointButtons);
+
+				}
+
 				//ClearAuthorship
 				if (tag.StartsWith("[ClearAuthorship:") == true) {
 
@@ -1361,6 +1406,27 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[LootChanceOverride:") == true) {
 
 					TagParse.TagIntCheck(tag, ref this.LootChanceOverride);
+
+				}
+
+				//SetDoorsAnyoneCanUse
+				if (tag.StartsWith("[SetDoorsAnyoneCanUse:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.SetDoorsAnyoneCanUse);
+
+				}
+
+				//SetStoresAnyoneCanUse
+				if (tag.StartsWith("[SetStoresAnyoneCanUse:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.SetStoresAnyoneCanUse);
+
+				}
+
+				//SetConnectorsTradeMode
+				if (tag.StartsWith("[SetConnectorsTradeMode:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.SetConnectorsTradeMode);
 
 				}
 

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <EntityContainers>
+        <Container>
+            <Id>
+                <TypeId>RemoteControl</TypeId>
+                <SubtypeId>RivalAIRemoteControlSmall</SubtypeId>
+            </Id>
+            <DefaultComponents>
+                <Component BuilderType="MyObjectBuilder_AutopilotComponent" SubtypeId="RivalAIRemoteControlSmall" ForceCreate="true"/>
+            </DefaultComponents>
+        </Container>
+
+        <Container>
+            <Id>
+                <TypeId>RemoteControl</TypeId>
+                <SubtypeId>RivalAIRemoteControlLarge</SubtypeId>
+            </Id>
+            <DefaultComponents>
+                <Component BuilderType="MyObjectBuilder_AutopilotComponent" SubtypeId="RivalAIRemoteControlLarge" ForceCreate="true"/>
+            </DefaultComponents>
+        </Container>
+
+
+
+    </EntityContainers>
+</Definitions>

@@ -29,6 +29,12 @@ namespace ModularEncountersSystems.Terminal {
 		internal static IMyTerminalControlSeparator _separatorB;
 		internal static IMyTerminalControlButton _confirmPurchase;
 
+		internal static IMyTerminalAction _actionA;
+		internal static IMyTerminalAction _actionB;
+		internal static IMyTerminalAction _actionC;
+		internal static IMyTerminalAction _actionD;
+		internal static IMyTerminalAction _actionE;
+
 		public static void DisplayControls(IMyTerminalBlock block, List<IMyTerminalControl> controls) {
 
 			if (!_setupDone) {
@@ -68,6 +74,10 @@ namespace ModularEncountersSystems.Terminal {
 				_privateControls.Add("GetOwnership");
 				_privateControls.Add("NumberOfProjections");
 				_privateControls.Add("NumberOfBlocks");
+				_privateControls.Add("AnyoneCanUse");
+				_privateControls.Add("Open Toolbar");
+				_privateControls.Add("ButtonText");
+				_privateControls.Add("ButtonName");
 
 				//Create Controls
 				_labelControls = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlLabel, IMyTerminalBlock>("MES-SuitMods-Label");
@@ -100,7 +110,38 @@ namespace ModularEncountersSystems.Terminal {
 				_separatorA = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlSeparator, IMyTerminalBlock>("MES-SuitMods-SeparatorA");
 				_separatorB = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlSeparator, IMyTerminalBlock>("MES-SuitMods-SeparatorB");
 
-				if (MyAPIGateway.Session.LocalHumanPlayer != null) {
+				_actionA = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionA");
+				_actionA.Enabled = (b) => { return true; };
+				_actionA.ValidForGroups = false;
+				_actionA.Name = new StringBuilder("Up");
+				_actionA.Action = BlankAction;
+
+				_actionB = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionB");
+				_actionB.Enabled = (b) => { return true; };
+				_actionB.ValidForGroups = false;
+				_actionB.Name = new StringBuilder("Down");
+				_actionB.Action = BlankAction;
+
+				_actionC = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionC");
+				_actionC.Enabled = (b) => { return true; };
+				_actionC.ValidForGroups = false;
+				_actionC.Name = new StringBuilder("Left");
+				_actionC.Action = BlankAction;
+
+				_actionD = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionD");
+				_actionD.Enabled = (b) => { return true; };
+				_actionD.ValidForGroups = false;
+				_actionD.Name = new StringBuilder("Right");
+				_actionD.Action = BlankAction;
+
+				_actionE = MyAPIGateway.TerminalControls.CreateAction<IMyTerminalBlock>("MES-SuitMods-ActionE");
+				_actionE.Enabled = (b) => { return true; };
+				_actionE.ValidForGroups = false;
+				_actionE.Name = new StringBuilder("Enter");
+				_actionE.Action = BlankAction;
+
+
+				if (MyAPIGateway.Session.LocalHumanPlayer != null && _progressionStats == null) {
 
 					_progressionStats = PlayerManager.GetProgressionContainer(MyAPIGateway.Session.LocalHumanPlayer.IdentityId, MyAPIGateway.Session.LocalHumanPlayer.SteamUserId);
 				
@@ -116,6 +157,7 @@ namespace ModularEncountersSystems.Terminal {
 					if (_privateControls.Contains(controls[i].Id)) {
 
 						controls.RemoveAt(i);
+
 					}
 
 				}
@@ -145,9 +187,17 @@ namespace ModularEncountersSystems.Terminal {
 				var syncContainer = new SyncContainer(SyncMode.SuitUpgradePlayerStats, serializedProgression);
 				SyncManager.SendSyncMesage(syncContainer, 0, true);
 
+			} else {
+
+				//Request New Progression Stats
+				var syncContainer = new SyncContainer(SyncMode.SuitUpgradeNewPlayerStats, null);
+				SyncManager.SendSyncMesage(syncContainer, 0, true);
+
 			}
 			
 		}
+
+		public static void BlankAction(IMyTerminalBlock block) { }
 
 		public static void GetSuitModsList(IMyTerminalBlock block, List<MyTerminalControlListBoxItem> items, List<MyTerminalControlListBoxItem> selected) {
 
@@ -207,7 +257,23 @@ namespace ModularEncountersSystems.Terminal {
 		internal static void SuitModsInfo(IMyTerminalBlock block) {
 
 			var sb = new StringBuilder();
-			sb.Append("");
+			sb.Append("The Modular Encounters Systems (MES) Suit Upgrade System allows you to purchase Permanent Upgrades for your Engineer Character. The upgrades require a combination of Space Credits and Research Points (the latter can be downloaded from Special Terminals on other NPC grids).").AppendLine();
+
+			sb.AppendLine().Append("[About Upgrades]").AppendLine();
+			sb.Append("Below is a list of the current upgrades that may be available for purchase at this upgrade station.").AppendLine();
+			sb.Append(" - Anti Jetpack Inhibitor: This provides immunity from Jetpack Inhibitors at the expense of suit energy. When this upgrade is at max level, it provides immunity at zero energy cost.").AppendLine();
+			sb.Append(" - Anti Hand Drill Inhibitor: This provides immunity from Hand Drill Inhibitors at the expense of suit energy. When this upgrade is at max level, it provides immunity at zero energy cost.").AppendLine();
+			sb.Append(" - Anti Hand Drill Inhibitor: This provides immunity from Personnel Inhibitors at the expense of suit energy. When this upgrade is at max level, it provides immunity at zero energy cost.").AppendLine();
+			sb.Append(" - Anti Energy Inhibitor: This provides immunity from Energy Inhibitors in the form of reduced suit energy consumption. When this upgrade is at max level, it provides immunity at zero energy cost.").AppendLine();
+			sb.Append(" - Solar Charging: This allows you to passively recharge suit energy while in direct sunlight. Higher levels of this upgrade allow faster charging.").AppendLine();
+			sb.Append(" - Damage Reduction: This upgrade reduces the amount of damage your character takes from all sources. Higher levels of this upgrade provide further damage reduction.").AppendLine();
+
+			sb.AppendLine().Append("[Purchasing an Upgrade]").AppendLine();
+			sb.Append(" - To initiate this transaction, select an item in the [Suit Mod Selection] menu.").AppendLine();
+			sb.Append(" - Once you have selected an upgrade, you will receive a price quote in the info pane of the terminal (bottom right). This will indicate the Space Credit and Research Point costs, along with your current upgrade level.").AppendLine();
+			sb.Append(" - If the terms are agreeable to you, then press the [Purchase Upgrade] button to complete the transaction.").AppendLine();
+			sb.Append(" - The credits will be removed from your player balance, and the upgrade will now be activated for your character.").AppendLine();
+
 			MyAPIGateway.Utilities.ShowMissionScreen("Shipyard System (MES)", "", "Information and Help", sb.ToString());
 
 		}

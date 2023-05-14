@@ -8,6 +8,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public string ProfileSubtypeId;
 
+		public string BlockName;
+
 		public string StoreBlockName;
 		public double InteractionRadius;
 		public int MinReputation;
@@ -34,12 +36,19 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int RepairAndConstructionCommissionPercentage;
 		public int RepairAndConstructionReputationDiscount;
 
+		public bool AllowGridTakeover;
+		public int GridTakeoverSmallGridBlockLimit;
+		public int GridTakeoverLargeGridBlockLimit;
+		public int GridTakeoverPricePerComputerMultiplier;
+		public int GridTakeoverReputationDiscount;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 		public ShipyardProfile() {
 
 			ProfileSubtypeId = "";
 
+			BlockName = "";
 			StoreBlockName = "";
 			InteractionRadius = 250;
 			MinReputation = -500;
@@ -65,7 +74,15 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RepairAndConstructionCommissionPercentage = 115;
 			RepairAndConstructionReputationDiscount = 7;
 
+			AllowGridTakeover = false;
+			GridTakeoverSmallGridBlockLimit = 2500;
+			GridTakeoverLargeGridBlockLimit = 5000;
+			GridTakeoverPricePerComputerMultiplier = 100;
+			GridTakeoverReputationDiscount = 10;
+
 			EditorReference = new Dictionary<string, Action<string, object>> {
+
+				{"BlockName", (s, o) => TagParse.TagStringCheck(s, ref BlockName) },
 
 				{"InteractionRadius", (s, o) => TagParse.TagDoubleCheck(s, ref InteractionRadius) },
 				{"MinReputation", (s, o) => TagParse.TagIntCheck(s, ref MinReputation) },
@@ -91,6 +108,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"RepairAndConstructionCommissionPercentage", (s, o) => TagParse.TagIntCheck(s, ref RepairAndConstructionCommissionPercentage) },
 				{"RepairAndConstructionReputationDiscount", (s, o) => TagParse.TagIntCheck(s, ref RepairAndConstructionReputationDiscount) },
 
+				{"AllowGridTakeover", (s, o) => TagParse.TagBoolCheck(s, ref AllowGridTakeover) },
+				{"GridTakeoverSmallGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverSmallGridBlockLimit) },
+				{"GridTakeoverLargeGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverLargeGridBlockLimit) },
+				{"GridTakeoverPricePerComputerMultiplier", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverPricePerComputerMultiplier) },
+				{"GridTakeoverReputationDiscount", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverReputationDiscount) },
+
 			};
 
 		}
@@ -114,6 +137,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public long GetRepairPrice(long rawValue, int rep) {
 
 			int percentage = RepairAndConstructionCommissionPercentage - (rep >= ReputationNeededForDiscount ? RepairAndConstructionReputationDiscount : 0);
+			float multiplier = ((float)percentage / 100);
+			return (long)Math.Floor(rawValue * multiplier);
+
+		}
+
+		public long GetTakeoverPrice(long rawValue, int rep) {
+
+			int percentage = 100 - (rep >= ReputationNeededForDiscount ? GridTakeoverReputationDiscount : 0);
 			float multiplier = ((float)percentage / 100);
 			return (long)Math.Floor(rawValue * multiplier);
 

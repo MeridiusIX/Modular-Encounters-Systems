@@ -3,7 +3,6 @@ using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
-using ModularEncountersSystems.Manipulation;
 using ModularEncountersSystems.Spawning.Profiles;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
@@ -14,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using VRage.Game;
+using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRage.ObjectBuilders;
@@ -1318,17 +1318,17 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 					if (!DefaultRangeWC.TryGetValue(block.SlimBlock.BlockDefinition.Id, out weaponMax)) {
 
-						weaponMax = APIs.WeaponCore.GetMaxWeaponRange(termBlock, 0);
+						weaponMax = APIs.WeaponCore.GetMaxWeaponRange(termBlock as MyEntity, 0);
 						DefaultRangeWC.Add(block.SlimBlock.BlockDefinition.Id, weaponMax);
 
 					}
 
-					APIs.WeaponCore.DisableRequiredPower(termBlock);
+					APIs.WeaponCore.DisableRequiredPower(termBlock as MyEntity);
 
 					if (!useMax && weaponMax > 800)
 						weaponMax = 800;
 
-					APIs.WeaponCore.SetBlockTrackingRange(termBlock, weaponMax);
+					APIs.WeaponCore.SetBlockTrackingRange(termBlock as MyEntity, weaponMax);
 
 					SpawnLogger.Write(string.Format("WC Block {0} Range Set To: {1}", termBlock.CustomName, weaponMax), SpawnerDebugEnum.PostSpawn);
 

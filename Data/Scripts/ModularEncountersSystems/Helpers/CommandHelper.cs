@@ -90,7 +90,7 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
-        public static Command ButtonPressCommand(long playerId) {
+        public static Command PlayerRelatedCommand(long playerId) {
 
             var command = new Command();
             command.PlayerIdentity = playerId;
@@ -129,7 +129,6 @@ namespace ModularEncountersSystems.Helpers {
         public void PrepareCommand(IBehavior behavior, CommandProfile profile, ActionReferenceProfile action, Command receivedCommand, long attackerId, long detectedId) {
 
             this.Behavior = behavior;
-            this.CommandCode = profile.CommandCode;
             this.DelayTicks = profile.CommandDelayTicks;
             this.SingleRecipient = profile.SingleRecipient;
             this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
@@ -138,8 +137,20 @@ namespace ModularEncountersSystems.Helpers {
             RemoteControl = behavior.RemoteControl;
             CommandOwnerId = behavior.RemoteControl.OwnerId;
             this.RequestEscortSlot = profile.RequestEscortSlot;
-
             double sendRadius = 0;
+
+            if (profile.CommandCode.Contains("{FactionTag}")){
+                this.CommandCode = profile.CommandCode.Replace("{FactionTag}", behavior.RemoteControl.GetOwnerFactionTag());
+            }
+            else
+            {
+                this.CommandCode = profile.CommandCode;
+            }
+            
+
+
+
+
 
             if (profile.IgnoreAntennaRequirement) {
 

@@ -163,6 +163,16 @@ namespace ModularEncountersSystems.Configuration {
 
 			PlanetSpawnFilterList.Clear();
 			PlanetSpawnFilterList.AddArray<PlanetSpawnFilter>(PlanetSpawnFilters);
+
+			for (int i = PlanetSpawnFilterList.Count - 1; i >= 0; i--) {
+
+				var existingFilter = PlanetSpawnFilterList[i];
+
+				if (existingFilter.PlanetId == filter.PlanetId)
+					PlanetSpawnFilterList.RemoveAt(i);
+
+			}
+
 			PlanetSpawnFilterList.Add(filter);
 			PlanetSpawnFilters = PlanetSpawnFilterList.ToArray();
 

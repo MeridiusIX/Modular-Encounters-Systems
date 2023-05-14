@@ -44,8 +44,59 @@ namespace ModularEncountersSystems.Configuration.Editor {
                 Settings.OtherNPCs = new ConfigOtherNPCs();
                 Settings.OtherNPCs.SaveSettings();
 
+                Settings.Combat = new ConfigCombat();
+                Settings.Combat.SaveSettings();
+
                 return "All Settings Have Been Reset";
             
+            }
+
+            if (receivedCommand.StartsWith("/MES.Settings.DisableSpawns")) {
+
+                Settings.SpaceCargoShips.EnableSpawns = false;
+                Settings.SpaceCargoShips.SaveSettings();
+
+                Settings.RandomEncounters.EnableSpawns = false;
+                Settings.RandomEncounters.SaveSettings();
+
+                Settings.PlanetaryCargoShips.EnableSpawns = false;
+                Settings.PlanetaryCargoShips.SaveSettings();
+
+                Settings.PlanetaryInstallations.EnableSpawns = false;
+                Settings.PlanetaryInstallations.SaveSettings();
+
+                Settings.BossEncounters.EnableSpawns = false;
+                Settings.BossEncounters.SaveSettings();
+
+                Settings.Creatures.EnableSpawns = false;
+                Settings.Creatures.SaveSettings();
+
+                return "All Spawns Disabled";
+
+            }
+
+            if (receivedCommand.StartsWith("/MES.Settings.EnableSpawns")) {
+
+                Settings.SpaceCargoShips.EnableSpawns = true;
+                Settings.SpaceCargoShips.SaveSettings();
+
+                Settings.RandomEncounters.EnableSpawns = true;
+                Settings.RandomEncounters.SaveSettings();
+
+                Settings.PlanetaryCargoShips.EnableSpawns = true;
+                Settings.PlanetaryCargoShips.SaveSettings();
+
+                Settings.PlanetaryInstallations.EnableSpawns = true;
+                Settings.PlanetaryInstallations.SaveSettings();
+
+                Settings.BossEncounters.EnableSpawns = true;
+                Settings.BossEncounters.SaveSettings();
+
+                Settings.Creatures.EnableSpawns = true;
+                Settings.Creatures.SaveSettings();
+
+                return "All Spawns Enabled";
+
             }
 
             if (receivedCommand.StartsWith("/MES.Settings.General."))
@@ -53,6 +104,9 @@ namespace ModularEncountersSystems.Configuration.Editor {
 
             if (receivedCommand.StartsWith("/MES.Settings.Grids."))
                 return Settings.Grids.EditFields(receivedCommand);
+
+            if (receivedCommand.StartsWith("/MES.Settings.Combat."))
+                return Settings.Combat.EditFields(receivedCommand);
 
             if (receivedCommand.StartsWith("/MES.Settings.CustomBlocks."))
                 return Settings.CustomBlocks.EditFields(receivedCommand);

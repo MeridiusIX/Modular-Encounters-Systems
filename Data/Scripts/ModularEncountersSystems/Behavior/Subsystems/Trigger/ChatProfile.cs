@@ -85,6 +85,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(25)]
 		public bool AllowDuplicatedMessages;
 
+		[ProtoMember(26)]
+		public bool SendToCommandPlayer;
+
+		[ProtoMember(27)]
+		public bool SendToSpecificPlayers;
+
 		[ProtoIgnore]
 		public Random Rnd;
 
@@ -114,6 +120,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			GPSLabel = "";
 			ChatVolumeMultiplier = new List<float>();
 			AllowDuplicatedMessages = false;
+			SendToCommandPlayer = false;
+			SendToSpecificPlayers = false;
 
 			SecondsUntilChat = 0;
 			ChatSentCount = 0;
@@ -332,6 +340,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[AllowDuplicatedMessages:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref AllowDuplicatedMessages);
+
+					}
+
+					//SendToCommandPlayer
+					if (tag.Contains("[SendToCommandPlayer:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref SendToCommandPlayer);
+
+					}
+
+					//SendToSpecificPlayers
+					if (tag.Contains("[SendToSpecificPlayers:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref SendToSpecificPlayers);
 
 					}
 

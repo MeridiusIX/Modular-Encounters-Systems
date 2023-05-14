@@ -43,6 +43,9 @@ namespace ModularEncountersSystems.Spawning {
 
 			bool spawnedBot = false;
 
+			if (count == 0)
+				return false;
+
 			for (int i = 0; i < count; i++) {
 
 				BotSpawnProfile profile = null;
@@ -78,26 +81,30 @@ namespace ModularEncountersSystems.Spawning {
 
 				} else {
 
-					if (collection.Conditions.CreatureIds.Count == 1) {
+					if (collection.Conditions.CreatureIds.Count > 0) {
 
-						botType = collection.Conditions.CreatureIds[0];
+						if (collection.Conditions.CreatureIds.Count == 1) {
 
-					} else {
+							botType = collection.Conditions.CreatureIds[0];
 
-						botType = collection.Conditions.CreatureIds[MathTools.RandomBetween(0, collection.Conditions.CreatureIds.Count)];
+						} else {
+
+							botType = collection.Conditions.CreatureIds[MathTools.RandomBetween(0, collection.Conditions.CreatureIds.Count)];
+
+						}
+
+						role = collection.Conditions.AiEnabledRole;
+						useAiEnabled = collection.Conditions.AiEnabledModBots;
+
+						if (string.IsNullOrWhiteSpace(botType))
+							continue;
+
+						IMyCharacter character = null;
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Faction Owner: " + collection.Faction, 3000);
+						SpawnBotRequest(botType, matrix, out character, name, useAiEnabled, role, null, owner, color);
+						spawnedBot = true;
 
 					}
-
-					role = collection.Conditions.AiEnabledRole;
-					useAiEnabled = collection.Conditions.AiEnabledModBots;
-
-					if (string.IsNullOrWhiteSpace(botType))
-						continue;
-
-					IMyCharacter character = null;
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Faction Owner: " + collection.Faction, 3000);
-					SpawnBotRequest(botType, matrix, out character, name, useAiEnabled, role, null, owner, color);
-					spawnedBot = true;
 
 				}
 

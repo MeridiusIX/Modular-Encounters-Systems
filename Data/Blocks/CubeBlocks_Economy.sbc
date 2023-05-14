@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CubeBlocks>
+
+    <Definition xsi:type="MyObjectBuilder_ProjectorDefinition">
+      <Id>
+        <TypeId>Projector</TypeId>
+        <SubtypeId>MES-Blocks-ShipyardTerminal</SubtypeId>
+      </Id>
+      <DisplayName>Shipyard Terminal</DisplayName>
+      <Description>
+        Purchase construction or repairs on your ships, or sell them entirely for credits.
+      </Description>
+      <Public>false</Public>
+      <GuiVisible>false</GuiVisible>
+      <Icon>Textures\GUI\Icons\Cubes\Console.dds</Icon>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <Model>Models\Cubes\Large\Console.mwm</Model>
+      <ModelOffset x="0" y="0" z="0" />
+      <Components>
+        <Component Subtype="InteriorPlate" Count="20" />
+        <Component Subtype="Construction" Count="20" />
+        <Component Subtype="Computer" Count="8" />
+        <Component Subtype="Display" Count="10" />
+        <Component Subtype="ProprietaryTech" Count="1" />
+        <Component Subtype="Construction" Count="10" />
+      </Components>
+      <CriticalComponent Subtype="ProprietaryTech" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Bottom" StartX="0" StartY="0" EndX="1" EndY="1" Default="true" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\ConsoleConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\ConsoleConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\ConsoleConstruction_3.mwm" />
+      </BuildProgressModels>
+      <ScreenAreas>
+        <ScreenArea Name="CockpitScreen_01" DisplayName="DisplayName_Screen_ProjectionArea" TextureResolution="512" ScreenWidth="1" ScreenHeight="1" />
+        <ScreenArea Name="CockpitScreen_02" DisplayName="DisplayName_Screen_Large" TextureResolution="256" ScreenWidth="16" ScreenHeight="11" />
+        <ScreenArea Name="CockpitScreen_03" DisplayName="DisplayName_Screen_Numpad" TextureResolution="128" ScreenWidth="4" ScreenHeight="6" />
+        <ScreenArea Name="CockpitScreen_04" DisplayName="DisplayName_Screen_Keyboard"  TextureResolution="128" ScreenWidth="2" ScreenHeight="1"/>
+      </ScreenAreas>
+      <BlockPairName>ShipyardTerminal</BlockPairName>
+      <MirroringZ>Y</MirroringZ>
+      <MirroringY>Z</MirroringY>
+      <EdgeType>Light</EdgeType>
+      <BuildTimeSeconds>14</BuildTimeSeconds>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <RequiredPowerInput>0.0002</RequiredPowerInput>
+      <DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+      <DamagedSound>ParticleElectrical</DamagedSound>
+      <PrimarySound>BlockProjectorOn</PrimarySound>
+      <IdleSound>BlockProjectorOff</IdleSound>
+      <EmissiveColorPreset>Extended</EmissiveColorPreset>
+      <PCU>150</PCU>
+      <DLC>DecorativeBlocks</DLC>
+      <IsAirTight>false</IsAirTight>
+      <AllowScaling>true</AllowScaling>
+      <IgnoreSize>true</IgnoreSize>
+      <RotationAngleStepDeg>1</RotationAngleStepDeg>
+    </Definition>
+    
+    <Definition xsi:type="MyObjectBuilder_ButtonPanelDefinition">
+      <Id>
+        <TypeId>ButtonPanel</TypeId>
+        <SubtypeId>MES-Blocks-SuitUpgradeStation</SubtypeId>
+      </Id>
+      <DisplayName>Suit Upgrade Station</DisplayName>
+      <Icon>Textures\Icons\ML_Suit_Upgrade.png</Icon>
+      <Description>
+        The latest wares, featuring quick and mostly painless installation.
+        By Meridius IX and AutoMcD.
+      </Description>
+      <CubeSize>Large</CubeSize>
+      <Public>false</Public>
+      <GuiVisible>false</GuiVisible>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="2" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\ML_Store\ML_Suit_Upgrade.mwm</Model>
+      <Components>
+        <Component Subtype="InteriorPlate" Count="10" />
+        <Component Subtype="Construction" Count="10" />
+        <Component Subtype="Computer" Count="20" />
+        <Component Subtype="ProprietaryTech" Count="1" />
+        <Component Subtype="Construction" Count="10" />
+      </Components>
+      <CriticalComponent Subtype="ProprietaryTech" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Front" StartX="0.00" StartY="0.00" EndX="1.00" EndY="1.00"/>
+        <MountPoint Side="Left" StartX="0.00" StartY="0.00" EndX="1.24" EndY="1.00"/>
+        <MountPoint Side="Right" StartX="0.76" StartY="0.00" EndX="2.00" EndY="1.00"/>
+        <MountPoint Side="Top" StartX="0.00" StartY="0.32" EndX="1.00" EndY="2.00"/>
+        <MountPoint Side="Bottom" StartX="0.00" StartY="0.00" EndX="1.00" EndY="1.68"/>
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\ML_Store\ML_Suit_Upgrade_BS1.mwm"/>
+        <Model BuildPercentUpperBound="0.67" File="Models\ML_Store\ML_Suit_Upgrade_BS2.mwm"/>
+        <Model BuildPercentUpperBound="1.00" File="Models\ML_Store\ML_Suit_Upgrade_BS3.mwm"/>
+      </BuildProgressModels>
+      <BlockPairName>ML_Suit_Large</BlockPairName>
+      <EdgeType>Light</EdgeType>
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <BuildTimeSeconds>30</BuildTimeSeconds>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <ButtonCount>4</ButtonCount>
+      <ButtonSymbols>
+        <string>Textures\GUI\Icons\buttons\OneButton.dds</string>
+        <string>Textures\GUI\Icons\buttons\TwoButton.dds</string>
+        <string>Textures\GUI\Icons\buttons\ThreeButton.dds</string>
+        <string>Textures\GUI\Icons\buttons\FourButton.dds</string>
+      </ButtonSymbols>
+      <UnassignedButtonColor>
+        <X>0.34</X>
+        <Y>0.34</Y>
+        <Z>0.34</Z>
+        <W>0</W>
+      </UnassignedButtonColor>
+      <ButtonColors>
+        <Vector4>
+          <X>1</X>
+          <Y>1</Y>
+          <Z>0.3</Z>
+          <W>1</W>
+        </Vector4>
+        <Vector4>
+          <X>1</X>
+          <Y>1</Y>
+          <Z>0.3</Z>
+          <W>1</W>
+        </Vector4>
+        <Vector4>
+          <X>1</X>
+          <Y>1</Y>
+          <Z>0.3</Z>
+          <W>1</W>
+        </Vector4>
+        <Vector4>
+          <X>1</X>
+          <Y>1</Y>
+          <Z>0.3</Z>
+          <W>1</W>
+        </Vector4>
+      </ButtonColors>
+      <DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+      <DamagedSound>ParticleElectrical</DamagedSound>
+      <DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>5</PCU>
+      <!--IsAirTight>false</IsAirTight-->
+    </Definition>
+
+    <Definition xsi:type="MyObjectBuilder_ButtonPanelDefinition">
+      <Id>
+        <TypeId>ButtonPanel</TypeId>
+        <SubtypeId>MES-Blocks-ResearchTerminal</SubtypeId>
+      </Id>
+      <DisplayName>Research Terminal</DisplayName>
+      <Public>false</Public>
+      <GuiVisible>false</GuiVisible>
+      <Icon>Textures\GUI\Icons\Cubes\SciFiButtonTerminal.dds</Icon>
+      <Description>This terminal contains downloadable research points.</Description>
+      <CubeSize>Large</CubeSize>
+      <BlockTopology>TriangleMesh</BlockTopology>
+      <Size x="1" y="1" z="1" />
+      <ModelOffset x="0" y="0" z="0" />
+      <Model>Models\Cubes\Large\SciFiButtonTerminal.mwm</Model>
+      <Components>
+        <Component Subtype="InteriorPlate" Count="5" />
+        <Component Subtype="Construction" Count="5" />
+        <Component Subtype="Computer" Count="4" />
+        <Component Subtype="ProprietaryTech" Count="1" />
+        <Component Subtype="Display" Count="4" />
+        <Component Subtype="Construction" Count="5" />
+      </Components>
+      <CriticalComponent Subtype="Display" Index="0" />
+      <MountPoints>
+        <MountPoint Side="Back" StartX="0.4" StartY="0.25" EndX="0.6" EndY="0.5" />
+      </MountPoints>
+      <BuildProgressModels>
+        <Model BuildPercentUpperBound="0.33" File="Models\Cubes\Large\SciFiButtonTerminalConstruction_1.mwm" />
+        <Model BuildPercentUpperBound="0.66" File="Models\Cubes\Large\SciFiButtonTerminalConstruction_2.mwm" />
+        <Model BuildPercentUpperBound="1.00" File="Models\Cubes\Large\SciFiButtonTerminalConstruction_3.mwm" />
+      </BuildProgressModels>
+      <BlockPairName>MESResearchTerminal</BlockPairName>
+      <ScreenAreas>
+        <ScreenArea Name="CockpitScreen_01" DisplayName="DisplayName_Screen_Large" TextureResolution="256" ScreenWidth="4" ScreenHeight="3" />
+      </ScreenAreas>
+      <EdgeType>Light</EdgeType>
+      <MirroringY>Z</MirroringY>
+      <MirroringZ>Y</MirroringZ>
+      <BuildTimeSeconds>8</BuildTimeSeconds>
+      <ResourceSinkGroup>Utility</ResourceSinkGroup>
+      <ButtonCount>1</ButtonCount>
+      <ButtonSymbols>
+        <string>Textures\GUI\Icons\buttons\OneButton.dds</string>
+      </ButtonSymbols>
+      <UnassignedButtonColor>
+        <X>0.34</X>
+        <Y>0.34</Y>
+        <Z>0.34</Z>
+        <W>0</W>
+      </UnassignedButtonColor>
+      <ButtonColors>
+        <Vector4>
+          <X>1</X>
+          <Y>1</Y>
+          <Z>0.3</Z>
+          <W>1</W>
+        </Vector4>
+        <Vector4>
+          <X>1</X>
+          <Y>1</Y>
+          <Z>0.3</Z>
+          <W>1</W>
+        </Vector4>
+        <Vector4>
+          <X>1</X>
+          <Y>1</Y>
+          <Z>0.3</Z>
+          <W>1</W>
+        </Vector4>
+        <Vector4>
+          <X>1</X>
+          <Y>1</Y>
+          <Z>0.3</Z>
+          <W>1</W>
+        </Vector4>
+      </ButtonColors>
+      <DamageEffectName>Damage_Electrical_Damaged</DamageEffectName>
+      <DamagedSound>ParticleElectrical</DamagedSound>
+      <DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
+      <DestroySound>WepSmallWarheadExpl</DestroySound>
+      <PCU>50</PCU>
+      <IsAirTight>false</IsAirTight>
+      <DLC>SparksOfTheFuture</DLC>
+    </Definition>
+    
+    
+  </CubeBlocks>
+
+  <BlockPositions></BlockPositions>
+
+
+</Definitions>

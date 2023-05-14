@@ -73,6 +73,9 @@ namespace ModularEncountersSystems.Sync {
 		[ProtoMember(12)]
 		public bool UnlockAdminBlocks;
 
+		[ProtoMember(13)]
+		public bool DeveloperMode;
+
 		public ChatMessage() {
 
 			Mode = ChatMsgMode.None;
@@ -610,11 +613,54 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.DeveloperMode
+			if (array[2] == "DeveloperMode") {
+
+				Mode = ChatMsgMode.ReturnMessage;
+				MES_SessionCore.DeveloperMode = !MES_SessionCore.DeveloperMode;
+				this.DeveloperMode = MES_SessionCore.DeveloperMode;
+				this.ReturnMessage = "Developer Mode Set: " + MES_SessionCore.DeveloperMode;
+				return true;
+
+			}
+
+			//MES.Debug.DeleteGrid
+			if (array[2] == "DeleteGrid") {
+
+				LoggerTools.DeleteGrid(this);
+				return true;
+
+			}
+
 			//MES.Debug.DrawPaths
 			if (array[2] == "DrawPaths") {
 
 				BehaviorManager.DebugDraw = !BehaviorManager.DebugDraw;
 				this.ReturnMessage = "Path Drawing For Behaviors Active: " + BehaviorManager.DebugDraw;
+				return true;
+
+			}
+
+			//MES.Debug.ForceCombatPhase
+			if (array[2] == "ForceCombatPhase") {
+
+				CombatPhaseManager.ForcePhase(true);
+				return true;
+
+			}
+
+			//MES.Debug.ForcePeacePhase
+			if (array[2] == "ForcePeacePhase") {
+
+				CombatPhaseManager.ForcePhase(false);
+				return true;
+
+			}
+
+			//MES.Debug.GetBlockData
+			if (array[2] == "GetBlockData") {
+
+				LoggerTools.GetBlockData(this);
 				return true;
 
 			}
@@ -709,6 +755,30 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.RotateBlockYaw
+			if (array[2] == "RotateBlockYaw") {
+
+				LoggerTools.DebugRotateBlockYaw(this);
+				return true;
+
+			}
+
+			//MES.Debug.RotateBlockPitch
+			if (array[2] == "RotateBlockPitch") {
+
+				LoggerTools.DebugRotateBlockPitch(this);
+				return true;
+
+			}
+
+			//MES.Debug.RotateBlockRoll
+			if (array[2] == "RotateBlockRoll") {
+
+				LoggerTools.DebugRotateBlockRoll(this);
+				return true;
+
+			}
+
 			//MES.Debug.RotationData
 			if (array[2] == "RotationData") {
 
@@ -721,6 +791,22 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "SaveGridTest") {
 
 				LoggerTools.DebugTestSaveGrid(this);
+				return true;
+
+			}
+
+			//MES.Debug.SetGridOwnership
+			if (array[2] == "SetGridOwnership") {
+
+				LoggerTools.SetGridOwnership(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.SpawnSingleBlocks
+			if (array[2] == "SpawnSingleBlocks") {
+
+				LoggerTools.DebugSpawnAllSingleBlocks(this);
 				return true;
 
 			}
@@ -777,6 +863,14 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "SpawnAllPrefabs") {
 
 				LoggerTools.SpawnAllPrefabs(this, array);
+				return true;
+
+			}
+
+			//MES.Debug.YeetGrid
+			if (array[2] == "YeetGrid") {
+
+				LoggerTools.YeetGrid(this);
 				return true;
 
 			}
@@ -1091,6 +1185,18 @@ namespace ModularEncountersSystems.Sync {
 				return true;
 
 			}
+
+
+			//GetZones
+			if (array[2] == "GetEvents")
+			{
+
+				LoggerTools.GetEvents(this);
+				return true;
+
+			}
+
+			
 
 			return false;
 

@@ -532,6 +532,13 @@ namespace ModularEncountersSystems.Zones {
 		
 		}
 
+		public static void RemoveAllZones() {
+
+			MyAPIGateway.Utilities.RemoveVariable("MES-ZoneData");
+			ActiveZones.Clear();
+
+		}
+
 		public static void ResetAllZones() {
 
 			MyAPIGateway.Utilities.RemoveVariable("MES-ZoneData");

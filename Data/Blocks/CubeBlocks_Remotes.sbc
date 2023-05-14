@@ -53,6 +53,7 @@
 			<EmissiveColorPreset>RivalAIEmissive</EmissiveColorPreset>
 			<DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
+			<TargetLockingEnabled>true</TargetLockingEnabled>
 			<PCU>25</PCU>      
 		</Definition>
 		<Definition xsi:type="MyObjectBuilder_RemoteControlDefinition">
@@ -105,6 +106,7 @@
 			<EmissiveColorPreset>RivalAIEmissive</EmissiveColorPreset>
 			<DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
+			<TargetLockingEnabled>true</TargetLockingEnabled>
 			<PCU>25</PCU>
 			<IsAirTight>false</IsAirTight>      
 		</Definition>

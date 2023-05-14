@@ -21,6 +21,7 @@ namespace ModularEncountersSystems.Terminal {
 		BlueprintBuilding,
 		ScrapPurchasing,
 		RepairAndConstruction,
+		GridTakeover,
 
 	}
 
@@ -106,6 +107,7 @@ namespace ModularEncountersSystems.Terminal {
 		internal static IMyTerminalControlLabel _labelBlueprint;
 		internal static IMyTerminalControlLabel _labelScrap;
 		internal static IMyTerminalControlLabel _labelRepair;
+		internal static IMyTerminalControlLabel _labelTakeover;
 		internal static IMyTerminalControlLabel _labelLimits;
 		internal static IMyTerminalControlLabel _labelQuote;
 		internal static IMyTerminalControlLabel _labelConfirmation;
@@ -126,6 +128,7 @@ namespace ModularEncountersSystems.Terminal {
 		internal static IMyTerminalControlButton _confirmButtonBlueprint;
 		internal static IMyTerminalControlButton _confirmButtonScrap;
 		internal static IMyTerminalControlButton _confirmButtonConstruct;
+		internal static IMyTerminalControlButton _confirmButtonTakeover;
 		internal static IMyTerminalControlCheckbox _useServerPrice;
 
 		public static void DisplayControls(IMyTerminalBlock block, List<IMyTerminalControl> controls) {
@@ -187,6 +190,10 @@ namespace ModularEncountersSystems.Terminal {
 				_labelRepair = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlLabel, IMyTerminalBlock>("MES-Shipyard-LabelRepair");
 				_labelRepair.Enabled = (b) => { return true; };
 				_labelRepair.Label = MyStringId.GetOrCompute("Repair And Construction");
+
+				_labelTakeover = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlLabel, IMyTerminalBlock>("MES-Shipyard-LabelTakeover");
+				_labelTakeover.Enabled = (b) => { return true; };
+				_labelTakeover.Label = MyStringId.GetOrCompute("Grid Takeover");
 
 				_labelLimits = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlLabel, IMyTerminalBlock>("MES-Shipyard-LabelLimits");
 				_labelLimits.Enabled = (b) => { return true; };
@@ -323,6 +330,12 @@ namespace ModularEncountersSystems.Terminal {
 				_confirmButtonConstruct.Tooltip = MyStringId.GetOrCompute("Constructs and/or Repairs all eligible blocks for the quoted price.");
 				_confirmButtonConstruct.Action = ConfirmOrder;
 
+				_confirmButtonTakeover = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlButton, IMyTerminalBlock>("MES-Shipyard-ConfirmTakeover");
+				_confirmButtonTakeover.Enabled = (b) => { return true; };
+				_confirmButtonTakeover.Title = MyStringId.GetOrCompute("Take Ownership of Grid");
+				_confirmButtonTakeover.Tooltip = MyStringId.GetOrCompute("Grants you full ownership of the grid for the quoted price.");
+				_confirmButtonTakeover.Action = ConfirmOrder;
+
 				_useServerPrice = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlCheckbox, IMyTerminalBlock>("MES-Shipyard-UseServerPrice");
 				_useServerPrice.Enabled = (b) => { return !MyAPIGateway.Multiplayer.IsServer; };
 				_useServerPrice.Visible = (b) => { return !MyAPIGateway.Multiplayer.IsServer; };
@@ -417,6 +430,17 @@ namespace ModularEncountersSystems.Terminal {
 
 			}
 
+			if (controlValues.Mode == ShipyardModes.GridTakeover) {
+
+				controls.Add(_labelTakeover);
+				controls.Add(_gridSelect);
+				controls.Add(_separatorB);
+				controls.Add(_labelConfirmation);
+				controls.Add(_confirmButtonTakeover);
+				controls.Add(_useServerPrice);
+
+			}
+
 		}
 
 		public static void GetPriceQuote(IMyTerminalBlock block) {
@@ -505,6 +529,30 @@ namespace ModularEncountersSystems.Terminal {
 
 			}
 
+			if (controls.Mode == ShipyardModes.GridTakeover) {
+
+				if (controls.SelectedGridItem == null || !controls.SelectedGridItem.ActiveEntity()) {
+
+					//Nothing
+
+				} else {
+
+					controls.QuotedPriceValue = EconomyHelper.GridTakeoverCost(controls.SelectedGridItem, MyAPIGateway.Session.LocalHumanPlayer?.IdentityId ?? 0, controls.Profile.GridTakeoverPricePerComputerMultiplier);
+
+					if (controls.QuotedPriceValue >= 0) {
+
+						controls.QuotedPriceValue = controls.Profile.GetTakeoverPrice(controls.QuotedPriceValue, rep);
+
+					}
+
+					if (controls.QuotedPriceValue == 1)
+						controls.QuotedPriceValue = 0;
+
+
+				}
+
+			}
+
 			controls.QuotedPrice.Clear();
 			controls.QuotedPrice.Append(controls.QuotedPriceValue > 0 ? controls.QuotedPriceValue.ToString() : "N/A");
 
@@ -548,11 +596,32 @@ namespace ModularEncountersSystems.Terminal {
 		internal static void ShipyardInfo(IMyTerminalBlock block) {
 
 			var sb = new StringBuilder();
-			sb.Append("The Modular Encounters Systems (MES) Shipyard System allows you to buy or sell entire grids, depending on what the merchant allows. Below are the different modes available, and how to use them:").AppendLine().AppendLine();
-			sb.Append("[Scrap Purchasing]").AppendLine();
-			sb.Append(" - This allows the Merchant Shipyard to purchase one of your grids as scrap, and providing a percentage of the grid's estimated value to the player that initiates the transaction. Some merchants may also include the value of the cargo in the grid as well. To initiate this transaction, choose [Scrap Purchasing] from the mode select. A terminal control will appear that will allow you to select a grid. Only grids that are a short distance from the merchant, and are also majority-owned by the player requesting the transaction will appear in this list. Once you've selected a grid, you will get a price quote in the info pane of the terminal (bottom right). If the price is agreeable to you, then press the [Sell Grid as Scrap] button to complete the transaction. The credits will be deposited into your player balance and the grid will be removed from the world.").AppendLine().AppendLine();
-			sb.Append("[Repair and Construction]").AppendLine();
-			sb.Append(" - This allows you to use the Merchant Shipyard for repairing damaged / incomplete blocks, or constructing new block from a projection on one of your near-by grids. When requesting this work, the Shipyard will attempt to repair/construct as many blocks as it currently can in one transaction. To initiate this transaction, choose [Repair and Construction] from the mode select. A terminal control will appear that will allow you to select a grid. Only grids that are a short distance from the merchant, and are also majority-owned by the player requesting the transaction will appear in this list. Once you've chosen a grid, select the types of work you want done on your ship by using the [] and [] checkboxes. Once you've made your selections, you will get a price quote in the info pane of the terminal (bottom right). If the price is agreeable to you, then press the [Construct / Repair Blocks] button to complete the transaction. The credits will be withdrawn from your player account, and the requested work will be performed on your selected grid.").AppendLine().AppendLine();
+			sb.Append("The Modular Encounters Systems (MES) Shipyard System allows you to complete grid level transactions, depending on what the merchant allows. Below are the different modes available, and how to use them:").AppendLine();
+
+			sb.AppendLine().Append("[Scrap Purchasing]").AppendLine();
+			sb.Append("This allows the Merchant Shipyard to purchase one of your grids as scrap, and providing a percentage of the grid's estimated value to the player that initiates the transaction. Some merchants may also include the value of the cargo in the grid as well.").AppendLine();
+			sb.Append(" - To initiate this transaction, choose [Scrap Purchasing] from the mode select.").AppendLine();
+			sb.Append(" - A terminal control will appear that will allow you to select a grid. Only grids that are a short distance from the merchant, and are also majority-owned by the player requesting the transaction will appear in this list.").AppendLine();
+			sb.Append(" - Once you've selected a grid, you will get a price quote in the info pane of the terminal (bottom right).").AppendLine();
+			sb.Append(" - If the price is agreeable to you, then press the [Sell Grid as Scrap] button to complete the transaction.").AppendLine();
+			sb.Append(" - The credits will be deposited into your player balance and the grid will be removed from the world.").AppendLine();
+
+			sb.AppendLine().Append("[Repair and Construction]").AppendLine();
+			sb.Append("This allows you to use the Merchant Shipyard for repairing damaged / incomplete blocks, or constructing new block from a projection on one of your near-by grids. When requesting this work, the Shipyard will attempt to repair/construct as many blocks as it currently can in one transaction.").AppendLine();
+			sb.Append(" - To initiate this transaction, choose [Repair and Construction] from the mode select").AppendLine();
+			sb.Append(" - A terminal control will appear that will allow you to select a grid. Only grids that are a short distance from the merchant, and are also majority-owned by the player requesting the transaction will appear in this list.").AppendLine();
+			sb.Append(" - Once you've chosen a grid, select the types of work you want done on your ship by using the [Construct New Blocks] and [Repair Blocks] checkboxes.").AppendLine();
+			sb.Append(" - Once you've made your selections, you will get a price quote in the info pane of the terminal (bottom right).").AppendLine();
+			sb.Append(" - If the price is agreeable to you, then press the [Construct / Repair Blocks] button to complete the transaction.").AppendLine();
+			sb.Append(" - The credits will be withdrawn from your player account, and the requested work will be performed on your selected grid.").AppendLine();
+
+			sb.AppendLine().Append("[Grid Takeover]").AppendLine();
+			sb.Append("This allows you to use the Merchant Shipyard to take complete ownership of another grid. The grid being taken over must have at least 1 block owned by an identity other than yourself (and is also not part of your faction). The cost of the takeover operation is based on the amount of computer components present in the blocks you do not already control.").AppendLine();
+			sb.Append(" - To initiate this transaction, choose [Grid Takeover] from the mode select.").AppendLine();
+			sb.Append(" - A terminal control will appear that will allow you to select a nearby grid with mixed ownership.").AppendLine();
+			sb.Append(" - Once you have selected a grid, you will receive a price quite in the info pane of the terminal (bottom right).").AppendLine();
+			sb.Append(" - If the terms are agreeable to you, then press the [Take Ownership of Grid] button to complete the transaction.").AppendLine();
+			sb.Append(" - The credits will be removed from your player balance, and the grid will now be fully under your ownership.").AppendLine();
 			MyAPIGateway.Utilities.ShowMissionScreen("Shipyard System (MES)", "", "Information and Help", sb.ToString());
 
 		}
@@ -619,6 +688,22 @@ namespace ModularEncountersSystems.Terminal {
 
 				}
 
+				//AllowGridTakeover
+				if (controls.Profile.AllowGridTakeover) {
+
+					var item = new MyTerminalControlListBoxItem(MyStringId.GetOrCompute("Grid Takeover"), MyStringId.GetOrCompute("Grid Takeover"), ShipyardModes.GridTakeover);
+					items.Add(item);
+
+					controls.SmallGridLimit.Clear();
+					controls.SmallGridLimit.Append(controls.Profile.GridTakeoverSmallGridBlockLimit.ToString());
+					controls.LargeGridLimit.Clear();
+					controls.LargeGridLimit.Append(controls.Profile.GridTakeoverLargeGridBlockLimit.ToString());
+
+					if (controls.Mode == ShipyardModes.GridTakeover)
+						selected.Add(item);
+
+				}
+
 			}
 
 		}
@@ -651,17 +736,81 @@ namespace ModularEncountersSystems.Terminal {
 
 			_grids.Clear();
 			GridManager.GetGridsWithinDistance(block.GetPosition(), controls.Profile.InteractionRadius, _grids);
+			var playerid = MyAPIGateway.Session?.LocalHumanPlayer?.IdentityId ?? 0;
+			var playerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerid);
 
 			for (int i = _grids.Count - 1; i >= 0; i--) {
 
 				var grid = _grids[i];
 
-				if (grid?.CubeGrid?.BigOwners == null || !grid.CubeGrid.BigOwners.Contains(MyAPIGateway.Session?.LocalHumanPlayer?.IdentityId ?? 0) || block.SlimBlock.CubeGrid == grid.CubeGrid || !GridSelectionRules(block, grid, controls.Mode, controls.Profile)) {
+				if (block.SlimBlock.CubeGrid == grid.CubeGrid || grid?.CubeGrid?.BigOwners == null || !GridSelectionRules(block, grid, controls.Mode, controls.Profile)) {
 
 					_grids.RemoveAt(i);
 					continue;
+
+				}
+
+				if (controls.Mode != ShipyardModes.GridTakeover) {
+
+					if (!grid.CubeGrid.BigOwners.Contains(playerid) ) {
+
+						_grids.RemoveAt(i);
+						continue;
+
+					}
+
+				} else {
+
+					bool nonFactionOwnership = false;
+					bool hasPlayerOwnershipSomewhere = false;
+
+					if (grid.CubeGrid.BigOwners.Contains(playerid))
+						hasPlayerOwnershipSomewhere = true;
+
+					foreach (var owner in grid.CubeGrid.BigOwners) {
+
+						if (owner == playerid || owner == 0)
+							continue;
+
+						if (playerFaction == null || !playerFaction.IsMember(owner)) {
+
+							nonFactionOwnership = true;
+							break;
+						
+						}
+					
+					}
+
+					if (grid.CubeGrid.SmallOwners != null) {
+
+						if (grid.CubeGrid.SmallOwners.Contains(playerid))
+							hasPlayerOwnershipSomewhere = true;
+
+						foreach (var owner in grid.CubeGrid.SmallOwners) {
+
+							if (owner == playerid || owner == 0)
+								continue;
+
+							if (playerFaction == null || !playerFaction.IsMember(owner)) {
+
+								nonFactionOwnership = true;
+								break;
+
+							}
+
+						}
+
+					}
+
+					if (!nonFactionOwnership || !hasPlayerOwnershipSomewhere) {
+
+						_grids.RemoveAt(i);
+						continue;
+
+					}
 				
 				}
+				
 			
 			}
 
@@ -710,6 +859,16 @@ namespace ModularEncountersSystems.Terminal {
 					return false;
 
 				if (size == MyCubeSize.Large && count > profile.RepairAndConstructionLargeGridBlockLimit)
+					return false;
+
+			}
+
+			if (mode == ShipyardModes.GridTakeover) {
+
+				if (size == MyCubeSize.Small && count > profile.GridTakeoverSmallGridBlockLimit)
+					return false;
+
+				if (size == MyCubeSize.Large && count > profile.GridTakeoverLargeGridBlockLimit)
 					return false;
 
 			}

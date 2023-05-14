@@ -132,7 +132,7 @@ namespace ModularEncountersSystems.Configuration {
 			CleanupDistanceStartsTimer = true;
 			CleanupResetTimerWithinDistance = true;
 			CleanupDistanceTrigger = 50000;
-			CleanupTimerTrigger = 1800;
+			CleanupTimerTrigger = 3600;
 			CleanupBlockLimitTrigger = 0;
 			CleanupIncludeUnowned = true;
 			CleanupUnpoweredOverride = true;

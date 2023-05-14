@@ -27,7 +27,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			base.Setup(block);
 
-			if (block?.Block == null) {
+			if (block?.Block == null || !_isServer) {
 
 				_isValid = false;
 				return;
@@ -41,6 +41,7 @@ namespace ModularEncountersSystems.BlockLogic {
 			_grid = TerminalBlock.SlimBlock.CubeGrid;
 			_grid.OnBlockOwnershipChanged += OwnershipChange;
 			_grid.OnGridSplit += GridSplit;
+			OwnershipChange(_grid);
 
 		}
 

@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Configuration;
+﻿using ModularEncountersSystems.BlockLogic;
+using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Tasks;
@@ -11,6 +12,7 @@ namespace ModularEncountersSystems.Spawning {
 
         public static int Timer = 0;
         public static List<WatchedPlayer> Players = new List<WatchedPlayer>();
+        private static bool _firstRun = false;
 
         public static void Setup() {
 
@@ -26,6 +28,23 @@ namespace ModularEncountersSystems.Spawning {
 
             if (Timer < Settings.General.PlayerWatcherTimerTrigger)
                 return;
+
+            if (!_firstRun) {
+
+                _firstRun = true;
+
+                try {
+
+                    var blockTest = new InhibitorLogic();
+                    Action blockTestAction = blockTest.RunTick100;
+
+                } catch (Exception) {
+
+                    SpawnGroupManager.AddonDetected = true;
+
+                }
+
+            }
 
             Timer = 0;
 

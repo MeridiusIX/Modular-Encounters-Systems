@@ -224,6 +224,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int ThreatScoreMinimum;
 		public int ThreatScoreMaximum;
 		public int ThreatScorePlanetaryHandicap;
+		public Entities.GridConfigurationEnum ThreatScoreGridConfiguration;
 
 		public bool UsePCUCheck;
 		public double PCUCheckRadius;
@@ -233,6 +234,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseDifficulty;
 		public int MinDifficulty;
 		public int MaxDifficulty;
+
+		public bool UseCombatPhase;
+		public bool IgnoreCombatPhase;
+		public bool CombatPhaseChecksInPersistentCondition;
 
 		public bool UsePlayerCredits;
 		public bool IncludeAllPlayersInRadius;
@@ -263,6 +268,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public List<string> SandboxVariables;
 		public List<string> FalseSandboxVariables;
+
+		public bool CheckCustomSandboxCounters;
+		public List<string> CustomSandboxCounters;
+		public List<int> CustomSandboxCountersTargets;
+		public List<CounterCompareEnum> SandboxCounterCompareTypes;
+
+
 
 		public bool UseRemoteControlCodeRestrictions;
 		public string RemoteControlCode;
@@ -317,6 +329,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int PrefabFixedCount;
 		public List<Vector3D> PrefabOffsetOverrides;
 		public bool UseSpawnGroupPrefabSpawningMode;
+
+		public bool UseEventController;
+		public List<string> EventControllerId;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -481,6 +496,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseDateTimeDaysOfWeek = false;
 			//DateTimeDaysOfWeek = new List<DayOfWeek>();
 
+			CheckCustomSandboxCounters= false;
+			CustomSandboxCounters = new List<string>();
+			CustomSandboxCountersTargets = new List<int>();
+			SandboxCounterCompareTypes = new List<CounterCompareEnum>();
+
 			SandboxVariables = new List<string>();
 			FalseSandboxVariables = new List<string>();
 
@@ -531,6 +551,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ThreatScoreMinimum = -1;
 			ThreatScoreMaximum = -1;
 			ThreatScorePlanetaryHandicap = 0;
+			ThreatScoreGridConfiguration = Entities.GridConfigurationEnum.All;
 
 			UsePCUCheck = false;
 			PCUCheckRadius = 5000;
@@ -540,6 +561,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseDifficulty = false;
 			MinDifficulty = -1;
 			MaxDifficulty = -1;
+
+			UseCombatPhase = false;
+			IgnoreCombatPhase = false;
+			CombatPhaseChecksInPersistentCondition = false;
 
 			UsePlayerCredits = false;
 			IncludeAllPlayersInRadius = false;
@@ -622,12 +647,15 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PrefabFixedCount = 1;
 			PrefabOffsetOverrides = new List<Vector3D>();
 			UseSpawnGroupPrefabSpawningMode = false;
+			UseEventController = false;
+			EventControllerId = new List<string>();
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"SpaceCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref SpaceCargoShip) },
 				{"LunarCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref LunarCargoShip) },
 				{"AtmosphericCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref AtmosphericCargoShip) },
+				{"PlanetaryCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref AtmosphericCargoShip) },
 				{"GravityCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref GravityCargoShip) },
 				{"SkipAirDensityCheck", (s, o) => TagParse.TagBoolCheck(s, ref SkipAirDensityCheck) },
 				{"CargoShipTerrainPath", (s, o) => TagParse.TagBoolCheck(s, ref CargoShipTerrainPath) },
@@ -793,6 +821,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"ThreatScoreMinimum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMinimum) },
 				{"ThreatScoreMaximum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMaximum) },
 				{"ThreatScorePlanetaryHandicap", (s, o) => TagParse.TagIntCheck(s, ref ThreatScorePlanetaryHandicap) },
+				{"ThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref ThreatScoreGridConfiguration) },
+
 				{"UsePCUCheck", (s, o) => TagParse.TagBoolCheck(s, ref UsePCUCheck) },
 				{"PCUCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PCUCheckRadius) },
 				{"PCUMinimum", (s, o) => TagParse.TagIntCheck(s, ref PCUMinimum) },
@@ -800,6 +830,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"UseDifficulty", (s, o) => TagParse.TagBoolCheck(s, ref UseDifficulty) },
 				{"MinDifficulty", (s, o) => TagParse.TagIntCheck(s, ref MinDifficulty) },
 				{"MaxDifficulty", (s, o) => TagParse.TagIntCheck(s, ref MaxDifficulty) },
+				{"UseCombatPhase", (s, o) => TagParse.TagBoolCheck(s, ref UseCombatPhase) },
+				{"IgnoreCombatPhase", (s, o) => TagParse.TagBoolCheck(s, ref IgnoreCombatPhase) },
+				{"CombatPhaseChecksInPersistentCondition", (s, o) => TagParse.TagBoolCheck(s, ref CombatPhaseChecksInPersistentCondition) },
 				{"UsePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref UsePlayerCredits) },
 				{"IncludeAllPlayersInRadius", (s, o) => TagParse.TagBoolCheck(s, ref IncludeAllPlayersInRadius) },
 				{"IncludeFactionBalance", (s, o) => TagParse.TagBoolCheck(s, ref IncludeFactionBalance) },
@@ -866,8 +899,16 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"PrefabFixedCount", (s, o) => TagParse.TagIntCheck(s, ref PrefabFixedCount) },
 				{"PrefabOffsetOverrides", (s, o) => TagParse.TagVector3DListCheck(s, ref PrefabOffsetOverrides) },
 				{"UseSpawnGroupPrefabSpawningMode", (s, o) => TagParse.TagBoolCheck(s, ref UseSpawnGroupPrefabSpawningMode) },
+				{"UseEventController", (s, o) => TagParse.TagBoolCheck(s, ref UseEventController) },
+				{"EventControllerId", (s, o) => TagParse.TagStringListCheck(s, ref EventControllerId) },
+				{"CheckCustomSandboxCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomSandboxCounters) },
+				{"CustomSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomSandboxCounters) },
+				{"CustomSandboxCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomSandboxCountersTargets) },
+				{"SandboxCounterCompareTypes", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref SandboxCounterCompareTypes) },
 
-			};
+
+
+		};
 
 		}
 

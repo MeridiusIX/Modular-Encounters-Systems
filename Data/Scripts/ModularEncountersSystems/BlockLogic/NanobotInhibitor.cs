@@ -11,7 +11,7 @@ using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class NanobotInhibitor : InhibitorBase, IBlockLogic {
+	public class NanobotInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal List<MyDefinitionId> _targetedBlocks;
 

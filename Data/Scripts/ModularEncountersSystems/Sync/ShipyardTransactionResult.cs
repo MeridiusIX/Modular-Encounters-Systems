@@ -103,6 +103,12 @@ namespace ModularEncountersSystems.Sync {
 
 				}
 
+				if (Mode == ShipyardModes.GridTakeover) {
+
+					sb.Append("Amount Paid To Merchant: ").Append(ServerPrice);
+
+				}
+
 			} else {
 
 				//sb.Append("Transaction Not Successful").AppendLine().AppendLine();
@@ -181,7 +187,7 @@ namespace ModularEncountersSystems.Sync {
 
 				if (Result == ShipyardTransactionResultEnum.ServerClientPriceMismatch) {
 
-					sb.Append("Calculated Value of Transaction on Server doesn't match Value on Client. To Proceed With Transaction, Use \"Allow Server Price\" Checkbox.").AppendLine().AppendLine();
+					sb.Append("Calculated Value of Transaction on Server doesn't match Value on Client. To Proceed With Transaction Anyway, Use \"Allow Server Price\" Checkbox and Retry the Order.").AppendLine().AppendLine();
 					sb.Append("Server Price: ").Append(ServerPrice);
 
 				}

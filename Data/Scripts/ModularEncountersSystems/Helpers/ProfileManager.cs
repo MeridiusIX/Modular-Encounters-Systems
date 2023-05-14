@@ -2,18 +2,21 @@
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Behavior.Subsystems.Weapons;
 using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Events;
+using ModularEncountersSystems.Events.Action;
+using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Zones;
-using ModularEncountersSystems.Events;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
+using VRage.Utils;
 
 namespace ModularEncountersSystems.Helpers {
 	public static class ProfileManager {
@@ -28,11 +31,13 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, ManipulationGroup> ManipulationGroups = new Dictionary<string, ManipulationGroup>();
 		public static Dictionary<string, ManipulationProfile> ManipulationProfiles = new Dictionary<string, ManipulationProfile>();
 		public static Dictionary<string, PrefabDataProfile> PrefabDataProfiles = new Dictionary<string, PrefabDataProfile>();
+		public static Dictionary<string, SafeZoneProfile> SafeZoneProfiles = new Dictionary<string, SafeZoneProfile>();
 		public static Dictionary<string, ShipyardProfile> ShipyardProfiles = new Dictionary<string, ShipyardProfile>();
 		public static Dictionary<string, SpawnConditionsGroup> SpawnConditionGroups = new Dictionary<string, SpawnConditionsGroup>();
 		public static Dictionary<string, SpawnConditionsProfile> SpawnConditionProfiles = new Dictionary<string, SpawnConditionsProfile>();
 		public static Dictionary<string, StaticEncounter> StaticEncounters = new Dictionary<string, StaticEncounter>();
-		public static Dictionary<string, SuitUpgradesProfile> SuitModificationProfiles = new Dictionary<string, SuitUpgradesProfile>();
+		public static Dictionary<string, StoreProfile> StoreProfiles = new Dictionary<string, StoreProfile>();
+		public static Dictionary<string, SuitUpgradesProfile> SuitUpgradesProfiles = new Dictionary<string, SuitUpgradesProfile>();
 		public static Dictionary<MyDefinitionId, WeaponModRulesProfile> WeaponModRulesProfiles = new Dictionary<MyDefinitionId, WeaponModRulesProfile>();
 		public static Dictionary<string, Zone> ZoneProfiles = new Dictionary<string, Zone>();
 		public static Dictionary<string, ZoneConditionsProfile> ZoneConditionsProfiles = new Dictionary<string, ZoneConditionsProfile>();
@@ -58,27 +63,25 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, WeaponSystemReference> WeaponProfiles = new Dictionary<string, WeaponSystemReference>();
 
 		public static Dictionary<string, MyDefinitionBase> DatapadTemplates = new Dictionary<string, MyDefinitionBase>();
+		public static Dictionary<string, StoreItemsContainer> StoreItemContainers = new Dictionary<string, StoreItemsContainer>();
 		public static Dictionary<string, TextTemplate> TextTemplates = new Dictionary<string, TextTemplate>();
 
 		public static List<string> ErrorProfiles = new List<string>();
 
 		public static AutoPilotProfile DefaultAutoPilotSettings = new AutoPilotProfile();
 
+		public static Dictionary<string, PlayerFilter> PlayerFilters = new Dictionary<string, PlayerFilter>();
 		//Events 
 
 		public static Dictionary<string, byte[]> EventActionObjectTemplates = new Dictionary<string, byte[]>();
 
+		/*
+		public static Dictionary<string, EventController> MainEvents = new Dictionary<string, EventController>();
+		*/
 
-
-		public static Dictionary<string, MainEvent> MainEvents = new Dictionary<string, MainEvent>();
-		public static Dictionary<string, Event> Events = new Dictionary<string, Event>();
+		public static Dictionary<string, EventProfile> EventProfiles = new Dictionary<string, EventProfile>();
 		public static Dictionary<string, EventCondition> EventConditions = new Dictionary<string, EventCondition>();
 		public static Dictionary<string, EventActionReferenceProfile> EventActionReferenceProfiles = new Dictionary<string, EventActionReferenceProfile>();
-
-
-
-
-
 
 		public static void Setup() {
 
@@ -117,6 +120,16 @@ namespace ModularEncountersSystems.Helpers {
 					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					ShipyardProfiles.Add(component.Id.SubtypeName, profile);
+					continue;
+
+				}
+
+				if (!StoreProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Store]")) {
+
+					var profile = new StoreProfile();
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					profile.InitTags(component.DescriptionText);
+					StoreProfiles.Add(component.Id.SubtypeName, profile);
 					continue;
 
 				}
@@ -171,7 +184,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Chat]") == true && ChatObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Chat]") || component.DescriptionText.Contains("[MES AI Chat]")) && ChatObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var chatObject = new ChatProfile();
 					chatObject.InitTags(component.DescriptionText);
@@ -183,7 +196,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Spawn]") == true && SpawnerObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Spawn]") || component.DescriptionText.Contains("[MES AI Spawn]")) && SpawnerObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var spawnerObject = new SpawnProfile();
 					spawnerObject.InitTags(component.DescriptionText);
@@ -195,10 +208,15 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (!SafeZoneProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES SafeZone]")) {
 
+					var profile = new SafeZoneProfile(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					profile.InitTags(component.DescriptionText);
+					SafeZoneProfiles.Add(component.Id.SubtypeName, profile);
+					continue;
 
-
-
+				}
 
 			}
 
@@ -250,17 +268,17 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (!SuitModificationProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Suit Upgrades]")) {
+				if (!SuitUpgradesProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Suit Upgrades]")) {
 
-					var profile = new StaticEncounter();
+					var profile = new SuitUpgradesProfile();
 					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
-					StaticEncounters.Add(component.Id.SubtypeName, profile);
+					SuitUpgradesProfiles.Add(component.Id.SubtypeName, profile);
 					continue;
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Action]") == true && ActionObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Action]") || component.DescriptionText.Contains("[MES AI Action]")) && ActionObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var actionObject = new ActionProfile();
 					actionObject.InitTags(component.DescriptionText);
@@ -278,7 +296,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Condition]") == true && ChatObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Condition]") || component.DescriptionText.Contains("[MES AI Condition]")) && ChatObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var conditionObject = new ConditionProfile();
 					conditionObject.InitTags(component.DescriptionText);
@@ -296,7 +314,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Target]") == true && TargetObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Target]") || component.DescriptionText.Contains("[MES AI Target]")) && TargetObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var targetObject = new TargetProfile();
 					targetObject.InitTags(component.DescriptionText);
@@ -309,27 +327,23 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-
-				if (!EventActionReferenceProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Action]"))
-				{
-
-					var actionObject = new EventActionProfile();
-					actionObject.InitTags(component.DescriptionText);
-					actionObject.ProfileSubtypeId = component.Id.SubtypeName;
+				if (!EventActionReferenceProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Action]")) {
 
 					var actionReference = new EventActionReferenceProfile();
 					actionReference.InitTags(component.DescriptionText);
 					actionReference.ProfileSubtypeId = component.Id.SubtypeName;
 
+					var actionObject = new EventActionProfile();
+					actionObject.InitTags(component.DescriptionText);
+					actionObject.ProfileSubtypeId = component.Id.SubtypeName;
+
 					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<EventActionProfile>(actionObject);
-					//Logger.WriteLog("Action Profile Added: " + component.Id.SubtypeName);
 					EventActionObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
 					EventActionReferenceProfiles.Add(component.Id.SubtypeName, actionReference);
 
 				}
 
-				if (!EventConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Condition]"))
-				{
+				if (!EventConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Condition]")) {
 
 					var EventCondition = new EventCondition();
 					EventCondition.InitTags(component.DescriptionText);
@@ -338,7 +352,21 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 				}
 
+				if (!PlayerFilters.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Player Filter]"))
+				{
+					MyLog.Default.WriteLine("CPT Adding Player Filter Profile");
+					var PlayerFilter = new PlayerFilter();
+					PlayerFilter.InitTags(component.DescriptionText);
+					PlayerFilter.ProfileSubtypeId = component.Id.SubtypeName;
+					PlayerFilters.Add(component.Id.SubtypeName, PlayerFilter);
+					continue;
+				}
 
+
+
+
+
+				
 			}
 
 			//Third Phase
@@ -362,7 +390,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Trigger]") == true && TriggerObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Trigger]") || component.DescriptionText.Contains("[MES AI Trigger]")) && TriggerObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var triggerObject = new TriggerProfile();
 					triggerObject.InitTags(component.DescriptionText);
@@ -374,13 +402,12 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (!Events.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event]"))
-				{
+				if (!EventProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event]")) {
 
-					var Event = new Event();
-					Event.InitTags(component.DescriptionText);
-					Event.ProfileSubtypeId = component.Id.SubtypeName;
-					Events.Add(component.Id.SubtypeName, Event);
+					var profile = new EventProfile();
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					profile.InitTags(component.DescriptionText);
+					EventProfiles.Add(component.Id.SubtypeName, profile);
 					continue;
 				}
 
@@ -399,7 +426,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Autopilot]") == true && AutoPilotProfiles.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Autopilot]") || component.DescriptionText.Contains("[MES AI Autopilot]")) && AutoPilotProfiles.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var autopilotObject = new AutoPilotProfile();
 					autopilotObject.InitTags(component.DescriptionText);
@@ -409,7 +436,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI TriggerGroup]") == true && TriggerObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI TriggerGroup]") || component.DescriptionText.Contains("[MES AI TriggerGroup]")) && TriggerObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var triggerObject = new TriggerGroupProfile();
 					triggerObject.InitTags(component.DescriptionText);
@@ -421,7 +448,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Waypoint]") == true && WaypointProfiles.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Waypoint]") || component.DescriptionText.Contains("[MES AI Waypoint]")) && WaypointProfiles.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var waypoint = new WaypointProfile();
 					waypoint.InitTags(component.DescriptionText);
@@ -431,7 +458,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Weapons]") == true && WeaponProfiles.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Weapons]") || component.DescriptionText.Contains("[MES AI Weapons]")) && WeaponProfiles.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var weapons = new WeaponSystemReference();
 					weapons.InitTags(component.DescriptionText);
@@ -441,7 +468,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.DescriptionText.Contains("[RivalAI Command]") == true && CommandProfiles.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Command]") || component.DescriptionText.Contains("[MES AI Command]")) && CommandProfiles.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var command = new CommandProfile();
 					command.InitTags(component.DescriptionText);
@@ -451,32 +478,19 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (component.Id.SubtypeName.StartsWith("RivalAI-Datapad") && !DatapadTemplates.ContainsKey(component.Id.SubtypeName)) {
+				if ((component.Id.SubtypeName.StartsWith("RivalAI-Datapad")) && !DatapadTemplates.ContainsKey(component.Id.SubtypeName)) {
 
 					DatapadTemplates.Add(component.Id.SubtypeName, component);
 					continue;
 
 				}
 
-
-
-				if (!MainEvents.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES MainEvent]"))
-				{
-
-					var MainEvent = new MainEvent();
-					MainEvent.InitTags(component.DescriptionText);
-					MainEvent.ProfileSubtypeId = component.Id.SubtypeName;
-					MainEvents.Add(component.Id.SubtypeName, MainEvent);
-					continue;
-				}
-
-
 			}
 
 			//Fifth Phase
 			foreach (var component in DefinitionHelper.EntityComponentDefinitions) {
 
-				if ((component.DescriptionText.Contains("[RivalAI Behavior]") || component.DescriptionText.Contains("[Rival AI Behavior]")) && BehaviorTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Behavior]") || component.DescriptionText.Contains("[Rival AI Behavior]") || component.DescriptionText.Contains("[MES AI Behavior]")) && BehaviorTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					BehaviorTemplates.Add(component.Id.SubtypeName, component.DescriptionText);
 
@@ -645,6 +659,78 @@ namespace ModularEncountersSystems.Helpers {
 				return null;
 
 			TextTemplates[name] = template;
+			return template;
+
+		}
+
+		public static StoreItemsContainer GetStoreItemContainer(string name) {
+
+			StoreItemsContainer template = null;
+
+			if (StoreItemContainers.TryGetValue(name, out template))
+				return template;
+
+			string path = "Data\\StoreItems\\" + name;
+
+			foreach (var mod in MyAPIGateway.Session.Mods) {
+
+				if (!MyAPIGateway.Utilities.FileExistsInModLocation(path, mod)) {
+
+					continue;
+
+				}
+
+				SpawnLogger.Write("StoreItemsContainer Exists: " + name, SpawnerDebugEnum.Dev);
+
+				try {
+
+					var reader = MyAPIGateway.Utilities.ReadFileInModLocation(path, mod);
+					string configcontents = reader.ReadToEnd();
+					template = MyAPIGateway.Utilities.SerializeFromXML<StoreItemsContainer>(configcontents);
+
+				} catch (Exception exc) {
+
+					SpawnLogger.Write("Could Not Serialize From XML: " + name, SpawnerDebugEnum.Error);
+					SpawnLogger.Write(exc.ToString(), SpawnerDebugEnum.Error);
+					continue;
+
+				}
+
+				if (template != null)
+					break;
+
+			}
+
+			if (template == null)
+				return null;
+
+			if (template.StoreItemsList == null)
+				template.StoreItemsList = new List<StoreItem>();
+
+			if (template.StoreItems != null) {
+
+				for (int i = template.StoreItems.Length - 1; i >= 0; i--) {
+
+					var item = template.StoreItems[i];
+					template.StoreItemsList.Add(item);
+
+					if (item.ItemSubtypeIds == null || item.ItemSubtypeIds.Length == 0)
+						continue;
+
+					foreach (var id in item.ItemSubtypeIds) {
+
+						template.StoreItemsList.Add(new StoreItem(id, item));
+
+					}
+
+				}
+
+				if (template.StoreItems.Length != template.StoreItemsList.Count)
+					template.StoreItems = template.StoreItemsList.ToArray();
+
+			}
+
+			StoreItemContainers[name] = template;
 			return template;
 
 		}

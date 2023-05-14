@@ -10,7 +10,7 @@ using VRage.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class DrillInhibitor : InhibitorBase, IBlockLogic {
+	public class DrillInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal Dictionary<PlayerEntity, DateTime> _playersInDisableRange;
 		internal Dictionary<PlayerEntity, int> _toolbarIndexes;
@@ -130,6 +130,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 							MyVisualScriptLogicProvider.ShowNotification("WARNING: Inhibitor Field Has Disabled Hand Drills!", 4000, "Red", player.Player.IdentityId);
 							_playersInDisableRange.Add(player, MyAPIGateway.Session.GameDateTime);
+							player.AddInhibitorToPlayer(_antenna, _inhibitor);
 							_toolbarIndexes.Add(player, 0);
 
 						}
@@ -208,7 +209,8 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			_playersInDisableRange.Remove(player);
 			_toolbarIndexes.Remove(player);
-		
+			player.RemoveInhibitorFromPlayer(_antenna, _inhibitor);
+
 		}
 
 		internal override void Unload(IMyEntity entity = null) {

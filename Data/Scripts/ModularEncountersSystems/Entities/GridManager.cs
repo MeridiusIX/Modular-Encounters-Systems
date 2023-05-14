@@ -111,6 +111,44 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public static IMySlimBlock GetClosestBlockInDirection(MatrixD cameraMatrix, double distance) {
+
+			var line = new LineD(cameraMatrix.Translation, cameraMatrix.Forward * 10000 + cameraMatrix.Translation);
+			GridEntity thisGrid = null;
+
+			var sb = new StringBuilder();
+
+			foreach (var grid in GridManager.Grids) {
+
+				if (!grid.ActiveEntity())
+					continue;
+
+				if (!grid.CubeGrid.WorldAABB.Intersects(ref line))
+					continue;
+
+				thisGrid = grid;
+				break;
+
+			}
+
+			if (thisGrid == null) {
+
+				return null;
+
+			}
+
+			var cell = thisGrid.CubeGrid.RayCastBlocks(line.From, line.To);
+
+			if (!cell.HasValue) {
+
+				return null;
+
+			}
+
+			return thisGrid.CubeGrid.GetCubeBlock(cell.Value);
+
+		}
+
 		public static GridEntity GetClosestGridInDirection(MatrixD cameraMatrix, double distance) {
 
 			var line = new LineD(cameraMatrix.Translation, cameraMatrix.Forward * distance + cameraMatrix.Translation);
@@ -236,7 +274,6 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 				
-
 			var grid = block.CubeGrid as MyCubeGrid;
 
 			if (grid == null) {
@@ -245,7 +282,6 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 				
-
 			if (RestrictedBlocks.Contains(block.BlockDefinition.Id)) {
 
 				grid.RazeBlock(block.Min);

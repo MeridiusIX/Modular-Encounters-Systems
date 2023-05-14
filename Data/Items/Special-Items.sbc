@@ -1,0 +1,62 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PhysicalItems>
+
+    <!-- ========================================================= -->
+    <!-- These Items Are Not Craftable In Assemblers Or Admin Menu -->
+    <!-- ========================================================= -->
+
+    <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
+      <Id>
+        <TypeId>ConsumableItem</TypeId>
+        <SubtypeId>SkeletonKey</SubtypeId>
+      </Id>
+      <DisplayName>Skeleton Key</DisplayName>
+      <Description>This module will override the protections on any door, forcing it to immediately open (as long as it's enabled / powered).</Description>
+      <Icon>Textures\GUI\Icons\Items\PowerKit.dds</Icon>
+      <IconSymbol>SK</IconSymbol>
+      <Size>
+        <X>0.14</X>
+        <Y>0.43</Y>
+        <Z>0.14</Z>
+      </Size>
+      <Mass>9</Mass>
+      <Volume>9</Volume>
+      <Model>Models\Items\PowerKit.mwm</Model>
+      <PhysicalMaterial>Metal</PhysicalMaterial>
+      <Stats>
+        <Stat Name="BatteryCharge" Value ="0" Time="3"/>
+      </Stats>
+      <MinimalPricePerUnit>250000</MinimalPricePerUnit>
+      <CanPlayerOrder>false</CanPlayerOrder>
+      <CanSpawnFromScreen>false</CanSpawnFromScreen>
+    </PhysicalItem>
+
+    <PhysicalItem xsi:type="MyObjectBuilder_ConsumableItemDefinition">
+      <Id>
+        <TypeId>ConsumableItem</TypeId>
+        <SubtypeId>HackingModule</SubtypeId>
+      </Id>
+      <DisplayName>Hacking Module</DisplayName>
+      <Description>This module will immediately change ownership of a block to the module user.</Description>
+      <Icon>Textures\GUI\Icons\Items\PowerKit.dds</Icon>
+      <IconSymbol>HM</IconSymbol>
+      <Size>
+        <X>0.14</X>
+        <Y>0.43</Y>
+        <Z>0.14</Z>
+      </Size>
+      <Mass>9</Mass>
+      <Volume>9</Volume>
+      <Model>Models\Items\PowerKit.mwm</Model>
+      <PhysicalMaterial>Metal</PhysicalMaterial>
+      <Stats>
+        <Stat Name="BatteryCharge" Value ="0" Time="3"/>
+      </Stats>
+      <MinimalPricePerUnit>1000000</MinimalPricePerUnit>
+      <CanPlayerOrder>false</CanPlayerOrder>
+      <CanSpawnFromScreen>false</CanSpawnFromScreen>
+    </PhysicalItem>
+
+  </PhysicalItems>
+</Definitions>

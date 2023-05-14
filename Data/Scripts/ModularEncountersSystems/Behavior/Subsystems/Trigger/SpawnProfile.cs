@@ -4,6 +4,7 @@ using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using VRageMath;
+using ModularEncountersSystems.Logging;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -200,7 +201,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (MaxSpawns >= 0 && SpawnCount >= MaxSpawns) {
 
-				//Logger.Write(ProfileSubtypeId + ": Max Spawns Already Exceeded", BehaviorDebugEnum.Spawn);
+
+
+				BehaviorLogger.Write(ProfileSubtypeId + ": Max Spawns Already Exceeded", BehaviorDebugEnum.Spawn);
 				UseSpawn = false;
 				return false;
 
@@ -212,20 +215,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (StartsReady == true) {
 
-					//Logger.Write(ProfileSubtypeId + ": Spawn Cooldown Not Finished", BehaviorDebugEnum.Spawn);
+					BehaviorLogger.Write(ProfileSubtypeId + ": Spawn Cooldown Not Finished", BehaviorDebugEnum.Spawn);
 					if (SpawnCount > 0)
 						return false;
 
 				} else {
 
-					//Logger.Write(ProfileSubtypeId + ": Spawn Cooldown Not Finished", BehaviorDebugEnum.Spawn);
+					BehaviorLogger.Write(ProfileSubtypeId + ": Spawn Cooldown Not Finished", BehaviorDebugEnum.Spawn);
 					return false;
 
 				}
 
 			}
 
-			//Logger.Write(ProfileSubtypeId + ": Spawn Cooldown Finished", BehaviorDebugEnum.Spawn);
+			BehaviorLogger.Write(ProfileSubtypeId + ": Spawn Is Ready to Spawn", BehaviorDebugEnum.Spawn);
 			return true;
 
 		}

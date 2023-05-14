@@ -34,6 +34,16 @@ namespace ModularEncountersSystems.Entities {
 
 	}
 
+	public enum GridConfigurationEnum
+	{
+
+		All,
+		Static,
+		Dynamic
+
+	}
+
+
 	public class GridEntity : EntityBase, ITarget{
 
 		public IMyCubeGrid CubeGrid;
@@ -68,6 +78,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> RivalAi;
 		public List<BlockEntity> Seats;
 		public List<BlockEntity> Shields;
+		public List<BlockEntity> Stores;
 		public List<BlockEntity> Thrusters;
 		public List<BlockEntity> Tools;
 		public List<BlockEntity> Turrets;
@@ -94,7 +105,11 @@ namespace ModularEncountersSystems.Entities {
 
 		public StringBuilder DebugData;
 
+		public string DespawnSource;
+
 		public bool ForceRemove;
+
+		public string GridName;
 
 		internal Dictionary<string, int> _missingComponents;
 		internal List<IMySlimBlock> _projectedBlocks;
@@ -134,6 +149,7 @@ namespace ModularEncountersSystems.Entities {
 			RivalAi = new List<BlockEntity>();
 			Seats = new List<BlockEntity>();
 			Shields = new List<BlockEntity>();
+			Stores = new List<BlockEntity>();
 			Thrusters = new List<BlockEntity>();
 			Tools = new List<BlockEntity>();
 			Turrets = new List<BlockEntity>();
@@ -165,6 +181,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.RivalAi, RivalAi);
 			BlockListReference.Add(BlockTypeEnum.Seats, Seats);
 			BlockListReference.Add(BlockTypeEnum.Shields, Shields);
+			BlockListReference.Add(BlockTypeEnum.Stores, Stores);
 			BlockListReference.Add(BlockTypeEnum.Thrusters, Thrusters);
 			BlockListReference.Add(BlockTypeEnum.Tools, Tools);
 			BlockListReference.Add(BlockTypeEnum.Turrets, Turrets);
@@ -222,6 +239,8 @@ namespace ModularEncountersSystems.Entities {
 			}
 
 			ForceRemove = false;
+			DespawnSource = "";
+			GridName = CubeGrid?.CustomName ?? "null";
 
 			TaskProcessor.Tasks.Add(new NewGrid(this));
 
@@ -308,11 +327,122 @@ namespace ModularEncountersSystems.Entities {
 		
 		}
 
+		//Disconnects Subgrids Bi-Directionally
+		public void DisconnectSubgrids() {
+
+			SpawnLogger.Write(" - " + GridName + " Disconnecting Subgrids Before Cleanup", SpawnerDebugEnum.CleanUp, true);
+
+			var gridList = new List<IMyCubeGrid>();
+			MyAPIGateway.GridGroups.GetGroup(CubeGrid, GridLinkTypeEnum.Physical, gridList);
+
+			//SpawnLogger.Write(CubeGrid.CustomName + " Linked Grid Count: " + gridList.Count, SpawnerDebugEnum.CleanUp, true);
+
+			IMyShipConnector connector = null;
+			IMyLandingGear gear = null;
+			IMyMotorStator rotor = null;
+			IMyPistonBase piston = null;
+
+			lock (AllTerminalBlocks) {
+
+				foreach (var block in AllTerminalBlocks) {
+
+					if (!block.ActiveEntity())
+						continue;
+
+					connector = block?.Block as IMyShipConnector;
+					gear = block?.Block as IMyLandingGear;
+					rotor = block?.Block as IMyMotorStator;
+					piston = block?.Block as IMyPistonBase;
+
+					if (connector != null)
+						connector.Disconnect();
+
+					if (gear != null && gear.IsLocked) {
+
+						//SpawnLogger.Write("Found Gear.", SpawnerDebugEnum.CleanUp, true);
+
+						if (gear.IsLocked) {
+
+							//SpawnLogger.Write("Unlocking Landing Gear.", SpawnerDebugEnum.CleanUp, true);
+							gear.AutoLock = false;
+							gear.Unlock();
+
+						}
+						
+					}
+
+					if (rotor != null && rotor.TopGrid != null && rotor as IMyMotorSuspension == null) {
+
+						rotor.Detach();
+					
+					}
+
+					if (piston != null && piston.TopGrid != null) {
+
+						piston.Detach();
+
+					}
+
+				}
+			
+			}
+
+			foreach (var physGrid in gridList) {
+
+				var linkedGrid = GridManager.GetGridEntity(physGrid);
+
+				if (linkedGrid == null || !linkedGrid.ActiveEntity() || linkedGrid == this)
+					continue;
+
+				SpawnLogger.Write(" - Disconnecting Parent From Other Subgrids Before Cleanup.", SpawnerDebugEnum.CleanUp, true);
+
+				lock (linkedGrid.AllTerminalBlocks) {
+
+					foreach (var block in linkedGrid.AllTerminalBlocks) {
+
+						gear = block?.Block as IMyLandingGear;
+						rotor = block?.Block as IMyMotorStator;
+						piston = block?.Block as IMyPistonBase;
+
+						if (gear != null && gear.IsLocked && gear.GetAttachedEntity() != null && gear.GetAttachedEntity().EntityId == CubeGrid.EntityId) {
+
+							//SpawnLogger.Write("Unlocking Landing Gear of Other Grid.", SpawnerDebugEnum.CleanUp, true);
+							gear.AutoLock = false;
+							gear.Unlock();
+
+						}
+
+						if (rotor != null && rotor.TopGrid != null && rotor.TopGrid == CubeGrid && rotor as IMyMotorSuspension == null) {
+
+							rotor.Detach();
+
+						}
+
+						if (piston != null && piston.TopGrid != null && piston.TopGrid == CubeGrid) {
+
+							piston.Detach();
+
+						}
+
+					}
+
+				}
+			
+			}
+
+			RefreshSubGrids();
+		
+		}
+
 		private void NewBlockAdded(IMySlimBlock block) {
 
-			if (!AllBlocks.Contains(block))
-				AllBlocks.Add(block);
+			lock (AllBlocks) {
 
+				if (!AllBlocks.Contains(block))
+					AllBlocks.Add(block);
+
+			}
+			
 			HealthUpdated = true;
 
 			if (!GridManager.ProcessBlock(block))
@@ -325,7 +455,7 @@ namespace ModularEncountersSystems.Entities {
 			bool assignedBlock = false;
 
 			//All Terminal Blocks
-			if (terminalBlock as IMyTerminalBlock != null) {
+			if (terminalBlock != null) {
 
 				AddBlock(terminalBlock, AllTerminalBlocks);
 
@@ -437,6 +567,13 @@ namespace ModularEncountersSystems.Entities {
 			if (terminalBlock as IMyCockpit != null) {
 
 				assignedBlock = AddBlock(terminalBlock, Seats);
+
+			}
+
+			//Stores
+			if (terminalBlock as IMyStoreBlock != null) {
+
+				assignedBlock = AddBlock(terminalBlock, Stores);
 
 			}
 
@@ -714,6 +851,68 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public int ComputerCount(long ownership = -1, bool allowNonActiveEntity = false) {
+
+			int result = 0;
+
+			if (!ActiveEntity()) {
+
+				if (!allowNonActiveEntity) {
+
+					return result;
+
+				}
+
+			}
+
+			lock (AllBlocks) {
+
+				IMySlimBlock slimBlock = null;
+				IMyTerminalBlock termBlock = null;
+				MyCubeBlockDefinition def = null;
+				Dictionary<string, int> dict = new Dictionary<string, int>();
+
+				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+					slimBlock = AllBlocks[i];
+					def = slimBlock?.BlockDefinition as MyCubeBlockDefinition;
+					termBlock = slimBlock?.FatBlock as IMyTerminalBlock;
+
+					if (def == null || termBlock == null)
+						continue;
+
+					if (ownership != -1 && termBlock.OwnerId != ownership)
+						continue;
+
+					foreach (var comp in def.Components) {
+
+						if (comp.Definition.Id.SubtypeName != "Computer")
+							continue;
+
+						result += comp.Count;
+
+					}
+
+					dict.Clear();
+					slimBlock.GetMissingComponents(dict);
+
+					foreach (var comp in dict.Keys) {
+
+						if (comp != "Computer")
+							continue;
+
+						result -= dict[comp];
+
+					}
+
+				}
+
+			}
+
+			return result;
+
+		}
+
 		public long CreditValueRegular(bool countInventoryItems = false, bool allowNonActiveEntity = false) {
 
 			long result = 0;
@@ -972,6 +1171,7 @@ namespace ModularEncountersSystems.Entities {
 				CleanBlockList(Power);
 				CleanBlockList(Seats);
 				CleanBlockList(Shields);
+				CleanBlockList(Stores);
 				CleanBlockList(Thrusters);
 				CleanBlockList(Tools);
 				CleanBlockList(Turrets);

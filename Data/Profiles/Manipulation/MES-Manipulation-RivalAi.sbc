@@ -17,6 +17,23 @@
       </Description>
 
     </EntityComponent>
-    
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Manipulation-ResearchPoints</SubtypeId>
+      </Id>
+      <Description>
+
+        [MES Manipulation]
+
+        [UseResearchPointButtons:true]
+
+
+      </Description>
+
+    </EntityComponent>
+
   </EntityComponents>
 </Definitions>

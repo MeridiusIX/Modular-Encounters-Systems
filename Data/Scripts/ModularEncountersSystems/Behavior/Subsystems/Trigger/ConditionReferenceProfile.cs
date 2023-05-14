@@ -14,7 +14,8 @@ using ModularEncountersSystems.Entities;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
-	public class ConditionReferenceProfile {
+	public class ConditionReferenceProfile
+	{
 
 
 		public bool UseConditions;
@@ -98,6 +99,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool BehaviorModeCheck;
 		public List<BehaviorMode> CurrentBehaviorMode;
 
+		public bool GravityCheck;
+		public float MinGravity;
+		public float MaxGravity;
+
 		public bool AltitudeCheck;
 		public double MinAltitude;
 		public double MaxAltitude;
@@ -139,9 +144,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckForPlanetaryLane;
 		public bool PlanetaryLanePassValue;
 
+		public bool CheckPlayerReputation;
+		public List<string> CheckReputationwithFaction;
+		public List<int> MinPlayerReputation;
+		public List<int> MaxPlayerReputation;
+		public double MaxPlayerReputationDistanceCheck;
+		public bool AllPlayersReputationMustMatch;
+
+		public bool PlayerIdentityMatches;
+
+		public bool CheckPlayerIdentitySandboxList;
+		public bool PlayerIdentityInSandboxList;
+		public string PlayerIdentitySandboxListId;
+
+		public bool CheckSufficientUpwardThrust;
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
-		public ConditionReferenceProfile() {
+		public ConditionReferenceProfile()
+		{
 
 			UseConditions = true;
 			MatchAnyCondition = false;
@@ -219,6 +240,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MinTargetDistanceUnderwater = -1;
 			MaxTargetDistanceUnderwater = -1;
 
+			GravityCheck = false;
+			MinGravity = -1000;
+			MaxGravity = -1000;
+
 			AltitudeCheck = false;
 			MinAltitude = -1;
 			MaxAltitude = -1;
@@ -264,6 +289,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			CheckForPlanetaryLane = false;
 			PlanetaryLanePassValue = true;
+
+
+			CheckPlayerReputation = false;
+			CheckReputationwithFaction = new List<string>();
+			MinPlayerReputation = new List<int>();
+			MaxPlayerReputation = new List<int>();
+			MaxPlayerReputationDistanceCheck = 2500;
+			AllPlayersReputationMustMatch = true;
+
+			PlayerIdentityMatches = false;
+			CheckPlayerIdentitySandboxList = false;
+			PlayerIdentityInSandboxList = false;
+			PlayerIdentitySandboxListId = "";
+
+			CheckSufficientUpwardThrust = false;
 
 			ProfileSubtypeId = "";
 
@@ -331,6 +371,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"BehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref BehaviorSubclass) },
 				{"BehaviorModeCheck", (s, o) => TagParse.TagBoolCheck(s, ref BehaviorModeCheck) },
 				{"CurrentBehaviorMode", (s, o) => TagParse.TagBehaviorModeEnumCheck(s, ref CurrentBehaviorMode) },
+				{"GravityCheck", (s, o) => TagParse.TagBoolCheck(s, ref GravityCheck) },
+				{"MinGravity", (s, o) => TagParse.TagFloatCheck(s, ref MinGravity) },
+				{"MaxGravity", (s, o) => TagParse.TagFloatCheck(s, ref MaxGravity) },
 				{"AltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref AltitudeCheck) },
 				{"MinAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinAltitude) },
 				{"MaxAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAltitude) },
@@ -362,12 +405,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckForPlanetaryLane", (s, o) => TagParse.TagBoolCheck(s, ref CheckForPlanetaryLane) },//CheckForPlanetaryLane
 				{"PlanetaryLanePassValue", (s, o) => TagParse.TagBoolCheck(s, ref PlanetaryLanePassValue) },
 
-			};
+
+				{"CheckPlayerReputation", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerReputation) },
+				{"CheckReputationwithFaction", (s, o) => TagParse.TagStringListCheck(s, ref CheckReputationwithFaction) },
+				{"MinPlayerReputation", (s, o) => TagParse.TagIntListCheck(s, ref MinPlayerReputation) },
+				{"MaxPlayerReputation", (s, o) => TagParse.TagIntListCheck(s, ref MaxPlayerReputation) },
+				{"MaxPlayerReputationDistanceCheck", (s, o) => TagParse.TagDoubleCheck(s, ref MaxPlayerReputationDistanceCheck) },
+				{"AllPlayersReputationMustMatch", (s, o) => TagParse.TagBoolCheck(s, ref AllPlayersReputationMustMatch) },
+
+				{"PlayerIdentityMatches", (s, o) => TagParse.TagBoolCheck(s, ref PlayerIdentityMatches) },//PlayerIdentityMatches
+				{"CheckPlayerIdentitySandboxList", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerIdentitySandboxList) },
+				{"PlayerIdentityInSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref PlayerIdentityInSandboxList) },
+				{"PlayerIdentitySandboxListId", (s, o) => TagParse.TagStringCheck(s, ref PlayerIdentitySandboxListId) },
+
+				{"CheckSufficientUpwardThrust", (s, o) => TagParse.TagBoolCheck(s, ref CheckSufficientUpwardThrust) },//CheckSufficientUpwardThrust
+				
+		};
 
 		}
 
 
-		public void EditValue(string receivedValue) {
+		public void EditValue(string receivedValue)
+		{
 
 			var processedTag = TagParse.ProcessTag(receivedValue);
 
@@ -384,13 +443,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		public void InitTags(string customData) {
+		public void InitTags(string customData)
+		{
 
-			if (string.IsNullOrWhiteSpace(customData) == false) {
+			if (string.IsNullOrWhiteSpace(customData) == false)
+			{
 
 				var descSplit = customData.Split('\n');
 
-				foreach (var tag in descSplit) {
+				foreach (var tag in descSplit)
+				{
 
 					EditValue(tag);
 

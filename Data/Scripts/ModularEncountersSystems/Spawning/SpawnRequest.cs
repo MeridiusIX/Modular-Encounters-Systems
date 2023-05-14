@@ -262,7 +262,7 @@ namespace ModularEncountersSystems.Spawning {
 		
 		}
 
-		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D()) {
+		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false, long ownerOverride = -1) {
 
 			SpawnLogger.Write("Spawn Request Received From: " + source, SpawnerDebugEnum.Spawning);
 
@@ -348,8 +348,10 @@ namespace ModularEncountersSystems.Spawning {
 
 			//Get SpawnGroups and Valid Factions
 			var spawnGroupCollection = new SpawnGroupCollection();
+			spawnGroupCollection.IgnoreAllSafetyChecks = ignoreSafetyChecks;
+			spawnGroupCollection.OwnerOverride = ownerOverride;
 			SpawnLogger.SpawnGroup.Clear();
-			SpawnGroupManager.GetSpawnGroups(type, environment, factionOverride, spawnGroupCollection, forceSpawn, adminSpawn, eligibleNames, dronePlayerTracker);
+			SpawnGroupManager.GetSpawnGroups(type, source, environment, factionOverride, spawnGroupCollection, forceSpawn, adminSpawn, eligibleNames, dronePlayerTracker);
 
 			//Select By ModID
 			if (Settings.General.UseModIdSelectionForSpawning == true) {
@@ -398,6 +400,12 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			SpawnLogger.Write("Pathing Successful", SpawnerDebugEnum.Spawning);
+
+			if (Vector3D.Distance(Vector3D.Zero, coords) > 6500000) {
+
+				SpawnLogger.Write("WARNING: Spawning NPC Grids beyond 6500km from world center may result in loss of precision when grids are placed in the world or when they utilize path finding. This is because of game engine limitations.", SpawnerDebugEnum.SpawnRecord, true);
+
+			}
 
 			//Create Boss Encounter
 			if (type.HasFlag(SpawningType.BossEncounter)) {
@@ -482,7 +490,7 @@ namespace ModularEncountersSystems.Spawning {
 				var spawnNames = new List<string>();
 				spawnNames.Add(encounter.SpawnGroupName);
 				SpawnLogger.SpawnGroup.Clear();
-				SpawnGroupManager.GetSpawnGroups(type, environment, encounter.Faction, spawnGroupCollection, false, true, spawnNames);
+				SpawnGroupManager.GetSpawnGroups(type, "Static Spawn", environment, encounter.Faction, spawnGroupCollection, false, true, spawnNames);
 
 				if (spawnGroupCollection.SpawnGroups.Count == 0) {
 

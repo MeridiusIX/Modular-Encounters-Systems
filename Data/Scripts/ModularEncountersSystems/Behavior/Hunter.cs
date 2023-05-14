@@ -71,12 +71,14 @@ namespace ModularEncountersSystems.Behavior {
 
 		}
 
-		//A: Found Target (Approach)
-		//B: Lost Target (Still Approach)
-		//C: Lost Target (Go To Despawn)
-		//D: Engage Target
-		//E: Engage In Range
-		//F: Engage Out Range
+		//BehaviorTriggerA - Found Target (Approach)
+		//BehaviorTriggerB - Lost Target (Still Approach)
+		//BehaviorTriggerC - Lost Target (Go To Despawn)
+		//BehaviorTriggerD - Engage Target
+		//BehaviorTriggerE - Engage In Range
+		//BehaviorTriggerF - Engage Out Range
+
+		//BehaviorActionA - Engage Current Target (useful for when receiving target from damager or command)
 
 
 		public void ProcessBehavior() {

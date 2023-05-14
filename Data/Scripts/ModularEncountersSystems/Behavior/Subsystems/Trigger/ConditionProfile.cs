@@ -11,6 +11,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.API;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
+using Sandbox.Game;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -268,19 +269,35 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				for (int i = 0; i < ConditionReference.TrueSandboxBooleans.Count; i++) {
 
+					var boolName = ConditionReference.TrueSandboxBooleans[i];
+					if (boolName.Contains("{SpawnGroupName}") && _behavior.CurrentGrid?.Npc.SpawnGroupName != null)
+					{
+						boolName = boolName.Replace("{SpawnGroupName}", _behavior.CurrentGrid?.Npc.SpawnGroupName);
+					}
+
+					if (boolName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
+					{
+						boolName = boolName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
+					}
+
 					try {
 
 						bool output = false;
-						var result = MyAPIGateway.Utilities.GetVariable(ConditionReference.TrueSandboxBooleans[i], out output);
+						var result = MyAPIGateway.Utilities.GetVariable(boolName, out output);
 
 						if (!result || !output) {
 
-							BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Boolean False: " + ConditionReference.TrueSandboxBooleans[i], BehaviorDebugEnum.Condition);
+							BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Boolean False: " + boolName, BehaviorDebugEnum.Condition);
 							failedCheck = true;
-							break;
 
-						} else if (ConditionReference.AllowAnyTrueSandboxBoolean) {
+							if (!ConditionReference.AllowAnyTrueSandboxBoolean)
+								break;
+							else
+								continue;
 
+						} else if (ConditionReference.AllowAnyTrueSandboxBoolean && output) {
+
+							failedCheck = false;
 							break;
 						
 						}
@@ -342,10 +359,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 								BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Amount Condition Not Satisfied: " + ConditionReference.CustomSandboxCounters[i], BehaviorDebugEnum.Condition);
 								failedCheck = true;
-								break;
 
-							} else if (ConditionReference.AllowAnyValidSandboxCounter) {
+								if (!ConditionReference.AllowAnyValidSandboxCounter)
+									break;
+								else
+									continue;
 
+							} else if (ConditionReference.AllowAnyValidSandboxCounter && counterResult) {
+
+								failedCheck = false;
 								break;
 							
 							}
@@ -621,6 +643,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.GravityCheck) {
+
+				usedConditions++;
+				var grav = PlanetManager.GetTotalNaturalGravity(_behavior.RemoteControl.GetPosition()).Length();
+
+				if ((ConditionReference.MinGravity == -1000 || grav > ConditionReference.MinGravity) && (ConditionReference.MaxGravity == -1000 || grav < ConditionReference.MaxGravity)) {
+
+					satisfiedConditions++;
+
+				} else {
+
+					BehaviorLogger.Write("Gravity Check Failed. Current Gravity: " + grav, BehaviorDebugEnum.Condition);
+
+				}
+
+			}
+
 			if (ConditionReference.AltitudeCheck) {
 
 				usedConditions++;
@@ -707,6 +746,117 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if (_behavior.AutoPilot.Targeting.Target.GetOwnerType().HasFlag(GridOwnershipEnum.NpcMajority))
 						satisfiedConditions++;
+
+				}
+
+			}
+
+			if (ConditionReference.CheckPlayerReputation) {
+
+				usedConditions++;
+
+				List<IMyPlayer> ListOfPlayersinRange = null;
+				List<long> ListOfPlayerIds = new List<long>();
+
+				int amountofplayersmatch = 0;
+
+				if(command != null) {
+
+					//If trigger is buttonpress for example, then use only that player to check wether the condition is satisfied
+					if (command.PlayerIdentity != 0) {
+
+						ListOfPlayerIds.Add(command.PlayerIdentity);
+
+					}
+
+
+					//If trigger is buttonpress for example, then use only that player to check wether the condition is satisfied
+					if (command != null && command.PlayerIdentity != 0) {
+
+
+
+					} else {
+
+						var gridcoords = _behavior.RemoteControl.GetPosition();
+						ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(gridcoords, ConditionReference.MaxPlayerReputationDistanceCheck);
+						foreach (IMyPlayer Player in ListOfPlayersinRange) {
+							
+							ListOfPlayerIds.Add(Player.IdentityId);
+
+						}
+
+					}
+					
+				} else {
+
+					//If not, then check for all the players in range
+					var gridcoords = _behavior.RemoteControl.GetPosition();
+					ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(gridcoords, ConditionReference.MaxPlayerReputationDistanceCheck);
+					foreach (IMyPlayer Player in ListOfPlayersinRange){
+
+						ListOfPlayerIds.Add(Player.IdentityId);
+
+					}
+
+				}
+
+				int amountofplayers = ListOfPlayerIds.Count;
+
+				if (ConditionReference.CheckReputationwithFaction.Count == ConditionReference.MaxPlayerReputation.Count && ConditionReference.MaxPlayerReputation.Count == ConditionReference.MinPlayerReputation.Count){
+					
+						foreach (long PlayerId in ListOfPlayerIds) {
+
+						int TotalFactions = ConditionReference.CheckReputationwithFaction.Count;
+						int SatisfiedFactions = 0;
+
+						for (int i = 0; i < ConditionReference.CheckReputationwithFaction.Count; i++) {
+
+							long FactionId;
+
+							if (ConditionReference.CheckReputationwithFaction[i] == "{self}") {
+
+								FactionId = _behavior.Owner.FactionId;
+
+							} else {
+
+								var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(ConditionReference.CheckReputationwithFaction[i]);
+								FactionId = customfaction.FactionId;
+
+							}
+
+
+							if (FactionId != 0)	{
+
+								var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(PlayerId, FactionId);
+
+								if (rep >= ConditionReference.MinPlayerReputation[i] && rep <= ConditionReference.MaxPlayerReputation[i])
+									SatisfiedFactions++;
+
+							}
+
+						}
+
+						if (SatisfiedFactions == TotalFactions)
+							amountofplayersmatch++;
+
+
+					}
+
+					if (ConditionReference.AllPlayersReputationMustMatch == true && amountofplayers == amountofplayersmatch){
+
+						satisfiedConditions++;
+
+					}
+
+					if (ConditionReference.AllPlayersReputationMustMatch == false && amountofplayersmatch > 0){
+
+						satisfiedConditions++;
+
+					}
+
+				}else{
+
+					BehaviorLogger.Write("CheckReputationwithFaction, MaxPlayerReputation, and MinPlayerReputation do not match in count. Condition Failed", BehaviorDebugEnum.Condition);
 
 				}
 
@@ -808,11 +958,45 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (command != null) {
 
-					var match = command.Behavior.AutoPilot.InGravity() == _behavior.AutoPilot.InGravity();
+					var match = PlanetManager.InGravity(command.Position) == PlanetManager.InGravity(_behavior.RemoteControl.GetPosition());
 
 					if(match == ConditionReference.CommandGravityMatches)
 						satisfiedConditions++;
 
+				}
+
+			}
+
+			if (ConditionReference.PlayerIdentityMatches) {
+
+				usedConditions++;
+
+				if (command != null) {
+
+					if (command.PlayerIdentity == _behavior.BehaviorSettings.SavedPlayerIdentityId)
+						satisfiedConditions++;
+
+				}
+
+			}
+
+			if (ConditionReference.CheckPlayerIdentitySandboxList)
+			{
+
+				usedConditions++;
+
+				if (command != null)
+				{
+					var playerId = command.PlayerIdentity;
+					List<long> PlayerIdentitySandboxList = new List<long>();
+
+					//Get variable
+					MyAPIGateway.Utilities.GetVariable<List<long>>(ConditionReference.PlayerIdentitySandboxListId, out PlayerIdentitySandboxList);
+
+					if (!(ConditionReference.PlayerIdentityMatches ^ PlayerIdentitySandboxList.Contains(playerId)))
+					{
+						satisfiedConditions++;
+					}
 				}
 
 			}
@@ -864,6 +1048,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (laneResult)
 					satisfiedConditions++;
 
+			}
+
+			if (ConditionReference.CheckSufficientUpwardThrust) {
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.InGravity()) {
+
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+
+					if(_behavior.AutoPilot.CalculateMaxGravity() > PlanetManager.GetTotalNaturalGravity(_behavior.RemoteControl.GetPosition()).Length())
+						satisfiedConditions++;
+
+				} else {
+
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Not In Grav??: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+					satisfiedConditions++;
+
+				}
+				
 			}
 
 			if (ConditionReference.MatchAnyCondition == false) {

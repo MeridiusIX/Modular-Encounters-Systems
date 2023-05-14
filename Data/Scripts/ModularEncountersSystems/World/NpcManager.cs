@@ -147,6 +147,17 @@ namespace ModularEncountersSystems.World {
 
 			}
 
+			LoadNewStaticEncounters(ref updateEncounters);
+
+			if (updateEncounters)
+				UpdateStaticEncounters();
+
+			TaskProcessor.Tick60.Tasks += CheckStaticEncounters;
+
+		}
+
+		public static void LoadNewStaticEncounters(ref bool updateEncounters) {
+
 			//TODO: Check For New Static SpawnGroups
 			for (int i = SpawnGroupManager.SpawnGroups.Count - 1; i >= 0; i--) {
 
@@ -156,7 +167,7 @@ namespace ModularEncountersSystems.World {
 
 					SpawnLogger.Write("Null or Blank SpawnGroupName Found While Checking For Static Encounters", SpawnerDebugEnum.Startup);
 					continue;
-				
+
 				}
 
 				SpawnConditionsProfile activeConditions = null;
@@ -169,7 +180,7 @@ namespace ModularEncountersSystems.World {
 					continue;
 
 				}
-					
+
 
 				foreach (var condition in spawnGroup.SpawnConditionsProfiles) {
 
@@ -220,13 +231,8 @@ namespace ModularEncountersSystems.World {
 					SpawnLogger.Write(spawnGroup.SpawnGroupName + " Static Encounter Init Failed", SpawnerDebugEnum.Startup);
 
 				}
-		
+
 			}
-
-			if (updateEncounters)
-				UpdateStaticEncounters();
-
-			TaskProcessor.Tick60.Tasks += CheckStaticEncounters;
 
 		}
 

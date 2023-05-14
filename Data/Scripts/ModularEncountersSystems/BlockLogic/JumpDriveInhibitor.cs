@@ -10,7 +10,7 @@ using VRage.Game.ModAPI;
 using VRage.ModAPI;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class JumpDriveInhibitor : InhibitorBase, IBlockLogic {
+	public class JumpDriveInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal List<BlockEntity> _potentialBlocks;
 		internal List<BlockEntity> _blocksInRange;

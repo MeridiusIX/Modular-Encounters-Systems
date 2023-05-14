@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Events.Action;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
@@ -10,6 +11,7 @@ using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Watchers;
+using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
@@ -78,7 +80,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				foreach (var chatData in actionsBase.ChatData) {
 
 					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
-					_broadcast.BroadcastRequest(chatData);
+					_broadcast.BroadcastRequest(chatData, command);
 
 				}
 
@@ -546,38 +548,37 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 			//ChangePlayerCredits
-			if (actions.ChangePlayerCredits && command != null && command.Type == CommandType.PlayerChat) {
+			if (actions.ChangePlayerCredits && command != null) {
 
 				if (command.PlayerIdentity != 0) {
 
-					var playerList = new List<IMyPlayer>();
-					MyAPIGateway.Players.GetPlayers(playerList, p => p.IdentityId == command.PlayerIdentity);
+					var player = PlayerManager.GetPlayerWithIdentityId(command.PlayerIdentity);
 
-					foreach (var player in playerList) {
+					if (player != null) {
 
 						long credits = 0;
-						player.TryGetBalanceInfo(out credits);
+						player.Player.TryGetBalanceInfo(out credits);
 
 						if (actions.ChangePlayerCreditsAmount > 0) {
 
-							player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+							player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
 							PaymentSuccessTriggered = true;
-						
+
 						} else {
 
 							if (actions.ChangePlayerCreditsAmount > credits) {
 
 								PaymentFailureTriggered = true;
-							
+
 							} else {
 
-								player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+								player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
 								PaymentSuccessTriggered = true;
 
 							}
-						
+
 						}
-					
+
 					}
 
 				}
@@ -1006,6 +1007,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//DisableAutopilot
+			if (actions.DisableAutopilot && _autopilot.State != null)
+				_autopilot.State.DisableAutopilot = true;
+
+			//EnableAutopilot
+			if (actions.EnableAutopilot && _autopilot.State != null)
+				_autopilot.State.DisableAutopilot = false;
+
 			//Zone Related (While Inside Zone)
 			if (actions.ChangeZoneAtPosition) {
 
@@ -1332,6 +1341,93 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			
 			}
 
+			//ChangeBlocksShareModeAll
+			if (actions.ChangeBlocksShareModeAll) {
+
+				if (_behavior?.CurrentGrid != null) {
+
+					lock (_behavior.CurrentGrid.LinkedGrids) {
+
+						for (int i = _behavior.CurrentGrid.LinkedGrids.Count - 1; i >= 0; i--) {
+
+							var grid = GridManager.GetSafeGridFromIndex(i, _behavior.CurrentGrid.LinkedGrids);
+
+							if (grid == null || !grid.ActiveEntity())
+								continue;
+
+							lock (grid.AllTerminalBlocks) {
+
+								for (int j = grid.AllTerminalBlocks.Count - 1; j >= 0; j--) {
+
+									var block = grid.AllTerminalBlocks[i];
+
+									if (block == null || !block.ActiveEntity())
+										continue;
+
+									foreach (var name in actions.BlockNamesShareModeAll) {
+
+										if (name == block.Block.CustomName) {
+
+											var cubeBlock = block.Block as MyCubeBlock;
+											cubeBlock.ChangeBlockOwnerRequest(block.Block.OwnerId, VRage.Game.MyOwnershipShareModeEnum.All);
+											break;
+
+										}
+									
+									}
+
+								}
+							
+							}
+						
+						}
+					
+					}
+				
+				}
+			
+			}
+
+			if (actions.ActivateEvent)
+			{
+				//Something doesn't feel right here - CPT
+				for (int i = 0; i < Events.EventManager.EventsList.Count; i++)
+				{
+					var thisEvent = Events.EventManager.EventsList[i];
+
+					if (!thisEvent.Valid)
+					{
+						continue;
+					}
+
+					for (int j = 0; j < actions.EventTag.Count; j++)
+					{
+						var thisEventTag = actions.EventTag[j];
+
+						if (thisEvent.Profile.Tags.Contains(thisEventTag))
+						{
+							thisEvent.ActivateEventActions();
+							thisEvent.RunCount++;
+						}
+					}
+
+
+					for (int j = 0; j < actions.EventId.Count; j++)
+					{
+						var thisEventId = actions.EventId[j];
+
+						if (thisEvent.ProfileSubtypeId == thisEventId)
+						{
+							thisEvent.ActivateEventActions();
+							thisEvent.RunCount++;
+						}
+					}
+
+
+
+				}
+			}
+
 			if (actions.AddCustomDataToBlocks) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Custom Data To Blocks. [Block Names: " + actions.CustomDataBlockNames.Count + "] [CustomData TextTemplates: " + actions.CustomDataFiles.Count + "]", BehaviorDebugEnum.Action);
@@ -1350,6 +1446,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				_behavior.Grid.ApplyContainerTypes(actions.ContainerTypeBlockNames, actions.ContainerTypeSubtypeIds);
 
+			}
+
+			if (actions.ApplyStoreProfiles && (_behavior.CurrentGrid?.ActiveEntity() ?? false)) {
+
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Store Profiles.", BehaviorDebugEnum.Action);
+				BehaviorLogger.Write(string.Format("Store Blocks / Store Profiles ::: {0} / {1}", actions.StoreBlocks.Count, actions.StoreProfiles.Count), BehaviorDebugEnum.Action);
+
+				for (int i = 0; i < actions.StoreProfiles.Count && i < actions.StoreBlocks.Count; i++) {
+
+					if (string.IsNullOrWhiteSpace(actions.StoreProfiles[i]) || string.IsNullOrWhiteSpace(actions.StoreBlocks[i]))
+						continue;
+
+					StoreProfile profile = null;
+
+					if (!ProfileManager.StoreProfiles.TryGetValue(actions.StoreProfiles[i], out profile)) {
+
+						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Store Profile With Name: " + actions.StoreProfiles[i], BehaviorDebugEnum.Action);
+						continue;
+					
+					}
+
+					foreach (var store in _behavior.CurrentGrid.Stores) {
+
+						if (!store.ActiveEntity() || store.Block.CustomName != actions.StoreBlocks[i] || store.Block.OwnerId != _behavior.RemoteControl.OwnerId)
+							continue;
+
+						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Store Profile With Name: " + actions.StoreProfiles[i], BehaviorDebugEnum.Action);
+						profile.ApplyProfileToBlock(store.Block as IMyStoreBlock, actions.ClearStoreContentsFirst);
+					
+					}
+				
+				}
+			
 			}
 
 			if (actions.UseCurrentPositionAsPatrolReference) {
@@ -1386,6 +1515,147 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				
 				}
 			
+			}
+
+			if (actions.CreateSafeZone) {
+
+				if (actions.IgnoreOtherSafeZonesDuringCreation || !SafeZoneManager.IsPositionInSafeZone(_behavior.RemoteControl.GetPosition())) {
+
+					SafeZoneProfile profile = null;
+
+					if (ProfileManager.SafeZoneProfiles.TryGetValue(actions.SafeZoneProfile, out profile)) {
+
+						var matrix = _behavior.RemoteControl.WorldMatrix;
+
+						if (actions.SafeZonePositionGridCenter)
+							matrix.Translation = _behavior.RemoteControl.CubeGrid.WorldAABB.Center;
+
+						if (actions.SafeZonePositionTerrainSurface && PlanetManager.InGravity(matrix.Translation)) {
+
+							var planet = PlanetManager.GetNearestPlanet(matrix.Translation);
+
+							if (planet != null)
+								matrix.Translation = planet.SurfaceCoordsAtPosition(matrix.Translation);
+
+						}
+
+						SafeZoneManager.CreateSafeZone(matrix, profile, "MES-NPC SafeZone - " + _behavior.RemoteControl.EntityId, actions.LinkSafeZoneToRemoteControl ? _behavior.RemoteControl : null);
+
+					}
+
+				}
+			
+			}
+
+			//WIP
+			if (actions.SavePlayerIdentityToSandboxList)
+			{
+				var playerid = command.PlayerIdentity;
+
+				List<long> PlayerIdentitySandboxList;
+
+				//Get variable
+				MyAPIGateway.Utilities.GetVariable(actions.PlayerIdentitySandboxList, out PlayerIdentitySandboxList);
+
+				if(PlayerIdentitySandboxList == null)
+					PlayerIdentitySandboxList = new List<long>();
+
+				if (!PlayerIdentitySandboxList.Contains(playerid))
+				{
+					MyVisualScriptLogicProvider.ShowNotificationToAll($"Saving playerID to {actions.PlayerIdentitySandboxList}", 800, "Red");
+					PlayerIdentitySandboxList.Add(playerid);
+				}
+
+				MyAPIGateway.Utilities.SetVariable(actions.PlayerIdentitySandboxList, PlayerIdentitySandboxList);
+			}
+
+			if (actions.RemovePlayerIdentityFromSandboxList)
+			{
+				var playerid = command.PlayerIdentity;
+
+				List<long> PlayerIdentitySandboxList = new List<long>();
+
+				//Get variable
+				MyAPIGateway.Utilities.GetVariable<List<long>>(actions.PlayerIdentitySandboxList, out PlayerIdentitySandboxList);
+
+				if (PlayerIdentitySandboxList != null)
+				{
+					if (PlayerIdentitySandboxList.Contains(playerid))
+					{
+						PlayerIdentitySandboxList.Remove(playerid);
+					}
+
+					MyAPIGateway.Utilities.SetVariable<List<long>>(actions.PlayerIdentitySandboxList, PlayerIdentitySandboxList);
+				}
+
+
+			}
+
+			if (actions.ResetCooldownTimeOfEvents)
+			{
+				EventActionProfile.ResetCooldownTimeOfEvents(actions.ResetEventCooldownNames, actions.ResetEventCooldownTags, _behavior.CurrentGrid?.Npc.SpawnGroupName);
+			}
+
+			if (actions.ResetThisStaticEncounter)
+			{
+				var spawngroupname = _behavior.CurrentGrid?.Npc.SpawnGroupName;
+
+				if (NpcManager.UniqueGroupsSpawned.Contains(spawngroupname))
+				{
+					NpcManager.UniqueGroupsSpawned.Remove(spawngroupname);
+
+
+					for (int i = SpawnGroupManager.SpawnGroups.Count - 1; i >= 0; i--)
+					{
+
+						var spawnGroup = SpawnGroupManager.SpawnGroups[i];
+						if (spawnGroup.SpawnGroupName == spawngroupname)
+						{
+							SpawnConditionsProfile activeConditions = null;
+
+							foreach (var condition in spawnGroup.SpawnConditionsProfiles)
+							{
+
+								if (condition.StaticEncounter)
+								{
+
+									SpawnLogger.Write(spawnGroup.SpawnGroupName + " Found as Potential Static Encounter", SpawnerDebugEnum.Startup);
+									activeConditions = condition;
+								}
+
+							}
+
+							//Create Static Encounter
+							var activeEncounter = new StaticEncounter();
+
+							activeEncounter.InitStaticEncounter(spawnGroup, activeConditions);
+
+							if (activeEncounter.IsValid)
+							{
+
+								SpawnLogger.Write("Adding Static Encounter: " + (!string.IsNullOrWhiteSpace(activeEncounter.SpawnGroupName) ? activeEncounter.SpawnGroupName : "(invalid)"), SpawnerDebugEnum.Startup);
+								NpcManager.StaticEncounters.Add(activeEncounter);
+
+							}
+							else
+							{
+
+								SpawnLogger.Write(spawnGroup.SpawnGroupName + " Static Encounter Init Failed", SpawnerDebugEnum.Startup);
+							}
+
+						}
+
+					}
+
+					NpcManager.UpdateStaticEncounters();
+					MyVisualScriptLogicProvider.ShowNotificationToAll($"{spawngroupname} despawned, and reset", 5000, "Red");
+				}
+					
+
+
+
+
+
 			}
 
 			//SetBooleansTrue
@@ -1443,6 +1713,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					SetSandboxCounter(actions.SetSandboxCounters[i], actions.SetSandboxCountersValues[i], true);
 
 			}
+
+			//SaveSavePlayerIdentity
+			if (actions.SavePlayerIdentity)
+				_behavior.BehaviorSettings.SavedPlayerIdentityId = command?.PlayerIdentity ?? 0;
+
+			//RemovePlayerIdentity
+			if (actions.RemovePlayerIdentity)
+				_behavior.BehaviorSettings.SavedPlayerIdentityId = 0;
 
 			//BehaviorSpecificEventA
 			if (actions.BehaviorSpecificEventA)

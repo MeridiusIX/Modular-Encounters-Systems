@@ -7,97 +7,280 @@ using System.Collections.Generic;
 using System.Text;
 using VRageMath;
 using Sandbox.ModAPI;
+using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ProtoBuf;
+using ModularEncountersSystems.Events.Action;
+using ModularEncountersSystems.Events.Condition;
 
 namespace ModularEncountersSystems.Events
 {
-    public enum EventActionExecutionEnum
-    {
-        AtOnce,
-        Sequential,
-        SingleRandom
-    }
 
-
+    [ProtoContract]
     public class Event
     {
         //SAVE
-        public string ProfileSubtypeId;
-        public bool Ready;
-        public int Happend; 
+        [ProtoMember(1)] public string ProfileSubtypeId;
+        [ProtoMember(2)] public bool Ready;
+        [ProtoMember(3)] public int RunCount;
+        [ProtoMember(4)] public int CurrentActionIndex;
+        [ProtoMember(5)] public int CooldownTimeTrigger;
+        [ProtoMember(6)] public DateTime LastTriggerTime;
+
+        //Previously EventTime Class Fields
+        [ProtoMember(8)] public bool ProcessingSequentialActions;
+        [ProtoMember(9)] public DateTime ActionStartTime;
+        [ProtoMember(10)] public int IncrementMs;
+        [ProtoMember(11)] public CheckType CheckingType;
+        [ProtoMember(12)] public int ActionIndex;
+
+        [ProtoMember(13)] public List<EventActionProfile> Actions;
+
+        [ProtoIgnore] public bool ErrorOnSetup;
+        [ProtoIgnore] public string ErrorSetupMsg;
+        [ProtoIgnore] public List<EventCondition> Conditions;
 
 
-        //REF
-        public bool UniqueEvent;
+        [ProtoIgnore]
+        public EventProfile Profile
+        {
 
+            get
+            {
 
-        //?
-        public List<EventCondition> Conditions;
+                if (_profile == null)
+                {
 
+                    if (!ProfileManager.EventProfiles.TryGetValue(ProfileSubtypeId, out _profile))
+                    {
 
-        //REF
-        public EventActionExecutionEnum ActionExecution;
-        public int TimeTillNextAction;
+                        ErrorOnSetup = true;
+                        ErrorSetupMsg = "Could Not Find EventProfile With Name [" + ProfileSubtypeId ?? null + "]";
 
-        //Store
-        public int AtAction;
+                    }
 
-        //?
-        public List<EventActionProfile> Actions;
+                }
 
-        //REF
-        public float MinCooldownMs;
-        public float MaxCooldownMs;
+                return _profile;
 
+            }
 
-        //Store
-        public int CooldownTime;
+        }
 
-        //Store
-        public DateTime LastTriggerTime;
+        [ProtoIgnore]
+        public bool Valid
+        {
 
-        //ProtoIgnore
-        public Random Rnd;
+            get
+            {
+
+                if (ErrorOnSetup || Profile == null)
+                    return false;
+
+                return true;
+
+            }
+
+        }
+
+        [ProtoIgnore] private EventProfile _profile;
+
+        /*
+        [ProtoIgnore]
+        public EventController Controller
+        {
+
+            get
+            {
+
+                if (_controller != null)
+                    return _controller;
+
+                if (string.IsNullOrWhiteSpace(Profile.EventControllerId))
+                    return null;
+
+                foreach (var controller in EventManager.EventControllersList)
+                {
+
+                    if (controller.ProfileSubtypeId == Profile.EventControllerId)
+                    {
+
+                        _controller = controller;
+                        return _controller;
+
+                    }
+
+                }
+
+                _controller = EventController.CreateController(Profile.EventControllerId);
+                EventManager.EventControllersList.Add(_controller);
+                return _controller;
+
+            }
+
+        }
+
+        [ProtoIgnore] private EventController _controller;
+        */
 
         public Event()
         {
-            ProfileSubtypeId = "";
-            Ready = false;
-            Happend = 0;
-            UniqueEvent = true;
-            Conditions = new List<EventCondition>();
 
-            ActionExecution = EventActionExecutionEnum.AtOnce;
-            TimeTillNextAction = 3;
-            AtAction = 0;
-            Actions = new List<EventActionProfile>();
 
-            MinCooldownMs = 0;
-            MaxCooldownMs = 1;
-            CooldownTime = 0;
-            LastTriggerTime = MyAPIGateway.Session.GameDateTime;
-            Rnd = new Random();
+
         }
 
-        public void TriggerEvent()
+        //This runs the first time a specific event is created
+        public Event(string profileSubtypeId)
+        {
+
+            ProfileSubtypeId = profileSubtypeId;
+            Init(true);
+
+            if (!Valid)
+            {
+
+                return;
+
+            }
+
+
+
+        }
+
+        public void Init(bool FirstTime = false)
+        {
+            if (FirstTime)
+            {
+                RunCount = 0;
+                CurrentActionIndex = 0;
+                CooldownTimeTrigger = 0;
+                LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+            }
+
+            Ready = false;
+            Conditions = new List<EventCondition>();
+            Actions = new List<EventActionProfile>();
+
+            if (Profile == null)
+            {
+
+                return;
+
+            }
+
+            foreach (var conditionName in Profile.ConditionIds)
+            {
+
+                EventCondition conditionProfile = null;
+
+                if (ProfileManager.EventConditions.TryGetValue(conditionName, out conditionProfile))
+                {
+
+                    Conditions.Add(conditionProfile);
+
+                }
+
+            }
+
+            foreach (var actionName in Profile.ActionIds)
+            {
+
+                byte[] bytes = null;
+
+                if (ProfileManager.EventActionObjectTemplates.TryGetValue(actionName, out bytes))
+                {
+
+                    EventActionProfile action = MyAPIGateway.Utilities.SerializeFromBinary<EventActionProfile>(bytes);
+
+                    if (action != null)
+                    {
+
+                        Actions.Add(action);
+
+                    }
+
+                }
+
+            }
+
+
+
+
+
+
+
+
+        }
+
+        public void ActivateEventActions()
         {
             this.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
-            this.CooldownTime = Rnd.Next((int)MinCooldownMs, (int)MaxCooldownMs);
-            EventActionProfile.ExecuteActions(this);
-            							
+            this.CooldownTimeTrigger = MathTools.RandomBetween(Profile.MinCooldownMs, Profile.MaxCooldownMs);
+
+            //MyVisualScriptLogicProvider.ShowNotificationToAll("Action Count: " + Actions.Count, 5000);
+
+
+
+            if (Actions.Count <= 0)
+                return;
+
+
+            if (Profile.ActionExecution == ActionExecutionEnum.All) {
+
+                for (int i = 0; i < Actions.Count; i++)
+                {
+
+                    Actions[i].ExecuteAction();
+
+                }
+
+            }
+
+
+            if (Profile.ActionExecution == ActionExecutionEnum.Random) {
+                var index = MathTools.RandomBetween(0, (Actions.Count));
+                Actions[index].ExecuteAction();
+
+                }
+
+            if (Profile.ActionExecution == ActionExecutionEnum.Sequential)
+            {
+
+                ProcessingSequentialActions = true;
+                ActionIndex = 0;
+                ActionStartTime = MyAPIGateway.Session.GameDateTime;
+                CheckingType = CheckType.ExecuteAction;
+                IncrementMs = Profile.TimeUntilNextActionMs;
+
+                /*
+                for (int i = Actions.Count - 1; i >= 0; i--) {
+
+                    var EventTime = new EventTime();
+                    EventTime.Event = this;
+                    EventTime.StartDate = MyAPIGateway.Session.GameDateTime;
+                    EventTime.Timeinms = (i * Profile.TimeUntilNextActionMs);
+                    EventTime.Type = CheckType.ExecuteAction;
+                    EventTime.ActionIndex = i;
+                    EventManager.EventTimes.Add(EventTime);
+
+                }
+                */
+            }
+
         }
 
         public bool ValidateCooldown()
         {
-            if (this.CooldownTime > 0)
+            if (this.CooldownTimeTrigger > 0)
             {
-
 
                 var duration = MyAPIGateway.Session.GameDateTime - this.LastTriggerTime;
 
-                if (duration.TotalMilliseconds > this.CooldownTime)
+                if (duration.TotalMilliseconds > this.CooldownTimeTrigger)
                     return true;
                 else
                     return false;
+
             }
 
 
@@ -107,130 +290,51 @@ namespace ModularEncountersSystems.Events
 
 
 
-        public void InitTags(string data = null)
+
+
+
+
+        public string GetInfo()
         {
-            if (string.IsNullOrWhiteSpace(data))
-                return;
 
-            var descSplit = data.Split('\n');
-
-            foreach (var tagRaw in descSplit)
+            var conditions = new StringBuilder();
+            for (int i = 0; i < Conditions.Count; i++)
             {
-
-                var tag = tagRaw.Trim();
-
-                //Active
-                if (tag.StartsWith("[UniqueEvent:") == true)
-                {
-
-                    TagParse.TagBoolCheck(tag, ref this.UniqueEvent);
-                }
-
-
-                //Conditions
-                if (tag.StartsWith("[Conditions:") == true)
-                {
-                    var tagSplit = TagParse.ProcessTag(tag);
-
-                    if (tagSplit.Length < 2)
-                    {
-                        return;
-                    }
-
-                    var key = tagSplit[1];
-                    EventCondition result = null;
-
-                    if (ProfileManager.EventConditions.TryGetValue(key, out result))
-                        this.Conditions.Add(result);
-                }
-
-
-                //Actions
-                if (tag.Contains("[Actions:") == true)
-                {
-
-                    string tempValue = "";
-                    TagParse.TagStringCheck(tag, ref tempValue);
-                    bool gotAction = false;
-
-                    if (string.IsNullOrWhiteSpace(tempValue) == false)
-                    {
-
-                        byte[] byteData = { };
-
-                        if (ProfileManager.EventActionObjectTemplates.TryGetValue(tempValue, out byteData) == true)
-                        {
-
-                            try
-                            {
-
-                                var profile = MyAPIGateway.Utilities.SerializeFromBinary<EventActionProfile>(byteData);
-
-                                if (profile != null)
-                                {
-
-                                    this.Actions.Add(profile);
-                                    gotAction = true;
-
-                                }
-
-                            }
-                            catch (Exception)
-                            {
-
-                            }
-
-                        }
-
-                    }
-
-                    if (!gotAction)
-                        ProfileManager.ReportProfileError(tempValue, "Could Not Load Action Profile From Trigger: " + ProfileSubtypeId);
-
-                }
-
-                //ActionExecution
-                if (tag.StartsWith("[ActionExecution:") == true)
-                {
-                    EventActionExecutionEnum result = EventActionExecutionEnum.AtOnce;
-                    var tagSplit = TagParse.ProcessTag(tag);
-
-                    if (tagSplit.Length == 2)
-                    {
-                        if (EventActionExecutionEnum.TryParse(tagSplit[1], out result) == false)
-                        {
-                            return;
-                        }
-                    }
-
-                    this.ActionExecution |= result;
-
-                }
-
-                //TimeTillNextAction
-                if (tag.StartsWith("[TimeTillNextAction:") == true)
-                {
-
-                    TagParse.TagIntCheck(tag, ref this.TimeTillNextAction);
-                }
-
-                //MinCooldown
-                if (tag.Contains("[MinCooldownMs:") == true)
-                {
-
-                    TagParse.TagFloatCheck(tag, ref MinCooldownMs);
-
-                }
-
-                //MaxCooldown
-                if (tag.Contains("[MaxCooldownMs:") == true)
-                {
-
-                    TagParse.TagFloatCheck(tag, ref MaxCooldownMs);
-
-                }
-
+                conditions.Append(Conditions[i].ProfileSubtypeId).Append($":{EventCondition.IsConditionMet(Conditions[i])} ");
             }
+
+            var actions = new StringBuilder();
+            for (int i = 0; i < Actions.Count; i++)
+            {
+                actions.Append(Actions[i].ProfileSubtypeId).Append(" ");
+            }
+
+            var sb = new StringBuilder();
+            sb.Append(" - Profile SubtypeId:           ").Append(ProfileSubtypeId).AppendLine();
+            sb.Append(" - EventController:             ").Append(Profile.EventControllerId).AppendLine();
+            sb.Append(" - UniqueEvent:                 ").Append(Profile.UniqueEvent).AppendLine();
+            sb.Append(" - RunCount:                    ").Append(RunCount).AppendLine();
+
+
+            sb.Append(" - Conditions Count:            ").Append(Conditions.Count).AppendLine();
+            sb.Append("     [] Conditions:             ").Append(conditions.ToString()).AppendLine();
+
+            sb.Append(" - Actions Count:               ").Append(Actions.Count).AppendLine();
+            sb.Append("     [] Actions:                ").Append(actions.ToString()).AppendLine();
+            sb.Append(" - ErrorOnSetup:                ").Append(ErrorOnSetup).AppendLine();
+            return sb.ToString();
+
+
         }
+
+
+
+
+
+
+
+
+
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Helpers;
+using Sandbox.Game;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -27,12 +28,57 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double ExistingYawMagnitude;
 		public double ExistingRollMagnitude;
 
+		public float PreviousPitchSpeed;
+		public float PreviousYawSpeed;
+		public float PreviousRollSpeed;
+
+		public double DebugYawAngleLeft;
+		public double DebugYawAngleRight;
+
+		public double MaxRotationForGridSize;
+
 		public void ApplyGyroRotation() {
 
 			if (ActiveGyro == null || !ActiveGyro.Active)
 				return;
 
 			ActiveGyro.ApplyRotation();
+
+			if (Data.UseForcedRotationDampening) {
+
+				double pitch = ExistingPitchMagnitude;
+				double yaw = ExistingYawMagnitude;
+				double roll = ExistingRollMagnitude;
+
+				//Pitch
+				if (Math.Sign(RotationToApply.X) != Math.Sign(ExistingPitchMagnitude) || (RotationToApply.X / ExistingPitchMagnitude) > Data.ForcedRotationDampeningAmount) {
+
+					pitch = ExistingPitchMagnitude - (ExistingPitchMagnitude * Data.ForcedRotationDampeningAmount);
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Damp Pitch", 250);
+
+				}
+
+				//Yaw
+				if (Math.Sign(RotationToApply.Y) != Math.Sign(ExistingYawMagnitude) || (RotationToApply.Y / ExistingYawMagnitude) > Data.ForcedRotationDampeningAmount) {
+
+					yaw = ExistingYawMagnitude - (ExistingYawMagnitude * Data.ForcedRotationDampeningAmount);
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Damp Yaw", 250);
+
+				}
+
+				//Roll
+				if (Math.Sign(RotationToApply.Z) != Math.Sign(ExistingRollMagnitude) || (RotationToApply.Z / ExistingRollMagnitude) > Data.ForcedRotationDampeningAmount) {
+
+					roll = ExistingRollMagnitude - (ExistingRollMagnitude * Data.ForcedRotationDampeningAmount);
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Damp Roll", 250);
+
+				}
+
+				var newAngularVelocity = (_remoteControl.WorldMatrix.Right * pitch) + (_remoteControl.WorldMatrix.Up * -yaw) + (_remoteControl.WorldMatrix.Forward * roll);
+				_behavior.CurrentGrid.CubeGrid.Physics.SetSpeeds(_behavior.CurrentGrid.CubeGrid.Physics.LinearVelocity, newAngularVelocity);
+				//MyVisualScriptLogicProvider.ShowNotificationToAll("Damp Rotation", 250);
+
+			}
 
 		}
 
@@ -54,13 +100,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
+			if (totalAngle > 0) {
+
+				var angleAddition = 180 - angleDifference;
+				angleDifference += angleAddition;
+			
+			}
+
+			angleDifference /= 2;
+
 			if (angleDifference <= this.Data.DesiredAngleToTarget) {
 
 				return 0;
 
 			}
 
-			if (totalAngle + angleDifference >= 90) {
+			if (angleDifference >= Data.RotationSlowdownAngle) {
 
 				return isSmallGrid ? Math.PI * 2 * angleDirection : Math.PI * angleDirection;
 
@@ -117,9 +172,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			var gridSize = (_remoteControl.CubeGrid.GridSizeEnum == MyCubeSize.Small);
 
+			if (MaxRotationForGridSize == 0)
+				MaxRotationForGridSize = gridSize ? 6.28 : 3.14;
+
 			//Calculate Yaw
 			double angleLeftToTarget = VectorHelper.GetAngleBetweenDirections(referenceMatrix.Left, directionToTarget);
 			double angleRightToTarget = VectorHelper.GetAngleBetweenDirections(referenceMatrix.Right, directionToTarget);
+			DebugYawAngleLeft = angleLeftToTarget;
+			DebugYawAngleRight = angleRightToTarget;
 			YawTargetAngleResult = VectorHelper.GetAngleBetweenDirections(referenceMatrix.Forward, directionToTarget) - VectorHelper.GetAngleBetweenDirections(referenceMatrix.Backward, directionToTarget);
 			gyroRotation.Y = (float)CalculateGyroAxisRadians(angleLeftToTarget, angleRightToTarget, YawTargetAngleResult, gridSize, ref YawAngleDifference);
 
@@ -163,7 +223,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
-			
+			//Limit Speed
 			if (ExistingPitchMagnitude != 0)
 				gyroRotation.X = LimitSpeed(gyroRotation.X, ExistingPitchMagnitude);
 
@@ -173,10 +233,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (ExistingRollMagnitude != 0)
 				gyroRotation.Z = LimitSpeed(gyroRotation.Z, ExistingRollMagnitude);
 
-
 			this.RotationToApply = gyroRotation;
 
 			return;
+
+		}
+
+		public void BoostUptoRotationSpeed(float currentMagnitude, double axisAngleDifference, ref float currentSpeed, ref float previousSpeed) {
+
+			var absCurrent = Math.Abs(currentSpeed);
+
+			//Sign Check
+			if (Math.Sign(currentSpeed) != Math.Sign(currentMagnitude)) {
+
+				currentSpeed += (float)MathHelper.Clamp((Math.Sign(currentSpeed) * MaxRotationForGridSize), -MaxRotationForGridSize, MaxRotationForGridSize);
+				previousSpeed = absCurrent;
+				return;
+
+			}
+
+			if (previousSpeed == 0) {
+
+				previousSpeed = absCurrent;
+				return;
+			
+			}
+
+			if (absCurrent > previousSpeed) {
+
+				currentSpeed += (float)MathHelper.Clamp((Math.Sign(currentSpeed) * MaxRotationForGridSize), -MaxRotationForGridSize, MaxRotationForGridSize);
+
+			}
+
+			previousSpeed = absCurrent;
 
 		}
 

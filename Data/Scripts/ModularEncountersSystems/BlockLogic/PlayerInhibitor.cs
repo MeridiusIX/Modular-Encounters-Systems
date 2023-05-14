@@ -10,7 +10,7 @@ using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class PlayerInhibitor : InhibitorBase, IBlockLogic {
+	public class PlayerInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal List<PlayerEntity> _playersInBlockRange;
 
@@ -131,6 +131,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 							MyVisualScriptLogicProvider.ShowNotification("WARNING: Prolonged Exposure To Personnel Inhibitor Field May Be Fatal!", 5000, "Red", player.Player.IdentityId);
 							_playersInBlockRange.Add(player);
+							player.AddInhibitorToPlayer(_antenna, _inhibitor);
 
 						}
 
@@ -147,7 +148,8 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal void RemovePlayer(PlayerEntity player) {
 
 			_playersInBlockRange.Remove(player);
-		
+			player.RemoveInhibitorFromPlayer(_antenna, _inhibitor);
+
 		}
 
 		internal override void Unload(IMyEntity entity = null) {

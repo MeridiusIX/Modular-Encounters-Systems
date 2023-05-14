@@ -111,7 +111,7 @@ namespace ModularEncountersSystems.Watchers {
 						SpawnLogger.Write("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " Queued For Removal and Removed From Watcher.", SpawnerDebugEnum.PostSpawn);
 						cargoShip.AppendDebug("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " At End of Path and Eligible for Despawn.");
 						cargoShip.AppendDebug("Drifting Cargo Ship " + linkedGrid.CubeGrid.CustomName + " Queued For Removal and Removed From Watcher.");
-						linkedGrid.Npc.DespawnSource = "Cargo Ship Reached End of Path / Distance";
+						linkedGrid.DespawnSource = "Cargo Ship Reached End of Path / Distance";
 
 					}
 

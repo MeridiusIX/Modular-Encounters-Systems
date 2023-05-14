@@ -46,7 +46,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				var thrustProfile = new ThrustSettings(profile);
 				var thrustProfileString = thrustProfile.ConvertToString();
-				StorageTools.ApplyCustomGridStorage(cubeGrid, StorageTools.NpcThrusterDataKey, thrustProfileString);
+				StorageTools.ApplyCustomEntityStorage(cubeGrid, StorageTools.NpcThrusterDataKey, thrustProfileString);
 				data.Attributes.CustomThrustDataUsed = true;
 
 			}
@@ -54,7 +54,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//Gyro Settings
 			if (profile.SetNpcGyroscopeMultiplier) {
 
-				StorageTools.ApplyCustomGridStorage(cubeGrid, StorageTools.NpcGyroDataKey, profile.NpcGyroscopeMultiplier.ToString());
+				StorageTools.ApplyCustomEntityStorage(cubeGrid, StorageTools.NpcGyroDataKey, profile.NpcGyroscopeMultiplier.ToString());
 
 			}
 
@@ -62,7 +62,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				SpawnLogger.Write("Assigning ModStorageComponent", SpawnerDebugEnum.Manipulation);
 
-				StorageTools.ApplyCustomGridStorage(cubeGrid, profile.StorageKey, profile.StorageValue);
+				StorageTools.ApplyCustomEntityStorage(cubeGrid, profile.StorageKey, profile.StorageValue);
 
 			}
 
@@ -179,6 +179,43 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 						gyro.GyroPower = 1f;
 						gyro.GyroOverride = false;
+
+					}
+
+				}
+
+				if (profile.SetDoorsAnyoneCanUse) {
+
+					var door = block as MyObjectBuilder_Door;
+
+					if (door != null) {
+
+						door.AnyoneCanUse = true;
+					
+					}
+				
+				}
+
+				if (profile.SetStoresAnyoneCanUse) {
+
+					var store = block as MyObjectBuilder_StoreBlock;
+
+					if (store != null) {
+
+						store.AnyoneCanUse = true;
+
+					}
+
+				}
+
+				if (profile.SetConnectorsTradeMode) {
+
+					var connector = block as MyObjectBuilder_ShipConnector;
+
+					if (connector != null) {
+
+						connector.TradingEnabled = true;
+						connector.AutoUnlockTime = 600;
 
 					}
 

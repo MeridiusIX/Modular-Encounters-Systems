@@ -77,7 +77,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (SpawnType == SpawningType.RandomEncounter) {
+			if (SpawnType == SpawningType.RandomEncounter || SpawnType == SpawningType.DroneEncounter) {
 
 				return SpawnMatrix.Translation + offset;
 
@@ -378,7 +378,7 @@ namespace ModularEncountersSystems.Spawning {
 					var spawnGroup = collection.SpawnGroup.SpawnGroup;
 					var startPath = path.GetPrefabStartCoords(prefabOffset, environment);
 					var endPath = path.GetPrefabEndCoords(prefabOffset, environment);
-					obstructed = IsSpacePathObstructed(planetGravitySphere, playerBox, startPath, endPath, voxelList, collection.Conditions.SkipGridSpawnChecks, collection.Conditions.SkipVoxelSpawnChecks);
+					obstructed = IsSpacePathObstructed(planetGravitySphere, playerBox, startPath, endPath, voxelList, collection.SkipGridSpawnChecks, collection.SkipVoxelSpawnChecks);
 
 					if (obstructed)
 						break;
@@ -442,7 +442,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 					var endPath = path.SpawnMatrix.Forward * pathDistance + startPath;
-					obstructed = IsSpacePathObstructed(planetGravitySphere, playerBox, startPath, endPath, voxelList, collection.Conditions.SkipGridSpawnChecks, collection.Conditions.SkipVoxelSpawnChecks);
+					obstructed = IsSpacePathObstructed(planetGravitySphere, playerBox, startPath, endPath, voxelList, collection.SkipGridSpawnChecks, collection.SkipVoxelSpawnChecks);
 
 					if (obstructed)
 						break;
@@ -565,7 +565,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					obstructed = IsPlanetPathObstructed(playerBox, startPath, endPath, pathDistance, environment, collection.Conditions.SkipGridSpawnChecks, collection.Conditions.SkipVoxelSpawnChecks, path.PathDebugging);
+					obstructed = IsPlanetPathObstructed(playerBox, startPath, endPath, pathDistance, environment, collection.SkipGridSpawnChecks, collection.SkipVoxelSpawnChecks, path.PathDebugging);
 
 					if (obstructed) {
 
@@ -652,14 +652,14 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					if (IsGridWithinMinDistance(startPath, Settings.PlanetaryCargoShips.MinSpawnDistFromEntities, collection.Conditions.SkipGridSpawnChecks)) {
+					if (IsGridWithinMinDistance(startPath, Settings.PlanetaryCargoShips.MinSpawnDistFromEntities, collection.SkipGridSpawnChecks)) {
 
 						obstructed = true;
 						break;
 
 					}
 
-					if (IsVoxelIntersecting(voxelList, startPath, endPath, Settings.PlanetaryCargoShips.MinSpawnDistFromEntities, collection.Conditions.SkipVoxelSpawnChecks)) {
+					if (IsVoxelIntersecting(voxelList, startPath, endPath, Settings.PlanetaryCargoShips.MinSpawnDistFromEntities, collection.SkipVoxelSpawnChecks)) {
 
 						obstructed = true;
 						break;
@@ -715,14 +715,14 @@ namespace ModularEncountersSystems.Spawning {
 
 					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 
-					if (IsGridWithinMinDistance(startPath, Settings.RandomEncounters.MinDistanceFromOtherEntities, collection.Conditions.SkipGridSpawnChecks)) {
+					if (IsGridWithinMinDistance(startPath, Settings.RandomEncounters.MinDistanceFromOtherEntities, collection.SkipGridSpawnChecks)) {
 
 						obstructed = true;
 						break;
 
 					}
 
-					if (IsVoxelIntersecting(voxelList, startPath + (path.PathDirection + 500), startPath + (path.PathDirection - 500), Settings.RandomEncounters.MinDistanceFromOtherEntities, collection.Conditions.SkipVoxelSpawnChecks)) {
+					if (IsVoxelIntersecting(voxelList, startPath + (path.PathDirection + 500), startPath + (path.PathDirection - 500), Settings.RandomEncounters.MinDistanceFromOtherEntities, collection.SkipVoxelSpawnChecks)) {
 
 						obstructed = true;
 						break;
@@ -799,7 +799,7 @@ namespace ModularEncountersSystems.Spawning {
 					if (!IsPositionSurfaceValid(coords, environment, collection, spawnType, isUnderwater, depth))
 						continue;
 
-					if (IsGridWithinMinDistance(coords, Settings.PlanetaryInstallations.MinimumSpawnDistanceFromOtherGrids, collection.Conditions.SkipGridSpawnChecks))
+					if (IsGridWithinMinDistance(coords, Settings.PlanetaryInstallations.MinimumSpawnDistanceFromOtherGrids, collection.SkipGridSpawnChecks))
 						continue;
 
 					var checkUpDir = Vector3D.Normalize(coords - environment.NearestPlanet.Center());
@@ -945,7 +945,7 @@ namespace ModularEncountersSystems.Spawning {
 					var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
 					var startPath = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 
-					obstructed = IsGridWithinMinDistance(path.StartCoords, Settings.DroneEncounters.MinDistanceFromOtherEntities, collection.Conditions.SkipGridSpawnChecks) && IsVoxelIntersecting(voxelList, path.StartCoords + new Vector3D(-300, -300, -300), path.StartCoords + new Vector3D(300, 300, 300), -1, collection.Conditions.SkipVoxelSpawnChecks);
+					obstructed = IsGridWithinMinDistance(path.StartCoords, Settings.DroneEncounters.MinDistanceFromOtherEntities, collection.SkipGridSpawnChecks) && IsVoxelIntersecting(voxelList, path.StartCoords + new Vector3D(-300, -300, -300), path.StartCoords + new Vector3D(300, 300, 300), -1, collection.SkipVoxelSpawnChecks);
 
 					if (obstructed)
 						break;
@@ -1072,13 +1072,13 @@ namespace ModularEncountersSystems.Spawning {
 
 				//Check for Voxels or Grids
 				
-				if (IsGridWithinMinDistance(initialCoords, Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.Conditions.SkipGridSpawnChecks)) {
+				if (IsGridWithinMinDistance(initialCoords, Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.SkipGridSpawnChecks)) {
 
 					continue;
 
 				}
 
-				if (IsVoxelIntersecting(voxelList, initialCoords + (path.PathDirection + 500), initialCoords + (path.PathDirection - 500), Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.Conditions.SkipVoxelSpawnChecks)) {
+				if (IsVoxelIntersecting(voxelList, initialCoords + (path.PathDirection + 500), initialCoords + (path.PathDirection - 500), Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.SkipVoxelSpawnChecks)) {
 
 					continue;
 
@@ -1119,7 +1119,7 @@ namespace ModularEncountersSystems.Spawning {
 				path.PathDirection = initialPerp;
 				path.PathDistance = initialDist;
 
-				if (IsGridWithinMinDistance(coords, Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.Conditions.SkipGridSpawnChecks)) {
+				if (IsGridWithinMinDistance(coords, Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.SkipGridSpawnChecks)) {
 
 					continue;
 
@@ -1199,7 +1199,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					var offsetCoords = Vector3D.Transform(prefabOffset, path.SpawnMatrix);
 
-					if (IsGridWithinMinDistance(offsetCoords, Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.Conditions.SkipGridSpawnChecks)) {
+					if (IsGridWithinMinDistance(offsetCoords, Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.SkipGridSpawnChecks)) {
 
 						badPosition = true;
 						break;
@@ -1243,17 +1243,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 
-			if (spawnTypes.HasFlag(SpawningType.StaticEncounterSpace)) {
-
-				path.SpawnType = SpawningType.StaticEncounterSpace;
-
-				if (generateDirections) {
-
-					matrix.Translation = collection.StaticEncounterInstance.ExactLocationCoords;
-
-				}
-
-			} else {
+			if (spawnTypes.HasFlag(SpawningType.StaticEncounterPlanet) && environment.IsOnPlanet) {
 
 				path.SpawnType = SpawningType.StaticEncounterPlanet;
 
@@ -1266,12 +1256,22 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
+			} else {
+
+				path.SpawnType = SpawningType.StaticEncounterSpace;
+
+				if (generateDirections) {
+
+					matrix.Translation = collection.StaticEncounterInstance.ExactLocationCoords;
+
+				}
+
 			}
 
 			path.SpawnMatrix = matrix;
 			path.StartCoords = matrix.Translation;
 
-			if (IsGridWithinMinDistance(path.StartCoords, 250, collection.Conditions.SkipGridSpawnChecks)) {
+			if (IsGridWithinMinDistance(path.StartCoords, 250, collection.SkipGridSpawnChecks)) {
 
 				return;
 
@@ -1394,9 +1394,9 @@ namespace ModularEncountersSystems.Spawning {
 				var prefab = collection.SpawnGroup.SpawnGroup.Prefabs[collection.PrefabIndexes[j]];
 				var prefabOffset = collection.SelectPrefabOffet(prefab.Position, j);
 
-				if (!collection.Conditions.SkipVoxelSpawnChecks) {
+				if (!collection.SkipVoxelSpawnChecks) {
 
-					if (IsVoxelIntersecting(voxelList, path.StartCoords, path.StartCoords, -1, collection.Conditions.SkipVoxelSpawnChecks)) {
+					if (IsVoxelIntersecting(voxelList, path.StartCoords, path.StartCoords, -1, collection.SkipVoxelSpawnChecks)) {
 
 						badCoords = true;
 						break;
@@ -1405,9 +1405,9 @@ namespace ModularEncountersSystems.Spawning {
 				
 				}
 
-				if (!collection.Conditions.SkipGridSpawnChecks) {
+				if (!collection.SkipGridSpawnChecks) {
 
-					if (IsGridWithinMinDistance(path.StartCoords, 0, collection.Conditions.SkipGridSpawnChecks)) {
+					if (IsGridWithinMinDistance(path.StartCoords, 0, collection.SkipGridSpawnChecks)) {
 
 						badCoords = true;
 						break;

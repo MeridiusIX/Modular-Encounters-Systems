@@ -36,6 +36,8 @@ namespace ModularEncountersSystems.Spawning {
 		public Dictionary<string, List<string>> ValidFactions;
 		public Dictionary<string, int> ActiveConditions;
 
+		public long OwnerOverride;
+
 		public Dictionary<string, List<ImprovedSpawnGroup>> SpawnGroupSublists;
 		public Dictionary<string, List<ImprovedSpawnGroup>> SmallSpawnGroupSublists;
 		public Dictionary<string, List<ImprovedSpawnGroup>> MediumSpawnGroupSublists;
@@ -56,6 +58,36 @@ namespace ModularEncountersSystems.Spawning {
 		public List<string> AllowedZoneFactions;
 		public List<string> RestrictedZoneSpawnGroups;
 
+		public bool IgnoreAllSafetyChecks = false;
+		public bool SkipGridSpawnChecks { get {
+
+				if (IgnoreAllSafetyChecks)
+					return true;
+
+				if (Conditions == null)
+					return false;
+
+				return Conditions.SkipGridSpawnChecks;
+
+			} 
+
+		}
+
+		public bool SkipVoxelSpawnChecks {
+			get {
+
+				if (IgnoreAllSafetyChecks)
+					return true;
+
+				if (Conditions == null)
+					return false;
+
+				return Conditions.SkipVoxelSpawnChecks;
+
+			}
+
+		}
+
 		public SpawnGroupCollection() {
 
 			SpawnGroup = null;
@@ -73,6 +105,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			ValidFactions = new Dictionary<string, List<string>>();
 			ActiveConditions = new Dictionary<string, int>();
+
+			OwnerOverride = -1;
 
 			SpawnGroupSublists = new Dictionary<string, List<ImprovedSpawnGroup>>();
 			SmallSpawnGroupSublists = new Dictionary<string, List<ImprovedSpawnGroup>>();

@@ -4,6 +4,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -27,32 +28,69 @@ namespace ModularEncountersSystems.Progression {
 			MES_SessionCore.UnloadActions += Unload;
 			EventWatcher.ButtonPressed += ResearchPointButtonPress;
 
-			if (string.IsNullOrWhiteSpace(Settings.SavedData?.PlayerProgressionData)) {
+			//Progression
+			if (!string.IsNullOrWhiteSpace(Settings.SavedData?.PlayerProgressionData)) {
 
-				SpawnLogger.Write("No Saved Progression Data For Players", SpawnerDebugEnum.Startup, true);
-				return;
+				//SpawnLogger.Write("Debug: Try Player Progression", SpawnerDebugEnum.Startup, true);
+				var serialized = Convert.FromBase64String(Settings.SavedData.PlayerProgressionData);
 
+				if (serialized != null) {
+
+					var data = MyAPIGateway.Utilities.SerializeFromBinary<List<ProgressionContainer>>(serialized);
+
+					if (data == null) {
+
+						SpawnLogger.Write("Couldn't Convert Progression Byte Array To Object", SpawnerDebugEnum.Startup, true);
+
+					} else {
+
+						ProgressionManager.ProgressionContainers = data;
+
+					}
+
+				} else {
+
+					SpawnLogger.Write("Couldn't Convert Progression Data From String To Byte Array", SpawnerDebugEnum.Startup, true);
+
+				}
+
+			} else {
+
+				SpawnLogger.Write("No Saved Progression Data For Players", SpawnerDebugEnum.Startup);
+				
 			}
 
-			var serialized = Convert.FromBase64String(Settings.SavedData.PlayerProgressionData);
+			//Active Research Points
+			if (!string.IsNullOrWhiteSpace(Settings.SavedData?.ActiveResearchPoints)) {
 
-			if (serialized == null) {
+				SpawnLogger.Write("Debug: Try Research Points", SpawnerDebugEnum.Startup, true);
+				var serializedPoints = Convert.FromBase64String(Settings.SavedData.ActiveResearchPoints);
 
-				SpawnLogger.Write("Couldn't Convert Progression Data From String To Byte Array", SpawnerDebugEnum.Startup, true);
-				return;
+				if (serializedPoints != null) {
+
+					var data = MyAPIGateway.Utilities.SerializeFromBinary<List<int>>(serializedPoints);
+
+					if (data == null) {
+
+						SpawnLogger.Write("Couldn't Convert Active Research Points Byte Array To Object", SpawnerDebugEnum.Startup, true);
+
+					} else {
+
+						ProgressionManager.ActiveResearchPointIds = data;
+
+					}
+
+				} else {
+
+					SpawnLogger.Write("Couldn't Convert Active Research Points Data From String To Byte Array", SpawnerDebugEnum.Startup, true);
+
+				}
+
+			} else {
+
+				SpawnLogger.Write("No Saved Active Research Point Data", SpawnerDebugEnum.Startup);
 
 			}
-
-			var data = MyAPIGateway.Utilities.SerializeFromBinary<List<ProgressionContainer>>(serialized);
-
-			if (data == null) {
-
-				SpawnLogger.Write("Couldn't Convert Progression Byte Array To Object", SpawnerDebugEnum.Startup, true);
-				return;
-
-			}
-
-			ProgressionManager.ProgressionContainers = data;
 
 		}
 
@@ -121,7 +159,7 @@ namespace ModularEncountersSystems.Progression {
 
 		public static void ResearchPointButtonPress(IMyButtonPanel panel, int index, long identityId) {
 
-			if (panel?.Storage == null)
+			if (panel?.Storage == null || panel.SlimBlock.BlockDefinition.Id != ControlManager.ResearchTerminalBlockId)
 				return;
 
 			string data = "";
@@ -131,7 +169,7 @@ namespace ModularEncountersSystems.Progression {
 
 			int result = 0;
 
-			if (int.TryParse(data, out result))
+			if (!int.TryParse(data, out result))
 				return;
 
 			if (!ActiveResearchPointIds.Contains(result))
@@ -150,12 +188,21 @@ namespace ModularEncountersSystems.Progression {
 			if (block != null)
 				block.Enabled = false;
 
+			//Other Stuff
+			panel.AnyoneCanUse = false;
+
 		}
 
 		public static void SaveProgression() {
 
+			if (Settings.SavedData == null)
+				return;
+
 			var serialized = MyAPIGateway.Utilities.SerializeToBinary<List<ProgressionContainer>>(ProgressionManager.ProgressionContainers);
 			Settings.SavedData.UpdateData(Convert.ToBase64String(serialized), ref Settings.SavedData.PlayerProgressionData);
+
+			var serializedPoints = MyAPIGateway.Utilities.SerializeToBinary<List<int>>(ProgressionManager.ActiveResearchPointIds);
+			Settings.SavedData.UpdateData(Convert.ToBase64String(serializedPoints), ref Settings.SavedData.ActiveResearchPoints);
 
 		}
 

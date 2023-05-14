@@ -41,6 +41,7 @@ namespace ModularEncountersSystems.Entities {
 		RivalAi,
 		Seats,
 		Shields,
+		Stores,
 		Thrusters,
 		Tools,
 		Turrets,

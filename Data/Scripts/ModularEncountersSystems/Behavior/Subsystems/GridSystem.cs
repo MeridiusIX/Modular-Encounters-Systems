@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Entities;
+﻿using ModularEncountersSystems.BlockLogic;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -208,18 +209,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			if (template == null)
 				return;
-
 			for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
 
 				var block = AllTerminalBlocks[i];
 
-				if (block?.GetInventory() == null)
-					continue;
-
 				for (int j = 0; j < blockNames.Count && j < indexes.Count; j++) {
 
 					var indexAllowed = template.LcdEntries.Length <= indexes[j] + 1;
-
 					if (block.CustomName == blockNames[j] && indexAllowed) {
 
 						template.LcdEntries[indexes[j]].ApplyLcdContents(block as IMyTextSurfaceProvider);
@@ -402,6 +398,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				if (string.IsNullOrWhiteSpace(block.CustomName))
 					continue;
 
+				IBlockLogic logic = null;
+				BlockLogicManager.LogicBlocks.TryGetValue(block.EntityId, out logic);
+
 				for (int j = 0; j < names.Count; j++) {
 
 					if (block.CustomName == names[j]) {
@@ -416,6 +415,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 						if (states[j] == SwitchEnum.Toggle)
 							changeTo = changeTo ? false : true;
+
+						if (logic as InhibitorLogic != null) {
+
+							var inhibitor = logic as InhibitorLogic;
+							inhibitor.Toggle(changeTo);
+							break;
+
+						}
 
 						block.Enabled = changeTo;
 						break;
@@ -465,8 +472,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		}
 
 		public bool JumpToCoords(Vector3D coords) {
-			return false;
-			/*
+
 			if (RemoteControl?.SlimBlock?.CubeGrid?.JumpSystem == null)
 				return false;
 
@@ -486,7 +492,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			var offset = new Vector3D(2000, 2000, 2000);
 			var box = new BoundingBoxD(coords - offset, coords + offset);
-			
+
 			foreach (var corner in box.GetCorners()) {
 
 				safeCoords = RemoteControl.SlimBlock.CubeGrid.JumpSystem.FindSuitableJumpLocation(corner);
@@ -504,7 +510,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			return result;
-			*/
+
 		}
 
 		public void ToggleBlocksOfType(List<SerializableDefinitionId> types, List<SwitchEnum> toggles) {

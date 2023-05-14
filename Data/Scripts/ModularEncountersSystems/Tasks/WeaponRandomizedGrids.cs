@@ -22,17 +22,28 @@ namespace ModularEncountersSystems.Tasks {
 
 		public WeaponRandomizedGrids(GridEntity grid) : base(grid) {
 
+			if (_grid.Npc.AppliedAttributes.WeaponRandomizationAggression) {
 
+				ApplyMaxRange();
+				_isValid = false;
+			
+			}
 
 		}
 
 		internal override void FirstRun() {
+
+			if (!_isValid)
+				return;
 
 			_grid.SetAutomatedWeaponRanges(false);
 
 		}
 
 		internal override void DamageDetect() {
+
+			if (!_isValid)
+				return;
 
 			_grid.SetAutomatedWeaponRanges(true);
 
@@ -46,6 +57,9 @@ namespace ModularEncountersSystems.Tasks {
 		}
 
 		public void ShieldValidator() {
+
+			if (!_isValid)
+				return;
 
 			if (!AddonManager.DefenseShields || !APIs.ShieldsApiLoaded || _notUsingShields)
 				return;
@@ -84,6 +98,9 @@ namespace ModularEncountersSystems.Tasks {
 
 		public void DamageHandler(object target, MyDamageInformation info) {
 
+			if (!_isValid)
+				return;
+
 			if (info.Amount == 0)
 				return;
 
@@ -120,6 +137,9 @@ namespace ModularEncountersSystems.Tasks {
 		}
 
 		private void ApplyMaxRange() {
+
+			if (!_isValid)
+				return;
 
 			_grid.SetAutomatedWeaponRanges(true);
 

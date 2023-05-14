@@ -10,7 +10,7 @@ using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.BlockLogic {
-	public class EnergyInhibitor : InhibitorBase, IBlockLogic {
+	public class EnergyInhibitor : InhibitorLogic, IBlockLogic {
 
 		internal float _damageAtZeroDistance = 0.20f;
 		internal List<PlayerEntity> _playersInBlockRange;
@@ -133,6 +133,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 							MyVisualScriptLogicProvider.ShowNotification("WARNING: Energy Inhibitor Detected. Suit Energy Rapidly Depleting.", 5000, "Red", player.Player.IdentityId);
 							_playersInBlockRange.Add(player);
+							player.AddInhibitorToPlayer(_antenna, _inhibitor);
 
 						}
 
@@ -149,6 +150,7 @@ namespace ModularEncountersSystems.BlockLogic {
 		internal void RemovePlayer(PlayerEntity player) {
 
 			_playersInBlockRange.Remove(player);
+			player.RemoveInhibitorFromPlayer(_antenna, _inhibitor);
 		
 		}
 

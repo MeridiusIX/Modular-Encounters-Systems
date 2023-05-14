@@ -56,6 +56,7 @@ namespace ModularEncountersSystems.Configuration {
 		public bool WeaponReplacerMassLimits;
 		public bool WeaponReplacerUseTotalGridMassMultiplier;
 		public float WeaponReplacerTotalGridMassMultiplier;
+		public bool RandomizedWeaponsUseFullRange;
 
 		public int ShieldProviderChance;
 
@@ -96,6 +97,7 @@ namespace ModularEncountersSystems.Configuration {
 			RandomWeaponSizeVariance = -1;
 			WeaponReplacerUseTotalGridMassMultiplier = false;
 			WeaponReplacerTotalGridMassMultiplier = 1.20f;
+			RandomizedWeaponsUseFullRange = false;
 
 			ShieldProviderChance = 100;
 
@@ -135,6 +137,7 @@ namespace ModularEncountersSystems.Configuration {
 				{"MaxAmmoInventoryWeight", (s, o) => EditorTools.SetCommandValueFloat(s, ref MaxAmmoInventoryWeight) },
 				{"WeaponReplacerUseTotalGridMassMultiplier", (s, o) => EditorTools.SetCommandValueBool(s, ref WeaponReplacerUseTotalGridMassMultiplier) },
 				{"WeaponReplacerTotalGridMassMultiplier", (s, o) => EditorTools.SetCommandValueFloat(s, ref WeaponReplacerTotalGridMassMultiplier) },
+				{"RandomizedWeaponsUseFullRange", (s, o) => EditorTools.SetCommandValueBool(s, ref RandomizedWeaponsUseFullRange) },
 				{"GlobalReplenishmentProfiles", (s, o) => EditorTools.SetCommandValueStringArray(s, ref GlobalReplenishmentProfiles) },
 				{"AerodynamicsModAdvLiftOverride", (s, o) => EditorTools.SetCommandValueBool(s, ref AerodynamicsModAdvLiftOverride) },
 				{"StopCompromisedAiMovement", (s, o) => EditorTools.SetCommandValueBool(s, ref StopCompromisedAiMovement) },

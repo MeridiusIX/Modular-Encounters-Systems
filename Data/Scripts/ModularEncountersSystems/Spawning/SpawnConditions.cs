@@ -689,7 +689,7 @@ namespace ModularEncountersSystems.Spawning {
 		
 		}
 
-		public static bool CheckCommonSpawnConditions(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, EnvironmentEvaluation environment, bool adminSpawn, SpawningType type, SpawningType spawnTypes, Dictionary<string, DateTime> playerDroneTracker, ref string failReason) {
+		public static bool CheckCommonSpawnConditions(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, string source, EnvironmentEvaluation environment, bool adminSpawn, SpawningType type, SpawningType spawnTypes, Dictionary<string, DateTime> playerDroneTracker, bool persistentConditionCheck, ref string failReason) {
 
 			if (spawnGroup.SpawnGroupEnabled == false) {
 
@@ -848,6 +848,12 @@ namespace ModularEncountersSystems.Spawning {
 				failReason = "   - Sandbox Variable Check Failed";
 				return false;
 
+			}
+
+			if(conditions.CheckCustomSandboxCounters && !CheckSandboxCounters(conditions.CustomSandboxCounters, conditions.CustomSandboxCountersTargets, conditions.SandboxCounterCompareTypes))
+			{
+				failReason = "   - Sandbox Variable Check Failed";
+				return false;
 			}
 
 			if (conditions.ModBlockExists.Count > 0) {
@@ -1036,9 +1042,49 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			
+			if (Settings.Combat.EnableCombatPhaseSystem && conditions.CombatPhaseChecksInPersistentCondition == persistentConditionCheck && !conditions.IgnoreCombatPhase && source != "Wave Spawner" && !source.Contains("IgnoreCombat")) {
+
+				if (CombatPhaseManager.Active && !conditions.UseCombatPhase) {
+
+					//All Lists Checked
+					if (!CheckCombatModIdOverrides(true, spawnGroup, conditions) && !CheckCombatSpawnOverrides(true, spawnGroup, conditions) && !CheckCombatModIdOverrides(false, spawnGroup, conditions) && !CheckCombatSpawnOverrides(false, spawnGroup, conditions)) {
+
+						failReason = "   - Non Combat Encounter During Combat Phase";
+						return false;
+
+					}
+
+				}
+
+				if (!CombatPhaseManager.Active && conditions.UseCombatPhase) {
+
+					if (!CheckCombatModIdOverrides(true, spawnGroup, conditions) && !CheckCombatSpawnOverrides(true, spawnGroup, conditions)) {
+
+						failReason = "   - Combat Encounter During Peace Phase";
+						return false;
+
+					}
+
+				}
+
+				if (!CombatPhaseManager.Active && !conditions.UseCombatPhase) {
+
+					if (CheckCombatModIdOverrides(false, spawnGroup, conditions) || CheckCombatSpawnOverrides(false, spawnGroup, conditions)) {
+
+						failReason = "   - Combat Encounter During Peace Phase";
+						return false;
+
+					}
+
+				}
+
+			}
+			
+
 			if (conditions.UseThreatLevelCheck == true) {
 
-				var threatLevel = GetThreatLevel(conditions.ThreatLevelCheckRange, conditions.ThreatIncludeOtherNpcOwners, environment.Position);
+				var threatLevel = GetThreatLevel(conditions.ThreatLevelCheckRange, conditions.ThreatIncludeOtherNpcOwners, environment.Position, conditions.ThreatScoreGridConfiguration);
 				var gravityHandicap = environment.IsOnPlanet ? conditions.ThreatScorePlanetaryHandicap : 0;
 
 				if (threatLevel < (float)conditions.ThreatScoreMinimum + gravityHandicap && (float)conditions.ThreatScoreMinimum > 0) {
@@ -1203,6 +1249,39 @@ namespace ModularEncountersSystems.Spawning {
 			
 			}
 
+			/*
+			if (conditions.UseEventController)
+			{
+				bool result = false;
+				for (int i = 0; i < Events.EventManager.EventControllersList.Count; i++)
+				{
+					var thisEventControllers = Events.EventManager.EventControllersList[i];
+
+					if (!thisEventControllers.Active)
+					{
+						continue;
+					}
+
+					if(conditions.EventControllerId.Contains(thisEventControllers.ProfileSubtypeId))
+					{
+						result = true;
+						break;
+					}
+
+				}
+
+				if (!result)
+				{
+					failReason = "   - EventController Check Failed";
+					return false;
+				}
+					
+				
+
+
+			}
+			*/
+
 			//Logger.Write(spawnGroup.SpawnGroupName + " Passed Common Conditions", true);
 			return true;
 
@@ -1308,6 +1387,77 @@ namespace ModularEncountersSystems.Spawning {
 			return true;
 
 		}
+
+		public static bool CheckSandboxCounters(List<string> CustomSandboxCounters, List<int> CustomSandboxCountersTargets, List<CounterCompareEnum> SandboxCounterCompareTypes)
+		{
+
+				if (CustomSandboxCounters.Count == CustomSandboxCountersTargets.Count)
+				{
+
+					for (int i = 0; i < CustomSandboxCounters.Count; i++)
+					{
+
+						try
+						{
+
+							int counter = 0;
+							var result = MyAPIGateway.Utilities.GetVariable(CustomSandboxCounters[i], out counter);
+
+							var compareType = CounterCompareEnum.GreaterOrEqual;
+
+							if (i <= SandboxCounterCompareTypes.Count - 1)
+								compareType = SandboxCounterCompareTypes[i];
+
+							bool counterResult = false;
+
+							if (compareType == CounterCompareEnum.GreaterOrEqual)
+								counterResult = (counter >= CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.Greater)
+								counterResult = (counter > CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.Equal)
+								counterResult = (counter == CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.NotEqual)
+								counterResult = (counter != CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.Less)
+								counterResult = (counter < CustomSandboxCountersTargets[i]);
+
+							if (compareType == CounterCompareEnum.LessOrEqual)
+								counterResult = (counter <= CustomSandboxCountersTargets[i]);
+
+							if (!result || !counterResult)
+							{
+								//BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Amount Condition Not Satisfied: " + ConditionReference.CustomSandboxCounters[i], BehaviorDebugEnum.Condition);
+								return false;
+
+							}
+						}
+						catch (Exception e)
+						{
+							//BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+							//BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+						}
+					}
+
+				}
+				else
+				{
+				//BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Names and Targets List Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
+				return false;
+				}
+			
+			return true;
+
+		}
+
+
+
+
+
+
 
 		public static bool CheckRemoteControlCode(SpawnConditionsProfile spawnGroup, Vector3D coords, ref string failReason) {
 
@@ -1444,6 +1594,44 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
+		public static bool CheckCombatModIdOverrides(bool active, ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions) {
+
+			var modId = spawnGroup.SpawnGroup.Context?.ModId ?? "N/A";
+			var collection = active ? Settings.Combat.AllPhaseModIdOverride : Settings.Combat.CombatPhaseModIdOverride;
+
+			foreach (var id in collection) {
+
+				if (modId.Contains(id)) {
+
+					return true;
+				
+				}
+			
+			}
+
+			return false;
+		
+		}
+
+		public static bool CheckCombatSpawnOverrides(bool active, ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions) {
+
+			var name = spawnGroup.SpawnGroupName;
+			var collection = active ? Settings.Combat.AllPhaseModIdOverride : Settings.Combat.CombatPhaseModIdOverride;
+
+			foreach (var id in collection) {
+
+				if (name == id) {
+
+					return true;
+
+				}
+
+			}
+
+			return false;
+
+		}
+
 		public static bool CheckSpawnCosts(SpawnConditionsProfile spawnGroup) {
 
 			bool result = true;
@@ -1497,7 +1685,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static float GetThreatLevel(double checkRange, bool includeNpcs, Vector3D coords) {
+		public static float GetThreatLevel(double checkRange, bool includeNpcs, Vector3D coords, GridConfigurationEnum gridconfigurationenum = GridConfigurationEnum.All) {
 
 			float totalThreatLevel = 0;
 
@@ -1505,6 +1693,8 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (!grid.ActiveEntity() || grid.Distance(coords) > checkRange)
 					continue;
+
+
 
 				bool validOwner = false;
 
@@ -1515,6 +1705,14 @@ namespace ModularEncountersSystems.Spawning {
 
 				if(includeNpcs && ownership.HasFlag(GridOwnershipEnum.NpcMajority))
 					validOwner = true;
+
+				if (grid.CubeGrid.IsStatic && gridconfigurationenum.HasFlag(GridConfigurationEnum.Dynamic))
+					validOwner = false;
+
+				if (!grid.CubeGrid.IsStatic && gridconfigurationenum.HasFlag(GridConfigurationEnum.Static))
+					validOwner = false;
+
+
 
 				if (!validOwner)
 					continue;

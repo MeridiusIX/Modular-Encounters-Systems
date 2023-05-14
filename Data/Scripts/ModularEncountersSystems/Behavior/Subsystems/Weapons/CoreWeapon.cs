@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
+using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
@@ -239,7 +240,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		private bool GetAmmoDetails() {
 
 			//BehaviorLogger.Write(string.Format(" - Getting Ammo Details For Core Weapon: {0}", _block.CustomName), BehaviorDebugEnum.Weapon);
-			var currentAmmo = APIs.WeaponCore.GetActiveAmmo(_block, _weaponId);
+			var currentAmmo = APIs.WeaponCore.GetActiveAmmo(_block as MyEntity, _weaponId);
 			//BehaviorLogger.Write(string.Format(" - CurrentAmmo For Core Weapon {0}: {1}", _block.CustomName, currentAmmo ?? "N/A"), BehaviorDebugEnum.Weapon);
 
 			if (_ammoRound != currentAmmo) {
@@ -289,7 +290,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 		public IMyEntity CurrentTarget() {
 
-			return !IsValid() ? null : APIs.WeaponCore.GetWeaponTarget(_block, _weaponId).Item4;
+			return !IsValid() ? null : APIs.WeaponCore.GetWeaponTarget(_block as MyEntity, _weaponId).Item4;
 
 		}
 
@@ -333,7 +334,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (_isValid && IsActive() && _readyToFire) {
 
 				BehaviorLogger.Write(_block.CustomName + " Fire Once", BehaviorDebugEnum.Weapon);
-				APIs.WeaponCore.FireWeaponOnce(_block, false, _weaponId);
+				APIs.WeaponCore.FireWeaponOnce(_block as MyEntity, false, _weaponId);
 
 			}
 	
@@ -364,7 +365,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (!IsValid())
 				return;
 
-			APIs.WeaponCore.SetWeaponTarget(_block, LockOnTarget, _weaponId);
+			APIs.WeaponCore.SetWeaponTarget(_block as MyEntity, LockOnTarget as MyEntity, _weaponId);
 			//APIs.WeaponCore.SetAiFocus(_block, LockOnTarget);
 
 		}
@@ -374,7 +375,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (!IsValid())
 				return;
 
-			APIs.WeaponCore.SetWeaponTarget(_block, entity, _weaponId);
+			APIs.WeaponCore.SetWeaponTarget(_block as MyEntity, entity as MyEntity, _weaponId);
 			//APIs.WeaponCore.SetAiFocus(_block, entity);
 
 		}
@@ -396,7 +397,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 					BehaviorLogger.Write(_block.CustomName + " Start Fire", BehaviorDebugEnum.Weapon);
 					_firing = true;
-					APIs.WeaponCore.ToggleWeaponFire(_block, true, false, _weaponId);
+					APIs.WeaponCore.ToggleWeaponFire(_block as MyEntity, true, false, _weaponId);
 
 				}
 
@@ -406,7 +407,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 					BehaviorLogger.Write(_block.CustomName + " End Fire", BehaviorDebugEnum.Weapon);
 					_firing = false;
-					APIs.WeaponCore.ToggleWeaponFire(_block, false, false, _weaponId);
+					APIs.WeaponCore.ToggleWeaponFire(_block as MyEntity, false, false, _weaponId);
 
 				}
 

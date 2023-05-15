@@ -185,6 +185,12 @@ namespace ModularEncountersSystems.Events {
 				
 				}
 
+
+                if (!thisEvent.EventEnabled)
+                {
+					continue;
+                }
+
 				/*
 				//Does this event have an Event Controller (previously MainEvent)? If so, check it.
 				if (!string.IsNullOrWhiteSpace(thisEvent.Profile.EventControllerId)) {

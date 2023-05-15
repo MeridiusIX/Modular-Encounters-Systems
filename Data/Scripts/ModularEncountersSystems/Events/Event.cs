@@ -35,6 +35,10 @@ namespace ModularEncountersSystems.Events
 
         [ProtoMember(13)] public List<EventActionProfile> Actions;
 
+
+        [ProtoMember(14)] public bool EventEnabled;
+
+
         [ProtoIgnore] public bool ErrorOnSetup;
         [ProtoIgnore] public string ErrorSetupMsg;
         [ProtoIgnore] public List<EventCondition> Conditions;
@@ -149,8 +153,17 @@ namespace ModularEncountersSystems.Events
 
         public void Init(bool FirstTime = false)
         {
+            if (Profile == null)
+            {
+
+                return;
+
+            }
+
+
             if (FirstTime)
             {
+                EventEnabled = Profile.UseEvent;
                 RunCount = 0;
                 CurrentActionIndex = 0;
                 CooldownTimeTrigger = 0;
@@ -161,12 +174,7 @@ namespace ModularEncountersSystems.Events
             Conditions = new List<EventCondition>();
             Actions = new List<EventActionProfile>();
 
-            if (Profile == null)
-            {
 
-                return;
-
-            }
 
             foreach (var conditionName in Profile.ConditionIds)
             {
@@ -311,7 +319,7 @@ namespace ModularEncountersSystems.Events
 
             var sb = new StringBuilder();
             sb.Append(" - Profile SubtypeId:           ").Append(ProfileSubtypeId).AppendLine();
-            sb.Append(" - EventController:             ").Append(Profile.EventControllerId).AppendLine();
+            sb.Append(" - EventEnabled:             ").Append(EventEnabled).AppendLine();
             sb.Append(" - UniqueEvent:                 ").Append(Profile.UniqueEvent).AppendLine();
             sb.Append(" - RunCount:                    ").Append(RunCount).AppendLine();
 
@@ -323,12 +331,18 @@ namespace ModularEncountersSystems.Events
             sb.Append("     [] Actions:                ").Append(actions.ToString()).AppendLine();
             sb.Append(" - ErrorOnSetup:                ").Append(ErrorOnSetup).AppendLine();
             return sb.ToString();
-
-
         }
 
 
-
+        public string GetShortInfo()
+        {
+            var sb = new StringBuilder();
+            sb.Append(" - Profile SubtypeId:           ").Append(ProfileSubtypeId).AppendLine();
+            sb.Append(" - EventEnabled:             ").Append(EventEnabled).AppendLine();
+            sb.Append(" - UniqueEvent:                 ").Append(Profile.UniqueEvent).AppendLine();
+            sb.Append(" - RunCount:                    ").Append(RunCount).AppendLine();
+            return sb.ToString();
+        }
 
 
 

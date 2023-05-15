@@ -35,8 +35,16 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 		public bool ResetCooldownTimeOfEvents;
-		public List<string> ResetEventCooldownNames;
+		public List<string> ResetEventCooldownIds;
 		public List<string> ResetEventCooldownTags;
+
+		public bool ToggleEvents;
+		public List<string> ToggleEventIds;
+		public List<bool> ToggleEventIdModes;
+		public List<string> ToggleEventTags;
+		public List<bool> ToggleEventTagModes;
+
+
 
 		public bool ChangeZoneAtPosition;
 		public List<string> ZoneNames;
@@ -92,7 +100,7 @@ namespace ModularEncountersSystems.Events.Action {
 			SetCountersAmount = new List<int>();
 
 			ResetCooldownTimeOfEvents = false;
-			ResetEventCooldownNames = new List<string>();
+			ResetEventCooldownIds = new List<string>();
 			ResetEventCooldownTags = new List<string>();
 
 			ChangeZoneAtPosition = false;
@@ -108,8 +116,11 @@ namespace ModularEncountersSystems.Events.Action {
 			GPSVector3Ds = new List<Vector3D>();
 			GPSColors = new List<Vector3D>();
 
-
-
+			ToggleEvents = false;
+			ToggleEventIds = new List<string>();
+			ToggleEventIdModes = new List<bool>();
+			ToggleEventTags = new List<string>();
+			ToggleEventTagModes = new List<bool>();
 			SpawnEncounter = true;
 			//SpawnData = new List<SpawnProfile>();
 			SpawnVector3Ds = new List<Vector3D>();
@@ -137,9 +148,19 @@ namespace ModularEncountersSystems.Events.Action {
 				{"DecreaseCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref DecreaseCountersAmount) },
 				{"SetCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetCounters) },
 				{"SetCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersAmount) },
+
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
-				{"ResetEventCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownNames) },
+
+				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
+
+
+				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
+				{"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
+				{"ToggleEventIdModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventIdModes) },
+				{"ToggleEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventTags) },
+				{"ToggleEventTagModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventTagModes) },
+
 
 				{"AddGPSForAll", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSForAll) },
 				{"RemoveGPSForAll", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSForAll) },

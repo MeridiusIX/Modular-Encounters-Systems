@@ -1400,9 +1400,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						continue;
 					}
 
-					for (int j = 0; j < actions.EventTag.Count; j++)
+					for (int j = 0; j < actions.ActivateEventTags.Count; j++)
 					{
-						var thisEventTag = actions.EventTag[j];
+						var thisEventTag = actions.ActivateEventTags[j];
 
 						if (thisEvent.Profile.Tags.Contains(thisEventTag))
 						{
@@ -1412,9 +1412,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 
 
-					for (int j = 0; j < actions.EventId.Count; j++)
+					for (int j = 0; j < actions.ActivateEventIds.Count; j++)
 					{
-						var thisEventId = actions.EventId[j];
+						var thisEventId = actions.ActivateEventIds[j];
 
 						if (thisEvent.ProfileSubtypeId == thisEventId)
 						{
@@ -1593,8 +1593,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (actions.ResetCooldownTimeOfEvents)
 			{
-				EventActionProfile.ResetCooldownTimeOfEvents(actions.ResetEventCooldownNames, actions.ResetEventCooldownTags, _behavior.CurrentGrid?.Npc.SpawnGroupName);
+				EventActionProfile.ResetCooldownTimeOfEvents(actions.ResetEventCooldownIds, actions.ResetEventCooldownTags, _behavior?.CurrentGrid?.Npc.SpawnGroupName);
 			}
+
+            if (actions.ToggleEvents)
+            {
+				EventActionProfile.ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes, _behavior?.CurrentGrid?.Npc.SpawnGroupName);
+			}
+
 
 			if (actions.ResetThisStaticEncounter)
 			{

@@ -75,8 +75,14 @@ namespace ModularEncountersSystems.Events.Action {
 
             if (actions.ResetCooldownTimeOfEvents)
             {
-				ResetCooldownTimeOfEvents(actions.ResetEventCooldownNames, actions.ResetEventCooldownTags);
+				ResetCooldownTimeOfEvents(actions.ResetEventCooldownIds, actions.ResetEventCooldownTags);
 			}
+
+			if (actions.ToggleEvents)
+			{
+				EventActionProfile.ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes);
+			}
+
 
 			//ChatBroadcast
 			if (actions.UseChatBroadcast == true) {
@@ -288,6 +294,46 @@ namespace ModularEncountersSystems.Events.Action {
 			}
 
 		}
+
+		
+		public static void ToggleEvents(List<string> ToggleEventIds, List<bool> ToggleEventIdModes, List<string> ToggleEventTags, List<bool> ToggleEventTagModes, string SpawnGroupName = "")
+		{
+			for (int i = 0; i < ToggleEventIds.Count; i++)
+			{
+				var Name = ToggleEventIds[i];
+				if (Name.Contains("{SpawnGroupName}") && SpawnGroupName != null)
+				{
+					Name = Name.Replace("{SpawnGroupName}", SpawnGroupName);
+				}
+
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Name == Event.ProfileSubtypeId)
+					{
+						Event.EventEnabled = ToggleEventIdModes[i];
+					}
+				}
+			}
+
+
+			for (int i = 0; i < ToggleEventTags.Count; i++)
+			{
+				var Tag = ToggleEventTags[i];
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Event.Profile.Tags.Contains(Tag))
+					{
+						Event.EventEnabled = ToggleEventTagModes[i];
+					}
+				}
+			}
+
+		}
+
+
+
+
+
 
 
 

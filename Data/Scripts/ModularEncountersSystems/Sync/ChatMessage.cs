@@ -183,13 +183,13 @@ namespace ModularEncountersSystems.Sync {
 				Message = Message.Replace("/MES.IGLBD", "/MES.Info.GetLogging.BehaviorDebug");
 
 			if (Message.StartsWith("/MES.IGGB"))
-				Message = Message.Replace("/MES.IGBD", "/MES.Info.GetGridBehavior");
+				Message = Message.Replace("/MES.IGGB", "/MES.Info.GetGridBehavior");
 
 			if (Message.StartsWith("/MES.IGGD"))
-				Message = Message.Replace("/MES.IGBD", "/MES.Info.GetGridData");
+				Message = Message.Replace("/MES.IGGD", "/MES.Info.GetGridData");
 
 			if (Message.StartsWith("/MES.IGD"))
-				Message = Message.Replace("/MES.IGBD", "/MES.Info.GetDiagnostics");
+				Message = Message.Replace("/MES.IGD", "/MES.Info.GetDiagnostics");
 
 		}
 
@@ -887,6 +887,16 @@ namespace ModularEncountersSystems.Sync {
 				var voxelSpawnB = MyAPIGateway.Session.VoxelMaps.CreatePredefinedVoxelMap("Nearby_Station_7", null, newMatrix, true);
 
 				ReturnMessage = "Test Spawn Asteroids:";
+				Mode = ChatMsgMode.ReturnMessage;
+				return true;
+
+			}
+
+			//MES.Debug.SpawnConstruct
+			if (array[2] == "SpawnConstruct") {
+
+				ReturnMessage = "Attempting Spawn Construct";
+				LoggerTools.DebugSpawnConstruct(this);
 				Mode = ChatMsgMode.ReturnMessage;
 				return true;
 

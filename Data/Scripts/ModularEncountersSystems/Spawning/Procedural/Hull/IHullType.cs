@@ -13,7 +13,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 		void SystemsPlacement();
 		void GreebleHull();
 		void PaintingAndSkins();
-		void SpawnCurrentConstruct(Vector3D coords);
+		void SpawnCurrentConstruct(MatrixD matrix);
 
 	}
 

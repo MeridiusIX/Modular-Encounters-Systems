@@ -302,7 +302,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					}
 
-					MyAPIGateway.Session.Factions.SetReputationBetweenPlayerAndFaction(playerId, faction.FactionId, newRep);
+					RelationManager.SetReputationWithFaction(playerId, faction.FactionId, newRep);
 					//MyVisualScriptLogicProvider.ShowNotification(string.Format("Reputation With {0} {1} By: {2}", faction.Tag, modifier, amount.ToString()), 2000, color, playerId);
 
 					var steamId = MyAPIGateway.Players.TryGetSteamId(playerId);

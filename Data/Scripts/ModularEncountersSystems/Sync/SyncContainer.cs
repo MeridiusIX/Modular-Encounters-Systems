@@ -16,6 +16,7 @@ namespace ModularEncountersSystems.Sync {
         SuitUpgradePlayerStats,
         SuitUpgradeTransaction,
         SuitUpgradeNewPlayerStats,
+        ReputationChangeClient,
 
     }
 

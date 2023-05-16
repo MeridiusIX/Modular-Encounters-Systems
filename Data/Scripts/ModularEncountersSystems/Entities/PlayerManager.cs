@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Configuration;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Terminal;
@@ -107,6 +108,9 @@ namespace ModularEncountersSystems.Entities {
 		public static void PlayerConnectEvent(long playerId) {
 
 			MyAPIGateway.Utilities.InvokeOnGameThread(() => { RefreshAllPlayers(true); });
+			RelationManager.RunCount = 0;
+			RelationManager.PlayerConnected = true;
+
 
 		}
 

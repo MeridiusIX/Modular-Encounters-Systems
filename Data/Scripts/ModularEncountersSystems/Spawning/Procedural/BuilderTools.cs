@@ -17,11 +17,6 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		public static Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> SymmetryXReference = new Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>>();
 		public static Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> SymmetryYReference = new Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>>();
 
-		public static MyDefinitionId ArmorBlock = new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorBlock");
-		public static MyDefinitionId ArmorSlope = new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorSlope");
-		public static MyDefinitionId ArmorCorner = new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorCorner");
-		public static MyDefinitionId ArmorInvCorner = new MyDefinitionId(typeof(MyObjectBuilder_CubeBlock), "LargeBlockArmorCornerInv");
-
 		private static SerializableVector3 _colorMask = new SerializableVector3(0.122222222f, 0.05f, 0.46f);
 
 		private static Dictionary<MyBlockOrientation, MyBlockOrientation> _tempDict = new Dictionary<MyBlockOrientation, MyBlockOrientation>();

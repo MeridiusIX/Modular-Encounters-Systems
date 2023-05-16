@@ -131,7 +131,10 @@ namespace ModularEncountersSystems.Files {
 
 		public int GetAmount(bool offer) {
 
-			if(offer)
+			//BehaviorLogger.Write("Offer Min Amount: " + Offer.MinAmount.ToString(), BehaviorDebugEnum.Action);
+			//BehaviorLogger.Write("Offer Min Amount: " + Offer.MaxAmount.ToString(), BehaviorDebugEnum.Action);
+
+			if (offer)
 				return MathTools.RandomBetween(Offer.MinAmount, Offer.MaxAmount + 1);
 			return MathTools.RandomBetween(Order.MinAmount, Order.MaxAmount + 1);
 

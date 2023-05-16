@@ -1000,7 +1000,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					//Logger.Write("Change Rep", true);/
 					var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(customer, npcFaction.FactionId);
-					MyAPIGateway.Session.Factions.SetReputationBetweenPlayerAndFaction(customer, npcFaction.FactionId, rep + (int)dividedAmount);
+					RelationManager.SetReputationWithFaction(customer, npcFaction.FactionId, rep + (int)dividedAmount);
 					existingAmt -= (int)dividedAmount * Settings.General.EconomyBuyingReputationCostAmount;
 
 				}

@@ -111,7 +111,9 @@ namespace ModularEncountersSystems.Tasks {
 
 						SpawnLogger.Write(" - " + grid.CubeGrid.CustomName + " Has Non-NPC Ownership. Cleaning Aborted.", SpawnerDebugEnum.CleanUp, true);
 						Cleaning.FlaggedForRemoval.RemoveAt(i);
-						break;
+						
+						if(!grid.ForceRemove)
+							break;
 
 					}
 

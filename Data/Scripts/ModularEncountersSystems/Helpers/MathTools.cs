@@ -142,6 +142,42 @@ namespace ModularEncountersSystems.Helpers {
         
         }
 
+        public static int ClampRandomEven(int value, int min, int max) {
+
+            if (value % 2 != 0)
+                return value;
+
+            if (value - 1 < min)
+                return value + 1;
+
+            if (value + 1 > max)
+                return value - 1;
+
+            if(RandomBool())
+                return value + 1;
+
+            return value - 1;
+
+        }
+
+        public static int ClampRandomOdd(int value, int min, int max) {
+
+            if (value % 2 == 0)
+                return value;
+
+            if (value - 1 < min)
+                return value + 1;
+
+            if (value + 1 > max)
+                return value - 1;
+
+            if (RandomBool())
+                return value + 1;
+
+            return value - 1;
+
+        }
+
         public static bool CompareValues(float providedValue, float comparedValue, CounterCompareEnum compare) {
 
             if (compare == CounterCompareEnum.GreaterOrEqual)

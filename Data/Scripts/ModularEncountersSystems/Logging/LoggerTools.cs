@@ -25,6 +25,7 @@ using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
 using VRageMath;
+using ModularEncountersSystems.Spawning.Procedural.Hull;
 
 namespace ModularEncountersSystems.Logging {
 
@@ -677,6 +678,15 @@ namespace ModularEncountersSystems.Logging {
 
 			TaskProcessor.Tasks.Add(new DebugSpawnSingleBlocks(MatrixD.CreateWorld(msg.PlayerPosition, Vector3D.Forward, Vector3D.Up)));
 		
+		}
+
+		public static void DebugSpawnConstruct(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld((msg.CameraPosition), msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var hull = new HullTypeSomerset();
+			hull.InitialHullSetup();
+			hull.SpawnCurrentConstruct(matrix);
+
 		}
 
 		public static void DebugTestSaveGrid(ChatMessage msg) {

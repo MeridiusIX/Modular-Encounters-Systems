@@ -420,6 +420,23 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
+		public static void PrefabSpawnDebug(string prefabId, MatrixD matrix) {
+
+			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(prefabId);
+
+			if (prefab == null) {
+
+				return;
+
+			}
+
+			Vector3D coords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
+
+			var dummyList = new List<IMyCubeGrid>();
+			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, prefabId, coords, (Vector3)matrix.Backward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, 0);
+
+		}
+
 		public static void PrefabSpawnDebug(long playerId, string prefabId, BoundingBoxD? box = null, MatrixD? boxMatrix = null) {
 
 			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(prefabId);

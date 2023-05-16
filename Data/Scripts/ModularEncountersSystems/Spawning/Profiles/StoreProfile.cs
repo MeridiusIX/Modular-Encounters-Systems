@@ -255,6 +255,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			_tempItems.Clear();
 			block.GetStoreItems(_tempItems);
 
+			foreach (var item in _tempItems) {
+
+				if(item.Item.HasValue)
+					BehaviorLogger.Write(string.Format("{0} - {1} - {2}", item.Item.Value.ToString(), item.StoreItemType.ToString(), item.Amount), BehaviorDebugEnum.Action);
+				else
+					BehaviorLogger.Write(string.Format("{0} - {1} - {2}", item.ItemType.ToString(), item.StoreItemType.ToString(), item.Amount), BehaviorDebugEnum.Action);
+			}
+
 			for (int i = _tempItems.Count - 1; i >= 0; i--) {
 
 				_tempFirstItem = _tempItems[i];
@@ -345,6 +353,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			var newItem = CreateStoreItem(block, item, offer ? StoreItemTypes.Offer : StoreItemTypes.Order, (int)additionalAdd);
 			
+
 			if (newItem.PricePerUnit <= 0) {
 
 				BehaviorLogger.Write(" - Item Cost Zero", BehaviorDebugEnum.Action);
@@ -352,8 +361,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			}
 
+			//BehaviorLogger.Write(" - Amount: " + (newItem.Amount), BehaviorDebugEnum.Action);
+			//BehaviorLogger.Write(" - Removed Amount: " + (newItem.RemovedAmount), BehaviorDebugEnum.Action);
+
 			newItem.IsCustomStoreItem = item.IsCustomItem;
 			ApplyItemLimits(newItem);
+
+			//BehaviorLogger.Write(" - Amount After: " + (newItem.Amount), BehaviorDebugEnum.Action);
+			//BehaviorLogger.Write(" - Removed Amount: " + (newItem.RemovedAmount), BehaviorDebugEnum.Action);
 
 
 			if (AddedItemsAveragePrice) {
@@ -507,7 +522,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_Ingot)) {
 
-					LimitAmountAndValue(item, _storeLimits.MaxIngotAmount, _storeLimits.MaxIngotAmount);
+					LimitAmountAndValue(item, _storeLimits.MaxIngotAmount, _storeLimits.MaxIngotValue);
 					return;
 
 				}
@@ -555,13 +570,17 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			var actualAmount = item.Amount - item.RemovedAmount;
 			var totalValue = (actualAmount * item.PricePerUnit);
-
+			//BehaviorLogger.Write("Max Value: " + maxValue.ToString(), BehaviorDebugEnum.Action);
+			//BehaviorLogger.Write("Max Amount: " + maxAmount.ToString(), BehaviorDebugEnum.Action);
+			//BehaviorLogger.Write("2Actual Amount: " + actualAmount.ToString(), BehaviorDebugEnum.Action);
+			//BehaviorLogger.Write("2Max Amount: " + maxAmount.ToString(), BehaviorDebugEnum.Action);
 			if (maxAmount > -1) {
 
 				if (actualAmount > maxAmount) {
 
-					var difference = maxAmount - actualAmount;
-					item.Amount += difference;
+					var difference = actualAmount - maxAmount;
+					//BehaviorLogger.Write("Amount Difference: " + difference.ToString(), BehaviorDebugEnum.Action);
+					item.Amount -= difference; //was += previously. hopefully that was a derp
 
 				}
 			
@@ -573,6 +592,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 					var valueDiff = (int)Math.Abs(maxValue - totalValue);
 					var amountToRemove = valueDiff / item.PricePerUnit;
+					//BehaviorLogger.Write("Amount Value Difference: " + amountToRemove.ToString(), BehaviorDebugEnum.Action);
 					item.Amount -= amountToRemove;
 
 				}

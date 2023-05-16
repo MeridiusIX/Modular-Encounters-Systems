@@ -25,7 +25,7 @@ namespace ModularEncountersSystems.Configuration {
 		public PlanetSpawnFilter(string name, long id) {
 
 			PlanetName = name;
-			PlanetId = Math.Abs(id);
+			PlanetId = id;
 			PlanetSpawnGroupBlacklist = new string[] { "AddSpawnGroupIdHere", "AddAnotherSpawnGroupIdHere" };
 		
 		}

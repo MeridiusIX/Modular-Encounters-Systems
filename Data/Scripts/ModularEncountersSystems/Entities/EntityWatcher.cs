@@ -48,6 +48,8 @@ namespace ModularEncountersSystems.Entities {
 			_setup = false;
 
 			MyVisualScriptLogicProvider.PlayerConnected += PlayerManager.PlayerConnectEvent;
+			MyVisualScriptLogicProvider.PlayerSpawned += PlayerManager.PlayerConnectEvent;
+			MyVisualScriptLogicProvider.PlayerRespawnRequest += PlayerManager.PlayerConnectEvent;
 			MyAPIGateway.Players.ItemConsumed += PlayerManager.ItemConsumedEvent;
 			PlayerManager.RefreshAllPlayers(true);
 
@@ -122,6 +124,9 @@ namespace ModularEncountersSystems.Entities {
 
 			MyAPIGateway.Entities.OnEntityAdd -= NewEntityDetected;
 			MyAPIGateway.Players.ItemConsumed -= PlayerManager.ItemConsumedEvent;
+			MyVisualScriptLogicProvider.PlayerConnected -= PlayerManager.PlayerConnectEvent;
+			MyVisualScriptLogicProvider.PlayerSpawned -= PlayerManager.PlayerConnectEvent;
+			MyVisualScriptLogicProvider.PlayerRespawnRequest -= PlayerManager.PlayerConnectEvent;
 			MES_SessionCore.SaveActions -= ProgressionManager.SaveProgression;
 
 			UnloadEntities?.Invoke();

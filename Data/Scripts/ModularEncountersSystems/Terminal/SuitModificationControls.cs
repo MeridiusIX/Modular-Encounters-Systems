@@ -140,11 +140,17 @@ namespace ModularEncountersSystems.Terminal {
 				_actionE.Name = new StringBuilder("Enter");
 				_actionE.Action = BlankAction;
 
-
-				if (MyAPIGateway.Session.LocalHumanPlayer != null && _progressionStats == null) {
+				if (MyAPIGateway.Multiplayer.IsServer && MyAPIGateway.Session.LocalHumanPlayer != null) {
 
 					_progressionStats = PlayerManager.GetProgressionContainer(MyAPIGateway.Session.LocalHumanPlayer.IdentityId, MyAPIGateway.Session.LocalHumanPlayer.SteamUserId);
-				
+
+				} else {
+
+					var syncContainer = new SyncContainer(SyncMode.SuitUpgradeNewPlayerStats, null);
+					syncContainer.IdentityId = MyAPIGateway.Session.LocalHumanPlayer?.IdentityId ?? 0;
+					syncContainer.SteamId = MyAPIGateway.Session.LocalHumanPlayer?.SteamUserId ?? 0;
+					SyncManager.SendSyncMesage(syncContainer, 0, true);
+
 				}
 
 			}
@@ -181,6 +187,7 @@ namespace ModularEncountersSystems.Terminal {
 
 			_lastSelectedBlock = block;
 
+			/*
 			if (_progressionStats != null) {
 
 				var serializedProgression = MyAPIGateway.Utilities.SerializeToBinary<ProgressionContainer>(_progressionStats);
@@ -194,7 +201,7 @@ namespace ModularEncountersSystems.Terminal {
 				SyncManager.SendSyncMesage(syncContainer, 0, true);
 
 			}
-			
+			*/
 		}
 
 		public static void BlankAction(IMyTerminalBlock block) { }

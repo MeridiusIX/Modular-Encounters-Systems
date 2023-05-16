@@ -98,6 +98,18 @@ namespace ModularEncountersSystems.Sync {
 
                 }
 
+                if (container.Mode == SyncMode.ReputationChangeClient) {
+
+                    var repChange = MyAPIGateway.Utilities.SerializeFromBinary<ReputationChange>(container.Data);
+
+                    if (repChange != null) {
+
+                        repChange.Process();
+
+                    }
+
+                }
+
                 if (container.Mode == SyncMode.ShipyardTransaction) {
 
                     var shipYardData = MyAPIGateway.Utilities.SerializeFromBinary<ShipyardTransaction>(container.Data);

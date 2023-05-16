@@ -547,6 +547,16 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			if (array[2] == "ResetThisStaticEncounters")
+			{
+				if (array.Length >= 4 && !string.IsNullOrWhiteSpace(array[3]))
+                {
+					NpcManager.ResetThisResetThisStaticEncounter(array[3]);
+					return true;
+				}
+			}
+
+
 			//MES.Debug.CreateIdStorage
 			if (array[2] == "CreateIdStorage") {
 

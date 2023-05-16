@@ -1895,36 +1895,32 @@ namespace ModularEncountersSystems.Logging {
 		{
 
 			var sb = new StringBuilder();
+			var sb2 = new StringBuilder();
 			sb.Append("::::: Event Data :::::").AppendLine();
-			sb.Append("Current time: ").Append(MyAPIGateway.Session.GameDateTime).AppendLine();
-			sb.Append("Corrected time: ").Append(Helpers.Time.GetRealIngameTime()).AppendLine();
 
-			/*
-			for (int i = EventManager.EventControllersList.Count - 1; i >= 0; i--)
-			{
-
-				var EventControllersList = EventManager.EventControllersList[i];
-
-				if (EventControllersList == null || !EventControllersList.Active)
-					continue;
-
-				sb.Append(EventControllersList.GetInfo()).AppendLine();
-
-			}
-			*/
+			sb2.Append("::::: Disabled Events :::::").AppendLine();
 
 			for (int i = EventManager.EventsList.Count - 1; i >= 0; i--)
 			{
-
 				var Event = EventManager.EventsList[i];
 
 				if (Event == null)
 					continue;
 
-				sb.Append(Event.GetInfo()).AppendLine();
+				if ((Event.RunCount > 0 && Event.Profile.UniqueEvent) | !Event.EventEnabled)
+				{
+					sb2.Append(Event.GetShortInfo()).AppendLine();
+				}
+				else
+					sb.Append(Event.GetInfo()).AppendLine();
+
 
 			}
 
+
+
+
+			sb.Append(sb2);
 
 			msg.ClipboardPayload = sb.ToString();
 			msg.Mode = ChatMsgMode.ReturnMessage;

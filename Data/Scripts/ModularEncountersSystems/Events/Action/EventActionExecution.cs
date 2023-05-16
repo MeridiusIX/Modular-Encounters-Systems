@@ -1,11 +1,15 @@
-﻿using ModularEncountersSystems.Events.Condition;
+﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Zones;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRageMath;
 
 namespace ModularEncountersSystems.Events.Action {
 	public partial class EventActionProfile {
@@ -71,8 +75,14 @@ namespace ModularEncountersSystems.Events.Action {
 
             if (actions.ResetCooldownTimeOfEvents)
             {
-				ResetCooldownTimeOfEvents(actions.ResetEventCooldownNames, actions.ResetEventCooldownTags);
+				ResetCooldownTimeOfEvents(actions.ResetEventCooldownIds, actions.ResetEventCooldownTags);
 			}
+
+			if (actions.ToggleEvents)
+			{
+				EventActionProfile.ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes);
+			}
+
 
 			//ChatBroadcast
 			if (actions.UseChatBroadcast == true) {
@@ -84,6 +94,73 @@ namespace ModularEncountersSystems.Events.Action {
 				}
 
 			}
+
+            if (actions.AddGPSForAll)
+            {
+				for (int i = 0; i < actions.GPSNames.Count; i++)
+				{
+					var Color = new Color((Vector3)actions.GPSColors[i]);
+
+					if (actions.UseGPSObjective)
+					{
+						MyVisualScriptLogicProvider.AddGPSObjectiveForAll(actions.GPSNames[i], actions.GPSDescriptions[i], actions.GPSVector3Ds[i], Color);
+					}
+					else
+					{
+						MyVisualScriptLogicProvider.AddGPSForAll(actions.GPSNames[i], actions.GPSDescriptions[i], actions.GPSVector3Ds[i], Color);
+					}
+				}
+			}
+			if (actions.RemoveGPSForAll)
+			{
+				for (int i = 0; i < actions.GPSNames.Count; i++)
+				{
+					MyVisualScriptLogicProvider.RemoveGPSForAll(actions.GPSNames[i]);
+				}
+			}
+
+
+			//
+			if (actions.SpawnEncounter)
+            {
+				if(Spawner.Count == actions.SpawnFactionTags.Count && Spawner.Count == actions.SpawnVector3Ds.Count)
+                {
+					for (int i = 0; i < Spawner.Count; i++)
+					{
+						var spawner = Spawner[i];
+
+						if (spawner.UseSpawn)
+						{
+							BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Spawn", BehaviorDebugEnum.Spawn);
+							if (spawner.IsReadyToSpawn())
+							{
+								var coords = actions.SpawnVector3Ds[i];
+								var planet = PlanetManager.GetNearestPlanet(coords);
+
+								MatrixD WorldMatrix = MatrixD.Zero;
+
+								if (planet != null && PlanetManager.InGravity(coords))
+								{
+									var up = planet.UpAtPosition(coords);
+									var forward = Vector3D.CalculatePerpendicularVector(up);
+									WorldMatrix = MatrixD.CreateWorld(coords, forward, up);
+								}
+								else
+									WorldMatrix = MatrixD.CreateWorld(coords);
+
+								spawner.AssignInitialMatrix(WorldMatrix);
+								spawner.CurrentFactionTag = actions.SpawnFactionTags[i];
+								BehaviorSpawnHelper.BehaviorSpawnRequest(spawner);
+							}
+
+						}
+
+					}
+				}
+
+			}
+
+
 
 
 			if (actions.ChangeZoneAtPosition)
@@ -217,6 +294,46 @@ namespace ModularEncountersSystems.Events.Action {
 			}
 
 		}
+
+		
+		public static void ToggleEvents(List<string> ToggleEventIds, List<bool> ToggleEventIdModes, List<string> ToggleEventTags, List<bool> ToggleEventTagModes, string SpawnGroupName = "")
+		{
+			for (int i = 0; i < ToggleEventIds.Count; i++)
+			{
+				var Name = ToggleEventIds[i];
+				if (Name.Contains("{SpawnGroupName}") && SpawnGroupName != null)
+				{
+					Name = Name.Replace("{SpawnGroupName}", SpawnGroupName);
+				}
+
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Name == Event.ProfileSubtypeId)
+					{
+						Event.EventEnabled = ToggleEventIdModes[i];
+					}
+				}
+			}
+
+
+			for (int i = 0; i < ToggleEventTags.Count; i++)
+			{
+				var Tag = ToggleEventTags[i];
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Event.Profile.Tags.Contains(Tag))
+					{
+						Event.EventEnabled = ToggleEventTagModes[i];
+					}
+				}
+			}
+
+		}
+
+
+
+
+
 
 
 

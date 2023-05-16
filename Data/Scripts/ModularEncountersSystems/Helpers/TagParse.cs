@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Events;
+using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
@@ -407,6 +408,30 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 		*/
+
+		public static void TagThreatScoreTypeEnumCheck(string tag, ref ThreatScoreTypeEnum original)
+		{
+
+			ThreatScoreTypeEnum result = ThreatScoreTypeEnum.Player;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2)
+			{
+
+				if (ThreatScoreTypeEnum.TryParse(tagSplit[1], out result) == false)
+				{
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+
+
 		public static void TagDirectionEnumCheck(string tag, ref Direction original) {
 
 			Direction result = Direction.None;

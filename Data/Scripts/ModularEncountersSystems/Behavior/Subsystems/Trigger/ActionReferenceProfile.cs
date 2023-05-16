@@ -372,8 +372,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> StoreProfiles;
 
 		public bool ActivateEvent;
-		public List<string> EventId;
-		public List<string> EventTag;
+		public List<string> ActivateEventIds;
+		public List<string> ActivateEventTags;
 
 		public bool CreateSafeZone;
 		public string SafeZoneProfile;
@@ -392,8 +392,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string PlayerIdentitySandboxList;
 
 		public bool ResetCooldownTimeOfEvents;
-		public List<string> ResetEventCooldownNames;
+		public List<string> ResetEventCooldownIds;
 		public List<string> ResetEventCooldownTags;
+
+		public bool ToggleEvents;
+		public List<string> ToggleEventIds;
+		public List<bool> ToggleEventIdModes;
+
+		public List<string> ToggleEventTags;
+		public List<bool> ToggleEventTagModes;
 
 		public bool DisableAutopilot;
 		public bool EnableAutopilot;
@@ -755,8 +762,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			StoreProfiles = new List<string>();
 
 			ActivateEvent = false;
-			EventId = new List<string>();
-			EventTag = new List<string>();
+			ActivateEventIds = new List<string>();
+			ActivateEventTags = new List<string>();
+
 
 			CreateSafeZone = false;
 
@@ -777,9 +785,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			PlayerIdentitySandboxList = "";
 
 			ResetCooldownTimeOfEvents = false;
-			ResetEventCooldownNames = new List<string>();
+			ResetEventCooldownIds = new List<string>();
 			ResetEventCooldownTags = new List<string>();
 
+			ToggleEvents = false;
+
+			ToggleEventIds = new List<string>();
+			ToggleEventIdModes = new List<bool>();
+			ToggleEventTags = new List<string>();
+			ToggleEventTagModes = new List<bool>();
+
+			
 			DisableAutopilot = false;
 			EnableAutopilot = false;
 
@@ -1042,8 +1058,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"StoreProfiles", (s, o) => TagParse.TagStringListCheck(s, ref StoreProfiles) },
 
 				{"ActivateEvent", (s, o) => TagParse.TagBoolCheck(s, ref ActivateEvent) },
-				{"EventId", (s, o) => TagParse.TagStringListCheck(s, ref EventId) },
-				{"EventTag", (s, o) => TagParse.TagStringListCheck(s, ref EventTag) },
+				{"ActivateEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventIds) },
+				{"ActivateEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventTags) },
 
 				{"CreateSafeZone", (s, o) => TagParse.TagBoolCheck(s, ref CreateSafeZone) },
 				{"SafeZoneProfile", (s, o) => TagParse.TagStringCheck(s, ref SafeZoneProfile) },
@@ -1061,8 +1077,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"RemovePlayerIdentityFromSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentityFromSandboxList) },
 				{"PlayerIdentitySandboxList", (s, o) => TagParse.TagStringCheck(s, ref PlayerIdentitySandboxList) },
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
-				{"ResetEventCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownNames) },
+				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
+
+				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
+
+				{"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
+				{"ToggleEventIdModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventIdModes) },
+
+				{"ToggleEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventTags) },
+				{"ToggleEventTagModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventTagModes) },
 
 				{"ResetThisStaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref ResetThisStaticEncounter) },
 

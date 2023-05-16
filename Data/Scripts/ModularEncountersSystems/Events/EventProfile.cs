@@ -16,6 +16,9 @@ namespace ModularEncountersSystems.Events
     {
 
         public string ProfileSubtypeId;
+
+        public bool UseEvent;
+
         public string EventControllerId;
         public bool UniqueEvent;
 
@@ -37,6 +40,7 @@ namespace ModularEncountersSystems.Events
         public EventProfile()
         {
             ProfileSubtypeId = "";
+            UseEvent = true;
             EventControllerId = "";
             UniqueEvent = true;
 
@@ -54,7 +58,7 @@ namespace ModularEncountersSystems.Events
             UseAnyPassingCondition = false;
 
             EditorReference = new Dictionary<string, Action<string, object>> {
-
+                {"UseEvent", (s, o) => TagParse.TagBoolCheck(s, ref UseEvent) },
                 {"EventControllerId", (s, o) => TagParse.TagStringCheck(s, ref EventControllerId) },
                 {"UniqueEvent", (s, o) => TagParse.TagBoolCheck(s, ref UniqueEvent) },
                 {"MinCooldownMs", (s, o) => TagParse.TagIntCheck(s, ref MinCooldownMs) },

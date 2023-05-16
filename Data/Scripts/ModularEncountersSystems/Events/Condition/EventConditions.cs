@@ -11,14 +11,24 @@ using VRage.Game;
 using VRage.Game.Components;
 using VRage.Utils;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Spawning;
 using VRageMath;
+using ModularEncountersSystems.Entities;
 
 namespace ModularEncountersSystems.Events.Condition
 {
+    public enum ThreatScoreTypeEnum
+    {
+        Player = 0,
+        PlayerLocation = 1,
+        Location = 2
+    }
+
     //Noting to safe? This is techniqually all "references"
     public class EventCondition {
 
         public string ProfileSubtypeId;
+        public bool UseFailCondition;
         public bool CheckTrueBooleans;
         public List<string> TrueBooleans;
         public bool AllowAnyTrueBoolean;
@@ -32,24 +42,29 @@ namespace ModularEncountersSystems.Events.Condition
         public List<CounterCompareEnum> CounterCompareTypes;
 
         public bool CheckPlayerNear;
-        public bool CheckPlayerFar;
-        public int Distance;
-        public Vector3D vector3;
+        public Vector3D PlayerNearVector3;
+        public int PlayerNearDistanceFromVector3;
         public List<string> PlayerFilterIds;
 
-
-
-
-
+        public bool CheckThreatScore;
+        public int ThreatScoreAmount;
+        public int ThreatScoreDistance;
+        public Vector3D ThreatScoreVector3;
+        public int ThreatScoreDistanceFromVector3;
+        public ThreatScoreTypeEnum ThreatScoreType;
+        public GridConfigurationEnum ThreatScoreGridConfiguration;
 
         public bool CheckMainEventDaysPassed;
         public int DaysPassed;
 
         public bool UseAnyPassingCondition;
 
+        public Dictionary<string, Action<string, object>> EditorReference;
+
         public EventCondition()
         {
             ProfileSubtypeId = "";
+            UseFailCondition = false;
             CheckTrueBooleans = false;
             TrueBooleans = new List<string>();
             AllowAnyTrueBoolean = false;
@@ -65,114 +80,92 @@ namespace ModularEncountersSystems.Events.Condition
             CustomCountersTargets = new List<int>();
             CounterCompareTypes = new List<CounterCompareEnum>();
 
+            CheckPlayerNear = false;
+            PlayerNearDistanceFromVector3 = 1000;
+            PlayerNearVector3 = new Vector3D();
+            PlayerFilterIds = new List<string>();
+
+            CheckThreatScore = false;
+            ThreatScoreAmount = 1000;
+            ThreatScoreDistance = 5000;
+            ThreatScoreVector3 = new Vector3D(0,0,0);
+            ThreatScoreDistanceFromVector3 = 50000;
+            ThreatScoreType = ThreatScoreTypeEnum.Player;
+            ThreatScoreGridConfiguration = GridConfigurationEnum.All;
+
+
+            EditorReference = new Dictionary<string, Action<string, object>>
+            {
+                {"CheckTrueBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckTrueBooleans) },
+                {"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },
+                {"TrueBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueBooleans) },
+                {"AllowAnyTrueBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyTrueBoolean) },
+                {"CheckFalseBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckFalseBooleans) },
+                {"FalseBooleans", (s, o) => TagParse.TagStringListCheck(s, ref FalseBooleans) },
+                {"CheckMainEventDaysPassed", (s, o) => TagParse.TagBoolCheck(s, ref CheckMainEventDaysPassed) },
+                {"AllowAnyFalseBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyFalseBoolean) },
+                {"DaysPassed", (s, o) => TagParse.TagIntCheck(s, ref DaysPassed) },
+                {"UseAnyPassingCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseAnyPassingCondition) },
+                {"CheckCustomCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomCounters) },
+                {"CustomCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomCounters) },
+                {"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomCountersTargets) },
+                {"CounterCompareTypes", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CounterCompareTypes) },
+                {"CheckPlayerNear", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerNear) },
+                {"PlayerNearCoords", (s, o) => TagParse.TagVector3DCheck(s, ref PlayerNearVector3) },
+                {"PlayerNearDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearDistanceFromVector3) },
+                {"PlayerFilterIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerFilterIds) },
+
+
+                {"CheckThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScore) },
+                {"ThreatScoreAmount", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreAmount) },
+                {"ThreatScoreDistance", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreDistance) },
+                {"ThreatScoreCoords", (s, o) => TagParse.TagVector3DCheck(s, ref ThreatScoreVector3) },
+                {"ThreatScoreDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreDistanceFromVector3) },
+                {"ThreatScoreType", (s, o) => TagParse.TagThreatScoreTypeEnumCheck(s, ref ThreatScoreType) },
+                {"ThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref ThreatScoreGridConfiguration) },
+
+                
+            };
 
         }
 
         public void InitTags(string data)
         {
-            if (string.IsNullOrWhiteSpace(data))
-                return;
-
-            var descSplit = data.Split('\n');
-
-            foreach (var tagRaw in descSplit)
+            if (string.IsNullOrWhiteSpace(data) == false)
             {
 
-                var tag = tagRaw.Trim();
+                var descSplit = data.Split('\n');
 
-                //CheckTrueBooleans
-                if (tag.StartsWith("[CheckTrueBooleans:") == true)
+                foreach (var tag in descSplit)
                 {
 
-                    TagParse.TagBoolCheck(tag, ref this.CheckTrueBooleans);
-                }
-                //TrueBooleans
-                if (tag.StartsWith("[TrueBooleans:") == true)
-                {
-
-                    TagParse.TagStringListCheck(tag, ref this.TrueBooleans);
-                }
-
-                //AllowAnyTrueBoolean
-                if (tag.StartsWith("[AllowAnyTrueBoolean:") == true)
-                {
-
-                    TagParse.TagBoolCheck(tag, ref this.AllowAnyTrueBoolean);
-                }
-
-                //CheckFalseBooleans
-                if (tag.StartsWith("[CheckFalseBooleans:") == true)
-                {
-
-                    TagParse.TagBoolCheck(tag, ref this.CheckFalseBooleans);
-                }
-                //FalseBooleans
-                if (tag.StartsWith("[FalseBooleans:") == true)
-                {
-
-                    TagParse.TagStringListCheck(tag, ref this.FalseBooleans);
-                }
-                //CheckMainEventDaysPassed
-                if (tag.StartsWith("[CheckMainEventDaysPassed:") == true)
-                {
-
-                    TagParse.TagBoolCheck(tag, ref this.CheckMainEventDaysPassed);
-                }
-
-                //AllowAnyFalseBoolean
-                if (tag.StartsWith("[AllowAnyFalseBoolean:") == true)
-                {
-
-                    TagParse.TagBoolCheck(tag, ref this.AllowAnyFalseBoolean);
-                }
-
-                //DaysPassed
-                if (tag.StartsWith("[DaysPassed:") == true)
-                {
-
-                    TagParse.TagIntCheck(tag, ref this.DaysPassed);
-                }
-
-                //UseAnyPassingCondition
-                if (tag.StartsWith("[UseAnyPassingCondition:") == true) {
-
-                    TagParse.TagBoolCheck(tag, ref this.UseAnyPassingCondition);
+                    EditValue(tag);
 
                 }
-                //CheckCustomCounters
-                if (tag.StartsWith("[CheckCustomCounters:") == true)
-                {
-
-                    TagParse.TagBoolCheck(tag, ref this.CheckCustomCounters);
-
-                }
-                //CustomCounters
-                if (tag.StartsWith("[CustomCounters:") == true)
-                {
-
-                    TagParse.TagStringListCheck(tag, ref this.CustomCounters);
-
-                }
-                //CustomCountersTargets
-                if (tag.StartsWith("[CustomCountersTargets:") == true)
-                {
-
-                    TagParse.TagIntListCheck(tag, ref this.CustomCountersTargets);
-
-                }
-                //CounterCompareTypes
-                if (tag.StartsWith("[CounterCompareTypes:") == true)
-                {
-
-                    TagParse.TagCounterCompareEnumCheck(tag, ref this.CounterCompareTypes);
-
-                }
-
-
 
             }
+        }
+
+        public void EditValue(string receivedValue)
+        {
+
+            var processedTag = TagParse.ProcessTag(receivedValue);
+
+            if (processedTag.Length < 2)
+                return;
+
+            Action<string, object> referenceMethod = null;
+
+            if (!EditorReference.TryGetValue(processedTag[0], out referenceMethod))
+                //TODO: Notes About Value Not Found
+                return;
+
+            referenceMethod?.Invoke(receivedValue, null);
 
         }
+
+
+
 
         public static bool AreConditionsMet(bool anyPassingConditionEventProfile, List<EventCondition> profiles)
         {
@@ -378,7 +371,7 @@ namespace ModularEncountersSystems.Events.Condition
 
                 //int amountofplayersmatch = 0;
 
-                ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(Profile.vector3, Profile.Distance);
+                ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(Profile.PlayerNearVector3, Profile.PlayerNearDistanceFromVector3);
                 //int amountofPlayers = ListOfPlayersinRange.Count;
 
                 foreach (IMyPlayer Player in ListOfPlayersinRange)
@@ -388,14 +381,58 @@ namespace ModularEncountersSystems.Events.Condition
 
                 foreach (var id in ListOfPlayerIds)
                 {
-                    if (PlayerFilter.ArePlayerFiltersMet(Profile.PlayerFilterIds, id))
+                    if(Profile.PlayerFilterIds.Count < 1)
+                    {
                         satisfiedConditions++;
+                    }
+                    else
+                    {
+                        if (PlayerFilter.ArePlayerFiltersMet(Profile.PlayerFilterIds, id))
+                            satisfiedConditions++;
+                    }
+
                 }
-
-                //if (amountofPlayers == amountofplayersmatch)
-                    
-
             }
+
+
+
+
+            if (Profile.CheckThreatScore)
+            {
+                usedConditions++;
+
+                var comparetype = Profile.ThreatScoreType;
+                if(comparetype == ThreatScoreTypeEnum.Location)
+                {
+                    if (SpawnConditions.GetThreatLevel(Profile.ThreatScoreDistance, false, Profile.ThreatScoreVector3, Profile.ThreatScoreGridConfiguration) >= Profile.ThreatScoreAmount)
+                    {
+                        satisfiedConditions++;
+                    }
+                }
+                else
+                {
+                    var playerList = new List<IMyPlayer>();
+                    if (comparetype == ThreatScoreTypeEnum.Player)
+                    {
+                        MyAPIGateway.Players.GetPlayers(playerList);
+                    }
+                    if (comparetype == ThreatScoreTypeEnum.PlayerLocation)
+                    {
+                        playerList = TargetHelper.GetPlayersWithinDistance(Profile.ThreatScoreVector3, Profile.ThreatScoreDistanceFromVector3);
+                    }
+
+                    foreach (IMyPlayer Player in playerList)
+                    {
+                        if (SpawnConditions.GetThreatLevel(Profile.ThreatScoreDistance, false, Player.GetPosition(), Profile.ThreatScoreGridConfiguration) >= Profile.ThreatScoreAmount)
+                        {
+                            satisfiedConditions++;
+                            break;
+                        }
+                    }
+                }
+            }
+
+
 
 
             //Date thingy
@@ -428,6 +465,12 @@ namespace ModularEncountersSystems.Events.Condition
 
             //Vector3D coords = player?.Character?.PositionComp?.WorldAABB.Center ?? Vector3D.Zero;
 
+            if (Profile.UseFailCondition)
+            {
+                if(usedConditions != satisfiedConditions)
+                    return true;
+                return false;
+            }
             return Profile.UseAnyPassingCondition ? satisfiedConditions >= 1 : usedConditions == satisfiedConditions;
 
         }

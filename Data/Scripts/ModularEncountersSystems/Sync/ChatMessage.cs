@@ -547,10 +547,11 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.ResetThisStaticEncounters
 			if (array[2] == "ResetThisStaticEncounters")
 			{
 				if (array.Length >= 4 && !string.IsNullOrWhiteSpace(array[3]))
-                {
+				{
 					NpcManager.ResetThisResetThisStaticEncounter(array[3]);
 					return true;
 				}

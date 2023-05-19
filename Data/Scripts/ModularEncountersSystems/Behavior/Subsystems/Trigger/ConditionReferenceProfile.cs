@@ -119,6 +119,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool IsTargetPlayer;
 		public bool IsTargetGrid;
 
+		public bool IsTargetStatic;
+
 		public bool IsAttackerHostile;
 		public bool IsAttackerNeutral;
 		public bool IsAttackerFriendly;
@@ -260,7 +262,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			IsTargetPlayer = false;
 			IsTargetGrid = false;
-
+			IsTargetStatic = false;
 			IsAttackerHostile = false;
 			IsAttackerNeutral = false;
 			IsAttackerFriendly = false;
@@ -386,6 +388,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckIfTargetIsNpcOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsNpcOwned) },
 				{"IsTargetGrid", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetGrid) },
 				{"IsTargetPlayer", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetPlayer) },
+				{"IsTargetStatic", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetStatic) },
 				{"IsAttackerHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerHostile) }, //
 				{"IsAttackerNeutral", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerNeutral) },
 				{"IsAttackerFriendly", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerFriendly) },

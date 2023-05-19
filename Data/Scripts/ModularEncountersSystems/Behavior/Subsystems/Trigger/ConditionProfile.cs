@@ -886,6 +886,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+
+
+			if (ConditionReference.IsTargetStatic)
+			{
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.IsStatic())
+				{
+
+					satisfiedConditions++;
+
+				}
+
+			}
+			
 			if (ConditionReference.IsAttackerHostile) {
 
 				usedConditions++;

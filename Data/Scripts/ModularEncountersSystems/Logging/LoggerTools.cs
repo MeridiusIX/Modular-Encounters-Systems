@@ -885,6 +885,32 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(BuildKeyList("Loot Group", ProfileManager.LootGroups.Keys));
 			sb.Append(BuildKeyList("Error", ProfileManager.ErrorProfiles));
 
+			if (ProfileManager.StoreItemContainers.Count > 0) {
+
+				sb.Append("Detected Profiles: Store Item Containers").AppendLine();
+
+				
+
+				foreach (var file in ProfileManager.StoreItemContainers.Keys) {
+
+					sb.Append(" - ").Append(file).AppendLine();
+					var container = ProfileManager.StoreItemContainers[file];
+
+					if (container == null || container.StoreItemsList.Count == 0)
+						continue;
+
+					foreach (var item in container.StoreItemsList) {
+
+						sb.Append("   - ").Append((item.StoreItemId ?? "null") + " / " + item.ItemType.ToString()).AppendLine();
+
+					}
+
+				}
+
+				sb.AppendLine();
+
+			}
+
 			return sb.ToString();
 		
 		}

@@ -1027,6 +1027,10 @@ namespace ModularEncountersSystems.Sync {
 				ClipboardPayload = LoggerTools.GetAllProfiles();
 				Mode = ChatMsgMode.ReturnMessage;
 				ReturnMessage = "Loaded Profiles Sent To Clipboard.";
+
+				if (MyAPIGateway.Utilities.IsDedicated)
+					SpawnLogger.Write(ClipboardPayload, SpawnerDebugEnum.GameLog, true);
+
 				return true;
 
 			}
@@ -1160,6 +1164,10 @@ namespace ModularEncountersSystems.Sync {
 
 				ClipboardPayload = LoggerTools.GetLogging(array, ref ReturnMessage);
 				Mode = ChatMsgMode.ReturnMessage;
+
+				if (MyAPIGateway.Utilities.IsDedicated)
+					SpawnLogger.Write(ClipboardPayload, SpawnerDebugEnum.GameLog, true);
+
 				return string.IsNullOrWhiteSpace(ClipboardPayload);
 
 			}

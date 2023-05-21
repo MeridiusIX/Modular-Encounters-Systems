@@ -58,7 +58,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("SetCombatPhase", new Action<bool>(CombatPhaseManager.ForcePhase));
 			dict.Add("SetSpawnerIgnoreForDespawn", new Func<IMyCubeGrid, bool, bool>(SetSpawnerIgnoreForDespawn));
 			dict.Add("SetZoneEnabled", new Action<string, bool, Vector3D?>(SetZoneEnabled));
-			dict.Add("SpawnBossEncounter", new Func<Vector3D, List<string>, bool>(SpawnBossEncounter));
+			dict.Add("SpawnBossEncounter", new Func<Vector3D, List<string>, bool, bool, bool>(SpawnBossEncounter));
 			dict.Add("SpawnPlanetaryCargoShip", new Func<Vector3D, List<string>, bool>(SpawnPlanetaryCargoShip));
 			dict.Add("SpawnPlanetaryInstallation", new Func<Vector3D, List<string>, bool>(SpawnPlanetaryInstallation));
 			dict.Add("SpawnRandomEncounter", new Func<Vector3D, List<string>, bool>(SpawnRandomEncounter));
@@ -253,9 +253,9 @@ namespace ModularEncountersSystems.API {
 		}
 
 		//SpawnBossEncounter
-		public static bool SpawnBossEncounter(Vector3D coords, List<string> spawnGroups) {
+		public static bool SpawnBossEncounter(Vector3D coords, List<string> spawnGroups, bool forceSpawn, bool adminSpawn) {
 
-			return SpawnRequest.CalculateSpawn(coords, "API Request", SpawningType.BossEncounter, false, false, spawnGroups);
+			return SpawnRequest.CalculateSpawn(coords, "API Request", SpawningType.BossEncounter, forceSpawn, adminSpawn, spawnGroups);
 
 		}
 

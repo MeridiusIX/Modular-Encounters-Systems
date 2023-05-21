@@ -38,7 +38,7 @@ namespace ModularEncountersSystems.API {
 		private Action<bool> _setCombatPhase;
 		private Func<IMyCubeGrid, bool, bool> _setSpawnerIgnoreForDespawn;
 		private Action<string, bool, Vector3D?> _setZoneEnabled;
-		private Func<Vector3D, List<string>, bool> _spawnBossEncounter;
+		private Func<Vector3D, List<string>, bool, bool, bool> _spawnBossEncounter;
 		private Func<Vector3D, List<string>, bool> _spawnPlanetaryCargoShip;
 		private Func<Vector3D, List<string>, bool> _spawnPlanetaryInstallation;
 		private Func<Vector3D, List<string>, bool> _spawnRandomEncounter;
@@ -252,10 +252,20 @@ namespace ModularEncountersSystems.API {
 		/// <param name="coords">The coordinates where a player would normally be (used as the origin to calculate the spawn from)</param>
 		/// <param name="spawnGroups">The spawnGroups you want to potentially spawn</param>
 		/// <returns>true or false depending on if the spawn was successful</returns>
-		public bool SpawnBossEncounter(Vector3D coords, List<string> spawnGroups) => _spawnBossEncounter?.Invoke(coords, spawnGroups) ?? false;
+		public bool SpawnBossEncounter(Vector3D coords, List<string> spawnGroups) => _spawnBossEncounter?.Invoke(coords, spawnGroups, false, false) ?? false;
 
 		/// <summary>
 		/// Allows you to request a Boss Encounter Spawn at a position and with a selection of spawnGroups
+		/// </summary>
+		/// <param name="coords">The coordinates where a player would normally be (used as the origin to calculate the spawn from)</param>
+		/// <param name="spawnGroups">The spawnGroups you want to potentially spawn</param>
+		/// <param name="forceSpawn">Spawn regardless of conditions</param>
+		/// <param name="adminSpawn">The spawnGroups you want to potentially spawn</param>
+		/// <returns>true or false depending on if the spawn was successful</returns>
+		public bool SpawnBossEncounter(Vector3D coords, List<string> spawnGroups, bool forceSpawn, bool adminSpawn) => _spawnBossEncounter?.Invoke(coords, spawnGroups, forceSpawn, adminSpawn) ?? false;
+
+		/// <summary>
+		/// Allows you to request a Planetary Cargo Ship Spawn at a position and with a selection of spawnGroups
 		/// </summary>
 		/// <param name="coords">The coordinates where a player would normally be (used as the origin to calculate the spawn from)</param>
 		/// <param name="spawnGroups">The spawnGroups you want to potentially spawn</param>
@@ -263,7 +273,7 @@ namespace ModularEncountersSystems.API {
 		public bool SpawnPlanetaryCargoShip(Vector3D coords, List<string> spawnGroups) => _spawnPlanetaryCargoShip?.Invoke(coords, spawnGroups) ?? false;
 
 		/// <summary>
-		/// Allows you to request a Boss Encounter Spawn at a position and with a selection of spawnGroups
+		/// Allows you to request a Planetary Installation Spawn at a position and with a selection of spawnGroups
 		/// </summary>
 		/// <param name="coords">The coordinates where a player would normally be (used as the origin to calculate the spawn from)</param>
 		/// <param name="spawnGroups">The spawnGroups you want to potentially spawn</param>
@@ -271,7 +281,7 @@ namespace ModularEncountersSystems.API {
 		public bool SpawnPlanetaryInstallation(Vector3D coords, List<string> spawnGroups) => _spawnPlanetaryInstallation?.Invoke(coords, spawnGroups) ?? false;
 
 		/// <summary>
-		/// Allows you to request a Boss Encounter Spawn at a position and with a selection of spawnGroups
+		/// Allows you to request a Random Encounter Spawn at a position and with a selection of spawnGroups
 		/// </summary>
 		/// <param name="coords">The coordinates where a player would normally be (used as the origin to calculate the spawn from)</param>
 		/// <param name="spawnGroups">The spawnGroups you want to potentially spawn</param>
@@ -279,7 +289,7 @@ namespace ModularEncountersSystems.API {
 		public bool SpawnRandomEncounter(Vector3D coords, List<string> spawnGroups) => _spawnRandomEncounter?.Invoke(coords, spawnGroups) ?? false;
 
 		/// <summary>
-		/// Allows you to request a Boss Encounter Spawn at a position and with a selection of spawnGroups
+		/// Allows you to request a Space Cargo Ship Spawn at a position and with a selection of spawnGroups
 		/// </summary>
 		/// <param name="coords">The coordinates where a player would normally be (used as the origin to calculate the spawn from)</param>
 		/// <param name="spawnGroups">The spawnGroups you want to potentially spawn</param>
@@ -334,7 +344,7 @@ namespace ModularEncountersSystems.API {
 				_setCombatPhase = (Action<bool>)dict["SetCombatPhase"];
 				_setSpawnerIgnoreForDespawn = (Func<IMyCubeGrid, bool, bool>)dict["SetSpawnerIgnoreForDespawn"];
 				_setZoneEnabled = (Action<string, bool, Vector3D?>)dict["SetZoneEnabled"];
-				_spawnBossEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnBossEncounter"];
+				_spawnBossEncounter = (Func<Vector3D, List<string>, bool, bool, bool>)dict["SpawnBossEncounter"];
 				_spawnPlanetaryCargoShip = (Func<Vector3D, List<string>, bool>)dict["SpawnPlanetaryCargoShip"];
 				_spawnPlanetaryInstallation = (Func<Vector3D, List<string>, bool>)dict["SpawnPlanetaryInstallation"];
 				_spawnRandomEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnRandomEncounter"];

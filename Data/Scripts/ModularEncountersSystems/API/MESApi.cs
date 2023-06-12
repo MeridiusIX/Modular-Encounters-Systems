@@ -44,6 +44,7 @@ namespace ModularEncountersSystems.API {
 		private Func<Vector3D, List<string>, bool> _spawnRandomEncounter;
 		private Func<Vector3D, List<string>, bool> _spawnSpaceCargoShip;
 		private Action<string, bool> _toggleSpawnGroupEnabled;
+		private Action<bool, string, Action> _registerCustomAction;
 
 		//Create this object in your SessionComponent LoadData() Method
 		public MESApi() {
@@ -293,6 +294,18 @@ namespace ModularEncountersSystems.API {
 		/// <param name="toggle">true for enabled, false for disabled</param>
 		public void ToggleSpawnGroupEnabled(string spawnGroupName, bool toggle) => _toggleSpawnGroupEnabled?.Invoke(spawnGroupName, toggle);
 
+		/// <summary>
+		/// Allows you to register a method that is invoked when a SpawnGroup's Conditions are being evaluated. The SpawnGroup eligiblity will pass or fail depending on the bool output of your provided method.
+		/// </summary>
+		/// <param name="register">If true, the method provided will be registered. If false, the provided method will be deregistered.</param>
+		/// <param name="methodIdentifier">A unique name that is used to link your method to a SpawnCondition</param>
+		/// <param name="action">The method you want invoked when Spawning is requested.</param>
+		/*
+			action Parameters:
+
+		*/
+		public void RegisterCustomAction(bool register, string methodIdentifier, Action action) => _registerCustomAction?.Invoke(register, methodIdentifier, action);
+
 		//Run This Method in your SessionComponent UnloadData() Method
 		public void UnregisterListener() {
 
@@ -339,7 +352,8 @@ namespace ModularEncountersSystems.API {
 				_spawnPlanetaryInstallation = (Func<Vector3D, List<string>, bool>)dict["SpawnPlanetaryInstallation"];
 				_spawnRandomEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnRandomEncounter"];
 				_spawnSpaceCargoShip = (Func<Vector3D, List<string>, bool>)dict["SpawnSpaceCargoShip"];
-				_toggleSpawnGroupEnabled = (Action<string, bool>)dict["ToggleSpawnGroupEnabled"]; 
+				_toggleSpawnGroupEnabled = (Action<string, bool>)dict["ToggleSpawnGroupEnabled"];
+				_registerCustomAction = (Action<bool, string, Action>)dict["RegisterCustomAction"];
 
 			} catch (Exception e) {
 

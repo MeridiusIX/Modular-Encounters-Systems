@@ -24,6 +24,10 @@ namespace ModularEncountersSystems.API {
 		public static Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>> BehaviorCustomTriggers = new Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>>();
 		public static Dictionary<string, Func<string, string, string, Vector3D, bool>> SpawnCustomConditions = new Dictionary<string, Func<string, string, string, Vector3D, bool>>();
 
+		public static Dictionary<string, Action> CustomActions = new Dictionary<string, Action>();
+
+
+
 		public static void SendApiToMods() {
 
 			//Create a Dictionary of delegates that point to methods in the MES code.
@@ -64,7 +68,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("SpawnRandomEncounter", new Func<Vector3D, List<string>, bool>(SpawnRandomEncounter));
 			dict.Add("SpawnSpaceCargoShip", new Func<Vector3D, List<string>, bool>(SpawnSpaceCargoShip));
 			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
-
+			dict.Add("RegisterCustomAction", new Action<bool, string, Action>(RegisterCustomAction));
 			return dict;
 
 		}
@@ -102,6 +106,23 @@ namespace ModularEncountersSystems.API {
 				SpawnCustomConditions.Remove(methodIdentifier);
 
 		}
+
+		public static void RegisterCustomAction(bool register, string methodIdentifier, Action action)
+		{
+
+			//SpawnGroup
+			//SpawnCondition
+			//SpawnType
+			//Vector3D
+
+			if (register && !CustomActions.ContainsKey(methodIdentifier))
+				CustomActions.Add(methodIdentifier, action);
+			else
+				CustomActions.Remove(methodIdentifier);
+
+		}
+
+
 
 		public static void RegisterSuccessfulSpawnAction(Action<IMyCubeGrid> action, bool register) {
 

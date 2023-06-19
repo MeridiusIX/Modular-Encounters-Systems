@@ -79,6 +79,9 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<bool> EventControllersActive;
 		public List<bool> EventControllersSetCurrentTime;
 
+		public bool ActivateCustomAction;
+		public string CustomActionName;
+
 		public string DebugHudMessage;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
@@ -129,7 +132,11 @@ namespace ModularEncountersSystems.Events.Action {
 			UseChatBroadcast = false;
 			ChatData = new List<ChatProfile>();
 
-			DebugHudMessage = "";
+			ActivateCustomAction = false;
+			CustomActionName = "";
+
+
+		DebugHudMessage = "";
 
 			SetEventControllers = false;
 			EventControllerNames = new List<string>();
@@ -178,6 +185,10 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ZoneNames", (s, o) => TagParse.TagStringListCheck(s, ref ZoneNames) },
 				{"ZoneCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref ZoneCoords) },
 				{"ZoneToggleActiveModes", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneToggleActiveModes) },
+
+				{"ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
+				{"CustomActionName", (s, o) => TagParse.TagStringCheck(s, ref CustomActionName) },
+
 
 				{"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
 				{"DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },

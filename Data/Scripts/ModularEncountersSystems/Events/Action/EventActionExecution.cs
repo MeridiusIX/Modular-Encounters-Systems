@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Entities;
+﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -182,6 +183,18 @@ namespace ModularEncountersSystems.Events.Action {
 
 			}
 
+			if (actions.ActivateCustomAction)
+            {
+				System.Action action;
+
+				if (LocalApi.CustomActions.TryGetValue(actions.CustomActionName, out action))
+				{
+					action?.Invoke();
+				}
+
+
+			}
+
 
 				/*
 				//SetEventControllers
@@ -226,6 +239,8 @@ namespace ModularEncountersSystems.Events.Action {
 		
 		}
 		*/
+
+	
 
 		public void SetCounter(string counterName, int amount, bool hardSet = false)
 		{

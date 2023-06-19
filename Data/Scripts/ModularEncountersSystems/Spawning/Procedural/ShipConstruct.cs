@@ -37,6 +37,10 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		internal MyObjectBuilder_CubeBlock _lastMirroredBlockXY;
 
 		private List<Vector3I> _tempCellList;
+		private MyObjectBuilder_CubeBlock _tempBlock;
+		private MyObjectBuilder_CubeGrid _tempGrid;
+
+		public StringBuilder Log;
 
 		public ShipConstruct(ShipRules rules) {
 
@@ -53,20 +57,44 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			_tempCellList = new List<Vector3I>();
 
+			Log = new StringBuilder();
+
 		}
 
-		public bool PlaceBlock(MyDefinitionId id, Vector3I min, Vector3I max, int pitch, int yaw, int roll, bool useXSymmetry = false, bool useYSymmetry = false, RestrictedCellType allowedRestrictions = RestrictedCellType.None) {
+		public bool PlaceBlock(BlockCategory category, Vector3I min, Vector3I max, Vector3I refMin, bool useXSymmetry = false, bool useYSymmetry = false, RestrictedCellType allowedRestrictions = RestrictedCellType.None) {
+
+			var refBlock = GetReferenceBlock(category, refMin);
+
+			if (refBlock == null) {
+
+				Log.Append("Block Definition Doesn't Exist").Append(" - ").Append(category.ToString()).Append(" - ").Append(min.ToString()).AppendLine();
+				return false;
+
+			}
+
+			var id = refBlock.GetId();
 
 			//Get Block Definition
 			MyCubeBlockDefinition blockDef = null;
 
-			if (!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(id, out blockDef))
+			if (!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(id, out blockDef)) {
+
+				Log.Append("Block Definition Doesn't Exist").Append(" - ").Append(id.ToString()).Append(" - ").Append(min.ToString()).AppendLine();
 				return false;
+
+			}
+
 
 			//Check if placement is possible
-			if (!CanPlaceBlockAtMin(min, max, useXSymmetry, useYSymmetry, allowedRestrictions))
+			if (!CanPlaceBlockAtMin(min, max, useXSymmetry, useYSymmetry, allowedRestrictions)) {
+
+				Log.Append("Cannot Place At Min Coords").Append(" - ").Append(id.ToString()).Append(" - ").Append(min.ToString()).AppendLine();
 				return false;
 
+			}
+
+
+			/*
 			//Orientation
 			MyBlockOrientation baseOrientation;
 
@@ -75,24 +103,26 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 				baseOrientation = BuilderTools.DefaultOrientation;
 
 
-			} else if (BuilderTools.OrientationMasterReference.TryGetValue(id, out baseOrientation)){
+			} else if (!BuilderTools.BlockCategoryPrefabReference.TryGetValue(id, out baseOrientation)){
 
-				//TODO: raise error to log
+				Log.Append("Block Not Found In Orientation Master Reference").Append(" - ").Append(id.ToString()).Append(" - ").Append(min.ToString()).AppendLine();
 				return false;
 
 			}
-
+			
+			
 			var orientation = BuilderTools.RotateOrientation(baseOrientation, pitch, yaw, roll);
+			*/
 
 			//Main Block First
-			CreateAndRegisterBlock(id, min, max, orientation, ref _lastPrimaryBlockPlaced);
+			CreateAndRegisterBlock(id, min, max, refBlock.BlockOrientation, ref _lastPrimaryBlockPlaced);
 
 			if (useXSymmetry) {
 
 				var actualMin = CalculateSymmetryX(min, max, false);
 				var actualMax = CalculateSymmetryX(min, max, true);
-				var newOrientation = BuilderTools.GetSymmetryOrientation(id, orientation, true, false);
-				CreateAndRegisterBlock(id, actualMin, actualMax, newOrientation, ref _lastMirroredBlockX);
+				var newRefBlock = BuilderTools.GetSymmetryOrientation(this, category, refBlock, true, false);
+				CreateAndRegisterBlock(id, actualMin, actualMax, newRefBlock.BlockOrientation, ref _lastMirroredBlockX);
 
 			}
 
@@ -100,8 +130,8 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 				var actualMin = CalculateSymmetryY(min, max, false);
 				var actualMax = CalculateSymmetryY(min, max, true);
-				var newOrientation = BuilderTools.GetSymmetryOrientation(id, orientation, false, true);
-				CreateAndRegisterBlock(id, actualMin, actualMax, newOrientation, ref _lastMirroredBlockY);
+				var newRefBlock = BuilderTools.GetSymmetryOrientation(this, category, refBlock, false, true);
+				CreateAndRegisterBlock(id, actualMin, actualMax, newRefBlock.BlockOrientation, ref _lastMirroredBlockY);
 
 			}
 
@@ -109,8 +139,8 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 				var actualMin = CalculateSymmetryXY(min, max, false);
 				var actualMax = CalculateSymmetryXY(min, max, true);
-				var newOrientation = BuilderTools.GetSymmetryOrientation(id, orientation, true, true);
-				CreateAndRegisterBlock(id, actualMin, actualMax, newOrientation, ref _lastMirroredBlockXY);
+				var newRefBlock = BuilderTools.GetSymmetryOrientation(this, category, refBlock, true, true);
+				CreateAndRegisterBlock(id, actualMin, actualMax, newRefBlock.BlockOrientation, ref _lastMirroredBlockXY);
 
 			}
 
@@ -124,7 +154,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			if (block == null) {
 
-				//TODO: raise error to log
+				Log.Append("Created Block Object Builder Null").Append(" - ").Append(id.ToString()).Append(" - ").Append(min.ToString()).AppendLine();
 				return false;
 
 			}
@@ -148,7 +178,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			if (cellOverlap) {
 
-				//TODO: raise error to log
+				Log.Append("Proposed Cell Overlapping Existing Block or Restricted Cell").Append(" - ").Append(id.ToString()).Append(" - ").Append(min.ToString()).AppendLine();
 				return false;
 			
 			}
@@ -162,6 +192,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			CubeGrid.CubeBlocks.Add(block);
 			lastBlock = block;
+			Log.Append("Block Placed Successfully").Append(" - ").Append(id.ToString()).Append(" - ").Append(min.ToString()).Append(" - ").Append(orientation.ToString()).AppendLine();
 			return true;
 
 		}
@@ -224,6 +255,15 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			}
 
+		}
+
+		private MyObjectBuilder_CubeBlock GetReferenceBlock(BlockCategory category, Vector3I min) {
+
+			if (!BuilderTools.BlockCategoryPrefabReference.TryGetValue(category, out _tempGrid))
+				return null;
+
+			return BuilderTools.GetBlockAtMinPosition(min, _tempGrid);
+		
 		}
 
 		private Vector3I CalculateSymmetryX(Vector3I min, Vector3I max, bool calcMax = false) {

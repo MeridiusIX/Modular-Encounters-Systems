@@ -622,7 +622,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void ProcessCompromisedTriggerWatcher(bool validToProcess) {
 
-			if (!validToProcess || RemoteControlCompromised)
+			if (!MyAPIGateway.Multiplayer.IsServer || !validToProcess || RemoteControlCompromised)
 				return;
 
 			RemoteControlCompromised = true;
@@ -1044,8 +1044,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public void SetSandboxBool(string boolName, bool mode) {
 
 
-      if (boolName.Contains("{SpawnGroupName}") && _behavior?.CurrentGrid?.Npc.SpawnGroupName != null)
-      {
+	  if (boolName.Contains("{SpawnGroupName}") && _behavior?.CurrentGrid?.Npc.SpawnGroupName != null)
+	  {
 				boolName = boolName.Replace("{SpawnGroupName}", _behavior?.CurrentGrid?.Npc.SpawnGroupName);
 			}
 

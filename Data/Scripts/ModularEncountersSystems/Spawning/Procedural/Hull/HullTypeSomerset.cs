@@ -7,13 +7,20 @@ using VRageMath;
 namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 	public class HullTypeSomerset : HullTypeBase, IHullType {
 
+		public HullTypeSomerset(ShipRules rules) {
+
+			BaseSetup(rules);
+		
+		}
+
 		public void InitialHullSetup() {
 
 			//Hull Outline Setup
 			Vector3I lastPosition = Vector3I.Zero;
+			Construct.Log.Clear();
 
 			//Origin:   1
-			Construct.PlaceBlock(BlockIDs.ArmorBlock, Vector3I.Zero, Vector3I.Zero, 0, 0, 0);
+			Construct.PlaceBlock(BlockCategory.Armor, Vector3I.Zero, Vector3I.Zero, new Vector3I(0, 0, 0));
 
 			//AngleOutA: 1-3
 			int rndNum = MathTools.RandomBetween(1, 4);
@@ -21,9 +28,9 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 				var pos = lastPosition;
 				pos.X += 1;
-				Construct.PlaceBlock(BlockIDs.ArmorSlope, pos, pos, 0, 0, 1, true);
-				pos.Z -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorBlock, pos, pos, 0, 0, 0, true);
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(3, 1, 1), true);
+				pos.Z += 1;
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
 				lastPosition = pos;
 
 			}
@@ -33,8 +40,8 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			for (int i = 1; i <= rndNum; i++) {
 
 				var pos = lastPosition;
-				pos.Z -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorBlock, pos, pos, 0, 0, 0, true);
+				pos.Z += 1;
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
 				lastPosition = pos;
 
 			}
@@ -45,9 +52,9 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 				var pos = lastPosition;
 				pos.X += 1;
-				Construct.PlaceBlock(BlockIDs.ArmorSlope, pos, pos, 0, 0, 1, true);
-				pos.Z -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorBlock, pos, pos, 0, 0, 0, true);
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(3, 1, 1), true);
+				pos.Z += 1;
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
 				lastPosition = pos;
 
 			}
@@ -57,8 +64,8 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			for (int i = 1; i <= rndNum; i++) {
 
 				var pos = lastPosition;
-				pos.Z -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorBlock, pos, pos, 0, 0, 0, true);
+				pos.Z += 1;
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
 				lastPosition = pos;
 
 			}
@@ -69,9 +76,9 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 				var pos = lastPosition;
 				pos.X += 1;
-				Construct.PlaceBlock(BlockIDs.ArmorSlope, pos, pos, 0, 0, 1, true);
-				pos.Z -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorBlock, pos, pos, 0, 0, 0, true);
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(3, 1, 1), true);
+				pos.Z += 1;
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
 				lastPosition = pos;
 
 			}
@@ -81,8 +88,8 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			for (int i = 1; i <= rndNum; i++) {
 
 				var pos = lastPosition;
-				pos.Z -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorBlock, pos, pos, 0, 0, 0, true);
+				pos.Z += 1;
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
 				lastPosition = pos;
 
 			}
@@ -93,10 +100,10 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 				var pos = lastPosition;
 				
-				pos.Z -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorSlope, pos, pos, 3, 0, 1, true);
+				pos.Z += 1;
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(3, 1, 3), true);
 				pos.X -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorBlock, pos, pos, 0, 0, 0, true);
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
 				lastPosition = pos;
 
 			}
@@ -106,8 +113,8 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			for (int i = 1; i <= rndNum; i++) {
 
 				var pos = lastPosition;
-				pos.Z -= 1;
-				Construct.PlaceBlock(BlockIDs.ArmorBlock, pos, pos, 0, 0, 0, true);
+				pos.Z += 1;
+				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
 				lastPosition = pos;
 
 			}

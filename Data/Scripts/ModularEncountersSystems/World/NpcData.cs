@@ -908,7 +908,7 @@ namespace ModularEncountersSystems.World {
 			Grid.RefreshSubGrids();
 
 			//OwnershipValidation
-			if (Attributes.OwnershipValidation && !AppliedAttributes.OwnershipValidation) {
+			if (Attributes.OwnershipValidation && !AppliedAttributes.OwnershipValidation && SpawnGroup.MesSpawnGroup) {
 
 				AppliedAttributes.OwnershipValidation = true;
 

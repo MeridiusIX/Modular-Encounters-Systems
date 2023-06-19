@@ -26,6 +26,7 @@ using VRage.Game;
 using VRage.Game.ModAPI;
 using VRageMath;
 using ModularEncountersSystems.Spawning.Procedural.Hull;
+using System.IO;
 
 namespace ModularEncountersSystems.Logging {
 
@@ -674,6 +675,23 @@ namespace ModularEncountersSystems.Logging {
 
 		}
 
+		public static void DebugBlockOrientation(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var block = GridManager.GetClosestBlockInDirection(matrix, 10000);
+
+			if (block == null) {
+
+				msg.ReturnMessage = "No Grid / Block in Camera Direction";
+				return;
+
+			}
+
+
+			MyVisualScriptLogicProvider.ShowNotification(block.BlockDefinition.Id.ToString() + " - " + block.Min.ToString(), 5000, "White", msg.PlayerId);
+
+		}
+
 		public static void DebugSpawnAllSingleBlocks(ChatMessage msg) {
 
 			TaskProcessor.Tasks.Add(new DebugSpawnSingleBlocks(MatrixD.CreateWorld(msg.PlayerPosition, Vector3D.Forward, Vector3D.Up)));
@@ -683,9 +701,11 @@ namespace ModularEncountersSystems.Logging {
 		public static void DebugSpawnConstruct(ChatMessage msg) {
 
 			var matrix = MatrixD.CreateWorld((msg.CameraPosition), msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
-			var hull = new HullTypeSomerset();
+			var hull = new HullTypeSomerset(new ShipRules());
 			hull.InitialHullSetup();
 			hull.SpawnCurrentConstruct(matrix);
+			msg.ClipboardPayload = hull.Construct.Log.ToString();
+			return;
 
 		}
 
@@ -997,8 +1017,21 @@ namespace ModularEncountersSystems.Logging {
 
 			var sb = new StringBuilder();
 
+			bool modPathError = !MES_SessionCore.Instance.ModContext.ModPath.StartsWith(Path.GetFullPath(MES_SessionCore.Instance.ModContext.ModPath));
 			sb.Append("::: MES Diagnostics :::").AppendLine();
-			sb.Append(" - Mod Version: ").Append(MES_SessionCore.ModVersion).AppendLine();
+			sb.Append(" - Mod Version:    ").Append(MES_SessionCore.ModVersion).AppendLine();
+			sb.Append(" - Mod Path:       ").Append(MES_SessionCore.Instance.ModContext?.ModPath ?? "null").AppendLine();
+			sb.Append(" - Mod Item Path:  ").Append(MES_SessionCore.Instance.ModContext?.ModItem.GetPath() ?? "null").AppendLine();
+			sb.Append(" - Mod Path Error: ").Append(modPathError).AppendLine();
+
+			if (modPathError) {
+
+				sb.Append(" - WARNING: Server Session using -path parameter incorrectly when starting server. Provided directory contain trailing \\ or / character which can interfere with mods ability to read certain files.").AppendLine();
+				SpawnLogger.Write("Server Session using -path parameter incorrectly when starting server. Provided directory contain trailing \\ or / character which can interfere with mods ability to read certain files.", SpawnerDebugEnum.Error, true);
+
+			}
+				
+
 			sb.AppendLine();
 
 			//NPC Mods
@@ -1045,6 +1078,17 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Weapon Core / Core Systems: ").Append(APIs.WeaponCoreApiLoaded).AppendLine();
 			sb.AppendLine();
 
+			//Spawners Active
+			sb.Append("::: Spawners Active :::").AppendLine();
+			sb.Append(" - Space Cargo Ships:          ").Append(Settings.SpaceCargoShips.EnableSpawns).AppendLine();
+			sb.Append(" - Random Encounters:          ").Append(Settings.RandomEncounters.EnableSpawns).AppendLine();
+			sb.Append(" - Planetary Cargo Ships:      ").Append(Settings.PlanetaryCargoShips.EnableSpawns).AppendLine();
+			sb.Append(" - Planetary Installations:    ").Append(Settings.PlanetaryInstallations.EnableSpawns).AppendLine();
+			sb.Append(" - Boss Encounters:            ").Append(Settings.BossEncounters.EnableSpawns).AppendLine();
+			sb.Append(" - Drone Encounters:           ").Append(Settings.DroneEncounters.EnableSpawns).AppendLine();
+			sb.Append(" - Creatures:                  ").Append(Settings.Creatures.EnableSpawns).AppendLine();
+			sb.AppendLine();
+
 			//Cleanup Settings
 			sb.Append("::: Cleanup Settings Enabled :::").AppendLine();
 			sb.Append(" - Space Cargo Ships:          ").Append(Settings.SpaceCargoShips.UseCleanupSettings).AppendLine();
@@ -1058,6 +1102,16 @@ namespace ModularEncountersSystems.Logging {
 
 			//GESAP
 			sb.Append(GetEligibleSpawnsAtPosition(msg));
+
+			//Wave Spawner Data
+			sb.Append("::: Space Wave Spawner Data :::").AppendLine();
+			sb.Append(WaveManager.Space.ToString()).AppendLine();
+
+			sb.Append("::: Planetary Wave Spawner Data :::").AppendLine();
+			sb.Append(WaveManager.Planet.ToString()).AppendLine();
+
+			sb.Append("::: Creature Wave Spawner Data :::").AppendLine();
+			sb.Append(WaveManager.Creature.ToString()).AppendLine();
 
 			//Player Data
 			sb.Append("::: Player Data :::").AppendLine();

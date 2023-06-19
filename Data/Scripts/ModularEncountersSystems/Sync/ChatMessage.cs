@@ -790,6 +790,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.BlockOrientation
+			if (array[2] == "BlockOrientation") {
+
+				LoggerTools.DebugBlockOrientation(this);
+				return true;
+
+			}
+
 			//MES.Debug.RotationData
 			if (array[2] == "RotationData") {
 

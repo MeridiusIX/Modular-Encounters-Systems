@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
 using System;
@@ -11,15 +12,24 @@ using VRage.ObjectBuilders;
 using VRageMath;
 
 namespace ModularEncountersSystems.Spawning.Procedural {
+
+	public enum BlockCategory {
+	
+		None,
+		Armor,
+
+	
+	}
+
 	public static class BuilderTools {
 
-		public static Dictionary<MyDefinitionId, MyBlockOrientation> OrientationMasterReference = new Dictionary<MyDefinitionId, MyBlockOrientation>();
-		public static Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> SymmetryXReference = new Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>>();
-		public static Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> SymmetryYReference = new Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>>();
+		public static Dictionary<BlockCategory, MyObjectBuilder_CubeGrid> BlockCategoryPrefabReference = new Dictionary<BlockCategory, MyObjectBuilder_CubeGrid>();
+		public static Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>> SymmetryXReference = new Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>>();
+		public static Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>> SymmetryYReference = new Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>>();
 
 		private static SerializableVector3 _colorMask = new SerializableVector3(0.122222222f, 0.05f, 0.46f);
 
-		private static Dictionary<MyBlockOrientation, MyBlockOrientation> _tempDict = new Dictionary<MyBlockOrientation, MyBlockOrientation>();
+		private static Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock> _tempDict = new Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>();
 		private static MyObjectBuilder_CubeBlock _symmetryXBlock = null;
 		private static MyObjectBuilder_CubeBlock _symmetryYBlock = null;
 
@@ -62,47 +72,47 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
-		public static MyBlockOrientation GetSymmetryOrientation(MyDefinitionId id, MyBlockOrientation orientation, bool xSymmetry, bool ySymmetry) {
+		public static MyObjectBuilder_CubeBlock GetSymmetryOrientation(ShipConstruct construct, BlockCategory category, MyObjectBuilder_CubeBlock orientation, bool xSymmetry, bool ySymmetry) {
 
 			if (!xSymmetry && !ySymmetry)
 				return orientation;
 
 			if (xSymmetry && !ySymmetry) {
 
-				return GetSymmetryOrientation(id, orientation, SymmetryXReference);
+				return GetSymmetryOrientation(construct, category, orientation, SymmetryXReference);
 
 			}
 
 			if (!xSymmetry && ySymmetry) {
 
-				return GetSymmetryOrientation(id, orientation, SymmetryYReference);
+				return GetSymmetryOrientation(construct, category, orientation, SymmetryYReference);
 
 			}
 
 			if (xSymmetry && ySymmetry) {
 
-				var xOrientation = GetSymmetryOrientation(id, orientation, SymmetryXReference);
-				return GetSymmetryOrientation(id, xOrientation, SymmetryYReference);
+				var xOrientation = GetSymmetryOrientation(construct, category, orientation, SymmetryXReference);
+				return GetSymmetryOrientation(construct, category, xOrientation, SymmetryYReference);
 
 			}
 
-			//TODO: raise error in log
+			construct.Log.Append("Couldn't get any symmetry. Using Default orientation").Append(" - ").Append(category.ToString()).Append(" - ").AppendLine();
 			return orientation;
 
 		}
 
-		private static MyBlockOrientation GetSymmetryOrientation(MyDefinitionId id, MyBlockOrientation orientation, Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> referenceDict) {
+		private static MyObjectBuilder_CubeBlock GetSymmetryOrientation(ShipConstruct construct, BlockCategory category, MyObjectBuilder_CubeBlock orientation, Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>> referenceDict) {
 
 			_tempDict = null;
 
-			if (!referenceDict.TryGetValue(id, out _tempDict)) {
+			if (!referenceDict.TryGetValue(category, out _tempDict)) {
 
-				//TODO: raise error in log
+				construct.Log.Append("Block Doesn't Have Symmetry Reference. Using Default orientation").Append(" - ").Append(category.ToString()).Append(" - ").AppendLine();
 				return orientation;
 
 			}
 
-			MyBlockOrientation newOrientation;
+			MyObjectBuilder_CubeBlock newOrientation;
 
 			if (_tempDict.TryGetValue(orientation, out newOrientation)) {
 
@@ -110,14 +120,14 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			}
 
-			//TODO: raise error in log
+			construct.Log.Append("Symmetry Not Found In Current Reference. Using Default orientation").Append(" - ").Append(category.ToString()).Append(" - ").Append(orientation.ToString()).AppendLine();
 			return orientation;
 
 		}
 
 		public static MyObjectBuilder_CubeBlock GetBlockAtMinPosition(Vector3I min, MyObjectBuilder_CubeGrid grid) {
 
-			if (grid.CubeBlocks == null)
+			if (grid?.CubeBlocks == null)
 				return null;
 
 			foreach (var block in grid.CubeBlocks) {
@@ -529,19 +539,23 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			CubeShapedBlocks.Add(new MyDefinitionId(typeof(MyObjectBuilder_BatteryBlock), "LargeBlockBatteryBlockWarfare2"));
 
 			DefaultOrientation = new MyBlockOrientation(Base6Directions.Direction.Forward, Base6Directions.Direction.Up);
-			MasterReferenceSetup();
 			SymmetryReferenceSetup();
 
 
 		}
 
+		/*
 		private static void MasterReferenceSetup() {
 
 			var prefab = MyDefinitionManager.Static.GetPrefabDefinition("MES-Prefab-BlockOrientationReference");
 
-			if (prefab?.CubeGrids == null || prefab.CubeGrids.Length == 0)
+			if (prefab?.CubeGrids == null || prefab.CubeGrids.Length == 0) {
+
+				//SpawnLogger.Write("MES-Prefab-BlockOrientationReference Not Found", SpawnerDebugEnum.Dev, true);
 				return;
 
+			}
+				
 			int count = 0;
 
 			foreach (var block in prefab.CubeGrids[0].CubeBlocks) {
@@ -559,34 +573,29 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			}
 
+			//SpawnLogger.Write("Total Blocks Registered From MES-Prefab-BlockOrientationReference: " + count.ToString(), SpawnerDebugEnum.Dev, true);
+
 		}
+		*/
 
 		private static void SymmetryReferenceSetup() {
 
-			var prefabList = MyDefinitionManager.Static.GetPrefabDefinitions();
+			var armorPrefab = MyDefinitionManager.Static.GetPrefabDefinition("MES-Prefab-Symmetry-Armor");
+			ProcessSymmetryPrefab(armorPrefab?.CubeGrids, BlockCategory.Armor);
 
-			foreach (var prefab in prefabList) {
 
-				if (prefab.Value?.Context?.ModId == null || prefab.Value.Context.ModId != MES_SessionCore.Instance.ModContext.ModId)
-					continue;
-
-				if (!prefab.Value.Id.SubtypeName.StartsWith("Symm-"))
-					continue;
-
-				ProcessSymmetryPrefab(prefab.Value.CubeGrids);
-
-			}
-		
 		}
 
-		private static void ProcessSymmetryPrefab(MyObjectBuilder_CubeGrid[] gridList) {
+		private static void ProcessSymmetryPrefab(MyObjectBuilder_CubeGrid[] gridList, BlockCategory category) {
 
-			if (gridList == null || gridList.Length == 0)
+			if (gridList == null || gridList.Length == 0 || gridList[0] == null)
 				return;
 
 			int count = 0;
 			var grid = gridList[0];
 			MyCubeBlockDefinition blockDef = null;
+
+			BlockCategoryPrefabReference.Add(category, grid);
 
 			foreach (var block in grid.CubeBlocks) {
 
@@ -598,7 +607,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 				var id = block.GetId();
 
-				if (blockDef == null && !DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(id, out blockDef)) {
+				if (blockDef == null) {
 
 					continue;
 				
@@ -616,9 +625,9 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 				_symmetryXBlock = GetBlockAtMinPosition(mirrorMinX, grid);
 
-				if (_symmetryXBlock != null && id == _symmetryXBlock.GetId()) {
+				if (_symmetryXBlock != null) {
 
-					AddSymmetryReference(SymmetryXReference, id, block.BlockOrientation, _symmetryXBlock.BlockOrientation);
+					AddSymmetryReference(true, SymmetryXReference, category, block, _symmetryXBlock);
 
 				}
 
@@ -633,9 +642,9 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 				}
 				_symmetryYBlock = GetBlockAtMinPosition(mirrorMinY, grid);
 
-				if (_symmetryYBlock != null && id == _symmetryYBlock.GetId()) {
+				if (_symmetryYBlock != null) {
 
-					AddSymmetryReference(SymmetryYReference, id, block.BlockOrientation, _symmetryYBlock.BlockOrientation);
+					AddSymmetryReference(false, SymmetryYReference, category, block, _symmetryYBlock);
 
 				}
 
@@ -643,18 +652,22 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
-		private static void AddSymmetryReference(Dictionary<MyDefinitionId, Dictionary<MyBlockOrientation, MyBlockOrientation>> reference, MyDefinitionId id, MyBlockOrientation orientation, MyBlockOrientation mirrorOrientation) {
+		private static void AddSymmetryReference(bool x, Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>> reference, BlockCategory category, MyObjectBuilder_CubeBlock orientation, MyObjectBuilder_CubeBlock mirrorOrientation) {
 
-			if (!reference.TryGetValue(id, out _tempDict)) {
+			if (!reference.TryGetValue(category, out _tempDict)) {
 
-				_tempDict = new Dictionary<MyBlockOrientation, MyBlockOrientation>();
-				reference.Add(id, _tempDict);
+				_tempDict = new Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>();
+				reference.Add(category, _tempDict);
 
 			}
 
-			if (!_tempDict.ContainsKey(orientation))
+			if (!_tempDict.ContainsKey(orientation)) {
+
+				//SpawnLogger.Write((x ? "X" : "Y") + " Symmetry Added For: " + id.ToString() + " - " + orientation.ToString() + " - " + mirrorOrientation.ToString(), SpawnerDebugEnum.Dev);
 				_tempDict.Add(orientation, mirrorOrientation);
-		
+
+			}
+				
 		}
 
 	}

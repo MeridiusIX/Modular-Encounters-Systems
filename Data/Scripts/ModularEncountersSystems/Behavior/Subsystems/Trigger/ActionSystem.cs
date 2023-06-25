@@ -1562,6 +1562,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (!PlayerIdentitySandboxList.Contains(playerid))
 				{
+					MyVisualScriptLogicProvider.ShowNotificationToAll($"Saving playerID to {actions.PlayerIdentitySandboxList}", 800, "Red");
 					PlayerIdentitySandboxList.Add(playerid);
 				}
 

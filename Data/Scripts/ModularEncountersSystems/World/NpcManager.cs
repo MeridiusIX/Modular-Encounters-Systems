@@ -312,7 +312,7 @@ namespace ModularEncountersSystems.World {
 				}
 
 				UpdateStaticEncounters();
-
+				MyVisualScriptLogicProvider.ShowNotificationToAll($"{spawnGroupName} despawned, and reset", 5000, "Red");
 			}
 
 		}

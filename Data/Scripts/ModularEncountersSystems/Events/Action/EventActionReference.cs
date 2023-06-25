@@ -81,6 +81,11 @@ namespace ModularEncountersSystems.Events.Action {
 
 		public bool ActivateCustomAction;
 		public string CustomActionName;
+		public List<object> CustomActionArguments;
+
+
+
+
 
 		public string DebugHudMessage;
 
@@ -134,6 +139,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 			ActivateCustomAction = false;
 			CustomActionName = "";
+			CustomActionArguments = new List<object>();
 
 
 		DebugHudMessage = "";
@@ -188,7 +194,8 @@ namespace ModularEncountersSystems.Events.Action {
 
 				{"ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
 				{"CustomActionName", (s, o) => TagParse.TagStringCheck(s, ref CustomActionName) },
-
+				{"CustomActionArguments", (s, o) => TagParse.TagObjectListCheck(s, ref CustomActionArguments) },
+				
 
 				{"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
 				{"DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },

@@ -24,7 +24,7 @@ namespace ModularEncountersSystems.API {
 		public static Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>> BehaviorCustomTriggers = new Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>>();
 		public static Dictionary<string, Func<string, string, string, Vector3D, bool>> SpawnCustomConditions = new Dictionary<string, Func<string, string, string, Vector3D, bool>>();
 
-		public static Dictionary<string, Action> CustomActions = new Dictionary<string, Action>();
+		public static Dictionary<string, Action<object[]>> CustomActions = new Dictionary<string, Action<object[]>>();
 
 
 
@@ -68,7 +68,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("SpawnRandomEncounter", new Func<Vector3D, List<string>, bool>(SpawnRandomEncounter));
 			dict.Add("SpawnSpaceCargoShip", new Func<Vector3D, List<string>, bool>(SpawnSpaceCargoShip));
 			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
-			dict.Add("RegisterCustomAction", new Action<bool, string, Action>(RegisterCustomAction));
+			dict.Add("RegisterCustomAction", new Action<bool, string, Action<object[]>>(RegisterCustomAction));
 			return dict;
 
 		}
@@ -107,7 +107,7 @@ namespace ModularEncountersSystems.API {
 
 		}
 
-		public static void RegisterCustomAction(bool register, string methodIdentifier, Action action)
+		public static void RegisterCustomAction(bool register, string methodIdentifier, Action<object[]> action)
 		{
 
 			//SpawnGroup

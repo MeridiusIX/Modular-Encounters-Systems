@@ -185,11 +185,11 @@ namespace ModularEncountersSystems.Events.Action {
 
 			if (actions.ActivateCustomAction)
             {
-				System.Action action;
-
+				System.Action<object[]> action;
+				var args = actions.CustomActionArguments.ToArray();
 				if (LocalApi.CustomActions.TryGetValue(actions.CustomActionName, out action))
 				{
-					action?.Invoke();
+					action?.Invoke(args);
 				}
 
 

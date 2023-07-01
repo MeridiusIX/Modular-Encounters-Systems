@@ -186,10 +186,49 @@ namespace ModularEncountersSystems.Events.Action {
 			if (actions.ActivateCustomAction)
             {
 				System.Action<object[]> action;
-				var args = actions.CustomActionArguments.ToArray();
+				List<object> args = new List<object>();
+
+
+				//Yes I tried args.Add(), and args.AddRange() both didn't work
+
+				foreach (var item in actions.CustomActionArgumentsString)
+				{
+					args.Add((object)item);
+				}
+
+				foreach (var item in actions.CustomActionArgumentsBool)
+				{
+					args.Add((object)item);
+				}
+
+				foreach (var item in actions.CustomActionArgumentsInt)
+				{
+					args.Add((object)item);
+				}
+
+				foreach (var item in actions.CustomActionArgumentsFloat)
+				{
+					args.Add((object)item);
+				}
+
+				foreach (var item in actions.CustomActionArgumentsLong)
+				{
+					args.Add((object)item);
+				}
+
+				foreach (var item in actions.CustomActionArgumentsDouble)
+				{
+					args.Add((object)item);
+				}
+
+				foreach (var item in actions.CustomActionArgumentsVector3D)
+				{
+					args.Add((object)item);
+				}
+
 				if (LocalApi.CustomActions.TryGetValue(actions.CustomActionName, out action))
 				{
-					action?.Invoke(args);
+					action?.Invoke(args.ToArray());
 				}
 
 

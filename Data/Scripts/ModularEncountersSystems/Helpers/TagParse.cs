@@ -538,6 +538,36 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagDoubleCheck(string tag, ref List<double> original)
+		{
+
+			double result = 0;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2)
+			{
+
+				if (double.TryParse(tagSplit[1], out result) == false)
+				{
+
+					return;
+
+				}
+
+			}
+			else
+			{
+
+				return;
+
+			}
+
+			original.Add(result);
+
+		}
+
+
+
 		public static void TagIntCheck(string tag, ref int original) {
 
 			int result = 0;
@@ -1794,6 +1824,8 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+
+		/* CPT shenanigans
 		public static void TagObjectListCheck(string tag, ref List<object> original)
 		{
 
@@ -1851,7 +1883,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-
+		*/
 
 
 	}

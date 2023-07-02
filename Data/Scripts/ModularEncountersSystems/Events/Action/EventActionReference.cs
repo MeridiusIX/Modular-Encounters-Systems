@@ -81,6 +81,19 @@ namespace ModularEncountersSystems.Events.Action {
 
 		public bool ActivateCustomAction;
 		public string CustomActionName;
+		public List<string> CustomActionArgumentsString;
+		public List<bool> CustomActionArgumentsBool;
+		public List<int> CustomActionArgumentsInt;
+		public List<float> CustomActionArgumentsFloat;
+		public List<long> CustomActionArgumentsLong;
+		public List<double> CustomActionArgumentsDouble;
+		public List<Vector3D> CustomActionArgumentsVector3D;
+
+
+
+
+		
+
 
 		public string DebugHudMessage;
 
@@ -102,9 +115,6 @@ namespace ModularEncountersSystems.Events.Action {
 			SetCounters = new List<string>();
 			SetCountersAmount = new List<int>();
 
-			ResetCooldownTimeOfEvents = false;
-			ResetEventCooldownIds = new List<string>();
-			ResetEventCooldownTags = new List<string>();
 
 			ChangeZoneAtPosition = false;
 			ZoneNames = new List<string>();
@@ -124,6 +134,14 @@ namespace ModularEncountersSystems.Events.Action {
 			ToggleEventIdModes = new List<bool>();
 			ToggleEventTags = new List<string>();
 			ToggleEventTagModes = new List<bool>();
+
+
+			ResetCooldownTimeOfEvents = false;
+			ResetEventCooldownIds = new List<string>();
+			ResetEventCooldownTags = new List<string>();
+
+
+
 			SpawnEncounter = true;
 			//SpawnData = new List<SpawnProfile>();
 			SpawnVector3Ds = new List<Vector3D>();
@@ -134,6 +152,24 @@ namespace ModularEncountersSystems.Events.Action {
 
 			ActivateCustomAction = false;
 			CustomActionName = "";
+
+			CustomActionArgumentsString = new List<string>();
+			CustomActionArgumentsBool = new List<bool>();	
+			CustomActionArgumentsInt = new List<int>();
+			CustomActionArgumentsFloat = new List<float>();
+			CustomActionArgumentsLong = new List<long>();
+			CustomActionArgumentsDouble = new List<double>();
+			CustomActionArgumentsVector3D = new List<Vector3D>();
+
+
+
+
+
+
+
+
+
+
 
 
 		DebugHudMessage = "";
@@ -188,9 +224,15 @@ namespace ModularEncountersSystems.Events.Action {
 
 				{"ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
 				{"CustomActionName", (s, o) => TagParse.TagStringCheck(s, ref CustomActionName) },
+				{"CustomActionArgumentsString", (s, o) => TagParse.TagStringListCheck(s, ref CustomActionArgumentsString) },
+				{"CustomActionArgumentsBool", (s, o) => TagParse.TagBoolListCheck(s, ref CustomActionArgumentsBool) },
+				{"CustomActionArgumentsInt", (s, o) => TagParse.TagIntListCheck(s, ref CustomActionArgumentsInt) },
+				{"CustomActionArgumentsFloat", (s, o) => TagParse.TagFloatCheck(s, ref CustomActionArgumentsFloat) },
+				{"CustomActionArgumentsLong", (s, o) => TagParse.TagLongCheck(s, ref CustomActionArgumentsLong) },
+				{"CustomActionArgumentsDouble", (s, o) => TagParse.TagDoubleCheck(s, ref CustomActionArgumentsDouble) },
+				{"CustomActionArgumentsVector3D", (s, o) => TagParse.TagVector3DListCheck(s, ref CustomActionArgumentsVector3D) },
 
-
-				{"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
+				{ "UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
 				{"DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },
 				{"SetEventControllers", (s, o) => TagParse.TagBoolCheck(s, ref SetEventControllers) },
 				{"EventControllerNames", (s, o) => TagParse.TagStringListCheck(s, ref EventControllerNames) },

@@ -8,11 +8,13 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Game;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
 using VRage.ObjectBuilders;
+using VRage.Utils;
 using VRageMath;
 
 namespace ModularEncountersSystems.Helpers {
@@ -535,6 +537,36 @@ namespace ModularEncountersSystems.Helpers {
 			original = result;
 
 		}
+
+		public static void TagDoubleCheck(string tag, ref List<double> original)
+		{
+
+			double result = 0;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2)
+			{
+
+				if (double.TryParse(tagSplit[1], out result) == false)
+				{
+
+					return;
+
+				}
+
+			}
+			else
+			{
+
+				return;
+
+			}
+
+			original.Add(result);
+
+		}
+
+
 
 		public static void TagIntCheck(string tag, ref int original) {
 
@@ -1791,6 +1823,68 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 		}
+
+
+		/* CPT shenanigans
+		public static void TagObjectListCheck(string tag, ref List<object> original)
+		{
+
+			string input ="";
+
+
+			bool dummybool = false;
+			string dummystring = "";
+			int dummyint = 0;
+			Vector3D dummyVector3D = new Vector3D(0,0,0);
+
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2)
+			{
+				input = tagSplit[1];
+
+			}
+
+			string[] parts = input.Split('@');
+
+			string type = parts[0].ToLower();   // "bool"
+			string value = "[sillyme:" + parts[1] + "]";  // "false"
+
+			if (type.Contains("bool"))
+            {
+				TagBoolCheck(value, ref dummybool);
+				original.Add((bool)dummybool);
+
+				return;
+			}
+
+			if (type == "string")
+			{
+				TagStringCheck(value, ref dummystring);
+				original.Add((string)dummystring);
+				return;
+			}
+
+			if (type == "int")
+			{
+				TagIntCheck(value, ref dummyint);
+				original.Add((int)dummyint);
+				return;
+			}
+
+			if (type == "vector3d")
+			{
+				TagVector3DCheck(value, ref dummyVector3D);
+				original.Add((Vector3D)dummyVector3D);
+				return;
+			}
+
+
+		}
+
+		*/
+
 
 	}
 

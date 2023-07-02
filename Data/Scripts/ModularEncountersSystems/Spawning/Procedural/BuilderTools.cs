@@ -21,7 +21,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 	
 	}
 
-	public static class BuilderTools {
+	public static partial class BuilderTools {
 
 		public static Dictionary<BlockCategory, MyObjectBuilder_CubeGrid> BlockCategoryPrefabReference = new Dictionary<BlockCategory, MyObjectBuilder_CubeGrid>();
 		public static Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>> SymmetryXReference = new Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>>();
@@ -607,7 +607,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 				var id = block.GetId();
 
-				if (blockDef == null) {
+				if (!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(id, out blockDef) || blockDef == null) {
 
 					continue;
 				

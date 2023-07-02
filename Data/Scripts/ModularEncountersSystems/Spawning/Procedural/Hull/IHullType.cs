@@ -7,12 +7,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 	public interface IHullType {
 
 		ShipConstruct Construct { get; }
-		void InitialHullSetup();
-		void ThrusterPlacement();
-		void InteriorPlacement();
-		void SystemsPlacement();
-		void GreebleHull();
-		void PaintingAndSkins();
+		ShipRules Rules { get; }
 		void SpawnCurrentConstruct(MatrixD matrix);
 
 	}

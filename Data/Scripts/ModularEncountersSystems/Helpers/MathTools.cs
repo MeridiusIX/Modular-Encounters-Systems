@@ -537,6 +537,16 @@ namespace ModularEncountersSystems.Helpers {
 
         }
 
+        public static Vector3I Vector3IPlus(Vector3I vec, int x = 0, int y = 0, int z = 0) {
+
+            var newVec = vec;
+            newVec.X += x;
+            newVec.Y += y;
+            newVec.Z += z;
+            return newVec;
+        
+        }
+
         public static double GravityToDistance(double gravityMultiplier = 1, double maxGravity = 1, double falloff = 7, double minRadius = 59400, double maxRadius = 67200) {
 
             if (gravityMultiplier >= maxGravity)

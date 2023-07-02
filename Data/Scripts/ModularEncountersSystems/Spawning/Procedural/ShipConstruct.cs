@@ -61,6 +61,14 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
+		public MyObjectBuilder_CubeBlock GetBlock(Vector3I cell) {
+
+			_tempBlock = null;
+			_blockMap.TryGetValue(cell, out _tempBlock);
+			return _tempBlock;
+
+		}
+
 		public bool PlaceBlock(BlockCategory category, Vector3I min, Vector3I max, Vector3I refMin, bool useXSymmetry = false, bool useYSymmetry = false, RestrictedCellType allowedRestrictions = RestrictedCellType.None) {
 
 			var refBlock = GetReferenceBlock(category, refMin);

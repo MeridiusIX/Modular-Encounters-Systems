@@ -8,11 +8,14 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 	public abstract class HullTypeBase {
 
 		public ShipConstruct Construct { get { return _construct; } set { _construct = value; } }
+		public ShipRules Rules { get { return _rules; } set { _rules = value; } }
 		internal ShipConstruct _construct;
+		internal ShipRules _rules;
 
 		internal void BaseSetup(ShipRules rules) {
 
 			_construct = new ShipConstruct(rules);
+			_rules = rules;
 
 		}
 

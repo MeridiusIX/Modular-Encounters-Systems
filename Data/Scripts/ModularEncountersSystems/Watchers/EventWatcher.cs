@@ -51,13 +51,16 @@ namespace ModularEncountersSystems.Watchers {
 
 				var thisGrid = GridManager.Grids[i];
 
-				if (!thisGrid.ActiveEntity() || thisGrid.GetEntityId() != entityId)
+				if (thisGrid == null || !thisGrid.ActiveEntity() || thisGrid.GetEntityId() != entityId)
 					continue;
 
 				grid = thisGrid;
 				break;
 
 			}
+
+			if (grid == null)
+				return;
 
 			//MyVisualScriptLogicProvider.ShowNotificationToAll("Jump: " + grid.CubeGrid.CustomName, 3000);
 			JumpRequested?.Invoke(grid, grid.GetPosition());

@@ -12,6 +12,7 @@ using ModularEncountersSystems.API;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using Sandbox.Game;
+using ModularEncountersSystems.Spawning;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -967,6 +968,36 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
+
+
+			//ThreatScore
+			if (ConditionReference.CheckThreatScore){
+
+				usedConditions++;
+
+				float ThreatScoreCompare = ConditionReference.ThreatScoreValue;
+				Vector3D Position = _behavior.CurrentGrid.GetPosition();
+
+				if (ConditionReference.UseNPCThreatScoreValue)
+                {
+					ThreatScoreCompare = _behavior.CurrentGrid.ThreatScore * ConditionReference.NPCThreatScoreValueMultiplier;
+				}
+
+                if (ConditionReference.CheckThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
+                {
+					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
+                }
+
+				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, true, Position, GridConfigurationEnum.All, _behavior.RemoteControl.GetOwnerFactionTag());
+
+
+				if (MathTools.CompareValues(ThreatScore, ThreatScoreCompare, ConditionReference.ThreatScoreCompareMode))
+					satisfiedConditions++;
+			}
+
+
+
+
 
 			if (ConditionReference.CommandGravityCheck) {
 

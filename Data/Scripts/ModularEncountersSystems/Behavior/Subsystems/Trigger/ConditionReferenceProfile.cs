@@ -118,8 +118,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool IsTargetPlayer;
 		public bool IsTargetGrid;
-
 		public bool IsTargetStatic;
+
+		public bool CheckThreatScore;
+		public float ThreatScoreValue;
+		public int CheckThreatScoreRadius;
+		public CounterCompareEnum ThreatScoreCompareMode;
+		public GridConfigurationEnum ThreatScoreGridConfiguration;
+		public bool CheckThreatScoreFromTargetPosition;
+		public bool UseNPCThreatScoreValue;
+		public float NPCThreatScoreValueMultiplier;
 
 		public bool IsAttackerHostile;
 		public bool IsAttackerNeutral;
@@ -281,6 +289,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CompareCommandGridValueMode = CounterCompareEnum.GreaterOrEqual;
 			CompareCommandGridValueSelfMultiplier = 1;
 
+			CheckThreatScore = false;
+			ThreatScoreValue = 0;
+			CheckThreatScoreRadius = 3000;
+			ThreatScoreCompareMode = CounterCompareEnum.GreaterOrEqual;
+			ThreatScoreGridConfiguration = GridConfigurationEnum.All;
+
+			CheckThreatScoreFromTargetPosition = false;
+			UseNPCThreatScoreValue = false;
+			NPCThreatScoreValueMultiplier = 1;
+
 			CommandGravityCheck = false;
 			CommandGravityMatches = false;
 
@@ -398,6 +416,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CompareCommandGridValue", (s, o) => TagParse.TagBoolCheck(s, ref CompareCommandGridValue) },
 				{"CompareCommandGridValueMode", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CompareCommandGridValueMode) },
 				{"CompareCommandGridValueSelfMultiplier", (s, o) => TagParse.TagFloatCheck(s, ref CompareCommandGridValueSelfMultiplier) },
+				{"CheckThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScore) },
+				{"ThreatScoreValue", (s, o) => TagParse.TagFloatCheck(s, ref ThreatScoreValue) },
+				{"CheckThreatScoreRadius", (s, o) => TagParse.TagIntCheck(s, ref CheckThreatScoreRadius) },
+				{"ThreatScoreCompareMode", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref ThreatScoreCompareMode) },
+				{"ThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref ThreatScoreGridConfiguration) },
+				{"CheckThreatScoreFromTargetPosition", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreFromTargetPosition) },
+				{"UseNPCThreatScoreValue", (s, o) => TagParse.TagBoolCheck(s, ref UseNPCThreatScoreValue) },
+				{"NPCThreatScoreValueMultiplier", (s, o) => TagParse.TagFloatCheck(s, ref NPCThreatScoreValueMultiplier) },
 				{"CommandGravityCheck", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityCheck) },
 				{"CommandGravityMatches", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityMatches) },
 				{"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },
@@ -407,15 +433,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"RequiredSpawnConditions", (s, o) => TagParse.TagStringListCheck(s, ref RequiredSpawnConditions) },
 				{"CheckForPlanetaryLane", (s, o) => TagParse.TagBoolCheck(s, ref CheckForPlanetaryLane) },//CheckForPlanetaryLane
 				{"PlanetaryLanePassValue", (s, o) => TagParse.TagBoolCheck(s, ref PlanetaryLanePassValue) },
-
-
 				{"CheckPlayerReputation", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerReputation) },
 				{"CheckReputationwithFaction", (s, o) => TagParse.TagStringListCheck(s, ref CheckReputationwithFaction) },
 				{"MinPlayerReputation", (s, o) => TagParse.TagIntListCheck(s, ref MinPlayerReputation) },
 				{"MaxPlayerReputation", (s, o) => TagParse.TagIntListCheck(s, ref MaxPlayerReputation) },
 				{"MaxPlayerReputationDistanceCheck", (s, o) => TagParse.TagDoubleCheck(s, ref MaxPlayerReputationDistanceCheck) },
 				{"AllPlayersReputationMustMatch", (s, o) => TagParse.TagBoolCheck(s, ref AllPlayersReputationMustMatch) },
-
 				{"PlayerIdentityMatches", (s, o) => TagParse.TagBoolCheck(s, ref PlayerIdentityMatches) },//PlayerIdentityMatches
 				{"CheckPlayerIdentitySandboxList", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerIdentitySandboxList) },
 				{"PlayerIdentityInSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref PlayerIdentityInSandboxList) },

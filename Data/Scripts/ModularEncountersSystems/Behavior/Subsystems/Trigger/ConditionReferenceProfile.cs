@@ -121,13 +121,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool IsTargetStatic;
 
 		public bool CheckThreatScore;
-		public float ThreatScoreValue;
+		public int CheckThreatScoreMinimum;
+		public int CheckThreatScoreMaximum;
 		public int CheckThreatScoreRadius;
-		public CounterCompareEnum ThreatScoreCompareMode;
-		public GridConfigurationEnum ThreatScoreGridConfiguration;
+		public bool CheckThreatScoreIncludeOtherNpcOwners;
+		public GridConfigurationEnum CheckThreatScoreGridConfiguration;
 		public bool CheckThreatScoreFromTargetPosition;
-		public bool UseNPCThreatScoreValue;
-		public float NPCThreatScoreValueMultiplier;
+
+		public bool CompareThreatScore;
+		public int CompareThreatScoreValue;
+		public bool CompareThreatScoreUseSelfValue;
+		public float CompareThreatScoreSelfValueMultiplier;
+		public CounterCompareEnum CompareThreatScoreMode;
+		public int CompareThreatScoreRadius;
+		public bool CompareThreatScoreIncludeOtherNpcOwners;
+		public GridConfigurationEnum CompareThreatScoreGridConfiguration;
+		public bool CompareThreatScoreFromTargetPosition;
 
 		public bool IsAttackerHostile;
 		public bool IsAttackerNeutral;
@@ -288,16 +297,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CompareCommandGridValue = false;
 			CompareCommandGridValueMode = CounterCompareEnum.GreaterOrEqual;
 			CompareCommandGridValueSelfMultiplier = 1;
-
 			CheckThreatScore = false;
-			ThreatScoreValue = 0;
+			CheckThreatScoreMinimum = -1;
+			CheckThreatScoreMaximum = -1;
 			CheckThreatScoreRadius = 3000;
-			ThreatScoreCompareMode = CounterCompareEnum.GreaterOrEqual;
-			ThreatScoreGridConfiguration = GridConfigurationEnum.All;
-
+			CheckThreatScoreIncludeOtherNpcOwners = false;
+			CheckThreatScoreGridConfiguration = GridConfigurationEnum.All;
 			CheckThreatScoreFromTargetPosition = false;
-			UseNPCThreatScoreValue = false;
-			NPCThreatScoreValueMultiplier = 1;
+
+
+
+
+
+			CompareThreatScore = false;
+			CompareThreatScoreValue = -1;
+			CompareThreatScoreUseSelfValue = false;
+			CompareThreatScoreSelfValueMultiplier = 1;
+			CompareThreatScoreMode = CounterCompareEnum.GreaterOrEqual;
+
+			CompareThreatScoreRadius = 3000;
+			CompareThreatScoreIncludeOtherNpcOwners = false;
+			CompareThreatScoreGridConfiguration = GridConfigurationEnum.All;
+			CompareThreatScoreFromTargetPosition = false;
+
 
 			CommandGravityCheck = false;
 			CommandGravityMatches = false;
@@ -417,13 +439,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CompareCommandGridValueMode", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CompareCommandGridValueMode) },
 				{"CompareCommandGridValueSelfMultiplier", (s, o) => TagParse.TagFloatCheck(s, ref CompareCommandGridValueSelfMultiplier) },
 				{"CheckThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScore) },
-				{"ThreatScoreValue", (s, o) => TagParse.TagFloatCheck(s, ref ThreatScoreValue) },
+				{"CheckThreatScoreMinimum", (s, o) => TagParse.TagIntCheck(s, ref CheckThreatScoreMinimum) },
+				{"CheckThreatScoreMaximum", (s, o) => TagParse.TagIntCheck(s, ref CheckThreatScoreMaximum) },
 				{"CheckThreatScoreRadius", (s, o) => TagParse.TagIntCheck(s, ref CheckThreatScoreRadius) },
-				{"ThreatScoreCompareMode", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref ThreatScoreCompareMode) },
-				{"ThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref ThreatScoreGridConfiguration) },
 				{"CheckThreatScoreFromTargetPosition", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreFromTargetPosition) },
-				{"UseNPCThreatScoreValue", (s, o) => TagParse.TagBoolCheck(s, ref UseNPCThreatScoreValue) },
-				{"NPCThreatScoreValueMultiplier", (s, o) => TagParse.TagFloatCheck(s, ref NPCThreatScoreValueMultiplier) },
+				{"CheckThreatScoreGridConfiguration;", (s, o) => TagParse.TagGridConfigurationCheck(s, ref CheckThreatScoreGridConfiguration) },
+				{"CheckThreatScoreFromTargetPosition", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreFromTargetPosition) },
+				{"CompareThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CompareThreatScore) },
+				{"CompareThreatScoreValue", (s, o) => TagParse.TagIntCheck(s, ref CompareThreatScoreValue) },
+				{"CompareThreatScoreUseSelfValue", (s, o) => TagParse.TagBoolCheck(s, ref CompareThreatScoreUseSelfValue) },
+				{"CompareThreatScoreSelfValueMultiplier", (s, o) => TagParse.TagFloatCheck(s, ref CompareThreatScoreSelfValueMultiplier) },
+				{"CompareThreatScoreMode", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CompareThreatScoreMode) },
+				{"CompareThreatScoreRadius", (s, o) => TagParse.TagIntCheck(s, ref CompareThreatScoreRadius) },
+				{"CompareThreatScoreFromTargetPosition", (s, o) => TagParse.TagBoolCheck(s, ref CompareThreatScoreFromTargetPosition) },
+				{"CompareThreatScoreGridConfiguration;", (s, o) => TagParse.TagGridConfigurationCheck(s, ref CompareThreatScoreGridConfiguration) },
+				{"CompareThreatScoreFromTargetPosition", (s, o) => TagParse.TagBoolCheck(s, ref CompareThreatScoreFromTargetPosition) },
+
 				{"CommandGravityCheck", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityCheck) },
 				{"CommandGravityMatches", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityMatches) },
 				{"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },

@@ -970,28 +970,46 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
-			//ThreatScore
+			//Check
 			if (ConditionReference.CheckThreatScore){
 
 				usedConditions++;
 
-				float ThreatScoreCompare = ConditionReference.ThreatScoreValue;
 				Vector3D Position = _behavior.CurrentGrid.GetPosition();
 
-				if (ConditionReference.UseNPCThreatScoreValue)
-                {
-					ThreatScoreCompare = _behavior.CurrentGrid.ThreatScore * ConditionReference.NPCThreatScoreValueMultiplier;
+				if (ConditionReference.CheckThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
+				{
+					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
 				}
 
-                if (ConditionReference.CheckThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
+				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, ConditionReference.CheckThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CheckThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
+
+				if (ThreatScore < (float)ConditionReference.CheckThreatScoreMinimum && (float)ConditionReference.CheckThreatScoreMinimum > 0 && ThreatScore > (float)ConditionReference.CheckThreatScoreMaximum && (float)ConditionReference.CheckThreatScoreMaximum > 0)
+					satisfiedConditions++;
+			}
+
+			//CompareThreatScore
+			if (ConditionReference.CompareThreatScore){
+
+				usedConditions++;
+
+				float ThreatScoreCompare = ConditionReference.CompareThreatScoreValue;
+				Vector3D Position = _behavior.CurrentGrid.GetPosition();
+
+				if (ConditionReference.CompareThreatScoreUseSelfValue)
+                {
+					ThreatScoreCompare = _behavior.CurrentGrid.ThreatScore * ConditionReference.CompareThreatScoreSelfValueMultiplier;
+				}
+
+                if (ConditionReference.CompareThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
                 {
 					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
                 }
 
-				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, true, Position, GridConfigurationEnum.All, _behavior.RemoteControl.GetOwnerFactionTag());
+				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CompareThreatScoreRadius, ConditionReference.CompareThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CompareThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
 
 
-				if (MathTools.CompareValues(ThreatScore, ThreatScoreCompare, ConditionReference.ThreatScoreCompareMode))
+				if (MathTools.CompareValues(ThreatScore, ThreatScoreCompare, ConditionReference.CompareThreatScoreMode))
 					satisfiedConditions++;
 			}
 

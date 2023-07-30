@@ -12,6 +12,7 @@ using ModularEncountersSystems.API;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using Sandbox.Game;
+using ModularEncountersSystems.Spawning;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -967,6 +968,54 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
+
+
+			//Check
+			if (ConditionReference.CheckThreatScore){
+
+				usedConditions++;
+
+				Vector3D Position = _behavior.CurrentGrid.GetPosition();
+
+				if (ConditionReference.CheckThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
+				{
+					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
+				}
+
+				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, ConditionReference.CheckThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CheckThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
+
+				if (ThreatScore < (float)ConditionReference.CheckThreatScoreMinimum && (float)ConditionReference.CheckThreatScoreMinimum > 0 && ThreatScore > (float)ConditionReference.CheckThreatScoreMaximum && (float)ConditionReference.CheckThreatScoreMaximum > 0)
+					satisfiedConditions++;
+			}
+
+			//CompareThreatScore
+			if (ConditionReference.CompareThreatScore){
+
+				usedConditions++;
+
+				float ThreatScoreCompare = ConditionReference.CompareThreatScoreValue;
+				Vector3D Position = _behavior.CurrentGrid.GetPosition();
+
+				if (ConditionReference.CompareThreatScoreUseSelfValue)
+                {
+					ThreatScoreCompare = _behavior.CurrentGrid.ThreatScore * ConditionReference.CompareThreatScoreSelfValueMultiplier;
+				}
+
+                if (ConditionReference.CompareThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
+                {
+					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
+                }
+
+				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CompareThreatScoreRadius, ConditionReference.CompareThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CompareThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
+
+
+				if (MathTools.CompareValues(ThreatScore, ThreatScoreCompare, ConditionReference.CompareThreatScoreMode))
+					satisfiedConditions++;
+			}
+
+
+
+
 
 			if (ConditionReference.CommandGravityCheck) {
 

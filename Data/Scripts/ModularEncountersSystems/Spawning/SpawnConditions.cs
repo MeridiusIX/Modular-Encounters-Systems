@@ -1685,7 +1685,19 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static float GetThreatLevel(double checkRange, bool includeNpcs, Vector3D coords, GridConfigurationEnum gridconfigurationenum = GridConfigurationEnum.All) {
+		public static float GetThreatLevel(double checkRange, bool includeNpcs, Vector3D coords, GridConfigurationEnum gridconfigurationenum = GridConfigurationEnum.All, string factionTag = "") {
+
+			IMyFaction Faction = null;
+			bool checkFaction = false;
+			if (factionTag != "")
+			{
+				Faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(factionTag);
+				if (Faction != null)
+				{
+					checkFaction = true;
+				}
+			}
+
 
 			float totalThreatLevel = 0;
 
@@ -1693,8 +1705,6 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (!grid.ActiveEntity() || grid.Distance(coords) > checkRange)
 					continue;
-
-
 
 				bool validOwner = false;
 
@@ -1712,6 +1722,9 @@ namespace ModularEncountersSystems.Spawning {
 				if (!grid.CubeGrid.IsStatic && gridconfigurationenum.HasFlag(GridConfigurationEnum.Static))
 					validOwner = false;
 
+				if(checkFaction)
+					if (!grid.RelationTypes(Faction.FounderId).HasFlag(RelationTypeEnum.Enemy))
+						validOwner = false;
 
 
 				if (!validOwner)

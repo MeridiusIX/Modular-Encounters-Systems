@@ -124,6 +124,7 @@ namespace ModularEncountersSystems.Configuration {
 				{"TimeoutDuration", (s, o) => EditorTools.SetCommandValueInt(s, ref TimeoutDuration) },
 
 				{"UseCleanupSettings", (s, o) => EditorTools.SetCommandValueBool(s, ref UseCleanupSettings) },
+				{"OnlyCleanNpcsFromMes", (s, o) => EditorTools.SetCommandValueBool(s, ref OnlyCleanNpcsFromMes) },
 				{"CleanupUseDistance", (s, o) => EditorTools.SetCommandValueBool(s, ref CleanupUseDistance) },
 				{"CleanupUseTimer", (s, o) => EditorTools.SetCommandValueBool(s, ref CleanupUseTimer) },
 				{"CleanupUseBlockLimit", (s, o) => EditorTools.SetCommandValueBool(s, ref CleanupUseBlockLimit) },

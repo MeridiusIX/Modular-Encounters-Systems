@@ -371,6 +371,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			if (string.IsNullOrWhiteSpace(_remoteControl.CustomData) == false) {
 
+				Collision = new CollisionSystem(_remoteControl, this);
+
 				var descSplit = _remoteControl.CustomData.Split('\n');
 
 				foreach (var tag in descSplit) {
@@ -469,7 +471,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				if (_remoteControl != null && MyAPIGateway.Entities.Exist(_remoteControl?.SlimBlock?.CubeGrid)) {
 
-					Collision = new CollisionSystem(_remoteControl, this);
 					Targeting.InitTags();
 					Weapons = new WeaponSystem(_remoteControl, _behavior);
 

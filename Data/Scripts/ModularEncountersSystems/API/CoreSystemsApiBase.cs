@@ -8,13 +8,11 @@ using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRageMath;
 
-namespace ModularEncountersSystems.API
-{
+namespace ModularEncountersSystems.API{
     /// <summary>
     /// https://github.com/sstixrud/CoreSystems/blob/master/BaseData/Scripts/CoreSystems/Api/CoreSystemsApiBase.cs
     /// </summary>
-    public partial class WcApi
-    {
+    public partial class WcApi {
         private bool _apiInit;
 
         private Action<IList<byte[]>> _getAllWeaponDefinitions;
@@ -56,6 +54,7 @@ namespace ModularEncountersSystems.API
 
         private Func<MyEntity, long> _getPlayerController;
         private Func<MyEntity, MyTuple<bool, int, int>> _getProjectilesLockedOn;
+        private Action<MyEntity, ICollection<Vector3D>> _getProjectilesLockedOnPos;
         private Func<MyDefinitionId, float> _getMaxPower;
 
         private Func<MyEntity, float> _getOptimalDps;
@@ -165,6 +164,8 @@ namespace ModularEncountersSystems.API
 
         public MyTuple<bool, int, int> GetProjectilesLockedOn(MyEntity victim) =>
             _getProjectilesLockedOn?.Invoke(victim) ?? new MyTuple<bool, int, int>();
+        public void GetProjectilesLockedOnPos(MyEntity victim, ICollection<Vector3D> collection) =>
+           _getProjectilesLockedOnPos?.Invoke(victim, collection);
         public void GetSortedThreats(MyEntity shooter, ICollection<MyTuple<MyEntity, float>> collection) =>
             _getSortedThreats?.Invoke(shooter, collection);
         public void GetObstructions(MyEntity shooter, ICollection<MyEntity> collection) =>
@@ -274,8 +275,7 @@ namespace ModularEncountersSystems.API
         /// <param name="callback"></param>  object casts (ulong = projectileId, IMySlimBlock, MyFloatingObject, IMyCharacter, MyVoxelBase, MyPlanet, MyEntity Shield see next line)
         ///                                  You can detect the shield entity in a performant way by creating a hash check ShieldHash = MyStringHash.GetOrCompute("DefenseShield");
         ///                                  then use it by Session.ShieldApiLoaded && Session.ShieldHash == ent.DefinitionId?.SubtypeId && ent.Render.Visible;  Visible means shield online
-        public void RegisterDamageEvent(long modId, int type, Action<ListReader<MyTuple<ulong, long, int, MyEntity, MyEntity, ListReader<MyTuple<Vector3D, object, float>>>>> callback)
-        {
+        public void RegisterDamageEvent(long modId, int type, Action<ListReader<MyTuple<ulong, long, int, MyEntity, MyEntity, ListReader<MyTuple<Vector3D, object, float>>>>> callback) {
             _registerDamageEvent?.Invoke(modId, type, callback);
         }
 
@@ -284,8 +284,7 @@ namespace ModularEncountersSystems.API
         /// </summary>
         /// <param name="handledEntityId"> is the player/grid/phantom you want to control the target focus for, applies to subgrids as well</param>
         /// <param name="unregister"> be sure to unregister when you no longer want to receive callbacks</param>
-        public void TargetFocushandler(long handledEntityId, bool unregister)
-        {
+        public void TargetFocushandler(long handledEntityId, bool unregister) {
             _targetFocusHandler(handledEntityId, unregister, TargetFocusCallback);
         }
 
@@ -297,15 +296,13 @@ namespace ModularEncountersSystems.API
         /// <param name="handledEntityId"></param>
         /// <param name="modeCode"></param>
         /// <returns></returns>
-        private bool TargetFocusCallback(MyEntity target, IMyCharacter requestingCharacter, long handledEntityId, int modeCode)
-        {
+        private bool TargetFocusCallback(MyEntity target, IMyCharacter requestingCharacter, long handledEntityId, int modeCode) {
             var mode = (ChangeMode)modeCode;
 
             return true;
         }
 
-        public enum ChangeMode
-        {
+        public enum ChangeMode {
             Add,
             Release,
             Lock,
@@ -315,8 +312,7 @@ namespace ModularEncountersSystems.API
         /// </summary>
         /// <param name="handledEntityId"></param>
         /// <param name="unregister"></param>
-        public void Hudhandler(long handledEntityId, bool unregister)
-        {
+        public void Hudhandler(long handledEntityId, bool unregister) {
             _hudHandler?.Invoke(handledEntityId, unregister, HudCallback);
         }
 
@@ -327,15 +323,13 @@ namespace ModularEncountersSystems.API
         /// <param name="handledEntityId"></param>
         /// <param name="modeCode"></param>
         /// <returns></returns>
-        private bool HudCallback(IMyCharacter requestingCharacter, long handledEntityId, int modeCode)
-        {
+        private bool HudCallback(IMyCharacter requestingCharacter, long handledEntityId, int modeCode) {
             var mode = (HudMode)modeCode;
 
             return true;
         }
 
-        internal enum HudMode
-        {
+        internal enum HudMode {
             Selector,
             Reload,
             TargetInfo,
@@ -360,8 +354,7 @@ namespace ModularEncountersSystems.API
         /// <param name="handledEntityId"></param>
         /// <param name="unregister"></param>
         /// <param name="callback"></param>
-        public void ShootRequestHandler(long handledEntityId, bool unregister, Func<Vector3D, Vector3D, int, bool, object, int, int, int, bool> callback)
-        {
+        public void ShootRequestHandler(long handledEntityId, bool unregister, Func<Vector3D, Vector3D, int, bool, object, int, int, int, bool> callback) {
             _shootHandler?.Invoke(handledEntityId, unregister, callback); // see example callback below
         }
 
@@ -377,8 +370,7 @@ namespace ModularEncountersSystems.API
         /// <param name="remainingMags"></param>
         /// <param name="requestStage">The number of times this callback will fire will depend on the relevant firing stages for this weapon/ammo and how far it gets</param>
         /// <returns></returns>
-        private bool ShootCallBack(Vector3D scopePos, Vector3D scopeDirection, int requestState, bool hasLos, object target, int currentAmmo, int remainingMags, int requestStage)
-        {
+        private bool ShootCallBack(Vector3D scopePos, Vector3D scopeDirection, int requestState, bool hasLos, object target, int currentAmmo, int remainingMags, int requestStage) {
             var stage = (EventTriggers)requestStage;
             var state = (ShootState)requestState;
             var targetAsEntity = target as MyEntity;
@@ -388,17 +380,14 @@ namespace ModularEncountersSystems.API
             return true;
         }
 
-        public enum ShootState
-        {
+        public enum ShootState {
             EventStart,
             EventEnd,
             Preceding,
             Canceled,
         }
 
-
-        public enum EventTriggers
-        {
+        public enum EventTriggers {
             Reloading,
             Firing,
             Tracking,
@@ -415,6 +404,11 @@ namespace ModularEncountersSystems.API
             Init,
             Homing,
             TargetAligned,
+            WhileOn,
+            TargetRanged100,
+            TargetRanged75,
+            TargetRanged50,
+            TargetRanged25,
         }
 
         /// <summary>
@@ -423,8 +417,7 @@ namespace ModularEncountersSystems.API
         /// <param name="weapon"></param>
         /// <param name="weaponId"></param>
         /// <returns>Mag definitionId, mag name, ammoRound name, weapon must aim (not manual aim) true/false</returns>
-        public MyTuple<MyDefinitionId, string, string, bool> GetMagazineMap(MyEntity weapon, int weaponId)
-        {
+        public MyTuple<MyDefinitionId, string, string, bool> GetMagazineMap(MyEntity weapon, int weaponId) {
             return _getMagazineMap?.Invoke(weapon, weaponId) ?? new MyTuple<MyDefinitionId, string, string, bool>();
         }
 
@@ -436,8 +429,7 @@ namespace ModularEncountersSystems.API
         /// <param name="id"></param>
         /// <param name="forceReload"></param>
         /// <returns></returns>
-        public bool SetMagazine(MyEntity weapon, int weaponId, MyDefinitionId id, bool forceReload)
-        {
+        public bool SetMagazine(MyEntity weapon, int weaponId, MyDefinitionId id, bool forceReload) {
             return _setMagazine?.Invoke(weapon, weaponId, id, forceReload) ?? false;
 
         }
@@ -448,8 +440,7 @@ namespace ModularEncountersSystems.API
         /// <param name="weapon"></param>
         /// <param name="weaponId"></param>
         /// <returns></returns>
-        public bool ForceReload(MyEntity weapon, int weaponId)
-        {
+        public bool ForceReload(MyEntity weapon, int weaponId) {
             return _forceReload?.Invoke(weapon, weaponId) ?? false;
 
         }
@@ -475,8 +466,7 @@ namespace ModularEncountersSystems.API
         /// </summary>
         /// <param name="readyCallback">Method to be called when CoreSystems replies.</param>
         /// <param name="getWeaponDefinitions">Set to true to fill <see cref="WeaponDefinitions"/>.</param>
-        public void Load(Action readyCallback = null, bool getWeaponDefinitions = false)
-        {
+        public void Load(Action readyCallback = null, bool getWeaponDefinitions = false) {
             if (_isRegistered)
                 throw new Exception($"{GetType().Name}.Load() should not be called multiple times!");
 
@@ -487,8 +477,7 @@ namespace ModularEncountersSystems.API
             MyAPIGateway.Utilities.SendModMessage(Channel, "ApiEndpointRequest");
         }
 
-        public void Unload()
-        {
+        public void Unload() {
             MyAPIGateway.Utilities.UnregisterMessageHandler(Channel, HandleMessage);
 
             ApiAssign(null);
@@ -498,8 +487,7 @@ namespace ModularEncountersSystems.API
             IsReady = false;
         }
 
-        private void HandleMessage(object obj)
-        {
+        private void HandleMessage(object obj) {
             if (_apiInit || obj is string
             ) // the sent "ApiEndpointRequest" will also be received here, explicitly ignoring that
                 return;
@@ -515,8 +503,7 @@ namespace ModularEncountersSystems.API
             _readyCallback?.Invoke();
         }
 
-        public void ApiAssign(IReadOnlyDictionary<string, Delegate> delegates, bool getWeaponDefinitions = false)
-        {
+        public void ApiAssign(IReadOnlyDictionary<string, Delegate> delegates, bool getWeaponDefinitions = false) {
             _apiInit = (delegates != null);
             /// base methods
             AssignMethod(delegates, "GetAllWeaponDefinitions", ref _getAllWeaponDefinitions);
@@ -537,6 +524,7 @@ namespace ModularEncountersSystems.API
             AssignMethod(delegates, "GetObstructionsBase", ref _getObstructions);
             AssignMethod(delegates, "GetMaxPower", ref _getMaxPower);
             AssignMethod(delegates, "GetProjectilesLockedOnBase", ref _getProjectilesLockedOn);
+            AssignMethod(delegates, "GetProjectilesLockedOnPos", ref _getProjectilesLockedOnPos);
             AssignMethod(delegates, "GetAiFocusBase", ref _getAiFocus);
             AssignMethod(delegates, "SetAiFocusBase", ref _setAiFocus);
             AssignMethod(delegates, "ReleaseAiFocusBase", ref _releaseAiFocus);
@@ -606,8 +594,7 @@ namespace ModularEncountersSystems.API
             // Damage handler
             AssignMethod(delegates, "DamageHandler", ref _registerDamageEvent);
 
-            if (getWeaponDefinitions)
-            {
+            if (getWeaponDefinitions) {
                 var byteArrays = new List<byte[]>();
                 GetAllWeaponDefinitions(byteArrays);
                 foreach (var byteArray in byteArrays)
@@ -616,10 +603,8 @@ namespace ModularEncountersSystems.API
         }
 
         private void AssignMethod<T>(IReadOnlyDictionary<string, Delegate> delegates, string name, ref T field)
-            where T : class
-        {
-            if (delegates == null)
-            {
+            where T : class {
+            if (delegates == null) {
                 field = null;
                 return;
             }
@@ -635,10 +620,8 @@ namespace ModularEncountersSystems.API
                     $"{GetType().Name} :: Delegate {name} is not type {typeof(T)}, instead it's: {del.GetType()}");
         }
 
-        public class DamageHandlerHelper
-        {
-            public void YourCallBackFunction(List<ProjectileDamageEvent> list)
-            {
+        public class DamageHandlerHelper {
+            public void YourCallBackFunction(List<ProjectileDamageEvent> list) {
                 // Your code goes here
                 //
                 // Once this function completes the data in the list will be deleted... if you need to use the data in this list
@@ -651,13 +634,11 @@ namespace ModularEncountersSystems.API
 
 
             /// Don't touch anything below this line
-            public void RegisterForDamage(long modId, EventType type)
-            {
-                _wcApi.RegisterDamageEvent(modId, (int) type, DefaultCallBack);
+            public void RegisterForDamage(long modId, EventType type) {
+                _wcApi.RegisterDamageEvent(modId, (int)type, DefaultCallBack);
             }
 
-            private void DefaultCallBack(ListReader<MyTuple<ulong, long, int, MyEntity, MyEntity, ListReader<MyTuple<Vector3D, object, float>>>> listReader)
-            {
+            private void DefaultCallBack(ListReader<MyTuple<ulong, long, int, MyEntity, MyEntity, ListReader<MyTuple<Vector3D, object, float>>>> listReader) {
                 YourCallBackFunction(ProcessEvents(listReader));
                 CleanUpEvents();
             }
@@ -665,14 +646,11 @@ namespace ModularEncountersSystems.API
             private readonly List<ProjectileDamageEvent> _convertedObjects = new List<ProjectileDamageEvent>();
             private readonly Stack<List<ProjectileDamageEvent.ProHit>> _hitPool = new Stack<List<ProjectileDamageEvent.ProHit>>(256);
 
-            private List<ProjectileDamageEvent> ProcessEvents(ListReader<MyTuple<ulong, long, int, MyEntity, MyEntity, ListReader<MyTuple<Vector3D, object, float>>>> projectiles)
-            {
-                foreach (var p in projectiles)
-                {
+            private List<ProjectileDamageEvent> ProcessEvents(ListReader<MyTuple<ulong, long, int, MyEntity, MyEntity, ListReader<MyTuple<Vector3D, object, float>>>> projectiles) {
+                foreach (var p in projectiles) {
                     var hits = _hitPool.Count > 0 ? _hitPool.Pop() : new List<ProjectileDamageEvent.ProHit>();
 
-                    foreach (var hitObj in p.Item6)
-                    {
+                    foreach (var hitObj in p.Item6) {
                         hits.Add(new ProjectileDamageEvent.ProHit { HitPosition = hitObj.Item1, ObjectHit = hitObj.Item2, Damage = hitObj.Item3 });
                     }
                     _convertedObjects.Add(new ProjectileDamageEvent { ProId = p.Item1, PlayerId = p.Item2, WeaponId = p.Item3, WeaponEntity = p.Item4, WeaponParent = p.Item5, ObjectsHit = hits });
@@ -681,18 +659,15 @@ namespace ModularEncountersSystems.API
                 return _convertedObjects;
             }
 
-            private void CleanUpEvents()
-            {
-                foreach (var p in _convertedObjects)
-                {
+            private void CleanUpEvents() {
+                foreach (var p in _convertedObjects) {
                     p.ObjectsHit.Clear();
                     _hitPool.Push(p.ObjectsHit);
                 }
                 _convertedObjects.Clear();
             }
 
-            public struct ProjectileDamageEvent
-            {
+            public struct ProjectileDamageEvent {
                 public ulong ProId;
                 public long PlayerId;
                 public int WeaponId;
@@ -700,8 +675,7 @@ namespace ModularEncountersSystems.API
                 public MyEntity WeaponParent;
                 public List<ProHit> ObjectsHit;
 
-                public struct ProHit
-                {
+                public struct ProHit {
                     public Vector3D HitPosition; // To == first hit, From = projectile start position this frame
                     public object ObjectHit; // block, player, etc... 
                     public float Damage;
@@ -710,13 +684,11 @@ namespace ModularEncountersSystems.API
 
 
             private readonly WcApi _wcApi;
-            public DamageHandlerHelper(WcApi wcApi)
-            {
+            public DamageHandlerHelper(WcApi wcApi) {
                 _wcApi = wcApi;
             }
 
-            public enum EventType
-            {
+            public enum EventType {
                 Unregister,
                 SystemWideDamageEvents,
             }

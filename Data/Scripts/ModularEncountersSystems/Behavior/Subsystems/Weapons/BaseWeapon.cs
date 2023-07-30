@@ -217,11 +217,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			} else {
 
-				if (collision.HasTarget(maxTargetTrajectory)) {
+				if (collision.HasTarget(maxTargetTrajectory + 50)) {
 
 					if ((collision.Type == CollisionType.Voxel && !collision.CollisionIsWater) || collision.Type == CollisionType.Safezone) {
 
-						//Logger.Write(" - Voxel Collision or SafeZone", BehaviorDebugEnum.Weapon);
+						//BehaviorLogger.Write(" - Voxel Collision or SafeZone", BehaviorDebugEnum.Weapon);
 						hasCollision = true;
 
 					}
@@ -234,7 +234,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 						if (!hostileEntity && _behavior.AutoPilot.DistanceToCurrentWaypoint > collision.GetCollisionDistance()) {
 
-							//Logger.Write(" - Target On Other Side Of Friendly Grid", BehaviorDebugEnum.Weapon);
+							//BehaviorLogger.Write(" - Target On Other Side Of Friendly Grid", BehaviorDebugEnum.Weapon);
 							hasCollision = true;
 
 						}
@@ -246,19 +246,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 						}
 
+					} else {
+
+						//BehaviorLogger.Write(" - Collision Is Other Entity Type", BehaviorDebugEnum.Weapon);
+
 					}
+
+				} else {
+
+					//BehaviorLogger.Write(" - No Current Collision Detected At Trajectory and Direction:   " + maxTargetTrajectory + " / " + _direction.ToString(), BehaviorDebugEnum.Weapon);
 
 				}
 			
 			}
 
-			/*
-			BehaviorLogger.Write("WeaponCore Static Can Shoot Waypoint:   " + canShootWaypoint, BehaviorDebugEnum.Weapon);
-			BehaviorLogger.Write("WeaponCore Static Can Shoot Target:     " + canShootTarget, BehaviorDebugEnum.Weapon);
-			BehaviorLogger.Write("WeaponCore Static Has Collision:        " + hasCollision, BehaviorDebugEnum.Weapon);
-			BehaviorLogger.Write("WeaponCore Static Hostile:              " + hostile, BehaviorDebugEnum.Weapon);
-			BehaviorLogger.Write("WeaponCore Static Must Contact Hostile: " + mustContactHostile, BehaviorDebugEnum.Weapon);
-			*/
+			
+			//BehaviorLogger.Write("WeaponCore Static Can Shoot Waypoint:   " + canShootWaypoint, BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write("WeaponCore Static Can Shoot Target:     " + canShootTarget, BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write("WeaponCore Static Has Collision:        " + hasCollision, BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write("WeaponCore Static Hostile:              " + hostile, BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write("WeaponCore Static Must Contact Hostile: " + mustContactHostile, BehaviorDebugEnum.Weapon);
+			
 
 			Status = WeaponStatusEnum.StaticWeaponNotAligned;
 			if (!canShootWaypoint && !canShootTarget)
@@ -404,7 +412,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			_pendingAmmoRefill = false;
 
-			BehaviorLogger.Write("Sending Replenish Request For Weapon: " + _block?.SlimBlock?.BlockDefinition?.Id ?? "Null", BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write("Sending Replenish Request For Weapon: " + _block?.SlimBlock?.BlockDefinition?.Id ?? "Null", BehaviorDebugEnum.Weapon);
 			InventoryHelper.AddItemsToInventory(_inventory, _currentAmmoMagazine, _weaponSystem.Data.AmmoReplenishClipAmount);
 			_ammoRefills++;
 

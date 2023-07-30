@@ -33,12 +33,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (BlockManager.AllWeaponCoreGuns.Contains(block.SlimBlock.BlockDefinition.Id)) {
 
-				BehaviorLogger.Write(block.CustomName + " Is WeaponCore Static Weapon", BehaviorDebugEnum.Weapon);
+				//BehaviorLogger.Write(block.CustomName + " Is WeaponCore Static Weapon", BehaviorDebugEnum.Weapon);
 				_isStatic = true;
 
 			} else {
 
-				BehaviorLogger.Write(block.CustomName + " Is WeaponCore Turret Weapon", BehaviorDebugEnum.Weapon);
+				//BehaviorLogger.Write(block.CustomName + " Is WeaponCore Turret Weapon", BehaviorDebugEnum.Weapon);
 				_isTurret = true;
 
 			}
@@ -52,7 +52,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			//Get Ammo Stuff
 
-			BehaviorLogger.Write(_block.CustomName + " Available Ammo Check", BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write(_block.CustomName + " Available Ammo Check", BehaviorDebugEnum.Weapon);
 			if (_weaponDefinition.Ammos.Length > 0) {
 
 				foreach (var ammo in _weaponDefinition.Ammos) {
@@ -98,6 +98,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 							if (threatType == TargetingDef.Threat.Characters && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Player) {
 
+								BehaviorLogger.Write(" - Homing Threat Is Matched To Player", BehaviorDebugEnum.Weapon);
 								threatMatch = true;
 								break;
 
@@ -105,6 +106,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 							if (threatType == TargetingDef.Threat.Grids && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Grid) {
 
+								BehaviorLogger.Write(" - Homing Threat Is Matched To Grid", BehaviorDebugEnum.Weapon);
 								threatMatch = true;
 								break;
 
@@ -145,7 +147,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				}
 
 				Status = WeaponStatusEnum.ReadyToFire;
-				//BehaviorLogger.Write(" - Got Target For Homing Shot", BehaviorDebugEnum.Weapon);
+				BehaviorLogger.Write(" - Got Target For Homing Shot", BehaviorDebugEnum.Weapon);
 				return;
 
 			}
@@ -173,28 +175,49 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			//---------------------
 
 			_readyToFire = StaticWeaponAlignedToTarget(_beamAmmo);
-			//BehaviorLogger.Write("WC Ready To Fire: " + _readyToFire, BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write("WC Ready To Fire: " + _readyToFire, BehaviorDebugEnum.Weapon);
 
 		}
 
 		public bool CanLockOnGrid(IMyCubeGrid target) {
 
-			if (_isStatic)
+			if (_isStatic) {
+
+				//BehaviorLogger.Write(" - Non Static Weapon Cannot Be Used For MES Homing Management", BehaviorDebugEnum.Weapon);
 				return false;
 
-			if (target == null || _block == null)
+			}
+				
+
+			if (target == null || _block == null) {
+
+				//BehaviorLogger.Write(" - Homing Target or Block Null", BehaviorDebugEnum.Weapon);
 				return false;
 
-			if (target.Closed || _block.Closed)
+			}
+
+			if (target.Closed || _block.Closed) {
+
+				//BehaviorLogger.Write(" - Homing Target or Block Closed", BehaviorDebugEnum.Weapon);
 				return false;
+
+			}
 
 			//Ammo Firing Range Check
-			if (Vector3D.Distance(target.GetPosition(), _block.GetPosition()) > MaxAmmoTrajectory())
+			if (Vector3D.Distance(target.GetPosition(), _block.GetPosition()) > MaxAmmoTrajectory()) {
+
+				//BehaviorLogger.Write(" - Homing Target Further Than Max Ammo Trajectory", BehaviorDebugEnum.Weapon);
 				return false;
 
+			}
+
 			//LOS Check
-			if (!_homingAmmo && !TurretHasLOS(target.GetPosition(), _block.GetPosition(), _behavior.CurrentGrid?.LinkedGrids))
+			if (!_homingAmmo && !TurretHasLOS(target.GetPosition(), _block.GetPosition(), _behavior.CurrentGrid?.LinkedGrids)) {
+
+				//BehaviorLogger.Write(" - Non homing ammo LOS fail", BehaviorDebugEnum.Weapon);
 				return false;
+
+			}
 
 			return true;
 
@@ -333,7 +356,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (_isValid && IsActive() && _readyToFire) {
 
-				BehaviorLogger.Write(_block.CustomName + " Fire Once", BehaviorDebugEnum.Weapon);
+				if (IsHoming) {
+				
+
+				
+				}
+
+				//BehaviorLogger.Write(_block.CustomName + " Fire Once", BehaviorDebugEnum.Weapon);
 				APIs.WeaponCore.FireWeaponOnce(_block as MyEntity, false, _weaponId);
 
 			}
@@ -385,11 +414,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (_isTurret)
 				return;
 
-			//BehaviorLogger.Write(_block.CustomName + " Valid:  " + _isValid, BehaviorDebugEnum.Weapon);
-			//BehaviorLogger.Write(_block.CustomName + " Active: " + IsActive(), BehaviorDebugEnum.Weapon);
-			//BehaviorLogger.Write(_block.CustomName + " Ready:  " + _readyToFire, BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write(_block.CustomName + " Valid:  " + _isValid, BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write(_block.CustomName + " Active: " + IsActive(), BehaviorDebugEnum.Weapon);
+			BehaviorLogger.Write(_block.CustomName + " Ready:  " + _readyToFire, BehaviorDebugEnum.Weapon);
 			//BehaviorLogger.Write(_block.CustomName + " Barra:  " + _isBarrageWeapon, BehaviorDebugEnum.Weapon);
+			//BehaviorLogger.Write(_block.CustomName + " Firing: " + _firing, BehaviorDebugEnum.Weapon);
 
+			/*
+			if (IsHoming && _readyToFire) {
+
+				var blockEntity = _block as MyEntity;
+				var targetEntity = _behavior.AutoPilot.Targeting.Target.GetEntity() as MyEntity;
+				//BehaviorLogger.Write(_block.CustomName + " Homing Block Null:  " + (blockEntity == null), BehaviorDebugEnum.Weapon);
+				//BehaviorLogger.Write(_block.CustomName + " Homing Target Null: " + (targetEntity == null), BehaviorDebugEnum.Weapon);
+
+				APIs.WeaponCore.SetAiFocus(blockEntity, targetEntity);
+				APIs.WeaponCore.SetWeaponTarget(blockEntity, targetEntity, _weaponId);
+			
+			}
+			*/
 
 			if (_isValid && IsActive() && _readyToFire && !_isBarrageWeapon) {
 
@@ -405,7 +448,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				if (_firing) {
 
-					BehaviorLogger.Write(_block.CustomName + " End Fire", BehaviorDebugEnum.Weapon);
+					//BehaviorLogger.Write(_block.CustomName + " End Fire", BehaviorDebugEnum.Weapon);
 					_firing = false;
 					APIs.WeaponCore.ToggleWeaponFire(_block as MyEntity, false, false, _weaponId);
 

@@ -111,6 +111,8 @@ namespace ModularEncountersSystems.BlockLogic {
                 ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Small"));
                 ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Small"));
                 ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Small"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_DefensiveCombatBlock), "SmallDefensiveCombat"));
+                ArmorModuleReplacement.SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_FlightMovementBlock), "SmallFlightMovement"));
 
             }
 
@@ -123,6 +125,8 @@ namespace ModularEncountersSystems.BlockLogic {
                 ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-JumpDrive-Large"));
                 ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
                 ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_DefensiveCombatBlock), "LargeDefensiveCombat"));
+                ArmorModuleReplacement.LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_FlightMovementBlock), "LargeFlightMovement"));
 
             }
 

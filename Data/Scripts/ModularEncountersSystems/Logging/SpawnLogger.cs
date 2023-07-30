@@ -62,6 +62,7 @@ namespace ModularEncountersSystems.Logging {
 		public static StringBuilder Zone = new StringBuilder();
 
 		public static List<LoggerQueue> QueuedItems = new List<LoggerQueue>();
+		public static Dictionary<string, int> Reason = null;
 
 		//Behavior Debugs
 
@@ -90,10 +91,21 @@ namespace ModularEncountersSystems.Logging {
 		
 		}
 
-		public static void Queue(string msg, SpawnerDebugEnum type, bool force = false) {
+		public static void Queue(string msg, SpawnerDebugEnum type, bool force = false, bool addToReason = false) {
 
 			QueuedItems.Add(new LoggerQueue(msg, type, force));
-		
+
+			if (Reason == null || !addToReason)
+				return;
+
+			string trimmedReason = msg.Trim();
+			int output = 0;
+
+			if (!Reason.TryGetValue(trimmedReason, out output))
+				Reason.Add(trimmedReason, 0);
+
+			Reason[trimmedReason]++;
+
 		}
 
 		public static void ProcessQueue() {

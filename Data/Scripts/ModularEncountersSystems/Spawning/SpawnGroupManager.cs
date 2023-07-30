@@ -16,6 +16,117 @@ using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.API;
 
 namespace ModularEncountersSystems.Spawning {
+
+	public class SpawnConditionTypeTally {
+
+		public int SpaceCargoShips = 0;
+		public int LunarCargoShips = 0;
+		public int PlanetaryCargoShips = 0;
+		public int GravityCargoShips = 0;
+		public int RandomEncounters = 0;
+		public int PlanetaryInstallations = 0;
+		public int BossEncounters = 0;
+		public int DroneEncounters = 0;
+		public int StaticEncounters = 0;
+		public int Creatures = 0;
+
+		public Dictionary<string, int> SpaceCargoShipReasons;
+		public Dictionary<string, int> LunarCargoShipReasons;
+		public Dictionary<string, int> PlanetaryCargoShipReasons;
+		public Dictionary<string, int> GravityCargoShipReasons;
+		public Dictionary<string, int> RandomEncounterReasons;
+		public Dictionary<string, int> PlanetaryInstallationReasons;
+		public Dictionary<string, int> BossEncounterReasons;
+		public Dictionary<string, int> DroneEncounterReasons;
+		public Dictionary<string, int> StaticEncounterReasons;
+		public Dictionary<string, int> CreatureReasons;
+
+		public SpawnConditionTypeTally() {
+
+			SpaceCargoShipReasons = new Dictionary<string, int>();
+			LunarCargoShipReasons = new Dictionary<string, int>();
+			PlanetaryCargoShipReasons = new Dictionary<string, int>();
+			GravityCargoShipReasons = new Dictionary<string, int>();
+			RandomEncounterReasons = new Dictionary<string, int>();
+			PlanetaryInstallationReasons = new Dictionary<string, int>();
+			BossEncounterReasons = new Dictionary<string, int>();
+			DroneEncounterReasons = new Dictionary<string, int>();
+			StaticEncounterReasons = new Dictionary<string, int>();
+			CreatureReasons = new Dictionary<string, int>();
+
+
+		}
+
+		public void ClearReasons() {
+
+			SpaceCargoShipReasons.Clear();
+			LunarCargoShipReasons.Clear();
+			PlanetaryCargoShipReasons.Clear();
+			GravityCargoShipReasons.Clear();
+			RandomEncounterReasons.Clear();
+			PlanetaryInstallationReasons.Clear();
+			BossEncounterReasons.Clear();
+			DroneEncounterReasons.Clear();
+			StaticEncounterReasons.Clear();
+			CreatureReasons.Clear();
+
+		}
+
+		public void AddReason(string reason, ref Dictionary<string, int> dict) {
+
+			string trimmedReason = reason.Trim();
+			int output = 0;
+
+			if (!dict.TryGetValue(trimmedReason, out output))
+				dict.Add(trimmedReason, 0);
+
+			dict[trimmedReason]++;
+
+		}
+
+		public void ProcessSpawnGroup(ImprovedSpawnGroup spawnGroup) {
+
+			if (spawnGroup == null || !spawnGroup.SpawnGroupEnabled || spawnGroup.SpawnConditionsProfiles == null)
+				return;
+
+			foreach (var conditions in spawnGroup.SpawnConditionsProfiles) {
+
+				if (conditions.SpaceCargoShip)
+					SpaceCargoShips++;
+
+				if (conditions.LunarCargoShip)
+					LunarCargoShips++;
+
+				if (conditions.AtmosphericCargoShip)
+					PlanetaryCargoShips++;
+
+				if (conditions.GravityCargoShip)
+					GravityCargoShips++;
+
+				if (conditions.SpaceRandomEncounter)
+					RandomEncounters++;
+
+				if (conditions.PlanetaryInstallation)
+					PlanetaryInstallations++;
+
+				if (conditions.BossEncounterAny || conditions.BossEncounterAtmo || conditions.BossEncounterSpace)
+					BossEncounters++;
+
+				if (conditions.DroneEncounter)
+					DroneEncounters++;
+
+				if (conditions.StaticEncounter)
+					StaticEncounters++;
+
+				if (conditions.CreatureSpawn)
+					Creatures++;
+
+			}
+		
+		}
+
+	}
+
 	public static class SpawnGroupManager {
 
 		public static List<ImprovedSpawnGroup> SpawnGroups = new List<ImprovedSpawnGroup>();
@@ -32,6 +143,8 @@ namespace ModularEncountersSystems.Spawning {
 		public static string AdminSpawnGroup = "";
 		public static string GroupInstance = "";
 		public static bool AddonDetected = false;
+
+		public static SpawnConditionTypeTally TotalSpawnGroups = new SpawnConditionTypeTally();
 
 		public static void GetSpawnGroups(SpawningType type, string source, EnvironmentEvaluation environment, string overrideFaction, SpawnGroupCollection collection, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, Dictionary<string, DateTime> playerDroneTracker = null) {
 
@@ -58,20 +171,20 @@ namespace ModularEncountersSystems.Spawning {
 				if (collection.AllowedZoneSpawns.Count > 0 && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
 
 					//Inside Zone
-					SpawnLogger.Queue(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup While Inside Zone: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Queue(" - Zone(s) SpawnGroup Whitelist Doesn't Contain SpawnGroup While Inside Zone", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 					continue;
 
 				} else if (collection.OnlyAllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName) && !collection.AllowedZoneSpawns.Contains(spawnGroup.SpawnGroupName)) {
 
 					//Outside Zone
-					SpawnLogger.Queue(" - Zone(s) Whitelisted SpawnGroup Cannot Spawn While Outside Zone: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Queue(" - Zone(s) Whitelisted SpawnGroup Cannot Spawn While Outside Zone", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 					continue;
 
 				}
 
 				if (collection.RestrictedZoneSpawnGroups.Contains(spawnGroup.SpawnGroupName)) {
 
-					SpawnLogger.Queue(" - Zone(s) SpawnGroup Blacklist Contains SpawnGroup: " + spawnGroup.SpawnGroupName, SpawnerDebugEnum.SpawnGroup);
+					SpawnLogger.Queue(" - Zone(s) SpawnGroup Blacklist Contains SpawnGroup", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 					continue;
 
 				}
@@ -86,7 +199,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Eligible Names
 					if (eligibleNames != null && eligibleNames.Count > 0 && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
 
-						SpawnLogger.Queue("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 						persistentCheckFailed = true;
 
 					}
@@ -94,7 +207,7 @@ namespace ModularEncountersSystems.Spawning {
 					//AdminSpawn
 					if (!persistentCheckFailed && persistentConditions.AdminSpawnOnly && !adminSpawn) {
 
-						SpawnLogger.Queue("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 						continue;
 
 					}
@@ -102,7 +215,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Common Checks
 					if (!persistentCheckFailed && !forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, persistentConditions, collection, source, environment, adminSpawn, type, spawnTypes, playerDroneTracker, true, ref commonConditionFailure)) {
 
-						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup, addToReason: true);
 						persistentCheckFailed = true;
 
 					}
@@ -134,7 +247,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Eligible Names
 					if (eligibleNames != null && eligibleNames.Count > 0 && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
 
-						SpawnLogger.Queue("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup Doesn't Match Provided Eligible SpawnGroupNames", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 						continue;
 
 					}
@@ -142,7 +255,7 @@ namespace ModularEncountersSystems.Spawning {
 					//AdminSpawn
 					if (conditions.AdminSpawnOnly && !adminSpawn) {
 
-						SpawnLogger.Queue("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup Is Admin Spawn Only", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 						continue;
 
 					}
@@ -150,7 +263,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Match SpawnTypes
 					if (!SpawnConditions.SpawningTypeAllowedForGroup(spawnTypes, conditions)) {
 
-						SpawnLogger.Queue("   - SpawnGroup SpawnType(s) Not Matched.", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup SpawnType(s) Not Matched.", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 						conditionsFailedBySpawnType++;
 						continue;
 
@@ -159,7 +272,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Common Checks
 					if (!forceSpawn && !SpawnConditions.CheckCommonSpawnConditions(spawnGroup, conditions, collection, source, environment, adminSpawn, type, spawnTypes, playerDroneTracker, false, ref commonConditionFailure)) {
 
-						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue(commonConditionFailure, SpawnerDebugEnum.SpawnGroup, addToReason: true);
 						continue;
 
 					}
@@ -169,7 +282,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					if (validFactionsList.Count == 0 && collection.OwnerOverride < 0) {
 
-						SpawnLogger.Queue("   - Could Not Get Valid NPC Faction.", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - Could Not Get Valid NPC Faction.", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 						continue;
 
 					}
@@ -283,7 +396,7 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
-						SpawnLogger.Queue("   - SpawnGroup OK", SpawnerDebugEnum.SpawnGroup);
+						SpawnLogger.Queue("   - SpawnGroup OK", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 
 						for (int i = 0; i < spawnGroup.Frequency; i++) {
 
@@ -484,6 +597,13 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			ApplySuppression(AddonManager.SuppressVanillaCargoShips, AddonManager.SuppressVanillaEncounters);
+
+			//Count all the conditions
+			foreach (var spawnGroup in SpawnGroups) {
+
+				TotalSpawnGroups.ProcessSpawnGroup(spawnGroup);
+			
+			}
 
 			if (SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("LnNibQ=="))) == true && (!SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MTUyMTkwNTg5MA=="))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("NzUwODU1"))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MjU0MjU5OTEwMA=="))))) {
 

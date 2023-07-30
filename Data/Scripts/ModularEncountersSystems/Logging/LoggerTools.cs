@@ -703,6 +703,7 @@ namespace ModularEncountersSystems.Logging {
 			var matrix = MatrixD.CreateWorld((msg.CameraPosition), msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
 			var hull = new HullTypeSomerset(new ShipRules());
 			hull.InitialHullOutline();
+			hull.FirstHullLayer();
 			hull.SpawnCurrentConstruct(matrix);
 			msg.ClipboardPayload = hull.Construct.Log.ToString();
 			return;

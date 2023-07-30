@@ -69,7 +69,7 @@ namespace ModularEncountersSystems.API {
         //WeaponCore
         public static bool WeaponCore = false;
         private static ulong _weaponCoreSteamId = 1918681825;
-        private static ulong _coreSystemsSteamId = 2496225055;
+        private static ulong _coreSystemsSteamId = 2189703321;
 
         //AiEnabled
         public static bool AiEnabled = false;
@@ -202,7 +202,7 @@ namespace ModularEncountersSystems.API {
                 }
 
                 //WeaponCore
-                if (id == _weaponCoreSteamId || id == _coreSystemsSteamId) {
+                if (id == _weaponCoreSteamId || id == _coreSystemsSteamId || mod.GetPath().Contains("AppData\\Roaming\\SpaceEngineers\\Mods\\CoreSystems")) {
 
                     SpawnLogger.Write("WeaponCore Mod Detected", SpawnerDebugEnum.Startup);
                     WeaponCore = true;

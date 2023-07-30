@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Prefabs\" />
     <Folder Include="Audio\" />
     <Folder Include="Models\" />
     <Folder Include="VoxelMaps\" />

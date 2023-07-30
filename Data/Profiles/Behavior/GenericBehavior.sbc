@@ -16,7 +16,22 @@
       </Description>
 
     </EntityComponent>
+    
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-Generic-Behavior-Fighter</SubtypeId>
+      </Id>
+      <Description>
 
+        [RivalAI Behavior]
+        [BehaviorName:Fighter]
+        [TargetData:RivalAI-GenericTargetProfile-EnemyPlayer]
+
+      </Description>
+
+    </EntityComponent>
+    
     <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
       <Id>
         <TypeId>Inventory</TypeId>

@@ -38,18 +38,29 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static long GetFactionOwner(IMyFaction faction) {
 
+			if (faction?.Members == null)
+				return 0;
+
 			if (faction.Members.Count == 0) {
 
 				lock (_memberList) {
 
 					_memberList.Clear();
+
 					foreach (var member in faction.Members)
 						_memberList.Add(member.Value);
-					var factionDef = MyDefinitionManager.Static.TryGetFactionDefinition(faction.Tag);
-					MyAPIGateway.Session.Factions.AddNewNPCToFaction(faction.FactionId, factionDef?.Founder ?? faction.Name + " Leader");
-					foreach (var member in _memberList)
-						MyAPIGateway.Session.Factions.PromoteMember(faction.FactionId, member.PlayerId);
 
+					var factionDef = MyDefinitionManager.Static.TryGetFactionDefinition(faction.Tag);
+
+					if (factionDef != null) {
+
+						MyAPIGateway.Session.Factions.AddNewNPCToFaction(faction.FactionId, factionDef?.Founder ?? faction.Name + " Leader");
+
+						foreach (var member in _memberList)
+							MyAPIGateway.Session.Factions.PromoteMember(faction.FactionId, member.PlayerId);
+
+					}
+					
 				}
 				
 			}

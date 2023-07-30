@@ -18,6 +18,17 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		
 	}
 
+	public enum BlockPlacementCategory {
+	
+		None,
+		HullOutline,
+		HullLayer,
+		NacelleArm,
+		NacelleOutline,
+		NacelleLayer
+	
+	}
+
 	public class ShipConstruct {
 
 		public ShipRules Rules;
@@ -40,6 +51,9 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		private MyObjectBuilder_CubeBlock _tempBlock;
 		private MyObjectBuilder_CubeGrid _tempGrid;
 
+		private List<Vector3I> _stackedBlocksFirst;
+		private List<Vector3I> _stackedBlocksSecond;
+
 		public StringBuilder Log;
 
 		public ShipConstruct(ShipRules rules) {
@@ -56,6 +70,9 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			_maxLengthZ = MathTools.RandomBetween(Rules.MinZ, Rules.MaxZ);
 
 			_tempCellList = new List<Vector3I>();
+
+			_stackedBlocksFirst = new List<Vector3I>();
+			_stackedBlocksSecond = new List<Vector3I>();
 
 			Log = new StringBuilder();
 
@@ -265,7 +282,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
-		private MyObjectBuilder_CubeBlock GetReferenceBlock(BlockCategory category, Vector3I min) {
+		public MyObjectBuilder_CubeBlock GetReferenceBlock(BlockCategory category, Vector3I min) {
 
 			if (!BuilderTools.BlockCategoryPrefabReference.TryGetValue(category, out _tempGrid))
 				return null;
@@ -305,7 +322,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			} else {
 
-				calculatedY = (max.X * -1) + localMaxY;
+				calculatedY = (max.Y * -1) + localMaxY;
 				return new Vector3I(min.X, calculatedY, max.Z);
 
 			}

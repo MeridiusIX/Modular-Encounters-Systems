@@ -32,7 +32,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			InitialHullOutline();
 
 			//Step 1
-			CoreHullSetup();
+			FirstHullLayer();
 		
 		}
 
@@ -45,108 +45,37 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 		public void InitialHullOutline() {
 
 			//Hull Outline Setup
-			Vector3I lastPosition = Vector3I.Zero;
+			Vector3I currentPosition = Vector3I.Zero;
 			Construct.Log.Clear();
+			int rndNum = 0;
 
-			//Origin:   1
+			//1: Origin:   1
 			Construct.PlaceBlock(BlockCategory.Armor, Vector3I.Zero, Vector3I.Zero, new Vector3I(0, 1, 0));
+			currentPosition.X += 1;
 
-			//AngleOutA: 1-3
-			int rndNum = MathTools.RandomBetween(1, 4);
-			for (int i = 1; i <= rndNum; i++) {
+			//2: AngleOutA: 1-3
+			BuilderTools.BuildDualBlockLine(Construct, BlockCategory.Armor, MathTools.RandomBetween(1, 4), -1, BuilderTools.IncrementX1Z1, BuilderTools.IncrementZ1, BuilderTools.IncrementX1Z1, Vector3I.Backward, new Vector3I(3, 1, 1), new Vector3I(0, 1, 0), true, false, ref currentPosition);
 
-				var pos = lastPosition;
-				pos.X += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(3, 1, 1), true);
-				pos.Z += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
-				lastPosition = pos;
+			//3: StraightA: 4-8
+			BuilderTools.BuildStraightArmorLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), MathTools.RandomBetween(4, 9), BuilderTools.IncrementZ1, BuilderTools.IncrementX1, true, false, ref currentPosition);
 
-			}
+			//4: AngleOutB: 2-4
+			BuilderTools.BuildDualBlockLine(Construct, BlockCategory.Armor, MathTools.RandomBetween(2, 5), -1, BuilderTools.IncrementX1Z1, BuilderTools.IncrementZ1, BuilderTools.IncrementX1Z1, Vector3I.Backward, new Vector3I(3, 1, 1), new Vector3I(0, 1, 0), true, false, ref currentPosition);
 
-			//StraightA: 4-8
-			rndNum = MathTools.RandomBetween(4, 8);
-			for (int i = 1; i <= rndNum; i++) {
+			//5: StraightB: 4-10
+			BuilderTools.BuildStraightArmorLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), MathTools.RandomBetween(4, 11), BuilderTools.IncrementZ1, BuilderTools.IncrementX1, true, false, ref currentPosition);
 
-				var pos = lastPosition;
-				pos.Z += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
-				lastPosition = pos;
+			//6: AngleOutC: 2-4
+			BuilderTools.BuildDualBlockLine(Construct, BlockCategory.Armor, MathTools.RandomBetween(2, 5), -1, BuilderTools.IncrementX1Z1, BuilderTools.IncrementZ1, BuilderTools.IncrementX1Z1, Vector3I.Backward, new Vector3I(3, 1, 1), new Vector3I(0, 1, 0), true, false, ref currentPosition);
 
-			}
+			//7: StraightC: 3-7 (Odd)
+			BuilderTools.BuildStraightArmorLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), MathTools.ClampRandomOdd(MathTools.RandomBetween(3, 8), 3, 7), BuilderTools.IncrementZ1, BuilderTools.IncrementZ1, true, false, ref currentPosition);
 
-			//AngleOutB: 2-4
-			rndNum = MathTools.RandomBetween(2, 4);
-			for (int i = 1; i <= rndNum; i++) {
+			//8: AngleInD:  2-4
+			BuilderTools.BuildDualBlockLine(Construct, BlockCategory.Armor, MathTools.RandomBetween(2, 5), 0, new Vector3I(-1,0,1), new Vector3I(-1,0,0), BuilderTools.IncrementZ1, Vector3I.Backward, new Vector3I(3, 1, 3), new Vector3I(0, 1, 0), true, false, ref currentPosition);
 
-				var pos = lastPosition;
-				pos.X += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(3, 1, 1), true);
-				pos.Z += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
-				lastPosition = pos;
-
-			}
-
-			//StraightB: 4-10
-			rndNum = MathTools.RandomBetween(4, 10);
-			for (int i = 1; i <= rndNum; i++) {
-
-				var pos = lastPosition;
-				pos.Z += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
-				lastPosition = pos;
-
-			}
-
-			//AngleOutC: 2-4
-			rndNum = MathTools.RandomBetween(2, 4);
-			for (int i = 1; i <= rndNum; i++) {
-
-				var pos = lastPosition;
-				pos.X += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(3, 1, 1), true);
-				pos.Z += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
-				lastPosition = pos;
-
-			}
-
-			//StraightC: 3-7 (Odd)
-			rndNum = MathTools.ClampRandomOdd(MathTools.RandomBetween(3, 7), 3, 7);
-			for (int i = 1; i <= rndNum; i++) {
-
-				var pos = lastPosition;
-				pos.Z += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
-				lastPosition = pos;
-
-			}
-
-			//AngleInD:  2-4
-			rndNum = MathTools.RandomBetween(2, 4);
-			for (int i = 1; i <= rndNum; i++) {
-
-				var pos = lastPosition;
-				
-				pos.Z += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(3, 1, 3), true);
-				pos.X -= 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
-				lastPosition = pos;
-
-			}
-
-			//StraightD: 4-10
-			rndNum = MathTools.RandomBetween(4, 10);
-			for (int i = 1; i <= rndNum; i++) {
-
-				var pos = lastPosition;
-				pos.Z += 1;
-				Construct.PlaceBlock(BlockCategory.Armor, pos, pos, new Vector3I(0, 1, 0), true);
-				lastPosition = pos;
-
-			}
+			//9: StraightD: 4-10
+			BuilderTools.BuildStraightArmorLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), MathTools.RandomBetween(4, 11), BuilderTools.IncrementZ1, BuilderTools.IncrementX1, true, false, ref currentPosition);
 
 			//End:      ???
 
@@ -154,79 +83,39 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 		}
 
-		public void CoreHullSetup() {
+		public void FirstHullLayer() {
 
-			//Start with origin
+			//Setup
 			Vector3I currentPosition = Vector3I.Zero;
 			currentPosition.Y = 1;
+			int scannedBlockCount = 0;
 			
+			//1: Origin Placement
+			if (!_thickCore) 
+				Construct.PlaceBlock(BlockCategory.Armor, currentPosition, currentPosition, new Vector3I(2, 1, 5), false, true);
+			else
+				BuilderTools.BuildStackedBlocks(Construct, BlockCategory.Armor, Vector3I.Up, currentPosition, false, true, new Vector3I(10, 1, 1), new Vector3I(14, 1, -3));
 
-			if (!_thickCore) {
-
-				Construct.PlaceBlock(BlockCategory.Armor, currentPosition, currentPosition, new Vector3I(2, 1, 5), true);
-
-			} else {
-
-				Construct.PlaceBlock(BlockCategory.Armor, currentPosition, currentPosition, new Vector3I(10, 1, 1), true);
-				var newPos = MathTools.Vector3IPlus(currentPosition, 0, 1, 0);
-				Construct.PlaceBlock(BlockCategory.Armor, newPos, newPos, new Vector3I(14, 1, -3), true);
-
-			}
-
-			//Next, Move 1 to the right
+			//1: Next, Move 1 to the right and scan angle blocks
 			currentPosition.X += 1;
-			
-			while (true) {
 
-				_tempBlockA = Construct.GetBlock(MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
-				_tempBlockB = Construct.GetBlock(MathTools.Vector3IPlus(currentPosition, 1, -1, 1));
+			//2: Scan Angle Blocks
+			scannedBlockCount = BuilderTools.CheckLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 1), BuilderTools.IncrementX1Z1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
 
-				if (_tempBlockA == null && _tempBlockB == null)
-					break;
+			//2: Place blocks on angle blocks
+			if (!_thickCore)
+				BuilderTools.BuildDualBlockLine(Construct, BlockCategory.Armor, scannedBlockCount, -1, BuilderTools.IncrementX1Z1, BuilderTools.IncrementZ1, BuilderTools.IncrementX1Z1, Vector3I.Backward, new Vector3I(3, 1, -3), new Vector3I(3, 1, -7), true, true, ref currentPosition);
+			else
+				BuilderTools.BuildDualStackedBlockLine(Construct, BlockCategory.Armor, scannedBlockCount, -1, BuilderTools.IncrementX1Z1, Vector3I.Up, BuilderTools.IncrementZ1, BuilderTools.IncrementX1Z1, Vector3I.Backward, true, true, ref currentPosition, new Vector3I(35, 1, 5), new Vector3I(21, 1, -3), new Vector3I(39, 1, 5), new Vector3I(39, 1, -7));
 
-				bool lastBlock = _tempBlockB == null;
+			//3: Scan Line Minus 1
+			scannedBlockCount = BuilderTools.CheckLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), BuilderTools.IncrementZ1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0)) - 1;
 
-				//Corner
-				if (!_thickCore) {
-
-					//Construct.PlaceBlock(BlockCategory.Armor, currentPosition, currentPosition, new Vector3I(3, 1, -3), true);
-
-				} else {
-
-					//Construct.PlaceBlock(BlockCategory.Armor, currentPosition, currentPosition, new Vector3I(35, 1, 5), true);
-					var newPos = MathTools.Vector3IPlus(currentPosition, 0, 1, 0);
-					//Construct.PlaceBlock(BlockCategory.Armor, newPos, newPos, new Vector3I(21, 1, -3), true);
-
-				}
-
-				currentPosition = MathTools.Vector3IPlus(currentPosition, 0, 0, 1);
-
-				//Inv Corner
-				if (!lastBlock) {
-
-					if (!_thickCore) {
-
-						//Construct.PlaceBlock(BlockCategory.Armor, currentPosition, currentPosition, new Vector3I(3, 1, -7), true);
-
-					} else {
-
-						//Construct.PlaceBlock(BlockCategory.Armor, currentPosition, currentPosition, new Vector3I(39, 1, 5), true);
-						var newPos = MathTools.Vector3IPlus(currentPosition, 0, 1, 0);
-						//Construct.PlaceBlock(BlockCategory.Armor, newPos, newPos, new Vector3I(39, 1, -7), true);
-
-					}
-
-					currentPosition = MathTools.Vector3IPlus(currentPosition, 1, 0, 0);
-
-				} else {
-
-					break;
-
-				}
-
-			}
-
-			//While loop, detect angle blocks on the outline, place new blocks as needed, stop when angle isnt detected.
+			//3: Place blocks on armor cubes
+			if (!_thickCore)
+				BuilderTools.BuildStraightArmorLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 6), scannedBlockCount, BuilderTools.IncrementZ1, BuilderTools.IncrementX1Z1, true, true, ref currentPosition);
+			else
+				BuilderTools.BuildStraightStackedArmorLine(Construct, BlockCategory.Armor, scannedBlockCount, BuilderTools.IncrementZ1, Vector3I.Up, BuilderTools.IncrementX1Z1, true, true, ref currentPosition, new Vector3I(11, 1, 2), new Vector3I(15, 1, -2)); 
 
 		}
 

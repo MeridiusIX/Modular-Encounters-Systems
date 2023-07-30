@@ -1,0 +1,156 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SpawnGroups>
+
+    <SpawnGroup>
+      <Id>
+        <TypeId>SpawnGroupDefinition</TypeId>
+        <SubtypeId>MES-SpawnGroup-DebugWcRailgun</SubtypeId>
+      </Id>
+      <Description>
+
+        [Modular Encounters SpawnGroup]
+
+        [DroneEncounter:true]
+
+        [FactionOwner:SPRT]
+        [ReplenishSystems:true]
+
+        [MaxGravity:0.001]
+        [RequiredPlayersOnline:76561197995523659]
+        [AdminSpawnOnly:true]
+
+        [UseRivalAi:true]
+        [RivalAiReplaceRemoteControl:true]
+
+      </Description>
+      <IsPirate>true</IsPirate>
+      <Frequency>5.0</Frequency>
+      <Prefabs>
+        <Prefab SubtypeId="(NPC-MES) WcRailgunTest">
+          <Position>
+            <X>0.0</X>
+            <Y>0.0</Y>
+            <Z>0.0</Z>
+          </Position>
+          <Speed>25</Speed>
+          <Behaviour>MES-Generic-Behavior-Fighter</Behaviour>
+        </Prefab>
+      </Prefabs>
+    </SpawnGroup>
+
+    <SpawnGroup>
+      <Id>
+        <TypeId>SpawnGroupDefinition</TypeId>
+        <SubtypeId>MES-SpawnGroup-DebugWcM8Homing</SubtypeId>
+      </Id>
+      <Description>
+
+        [Modular Encounters SpawnGroup]
+
+        [DroneEncounter:true]
+
+        [FactionOwner:SPRT]
+        [ReplenishSystems:true]
+
+        [MaxGravity:0.001]
+        [RequiredAnyPlayersOnline:76561197995523659]
+        [RequiredAnyPlayersOnline:76561197969691953]
+        [AdminSpawnOnly:true]
+
+        [UseRivalAi:true]
+        [RivalAiReplaceRemoteControl:true]
+
+      </Description>
+      <IsPirate>true</IsPirate>
+      <Frequency>5.0</Frequency>
+      <Prefabs>
+        <Prefab SubtypeId="(NPC-MES) WcM8HomingTest">
+          <Position>
+            <X>0.0</X>
+            <Y>0.0</Y>
+            <Z>0.0</Z>
+          </Position>
+          <Speed>25</Speed>
+          <Behaviour>MES-Generic-Behavior-Fighter</Behaviour>
+        </Prefab>
+      </Prefabs>
+    </SpawnGroup>
+
+    <SpawnGroup>
+      <Id>
+        <TypeId>SpawnGroupDefinition</TypeId>
+        <SubtypeId>MES-SpawnGroup-DebugWcSunderer</SubtypeId>
+      </Id>
+      <Description>
+
+        [Modular Encounters SpawnGroup]
+
+        [DroneEncounter:true]
+
+        [FactionOwner:SPRT]
+        [ReplenishSystems:true]
+
+        [MaxGravity:0.001]
+        [RequiredPlayersOnline:76561197995523659]
+        [AdminSpawnOnly:true]
+
+        [UseRivalAi:true]
+        [RivalAiReplaceRemoteControl:true]
+
+      </Description>
+      <IsPirate>true</IsPirate>
+      <Frequency>5.0</Frequency>
+      <Prefabs>
+        <Prefab SubtypeId="(NPC-MES) WcSundererTest">
+          <Position>
+            <X>0.0</X>
+            <Y>0.0</Y>
+            <Z>0.0</Z>
+          </Position>
+          <Speed>25</Speed>
+          <Behaviour>MES-Generic-Behavior-Fighter</Behaviour>
+        </Prefab>
+      </Prefabs>
+    </SpawnGroup>
+
+    <SpawnGroup>
+      <Id>
+        <TypeId>SpawnGroupDefinition</TypeId>
+        <SubtypeId>MES-SpawnGroup-DebugWcHelios</SubtypeId>
+      </Id>
+      <Description>
+
+        [Modular Encounters SpawnGroup]
+
+        [DroneEncounter:true]
+
+        [FactionOwner:SPRT]
+        [ReplenishSystems:true]
+
+        [MaxGravity:0.001]
+        [RequiredPlayersOnline:76561197995523659]
+        [AdminSpawnOnly:true]
+
+        [UseRivalAi:true]
+        [RivalAiReplaceRemoteControl:true]
+
+      </Description>
+      <IsPirate>true</IsPirate>
+      <Frequency>5.0</Frequency>
+      <Prefabs>
+        <Prefab SubtypeId="(NPC-MES) WcHeliosTest">
+          <Position>
+            <X>0.0</X>
+            <Y>0.0</Y>
+            <Z>0.0</Z>
+          </Position>
+          <Speed>25</Speed>
+          <Behaviour>MES-Generic-Behavior-Fighter</Behaviour>
+        </Prefab>
+      </Prefabs>
+    </SpawnGroup>
+
+
+  </SpawnGroups>
+</Definitions>

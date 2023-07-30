@@ -357,7 +357,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool EnvironmentChecks(SpawnConditionsProfile spawnGroup, EnvironmentEvaluation environment, string failReason) {
+		public static bool EnvironmentChecks(SpawnConditionsProfile spawnGroup, EnvironmentEvaluation environment, ref string failReason) {
 
 			if (spawnGroup.MinAirDensity != -1 && environment.AtmosphereAtPosition < spawnGroup.MinAirDensity) {
 
@@ -830,7 +830,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (EnvironmentChecks(conditions, environment, failReason) == false) {
+			if (EnvironmentChecks(conditions, environment, ref failReason) == false) {
 
 				return false;
 

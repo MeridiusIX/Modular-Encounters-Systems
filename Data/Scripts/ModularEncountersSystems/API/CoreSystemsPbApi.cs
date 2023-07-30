@@ -10,8 +10,7 @@ namespace ModularEncountersSystems.API {
     /// <summary>
     /// https://github.com/sstixrud/CoreSystems/blob/master/BaseData/Scripts/CoreSystems/Api/CoreSystemsPbApi.cs
     /// </summary>
-    public class WcPbApi
-    {
+    public class WcPbApi {
         private Action<ICollection<MyDefinitionId>> _getCoreWeapons;
         private Action<ICollection<MyDefinitionId>> _getCoreStaticLaunchers;
         private Action<ICollection<MyDefinitionId>> _getCoreTurrets;
@@ -55,15 +54,13 @@ namespace ModularEncountersSystems.API {
         private Func<Sandbox.ModAPI.Ingame.IMyTerminalBlock, MyTuple<bool, bool>> _isInRange;
         private Action<Sandbox.ModAPI.Ingame.IMyTerminalBlock, int, Action<int, bool>> _monitorEvents;
         private Action<Sandbox.ModAPI.Ingame.IMyTerminalBlock, int, Action<int, bool>> _unmonitorEvents;
-        public bool Activate(Sandbox.ModAPI.Ingame.IMyTerminalBlock pbBlock)
-        {
+        public bool Activate(Sandbox.ModAPI.Ingame.IMyTerminalBlock pbBlock) {
             var dict = pbBlock.GetProperty("WcPbAPI")?.As<IReadOnlyDictionary<string, Delegate>>().GetValue(pbBlock);
             if (dict == null) throw new Exception("WcPbAPI failed to activate");
             return ApiAssign(dict);
         }
 
-        public bool ApiAssign(IReadOnlyDictionary<string, Delegate> delegates)
-        {
+        public bool ApiAssign(IReadOnlyDictionary<string, Delegate> delegates) {
             if (delegates == null)
                 return false;
 
@@ -113,8 +110,7 @@ namespace ModularEncountersSystems.API {
             return true;
         }
 
-        private void AssignMethod<T>(IReadOnlyDictionary<string, Delegate> delegates, string name, ref T field) where T : class
-        {
+        private void AssignMethod<T>(IReadOnlyDictionary<string, Delegate> delegates, string name, ref T field) where T : class {
             if (delegates == null) {
                 field = null;
                 return;
@@ -214,7 +210,7 @@ namespace ModularEncountersSystems.API {
 
         public MyTuple<Vector3D, Vector3D, float, float, long, string> GetProjectileState(ulong projectileId) =>
             _getProjectileState?.Invoke(projectileId) ?? new MyTuple<Vector3D, Vector3D, float, float, long, string>();
-        
+
         public float GetConstructEffectiveDps(long entity) => _getConstructEffectiveDps?.Invoke(entity) ?? 0f;
 
         public long GetPlayerController(Sandbox.ModAPI.Ingame.IMyTerminalBlock weapon) => _getPlayerController?.Invoke(weapon) ?? -1;

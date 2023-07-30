@@ -7,10 +7,8 @@ namespace ModularEncountersSystems.API {
     /// <summary>
     /// https://github.com/sstixrud/CoreSystems/blob/master/BaseData/Scripts/CoreSystems/Api/CoreSystemsApiPhantoms.cs
     /// </summary>
-    public partial class WcApi 
-    {
-        public enum TriggerActions
-        {
+    public partial class WcApi {
+        public enum TriggerActions {
             TriggerOff,
             TriggerOn,
             TriggerOnce,
@@ -48,7 +46,7 @@ namespace ModularEncountersSystems.API {
         /// <param name="phantom"></param>
         /// <param name="trigger"></param>
         internal void SetTriggerState(MyEntity phantom, TriggerActions trigger) => _setTriggerState?.Invoke(phantom, (int)trigger);
-        
+
         /// <summary>
         /// Add additional magazines
         /// </summary>

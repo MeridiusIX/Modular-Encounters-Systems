@@ -8,6 +8,7 @@ using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
+using Sandbox.Definitions;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -588,6 +589,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				if (prefab.Prefab.CubeGrids.Length > 0) {
 
 					prefab.Prefab.CubeGrids[0].DisplayName = newRandomName;
+					MyCubeBlockDefinition antennaDef = null;
 
 					foreach (var grid in prefab.Prefab.CubeGrids) {
 
@@ -608,9 +610,22 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 							var antenna = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
 
-							if (antenna?.CustomName == null) {
+							if (antenna == null) {
 
 								continue;
+
+							}
+
+							if (antenna.CustomName == null) {
+
+								antennaDef = null;
+								if(!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(antenna.GetId(), out antennaDef))
+									continue;
+
+								antenna.CustomName = antennaDef.DisplayNameText;
+
+								if (antenna.CustomName == null)
+									continue;
 
 							}
 

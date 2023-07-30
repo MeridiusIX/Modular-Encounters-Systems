@@ -56,6 +56,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		public List<IWeapon> Turrets;
 
 		private DateTime _collisionTimer;
+		private DateTime _lastAiFocusSetTime;
 
 		private bool _parallelWorkInProgress;
 		private bool _pendingBarrageTrigger;
@@ -109,6 +110,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			Turrets = new List<IWeapon>();
 
 			_collisionTimer = MyAPIGateway.Session.GameDateTime;
+			_lastAiFocusSetTime = MyAPIGateway.Session.GameDateTime;
 
 			MaxStaticRangesPerDirection = new Dictionary<Direction, double>();
 			MaxStaticRangesPerDirection.Add(Direction.Forward, 0);
@@ -477,7 +479,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Backward == remMatrix.Backward || VectorHelper.GetAngleBetweenDirections(remMatrix.Backward, wepMatrix.Backward) < 2) {
+				if (wepMatrix.Forward == remMatrix.Backward || VectorHelper.GetAngleBetweenDirections(remMatrix.Backward, wepMatrix.Forward) < 2) {
 
 					weapon.SetDirection(Direction.Backward);
 
@@ -486,7 +488,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Up == remMatrix.Up || VectorHelper.GetAngleBetweenDirections(remMatrix.Up, wepMatrix.Up) < 2) {
+				if (wepMatrix.Forward == remMatrix.Up || VectorHelper.GetAngleBetweenDirections(remMatrix.Up, wepMatrix.Forward) < 2) {
 
 					weapon.SetDirection(Direction.Up);
 
@@ -495,7 +497,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Down == remMatrix.Down || VectorHelper.GetAngleBetweenDirections(remMatrix.Down, wepMatrix.Down) < 2) {
+				if (wepMatrix.Forward == remMatrix.Down || VectorHelper.GetAngleBetweenDirections(remMatrix.Down, wepMatrix.Forward) < 2) {
 
 					weapon.SetDirection(Direction.Down);
 
@@ -504,7 +506,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Left == remMatrix.Left || VectorHelper.GetAngleBetweenDirections(remMatrix.Left, wepMatrix.Left) < 2) {
+				if (wepMatrix.Forward == remMatrix.Left || VectorHelper.GetAngleBetweenDirections(remMatrix.Left, wepMatrix.Forward) < 2) {
 
 					weapon.SetDirection(Direction.Left);
 
@@ -513,7 +515,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				}
 
-				if (wepMatrix.Right == remMatrix.Right || VectorHelper.GetAngleBetweenDirections(remMatrix.Right, wepMatrix.Right) < 2) {
+				if (wepMatrix.Forward == remMatrix.Right || VectorHelper.GetAngleBetweenDirections(remMatrix.Right, wepMatrix.Forward) < 2) {
 
 					weapon.SetDirection(Direction.Right);
 
@@ -625,9 +627,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				if (_behavior.AutoPilot.Targeting.HasTarget()) {
 
-					if (_behavior.AutoPilot.Targeting.Target?.GetEntity() != APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity)) {
+					var existingFocus = APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity);
 
-						APIs.WeaponCore.SetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity, _behavior.AutoPilot.Targeting.Target?.GetEntity() as MyEntity);
+					if (existingFocus == null && (MyAPIGateway.Session.GameDateTime - _lastAiFocusSetTime).TotalMilliseconds > 2000) {
+
+						_lastAiFocusSetTime = MyAPIGateway.Session.GameDateTime;
+						BehaviorLogger.Write("Setting WeaponCore AI Focus", BehaviorDebugEnum.Weapon);
+						var gridEntity = _behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity;
+						var targetEntity = _behavior.AutoPilot.Targeting.Target?.GetParentEntity() as MyEntity;
+						APIs.WeaponCore.SetAiFocus(gridEntity, targetEntity);
+
+						if (APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity) == null){
+
+							BehaviorLogger.Write("WeaponCore AI Focus Null After Assignment. Grid / Target null check: " + (gridEntity == null).ToString() + " / " + (targetEntity == null).ToString(), BehaviorDebugEnum.Weapon);
+							BehaviorLogger.Write("Grid / Target Entities cast as IMyCubeGrid reporting null: " + (gridEntity as IMyCubeGrid == null).ToString() + " / " + (targetEntity as IMyCubeGrid == null).ToString(), BehaviorDebugEnum.Weapon);
+
+						}
 
 					}
 				
@@ -650,6 +665,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				weapon.ToggleFire();
 
 			}
+
 
 		}
 
@@ -836,6 +852,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				if (weapon.CanLockOnGrid(grid)) {
 
+					BehaviorLogger.Write(weapon.Block().CustomName + " Pending Lock On", BehaviorDebugEnum.Weapon);
 					weapon.LockOnTarget = grid;
 					weapon.PendingLockOn = true;
 				
@@ -858,6 +875,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 					continue;
 
 				weapon.SetLockOnTarget();
+				
 			
 			}
 		

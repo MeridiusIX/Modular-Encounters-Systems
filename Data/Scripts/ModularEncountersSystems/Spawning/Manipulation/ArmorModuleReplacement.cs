@@ -62,8 +62,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Large"));
 			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Player-Large"));
 			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Energy-Large"));
-			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_DefensiveCombatBlock), "LargeDefensiveCombat"));
-			SmallModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_FlightMovementBlock), "LargeFlightMovement"));
+			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_DefensiveCombatBlock), "LargeDefensiveCombat"));
+			LargeModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_FlightMovementBlock), "LargeFlightMovement"));
 
 			foreach (var id in SmallModules)
 				ModuleSubtypes.Add(id.SubtypeName);

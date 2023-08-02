@@ -1595,17 +1595,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				EventActionProfile.ResetCooldownTimeOfEvents(actions.ResetEventCooldownIds, actions.ResetEventCooldownTags, _behavior?.CurrentGrid?.Npc.SpawnGroupName);
 			}
 
-            if (actions.ToggleEvents)
-            {
+			if (actions.ToggleEvents)
+			{
 				EventActionProfile.ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes, _behavior?.CurrentGrid?.Npc.SpawnGroupName);
 			}
 
 
 			if (actions.ResetThisStaticEncounter)
 			{
-        
+		
 				var spawngroupname = _behavior?.CurrentGrid?.Npc.SpawnGroupName;
-        
+		
 				if(spawngroupname != null)
 				  NpcManager.ResetThisResetThisStaticEncounter(spawngroupname);
 

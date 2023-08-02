@@ -700,6 +700,13 @@ namespace ModularEncountersSystems.Logging {
 
 		public static void DebugSpawnConstruct(ChatMessage msg) {
 
+			if (!MES_SessionCore.Developers.Contains(msg.SteamId)) {
+
+				msg.ReturnMessage = "Feature Not Available";
+				return;
+			
+			}
+
 			var matrix = MatrixD.CreateWorld((msg.CameraPosition), msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
 			var hull = new HullTypeSomerset(new ShipRules());
 			hull.InitialHullOutline();

@@ -51,7 +51,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		private MyObjectBuilder_CubeBlock _tempBlock;
 		private MyObjectBuilder_CubeGrid _tempGrid;
 
-		private List<Vector3I> _stackedBlocksFirst;
+		private List<Vector3I> _stackedBlocksTemo;
 		private List<Vector3I> _stackedBlocksSecond;
 
 		public StringBuilder Log;
@@ -71,7 +71,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			_tempCellList = new List<Vector3I>();
 
-			_stackedBlocksFirst = new List<Vector3I>();
+			_stackedBlocksTemo = new List<Vector3I>();
 			_stackedBlocksSecond = new List<Vector3I>();
 
 			Log = new StringBuilder();
@@ -175,6 +175,27 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		private bool CreateAndRegisterBlock(MyDefinitionId id, Vector3I min, Vector3I max, MyBlockOrientation orientation, ref MyObjectBuilder_CubeBlock lastBlock) {
 
+			CreateCellList(min, max); //Symmetry is Fucked
+
+			//Precheck
+			foreach (var cell in _tempCellList) {
+
+				if (_blockMap.ContainsKey(cell)) {
+
+					Log.Append("Proposed Cell Overlapping Existing Block").Append(" - ").Append(id.ToString()).Append(" - ").Append(cell.ToString()).AppendLine();
+					return false;
+
+				}
+
+				if (_restrictedCells.ContainsKey(cell)) {
+
+					Log.Append("Proposed Cell Overlapping Restricted Cell").Append(" - ").Append(id.ToString()).Append(" - ").Append(cell.ToString()).AppendLine();
+					return false;
+
+				}
+
+			}
+
 			var block = CreateBlock(id, min, max, orientation);
 
 			if (block == null) {
@@ -187,31 +208,11 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			block.BlockOrientation = orientation;
 			block.Min = min;
 
-			CreateCellList(min, max);
-			bool cellOverlap = false;
-			//Precheck
-			foreach (var cell in _tempCellList) {
-
-				if (_blockMap.ContainsKey(cell) || _restrictedCells.ContainsKey(cell)) {
-
-					cellOverlap = true;
-					break;
-
-				}
-			
-			}
-
-			if (cellOverlap) {
-
-				Log.Append("Proposed Cell Overlapping Existing Block or Restricted Cell").Append(" - ").Append(id.ToString()).Append(" - ").Append(min.ToString()).AppendLine();
-				return false;
-			
-			}
-
 			foreach (var cell in _tempCellList) {
 
 				_blockMap.Add(cell, block);
 				_restrictedCells.Add(cell, RestrictedCellType.Block);
+				Log.Append("Cell Registered To BlockMap").Append(" - ").Append(cell.ToString()).AppendLine();
 
 			}
 
@@ -242,6 +243,13 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			_tempCellList.Clear();
 			var actualMin = min;
 			var actualMax = max;
+
+			if (min == max) {
+
+				_tempCellList.Add(min);
+				return;
+
+			}
 
 			/*
 			if (symmetryX && !symmetryY) {
@@ -293,9 +301,13 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		private Vector3I CalculateSymmetryX(Vector3I min, Vector3I max, bool calcMax = false) {
 
+			if (min == max)
+				return new Vector3I(-min.X, min.Y, min.Z);
+
 			var xSignInverted = Math.Sign(min.X) * -1;
 			var localMaxX = max.X + (xSignInverted * min.X);
 			var calculatedX = 0;
+
 			if (!calcMax) {
 
 				calculatedX = (min.X * -1) - localMaxX;
@@ -311,6 +323,9 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		}
 
 		private Vector3I CalculateSymmetryY(Vector3I min, Vector3I max, bool calcMax = false) {
+
+			if (min == max)
+				return new Vector3I(min.X, -min.Y, min.Z);
 
 			var ySignInverted = Math.Sign(min.Y) * -1;
 			var localMaxY = max.Y + (ySignInverted * min.Y);
@@ -331,6 +346,10 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		private Vector3I CalculateSymmetryXY(Vector3I min, Vector3I max, bool calcMax = false) {
 
+			if (min == max)
+				return new Vector3I(-min.X, -min.Y, min.Z);
+
+			//Might be some broken shit down here for multi-cell blocks
 			var xSignInverted = Math.Sign(min.X) * -1;
 			var localMaxX = max.X + (xSignInverted * min.X);
 			var calculatedX = 0;
@@ -444,6 +463,44 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			*/
 
 			return true;
+
+		}
+
+		public List<Vector3I> BuildBlockStackList(Vector3I[] blocks, int stackLength, bool firstHalf = true, bool useAll = false) {
+
+			_stackedBlocksTemo.Clear();
+
+			if (stackLength % 2 != 0)
+				return _stackedBlocksTemo;
+
+			/*
+			0 1
+			1 2
+			2 3
+
+			3 4
+			4 5
+			5 6
+			*/
+
+
+			int start = (firstHalf ? 0 : blocks.Length / 2);
+			int end = firstHalf ? blocks.Length / 2 : blocks.Length;
+
+			if (useAll) {
+
+				start = 0;
+				end = blocks.Length;
+			
+			}
+
+			for (int i = start; i < end; i++) {
+
+				_stackedBlocksTemo.Add(blocks[i]);
+
+			}
+
+			return _stackedBlocksTemo;
 
 		}
 

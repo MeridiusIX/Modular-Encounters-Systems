@@ -25,6 +25,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<int> ManipulationRestrictedPrefabIndexes;
 		public int ManipulationMinDifficulty;
 		public int ManipulationMaxDifficulty;
+		public List<ulong> ManipulationRequireAllMods;
+		public List<ulong> ManipulationRequireAnyMods;
+		public List<ulong> ManipulationExcludeAllMods;
+		public List<ulong> ManipulationExcludeAnyMods;
 
 		public bool RandomizeWeapons;
 		public bool IgnoreWeaponRandomizerMod;
@@ -224,6 +228,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ManipulationRestrictedPrefabIndexes = new List<int>();
 			ManipulationMinDifficulty = -1;
 			ManipulationMaxDifficulty = -1;
+			ManipulationRequireAllMods = new List<ulong>();
+			ManipulationRequireAnyMods = new List<ulong>();
+			ManipulationExcludeAllMods = new List<ulong>();
+			ManipulationExcludeAnyMods = new List<ulong>();
 
 			RandomizeWeapons = false;
 			IgnoreWeaponRandomizerMod = false;
@@ -512,6 +520,34 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ManipulationMaxDifficulty:") == true) {
 
 					TagParse.TagIntCheck(tag, ref this.ManipulationMaxDifficulty);
+
+				}
+
+				//ManipulationRequireAllMods
+				if (tag.StartsWith("[ManipulationRequireAllMods:") == true) {
+
+					TagParse.TagUlongListCheck(tag, ref this.ManipulationRequireAllMods);
+
+				}
+
+				//ManipulationRequireAnyMods
+				if (tag.StartsWith("[ManipulationRequireAnyMods:") == true) {
+
+					TagParse.TagUlongListCheck(tag, ref this.ManipulationRequireAnyMods);
+
+				}
+
+				//ManipulationExcludeAllMods
+				if (tag.StartsWith("[ManipulationExcludeAllMods:") == true) {
+
+					TagParse.TagUlongListCheck(tag, ref this.ManipulationExcludeAllMods);
+
+				}
+
+				//ManipulationExcludeAnyMods
+				if (tag.StartsWith("[ManipulationExcludeAnyMods:") == true) {
+
+					TagParse.TagUlongListCheck(tag, ref this.ManipulationExcludeAnyMods);
 
 				}
 

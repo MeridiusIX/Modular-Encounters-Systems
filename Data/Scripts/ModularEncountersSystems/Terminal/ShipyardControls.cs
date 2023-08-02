@@ -571,7 +571,7 @@ namespace ModularEncountersSystems.Terminal {
 			transaction.Mode = controls.Mode;
 			transaction.ConstructBlocks = controls.ConstructNewBlocks;
 			transaction.RepairBlocks = controls.RepairBlocks;
-			transaction.UseServerPrice = false; //TODO: Implement Server Cost Checkbox
+			transaction.UseServerPrice = controls.UseServerPrice;
 			var data = MyAPIGateway.Utilities.SerializeToBinary<ShipyardTransaction>(transaction);
 			var container = new SyncContainer(SyncMode.ShipyardTransaction, data);
 			SyncManager.SendSyncMesage(container, 0, true);

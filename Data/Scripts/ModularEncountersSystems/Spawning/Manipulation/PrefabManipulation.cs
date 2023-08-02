@@ -226,6 +226,8 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+
+
 			foreach (var tag in profile.ManipulationRequiredCustomTags) {
 
 				if (!data.CustomTags.Contains(tag)) {
@@ -235,6 +237,90 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				}
 			
+			}
+
+			return true;
+
+		}
+
+		public static bool NeededModsForSpawnGroup(ManipulationProfile manipulation) {
+
+			//Require All
+			if (manipulation.ManipulationRequireAllMods.Count > 0) {
+
+				foreach (var item in manipulation.ManipulationRequireAllMods) {
+
+					if (AddonManager.ModIdList.Contains(item) == false) {
+
+						return false;
+
+					}
+
+				}
+
+			}
+
+			//Require Any
+			if (manipulation.ManipulationRequireAnyMods.Count > 0) {
+
+				bool gotMod = false;
+
+				foreach (var item in manipulation.ManipulationRequireAnyMods) {
+
+					if (AddonManager.ModIdList.Contains(item) == true) {
+
+						gotMod = true;
+						break;
+
+					}
+
+				}
+
+				if (gotMod == false) {
+
+					return false;
+
+				}
+
+			}
+
+			//Exclude All
+			if (manipulation.ManipulationExcludeAllMods.Count > 0) {
+
+				foreach (var item in manipulation.ManipulationExcludeAllMods) {
+
+					if (AddonManager.ModIdList.Contains(item) == true) {
+
+						return false;
+
+					}
+
+				}
+
+			}
+
+			//Exclude Any
+			if (manipulation.ManipulationExcludeAnyMods.Count > 0) {
+
+				bool conditionMet = false;
+
+				foreach (var item in manipulation.ManipulationExcludeAnyMods) {
+
+					if (AddonManager.ModIdList.Contains(item) == false) {
+
+						conditionMet = true;
+						break;
+
+					}
+
+				}
+
+				if (conditionMet == false) {
+
+					return false;
+
+				}
+
 			}
 
 			return true;

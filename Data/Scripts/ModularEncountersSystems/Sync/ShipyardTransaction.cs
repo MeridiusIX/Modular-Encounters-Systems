@@ -310,10 +310,17 @@ namespace ModularEncountersSystems.Sync {
 
 			var serverFinalCost = profile.GetRepairPrice(serverRawCost, reputation);
 
+			if (serverFinalCost <= 0) {
+
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerRawCostZero, Mode, sender, ProjectorId);
+				return;
+
+			}
+
 			//Compare To ClientPrice
 			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
-				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId, serverFinalCost);
 				return;
 
 			}

@@ -21,7 +21,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		public static void BuildStraightStackedArmorLine(ShipConstruct construct, BlockCategory category, int steps, Vector3I increment, Vector3I stackIncrement, Vector3I endIncrement, bool xsymm, bool ysymm, ref Vector3I currentPosition, params Vector3I[] blocks) {
 
-			currentPosition = BuildStackedBlocksLine(construct, category, increment, stackIncrement, steps, currentPosition, xsymm, ysymm, -1, -1, blocks);
+			currentPosition = BuildStackedBlocksLine(construct, category, increment, stackIncrement, steps, currentPosition, xsymm, ysymm, construct.BuildBlockStackList(blocks, blocks.Length, useAll:true));
 			currentPosition += endIncrement;
 
 		}
@@ -55,11 +55,11 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			int halfArrayLength = blocks.Length / 2;
 
-			var firstPos = BuildStackedBlocksLine(construct, BlockCategory.Armor, increment, stackIncrement, steps, currentPosition, xsymm, ysymm, 0, halfArrayLength - 1, blocks);
+			var firstPos = BuildStackedBlocksLine(construct, BlockCategory.Armor, increment, stackIncrement,  steps, currentPosition, xsymm, ysymm, construct.BuildBlockStackList(blocks, stackLength));
 
 			if (steps > 1) {
 
-				var secondPos = BuildStackedBlocksLine(construct, BlockCategory.Armor, increment, stackIncrement, (steps += secondStepAdd), (currentPosition += secondLineOffset), xsymm, ysymm, halfArrayLength, blocks.Length - 1, blocks);
+				var secondPos = BuildStackedBlocksLine(construct, BlockCategory.Armor, increment, stackIncrement, (steps += secondStepAdd), (currentPosition += secondLineOffset), xsymm, ysymm, construct.BuildBlockStackList(blocks, stackLength, false));
 				currentPosition = secondPos + endIncrement;
 
 			} else {
@@ -71,41 +71,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		}
 
-		private static void BuildBlockStackList(List<Vector3I> targetList, Vector3I[] blocks, int stackLength, bool firstLine = true,  bool firstHalf = true) {
-
-			targetList.Clear();
-
-			if (stackLength % 2 != 0)
-				return;
-
-			/*
-			0 1
-			1 2
-
-			2 3
-			3 4
-
-
-
-			4 5
-			5 6
-
-			6 7
-			7 8
-			*/
-
-			incorp firstline
-			int start = firstHalf ? 0 : blocks.Length / 2;
-			int end = firstHalf ? blocks.Length / 2 : stackLength;
-
-			for (int i = start; i < end; i++) {
-
-				targetList.Add(blocks[i])
-
-
-			}
-
-		}
+		
 
 		public static Vector3I BuildLine(ShipConstruct construct, BlockCategory category, Vector3I block, Vector3I increment, int steps, Vector3I position, bool xSymmetry = false, bool ySymmetry = false) {
 
@@ -131,8 +97,13 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		public static void BuildStackedBlocks(ShipConstruct construct, BlockCategory category, Vector3I increment, Vector3I currentPosition, bool xSymmetry, bool ySymmetry, params Vector3I[] blocks) {
 
-			if (blocks == null || blocks.Length == 0)
+			if (blocks == null || blocks.Length == 0) {
+
+				construct.Log.Append("BuildStackedBlocks: Array Null or Empty").AppendLine();
 				return;
+
+			}
+				
 
 			var pos = currentPosition;
 
@@ -147,6 +118,20 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		public static Vector3I BuildStackedBlocksLine(ShipConstruct construct, BlockCategory category, Vector3I increment, Vector3I stackIncrement, int steps, Vector3I position, bool xSymmetry, bool ySymmetry, List<Vector3I> blocks) {
 
+			if (blocks == null) {
+
+				construct.Log.Append("BuildStackedBlocksLine: List Null").AppendLine();
+				return position;
+
+			}
+
+			if (blocks.Count == 0) {
+
+				construct.Log.Append("BuildStackedBlocksLine: List Empty").AppendLine();
+				return position;
+
+			}
+
 			var pos = position;
 			var stepsTaken = 0;
 
@@ -157,10 +142,12 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 				for (int i = 0; i < blocks.Count; i++) {
 
 					//Place
-					construct.PlaceBlock(category, pos, pos, blocks[i], xSymmetry, ySymmetry);
+					construct.PlaceBlock(category, cellPos, cellPos, blocks[i], xSymmetry, ySymmetry);
 					cellPos += stackIncrement;
 				
 				}
+
+				stepsTaken++;
 
 				if (stepsTaken >= steps)
 					break;

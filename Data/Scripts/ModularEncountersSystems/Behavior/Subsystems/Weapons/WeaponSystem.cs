@@ -625,29 +625,38 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (APIs.WeaponCoreApiLoaded) {
 
-				if (_behavior.AutoPilot.Targeting.HasTarget()) {
+				try {
 
-					var existingFocus = APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity);
+					if (_behavior.AutoPilot.Targeting.HasTarget()) {
 
-					if (existingFocus == null && (MyAPIGateway.Session.GameDateTime - _lastAiFocusSetTime).TotalMilliseconds > 2000) {
+						var existingFocus = APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity);
 
-						_lastAiFocusSetTime = MyAPIGateway.Session.GameDateTime;
-						BehaviorLogger.Write("Setting WeaponCore AI Focus", BehaviorDebugEnum.Weapon);
-						var gridEntity = _behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity;
-						var targetEntity = _behavior.AutoPilot.Targeting.Target?.GetParentEntity() as MyEntity;
-						APIs.WeaponCore.SetAiFocus(gridEntity, targetEntity);
+						if (existingFocus == null && (MyAPIGateway.Session.GameDateTime - _lastAiFocusSetTime).TotalMilliseconds > 2000) {
 
-						if (APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity) == null){
+							_lastAiFocusSetTime = MyAPIGateway.Session.GameDateTime;
+							BehaviorLogger.Write("Setting WeaponCore AI Focus", BehaviorDebugEnum.Weapon);
+							var gridEntity = _behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity;
+							var targetEntity = _behavior.AutoPilot.Targeting.Target?.GetParentEntity() as MyEntity;
+							APIs.WeaponCore.SetAiFocus(gridEntity, targetEntity);
 
-							BehaviorLogger.Write("WeaponCore AI Focus Null After Assignment. Grid / Target null check: " + (gridEntity == null).ToString() + " / " + (targetEntity == null).ToString(), BehaviorDebugEnum.Weapon);
-							BehaviorLogger.Write("Grid / Target Entities cast as IMyCubeGrid reporting null: " + (gridEntity as IMyCubeGrid == null).ToString() + " / " + (targetEntity as IMyCubeGrid == null).ToString(), BehaviorDebugEnum.Weapon);
+							if (APIs.WeaponCore.GetAiFocus(_behavior.RemoteControl?.SlimBlock?.CubeGrid as MyEntity) == null) {
+
+								BehaviorLogger.Write("WeaponCore AI Focus Null After Assignment. Grid / Target null check: " + (gridEntity == null).ToString() + " / " + (targetEntity == null).ToString(), BehaviorDebugEnum.Weapon);
+								BehaviorLogger.Write("Grid / Target Entities cast as IMyCubeGrid reporting null: " + (gridEntity as IMyCubeGrid == null).ToString() + " / " + (targetEntity as IMyCubeGrid == null).ToString(), BehaviorDebugEnum.Weapon);
+
+							}
 
 						}
 
 					}
-				
+
+				} catch (Exception e) {
+
+					BehaviorLogger.Write("Caught Exception In WeaponCore SetAiFocus", BehaviorDebugEnum.Error);
+					BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Error);
+
 				}
-			
+
 			}
 
 			if (_pendingBarrageTrigger) {

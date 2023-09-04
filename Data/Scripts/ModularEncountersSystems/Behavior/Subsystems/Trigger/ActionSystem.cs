@@ -1416,6 +1416,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					{
 						var thisEventId = actions.ActivateEventIds[j];
 
+						var SpawnGroupName = _behavior?.CurrentGrid?.Npc.SpawnGroupName;
+
+						if (thisEventId.Contains("{SpawnGroupName}") && SpawnGroupName != null)
+						{
+							thisEventId = thisEventId.Replace("{SpawnGroupName}", SpawnGroupName);
+						}
+
+
 						if (thisEvent.ProfileSubtypeId == thisEventId)
 						{
 							thisEvent.ActivateEventActions();

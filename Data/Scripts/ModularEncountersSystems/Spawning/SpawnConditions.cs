@@ -1080,7 +1080,71 @@ namespace ModularEncountersSystems.Spawning {
 				}
 
 			}
+
+            if (conditions.CheckRequiredBlocks)
+            {
+
+
+				bool foundTheBlocks = false;
+
+				double checkRange = conditions.RequiredBlockCheckRange;
+
+				List<string> SubtypeIds = new List<string>();
+
+
+				SubtypeIds.AddList(conditions.RequiredBlockSubtypeIds);
+
+
+
+				
+
+				foreach (var grid in GridManager.Grids)
+				{
+					if (SubtypeIds.Count == 0)
+						foundTheBlocks = true;
+
+					if (foundTheBlocks)
+						break;
+
+					
+					
+
+					if (!grid.ActiveEntity() || grid.Distance(environment.Position) > checkRange)
+						continue;
+
+					if (grid.GetOwnerType().HasFlag(GridOwnershipEnum.NpcMajority) && !conditions.RequiredBlockIncludeNPCGrids)
+						continue;
+
+					foreach (BlockEntity item in grid.AllTerminalBlocks)
+					{
+						
+						if (SubtypeIds.Remove(((MyDefinitionId)item.Block.BlockDefinition).SubtypeName))
+						{
+							//MyVisualScriptLogicProvider.ShowNotificationToAll("I got it", 5000);
+							if (SubtypeIds.Count == 0)
+							{
+								foundTheBlocks = true;
+								break;
+							}
+							if (conditions.RequiredBlockAnySubtypeId)
+                            {
+								foundTheBlocks = true;
+								break;
+                            }
+						}
+					}
+				}
+
+
+				if (!foundTheBlocks)
+					return false;
+			}
+
+
+
 			
+
+
 
 			if (conditions.UseThreatLevelCheck == true) {
 

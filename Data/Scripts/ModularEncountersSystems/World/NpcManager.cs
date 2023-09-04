@@ -286,6 +286,8 @@ namespace ModularEncountersSystems.World {
 								SpawnLogger.Write(spawnGroup.SpawnGroupName + " Found as Potential Static Encounter", SpawnerDebugEnum.Startup);
 								activeConditions = condition;
 							}
+							else
+								return; //prevent crash
 
 						}
 

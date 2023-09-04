@@ -333,6 +333,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseEventController;
 		public List<string> EventControllerId;
 
+		public bool CheckRequiredBlocks;
+		public List<string> RequiredBlockSubtypeIds;
+		public bool RequiredBlockAnySubtypeId;
+		public double RequiredBlockCheckRange;
+		public bool RequiredBlockIncludeNPCGrids;
+
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -650,6 +657,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseEventController = false;
 			EventControllerId = new List<string>();
 
+			CheckRequiredBlocks = false;
+			RequiredBlockSubtypeIds = new List<string>();
+			RequiredBlockAnySubtypeId = false;
+			RequiredBlockCheckRange = 5000;
+			RequiredBlockIncludeNPCGrids = false;
+
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"SpaceCargoShip", (s, o) => TagParse.TagBoolCheck(s, ref SpaceCargoShip) },
@@ -905,14 +918,19 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"CustomSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomSandboxCounters) },
 				{"CustomSandboxCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomSandboxCountersTargets) },
 				{"SandboxCounterCompareTypes", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref SandboxCounterCompareTypes) },
+				{"CheckRequiredBlocks", (s, o) => TagParse.TagBoolCheck(s, ref CheckRequiredBlocks) },
+				{"RequiredBlockSubtypeIds", (s, o) => TagParse.TagStringListCheck(s, ref RequiredBlockSubtypeIds) },
+				{"RequiredBlockAnySubtypeId", (s, o) => TagParse.TagBoolCheck(s, ref RequiredBlockAnySubtypeId) },
+				{"RequiredBlockCheckRange", (s, o) => TagParse.TagDoubleCheck(s, ref RequiredBlockCheckRange) },
+				{"RequiredBlockIncludeNPCGrids", (s, o) => TagParse.TagBoolCheck(s, ref RequiredBlockIncludeNPCGrids) },
 
-
-
-		};
+				};
 
 		}
 
-		public void EditValue(string receivedValue) {
+
+
+        public void EditValue(string receivedValue) {
 
 			var processedTag = TagParse.ProcessTag(receivedValue);
 

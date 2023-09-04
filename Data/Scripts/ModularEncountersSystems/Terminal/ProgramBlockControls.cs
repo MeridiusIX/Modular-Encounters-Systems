@@ -11,7 +11,7 @@ using VRage.ObjectBuilders;
 using VRage.Utils;
 using VRageMath;
 
-namespace ModularEncountersSystems.Admin {
+namespace ModularEncountersSystems.Terminal{
 	public class ProgramBlockControls {
 
 		public static void SpawnProgramBlockForControls() {

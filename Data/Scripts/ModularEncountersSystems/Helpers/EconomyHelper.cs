@@ -306,6 +306,7 @@ namespace ModularEncountersSystems.Helpers {
 				}
 
 				BlockMinimumValues.Add(blockDefinition.Id, totalCost);
+				AddToMasterReference(blockDefinition.Id, totalCost);
 
 				if (badItemValue == true) {
 

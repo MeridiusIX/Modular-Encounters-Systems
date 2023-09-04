@@ -800,9 +800,8 @@ namespace ModularEncountersSystems.Entities {
 
 		private void BlockRemoved(IMySlimBlock block) {
 
-			AllBlocks.Remove(block);
-			HealthUpdated = true;
-		
+			CleanBlockLists(block);
+
 		}
 
 		private bool AddBlock(IMyTerminalBlock block, List<BlockEntity> collection) {
@@ -837,10 +836,12 @@ namespace ModularEncountersSystems.Entities {
 
 					if (block == null || block.IsClosed() || block.ParentEntity != this.ParentEntity)
 						collection.RemoveAt(i);
-				
+
 				}
-			
+
 			}
+
+			
 		
 		}
 
@@ -1134,20 +1135,31 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public void CleanBlockLists() {
+		public void CleanBlockLists(IMySlimBlock block = null) {
 
 			lock (AllBlocks) {
 
-				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+				if (block == null) {
 
-					if (AllBlocks[i]?.CubeGrid == null || AllBlocks[i].CubeGrid.EntityId != ParentEntity.EntityId)
-						AllBlocks.RemoveAt(i);
+					for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+						if (AllBlocks[i]?.CubeGrid == null || AllBlocks[i].CubeGrid.EntityId != ParentEntity.EntityId)
+							AllBlocks.RemoveAt(i);
+
+					}
+
+				} else {
+
+					AllBlocks.Remove(block);
 
 				}
-			
+				
 			}
 
 			HealthUpdated = true;
+
+			if (block != null && block.FatBlock as IMyTerminalBlock == null)
+				return;
 
 			try {
 

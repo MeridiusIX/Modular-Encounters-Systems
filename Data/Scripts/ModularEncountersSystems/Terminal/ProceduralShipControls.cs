@@ -1,7 +1,7 @@
 ﻿using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Progression;
-using ModularEncountersSystems.Spawning.Procedural;
+using ModularEncountersSystems.Spawning.Procedural.Builder;
 using ModularEncountersSystems.Sync;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;

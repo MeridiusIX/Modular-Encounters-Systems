@@ -162,19 +162,24 @@ namespace ModularEncountersSystems.Helpers {
 
         public static int ClampRandomOdd(int value, int min, int max) {
 
-            if (value % 2 == 0)
-                return value;
+            var oddValue = value;
 
-            if (value - 1 < min)
-                return value + 1;
+            if (value % 2 == 0) {
 
-            if (value + 1 > max)
-                return value - 1;
+                if (RandomBool())
+                    oddValue++;
+                else
+                    oddValue--;
+            
+            }
 
-            if (RandomBool())
-                return value + 1;
+            if (oddValue < min)
+                return min;
 
-            return value - 1;
+            if (oddValue > max)
+                return max;
+
+            return oddValue;
 
         }
 

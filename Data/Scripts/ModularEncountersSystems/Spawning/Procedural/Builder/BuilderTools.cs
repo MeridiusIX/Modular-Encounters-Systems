@@ -11,17 +11,17 @@ using VRage.Game;
 using VRage.ObjectBuilders;
 using VRageMath;
 
-namespace ModularEncountersSystems.Spawning.Procedural {
+namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 
 	public enum BlockCategory {
-	
+
 		None,
 		Armor,
 
-	
+
 	}
 
-	public static partial class BuilderTools {
+	public static class BuilderTools {
 
 		public static Dictionary<BlockCategory, MyObjectBuilder_CubeGrid> BlockCategoryPrefabReference = new Dictionary<BlockCategory, MyObjectBuilder_CubeGrid>();
 		public static Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>> SymmetryXReference = new Dictionary<BlockCategory, Dictionary<MyObjectBuilder_CubeBlock, MyObjectBuilder_CubeBlock>>();
@@ -33,12 +33,16 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		private static MyObjectBuilder_CubeBlock _symmetryXBlock = null;
 		private static MyObjectBuilder_CubeBlock _symmetryYBlock = null;
 
+		public static Vector3I IncrementX1 = new Vector3I(1, 0, 0);
+		public static Vector3I IncrementZ1 = new Vector3I(0, 0, 1);
+		public static Vector3I IncrementX1Z1 = new Vector3I(1, 0, 1);
+
 		public static MyBlockOrientation DefaultOrientation;
 
 		public static List<MyDefinitionId> CubeShapedBlocks = new List<MyDefinitionId>();
 
 		public static MyObjectBuilder_CubeBlock AddBlockToGrid(MyObjectBuilder_CubeGrid grid, MyDefinitionId id, Vector3I? pos = null, SerializableBlockOrientation? orientation = null, Vector3? color = null, string skin = null) {
-			
+
 			try {
 
 				var ob = MyObjectBuilderSerializer.CreateNewObject(id);
@@ -63,9 +67,9 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 				return block;
 
 			} catch (Exception e) {
-			
-				
-			
+
+
+
 			}
 
 			return null;
@@ -132,13 +136,13 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			foreach (var block in grid.CubeBlocks) {
 
-				if (((Vector3I)(block.Min)) == min)
+				if ((Vector3I)block.Min == min)
 					return block;
-			
+
 			}
 
 			return null;
-		
+
 		}
 
 		public static MyBlockOrientation RotateOrientation(MyBlockOrientation baseOrientation, int pitch, int yaw, int roll) {
@@ -169,7 +173,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			}
 
 			return orientation;
-		
+
 		}
 
 		private static MyBlockOrientation RotateYaw(MyBlockOrientation original) {
@@ -610,9 +614,9 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 				if (!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(id, out blockDef) || blockDef == null) {
 
 					continue;
-				
+
 				}
-				
+
 				//Process X
 				var mirrorMinX = new Vector3I(-block.Min.X, block.Min.Y, block.Min.Z);
 
@@ -667,7 +671,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 				_tempDict.Add(orientation, mirrorOrientation);
 
 			}
-				
+
 		}
 
 	}

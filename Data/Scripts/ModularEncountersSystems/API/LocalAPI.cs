@@ -39,13 +39,16 @@ namespace ModularEncountersSystems.API {
 		public static Dictionary<string, Delegate> GetApiDictionary() {
 
 			var dict = new Dictionary<string, Delegate>();
+			
 			dict.Add("AddKnownPlayerLocation", new Action<Vector3D, string, double, int, int, int>(KnownPlayerLocationManager.AddKnownPlayerLocation));
+			dict.Add("ApiSpawnRequest", new Func<Vector3D, string, string, bool, bool, List<string>, string, MatrixD, Vector3D, bool, long, bool>(ApiSpawnRequest));
 			dict.Add("BehaviorTriggerActivationWatcher", new Action<bool, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D>>(ChangeBehaviorTriggerWatcher));
 			dict.Add("ChatCommand", new Action<string, MatrixD, long, ulong>(ChatManager.ChatFromApi));
 			dict.Add("CustomSpawnRequest", new Func<List<string>, MatrixD, Vector3, bool, string, string, bool>(CustomSpawnRequest));
 			dict.Add("GetDespawnCoords", new Func<IMyCubeGrid, Vector3D>(GetDespawnCoords));
 			dict.Add("GetPlayerInhibitorData", new Action<long, string, List<MyTuple<IMyRadioAntenna, DateTime>>>(GetPlayerInhibitorData));
 			dict.Add("GetSpawnGroupBlackList", new Func<List<string>>(GetSpawnGroupBlackList));
+			dict.Add("GetSpawnGroupsByType", new Action<string, List<string>>(GetSpawnGroupsByType));
 			dict.Add("GetNpcNameBlackList", new Func<List<string>>(GetNpcNameBlackList));
 			//GetZonesAtPosition
 			dict.Add("IsPositionInKnownPlayerLocation", new Func<Vector3D, bool, string, bool>(KnownPlayerLocationManager.IsPositionInKnownPlayerLocation));
@@ -144,6 +147,18 @@ namespace ModularEncountersSystems.API {
 
 		}
 
+		//ApiSpawnRequest
+		public static bool ApiSpawnRequest(Vector3D coords, string source, string spawningTypeString, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false, long ownerOverride = -1) {
+
+			SpawningType type = SpawningType.None;
+
+			if (!Enum.TryParse<SpawningType>(spawningTypeString, out type))
+				return false;
+
+			return SpawnRequest.CalculateSpawn(coords, "API Request: " + (source ?? "null"), type, forceSpawn, adminSpawn, eligibleNames, factionOverride, spawnMatrix, customVelocity, ignoreSafetyChecks, ownerOverride);
+
+		}
+
 		public static Vector3D GetDespawnCoords(IMyCubeGrid cubeGrid) {
 
 			var npcGrid = NpcManager.GetNpcFromGrid(cubeGrid);
@@ -181,6 +196,33 @@ namespace ModularEncountersSystems.API {
 
 			return new List<string>(Settings.General.NpcSpawnGroupBlacklist.ToList());
 
+		}
+
+		public static void GetSpawnGroupsByType(string spawntype, List<string> output) {
+
+			SpawningType type = SpawningType.None;
+
+			if (!Enum.TryParse<SpawningType>(spawntype, out type))
+				return;
+
+			foreach (var spawnGroup in SpawnGroupManager.SpawnGroups) {
+
+				if (spawnGroup?.SpawnGroupName == null)
+					continue;
+
+				foreach (var condition in spawnGroup.SpawnConditionsProfiles) {
+
+					if (SpawnConditions.SpawningTypeAllowedForGroup(type, condition)) {
+
+						output.Add(spawnGroup.SpawnGroupName);
+						break;
+					
+					}
+				
+				}
+			
+			}
+		
 		}
 
 		public static List<string> GetNpcNameBlackList() {

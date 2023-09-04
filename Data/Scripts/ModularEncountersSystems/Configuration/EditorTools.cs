@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Configuration.Editor;
 using Sandbox.Game;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,6 +47,8 @@ namespace ModularEncountersSystems.Configuration.Editor {
 
                 Settings.Combat = new ConfigCombat();
                 Settings.Combat.SaveSettings();
+
+                MyAPIGateway.Utilities.SetVariable<bool>("MES-ChaoticSpawningSettings-UsedInWorld", false);
 
                 return "All Settings Have Been Reset";
             

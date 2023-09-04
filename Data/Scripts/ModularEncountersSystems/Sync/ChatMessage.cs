@@ -886,6 +886,14 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//MES.Debug.StoreTest
+			if (array[2] == "StoreTest") {
+
+				LoggerTools.StoreTest(this);
+				return true;
+
+			}
+
 			//MES.Debug.YeetGrid
 			if (array[2] == "YeetGrid") {
 

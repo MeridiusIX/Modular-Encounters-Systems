@@ -3,6 +3,14 @@
   <Prefabs>
     <Prefab xsi:type="MyObjectBuilder_PrefabDefinition">
       <Id Type="MyObjectBuilder_PrefabDefinition" Subtype="(NPC-MES) WcHeliosTest" />
+      <DisplayName>Test Grid</DisplayName>
+      <Description>MES Test Grid, Dont Use Me</Description>
+      <Icons>
+        <Icon>Textures\Icons\greendoticon.dds</Icon>
+      </Icons>
+      <Icon>Textures\Icons\greendoticon.dds</Icon>
+      <TooltipImage>Textures\Icons\greendoticon.png</TooltipImage>
+      <EnvironmentType>Space PlanetWithoutAtmosphere</EnvironmentType>
       <CubeGrids>
         <CubeGrid>
           <SubtypeName />

@@ -74,8 +74,8 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 
-            if (actions.ResetCooldownTimeOfEvents)
-            {
+			if (actions.ResetCooldownTimeOfEvents)
+			{
 				ResetCooldownTimeOfEvents(actions.ResetEventCooldownIds, actions.ResetEventCooldownTags);
 			}
 
@@ -96,8 +96,8 @@ namespace ModularEncountersSystems.Events.Action {
 
 			}
 
-            if (actions.AddGPSForAll)
-            {
+			if (actions.AddGPSForAll)
+			{
 				for (int i = 0; i < actions.GPSNames.Count; i++)
 				{
 					var Color = new Color((Vector3)actions.GPSColors[i]);
@@ -123,9 +123,9 @@ namespace ModularEncountersSystems.Events.Action {
 
 			//
 			if (actions.SpawnEncounter)
-            {
+			{
 				if(Spawner.Count == actions.SpawnFactionTags.Count && Spawner.Count == actions.SpawnVector3Ds.Count)
-                {
+				{
 					for (int i = 0; i < Spawner.Count; i++)
 					{
 						var spawner = Spawner[i];
@@ -184,7 +184,7 @@ namespace ModularEncountersSystems.Events.Action {
 			}
 
 			if (actions.ActivateCustomAction)
-            {
+			{
 				System.Action<object[]> action;
 				List<object> args = new List<object>();
 

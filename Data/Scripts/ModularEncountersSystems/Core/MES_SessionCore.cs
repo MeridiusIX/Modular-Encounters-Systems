@@ -34,8 +34,8 @@ namespace ModularEncountersSystems.Core {
 		public static bool OfflineDetected = false;
 		public bool FinalSetup = false;
 
-		public static string ModVersion = "2.69.22";
-		public static int ModVersionValue = 200690022;
+		public static string ModVersion = "2.69.26";
+		public static int ModVersionValue = 200690026;
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -114,7 +114,9 @@ namespace ModularEncountersSystems.Core {
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();
 			APIs.RegisterAPIs(2); //Register Any Applicable APIs
-			
+			AddonManager.ProcessMesAddons();
+
+
 
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;

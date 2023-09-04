@@ -95,6 +95,10 @@ namespace ModularEncountersSystems.API {
         public static bool StealthMod = false;
         private static ulong _stealthModSteamId = 2805859069;
 
+        //ChaoticSpawningSettings
+        public static bool ChaoticSpawningSettingsMod = false;
+        public static ulong _chaoticSpawningSettingsSteamId = 3023485481;
+
         public static void DetectAddons() {
 
             ConfigInstance = MyAPIGateway.Utilities.GamePaths.ModScopeName;
@@ -263,6 +267,29 @@ namespace ModularEncountersSystems.API {
 
                 }
 
+                if (id == _chaoticSpawningSettingsSteamId) {
+
+                    SpawnLogger.Write("Chaotic Spawning Settings Mod Detected", SpawnerDebugEnum.Startup);
+                    ChaoticSpawningSettingsMod = true;
+                    continue;
+
+                }
+
+            }
+
+            
+
+        }
+
+        public static void ProcessMesAddons() {
+
+            if (ChaoticSpawningSettingsMod) {
+
+                MyAPIGateway.Utilities.SetVariable<bool>("MES-ChaoticSpawningSettings-UsedInWorld", true);
+                PresetConfigs.DelimitSpawns();
+                PresetConfigs.FrequentSpawns();
+                PresetConfigs.Suffering();
+                Settings.SaveAll();
             }
 
         }

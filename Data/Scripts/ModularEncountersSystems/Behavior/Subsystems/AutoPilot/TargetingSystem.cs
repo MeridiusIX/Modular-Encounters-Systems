@@ -20,6 +20,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public IMyRemoteControl RemoteControl;
 		private IBehavior _behavior;
 
+		private IMyCubeGrid _nullGrid;
+
 		public ITarget Target { 
 			
 			get { 
@@ -1345,7 +1347,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			if (ClearLockOn) {
 
-				RemoteControl.SetLockedTarget(null);
+				RemoteControl.SetLockedTarget(_nullGrid);
 				ClearLockOn = false;
 
 			}

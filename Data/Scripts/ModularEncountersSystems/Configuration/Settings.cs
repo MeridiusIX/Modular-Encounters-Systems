@@ -459,6 +459,7 @@ namespace ModularEncountersSystems.Configuration {
 				Progression.SaveSettings();
 				RandomEncounters.SaveSettings();
 				SpaceCargoShips.SaveSettings();
+				
 
 			} catch (Exception e) {
 

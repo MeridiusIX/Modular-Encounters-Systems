@@ -173,7 +173,7 @@ namespace ModularEncountersSystems.Sync {
 			//Compare To ClientPrice
 			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
-				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId, serverFinalCost);
 				return;
 			
 			}
@@ -217,7 +217,7 @@ namespace ModularEncountersSystems.Sync {
 			//Compare To ClientPrice
 			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
-				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId, serverFinalCost);
 				return;
 
 			}
@@ -426,7 +426,7 @@ namespace ModularEncountersSystems.Sync {
 			//Compare To ClientPrice
 			if (serverFinalCost != ClientPrice && !UseServerPrice) {
 
-				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId);
+				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId, serverFinalCost);
 				return;
 
 			}

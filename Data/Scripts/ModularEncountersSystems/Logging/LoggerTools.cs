@@ -27,6 +27,7 @@ using VRage.Game.ModAPI;
 using VRageMath;
 using ModularEncountersSystems.Spawning.Procedural.Hull;
 using System.IO;
+using ModularEncountersSystems.Spawning.Procedural.Builder;
 
 namespace ModularEncountersSystems.Logging {
 
@@ -709,8 +710,7 @@ namespace ModularEncountersSystems.Logging {
 
 			var matrix = MatrixD.CreateWorld((msg.CameraPosition), msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
 			var hull = new HullTypeSomerset(new ShipRules());
-			hull.InitialHullOutline();
-			hull.FirstHullLayer();
+			hull.GenerateShip();
 			hull.SpawnCurrentConstruct(matrix);
 			msg.ClipboardPayload = hull.Construct.Log.ToString();
 			return;
@@ -1084,6 +1084,13 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Defense Shields:            ").Append(APIs.ShieldsApiLoaded).AppendLine();
 			sb.Append(" - Water Mod:                  ").Append(APIs.WaterModApiLoaded).AppendLine();
 			sb.Append(" - Weapon Core / Core Systems: ").Append(APIs.WeaponCoreApiLoaded).AppendLine();
+			sb.AppendLine();
+
+			//Presets Used
+			sb.Append("::: Settings Preset Mod(s) Previously Used :::").AppendLine();
+			bool chaoticUsed = false;
+			MyAPIGateway.Utilities.GetVariable<bool>("MES-ChaoticSpawningSettings-UsedInWorld", out chaoticUsed);
+			sb.Append(" - Chaotic Spawning Settings:                 ").Append(chaoticUsed).AppendLine();
 			sb.AppendLine();
 
 			//Spawners Active
@@ -2220,6 +2227,65 @@ namespace ModularEncountersSystems.Logging {
 
 			var prefabProcess = new SpawnAllPrefabs(array[3]);
 			TaskProcessor.Tasks.Add(prefabProcess);
+
+		}
+
+		public static void StoreTest(ChatMessage msg) {
+
+			var matrix = MatrixD.CreateWorld(msg.CameraPosition, msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var block = GridManager.GetClosestBlockInDirection(matrix, 2000);
+
+			if (block?.FatBlock == null) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "No Block In Camera Direction";
+				return;
+
+			}
+
+			var store = block.FatBlock as IMyStoreBlock;
+
+			if (store == null) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "Detected Block Isnt Store Block";
+				return;
+
+			}
+
+			var prefab = MyDefinitionManager.Static.GetPrefabDefinition("(NPC-MES) WcHeliosTest");
+
+			if (prefab == null) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "Prefab Null";
+				return;
+
+			}
+
+			if (prefab.Icons == null) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "Prefab Icons Null";
+				return;
+
+			}
+
+			if (prefab.Icons.Length == 0) {
+
+				msg.Mode = ChatMsgMode.ReturnMessage;
+				msg.ReturnMessage = "Prefab Icons Empty";
+				return;
+
+			}
+
+			var item = store.CreateStoreItem("(NPC-MES) WcHeliosTest", 1, 1000, 1000);
+			item.IsCustomStoreItem = true;
+			store.InsertStoreItem(item);
+			
+			msg.Mode = ChatMsgMode.ReturnMessage;
+			msg.ReturnMessage = "Item Added: " + prefab.Icons[0];
+			return;
 
 		}
 

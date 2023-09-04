@@ -1043,27 +1043,32 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void SetSandboxBool(string boolName, bool mode) {
 
+			if (string.IsNullOrWhiteSpace(boolName))
+				return;
 
-	  if (boolName.Contains("{SpawnGroupName}") && _behavior?.CurrentGrid?.Npc.SpawnGroupName != null)
-	  {
-				boolName = boolName.Replace("{SpawnGroupName}", _behavior?.CurrentGrid?.Npc.SpawnGroupName);
+			if (boolName.Contains("{SpawnGroupName}") && _behavior?.CurrentGrid?.Npc?.SpawnGroupName != null) {
+
+				boolName = boolName.Replace("{SpawnGroupName}", _behavior.CurrentGrid.Npc.SpawnGroupName);
+
 			}
 
-			if (boolName.Contains("{Faction}") && _behavior?.Owner?.Faction.Tag != null)
-			{
-				boolName = boolName.Replace("{Faction}", _behavior?.Owner?.Faction.Tag);
+			if (boolName.Contains("{Faction}") && _behavior?.Owner?.Faction?.Tag != null) {
+
+				boolName = boolName.Replace("{Faction}", _behavior.Owner.Faction.Tag);
+
 			}
 
 			MyAPIGateway.Utilities.SetVariable(boolName, mode);
+
 		}
 
 		public void SetSandboxCounter(string counterName, int amount, bool hardSet = false) {
 
-			if (counterName.Contains("{Faction}") && _behavior?.Owner?.Faction.Tag != null)
-			{
-				counterName = counterName.Replace("{Faction}", _behavior?.Owner?.Faction.Tag);
-			}
+			if (counterName.Contains("{Faction}") && _behavior?.Owner?.Faction?.Tag != null) {
 
+				counterName = counterName.Replace("{Faction}", _behavior.Owner.Faction.Tag);
+
+			}
 
 			if (hardSet) {
 
@@ -1081,10 +1086,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				MyAPIGateway.Utilities.SetVariable(counterName, 0);
 				return;
 
-			}
+			} else {
 
-			else
-			{
 				existingCounter += amount;
 				MyAPIGateway.Utilities.SetVariable(counterName, existingCounter);
 				return;

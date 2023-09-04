@@ -21,6 +21,8 @@ using VRage.Utils;
 namespace ModularEncountersSystems.Helpers {
 	public static class ProfileManager {
 
+		public static List<MyDefinitionId> AllMesProfileIds = new List<MyDefinitionId>();
+
 		//Spawner Related Profiles
 		public static Dictionary<string, BlockReplacementProfile> BlockReplacementProfiles = new Dictionary<string, BlockReplacementProfile>();
 		public static Dictionary<string, BotSpawnProfile> BotSpawnProfiles = new Dictionary<string, BotSpawnProfile>();
@@ -91,6 +93,7 @@ namespace ModularEncountersSystems.Helpers {
 				if (!BlockReplacementProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Block Replacement]")) {
 
 					BlockReplacementProfiles.Add(component.Id.SubtypeName, new BlockReplacementProfile(component.DescriptionText));
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -100,6 +103,7 @@ namespace ModularEncountersSystems.Helpers {
 					var profile = new DerelictionProfile(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					DerelictionProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -110,6 +114,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					LootProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -120,6 +125,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					ShipyardProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -130,6 +136,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					profile.InitTags(component.DescriptionText);
 					StoreProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -149,7 +156,8 @@ namespace ModularEncountersSystems.Helpers {
 						//TODO: Log Dup Key
 
 					}
-					
+
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -160,6 +168,7 @@ namespace ModularEncountersSystems.Helpers {
 					zone.InitTags(component.DescriptionText);
 					zone.ProfileSubtypeId = component.Id.SubtypeName;
 					ZoneProfiles.Add(component.Id.SubtypeName, zone);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -170,6 +179,7 @@ namespace ModularEncountersSystems.Helpers {
 					zone.ProfileSubtypeId = component.Id.SubtypeName;
 					zone.InitTags(component.DescriptionText);
 					ZoneConditionsProfiles.Add(component.Id.SubtypeName, zone);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -180,6 +190,7 @@ namespace ModularEncountersSystems.Helpers {
 					bot.InitTags(component.DescriptionText);
 					bot.ProfileSubtypeId = component.Id.SubtypeName;
 					BotSpawnProfiles.Add(component.Id.SubtypeName, bot);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -192,6 +203,7 @@ namespace ModularEncountersSystems.Helpers {
 					var chatBytes = MyAPIGateway.Utilities.SerializeToBinary<ChatProfile>(chatObject);
 					//Logger.WriteLog("Chat Profile Added: " + component.Id.SubtypeName);
 					ChatObjectTemplates.Add(component.Id.SubtypeName, chatBytes);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -204,6 +216,7 @@ namespace ModularEncountersSystems.Helpers {
 					var spawnerBytes = MyAPIGateway.Utilities.SerializeToBinary<SpawnProfile>(spawnerObject);
 					//Logger.WriteLog("Spawner Profile Added: " + component.Id.SubtypeName);
 					SpawnerObjectTemplates.Add(component.Id.SubtypeName, spawnerBytes);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -214,6 +227,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					profile.InitTags(component.DescriptionText);
 					SafeZoneProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -228,6 +242,7 @@ namespace ModularEncountersSystems.Helpers {
 					var profile = new LootGroup(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					LootGroups.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -235,6 +250,7 @@ namespace ModularEncountersSystems.Helpers {
 				if (!ReplenishmentProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Replenishment]")) {
 
 					ReplenishmentProfiles.Add(component.Id.SubtypeName, new ReplenishmentProfile(component.DescriptionText));
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -244,6 +260,7 @@ namespace ModularEncountersSystems.Helpers {
 					var profile = new ManipulationProfile(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					ManipulationProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -254,6 +271,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					profile.InitTags(component.DescriptionText);
 					SpawnConditionProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -264,6 +282,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					StaticEncounters.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -274,6 +293,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					SuitUpgradesProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -292,6 +312,7 @@ namespace ModularEncountersSystems.Helpers {
 					//Logger.WriteLog("Action Profile Added: " + component.Id.SubtypeName);
 					ActionObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
 					ActionReferenceProfiles.Add(component.Id.SubtypeName, actionReference);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -310,6 +331,7 @@ namespace ModularEncountersSystems.Helpers {
 					//Logger.WriteLog("Condition Profile Added: " + component.Id.SubtypeName);
 					ConditionObjectTemplates.Add(component.Id.SubtypeName, conditionBytes);
 					ConditionReferenceProfiles.Add(component.Id.SubtypeName, conditionReference);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -323,6 +345,7 @@ namespace ModularEncountersSystems.Helpers {
 					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<TargetProfile>(targetObject);
 					//Logger.WriteLog("Target Profile Added: " + component.Id.SubtypeName);
 					TargetObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -340,6 +363,7 @@ namespace ModularEncountersSystems.Helpers {
 					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<EventActionProfile>(actionObject);
 					EventActionObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
 					EventActionReferenceProfiles.Add(component.Id.SubtypeName, actionReference);
+					AllMesProfileIds.Add(component.Id);
 
 				}
 
@@ -349,6 +373,7 @@ namespace ModularEncountersSystems.Helpers {
 					EventCondition.InitTags(component.DescriptionText);
 					EventCondition.ProfileSubtypeId = component.Id.SubtypeName;
 					EventConditions.Add(component.Id.SubtypeName, EventCondition);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 				}
 
@@ -359,6 +384,7 @@ namespace ModularEncountersSystems.Helpers {
 					PlayerFilter.InitTags(component.DescriptionText);
 					PlayerFilter.ProfileSubtypeId = component.Id.SubtypeName;
 					PlayerFilters.Add(component.Id.SubtypeName, PlayerFilter);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 				}
 
@@ -377,6 +403,7 @@ namespace ModularEncountersSystems.Helpers {
 					var profile = new ManipulationGroup(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					ManipulationGroups.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -386,6 +413,7 @@ namespace ModularEncountersSystems.Helpers {
 					var profile = new SpawnConditionsGroup(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					SpawnConditionGroups.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -398,6 +426,7 @@ namespace ModularEncountersSystems.Helpers {
 					var triggerBytes = MyAPIGateway.Utilities.SerializeToBinary<TriggerProfile>(triggerObject);
 					//Logger.WriteLog("Trigger Profile Added: " + component.Id.SubtypeName);
 					TriggerObjectTemplates.Add(component.Id.SubtypeName, triggerBytes);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -408,6 +437,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					profile.InitTags(component.DescriptionText);
 					EventProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 				}
 
@@ -422,6 +452,7 @@ namespace ModularEncountersSystems.Helpers {
 					profile.InitTags(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					PrefabDataProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -432,6 +463,7 @@ namespace ModularEncountersSystems.Helpers {
 					autopilotObject.InitTags(component.DescriptionText);
 					autopilotObject.ProfileSubtypeId = component.Id.SubtypeName;
 					AutoPilotProfiles.Add(component.Id.SubtypeName, autopilotObject);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -444,6 +476,7 @@ namespace ModularEncountersSystems.Helpers {
 					var triggerBytes = MyAPIGateway.Utilities.SerializeToBinary<TriggerGroupProfile>(triggerObject);
 					//Logger.WriteLog("Trigger Profile Added: " + component.Id.SubtypeName);
 					TriggerGroupObjectTemplates.Add(component.Id.SubtypeName, triggerBytes);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -454,6 +487,7 @@ namespace ModularEncountersSystems.Helpers {
 					waypoint.InitTags(component.DescriptionText);
 					waypoint.ProfileSubtypeId = component.Id.SubtypeName;
 					WaypointProfiles.Add(component.Id.SubtypeName, waypoint);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -464,6 +498,7 @@ namespace ModularEncountersSystems.Helpers {
 					weapons.InitTags(component.DescriptionText);
 					weapons.ProfileSubtypeId = component.Id.SubtypeName;
 					WeaponProfiles.Add(component.Id.SubtypeName, weapons);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -474,6 +509,7 @@ namespace ModularEncountersSystems.Helpers {
 					command.InitTags(component.DescriptionText);
 					command.ProfileSubtypeId = component.Id.SubtypeName;
 					CommandProfiles.Add(component.Id.SubtypeName, command);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -481,6 +517,7 @@ namespace ModularEncountersSystems.Helpers {
 				if ((component.Id.SubtypeName.StartsWith("RivalAI-Datapad")) && !DatapadTemplates.ContainsKey(component.Id.SubtypeName)) {
 
 					DatapadTemplates.Add(component.Id.SubtypeName, component);
+					AllMesProfileIds.Add(component.Id);
 					continue;
 
 				}
@@ -493,6 +530,7 @@ namespace ModularEncountersSystems.Helpers {
 				if ((component.DescriptionText.Contains("[RivalAI Behavior]") || component.DescriptionText.Contains("[Rival AI Behavior]") || component.DescriptionText.Contains("[MES AI Behavior]")) && BehaviorTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					BehaviorTemplates.Add(component.Id.SubtypeName, component.DescriptionText);
+					AllMesProfileIds.Add(component.Id);
 
 					if (!BehaviorTypes.ContainsKey(component.Id.SubtypeName)) {
 

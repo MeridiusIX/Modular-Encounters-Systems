@@ -790,7 +790,7 @@ namespace ModularEncountersSystems.Entities {
 
 						var inventoryModifier = ((float)block.Block.GetInventory().CurrentVolume / (float)block.Block.GetInventory().MaxVolume) + 1;
 
-						if (result == float.NaN)
+						if (inventoryModifier != float.NaN)
 							value *= inventoryModifier;
 
 					}

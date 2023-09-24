@@ -40,6 +40,9 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 			//Step 2
 			FillFirstHullLayer();
+
+			//Step 3
+			SecondHullLayer();
 		
 		}
 
@@ -118,7 +121,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			currentPosition.X += 1;
 
 			//2: Scan Angle Blocks
-			scannedBlockCount = LineBuilder.CheckLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 1), BuilderTools.IncrementX1Z1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
+			scannedBlockCount = PatternSearch.CheckLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 1), BuilderTools.IncrementX1Z1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
 
 			//2: Place blocks on angle blocks
 			if (!_thickCore)
@@ -127,7 +130,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 				LineBuilder.BuildDualStackedBlockLine(Construct, BlockCategory.Armor, scannedBlockCount, -1, BuilderTools.IncrementX1Z1, Vector3I.Up, BuilderTools.IncrementZ1, BuilderTools.IncrementX1Z1, Vector3I.Backward, true, true, 2, ref currentPosition, new Vector3I(35, 1, 5), new Vector3I(35, 1, -7), new Vector3I(39, 1, 5), new Vector3I(39, 1, -7));
 
 			//3: Scan Line Minus 1
-			scannedBlockCount = LineBuilder.CheckLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), BuilderTools.IncrementZ1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0)) - 1;
+			scannedBlockCount = PatternSearch.CheckLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), BuilderTools.IncrementZ1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0)) - 1;
 
 			//3: Place blocks on armor cubes
 			if (!_thickCore)
@@ -136,7 +139,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 				LineBuilder.BuildStraightStackedArmorLine(Construct, BlockCategory.Armor, scannedBlockCount, BuilderTools.IncrementZ1, Vector3I.Up, BuilderTools.IncrementX1Z1, true, true, ref currentPosition, new Vector3I(11, 1, 2), new Vector3I(15, 1, -2));
 
 			//4: Scan Angle Blocks
-			scannedBlockCount = LineBuilder.CheckLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 1), BuilderTools.IncrementX1Z1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
+			scannedBlockCount = PatternSearch.CheckLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 1), BuilderTools.IncrementX1Z1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
 
 			//4: Place blocks on angle blocks
 			if (!_thickCore)
@@ -145,7 +148,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 				LineBuilder.BuildDualStackedBlockLine(Construct, BlockCategory.Armor, scannedBlockCount, 0, BuilderTools.IncrementX1Z1, Vector3I.Up, Vector3I.Left, BuilderTools.IncrementX1Z1, Vector3I.Backward, true, true, 2, ref currentPosition, new Vector3I(35, 1, 5), new Vector3I(35, 1, -7), new Vector3I(39, 1, 5), new Vector3I(39, 1, -7));
 
 			//5: Scan Line Minus 1
-			scannedBlockCount = LineBuilder.CheckLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), BuilderTools.IncrementZ1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0)) - 1;
+			scannedBlockCount = PatternSearch.CheckLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), BuilderTools.IncrementZ1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0)) - 1;
 
 			//5: Place blocks on armor cubes
 			if (!_thickCore)
@@ -154,7 +157,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 				LineBuilder.BuildStraightStackedArmorLine(Construct, BlockCategory.Armor, scannedBlockCount, BuilderTools.IncrementZ1, Vector3I.Up, BuilderTools.IncrementX1Z1, true, true, ref currentPosition, new Vector3I(11, 1, 2), new Vector3I(15, 1, -2));
 
 			//6: Scan Angle Blocks
-			scannedBlockCount = LineBuilder.CheckLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 1), BuilderTools.IncrementX1Z1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
+			scannedBlockCount = PatternSearch.CheckLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 1), BuilderTools.IncrementX1Z1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
 
 			//6: Place blocks on angle blocks
 			if (!_thickCore)
@@ -163,7 +166,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 				LineBuilder.BuildDualStackedBlockLine(Construct, BlockCategory.Armor, scannedBlockCount, 0, BuilderTools.IncrementX1Z1, Vector3I.Up, Vector3I.Left, BuilderTools.IncrementX1Z1, Vector3I.Backward, true, true, 2, ref currentPosition, new Vector3I(35, 1, 5), new Vector3I(35, 1, -7), new Vector3I(39, 1, 5), new Vector3I(39, 1, -7));
 
 			//7: Scan Line
-			scannedBlockCount = LineBuilder.CheckLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), BuilderTools.IncrementZ1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
+			scannedBlockCount = PatternSearch.CheckLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), BuilderTools.IncrementZ1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
 
 			//7: Determine Nacelle Usage
 			if (!_useNacelles) {
@@ -196,6 +199,41 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 			}
 
+			//8: Scan Angle-In Line
+			scannedBlockCount = PatternSearch.CheckLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 3), BuilderTools.IncrementnX1Z1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
+
+			//8: Place Blocks on Angle
+			if (!_thickCore)
+				LineBuilder.BuildDualBlockLine(Construct, BlockCategory.Armor, scannedBlockCount, 0, BuilderTools.IncrementnX1Z1, Vector3I.Left, BuilderTools.IncrementZ1, Vector3I.Backward, new Vector3I(3, 1, -1), new Vector3I(3, 1, -5), true, true, ref currentPosition);
+			else
+				LineBuilder.BuildDualStackedBlockLine(Construct, BlockCategory.Armor, scannedBlockCount, 0, BuilderTools.IncrementnX1Z1, Vector3I.Up, Vector3I.Left, BuilderTools.IncrementZ1, Vector3I.Backward, true, true, 2, ref currentPosition, new Vector3I(35, 1, 7), new Vector3I(35, 1, -5), new Vector3I(39, 1, 7), new Vector3I(39, 1, -5));
+
+
+			//9: Scan Line
+			scannedBlockCount = PatternSearch.CheckLine(Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), BuilderTools.IncrementZ1, MathTools.Vector3IPlus(currentPosition, 0, -1, 0));
+
+			//9: Place Blocks on Line
+			if (!_thickCore)
+				LineBuilder.BuildStraightArmorLine(Construct, BlockCategory.Armor, new Vector3I(3, 1, 6), scannedBlockCount, BuilderTools.IncrementZ1, BuilderTools.IncrementZ1, true, true, ref currentPosition);
+			else
+				LineBuilder.BuildStraightStackedArmorLine(Construct, BlockCategory.Armor, scannedBlockCount, BuilderTools.IncrementZ1, Vector3I.Up, BuilderTools.IncrementZ1, true, true, ref currentPosition, new Vector3I(11, 1, 2), new Vector3I(15, 1, -2));
+
+			//10: Complete End Section
+			var hullEndPointTemp = _mainHullEndPoint + Vector3I.Up;
+
+			if (!_thickCore) {
+
+				LineBuilder.BuildStraightArmorLine(Construct, BlockCategory.Armor, new Vector3I(2, 1, 7), currentPosition.X, Vector3I.Right, Vector3I.Right, true, true, ref hullEndPointTemp);
+				Construct.PlaceBlock(BlockCategory.Armor, hullEndPointTemp, hullEndPointTemp, new Vector3I(3, 1, -1), true, true);
+
+			} else {
+
+				LineBuilder.BuildStraightStackedArmorLine(Construct, BlockCategory.Armor, currentPosition.X, Vector3I.Right, Vector3I.Up, Vector3I.Right, true, true, ref hullEndPointTemp, new Vector3I(10, 1, 3), new Vector3I(14, 1, -1));
+				LineBuilder.BuildStackedBlocks(Construct, BlockCategory.Armor, Vector3I.Up, hullEndPointTemp, true, true, new Vector3I(35, 1, 7), new Vector3I(35, 1, -5));
+
+			}
+
+
 		}
 
 		public void FillFirstHullLayer() {
@@ -203,6 +241,38 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			var noseTop = _thickCore ? new Vector3I(0, 2, 1) : new Vector3I(0, 1, 1);
 			LineBuilder.FillSpaceWithLines(Construct, BlockCategory.Armor, noseTop, BuilderTools.IncrementZ1, Vector3I.Right, 20, new Vector3I(0, 1, 0), true, true);
 		
+		}
+
+		public void SecondHullLayer() {
+
+			var startCoords = Vector3I.Up + BuilderTools.IncrementZ1;
+			startCoords.Y += Construct.Max.Y;
+			PatternSearch.FindAllLines(_lineDataCollection, Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), startCoords, Vector3I.Down, BuilderTools.IncrementZ1, Vector3I.Right, 1, 1);
+			int coloredBlocks = 0;
+
+			foreach (var line in _lineDataCollection) {
+
+				_blockCollection.Clear();
+				Construct.GetBlocks(line.Start, line.End, _blockCollection, true, true);
+
+				foreach (var block in _blockCollection) {
+
+					if (block == null)
+						continue;
+
+					block.ColorMaskHSV.X = 0.5472222f;
+					block.ColorMaskHSV.Y = 1;
+					block.ColorMaskHSV.Z = 1;
+					coloredBlocks++;
+
+				}
+			
+			}
+
+			Construct.Log.Append("LineData Collections: " + _lineDataCollection.Count).AppendLine();
+			Construct.Log.Append("Block Collection:     " + _blockCollection.Count).AppendLine();
+			Construct.Log.Append("Colored Blocks:       " + coloredBlocks).AppendLine();
+
 		}
 
 		public void ThrusterPlacement() {

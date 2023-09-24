@@ -36,6 +36,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 		public static Vector3I IncrementX1 = new Vector3I(1, 0, 0);
 		public static Vector3I IncrementZ1 = new Vector3I(0, 0, 1);
 		public static Vector3I IncrementX1Z1 = new Vector3I(1, 0, 1);
+		public static Vector3I IncrementnX1Z1 = new Vector3I(-1, 0, 1);
 
 		public static MyBlockOrientation DefaultOrientation;
 
@@ -544,7 +545,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 
 			DefaultOrientation = new MyBlockOrientation(Base6Directions.Direction.Forward, Base6Directions.Direction.Up);
 			SymmetryReferenceSetup();
-
+			LineBuilder.Setup();
 
 		}
 

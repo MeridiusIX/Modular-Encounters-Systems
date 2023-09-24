@@ -1306,13 +1306,25 @@ namespace ModularEncountersSystems.Entities {
 
 			for (int i = LinkedGrids.Count - 1; i >= 0; i--) {
 
-				if (LinkedGrids[i] != null && LinkedGrids[i].RefreshLinkedGrids) {
+				try {
 
-					EntityEvaluator.GetAttachedGrids(this);
-					break;
+					if (i >= LinkedGrids.Count)
+						continue;
+
+					if (LinkedGrids[i] != null && LinkedGrids[i].RefreshLinkedGrids) {
+
+						EntityEvaluator.GetAttachedGrids(this);
+						break;
+
+					}
+
+				} catch (Exception e) {
+
+					SpawnLogger.Write("Warning: LinkedGrids List Index Issue", SpawnerDebugEnum.Error, true);
+					SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error, true);
 
 				}
-				
+
 			}
 			
 		}
@@ -1320,6 +1332,9 @@ namespace ModularEncountersSystems.Entities {
 		public void SetAutomatedWeaponRanges(bool useMax = false) {
 
 			WeaponRandomizer.SetWeaponCoreRandomRanges(this, useMax);
+
+			if (this.Npc != null && useMax)
+				this.Npc.AppliedAttributes.WeaponRandomizationAggression = true;
 
 			foreach (var grid in this.LinkedGrids) {
 

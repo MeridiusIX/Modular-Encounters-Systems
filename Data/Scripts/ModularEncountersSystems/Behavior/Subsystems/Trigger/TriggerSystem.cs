@@ -962,7 +962,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (actionList == null || actionList.Count == 0) {
 
+				//Trigger doesn't have actions. Shouldn't be possible to get here with that, but we'll play it safe anyway
+				return;
+			
+			}
 
 			//Action Execution
 			if (trigger.ActionExecution == ActionExecutionEnum.All) {

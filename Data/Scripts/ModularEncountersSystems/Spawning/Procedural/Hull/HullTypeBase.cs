@@ -1,7 +1,9 @@
-﻿using Sandbox.Definitions;
+﻿using ModularEncountersSystems.Spawning.Procedural.Builder;
+using Sandbox.Definitions;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game;
 using VRageMath;
 
 namespace ModularEncountersSystems.Spawning.Procedural.Hull {
@@ -12,10 +14,15 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 		internal ShipConstruct _construct;
 		internal ShipRules _rules;
 
+		internal List<LineData> _lineDataCollection;
+		internal List<MyObjectBuilder_CubeBlock> _blockCollection;
+
 		internal void BaseSetup(ShipRules rules) {
 
 			_construct = new ShipConstruct(rules);
 			_rules = rules;
+			_lineDataCollection = new List<LineData>();
+			_blockCollection = new List<MyObjectBuilder_CubeBlock>();
 
 		}
 

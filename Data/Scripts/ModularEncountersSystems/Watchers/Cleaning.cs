@@ -141,14 +141,20 @@ namespace ModularEncountersSystems.Watchers {
 				}
 
 				//Unowned Filtering
-				if (!config.CleanupIncludeUnowned) {
+				if (config.CleanupIncludeUnowned) {
 
 					if (grid.Ownership.HasFlag(GridOwnershipEnum.NpcMajority) || grid.Ownership.HasFlag(GridOwnershipEnum.NpcMinority)) {
 
 						continue;
+
+					}
+
+					if (!grid.Npc.SpawnedByMES) {
+
+						continue;
 					
 					}
-				
+
 				}
 
 				//Determine Block Count
@@ -416,6 +422,12 @@ namespace ModularEncountersSystems.Watchers {
 			}
 
 			foreach (var gridEntity in grid.LinkedGrids) {
+
+				if (gridEntity.Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || gridEntity.Ownership.HasFlag(GridOwnershipEnum.PlayerMinority)) {
+
+					continue;
+				
+				}
 
 				if (!PendingGridsForRemoval) {
 

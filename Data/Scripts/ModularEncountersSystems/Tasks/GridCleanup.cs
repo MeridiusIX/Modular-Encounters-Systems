@@ -27,14 +27,14 @@ namespace ModularEncountersSystems.Tasks {
 
 			for (int i = Cleaning.FlaggedForRemoval.Count - 1; i >= 0; i--) {
 
-				SpawnLogger.Write("Remaining Grids To Be Despawned: " + Cleaning.FlaggedForRemoval.Count, SpawnerDebugEnum.CleanUp, true);
+				SpawnLogger.Write("Remaining Grids To Be Despawned: " + Cleaning.FlaggedForRemoval.Count, SpawnerDebugEnum.CleanUp);
 
 				var grid = Cleaning.FlaggedForRemoval[i];
 
 				if (!grid.ActiveEntity()) {
 
-					SpawnLogger.Write("Grid [" + grid.GridName + "] Marked For Cleanup Already Removed Before MES Could Process It.", SpawnerDebugEnum.CleanUp, true);
-					SpawnLogger.Write("Closed: " + grid.Closed + " / Physics: " + grid.HasPhysics, SpawnerDebugEnum.CleanUp, true);
+					SpawnLogger.Write("Grid [" + grid.GridName + "] Marked For Cleanup Already Removed Before MES Could Process It.", SpawnerDebugEnum.CleanUp);
+					SpawnLogger.Write("Closed: " + grid.Closed + " / Physics: " + grid.HasPhysics, SpawnerDebugEnum.CleanUp);
 					Cleaning.FlaggedForRemoval.RemoveAt(i);
 					continue;
 
@@ -71,15 +71,15 @@ namespace ModularEncountersSystems.Tasks {
 
 				}
 
-				SpawnLogger.Write(grid.CubeGrid.CustomName + " Grid is being Cleaned.", SpawnerDebugEnum.CleanUp, true);
+				SpawnLogger.Write(grid.CubeGrid.CustomName + " Grid is being Cleaned.", SpawnerDebugEnum.CleanUp);
 
 				if (!string.IsNullOrWhiteSpace(grid?.DespawnSource)) {
 
-					SpawnLogger.Write(string.Format(" - Despawn Source: [{0}]", grid.DespawnSource), SpawnerDebugEnum.CleanUp, true);
+					SpawnLogger.Write(string.Format(" - Despawn Source: [{0}]", grid.DespawnSource), SpawnerDebugEnum.CleanUp);
 
 				} else {
 
-					SpawnLogger.Write(string.Format(" - Despawn Source: Unknown"), SpawnerDebugEnum.CleanUp, true);
+					SpawnLogger.Write(string.Format(" - Despawn Source: Unknown"), SpawnerDebugEnum.CleanUp);
 
 				}
 
@@ -90,7 +90,7 @@ namespace ModularEncountersSystems.Tasks {
 					foreach (var owner in grid.CubeGrid.BigOwners) {
 
 						var npcOwner = OwnershipHelper.IsNPC(owner);
-						SpawnLogger.Write(string.Format(" - Grid [{0}] Majority Owner [{1}]. NPC Ownership: {2}", grid.CubeGrid.CustomName ?? "null", owner, npcOwner), SpawnerDebugEnum.CleanUp, true);
+						SpawnLogger.Write(string.Format(" - Grid [{0}] Majority Owner [{1}]. NPC Ownership: {2}", grid.CubeGrid.CustomName ?? "null", owner, npcOwner), SpawnerDebugEnum.CleanUp);
 
 						if (!npcOwner)
 							abort = true;
@@ -100,7 +100,7 @@ namespace ModularEncountersSystems.Tasks {
 					foreach (var owner in grid.CubeGrid.SmallOwners) {
 
 						var npcOwner = OwnershipHelper.IsNPC(owner);
-						SpawnLogger.Write(string.Format(" - Grid [{0}] Minority Owner [{1}]. NPC Ownership: {2}", grid.CubeGrid.CustomName ?? "null", owner, npcOwner), SpawnerDebugEnum.CleanUp, true);
+						SpawnLogger.Write(string.Format(" - Grid [{0}] Minority Owner [{1}]. NPC Ownership: {2}", grid.CubeGrid.CustomName ?? "null", owner, npcOwner), SpawnerDebugEnum.CleanUp);
 
 						if (!npcOwner)
 							abort = true;
@@ -109,7 +109,7 @@ namespace ModularEncountersSystems.Tasks {
 
 					if (abort) {
 
-						SpawnLogger.Write(" - " + grid.CubeGrid.CustomName + " Has Non-NPC Ownership. Cleaning Aborted.", SpawnerDebugEnum.CleanUp, true);
+						SpawnLogger.Write(" - " + grid.CubeGrid.CustomName + " Has Non-NPC Ownership. Cleaning Aborted.", SpawnerDebugEnum.CleanUp);
 						Cleaning.FlaggedForRemoval.RemoveAt(i);
 						
 						if(!grid.ForceRemove)
@@ -134,7 +134,7 @@ namespace ModularEncountersSystems.Tasks {
 
 				cleanedGrid = true;
 				Cleaning.FlaggedForRemoval.RemoveAt(i);
-				SpawnLogger.Write(" - " + grid.CubeGrid.CustomName + " Grid is Closed.", SpawnerDebugEnum.CleanUp, true);
+				SpawnLogger.Write(" - " + grid.CubeGrid.CustomName + " Grid is Closed.", SpawnerDebugEnum.CleanUp);
 
 				break;
 

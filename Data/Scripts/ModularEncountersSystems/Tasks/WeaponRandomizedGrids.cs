@@ -18,8 +18,6 @@ using VRageMath;
 namespace ModularEncountersSystems.Tasks {
 	public class WeaponRandomizedGrids : GridDamageWatcher, ITaskItem {
 
-
-
 		public WeaponRandomizedGrids(GridEntity grid) : base(grid) {
 
 			if (_grid.Npc.AppliedAttributes.WeaponRandomizationAggression) {
@@ -34,6 +32,9 @@ namespace ModularEncountersSystems.Tasks {
 		internal override void FirstRun() {
 
 			if (!_isValid)
+				return;
+
+			if (!_grid?.Npc?.AppliedAttributes?.WeaponRandomizationAggression ?? false)
 				return;
 
 			_grid.SetAutomatedWeaponRanges(false);

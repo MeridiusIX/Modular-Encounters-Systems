@@ -39,9 +39,9 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 		internal Dictionary<Vector3I, MyObjectBuilder_CubeBlock> _blockMap;
 		internal Dictionary<Vector3I, RestrictedCellType> _restrictedCells;
 
-		internal int _maxWidthX;
-		internal int _maxHeightY;
-		internal int _maxLengthZ;
+		public Vector3I Min;
+		public Vector3I Max;
+		public int _maxLengthZ;
 
 		internal MyObjectBuilder_CubeBlock _lastPrimaryBlockPlaced;
 		internal MyObjectBuilder_CubeBlock _lastMirroredBlockX;
@@ -66,9 +66,8 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			_blockMap = new Dictionary<Vector3I, MyObjectBuilder_CubeBlock>();
 			_restrictedCells = new Dictionary<Vector3I, RestrictedCellType>();
 
-			_maxWidthX = MathTools.RandomBetween(Rules.MinX, Rules.MaxX);
-			_maxHeightY = MathTools.RandomBetween(Rules.MinY, Rules.MaxY);
-			_maxLengthZ = MathTools.RandomBetween(Rules.MinZ, Rules.MaxZ);
+			Min = Vector3I.Zero;
+			Max = Vector3I.Zero;
 
 			_tempCellList = new List<Vector3I>();
 
@@ -81,9 +80,63 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 		public MyObjectBuilder_CubeBlock GetBlock(Vector3I cell) {
 
-			_tempBlock = null;
+			
 			_blockMap.TryGetValue(cell, out _tempBlock);
 			return _tempBlock;
+
+		}
+
+		public void GetBlocks(Vector3I min, Vector3I max, List<MyObjectBuilder_CubeBlock> blocks, bool xSymm, bool ySymm) {
+
+			GetBlocks(min, max, blocks);
+
+			if (xSymm) {
+
+				var actualMin = CalculateSymmetryX(min, max, false);
+				var actualMax = CalculateSymmetryX(min, max, true);
+				GetBlocks(actualMin, actualMax, blocks);
+
+			}
+
+			if (ySymm) {
+
+				var actualMin = CalculateSymmetryY(min, max, false);
+				var actualMax = CalculateSymmetryY(min, max, true);
+				GetBlocks(actualMin, actualMax, blocks);
+
+			}
+
+			if (xSymm && ySymm) {
+
+				var actualMin = CalculateSymmetryXY(min, max, false);
+				var actualMax = CalculateSymmetryXY(min, max, true);
+				GetBlocks(actualMin, actualMax, blocks);
+
+			}
+
+		}
+
+		public void GetBlocks(Vector3I min, Vector3I max, List<MyObjectBuilder_CubeBlock> blocks) {
+
+			for (int x = min.X; x <= max.X; x++) {
+
+				for (int y = min.Y; y <= max.Y; y++) {
+
+					for (int z = min.Z; z <= max.Z; z++) {
+
+						var cell = new Vector3I(x, y, z);
+						var block = GetBlock(cell);
+
+						if (block == null || blocks.Contains(block))
+							continue;
+
+						blocks.Add(block);
+
+					}
+
+				}
+
+			}
 
 		}
 
@@ -219,8 +272,32 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 
 			CubeGrid.CubeBlocks.Add(block);
 			lastBlock = block;
+			UpdateMinMax(min);
+			UpdateMinMax(max);
 			Log.Append("Block Placed Successfully").Append(" - ").Append(id.ToString()).Append(" - ").Append(min.ToString()).Append(" - ").Append(orientation.ToString()).AppendLine();
 			return true;
+
+		}
+
+		internal void UpdateMinMax(Vector3I value) {
+
+			if (value.X < Min.X)
+				Min.X = value.X;
+
+			if (value.Y < Min.Y)
+				Min.Y = value.Y;
+
+			if (value.Z < Min.Z)
+				Min.Z = value.Z;
+
+			if (value.X > Max.X)
+				Max.X = value.X;
+
+			if (value.Y > Max.Y)
+				Max.Y = value.Y;
+
+			if (value.Z > Max.Z)
+				Max.Z = value.Z;
 
 		}
 
@@ -368,7 +445,7 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			} else {
 
 				calculatedX = (max.X * -1) + localMaxX;
-				calculatedY = (max.X * -1) + localMaxY;
+				calculatedY = (max.Y * -1) + localMaxY;
 				return new Vector3I(calculatedX, calculatedY, max.Z);
 
 			}

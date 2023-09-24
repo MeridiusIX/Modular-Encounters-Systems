@@ -89,7 +89,7 @@ namespace ModularEncountersSystems.Configuration {
 			EnableGlobalNPCWeaponRandomizer = false;
 			EnableGlobalNPCShieldProvider = false;
 
-			WeaponReplacerBlacklist = new string[]{"1380830774", "Large_SC_LaserDrill_HiddenStatic", "Large_SC_LaserDrill_HiddenTurret", "Large_SC_LaserDrill", "Large_SC_LaserDrillTurret", "Spotlight_Turret_Large", "Spotlight_Turret_Light_Large", "Spotlight_Turret_Small", "SmallSpotlight_Turret_Small", "ShieldChargerBase_Large", "LDualPulseLaserBase_Large", "AegisLargeBeamBase_Large", "AegisMediumeamBase_Large", "XLGigaBeamGTFBase_Large", "XLDualPulseLaserBase_Large", "1817300677"};
+			WeaponReplacerBlacklist = new string[]{"1380830774", "Large_SC_LaserDrill_HiddenStatic", "Large_SC_LaserDrill_HiddenTurret", "Large_SC_LaserDrill", "Large_SC_LaserDrillTurret", "Spotlight_Turret_Large", "Spotlight_Turret_Light_Large", "Spotlight_Turret_Small", "SmallSpotlight_Turret_Small", "ShieldChargerBase_Large", "LDualPulseLaserBase_Large", "AegisLargeBeamBase_Large", "AegisMediumeamBase_Large", "XLGigaBeamGTFBase_Large", "XLDualPulseLaserBase_Large", "1817300677", "LargeSearchlight", "SmallSearchlight" };
 			WeaponReplacerWhitelist = new string[]{};
 			WeaponReplacerTargetBlacklist = new string[]{};
 			WeaponReplacerTargetWhitelist = new string[]{};

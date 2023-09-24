@@ -1081,8 +1081,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-            if (conditions.CheckRequiredBlocks)
-            {
+			if (conditions.CheckRequiredBlocks)
+			{
 
 
 				bool foundTheBlocks = false;
@@ -1127,10 +1127,10 @@ namespace ModularEncountersSystems.Spawning {
 								break;
 							}
 							if (conditions.RequiredBlockAnySubtypeId)
-                            {
+							{
 								foundTheBlocks = true;
 								break;
-                            }
+							}
 						}
 					}
 				}

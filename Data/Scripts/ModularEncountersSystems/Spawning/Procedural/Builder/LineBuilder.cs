@@ -8,6 +8,15 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 
 	public static class LineBuilder {
 
+		public static Dictionary<string, LinePattern> LinePatterns = new Dictionary<string, LinePattern>();
+
+		public static void Setup() {
+
+			LinePatterns.Add("TopSingleSlopeLine", new LinePattern("TopSingleSlopeLine"));
+			LinePatterns.Add("TopRampLine", new LinePattern("TopRampLine"));
+
+		}
+
 		public static void BuildStraightArmorLine(ShipConstruct construct, BlockCategory category, Vector3I block, int steps, Vector3I increment, Vector3I endIncrement, bool xsymm, bool ysymm, ref Vector3I currentPosition) {
 
 			currentPosition = BuildLine(construct, category, block, increment, steps, currentPosition, xsymm, ysymm);
@@ -156,34 +165,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 
 		}
 
-		public static int CheckLine(ShipConstruct construct, BlockCategory category, Vector3I block, Vector3I increment, Vector3I position, bool matchAnyBlock = false) {
-
-			int hits = 0;
-			var currentPosition = position;
-			var refBlock = construct.GetReferenceBlock(category, block);
-
-			if (refBlock == null)
-				return hits;
-
-			for (int i = 0; i < 250; i++) {
-
-				var cubeBlock = construct.GetBlock(currentPosition);
-
-				if (cubeBlock == null)
-					break;
-
-				if (!matchAnyBlock)
-					if (cubeBlock.GetId() != refBlock.GetId())
-						break;
-
-				currentPosition += increment;
-				hits += 1;
-
-			}
-
-			return hits;
-
-		}
+		
 
 		public static void FillSpaceWithLines(ShipConstruct construct, BlockCategory category, Vector3I startCoords, Vector3I advanceIncrement, Vector3I searchIncrement, int maxSearchCells, Vector3I block, bool xSymmetry, bool ySymmetry) {
 

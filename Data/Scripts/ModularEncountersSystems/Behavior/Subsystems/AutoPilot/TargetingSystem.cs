@@ -614,7 +614,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			//Stealth
 			if (AddonManager.StealthMod) {
 
-				if (target.GetParentEntity() != null && ((uint)target.GetParentEntity().Flags & 0x1000000) > 0) {
+				if (target.GetParentEntity() != null && ((uint)target.GetParentEntity().Flags & 0x20000000) > 0) {
 
 					if (!AllUniqueFilters.Contains(TargetFilterEnum.IgnoreStealthDrive)) {
 

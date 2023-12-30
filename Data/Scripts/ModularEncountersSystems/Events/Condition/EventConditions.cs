@@ -44,6 +44,7 @@ namespace ModularEncountersSystems.Events.Condition
         public bool CheckPlayerNear;
         public Vector3D PlayerNearVector3;
         public int PlayerNearDistanceFromVector3;
+        public int PlayerNearMinDistanceFromVector3;
         public List<string> PlayerFilterIds;
 
         public bool CheckThreatScore;
@@ -82,6 +83,7 @@ namespace ModularEncountersSystems.Events.Condition
 
             CheckPlayerNear = false;
             PlayerNearDistanceFromVector3 = 1000;
+            PlayerNearMinDistanceFromVector3 = 0;
             PlayerNearVector3 = new Vector3D();
             PlayerFilterIds = new List<string>();
 
@@ -113,6 +115,8 @@ namespace ModularEncountersSystems.Events.Condition
                 {"CheckPlayerNear", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerNear) },
                 {"PlayerNearCoords", (s, o) => TagParse.TagVector3DCheck(s, ref PlayerNearVector3) },
                 {"PlayerNearDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearDistanceFromVector3) },
+                {"PlayerNearMinDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearMinDistanceFromVector3) },
+                
                 {"PlayerFilterIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerFilterIds) },
 
 
@@ -261,7 +265,6 @@ namespace ModularEncountersSystems.Events.Condition
 
                         if (output)
                         {
-
                             //BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
                             failedCheck = true;
                             continue;
@@ -371,7 +374,7 @@ namespace ModularEncountersSystems.Events.Condition
 
                 //int amountofplayersmatch = 0;
 
-                ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(Profile.PlayerNearVector3, Profile.PlayerNearDistanceFromVector3);
+                ListOfPlayersinRange = TargetHelper.GetPlayersWithinRange(Profile.PlayerNearVector3, Profile.PlayerNearMinDistanceFromVector3,Profile.PlayerNearDistanceFromVector3);
                 //int amountofPlayers = ListOfPlayersinRange.Count;
 
                 foreach (IMyPlayer Player in ListOfPlayersinRange)

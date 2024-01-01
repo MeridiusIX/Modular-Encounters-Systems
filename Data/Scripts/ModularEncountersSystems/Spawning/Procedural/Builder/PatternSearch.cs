@@ -11,13 +11,17 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 		public bool Valid;
 		public Vector3I Start;
 		public Vector3I End;
+		public Vector3I Direction;
+		public Vector3I AdjacentDirection;
 		public int Length;
 
-		public LineData(Vector3I start, Vector3I end, int length) {
+		public LineData(Vector3I start, Vector3I end, Vector3I dir, Vector3I searchDir, int length) {
 
 			Start = start;
 			End = end;
+			Direction = dir;
 			Length = length;
+			AdjacentDirection = searchDir;
 			Valid = true;
 		
 		}
@@ -26,9 +30,18 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 
 			Start = Vector3I.Zero;
 			End = Vector3I.Zero;
+			Direction = Vector3I.Zero;
+			AdjacentDirection = Vector3I.Zero;
 			Valid = false;
 			Length = 0;
 
+		}
+
+		public void OffsetLine(Vector3I offsetAmount) {
+
+			Start += offsetAmount;
+			End += offsetAmount;
+		
 		}
 
 	}
@@ -132,7 +145,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 			if (!firstPoint.HasValue)
 				return new LineData();
 
-			return new LineData(firstPoint.Value, endPoint.Value, lineLength);
+			return new LineData(firstPoint.Value, endPoint.Value, advanceDir, searchDir, lineLength);
 		
 		}
 

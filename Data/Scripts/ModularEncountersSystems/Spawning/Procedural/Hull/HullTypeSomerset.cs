@@ -46,10 +46,36 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 		
 		}
 
-		public void ProcessStep(int step = 0) {
-		
-			
-		
+		public void ProcessStep(int step = -1) {
+
+			if (step == 0) {
+
+				InitialHullOutline();
+				return;
+
+			}
+
+			if (step == 1) {
+
+				FirstHullLayer();
+				return;
+
+			}
+
+			if (step == 2) {
+
+				FillFirstHullLayer();
+				return;
+
+			}
+
+			if (step == 3) {
+
+				SecondHullLayer();
+				return;
+
+			}
+
 		}
 
 		public void InitialHullOutline() {
@@ -248,6 +274,8 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			var startCoords = Vector3I.Up + BuilderTools.IncrementZ1;
 			startCoords.Y += Construct.Max.Y;
 			PatternSearch.FindAllLines(_lineDataCollection, Construct, BlockCategory.Armor, new Vector3I(0, 1, 0), startCoords, Vector3I.Down, BuilderTools.IncrementZ1, Vector3I.Right, 1, 1);
+			
+			//This is Debug Stuff
 			int coloredBlocks = 0;
 
 			foreach (var line in _lineDataCollection) {
@@ -272,6 +300,12 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 			Construct.Log.Append("LineData Collections: " + _lineDataCollection.Count).AppendLine();
 			Construct.Log.Append("Block Collection:     " + _blockCollection.Count).AppendLine();
 			Construct.Log.Append("Colored Blocks:       " + coloredBlocks).AppendLine();
+			//Debug Stuff Ends
+
+			string startPattern = null;
+			string additionalPattern = null;
+			LineBuilder.GetTopLinePatternRandomPair(ref startPattern, ref additionalPattern);
+			LineBuilder.BuildPatternedLines(Construct, _lineDataCollection, Vector3I.Up, startPattern, additionalPattern, true, true);
 
 		}
 

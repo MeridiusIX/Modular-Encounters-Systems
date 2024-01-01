@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModularEncountersSystems.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
@@ -13,7 +14,10 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 		public static void Setup() {
 
 			LinePatterns.Add("TopSingleSlopeLine", new LinePattern("TopSingleSlopeLine"));
-			LinePatterns.Add("TopRampLine", new LinePattern("TopRampLine"));
+			LinePatterns.Add("TopSlopeCornerLine", new LinePattern("TopSlopeCornerLine"));
+
+			LinePatterns.Add("TopRampLine", new LinePattern("TopRampLine")); 
+			LinePatterns.Add("TopRampCornerLine", new LinePattern("TopRampCornerLine"));
 
 		}
 
@@ -98,6 +102,89 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 
 			return pos;
 
+		}
+
+		public static void BuildPatternedLines(ShipConstruct construct, List<LineData> lineCollection, Vector3I lineOffset, string firstLinePattern, string remainingLinePatterns = null, bool xSymmetry = false, bool ySymmetry = false) {
+
+			if (lineCollection == null || lineCollection.Count == 0 || string.IsNullOrWhiteSpace(firstLinePattern))
+				return;
+
+			LinePattern startingLinePattern = null;
+
+			if (!LinePatterns.TryGetValue(firstLinePattern, out startingLinePattern)) {
+
+				return;
+			
+			}
+
+			LinePattern secondaryLinePattern = null;
+
+			if (string.IsNullOrWhiteSpace(remainingLinePatterns) || !LinePatterns.TryGetValue(remainingLinePatterns, out secondaryLinePattern)) {
+
+				secondaryLinePattern = startingLinePattern;
+
+			}
+
+			for (int i = 0; i < lineCollection.Count; i++) {
+
+				var line = lineCollection[i];
+				line.OffsetLine(lineOffset);
+				var pattern = i == 0 ? startingLinePattern : secondaryLinePattern;
+
+				var currentPosition = line.Start;
+				int currentLength = 0;
+				int startIndex = 0;
+				int endIndex = -1;
+				bool startedLine = false;
+				bool endingLine = false;
+
+				while (true) {
+
+
+					if (!startedLine) {
+
+						if (pattern.StartLine(construct, line, currentLength, currentPosition, -line.AdjacentDirection)) {
+
+							startedLine = true;
+
+						} else {
+
+							currentPosition += line.Direction;
+							currentLength++;
+
+							if (currentLength > line.Length)
+								break;
+
+							continue;
+
+						}
+
+					}
+
+					if (!endingLine) {
+
+						if (pattern.EndLine(construct, line, currentLength, currentPosition, line.Direction, -line.AdjacentDirection)) {
+
+							endingLine = true;
+							endIndex = 0;
+						
+						}
+					
+					}
+
+					Vector3I blockToPlace = pattern.GetNextBlock(ref startIndex, ref endIndex);
+					construct.PlaceBlock(pattern.Category, currentPosition, currentPosition, blockToPlace, xSymmetry, ySymmetry);
+					
+					currentPosition += line.Direction;
+					currentLength++;
+
+					if (currentLength >= line.Length || (endingLine && endIndex >= pattern.LinePatternEnd.Length))
+						break;
+
+				}
+				
+			}
+		
 		}
 
 		public static void BuildStackedBlocks(ShipConstruct construct, BlockCategory category, Vector3I increment, Vector3I currentPosition, bool xSymmetry, bool ySymmetry, params Vector3I[] blocks) {
@@ -222,6 +309,44 @@ namespace ModularEncountersSystems.Spawning.Procedural.Builder {
 
 			}
 		
+		}
+
+		public static void GetTopLinePatternRandomPair(ref string start, ref string additional) {
+
+			var roll = MathTools.RandomBetween(0, 4);
+
+			if (roll == 0) {
+
+				start = "TopSingleSlopeLine";
+				return;
+			
+			}
+
+			if (roll == 1) {
+
+				start = "TopRampLine";
+				return;
+
+			}
+
+			if (roll == 2) {
+
+				start = "TopSingleSlopeLine";
+				additional = "TopSlopeCornerLine";
+				return;
+
+			}
+
+			if (roll == 3) {
+
+				start = "TopRampLine";
+				additional = "TopRampCornerLine";
+				return;
+
+			}
+
+			return;
+
 		}
 
 	}

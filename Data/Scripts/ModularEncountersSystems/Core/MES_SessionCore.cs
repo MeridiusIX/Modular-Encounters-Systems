@@ -32,10 +32,11 @@ namespace ModularEncountersSystems.Core {
 
 		public static bool ModEnabled = true;
 		public static bool OfflineDetected = false;
+		public static bool SyncWarning = false;
 		public bool FinalSetup = false;
 
-		public static string ModVersion = "2.70.0";
-		public static int ModVersionValue = 200700000;
+		public static string ModVersion = "2.70.5";
+		public static int ModVersionValue = 200700005;
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -240,9 +241,11 @@ namespace ModularEncountersSystems.Core {
 			if (MyAPIGateway.Session.SessionSettings.EnableSelectivePhysicsUpdates && MyAPIGateway.Session.SessionSettings.SyncDistance < 10000) {
 
 				//TODO: Log SPU Restriction
-				SpawnLogger.Write("Mod Disabled: Selective Physics Updates is Enabled with SyncDistance Less Than 10000", SpawnerDebugEnum.Startup, true);
-				SpawnLogger.Write("Disable Selective Physics Updates OR Increase SyncDistance To Minimum of 10000", SpawnerDebugEnum.Startup, true);
-				return false;
+				SpawnLogger.Write("WARNING: Selective Physics Updates is Enabled with SyncDistance Less Than 10000. Modular Encounters Systems may not work correctly.", SpawnerDebugEnum.Startup, true);
+				SpawnLogger.Write("This could result in NPC grids spawning and getting stuck, or NPC grids not being visible until much closer to the player.", SpawnerDebugEnum.Startup, true);
+				SpawnLogger.Write("Consider raising SyncDistance to 10000 or higher while using Selective Physics Updates.", SpawnerDebugEnum.Startup, true);
+				SyncWarning = true;
+				//return false;
 
 			}
 

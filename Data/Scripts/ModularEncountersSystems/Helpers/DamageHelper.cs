@@ -223,15 +223,20 @@ namespace ModularEncountersSystems.Helpers {
 			myExplosionInfo.OwnerEntity = ownerEntity as MyEntity;
 			myExplosionInfo.Direction = Vector3.Forward;
 			myExplosionInfo.VoxelExplosionCenter = coords;
-			myExplosionInfo.ExplosionFlags = (MyExplosionFlags.CREATE_DEBRIS | MyExplosionFlags.APPLY_FORCE_AND_DAMAGE | MyExplosionFlags.CREATE_DECALS | MyExplosionFlags.CREATE_PARTICLE_EFFECT | MyExplosionFlags.CREATE_SHRAPNELS | MyExplosionFlags.APPLY_DEFORMATION);
+
+			var fakeExplosionInfoFlags = (FakeExplosionFlags.CREATE_DEBRIS | FakeExplosionFlags.APPLY_FORCE_AND_DAMAGE | FakeExplosionFlags.CREATE_DECALS | FakeExplosionFlags.CREATE_PARTICLE_EFFECT | FakeExplosionFlags.CREATE_SHRAPNELS | FakeExplosionFlags.APPLY_DEFORMATION);
+			//myExplosionInfo.ExplosionFlags = (MyExplosionFlags.CREATE_DEBRIS | MyExplosionFlags.APPLY_FORCE_AND_DAMAGE | MyExplosionFlags.CREATE_DECALS | MyExplosionFlags.CREATE_PARTICLE_EFFECT | MyExplosionFlags.CREATE_SHRAPNELS | MyExplosionFlags.APPLY_DEFORMATION);
+
 
 			if (!damageIgnoreVoxels) {
 
-				myExplosionInfo.ExplosionFlags |= MyExplosionFlags.AFFECT_VOXELS;
+				fakeExplosionInfoFlags |= FakeExplosionFlags.AFFECT_VOXELS;
 				myExplosionInfo.VoxelCutoutScale = 1f;
 
 			}
-			
+
+			Enum.TryParse((fakeExplosionInfoFlags.ToString()), out myExplosionInfo.ExplosionFlags);
+
 			myExplosionInfo.PlaySound = true;
 			myExplosionInfo.ApplyForceAndDamage = true;
 			myExplosionInfo.ObjectsRemoveDelayInMiliseconds = 40;

@@ -402,7 +402,11 @@ namespace ModularEncountersSystems.BlockLogic {
 			myExplosionInfo.ParticleScale = 1f;
 			myExplosionInfo.Direction = Vector3.Down;
 			myExplosionInfo.VoxelExplosionCenter = result.HitPosition;
-			myExplosionInfo.ExplosionFlags = (MyExplosionFlags.CREATE_DEBRIS | MyExplosionFlags.AFFECT_VOXELS | MyExplosionFlags.APPLY_FORCE_AND_DAMAGE | MyExplosionFlags.CREATE_DECALS | MyExplosionFlags.CREATE_PARTICLE_EFFECT | MyExplosionFlags.CREATE_SHRAPNELS | MyExplosionFlags.APPLY_DEFORMATION);
+
+			var fakeExplosionFlagsTemp = (FakeExplosionFlags.CREATE_DEBRIS | FakeExplosionFlags.AFFECT_VOXELS | FakeExplosionFlags.APPLY_FORCE_AND_DAMAGE | FakeExplosionFlags.CREATE_DECALS | FakeExplosionFlags.CREATE_PARTICLE_EFFECT | FakeExplosionFlags.CREATE_SHRAPNELS | FakeExplosionFlags.APPLY_DEFORMATION);
+			//myExplosionInfo.ExplosionFlags = (MyExplosionFlags.CREATE_DEBRIS | MyExplosionFlags.AFFECT_VOXELS | MyExplosionFlags.APPLY_FORCE_AND_DAMAGE | MyExplosionFlags.CREATE_DECALS | MyExplosionFlags.CREATE_PARTICLE_EFFECT | MyExplosionFlags.CREATE_SHRAPNELS | MyExplosionFlags.APPLY_DEFORMATION);
+			Enum.TryParse((fakeExplosionFlagsTemp.ToString()), out myExplosionInfo.ExplosionFlags);
+
 			myExplosionInfo.VoxelCutoutScale = 1f;
 			myExplosionInfo.PlaySound = true;
 			myExplosionInfo.ApplyForceAndDamage = true;

@@ -62,6 +62,8 @@ namespace ModularEncountersSystems.Spawning.Procedural {
 			Rules = rules;
 
 			CubeGrid = new MyObjectBuilder_CubeGrid();
+			CubeGrid.PositionAndOrientation = new VRage.MyPositionAndOrientation();
+			CubeGrid.PersistentFlags |= MyPersistentEntityFlags2.CastShadows | MyPersistentEntityFlags2.InScene;
 
 			_blockMap = new Dictionary<Vector3I, MyObjectBuilder_CubeBlock>();
 			_restrictedCells = new Dictionary<Vector3I, RestrictedCellType>();

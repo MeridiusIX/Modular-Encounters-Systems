@@ -134,6 +134,19 @@ namespace ModularEncountersSystems.Helpers {
     
     }
 
+    public enum FakeExplosionFlags {
+        CREATE_DEBRIS = 1,
+        AFFECT_VOXELS = 2,
+        APPLY_FORCE_AND_DAMAGE = 4,
+        CREATE_DECALS = 8,
+        FORCE_DEBRIS = 0x10,
+        CREATE_PARTICLE_EFFECT = 0x20,
+        CREATE_SHRAPNELS = 0x40,
+        APPLY_DEFORMATION = 0x80,
+        CREATE_PARTICLE_DEBRIS = 0x100,
+        FORCE_CUSTOM_END_OF_LIFE_EFFECT = 0x200
+    }
+
     public enum TargetTypeEnum {
 
         None,

@@ -8,7 +8,7 @@ namespace ModularEncountersSystems.Spawning.Procedural.Hull {
 
 		ShipConstruct Construct { get; }
 		ShipRules Rules { get; }
-		void SpawnCurrentConstruct(MatrixD matrix);
+		void SpawnCurrentConstruct(MatrixD matrix, string prefabId);
 
 	}
 

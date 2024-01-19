@@ -36,7 +36,7 @@ namespace ModularEncountersSystems.Core {
 		public bool FinalSetup = false;
 
 		public static string ModVersion = "2.70.6";
-		public static int ModVersionValue = 200700005;
+		public static int ModVersionValue = 200700006;
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;

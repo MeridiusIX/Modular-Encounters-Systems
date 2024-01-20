@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Helpers;
@@ -84,44 +85,133 @@ namespace ModularEncountersSystems.Events.Action {
 				EventActionProfile.ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes);
 			}
 
+            if (actions.AddTagstoPlayers)
+            {
+				foreach(var player in PlayerManager.Players)
+				{
+
+                    if (PlayerCondition.ArePlayerConditionsMet(actions.AddTagsPlayerConditionIds, player.Player.IdentityId))
+                    {
+						foreach (var tag in actions.AddTags)
+						{
+							if (player.ProgressionData.Tags.Contains(tag))
+								continue;
+							player.ProgressionData.Tags.Add(tag);
+						}
+                    }
+				}
+            }
+
+			if (actions.RemoveTagsFromPlayers)
+			{
+				foreach (var player in PlayerManager.Players)
+				{
+
+					if (PlayerCondition.ArePlayerConditionsMet(actions.RemoveTagsPlayerConditionIds, player.Player.IdentityId))
+					{
+						foreach (var tag in actions.RemoveTags)
+						{
+							if (!player.ProgressionData.Tags.Contains(tag))
+								continue;
+							player.ProgressionData.Tags.Remove(tag);
+						}
+					}
+				}
+			}
+
+
+			if (actions.TeleportPlayers)
+			{
+				foreach (var player in PlayerManager.Players)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(actions.TeleportPlayerConditionIds, player.Player.IdentityId))
+					{
+						player.Player.Character.Teleport(MatrixD.CreateWorld(actions.TeleportPlayerCoords));
+
+					}
+					
+				}
+			}
+
+            if (actions.FadeInPlayers)
+            {
+				foreach (var player in PlayerManager.Players)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeInPlayerConditionIds, player.Player.IdentityId))
+					{
+						MyVisualScriptLogicProvider.ScreenColorFadingStart(2, true, player.Player.IdentityId);
+						MyVisualScriptLogicProvider.ScreenColorFadingMinimalizeHUD(true, player.Player.IdentityId);
+					}
+				}
+			}
+
+            if (actions.FadeOutPlayers)
+            {
+				foreach (var player in PlayerManager.Players)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeOutPlayerConditionIds, player.Player.IdentityId))
+					{
+						MyVisualScriptLogicProvider.ScreenColorFadingStartSwitch(8, player.Player.IdentityId);
+					}
+				}
+			}
+
+			if (actions.AddGPSToPlayers)
+			{
+
+				foreach (var player in PlayerManager.Players)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId))
+					{
+						for (int i = 0; i < actions.GPSNames.Count; i++)
+						{
+							var Color = new Color((Vector3)actions.GPSColors[i]);
+
+							if (actions.UseGPSObjective)
+							{
+								MyVisualScriptLogicProvider.AddGPSObjective(actions.GPSNames[i], actions.GPSDescriptions[i], actions.GPSVector3Ds[i], Color, 0, player.Player.IdentityId);
+							}
+							else
+							{
+								MyVisualScriptLogicProvider.AddGPS(actions.GPSNames[i], actions.GPSDescriptions[i], actions.GPSVector3Ds[i], Color, 0, player.Player.IdentityId);
+							}
+						}
+					}
+				}
+			}
+
+
+
+
+			if (actions.RemoveGPSFromPlayers)
+			{
+				foreach (var player in PlayerManager.Players)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId))
+					{
+						for (int i = 0; i < actions.GPSNames.Count; i++)
+						{
+							MyVisualScriptLogicProvider.RemoveGPS(actions.GPSNames[i], player.Player.IdentityId);
+						}
+					}
+				}
+
+			}
+
+
 
 			//ChatBroadcast
 			if (actions.UseChatBroadcast == true) {
 
 				foreach (var chatData in ChatData) {
-
 					EventBroadcastSystem.BroadcastRequest(chatData);
 
 				}
 
 			}
 
-			if (actions.AddGPSForAll)
-			{
-				for (int i = 0; i < actions.GPSNames.Count; i++)
-				{
-					var Color = new Color((Vector3)actions.GPSColors[i]);
-
-					if (actions.UseGPSObjective)
-					{
-						MyVisualScriptLogicProvider.AddGPSObjectiveForAll(actions.GPSNames[i], actions.GPSDescriptions[i], actions.GPSVector3Ds[i], Color);
-					}
-					else
-					{
-						MyVisualScriptLogicProvider.AddGPSForAll(actions.GPSNames[i], actions.GPSDescriptions[i], actions.GPSVector3Ds[i], Color);
-					}
-				}
-			}
-			if (actions.RemoveGPSForAll)
-			{
-				for (int i = 0; i < actions.GPSNames.Count; i++)
-				{
-					MyVisualScriptLogicProvider.RemoveGPSForAll(actions.GPSNames[i]);
-				}
-			}
 
 
-			//
 			if (actions.SpawnEncounter)
 			{
 				if(Spawner.Count == actions.SpawnFactionTags.Count && Spawner.Count == actions.SpawnVector3Ds.Count)

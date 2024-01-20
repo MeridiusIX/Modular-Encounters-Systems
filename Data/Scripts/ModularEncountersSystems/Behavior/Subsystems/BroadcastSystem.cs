@@ -192,6 +192,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			foreach (var player in playerList) {
 
+				var playerId = chat.SendToAllOnlinePlayers ? 0 : player.IdentityId;
+				var playerName = chat.SendToAllOnlinePlayers ? "Player" : player.DisplayName;
+
+
+				if (chat.SendToSpecificPlayers && chat.PlayerConditionIds != null)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(chat.PlayerConditionIds, playerId))
+						SpecificPlayerIds.Add(playerId);
+				}
+
+
+
 				if (chat.SendToCommandPlayer || chat.SendToSpecificPlayers) {
 
 					if (!SpecificPlayerIds.Contains(player.IdentityId))
@@ -199,8 +211,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				}
 
-				var playerId = chat.SendToAllOnlinePlayers ? 0 : player.IdentityId;
-				var playerName = chat.SendToAllOnlinePlayers ? "Player" : player.DisplayName;
 
 				if (!chat.SendToAllOnlinePlayers && (player.IsBot == true || player.Character == null)) {
 
@@ -249,7 +259,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						modifiedLabel = modifiedLabel.Replace("{GridName}", this.RemoteControl.SlimBlock.CubeGrid.CustomName);
 
 					modifiedMsg = modifiedMsg.Replace("{GPS}", GetGPSString(modifiedLabel));
-					SendGPSToPlayer(modifiedLabel, RemoteControl.SlimBlock.CubeGrid.WorldAABB.Center, player.IdentityId);
+
+					var GPSOffsetVector = Vector3D.Transform(chat.GPSOffset, RemoteControl.SlimBlock.CubeGrid.PositionComp.GetOrientation());
+
+		
+					SendGPSToPlayer(modifiedLabel, RemoteControl.SlimBlock.CubeGrid.WorldAABB.Center + GPSOffsetVector, player.IdentityId);
 
 				}
 

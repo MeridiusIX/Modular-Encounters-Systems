@@ -387,9 +387,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SavePlayerIdentity;
 		public bool RemovePlayerIdentity;
 
-		public bool SavePlayerIdentityToSandboxList;
-		public bool RemovePlayerIdentityFromSandboxList;
-		public string PlayerIdentitySandboxList;
+		public bool AddTagsToPlayers;
+		public bool AddTagsIncludeSavedPlayerIdentity;
+		public List<string> AddTagsPlayerConditionIds;
+		public List<string> AddTags;
+		public bool AddTagsOverridePositionInPlayerCondition;
+
+		public bool RemoveTagsFromPlayers;
+		public bool RemoveTagsIncludeSavedPlayerIdentity;
+		public List<string> RemoveTagsPlayerConditionIds;
+		public List<string> RemoveTags;
+		public bool RemoveTagsOverridePositioninPlayerCondition;
+
+
+
+
 
 		public bool ResetCooldownTimeOfEvents;
 		public List<string> ResetEventCooldownIds;
@@ -780,9 +792,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SavePlayerIdentity = false;
 			RemovePlayerIdentity = false;
 
-			SavePlayerIdentityToSandboxList = false;
-			RemovePlayerIdentityFromSandboxList = false;
-			PlayerIdentitySandboxList = "";
+			AddTagsToPlayers = false;
+			AddTagsIncludeSavedPlayerIdentity = false;
+			AddTagsPlayerConditionIds = new List<string>();
+			AddTags = new List<string>();
+			AddTagsOverridePositionInPlayerCondition = false;
+
+			RemoveTagsFromPlayers = false;
+			RemoveTagsIncludeSavedPlayerIdentity = false;
+			RemoveTagsPlayerConditionIds = new List<string>();
+			RemoveTags = new List<string>();
+			RemoveTagsOverridePositioninPlayerCondition = false;
+
+
+
 
 			ResetCooldownTimeOfEvents = false;
 			ResetEventCooldownIds = new List<string>();
@@ -1071,11 +1094,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"SavePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref SavePlayerIdentity) },
 				{"RemovePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentity) },
 
-				{"RemoveSafeZonesAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref RemoveSafeZonesAtPosition) },
+				{"AddTagsToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsToPlayers) },
+				{"AddTagsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsIncludeSavedPlayerIdentity) },
+				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
+				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
+				{"AddTagsOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsOverridePositionInPlayerCondition) },
 
-				{"SavePlayerIdentityToSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref SavePlayerIdentityToSandboxList) },
-				{"RemovePlayerIdentityFromSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentityFromSandboxList) },
-				{"PlayerIdentitySandboxList", (s, o) => TagParse.TagStringCheck(s, ref PlayerIdentitySandboxList) },
+
+				{"RemoveTagsFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsFromPlayers) },
+				{"RemoveTagsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsIncludeSavedPlayerIdentity) },
+				{"RemoveTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTagsPlayerConditionIds) },
+				{"RemoveTags", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTags) },
+				{"RemoveTagsOverridePositioninPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsOverridePositioninPlayerCondition) },
+
+
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
 				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },

@@ -80,12 +80,69 @@ namespace ModularEncountersSystems.Entities {
 					ProgressionManager.ProgressionContainers.Add(_progression);
 
 				}
+			}
+		}
+
+		public ProgressionDataContainer ProgressionData
+		{
+
+			get
+			{
+
+				if (_progressionData == null)
+				{
+
+					if (Player != null)
+					{
+
+						foreach (var progression in ProgressionDataManager.ProgressionDataContainersList)
+						{
+
+							if (Player.SteamUserId == progression.SteamId)
+							{
+								progression.IdentityId = Player.IdentityId;
+								_progressionData = progression;
+								return _progressionData;
+
+							}
+
+						}
+
+					}
+
+					_progressionData = new ProgressionDataContainer();
+					_progressionData.IdentityId = Player?.IdentityId ?? 0;
+					_progressionData.SteamId = Player?.SteamUserId ?? 0;
+					ProgressionDataManager.ProgressionDataContainersList.Add(_progressionData);
+
+				}
+
+				return _progressionData;
+
+			}
+
+			set
+			{
+
+				if (value != null)
+					_progressionData = value;
+				else if (_progressionData == null)
+				{
+					_progressionData = new ProgressionDataContainer();
+					_progressionData.IdentityId = Player?.IdentityId ?? 0;
+					_progressionData.SteamId = Player?.SteamUserId ?? 0;
+					ProgressionDataManager.ProgressionDataContainersList.Add(_progressionData);
+
+				}
 
 
 			}
 		}
 
+
 		internal ProgressionContainer _progression;
+
+		internal ProgressionDataContainer _progressionData;
 
 		public List<GridEntity> LinkedGrids;
 
@@ -120,6 +177,7 @@ namespace ModularEncountersSystems.Entities {
 			MyVisualScriptLogicProvider.PlayerLeftCockpit += PlayerCockpitAction;
 			MyVisualScriptLogicProvider.PlayerEnteredCockpit += PlayerCockpitAction;
 			MyVisualScriptLogicProvider.RemoteControlChanged += PlayerRemoteAction;
+			MyVisualScriptLogicProvider.RespawnShipSpawned += RespawnShipSpawned;
 
 			PlayerConnect(Player.IdentityId);
 
@@ -301,6 +359,15 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public void RespawnShipSpawned(long shipEntityId, long playerId, string RespawnShipPrefabName)
+        {
+			if (playerId != Player.IdentityId)
+				return;
+
+			ProgressionData.LastRespawnShipName = RespawnShipPrefabName;
+        }
+
+
 		public bool PlayerInPressurizedSeat() {
 
 			if (!IsParentEntitySeat)
@@ -443,6 +510,11 @@ namespace ModularEncountersSystems.Entities {
 			sb.Append("Online:                          ").Append(Online).AppendLine();
 			sb.Append("Closed:                          ").Append(IsClosed()).AppendLine();
 			sb.Append("Position:                        ").Append(GetPosition()).AppendLine();
+
+			sb.AppendLine();
+			sb.Append("LastRespawnPrefabName:           ").Append(ProgressionData.LastRespawnShipName).AppendLine();
+			sb.Append("Tags:                            ").Append(string.Join(",", ProgressionData.Tags)).AppendLine();
+			sb.AppendLine();
 
 			foreach (var watchedPlayer in PlayerSpawnWatcher.Players) {
 
@@ -846,7 +918,7 @@ namespace ModularEncountersSystems.Entities {
 			MyVisualScriptLogicProvider.PlayerLeftCockpit -= PlayerCockpitAction;
 			MyVisualScriptLogicProvider.PlayerEnteredCockpit -= PlayerCockpitAction;
 			MyVisualScriptLogicProvider.RemoteControlChanged -= PlayerRemoteAction;
-
+			MyVisualScriptLogicProvider.RespawnShipSpawned -= RespawnShipSpawned;
 		}
 
 	}

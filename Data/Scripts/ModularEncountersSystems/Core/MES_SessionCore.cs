@@ -35,8 +35,8 @@ namespace ModularEncountersSystems.Core {
 		public static bool SyncWarning = false;
 		public bool FinalSetup = false;
 
-		public static string ModVersion = "2.70.6";
-		public static int ModVersionValue = 200700006;
+		public static string ModVersion = "2.71.0";
+		public static int ModVersionValue = 200710000;
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -111,6 +111,7 @@ namespace ModularEncountersSystems.Core {
 			Settings.InitSettings("BeforeStart"); //Get Existing Settings From XML or Create New
 			BlockLogicManager.Setup();
 			ProgressionManager.Setup();
+			ProgressionDataManager.Setup();
 			ControlManager.Setup();
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();

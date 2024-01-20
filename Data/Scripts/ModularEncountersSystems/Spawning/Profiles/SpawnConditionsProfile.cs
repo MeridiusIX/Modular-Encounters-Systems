@@ -252,6 +252,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int MinimumReputation;
 		public int MaximumReputation;
 
+		public bool UsePlayerCondition;
+		public double PlayerConditionCheckRadius;
+		public List<string> PlayerConditionIds;
+
+
 		public bool UseSignalRequirement;
 		public double MinSignalRadius;
 		public double MaxSignalRadius;
@@ -332,6 +337,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public bool UseEventController;
 		public List<string> EventControllerId;
+
 
 		public bool CheckRequiredBlocks;
 		public List<string> RequiredBlockSubtypeIds;
@@ -586,6 +592,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			MinimumReputation = -1501;
 			MaximumReputation = 1501;
 
+			UsePlayerCondition = false;
+			PlayerConditionCheckRadius = 10000;
+			PlayerConditionIds = new List<string>();
+
 			UseSignalRequirement = false;
 			MinSignalRadius = -1;
 			MaxSignalRadius = -1;
@@ -828,7 +838,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"PlayerCountCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PlayerCountCheckRadius) },
 				{"MinimumPlayers", (s, o) => TagParse.TagIntCheck(s, ref MinimumPlayers) },
 				{"MaximumPlayers", (s, o) => TagParse.TagIntCheck(s, ref MaximumPlayers) },
-				{"UseThreatLevelCheck", (s, o) => TagParse.TagBoolCheck(s, ref UseThreatLevelCheck) },
+				{"UsePlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref UsePlayerCondition) },
+				{"PlayerConditionCheckRadius", (s, o) => TagParse.TagDoubleCheck(s, ref PlayerConditionCheckRadius) },
+				{"PlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerConditionIds) },
+				{ "UseThreatLevelCheck", (s, o) => TagParse.TagBoolCheck(s, ref UseThreatLevelCheck) },
 				{"ThreatLevelCheckRange", (s, o) => TagParse.TagDoubleCheck(s, ref ThreatLevelCheckRange) },
 				{"ThreatIncludeOtherNpcOwners", (s, o) => TagParse.TagBoolCheck(s, ref ThreatIncludeOtherNpcOwners) },
 				{"ThreatScoreMinimum", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreMinimum) },

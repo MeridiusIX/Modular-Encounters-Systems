@@ -44,24 +44,47 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<string> ToggleEventTags;
 		public List<bool> ToggleEventTagModes;
 
-
-
 		public bool ChangeZoneAtPosition;
 		public List<string> ZoneNames;
 		public List<Vector3D> ZoneCoords;
 		public List<bool> ZoneToggleActiveModes;
 
 
+		//Player Start
+		public bool AddTagstoPlayers;
+		public List<string> AddTagsPlayerConditionIds;
+		public List<string> AddTags;
 
-		//To do GPS for specific players only
-		public bool AddGPSForAll;
-		public bool RemoveGPSForAll;
+		public bool RemoveTagsFromPlayers;
+		public List<string> RemoveTagsPlayerConditionIds;
+		public List<string> RemoveTags;
+
+		public bool FadeOutPlayers;
+		public List<string> FadeOutPlayerConditionIds;
+
+		public bool FadeInPlayers;
+		public List<string> FadeInPlayerConditionIds;
+
+
+		public bool TeleportPlayers;
+		public List<string> TeleportPlayerConditionIds;
+		public Vector3D TeleportPlayerCoords;
+		public float TeleportRadius;
+
+
+		public bool AddGPSToPlayers;
+		public bool AddGPSToAll;
+		public bool RemoveGPSFromPlayers;
+		public List<string> AddGPSPlayerConditionIds;
+		public List<string> RemoveGPSPlayerConditionIds;
 
 		public bool UseGPSObjective;
 		public List<string> GPSNames;
 		public List<string> GPSDescriptions;
 		public List<Vector3D> GPSVector3Ds;
 		public List<Vector3D> GPSColors;
+
+		//PlayersEnd
 
 
 
@@ -91,10 +114,6 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 
-
-		
-
-
 		public string DebugHudMessage;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
@@ -121,8 +140,11 @@ namespace ModularEncountersSystems.Events.Action {
 			ZoneCoords = new List<Vector3D>();
 			ZoneToggleActiveModes = new List<bool>();
 
-			AddGPSForAll = false;
-			RemoveGPSForAll = false;
+			AddGPSToPlayers = false;
+			AddGPSToAll = false;
+			RemoveGPSFromPlayers = false;
+
+
 			UseGPSObjective = false;
 			GPSNames = new List<string>();
 			GPSDescriptions = new List<string>();
@@ -140,7 +162,26 @@ namespace ModularEncountersSystems.Events.Action {
 			ResetEventCooldownIds = new List<string>();
 			ResetEventCooldownTags = new List<string>();
 
+			AddTagstoPlayers = false;
+			AddTagsPlayerConditionIds = new List<string>();
+			AddTags = new List<string>();
 
+			RemoveTagsFromPlayers = false;
+			RemoveTagsPlayerConditionIds = new List<string>();
+			RemoveTags = new List<string>();
+
+			FadeInPlayers = false;
+			FadeInPlayerConditionIds = new List<string>();
+
+			FadeOutPlayers = false;
+			FadeOutPlayerConditionIds = new List<string>();
+
+
+
+			TeleportPlayers = false;
+			TeleportPlayerConditionIds = new List<string>();
+			TeleportPlayerCoords = new Vector3D();
+			TeleportRadius = 0;
 
 			SpawnEncounter = true;
 			//SpawnData = new List<SpawnProfile>();
@@ -161,18 +202,7 @@ namespace ModularEncountersSystems.Events.Action {
 			CustomActionArgumentsDouble = new List<double>();
 			CustomActionArgumentsVector3D = new List<Vector3D>();
 
-
-
-
-
-
-
-
-
-
-
-
-		DebugHudMessage = "";
+			DebugHudMessage = "";
 
 			SetEventControllers = false;
 			EventControllerNames = new List<string>();
@@ -193,9 +223,22 @@ namespace ModularEncountersSystems.Events.Action {
 				{"SetCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersAmount) },
 
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
-
 				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
+
+				{"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
+				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
+				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
+
+				{"RemoveTagsFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsFromPlayers) },
+				{"RemoveTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTagsPlayerConditionIds) },
+				{"RemoveTags", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTags) },
+
+				{"FadeInPlayers", (s, o) => TagParse.TagBoolCheck(s, ref FadeInPlayers) },
+				{"FadeInPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref FadeInPlayerConditionIds) },
+
+				{"FadeOutPlayers", (s, o) => TagParse.TagBoolCheck(s, ref FadeOutPlayers) },
+				{"FadeOutPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref FadeOutPlayerConditionIds) },
 
 
 				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
@@ -204,9 +247,8 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ToggleEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventTags) },
 				{"ToggleEventTagModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventTagModes) },
 
-
-				{"AddGPSForAll", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSForAll) },
-				{"RemoveGPSForAll", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSForAll) },
+				{"AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
+				{"RemoveGPSFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSFromPlayers) },
 				{"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
 				{"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
 				{"GPSDescriptions", (s, o) => TagParse.TagStringListCheck(s, ref GPSDescriptions) },
@@ -221,6 +263,14 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ZoneNames", (s, o) => TagParse.TagStringListCheck(s, ref ZoneNames) },
 				{"ZoneCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref ZoneCoords) },
 				{"ZoneToggleActiveModes", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneToggleActiveModes) },
+
+				{"TeleportPlayers", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayers) },
+				{"TeleportPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref TeleportPlayerConditionIds) },
+				{"TeleportPlayerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TeleportPlayerCoords) },
+				{"TeleportRadius", (s, o) => TagParse.TagFloatCheck(s, ref TeleportRadius) },
+
+
+
 
 				{"ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
 				{"CustomActionName", (s, o) => TagParse.TagStringCheck(s, ref CustomActionName) },

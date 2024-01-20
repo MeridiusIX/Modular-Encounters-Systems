@@ -45,7 +45,9 @@ namespace ModularEncountersSystems.Events.Condition
         public Vector3D PlayerNearVector3;
         public int PlayerNearDistanceFromVector3;
         public int PlayerNearMinDistanceFromVector3;
-        public List<string> PlayerFilterIds;
+
+        public bool CheckPlayerCondition;
+        public List<string> PlayerConditionIds;
 
         public bool CheckThreatScore;
         public int ThreatScoreAmount;
@@ -55,6 +57,7 @@ namespace ModularEncountersSystems.Events.Condition
         public ThreatScoreTypeEnum ThreatScoreType;
         public GridConfigurationEnum ThreatScoreGridConfiguration;
 
+        //Not in use
         public bool CheckMainEventDaysPassed;
         public int DaysPassed;
 
@@ -85,7 +88,10 @@ namespace ModularEncountersSystems.Events.Condition
             PlayerNearDistanceFromVector3 = 1000;
             PlayerNearMinDistanceFromVector3 = 0;
             PlayerNearVector3 = new Vector3D();
-            PlayerFilterIds = new List<string>();
+
+
+            CheckPlayerCondition = false;
+            PlayerConditionIds = new List<string>();
 
             CheckThreatScore = false;
             ThreatScoreAmount = 1000;
@@ -116,10 +122,8 @@ namespace ModularEncountersSystems.Events.Condition
                 {"PlayerNearCoords", (s, o) => TagParse.TagVector3DCheck(s, ref PlayerNearVector3) },
                 {"PlayerNearDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearDistanceFromVector3) },
                 {"PlayerNearMinDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearMinDistanceFromVector3) },
-                
-                {"PlayerFilterIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerFilterIds) },
-
-
+                {"CheckPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerCondition) },
+                {"PlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerConditionIds) },
                 {"CheckThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScore) },
                 {"ThreatScoreAmount", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreAmount) },
                 {"ThreatScoreDistance", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreDistance) },
@@ -377,6 +381,15 @@ namespace ModularEncountersSystems.Events.Condition
                 ListOfPlayersinRange = TargetHelper.GetPlayersWithinRange(Profile.PlayerNearVector3, Profile.PlayerNearMinDistanceFromVector3,Profile.PlayerNearDistanceFromVector3);
                 //int amountofPlayers = ListOfPlayersinRange.Count;
 
+
+
+                if (ListOfPlayersinRange.Count >0)
+                {
+                    satisfiedConditions++;
+                }
+
+                /*
+
                 foreach (IMyPlayer Player in ListOfPlayersinRange)
                 {
                     ListOfPlayerIds.Add(Player.IdentityId);
@@ -384,17 +397,35 @@ namespace ModularEncountersSystems.Events.Condition
 
                 foreach (var id in ListOfPlayerIds)
                 {
-                    if(Profile.PlayerFilterIds.Count < 1)
+                    if(Profile.PlayerConditionIds.Count < 1)
                     {
                         satisfiedConditions++;
                     }
                     else
                     {
-                        if (PlayerFilter.ArePlayerFiltersMet(Profile.PlayerFilterIds, id))
+                        if (PlayerCondition.ArePlayerConditionsMet(Profile.PlayerConditionIds, id))
                             satisfiedConditions++;
                     }
 
                 }
+                */
+            }
+
+            if (Profile.CheckPlayerCondition)
+            {
+                usedConditions++;
+
+
+                var playerList = new List<IMyPlayer>();
+                MyAPIGateway.Players.GetPlayers(playerList);
+
+                foreach (IMyPlayer Player in playerList)
+                {
+                    if (PlayerCondition.ArePlayerConditionsMet(Profile.PlayerConditionIds, Player.IdentityId))
+                        satisfiedConditions++;
+
+                }
+
             }
 
 

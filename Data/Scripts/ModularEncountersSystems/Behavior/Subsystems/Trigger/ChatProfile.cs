@@ -4,6 +4,7 @@ using ProtoBuf;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
+using VRageMath;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -91,6 +92,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(27)]
 		public bool SendToSpecificPlayers;
 
+		[ProtoMember(28)]
+		public List<string> PlayerConditionIds;
+
+		[ProtoMember(29)]
+		public Vector3D GPSOffset;
+
 		[ProtoIgnore]
 		public Random Rnd;
 
@@ -122,6 +129,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			AllowDuplicatedMessages = false;
 			SendToCommandPlayer = false;
 			SendToSpecificPlayers = false;
+			PlayerConditionIds = new List<string>();
+			GPSOffset = new Vector3D();
 
 			SecondsUntilChat = 0;
 			ChatSentCount = 0;
@@ -356,6 +365,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						TagParse.TagBoolCheck(tag, ref SendToSpecificPlayers);
 
 					}
+
+					//PlayerFilterIds
+					if (tag.Contains("[PlayerConditionIds:") == true)
+					{
+
+						TagParse.TagStringListCheck(tag, false, ref PlayerConditionIds);
+
+					}
+
+					//ChatAvatar
+					if (tag.Contains("[GPSOffset:") == true)
+					{
+
+						TagParse.TagVector3DCheck(tag, ref GPSOffset);
+
+					}
+
+
+
+
+					
 
 				}
 

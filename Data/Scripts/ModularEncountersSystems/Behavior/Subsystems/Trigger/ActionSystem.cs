@@ -1555,48 +1555,87 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			
 			}
 
-			//WIP
-			if (actions.SavePlayerIdentityToSandboxList)
+
+
+
+			if (actions.AddTagsToPlayers)
 			{
-				var playerid = command.PlayerIdentity;
-
-				List<long> PlayerIdentitySandboxList;
-
-				//Get variable
-				MyAPIGateway.Utilities.GetVariable(actions.PlayerIdentitySandboxList, out PlayerIdentitySandboxList);
-
-				if(PlayerIdentitySandboxList == null)
-					PlayerIdentitySandboxList = new List<long>();
-
-				if (!PlayerIdentitySandboxList.Contains(playerid))
+				bool SavedPlayerIdentityAlreadyIncluded = false;
+				foreach (var player in PlayerManager.Players)
 				{
-					PlayerIdentitySandboxList.Add(playerid);
-				}
-
-				MyAPIGateway.Utilities.SetVariable(actions.PlayerIdentitySandboxList, PlayerIdentitySandboxList);
-			}
-
-			if (actions.RemovePlayerIdentityFromSandboxList)
-			{
-				var playerid = command.PlayerIdentity;
-
-				List<long> PlayerIdentitySandboxList = new List<long>();
-
-				//Get variable
-				MyAPIGateway.Utilities.GetVariable<List<long>>(actions.PlayerIdentitySandboxList, out PlayerIdentitySandboxList);
-
-				if (PlayerIdentitySandboxList != null)
-				{
-					if (PlayerIdentitySandboxList.Contains(playerid))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddTagsPlayerConditionIds, player.Player.IdentityId, actions.AddTagsOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
 					{
-						PlayerIdentitySandboxList.Remove(playerid);
+						if (command.PlayerIdentity != 0 && command.PlayerIdentity == player.Player.IdentityId)
+							SavedPlayerIdentityAlreadyIncluded = true;
+
+                        foreach (var tag in actions.AddTags)
+                        {
+							if (player.ProgressionData.Tags.Contains(tag))
+								continue;
+							player.ProgressionData.Tags.Add(tag);
+						}
+						
 					}
 
-					MyAPIGateway.Utilities.SetVariable<List<long>>(actions.PlayerIdentitySandboxList, PlayerIdentitySandboxList);
 				}
 
+                if (actions.AddTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded)
+                {
+					var playerid = command.PlayerIdentity;
+					var player = PlayerManager.GetPlayerWithIdentityId(playerid);
 
+					if(player != null)
+                    {
+						foreach (var tag in actions.AddTags)
+						{
+							if (player.ProgressionData.Tags.Contains(tag))
+								continue;
+							player.ProgressionData.Tags.Add(tag);
+						}
+					}
+				}
 			}
+
+			if (actions.RemoveTagsFromPlayers)
+			{
+				bool SavedPlayerIdentityAlreadyIncluded = false;
+				foreach (var player in PlayerManager.Players)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(actions.RemoveTagsPlayerConditionIds, player.Player.IdentityId, actions.RemoveTagsOverridePositioninPlayerCondition, _behavior.RemoteControl.GetPosition()))
+					{
+						if (command.PlayerIdentity != 0 && command.PlayerIdentity == player.Player.IdentityId)
+							SavedPlayerIdentityAlreadyIncluded = true;
+
+						foreach (var tag in actions.RemoveTags)
+						{
+							if (!player.ProgressionData.Tags.Contains(tag))
+								continue;
+
+							player.ProgressionData.Tags.Remove(tag);
+						}
+
+					}
+
+				}
+
+				if (actions.RemoveTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded)
+				{
+					var playerid = command.PlayerIdentity;
+					var player = PlayerManager.GetPlayerWithIdentityId(playerid);
+
+					if (player != null)
+                    {
+						foreach (var tag in actions.RemoveTags)
+						{
+							if (!player.ProgressionData.Tags.Contains(tag))
+								continue;
+
+							player.ProgressionData.Tags.Remove(tag);
+						}
+					}
+				}
+			}
+
 
 			if (actions.ResetCooldownTimeOfEvents)
 			{

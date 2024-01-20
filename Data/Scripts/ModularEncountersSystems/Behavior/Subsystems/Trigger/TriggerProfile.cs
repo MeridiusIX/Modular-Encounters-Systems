@@ -196,9 +196,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(58)]
 		public float PercentageOfHealthRemaining;
 
+
+		//PlayerCondition
 		[ProtoMember(59)]
 		public List<string> PlayerFilterProfileIds;
 
+		//PlayerCondition
 		[ProtoMember(60)]
 		public bool UsePlayerFilterProfile;
 
@@ -899,15 +902,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
+					//PlayerFilterProfile DO NOT DOC
+					if (tag.Contains("[PlayerConditionProfileIds:") == true)
+					{
+						TagParse.TagStringListCheck(tag, ref PlayerFilterProfileIds);
+					}
+
+					//UsePlayerFilterProfile DO NOT DOC
+					if (tag.Contains("[UsePlayerConditionProfile:") == true)
+					{
+						TagParse.TagBoolCheck(tag, ref UsePlayerFilterProfile);
+
+					}
+
 
 					//PlayerFilterProfile
-					if (tag.Contains("[PlayerFilterProfileIds:") == true)
+					if (tag.Contains("[PlayerConditionIds:") == true)
 					{
 						TagParse.TagStringListCheck(tag, ref PlayerFilterProfileIds);
 					}
 
 					//UsePlayerFilterProfile
-					if (tag.Contains("[UsePlayerFilterProfile:") == true)
+					if (tag.Contains("[UsePlayerCondition:") == true)
 					{
 						TagParse.TagBoolCheck(tag, ref UsePlayerFilterProfile);
 

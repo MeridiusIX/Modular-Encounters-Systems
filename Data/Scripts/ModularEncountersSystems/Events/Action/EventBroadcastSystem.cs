@@ -119,6 +119,10 @@ namespace ModularEncountersSystems.Events.Action {
 
 			}
 
+
+
+
+
 			if (specificPlayerIds != null) {
 
 				foreach (var id in specificPlayerIds)
@@ -128,16 +132,30 @@ namespace ModularEncountersSystems.Events.Action {
 
 			foreach (var player in playerList) {
 
-				if (chat.SendToCommandPlayer || chat.SendToSpecificPlayers) {
 
-					if (!SpecificPlayerIds.Contains(player.IdentityId))
-						continue;
-
-				}
 
 				var playerId = player.IdentityId;
 				var playerName = player.DisplayName;
 				var modifiedMsg = message;
+
+				if (modifiedMsg.Contains("{PlayerName}") == true)
+				{
+
+					modifiedMsg = modifiedMsg.Replace("{PlayerName}", playerName);
+
+				}
+
+				if (chat.SendToSpecificPlayers && chat.PlayerConditionIds != null)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(chat.PlayerConditionIds, playerId))
+						SpecificPlayerIds.Add(playerId);
+				}
+
+				if (chat.SendToCommandPlayer || chat.SendToSpecificPlayers) {
+
+					if (!SpecificPlayerIds.Contains(player.IdentityId))
+						continue;
+				}
 
 				/*
 				if (modifiedMsg.Contains("{GPS}") == true) {

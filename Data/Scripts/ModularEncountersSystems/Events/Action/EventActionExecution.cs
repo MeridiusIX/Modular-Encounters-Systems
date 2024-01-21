@@ -21,6 +21,29 @@ namespace ModularEncountersSystems.Events.Action {
 			var actions = ActionReference;
 			var EventBroadcastSystem = new EventBroadcastSystem();
 
+
+
+			if (actions.Chance < 100)
+			{
+
+				var roll = MathTools.RandomBetween(0, 101);
+
+				if (roll > actions.Chance)
+				{
+
+					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Did Not Pass Chance Check", BehaviorDebugEnum.Action);
+					return;
+
+				}
+
+
+			}
+
+
+
+
+
+
 			//DebugHudMessage
 			if (!string.IsNullOrWhiteSpace(actions.DebugHudMessage))
 				MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);

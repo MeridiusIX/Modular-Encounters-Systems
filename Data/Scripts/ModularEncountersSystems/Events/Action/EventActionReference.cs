@@ -20,6 +20,8 @@ namespace ModularEncountersSystems.Events.Action {
 	public class EventActionReferenceProfile {
 
 		public string ProfileSubtypeId;
+		public int Chance;
+
 		public bool ChangeBooleans;
 		public List<string> SetBooleansTrue;
 		public List<string> SetBooleansFalse;
@@ -121,6 +123,7 @@ namespace ModularEncountersSystems.Events.Action {
 		public EventActionReferenceProfile() {
 
 			ProfileSubtypeId = "";
+			Chance = 100;
 			ChangeBooleans = false;
 			SetBooleansTrue = new List<string>();
 			SetBooleansFalse = new List<string>();
@@ -212,6 +215,7 @@ namespace ModularEncountersSystems.Events.Action {
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"ChangeBooleans", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBooleans) },
+				{"Chance", (s, o) => TagParse.TagIntCheck(s, ref Chance) },
 				{"SetBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansTrue) },
 				{"SetBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansFalse) },
 				{"ChangeCounters", (s, o) => TagParse.TagBoolCheck(s, ref ChangeCounters) },

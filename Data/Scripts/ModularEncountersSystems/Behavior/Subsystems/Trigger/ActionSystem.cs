@@ -1417,10 +1417,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						var thisEventId = actions.ActivateEventIds[j];
 
 						var SpawnGroupName = _behavior?.CurrentGrid?.Npc.SpawnGroupName;
+						var Faction = _behavior?.CurrentGrid?.Npc.InitialFaction;
 
 						if (thisEventId.Contains("{SpawnGroupName}") && SpawnGroupName != null)
 						{
 							thisEventId = thisEventId.Replace("{SpawnGroupName}", SpawnGroupName);
+						}
+
+
+						if (thisEventId.Contains("{Faction}") && Faction != null)
+						{
+							thisEventId = thisEventId.Replace("{Faction}", Faction);
 						}
 
 
@@ -1563,13 +1570,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				bool SavedPlayerIdentityAlreadyIncluded = false;
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.AddTagsPlayerConditionIds, player.Player.IdentityId, actions.AddTagsOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
+					var AddTagsPlayerConditionIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.AddTagsPlayerConditionIds);
+
+					if (PlayerCondition.ArePlayerConditionsMet(AddTagsPlayerConditionIds, player.Player.IdentityId, actions.AddTagsOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
 					{
-						if (command.PlayerIdentity != 0 && command.PlayerIdentity == player.Player.IdentityId)
+						if ((command?.PlayerIdentity ?? 0)  != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
 							SavedPlayerIdentityAlreadyIncluded = true;
 
-                        foreach (var tag in actions.AddTags)
+                        foreach (var addtag in actions.AddTags)
                         {
+							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc?? null, addtag);
+
 							if (player.ProgressionData.Tags.Contains(tag))
 								continue;
 							player.ProgressionData.Tags.Add(tag);
@@ -1579,15 +1590,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-                if (actions.AddTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded)
+				if (actions.AddTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded && command != null)
                 {
-					var playerid = command.PlayerIdentity;
+					var playerid = command?.PlayerIdentity ?? 0;
 					var player = PlayerManager.GetPlayerWithIdentityId(playerid);
 
 					if(player != null)
                     {
-						foreach (var tag in actions.AddTags)
+						foreach (var addtag in actions.AddTags)
 						{
+							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, addtag);
+
 							if (player.ProgressionData.Tags.Contains(tag))
 								continue;
 							player.ProgressionData.Tags.Add(tag);
@@ -1601,13 +1614,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				bool SavedPlayerIdentityAlreadyIncluded = false;
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.RemoveTagsPlayerConditionIds, player.Player.IdentityId, actions.RemoveTagsOverridePositioninPlayerCondition, _behavior.RemoteControl.GetPosition()))
+					var RemoveTagsPlayerConditionIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.RemoveTagsPlayerConditionIds);
+
+					if (PlayerCondition.ArePlayerConditionsMet(RemoveTagsPlayerConditionIds, player.Player.IdentityId, actions.RemoveTagsOverridePositioninPlayerCondition, _behavior.RemoteControl.GetPosition()))
 					{
-						if (command.PlayerIdentity != 0 && command.PlayerIdentity == player.Player.IdentityId)
+						if ((command?.PlayerIdentity ?? 0) != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
 							SavedPlayerIdentityAlreadyIncluded = true;
 
-						foreach (var tag in actions.RemoveTags)
+						foreach (var removetag in actions.RemoveTags)
 						{
+							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, removetag);
+
+
 							if (!player.ProgressionData.Tags.Contains(tag))
 								continue;
 
@@ -1618,15 +1636,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				if (actions.RemoveTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded)
+				if (actions.RemoveTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded && command != null)
 				{
 					var playerid = command.PlayerIdentity;
 					var player = PlayerManager.GetPlayerWithIdentityId(playerid);
 
 					if (player != null)
                     {
-						foreach (var tag in actions.RemoveTags)
+						foreach (var removetag in actions.RemoveTags)
 						{
+							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, removetag);
+
 							if (!player.ProgressionData.Tags.Contains(tag))
 								continue;
 

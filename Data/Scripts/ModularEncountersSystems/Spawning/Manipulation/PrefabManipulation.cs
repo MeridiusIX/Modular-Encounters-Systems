@@ -674,7 +674,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				if (prefab.Prefab.CubeGrids.Length > 0) {
 
-					prefab.Prefab.CubeGrids[0].DisplayName = newRandomName;
+					prefab.Prefab.CubeGrids[0].DisplayName = RandomNameGenerator.ProcessGridname(newRandomName, prefab.Prefab.CubeGrids[0].DisplayName);
 					MyCubeBlockDefinition antennaDef = null;
 
 					foreach (var grid in prefab.Prefab.CubeGrids) {

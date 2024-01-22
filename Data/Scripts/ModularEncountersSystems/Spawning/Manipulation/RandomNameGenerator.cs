@@ -493,8 +493,19 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		};
 
+		public static string ProcessGridname(string pattern, string gridName){
+			string newPattern = pattern;
+			string keyword = "DefaultGridName";
+			
+			// Prevent recursion
+			if (gridName.Contains(keyword)){
+				return newPattern;
+			}
 
+			newPattern = ProcessString(newPattern, keyword, (new string [] {gridName}) );
 
+			return newPattern;
+		}
 		public static string CreateRandomNameFromPattern(string pattern) {
 
 			string newPattern = pattern;

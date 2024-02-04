@@ -54,6 +54,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeReputationWithPlayers;
 		public double ReputationChangeRadius;
 		public List<int> ReputationChangeAmount;
+		public List<string> ReputationPlayerConditionIds;
 
 		public bool ActivateAssertiveAntennas;
 		public bool ChangeAntennaOwnership;
@@ -464,6 +465,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ReputationChangeFactions = new List<string>();
 			ReputationChangeAmount = new List<int>();
 			ReputationChangesForAllRadiusPlayerFactionMembers = false;
+			ReputationPlayerConditionIds = new List<string>();
+
 
 			ChangeAttackerReputation = false;
 			ChangeAttackerReputationFaction = new List<string>();
@@ -856,6 +859,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ChangeReputationWithPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationWithPlayers) },
 				{"ReputationChangeRadius", (s, o) => TagParse.TagDoubleCheck(s, ref ReputationChangeRadius) },
 				{"ReputationChangeFactions", (s, o) => TagParse.TagStringListCheck(s, ref ReputationChangeFactions) },
+				{"ReputationPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ReputationPlayerConditionIds) },
 				{"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
 				{"ActivateAssertiveAntennas", (s, o) => TagParse.TagBoolCheck(s, ref ActivateAssertiveAntennas) },
 				{"ChangeAntennaOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaOwnership) },

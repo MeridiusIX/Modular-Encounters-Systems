@@ -532,7 +532,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
-			if (receivedCommand.SenderEntity?.PositionComp == null || RemoteControl?.SlimBlock?.CubeGrid == null) {
+			if (!receivedCommand.FromEvent && (receivedCommand.SenderEntity?.PositionComp == null || RemoteControl?.SlimBlock?.CubeGrid == null)) {
 
 				BehaviorLogger.Write("Sender Remote CubeGrid Null or Receiver Remote CubeGrid Null", BehaviorDebugEnum.Command);
 				return;
@@ -546,7 +546,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			var dist = Vector3D.Distance(RemoteControl.GetPosition(), receivedCommand.SenderEntity.GetPosition());
+			var dist = Vector3D.Distance(RemoteControl.GetPosition(), receivedCommand.SenderEntity?.GetPosition() ?? receivedCommand.Position);
 
 			if (!receivedCommand.UseTriggerTargetDistance) {
 

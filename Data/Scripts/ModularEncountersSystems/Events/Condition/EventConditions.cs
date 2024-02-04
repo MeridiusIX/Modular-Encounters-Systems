@@ -419,10 +419,14 @@ namespace ModularEncountersSystems.Events.Condition
                 var playerList = new List<IMyPlayer>();
                 MyAPIGateway.Players.GetPlayers(playerList);
 
-                foreach (IMyPlayer Player in playerList)
+                foreach (var player in PlayerManager.Players)
                 {
-                    if (PlayerCondition.ArePlayerConditionsMet(Profile.PlayerConditionIds, Player.IdentityId))
+                    if (PlayerCondition.ArePlayerConditionsMet(Profile.PlayerConditionIds, player.Player.IdentityId))
+                    {
                         satisfiedConditions++;
+                        break;
+                    }
+
 
                 }
 

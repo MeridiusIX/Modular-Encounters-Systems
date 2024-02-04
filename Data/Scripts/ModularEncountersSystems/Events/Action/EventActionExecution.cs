@@ -105,7 +105,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 			if (actions.ToggleEvents)
 			{
-				EventActionProfile.ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes);
+				ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes);
 			}
 
             if (actions.AddTagstoPlayers)
@@ -142,6 +142,34 @@ namespace ModularEncountersSystems.Events.Action {
 				}
 			}
 
+			//BroadcastCommandProfiles
+			if (actions.BroadcastCommandProfiles)
+			{
+
+				foreach (var commandId in actions.CommandProfileIds)
+				{
+
+					CommandProfile commandProfile = null;
+
+					if (!ProfileManager.CommandProfiles.TryGetValue(commandId, out commandProfile))
+					{
+
+						BehaviorLogger.Write(commandId + ": Command Profile Not Found", BehaviorDebugEnum.Action);
+						continue;
+
+					}
+
+					var newCommand = new Command();
+					newCommand.PrepareEventCommand(commandProfile, actions.CommandProfileOriginCoords);
+					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Sending Command: " + newCommand.CommandCode, BehaviorDebugEnum.Action);
+
+					CommandHelper.SendCommand(newCommand);
+
+				}
+
+			}
+
+
 
 			if (actions.TeleportPlayers)
 			{
@@ -177,6 +205,23 @@ namespace ModularEncountersSystems.Events.Action {
 						MyVisualScriptLogicProvider.ScreenColorFadingStartSwitch(8, player.Player.IdentityId);
 					}
 				}
+			}
+
+            if (actions.ChangeReputationWithPlayers)
+            {
+				List<long> players = new List<long>();
+
+
+				foreach (var player in PlayerManager.Players)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(actions.ReputationPlayerConditionIds, player.Player.IdentityId))
+					{
+						players.Add(player.Player.IdentityId);
+					}
+				}
+
+
+				FactionHelper.ChangePlayerReputationWithFactions(null,actions.ReputationChangeAmount, players, actions.ReputationChangeFactions, actions.ReputationChangesForAllRadiusPlayerFactionMembers, actions.ReputationMinCap, actions.ReputationMaxCap);
 			}
 
 			if (actions.AddGPSToPlayers)
@@ -481,7 +526,6 @@ namespace ModularEncountersSystems.Events.Action {
 					}
 				}
 			}
-
 
 			for (int i = 0; i < ToggleEventTags.Count; i++)
 			{

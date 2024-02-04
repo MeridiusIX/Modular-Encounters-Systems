@@ -73,7 +73,6 @@ namespace ModularEncountersSystems.Events.Action {
 		public Vector3D TeleportPlayerCoords;
 		public float TeleportRadius;
 
-
 		public bool AddGPSToPlayers;
 		public bool AddGPSToAll;
 		public bool RemoveGPSFromPlayers;
@@ -86,9 +85,18 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<Vector3D> GPSVector3Ds;
 		public List<Vector3D> GPSColors;
 
+		public bool ChangeReputationWithPlayers;
+		public List<string> ReputationPlayerConditionIds;
+		public List<int> ReputationChangeAmount;
+		public List<string> ReputationChangeFactions;
+		public bool ReputationChangesForAllRadiusPlayerFactionMembers;
+		public int ReputationMinCap;
+		public int ReputationMaxCap;
 		//PlayersEnd
 
-
+		public bool BroadcastCommandProfiles;
+		public List<string> CommandProfileIds;
+		public Vector3D CommandProfileOriginCoords;
 
 		public bool SpawnEncounter;
 		//public List<SpawnProfile> SpawnData;
@@ -147,6 +155,9 @@ namespace ModularEncountersSystems.Events.Action {
 			AddGPSToAll = false;
 			RemoveGPSFromPlayers = false;
 
+			BroadcastCommandProfiles = false;
+			CommandProfileIds = new List<string>();
+			CommandProfileOriginCoords = new Vector3D();
 
 			UseGPSObjective = false;
 			GPSNames = new List<string>();
@@ -185,6 +196,17 @@ namespace ModularEncountersSystems.Events.Action {
 			TeleportPlayerConditionIds = new List<string>();
 			TeleportPlayerCoords = new Vector3D();
 			TeleportRadius = 0;
+
+			ChangeReputationWithPlayers = false;
+			ReputationPlayerConditionIds = new List<string>();
+			ReputationChangeFactions = new List<string>();
+			ReputationChangeAmount = new List<int>();
+			ReputationChangesForAllRadiusPlayerFactionMembers = false;
+			ReputationMinCap = -1500;
+			ReputationMaxCap = 1500;
+
+
+
 
 			SpawnEncounter = true;
 			//SpawnData = new List<SpawnProfile>();
@@ -244,7 +266,13 @@ namespace ModularEncountersSystems.Events.Action {
 				{"FadeOutPlayers", (s, o) => TagParse.TagBoolCheck(s, ref FadeOutPlayers) },
 				{"FadeOutPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref FadeOutPlayerConditionIds) },
 
+				{"BroadcastCommandProfiles", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCommandProfiles) },
+				{"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
+				{"CommandProfileOriginCoords", (s, o) => TagParse.TagVector3DCheck(s, ref CommandProfileOriginCoords) },
 
+
+
+				
 				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
 				{"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
 				{"ToggleEventIdModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventIdModes) },
@@ -273,12 +301,17 @@ namespace ModularEncountersSystems.Events.Action {
 				{"TeleportPlayerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TeleportPlayerCoords) },
 				{"TeleportRadius", (s, o) => TagParse.TagFloatCheck(s, ref TeleportRadius) },
 
-
-
+				{"ChangeReputationWithPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationWithPlayers) },
+				{"ReputationPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ReputationPlayerConditionIds) },
+				{"ReputationChangeFactions", (s, o) => TagParse.TagStringListCheck(s, ref ReputationChangeFactions) },
+				{"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
+				{"ReputationChangesForAllRadiusPlayerFactionMembers", (s, o) => TagParse.TagBoolCheck(s, ref ReputationChangesForAllRadiusPlayerFactionMembers) },
+				{"ReputationMinCap", (s, o) => TagParse.TagIntCheck(s, ref ReputationMinCap) },
+				{"ReputationMaxCap", (s, o) => TagParse.TagIntCheck(s, ref ReputationMaxCap) },
 
 				{"ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
 				{"CustomActionName", (s, o) => TagParse.TagStringCheck(s, ref CustomActionName) },
-				{"CustomActionArgumentsString", (s, o) => TagParse.TagStringListCheck(s, ref CustomActionArgumentsString) },
+				{"CustomActionArgumentsString", (s, o) => TagParse.TagStringListCheck(s,false ,ref CustomActionArgumentsString) },
 				{"CustomActionArgumentsBool", (s, o) => TagParse.TagBoolListCheck(s, ref CustomActionArgumentsBool) },
 				{"CustomActionArgumentsInt", (s, o) => TagParse.TagIntListCheck(s, ref CustomActionArgumentsInt) },
 				{"CustomActionArgumentsFloat", (s, o) => TagParse.TagFloatCheck(s, ref CustomActionArgumentsFloat) },

@@ -147,6 +147,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
             List<PlayerCondition> Profiles = new List<PlayerCondition>();
 
+
+            if (ProfilesIds == null)
+                return false;
+
+
             foreach (var Name in ProfilesIds)
             {
                 PlayerCondition PlayerCondition = null;
@@ -158,12 +163,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
             }
 
-
-
             int usedProfileConditions = 0;
             int satisfieddProfileConditions = 0;
-
-
 
             if (Profiles.Count <=0)
                 return false;

@@ -650,7 +650,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.ChangeReputationWithPlayers == true) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Reputation Change With Players In Radius", BehaviorDebugEnum.Action);
-				FactionHelper.ChangeReputationWithPlayersInRadius(RemoteControl, actions.ReputationChangeRadius, actions.ReputationChangeAmount, actions.ReputationChangeFactions, actions.ReputationChangesForAllRadiusPlayerFactionMembers, actions.ReputationMinCap, actions.ReputationMaxCap);
+				FactionHelper.ChangeReputationWithPlayersInRadius(RemoteControl, actions.ReputationChangeRadius,actions.ReputationChangeAmount, actions.ReputationChangeFactions, actions.ReputationChangesForAllRadiusPlayerFactionMembers, actions.ReputationMinCap, actions.ReputationMaxCap, actions.ReputationPlayerConditionIds);
 
 			}
 

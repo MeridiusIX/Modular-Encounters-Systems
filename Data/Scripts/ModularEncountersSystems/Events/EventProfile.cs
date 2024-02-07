@@ -25,6 +25,8 @@ namespace ModularEncountersSystems.Events
         public int MinCooldownMs;
         public int MaxCooldownMs;
 
+        public List<string> PersistantConditionIds;
+
         public List<string> ConditionIds;
         public bool UseAnyPassingCondition;
 
@@ -33,6 +35,7 @@ namespace ModularEncountersSystems.Events
         public ActionExecutionEnum ActionExecution;
         public int TimeUntilNextActionMs;
 
+        public bool OnFailResetCooldown;
         public List<string> Tags;
 
         public Dictionary<string, Action<string, object>> EditorReference;
@@ -54,6 +57,8 @@ namespace ModularEncountersSystems.Events
 
             ActionIds = new List<string>();
 
+            OnFailResetCooldown = false;
+            PersistantConditionIds = new List<string>();
             ConditionIds = new List<string>();
             UseAnyPassingCondition = false;
 
@@ -63,8 +68,11 @@ namespace ModularEncountersSystems.Events
                 {"UniqueEvent", (s, o) => TagParse.TagBoolCheck(s, ref UniqueEvent) },
                 {"MinCooldownMs", (s, o) => TagParse.TagIntCheck(s, ref MinCooldownMs) },
                 {"MaxCooldownMs", (s, o) => TagParse.TagIntCheck(s, ref MaxCooldownMs) },
+                {"PersistantConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PersistantConditionIds) },
                 {"ConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ConditionIds) },
                 {"UseAnyPassingCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseAnyPassingCondition) },
+                {"OnFailResetCooldown", (s, o) => TagParse.TagBoolCheck(s, ref OnFailResetCooldown) },
+                
                 {"ActionIds", (s, o) => TagParse.TagStringListCheck(s, ref ActionIds) },
                 {"ActionExecution", (s, o) => TagParse.TagActionExecutionCheck(s, ref ActionExecution) },
                 {"TimeUntilNextActionMs", (s, o) => TagParse.TagIntCheck(s, ref TimeUntilNextActionMs) },

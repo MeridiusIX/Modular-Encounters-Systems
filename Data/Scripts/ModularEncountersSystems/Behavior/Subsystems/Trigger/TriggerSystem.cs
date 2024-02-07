@@ -111,7 +111,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (trigger.Type == "PlayerNear") {
 
 					if (trigger.UsePlayerFilterProfile)
-						trigger.ActivateTrigger(CheckPlayerNearFilter);
+						trigger.ActivateTrigger(CheckPlayerNearPlayerCondition);
 					else
 						trigger.ActivateTrigger(CheckPlayerNear);
 
@@ -123,7 +123,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (trigger.Type == "PlayerFar") {
 
 					if (trigger.UsePlayerFilterProfile) 
-						trigger.ActivateTrigger(CheckPlayerFarFilter);
+						trigger.ActivateTrigger(CheckPlayerFarPlayerCondition);
 					else
 						trigger.ActivateTrigger(CheckPlayerFar);
 
@@ -532,7 +532,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
-			if (receivedCommand.SenderEntity?.PositionComp == null || RemoteControl?.SlimBlock?.CubeGrid == null) {
+			if (!receivedCommand.FromEvent && (receivedCommand.SenderEntity?.PositionComp == null || RemoteControl?.SlimBlock?.CubeGrid == null)) {
 
 				BehaviorLogger.Write("Sender Remote CubeGrid Null or Receiver Remote CubeGrid Null", BehaviorDebugEnum.Command);
 				return;
@@ -546,7 +546,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			var dist = Vector3D.Distance(RemoteControl.GetPosition(), receivedCommand.SenderEntity.GetPosition());
+			var dist = Vector3D.Distance(RemoteControl.GetPosition(), receivedCommand.SenderEntity?.GetPosition() ?? receivedCommand.Position);
 
 			if (!receivedCommand.UseTriggerTargetDistance) {
 
@@ -818,6 +818,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							continue;
 					
 					}
+
+
+                    if (trigger.UsePlayerFilterProfile)
+                    {
+						if (!PlayerCondition.ArePlayerConditionsMet(trigger.PlayerFilterProfileIds, playerId))
+							continue;
+                    }
 
 					trigger.ActivateTrigger(command: Command.PlayerRelatedCommand(playerId));
 
@@ -1187,7 +1194,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		public bool IsPlayerNearbyWithFilter(TriggerProfile control, bool playerOutsideDistance = false)
+		public bool IsPlayerNearbyWithPlayerConditon(TriggerProfile control, bool playerOutsideDistance = false)
 		{
 
 			var remotePosition = Vector3D.Transform(control.PlayerNearPositionOffset, RemoteControl.WorldMatrix);
@@ -1207,7 +1214,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (distance > -1 && dist > distance)
 					continue;
 
-				if (!PlayerFilter.ArePlayerFiltersMet(control.PlayerFilterProfileIds, player.Player.IdentityId))
+				if (!PlayerCondition.ArePlayerConditionsMet(control.PlayerFilterProfileIds, player.Player.IdentityId))
 					continue;
 
 				distance = dist;
@@ -1227,11 +1234,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 			if (playerOutsideDistance)
+            {
 				if (playerDist < control.TargetDistance)
 					return false;
-				else
-					if (playerDist > control.TargetDistance)
-							return false;
+			}
+			else
+				if (playerDist > control.TargetDistance)
+						return false;
 
 			if (control.TempCommand == null)
 				control.TempCommand = new Command();

@@ -17,6 +17,7 @@ using VRageMath;
 using ModularEncountersSystems.Spawning.Profiles;
 using VRage.Game;
 using Sandbox.Game;
+using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 
 namespace ModularEncountersSystems.Spawning {
 	public static class SpawnConditions {
@@ -1276,6 +1277,44 @@ namespace ModularEncountersSystems.Spawning {
 				}
 
 			}
+
+
+			if (conditions.UsePlayerCondition)
+			{
+
+				bool playerthatmatchesfound = false;
+				foreach (var player in PlayerManager.Players)
+				{
+
+					if (!player.Online)
+						continue;
+
+					if (player.Player.IsBot == true || player.Player.Character == null)
+						continue;
+
+
+					if (Vector3D.Distance(player.GetPosition(), environment.Position) > conditions.PlayerConditionCheckRadius)
+						continue;
+
+					if (PlayerCondition.ArePlayerConditionsMet(conditions.PlayerConditionIds, player.Player.IdentityId))
+                    {
+						playerthatmatchesfound = true;
+						break;
+					}
+
+
+				}
+
+				if (!playerthatmatchesfound)
+					return false;
+			}
+
+
+
+
+
+
+
 
 			if (conditions.UseSandboxCounterCosts && !CheckSpawnCosts(conditions)) {
 

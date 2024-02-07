@@ -227,12 +227,40 @@ namespace ModularEncountersSystems.Events {
 
 				}
 
+
+				//Check PersistantCondition
+				if (!EventCondition.AreConditionsMet(false, thisEvent.PersistantConditions))
+				{
+					if (thisEvent.Profile.OnFailResetCooldown)
+                    {
+						thisEvent.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+						thisEvent.CooldownTimeTrigger = MathTools.RandomBetween(thisEvent.Profile.MinCooldownMs, thisEvent.Profile.MaxCooldownMs);
+
+					}
+
+
+
+					continue;
+				}
+
+
 				//Check Conditions
 				if (!EventCondition.AreConditionsMet(thisEvent.Profile.UseAnyPassingCondition, thisEvent.Conditions)) {
+
+					if (thisEvent.Profile.OnFailResetCooldown)
+                    {
+						thisEvent.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+						thisEvent.CooldownTimeTrigger = MathTools.RandomBetween(thisEvent.Profile.MinCooldownMs, thisEvent.Profile.MaxCooldownMs);
+
+					}
+
+
 
 					continue;
 
 				}
+
+
 				
 				thisEvent.Ready = true;
 				_readyEvents.Add(thisEvent);

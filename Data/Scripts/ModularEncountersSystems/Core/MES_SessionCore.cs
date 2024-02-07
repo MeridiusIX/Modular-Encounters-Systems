@@ -111,6 +111,7 @@ namespace ModularEncountersSystems.Core {
 			Settings.InitSettings("BeforeStart"); //Get Existing Settings From XML or Create New
 			BlockLogicManager.Setup();
 			ProgressionManager.Setup();
+			ProgressionDataManager.Setup();
 			ControlManager.Setup();
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();

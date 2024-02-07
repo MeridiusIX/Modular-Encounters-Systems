@@ -72,7 +72,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static AutoPilotProfile DefaultAutoPilotSettings = new AutoPilotProfile();
 
-		public static Dictionary<string, PlayerFilter> PlayerFilters = new Dictionary<string, PlayerFilter>();
+		public static Dictionary<string, PlayerCondition> PlayerConditions = new Dictionary<string, PlayerCondition>();
 		//Events 
 
 		public static Dictionary<string, byte[]> EventActionObjectTemplates = new Dictionary<string, byte[]>();
@@ -377,13 +377,13 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 				}
 
-				if (!PlayerFilters.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Player Filter]"))
+				if (!PlayerConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Player Condition]"))
 				{
-					MyLog.Default.WriteLine("CPT Adding Player Filter Profile");
-					var PlayerFilter = new PlayerFilter();
-					PlayerFilter.InitTags(component.DescriptionText);
-					PlayerFilter.ProfileSubtypeId = component.Id.SubtypeName;
-					PlayerFilters.Add(component.Id.SubtypeName, PlayerFilter);
+
+					var PlayerCondition = new PlayerCondition();
+					PlayerCondition.InitTags(component.DescriptionText);
+					PlayerCondition.ProfileSubtypeId = component.Id.SubtypeName;
+					PlayerConditions.Add(component.Id.SubtypeName, PlayerCondition);
 					AllMesProfileIds.Add(component.Id);
 					continue;
 				}

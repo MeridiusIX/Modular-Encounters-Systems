@@ -84,6 +84,8 @@ namespace ModularEncountersSystems.Helpers {
 
         public int DelayTicks;
 
+        public bool FromEvent;
+
         public Command() {
 
             Defaults();
@@ -97,6 +99,7 @@ namespace ModularEncountersSystems.Helpers {
             return command;
 
         }
+
 
         public void Defaults() {
 
@@ -123,8 +126,37 @@ namespace ModularEncountersSystems.Helpers {
             Behavior = null;
             RequestEscortSlot = false;
             DelayTicks = 0;
+            FromEvent = false;
 
         }
+        public void PrepareEventCommand(CommandProfile profile, Vector3D position)
+        {
+
+            this.FromEvent = true;
+            this.DelayTicks = profile.CommandDelayTicks;
+            this.SingleRecipient = profile.SingleRecipient;
+
+
+
+            this.IgnoreAntennaRequirement = true;
+            this.MatchSenderReceiverOwners = false;
+            this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
+
+
+
+            this.CommandCode = profile.CommandCode;
+
+            this.Position = position;
+
+
+            this.Radius = profile.Radius;
+
+
+    
+
+        }
+
+
 
         public void PrepareCommand(IBehavior behavior, CommandProfile profile, ActionReferenceProfile action, Command receivedCommand, long attackerId, long detectedId) {
 

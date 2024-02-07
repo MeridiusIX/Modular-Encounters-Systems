@@ -44,7 +44,10 @@ namespace ModularEncountersSystems.Events.Condition
         public bool CheckPlayerNear;
         public Vector3D PlayerNearVector3;
         public int PlayerNearDistanceFromVector3;
-        public List<string> PlayerFilterIds;
+        public int PlayerNearMinDistanceFromVector3;
+
+        public bool CheckPlayerCondition;
+        public List<string> PlayerConditionIds;
 
         public bool CheckThreatScore;
         public int ThreatScoreAmount;
@@ -54,6 +57,7 @@ namespace ModularEncountersSystems.Events.Condition
         public ThreatScoreTypeEnum ThreatScoreType;
         public GridConfigurationEnum ThreatScoreGridConfiguration;
 
+        //Not in use
         public bool CheckMainEventDaysPassed;
         public int DaysPassed;
 
@@ -82,8 +86,12 @@ namespace ModularEncountersSystems.Events.Condition
 
             CheckPlayerNear = false;
             PlayerNearDistanceFromVector3 = 1000;
+            PlayerNearMinDistanceFromVector3 = 0;
             PlayerNearVector3 = new Vector3D();
-            PlayerFilterIds = new List<string>();
+
+
+            CheckPlayerCondition = false;
+            PlayerConditionIds = new List<string>();
 
             CheckThreatScore = false;
             ThreatScoreAmount = 1000;
@@ -113,9 +121,9 @@ namespace ModularEncountersSystems.Events.Condition
                 {"CheckPlayerNear", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerNear) },
                 {"PlayerNearCoords", (s, o) => TagParse.TagVector3DCheck(s, ref PlayerNearVector3) },
                 {"PlayerNearDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearDistanceFromVector3) },
-                {"PlayerFilterIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerFilterIds) },
-
-
+                {"PlayerNearMinDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearMinDistanceFromVector3) },
+                {"CheckPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerCondition) },
+                {"PlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerConditionIds) },
                 {"CheckThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScore) },
                 {"ThreatScoreAmount", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreAmount) },
                 {"ThreatScoreDistance", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreDistance) },
@@ -261,7 +269,6 @@ namespace ModularEncountersSystems.Events.Condition
 
                         if (output)
                         {
-
                             //BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
                             failedCheck = true;
                             continue;
@@ -371,8 +378,17 @@ namespace ModularEncountersSystems.Events.Condition
 
                 //int amountofplayersmatch = 0;
 
-                ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(Profile.PlayerNearVector3, Profile.PlayerNearDistanceFromVector3);
+                ListOfPlayersinRange = TargetHelper.GetPlayersWithinRange(Profile.PlayerNearVector3, Profile.PlayerNearMinDistanceFromVector3,Profile.PlayerNearDistanceFromVector3);
                 //int amountofPlayers = ListOfPlayersinRange.Count;
+
+
+
+                if (ListOfPlayersinRange.Count >0)
+                {
+                    satisfiedConditions++;
+                }
+
+                /*
 
                 foreach (IMyPlayer Player in ListOfPlayersinRange)
                 {
@@ -381,17 +397,39 @@ namespace ModularEncountersSystems.Events.Condition
 
                 foreach (var id in ListOfPlayerIds)
                 {
-                    if(Profile.PlayerFilterIds.Count < 1)
+                    if(Profile.PlayerConditionIds.Count < 1)
                     {
                         satisfiedConditions++;
                     }
                     else
                     {
-                        if (PlayerFilter.ArePlayerFiltersMet(Profile.PlayerFilterIds, id))
+                        if (PlayerCondition.ArePlayerConditionsMet(Profile.PlayerConditionIds, id))
                             satisfiedConditions++;
                     }
 
                 }
+                */
+            }
+
+            if (Profile.CheckPlayerCondition)
+            {
+                usedConditions++;
+
+
+                var playerList = new List<IMyPlayer>();
+                MyAPIGateway.Players.GetPlayers(playerList);
+
+                foreach (var player in PlayerManager.Players)
+                {
+                    if (PlayerCondition.ArePlayerConditionsMet(Profile.PlayerConditionIds, player.Player.IdentityId))
+                    {
+                        satisfiedConditions++;
+                        break;
+                    }
+
+
+                }
+
             }
 
 

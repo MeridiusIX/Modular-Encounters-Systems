@@ -650,7 +650,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.ChangeReputationWithPlayers == true) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Reputation Change With Players In Radius", BehaviorDebugEnum.Action);
-				FactionHelper.ChangeReputationWithPlayersInRadius(RemoteControl, actions.ReputationChangeRadius, actions.ReputationChangeAmount, actions.ReputationChangeFactions, actions.ReputationChangesForAllRadiusPlayerFactionMembers, actions.ReputationMinCap, actions.ReputationMaxCap);
+				FactionHelper.ChangeReputationWithPlayersInRadius(RemoteControl, actions.ReputationChangeRadius,actions.ReputationChangeAmount, actions.ReputationChangeFactions, actions.ReputationChangesForAllRadiusPlayerFactionMembers, actions.ReputationMinCap, actions.ReputationMaxCap, actions.ReputationPlayerConditionIds);
 
 			}
 
@@ -1417,10 +1417,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						var thisEventId = actions.ActivateEventIds[j];
 
 						var SpawnGroupName = _behavior?.CurrentGrid?.Npc.SpawnGroupName;
+						var Faction = _behavior?.CurrentGrid?.Npc.InitialFaction;
 
 						if (thisEventId.Contains("{SpawnGroupName}") && SpawnGroupName != null)
 						{
 							thisEventId = thisEventId.Replace("{SpawnGroupName}", SpawnGroupName);
+						}
+
+
+						if (thisEventId.Contains("{Faction}") && Faction != null)
+						{
+							thisEventId = thisEventId.Replace("{Faction}", Faction);
 						}
 
 
@@ -1555,48 +1562,100 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			
 			}
 
-			//WIP
-			if (actions.SavePlayerIdentityToSandboxList)
+
+
+
+			if (actions.AddTagsToPlayers)
 			{
-				var playerid = command.PlayerIdentity;
-
-				List<long> PlayerIdentitySandboxList;
-
-				//Get variable
-				MyAPIGateway.Utilities.GetVariable(actions.PlayerIdentitySandboxList, out PlayerIdentitySandboxList);
-
-				if(PlayerIdentitySandboxList == null)
-					PlayerIdentitySandboxList = new List<long>();
-
-				if (!PlayerIdentitySandboxList.Contains(playerid))
+				bool SavedPlayerIdentityAlreadyIncluded = false;
+				foreach (var player in PlayerManager.Players)
 				{
-					PlayerIdentitySandboxList.Add(playerid);
-				}
+					var AddTagsPlayerConditionIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.AddTagsPlayerConditionIds);
 
-				MyAPIGateway.Utilities.SetVariable(actions.PlayerIdentitySandboxList, PlayerIdentitySandboxList);
-			}
-
-			if (actions.RemovePlayerIdentityFromSandboxList)
-			{
-				var playerid = command.PlayerIdentity;
-
-				List<long> PlayerIdentitySandboxList = new List<long>();
-
-				//Get variable
-				MyAPIGateway.Utilities.GetVariable<List<long>>(actions.PlayerIdentitySandboxList, out PlayerIdentitySandboxList);
-
-				if (PlayerIdentitySandboxList != null)
-				{
-					if (PlayerIdentitySandboxList.Contains(playerid))
+					if (PlayerCondition.ArePlayerConditionsMet(AddTagsPlayerConditionIds, player.Player.IdentityId, actions.AddTagsOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
 					{
-						PlayerIdentitySandboxList.Remove(playerid);
+						if ((command?.PlayerIdentity ?? 0)  != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
+							SavedPlayerIdentityAlreadyIncluded = true;
+
+                        foreach (var addtag in actions.AddTags)
+                        {
+							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc?? null, addtag);
+
+							if (player.ProgressionData.Tags.Contains(tag))
+								continue;
+							player.ProgressionData.Tags.Add(tag);
+						}
+						
 					}
 
-					MyAPIGateway.Utilities.SetVariable<List<long>>(actions.PlayerIdentitySandboxList, PlayerIdentitySandboxList);
 				}
 
+				if (actions.AddTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded && command != null)
+                {
+					var playerid = command?.PlayerIdentity ?? 0;
+					var player = PlayerManager.GetPlayerWithIdentityId(playerid);
 
+					if(player != null)
+                    {
+						foreach (var addtag in actions.AddTags)
+						{
+							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, addtag);
+
+							if (player.ProgressionData.Tags.Contains(tag))
+								continue;
+							player.ProgressionData.Tags.Add(tag);
+						}
+					}
+				}
 			}
+
+			if (actions.RemoveTagsFromPlayers)
+			{
+				bool SavedPlayerIdentityAlreadyIncluded = false;
+				foreach (var player in PlayerManager.Players)
+				{
+					var RemoveTagsPlayerConditionIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.RemoveTagsPlayerConditionIds);
+
+					if (PlayerCondition.ArePlayerConditionsMet(RemoveTagsPlayerConditionIds, player.Player.IdentityId, actions.RemoveTagsOverridePositioninPlayerCondition, _behavior.RemoteControl.GetPosition()))
+					{
+						if ((command?.PlayerIdentity ?? 0) != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
+							SavedPlayerIdentityAlreadyIncluded = true;
+
+						foreach (var removetag in actions.RemoveTags)
+						{
+							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, removetag);
+
+
+							if (!player.ProgressionData.Tags.Contains(tag))
+								continue;
+
+							player.ProgressionData.Tags.Remove(tag);
+						}
+
+					}
+
+				}
+
+				if (actions.RemoveTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded && command != null)
+				{
+					var playerid = command.PlayerIdentity;
+					var player = PlayerManager.GetPlayerWithIdentityId(playerid);
+
+					if (player != null)
+                    {
+						foreach (var removetag in actions.RemoveTags)
+						{
+							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, removetag);
+
+							if (!player.ProgressionData.Tags.Contains(tag))
+								continue;
+
+							player.ProgressionData.Tags.Remove(tag);
+						}
+					}
+				}
+			}
+
 
 			if (actions.ResetCooldownTimeOfEvents)
 			{

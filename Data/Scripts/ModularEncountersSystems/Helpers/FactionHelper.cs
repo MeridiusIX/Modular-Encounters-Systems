@@ -1,6 +1,8 @@
-﻿using ModularEncountersSystems.Logging;
+﻿using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Sync;
 using Sandbox.Definitions;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -214,7 +216,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static void ChangeReputationWithPlayersInRadius(IMyRemoteControl remoteControl, double radius, List<int> amounts, List<string> factions, bool applyReputationChangeToFactionMembers, int minRep, int maxRep) {
+		public static void ChangeReputationWithPlayersInRadius(IMyRemoteControl remoteControl, double radius, List<int> amounts, List<string> factions, bool applyReputationChangeToFactionMembers, int minRep, int maxRep, List<string> ReputationPlayerConditionIds = null) {
 
 			if (amounts.Count != factions.Count) {
 
@@ -234,6 +236,13 @@ namespace ModularEncountersSystems.Helpers {
 
 				if (Vector3D.Distance(player.GetPosition(), remoteControl.GetPosition()) > radius)
 					continue;
+
+				if (ReputationPlayerConditionIds != null && ReputationPlayerConditionIds.Count>0)
+					if(!PlayerCondition.ArePlayerConditionsMet(ReputationPlayerConditionIds, player.IdentityId))
+						continue;
+
+	
+
 
 				if (player.IdentityId != 0 && !playerIds.Contains(player.IdentityId))
 					playerIds.Add(player.IdentityId);
@@ -275,7 +284,8 @@ namespace ModularEncountersSystems.Helpers {
 				var tag = factionTags[i];
 				var amount = amounts[i];
 
-				if(tag == "{Self}"){
+				if(tag == "{Self}" && remoteControl != null)
+				{
 					tag = remoteControl.GetOwnerFactionTag();
 
 				}
@@ -312,6 +322,9 @@ namespace ModularEncountersSystems.Helpers {
 							newRep = oldRep + amount;
 
 					}
+
+					//Extra check
+					newRep = MathHelper.Clamp(proposedRep, minRep, maxRep);
 
 					RelationManager.SetReputationWithFaction(playerId, faction.FactionId, newRep);
 					//MyVisualScriptLogicProvider.ShowNotification(string.Format("Reputation With {0} {1} By: {2}", faction.Tag, modifier, amount.ToString()), 2000, color, playerId);

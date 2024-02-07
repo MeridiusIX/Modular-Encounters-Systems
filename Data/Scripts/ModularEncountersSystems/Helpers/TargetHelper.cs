@@ -764,6 +764,16 @@ namespace ModularEncountersSystems.Helpers {
 			return playerList;
 			
 		}
+		//Overload didn't work for me somehow -cpt
+		public static List<IMyPlayer> GetPlayersWithinRange(Vector3D coords, double minDistance, double maxDistance)
+		{
+
+			var playerList = new List<IMyPlayer>();
+
+			MyAPIGateway.Players.GetPlayers(playerList, x => x.IsBot == false && Vector3D.Distance(coords, x.GetPosition()) < maxDistance && Vector3D.Distance(coords, x.GetPosition()) > minDistance);
+			return playerList;
+
+		}
 
 		//IsGridPowered
 		public static bool IsGridPowered(IMyCubeGrid cubeGrid) {

@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Helpers;
+﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Helpers;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> PainSounds;
 		public List<string> IdleSounds;
 		public List<string> TauntSounds;
-
+		public List<string> TargetPriorities;
+		public List<string> RepairPriorities;
 		public List<string> EmoteActions;
 
 		public float ShotDeviationAngle;
@@ -48,7 +50,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			ProfileSubtypeId = "";
 			UseAiEnabled = true;
-			Data = new SpawnData();
 
 			BotType = "";
 			BotBehavior = "Default";
@@ -71,7 +72,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PainSounds = new List<string>();
 			IdleSounds = new List<string>();
 			TauntSounds = new List<string>();
-
+			TargetPriorities = new List<string>();
+			RepairPriorities = new List<string>();
 			EmoteActions = new List<string>();
 
 			ShotDeviationAngle = 1.5f;
@@ -260,35 +262,65 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-			}
 
-			Data.BotSubtype = this.BotType;
-			Data.BotRole = this.BotBehavior;
-			Data.DisplayName = this.BotDisplayName;
-			var tempColor = new Color(this.Color.X, this.Color.Y, this.Color.Z);
-			if (this.Color.X != 300)
-				Data.Color = tempColor;
+				if (tag.Contains("[TargetPriorities:")) {
 
-			Data.CanUseAirNodes = this.CanUseAirNodes;
-			Data.CanUseSpaceNodes = this.CanUseSpaceNodes;
-			Data.UseGroundNodesFirst = this.UseGroundNodesFirst;
-			Data.CanUseWaterNodes = this.CanUseWaterNodes;
-			Data.WaterNodesOnly = this.WaterNodesOnly;
-			Data.CanUseLadders = this.CanUseLadders;
-			Data.CanUseSeats = this.CanUseSeats;
-			Data.CanDamageGrids = this.CanDamageGrids;
-			Data.DespawnTicks = this.DespawnTicks;
-			Data.DeathSound = this.DeathSound;
-			Data.AttackSounds = this.AttackSounds;
-			Data.PainSounds = this.PainSounds;
-			Data.IdleSounds = this.IdleSounds;
-			Data.TauntSounds = this.TauntSounds;
-			Data.Actions = this.EmoteActions;
-			Data.ShotDeviationAngle = this.ShotDeviationAngle;
-			Data.LeadTargets = this.LeadTargets;
-			Data.ToolSubtypeId = this.ToolSubtypeId;
-			Data.LootContainerSubtypeId = this.LootContainerSubtypeId;
-			SerializedData = MyAPIGateway.Utilities.SerializeToBinary<SpawnData>(Data);
+					TagParse.TagStringListCheck(tag, ref TargetPriorities);
+					continue;
+
+				}
+
+
+        if (tag.Contains("[RepairPriorities:")) {
+
+          TagParse.TagStringListCheck(tag, ref RepairPriorities);
+          continue;
+
+        }
+
+      }
+
+			if (TargetPriorities.Count == 0)
+				TargetPriorities = GetDefaultTargetPriorities();
+
+			if (RepairPriorities.Count == 0)
+				RepairPriorities = GetDefaultRepairPriorities();
+
+      Data = new SpawnData
+      {
+        BotSubtype = this.BotType,
+        BotRole = this.BotBehavior,
+        DisplayName = this.BotDisplayName,
+        CanUseAirNodes = this.CanUseAirNodes,
+        CanUseSpaceNodes = this.CanUseSpaceNodes,
+        UseGroundNodesFirst = this.UseGroundNodesFirst,
+        CanUseWaterNodes = this.CanUseWaterNodes,
+        WaterNodesOnly = this.WaterNodesOnly,
+        CanUseLadders = this.CanUseLadders,
+        CanUseSeats = this.CanUseSeats,
+        CanDamageGrids = this.CanDamageGrids,
+        DespawnTicks = this.DespawnTicks,
+        DeathSound = this.DeathSound,
+        AttackSounds = this.AttackSounds,
+        PainSounds = this.PainSounds,
+        IdleSounds = this.IdleSounds,
+        TauntSounds = this.TauntSounds,
+        Actions = this.EmoteActions,
+        ShotDeviationAngle = this.ShotDeviationAngle,
+        LeadTargets = this.LeadTargets,
+        ToolSubtypeId = this.ToolSubtypeId,
+        LootContainerSubtypeId = this.LootContainerSubtypeId,
+        TargetPriorities = this.TargetPriorities,
+        RepairPriorities = this.RepairPriorities
+      };
+
+      if (this.Color.X != 300)
+      {
+        var tempColor = new Color(this.Color.X, this.Color.Y, this.Color.Z);
+        Data.Color = tempColor;
+      }
+
+      SerializedData = MyAPIGateway.Utilities.SerializeToBinary<SpawnData>(Data);
 
 		}
 

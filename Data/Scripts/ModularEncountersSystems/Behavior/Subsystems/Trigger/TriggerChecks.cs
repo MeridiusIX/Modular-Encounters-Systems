@@ -17,9 +17,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		}
 
 
-		public bool CheckPlayerNearFilter(TriggerProfile trigger)
+		public bool CheckPlayerNearPlayerCondition(TriggerProfile trigger)
 		{
-			return IsPlayerNearbyWithFilter(trigger);
+			return IsPlayerNearbyWithPlayerConditon(trigger);
 		}
 
 
@@ -31,9 +31,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			return IsPlayerNearby(trigger, true);
 		}
 
-		public bool CheckPlayerFarFilter(TriggerProfile trigger)
+		public bool CheckPlayerFarPlayerCondition(TriggerProfile trigger)
 		{
-			return IsPlayerNearbyWithFilter(trigger, true);
+			return IsPlayerNearbyWithPlayerConditon(trigger, true);
 
 		}
 

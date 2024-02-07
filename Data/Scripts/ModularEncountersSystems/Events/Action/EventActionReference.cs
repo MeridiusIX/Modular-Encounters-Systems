@@ -20,6 +20,8 @@ namespace ModularEncountersSystems.Events.Action {
 	public class EventActionReferenceProfile {
 
 		public string ProfileSubtypeId;
+		public int Chance;
+
 		public bool ChangeBooleans;
 		public List<string> SetBooleansTrue;
 		public List<string> SetBooleansFalse;
@@ -44,18 +46,38 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<string> ToggleEventTags;
 		public List<bool> ToggleEventTagModes;
 
-
-
 		public bool ChangeZoneAtPosition;
 		public List<string> ZoneNames;
 		public List<Vector3D> ZoneCoords;
 		public List<bool> ZoneToggleActiveModes;
 
 
+		//Player Start
+		public bool AddTagstoPlayers;
+		public List<string> AddTagsPlayerConditionIds;
+		public List<string> AddTags;
 
-		//To do GPS for specific players only
-		public bool AddGPSForAll;
-		public bool RemoveGPSForAll;
+		public bool RemoveTagsFromPlayers;
+		public List<string> RemoveTagsPlayerConditionIds;
+		public List<string> RemoveTags;
+
+		public bool FadeOutPlayers;
+		public List<string> FadeOutPlayerConditionIds;
+
+		public bool FadeInPlayers;
+		public List<string> FadeInPlayerConditionIds;
+
+
+		public bool TeleportPlayers;
+		public List<string> TeleportPlayerConditionIds;
+		public Vector3D TeleportPlayerCoords;
+		public float TeleportRadius;
+
+		public bool AddGPSToPlayers;
+		public bool AddGPSToAll;
+		public bool RemoveGPSFromPlayers;
+		public List<string> AddGPSPlayerConditionIds;
+		public List<string> RemoveGPSPlayerConditionIds;
 
 		public bool UseGPSObjective;
 		public List<string> GPSNames;
@@ -63,7 +85,18 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<Vector3D> GPSVector3Ds;
 		public List<Vector3D> GPSColors;
 
+		public bool ChangeReputationWithPlayers;
+		public List<string> ReputationPlayerConditionIds;
+		public List<int> ReputationChangeAmount;
+		public List<string> ReputationChangeFactions;
+		public bool ReputationChangesForAllRadiusPlayerFactionMembers;
+		public int ReputationMinCap;
+		public int ReputationMaxCap;
+		//PlayersEnd
 
+		public bool BroadcastCommandProfiles;
+		public List<string> CommandProfileIds;
+		public Vector3D CommandProfileOriginCoords;
 
 		public bool SpawnEncounter;
 		//public List<SpawnProfile> SpawnData;
@@ -91,10 +124,6 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 
-
-		
-
-
 		public string DebugHudMessage;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
@@ -102,6 +131,7 @@ namespace ModularEncountersSystems.Events.Action {
 		public EventActionReferenceProfile() {
 
 			ProfileSubtypeId = "";
+			Chance = 100;
 			ChangeBooleans = false;
 			SetBooleansTrue = new List<string>();
 			SetBooleansFalse = new List<string>();
@@ -121,8 +151,14 @@ namespace ModularEncountersSystems.Events.Action {
 			ZoneCoords = new List<Vector3D>();
 			ZoneToggleActiveModes = new List<bool>();
 
-			AddGPSForAll = false;
-			RemoveGPSForAll = false;
+			AddGPSToPlayers = false;
+			AddGPSToAll = false;
+			RemoveGPSFromPlayers = false;
+
+			BroadcastCommandProfiles = false;
+			CommandProfileIds = new List<string>();
+			CommandProfileOriginCoords = new Vector3D();
+
 			UseGPSObjective = false;
 			GPSNames = new List<string>();
 			GPSDescriptions = new List<string>();
@@ -139,6 +175,36 @@ namespace ModularEncountersSystems.Events.Action {
 			ResetCooldownTimeOfEvents = false;
 			ResetEventCooldownIds = new List<string>();
 			ResetEventCooldownTags = new List<string>();
+
+			AddTagstoPlayers = false;
+			AddTagsPlayerConditionIds = new List<string>();
+			AddTags = new List<string>();
+
+			RemoveTagsFromPlayers = false;
+			RemoveTagsPlayerConditionIds = new List<string>();
+			RemoveTags = new List<string>();
+
+			FadeInPlayers = false;
+			FadeInPlayerConditionIds = new List<string>();
+
+			FadeOutPlayers = false;
+			FadeOutPlayerConditionIds = new List<string>();
+
+
+
+			TeleportPlayers = false;
+			TeleportPlayerConditionIds = new List<string>();
+			TeleportPlayerCoords = new Vector3D();
+			TeleportRadius = 0;
+
+			ChangeReputationWithPlayers = false;
+			ReputationPlayerConditionIds = new List<string>();
+			ReputationChangeFactions = new List<string>();
+			ReputationChangeAmount = new List<int>();
+			ReputationChangesForAllRadiusPlayerFactionMembers = false;
+			ReputationMinCap = -1500;
+			ReputationMaxCap = 1500;
+
 
 
 
@@ -161,18 +227,7 @@ namespace ModularEncountersSystems.Events.Action {
 			CustomActionArgumentsDouble = new List<double>();
 			CustomActionArgumentsVector3D = new List<Vector3D>();
 
-
-
-
-
-
-
-
-
-
-
-
-		DebugHudMessage = "";
+			DebugHudMessage = "";
 
 			SetEventControllers = false;
 			EventControllerNames = new List<string>();
@@ -182,6 +237,7 @@ namespace ModularEncountersSystems.Events.Action {
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"ChangeBooleans", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBooleans) },
+				{"Chance", (s, o) => TagParse.TagIntCheck(s, ref Chance) },
 				{"SetBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansTrue) },
 				{"SetBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansFalse) },
 				{"ChangeCounters", (s, o) => TagParse.TagBoolCheck(s, ref ChangeCounters) },
@@ -193,20 +249,38 @@ namespace ModularEncountersSystems.Events.Action {
 				{"SetCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersAmount) },
 
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
-
 				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
 
+				{"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
+				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
+				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
 
+				{"RemoveTagsFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsFromPlayers) },
+				{"RemoveTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTagsPlayerConditionIds) },
+				{"RemoveTags", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTags) },
+
+				{"FadeInPlayers", (s, o) => TagParse.TagBoolCheck(s, ref FadeInPlayers) },
+				{"FadeInPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref FadeInPlayerConditionIds) },
+
+				{"FadeOutPlayers", (s, o) => TagParse.TagBoolCheck(s, ref FadeOutPlayers) },
+				{"FadeOutPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref FadeOutPlayerConditionIds) },
+
+				{"BroadcastCommandProfiles", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCommandProfiles) },
+				{"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
+				{"CommandProfileOriginCoords", (s, o) => TagParse.TagVector3DCheck(s, ref CommandProfileOriginCoords) },
+
+
+
+				
 				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
 				{"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
 				{"ToggleEventIdModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventIdModes) },
 				{"ToggleEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventTags) },
 				{"ToggleEventTagModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventTagModes) },
 
-
-				{"AddGPSForAll", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSForAll) },
-				{"RemoveGPSForAll", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSForAll) },
+				{"AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
+				{"RemoveGPSFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSFromPlayers) },
 				{"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
 				{"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
 				{"GPSDescriptions", (s, o) => TagParse.TagStringListCheck(s, ref GPSDescriptions) },
@@ -222,9 +296,22 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ZoneCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref ZoneCoords) },
 				{"ZoneToggleActiveModes", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneToggleActiveModes) },
 
+				{"TeleportPlayers", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayers) },
+				{"TeleportPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref TeleportPlayerConditionIds) },
+				{"TeleportPlayerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TeleportPlayerCoords) },
+				{"TeleportRadius", (s, o) => TagParse.TagFloatCheck(s, ref TeleportRadius) },
+
+				{"ChangeReputationWithPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationWithPlayers) },
+				{"ReputationPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ReputationPlayerConditionIds) },
+				{"ReputationChangeFactions", (s, o) => TagParse.TagStringListCheck(s, ref ReputationChangeFactions) },
+				{"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
+				{"ReputationChangesForAllRadiusPlayerFactionMembers", (s, o) => TagParse.TagBoolCheck(s, ref ReputationChangesForAllRadiusPlayerFactionMembers) },
+				{"ReputationMinCap", (s, o) => TagParse.TagIntCheck(s, ref ReputationMinCap) },
+				{"ReputationMaxCap", (s, o) => TagParse.TagIntCheck(s, ref ReputationMaxCap) },
+
 				{"ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
 				{"CustomActionName", (s, o) => TagParse.TagStringCheck(s, ref CustomActionName) },
-				{"CustomActionArgumentsString", (s, o) => TagParse.TagStringListCheck(s, ref CustomActionArgumentsString) },
+				{"CustomActionArgumentsString", (s, o) => TagParse.TagStringListCheck(s,false ,ref CustomActionArgumentsString) },
 				{"CustomActionArgumentsBool", (s, o) => TagParse.TagBoolListCheck(s, ref CustomActionArgumentsBool) },
 				{"CustomActionArgumentsInt", (s, o) => TagParse.TagIntListCheck(s, ref CustomActionArgumentsInt) },
 				{"CustomActionArgumentsFloat", (s, o) => TagParse.TagFloatCheck(s, ref CustomActionArgumentsFloat) },

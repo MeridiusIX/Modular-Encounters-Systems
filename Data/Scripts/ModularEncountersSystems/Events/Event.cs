@@ -42,7 +42,7 @@ namespace ModularEncountersSystems.Events
         [ProtoIgnore] public bool ErrorOnSetup;
         [ProtoIgnore] public string ErrorSetupMsg;
         [ProtoIgnore] public List<EventCondition> Conditions;
-
+        [ProtoIgnore] public List<EventCondition> PersistantConditions;
 
         [ProtoIgnore]
         public EventProfile Profile
@@ -172,8 +172,24 @@ namespace ModularEncountersSystems.Events
 
             Ready = false;
             Conditions = new List<EventCondition>();
+            PersistantConditions = new List<EventCondition>();
             Actions = new List<EventActionProfile>();
 
+
+
+            foreach (var conditionName in Profile.PersistantConditionIds)
+            {
+
+                EventCondition conditionProfile = null;
+
+                if (ProfileManager.EventConditions.TryGetValue(conditionName, out conditionProfile))
+                {
+
+                    PersistantConditions.Add(conditionProfile);
+
+                }
+
+            }
 
 
             foreach (var conditionName in Profile.ConditionIds)
@@ -189,6 +205,9 @@ namespace ModularEncountersSystems.Events
                 }
 
             }
+
+
+
 
             foreach (var actionName in Profile.ActionIds)
             {
@@ -311,6 +330,12 @@ namespace ModularEncountersSystems.Events
                 conditions.Append(Conditions[i].ProfileSubtypeId).Append($":{EventCondition.IsConditionMet(Conditions[i])} ");
             }
 
+
+            var persistantConditions = new StringBuilder();
+            for (int i = 0; i < PersistantConditions.Count; i++)
+            {
+                persistantConditions.Append(PersistantConditions[i].ProfileSubtypeId).Append($":{EventCondition.IsConditionMet(PersistantConditions[i])} ");
+            }
             var actions = new StringBuilder();
             for (int i = 0; i < Actions.Count; i++)
             {
@@ -319,10 +344,15 @@ namespace ModularEncountersSystems.Events
 
             var sb = new StringBuilder();
             sb.Append(" - Profile SubtypeId:           ").Append(ProfileSubtypeId).AppendLine();
-            sb.Append(" - EventEnabled:             ").Append(EventEnabled).AppendLine();
+            sb.Append(" - EventEnabled:                ").Append(EventEnabled).AppendLine();
             sb.Append(" - UniqueEvent:                 ").Append(Profile.UniqueEvent).AppendLine();
             sb.Append(" - RunCount:                    ").Append(RunCount).AppendLine();
 
+            sb.Append(" - CooldownReady:               ").Append(this.ValidateCooldown()).AppendLine();
+
+
+            sb.Append(" - PersistantConditions Count:  ").Append(PersistantConditions.Count).AppendLine();
+            sb.Append("     [] PersistantConditions:   ").Append(persistantConditions.ToString()).AppendLine();
 
             sb.Append(" - Conditions Count:            ").Append(Conditions.Count).AppendLine();
             sb.Append("     [] Conditions:             ").Append(conditions.ToString()).AppendLine();

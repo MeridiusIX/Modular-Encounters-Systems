@@ -65,13 +65,13 @@ namespace ModularEncountersSystems.API {
 		//Defense Shields
 		public static bool DefenseShields = false;
 		private static ulong _defenseShieldsSteamId = 1365616918;
-		private static ulong _defenseShieldsSteamIdNew = 1365616918;
+		private static ulong _defenseShieldsSteamIdNew = 3154379105;
 
 		//WeaponCore
 		public static bool WeaponCore = false;
 		private static ulong _weaponCoreSteamId = 1918681825;
 		private static ulong _coreSystemsSteamId = 2189703321;
-		private static ulong _weaponCoreSteamIdNew = 1918681825;
+		private static ulong _weaponCoreSteamIdNew = 3154371364;
 
 		//AiEnabled
 		public static bool AiEnabled = false;

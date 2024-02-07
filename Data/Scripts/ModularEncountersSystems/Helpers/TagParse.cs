@@ -9,6 +9,7 @@ using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -574,6 +575,36 @@ namespace ModularEncountersSystems.Helpers {
 			var tagSplit = ProcessTag(tag);
 
 			if (tagSplit.Length == 2) {
+
+				if (int.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			} else {
+
+				return;
+
+			}
+
+			original = result;
+
+		}
+
+		public static void TagIntOrDayCheck(string tag, ref int original) {
+
+			int result = 0;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (tagSplit[1] == "Day") {
+
+					original = (int)MyAPIGateway.Session.SessionSettings.SunRotationIntervalMinutes;
+					return;
+
+				}
 
 				if (int.TryParse(tagSplit[1], out result) == false) {
 
@@ -1852,7 +1883,7 @@ namespace ModularEncountersSystems.Helpers {
 			string value = "[sillyme:" + parts[1] + "]";  // "false"
 
 			if (type.Contains("bool"))
-            {
+			{
 				TagBoolCheck(value, ref dummybool);
 				original.Add((bool)dummybool);
 

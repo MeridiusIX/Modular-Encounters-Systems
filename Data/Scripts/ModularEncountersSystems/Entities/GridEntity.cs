@@ -330,7 +330,7 @@ namespace ModularEncountersSystems.Entities {
 		//Disconnects Subgrids Bi-Directionally
 		public void DisconnectSubgrids() {
 
-			SpawnLogger.Write(" - " + GridName + " Disconnecting Subgrids Before Cleanup", SpawnerDebugEnum.CleanUp, true);
+			//SpawnLogger.Write(" - " + GridName + " Disconnecting Subgrids Before Cleanup", SpawnerDebugEnum.CleanUp, true);
 
 			var gridList = new List<IMyCubeGrid>();
 			MyAPIGateway.GridGroups.GetGroup(CubeGrid, GridLinkTypeEnum.Physical, gridList);
@@ -343,8 +343,13 @@ namespace ModularEncountersSystems.Entities {
 			IMyPistonBase piston = null;
 
 			lock (AllTerminalBlocks) {
+				
+				for(int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
 
-				foreach (var block in AllTerminalBlocks) {
+					if (i >= AllTerminalBlocks.Count)
+						continue;
+
+					var block = AllTerminalBlocks[i];
 
 					if (!block.ActiveEntity())
 						continue;
@@ -394,11 +399,16 @@ namespace ModularEncountersSystems.Entities {
 				if (linkedGrid == null || !linkedGrid.ActiveEntity() || linkedGrid == this)
 					continue;
 
-				SpawnLogger.Write(" - Disconnecting Parent From Other Subgrids Before Cleanup.", SpawnerDebugEnum.CleanUp, true);
+				//SpawnLogger.Write(" - Disconnecting Parent From Other Subgrids Before Cleanup.", SpawnerDebugEnum.CleanUp, true);
 
 				lock (linkedGrid.AllTerminalBlocks) {
 
-					foreach (var block in linkedGrid.AllTerminalBlocks) {
+					for (int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
+
+						if (i >= AllTerminalBlocks.Count)
+							continue;
+
+						var block = AllTerminalBlocks[i];
 
 						gear = block?.Block as IMyLandingGear;
 						rotor = block?.Block as IMyMotorStator;

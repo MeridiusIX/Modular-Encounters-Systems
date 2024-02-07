@@ -357,9 +357,9 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool EnvironmentChecks(SpawnConditionsProfile spawnGroup, EnvironmentEvaluation environment, ref string failReason) {
+		public static bool EnvironmentChecks(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, EnvironmentEvaluation environment, ref string failReason) {
 
-			if (spawnGroup.MinAirDensity != -1 && environment.AtmosphereAtPosition < spawnGroup.MinAirDensity) {
+			if (conditions.MinAirDensity != -1 && environment.AtmosphereAtPosition < conditions.MinAirDensity) {
 
 				failReason = "   - MinAirDensity Check Failed";
 				return false;
@@ -367,30 +367,45 @@ namespace ModularEncountersSystems.Spawning {
 			}
 				
 
-			if (spawnGroup.MaxAirDensity != -1 && environment.AtmosphereAtPosition > spawnGroup.MinAirDensity) {
+			if (conditions.MaxAirDensity != -1 && environment.AtmosphereAtPosition > conditions.MinAirDensity) {
 
 				failReason = "   - MaxAirDensity Check Failed";
 				return false;
 
 			}
 
-			if (spawnGroup.MinGravity != -1 && environment.GravityAtPosition < spawnGroup.MinGravity) {
+			if (conditions.MinGravity != -1 && environment.GravityAtPosition < conditions.MinGravity) {
 
 				failReason = "   - MinGravity Check Failed";
 				return false;
 
 			}
 
-			if (spawnGroup.MaxGravity != -1 && environment.GravityAtPosition > spawnGroup.MaxGravity) {
+			if (conditions.MaxGravity != -1 && environment.GravityAtPosition > conditions.MaxGravity) {
 
 				failReason = "   - MaxGravity Check Failed";
 				return false;
 
 			}
 
-			if (spawnGroup.UseDayOrNightOnly) {
+			if (conditions.CheckPrefabGravityProfiles) {
 
-				if (spawnGroup.SpawnOnlyAtNight != environment.IsNight) {
+				foreach (var prefab in spawnGroup.SpawnGroup.Prefabs) {
+
+					if (!PrefabGravityProfile.CheckPrefabGravity(prefab.SubtypeId, environment.GravityAtPosition, !environment.PlanetaryCargoShipsEligible)) {
+
+						failReason = "   - Prefab Gravity Profiles Check Failed";
+						return false;
+
+					}
+				
+				}
+			
+			}
+
+			if (conditions.UseDayOrNightOnly) {
+
+				if (conditions.SpawnOnlyAtNight != environment.IsNight) {
 
 					failReason = "   - Night Only Check Failed";
 					return false;
@@ -399,9 +414,9 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (spawnGroup.UseWeatherSpawning) {
+			if (conditions.UseWeatherSpawning) {
 
-				if (!spawnGroup.AllowedWeatherSystems.Contains(environment.WeatherAtPosition)) {
+				if (!conditions.AllowedWeatherSystems.Contains(environment.WeatherAtPosition)) {
 
 					failReason = "   - Weather Check Failed";
 					return false;
@@ -410,9 +425,9 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (spawnGroup.UseTerrainTypeValidation) {
+			if (conditions.UseTerrainTypeValidation) {
 
-				if (!spawnGroup.AllowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
+				if (!conditions.AllowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
 
 					failReason = "   - Allowed Terrain Check Failed";
 					return false;
@@ -423,13 +438,13 @@ namespace ModularEncountersSystems.Spawning {
 
 			bool requiresWater = false;
 
-			if (spawnGroup.PlanetaryInstallation) {
+			if (conditions.PlanetaryInstallation) {
 
-				requiresWater = (!spawnGroup.InstallationSpawnsOnDryLand && (spawnGroup.InstallationSpawnsOnWaterSurface || spawnGroup.InstallationSpawnsUnderwater));
+				requiresWater = (!conditions.InstallationSpawnsOnDryLand && (conditions.InstallationSpawnsOnWaterSurface || conditions.InstallationSpawnsUnderwater));
 
 			} else {
 
-				requiresWater = spawnGroup.MustSpawnUnderwater;
+				requiresWater = conditions.MustSpawnUnderwater;
 
 			}
 
@@ -830,7 +845,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (EnvironmentChecks(conditions, environment, ref failReason) == false) {
+			if (EnvironmentChecks(spawnGroup, conditions, environment, ref failReason) == false) {
 
 				return false;
 
@@ -1902,27 +1917,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Custom Counters
 					if (zoneCondition.CheckCustomZoneCounters) {
 
-						bool failedResult = false;
-
-						foreach (var counterName in zoneCondition.CustomZoneCounterReference.Keys) {
-
-							long value = 0;
-
-							if (!zone.CustomCounters.TryGetValue(counterName, out value)) {
-
-								failedResult = true;
-								break;
-
-							}
-
-							if (value < zoneCondition.CustomZoneCounterReference[counterName]) {
-
-								failedResult = true;
-								break;
-
-							}
-						
-						}
+						bool failedResult = zoneCondition.CheckCounters(zone);
 
 						if (failedResult) {
 

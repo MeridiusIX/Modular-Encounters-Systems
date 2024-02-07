@@ -708,10 +708,21 @@ namespace ModularEncountersSystems.Logging {
 			
 			}
 
-			var matrix = MatrixD.CreateWorld((msg.CameraPosition), msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
+			var matrix = MatrixD.CreateWorld((msg.CameraDirection * 400 + msg.CameraPosition), msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
 			var hull = new HullTypeSomerset(new ShipRules());
-			hull.GenerateShip();
-			hull.SpawnCurrentConstruct(matrix);
+
+			
+
+			for (int i = 0; i < 4; i++) {
+
+				var thisMatrix = MatrixD.CreateWorld((matrix.Right * (100 * i) + matrix.Translation), matrix.Forward, matrix.Up);
+				hull.Construct.CubeGrid.PositionAndOrientation = new VRage.MyPositionAndOrientation(new Vector3D((100 * i), 0, 0), Vector3.Forward, Vector3.Up);
+				hull.ProcessStep(i);
+				string prefabId = "MES-Prefab-ProceduralPrefabDebug-" + i.ToString();
+				hull.SpawnCurrentConstruct(thisMatrix, prefabId);
+
+			}
+
 			msg.ClipboardPayload = hull.Construct.Log.ToString();
 			return;
 
@@ -1031,6 +1042,9 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Mod Path:       ").Append(MES_SessionCore.Instance.ModContext?.ModPath ?? "null").AppendLine();
 			sb.Append(" - Mod Item Path:  ").Append(MES_SessionCore.Instance.ModContext?.ModItem.GetPath() ?? "null").AppendLine();
 			sb.Append(" - Mod Path Error: ").Append(modPathError).AppendLine();
+
+			if(MES_SessionCore.SyncWarning)
+				sb.Append(" - Low Sync Distance and Selective Physics Updates: ").Append(MES_SessionCore.SyncWarning).AppendLine();
 
 			if (modPathError) {
 

@@ -25,6 +25,9 @@ namespace ModularEncountersSystems.Zones {
 	public static class ZoneManager {
 
 		public static List<Zone> ActiveZones = new List<Zone>();
+		private static bool _updateZones = false;
+
+		private static byte _secondsForTimerCheck = 0;
 
 		public static void Setup() {
 
@@ -108,9 +111,11 @@ namespace ModularEncountersSystems.Zones {
 			
 			}
 
+			MES_SessionCore.SaveActions += UpdateZoneStorage;
 			AddNewZones();
 
 			TaskProcessor.Tick60.Tasks += AnnounceDepartMessages;
+			TaskProcessor.Tick60.Tasks += TimerChecks;
 			MES_SessionCore.UnloadActions += Unload;
 		
 		}
@@ -222,7 +227,7 @@ namespace ModularEncountersSystems.Zones {
 
 			if (updateZones) {
 
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 			}
 
@@ -234,18 +239,28 @@ namespace ModularEncountersSystems.Zones {
 			if (ActiveZones.Contains(zone)) {
 
 				ActiveZones.Remove(zone);
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 			}
 
 		}
 
+		public static void FlagUpdateZoneStorage() {
+
+			_updateZones = true;
+		
+		}
+
 		public static void UpdateZoneStorage() {
+
+			if (!_updateZones)
+				return;
 
 			var zoneData = MyAPIGateway.Utilities.SerializeToBinary<List<Zone>>(ActiveZones);
 			var zoneString = Convert.ToBase64String(zoneData);
 			MyAPIGateway.Utilities.SetVariable<string>("MES-ZoneData", zoneString);
-		
+			_updateZones = false;
+
 		}
 
 		public static void GetAllowedSpawns(Vector3D coords, SpawnGroupCollection collection) {
@@ -382,7 +397,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			if (updateZones)
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 
 		}
@@ -407,7 +422,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			if (updateZones)
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 		}
 
@@ -432,7 +447,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			if (updateZones)
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 		}
 
@@ -457,7 +472,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			if (updateZones)
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 		}
 
@@ -481,7 +496,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			if (updateZones)
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 		}
 
@@ -505,7 +520,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			if (updateZones)
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 		}
 
@@ -547,6 +562,62 @@ namespace ModularEncountersSystems.Zones {
 		
 		}
 
+		public static void TimerChecks() {
+
+			_secondsForTimerCheck++;
+
+			if (_secondsForTimerCheck < 10)
+				return;
+
+			_secondsForTimerCheck = 0;
+
+			bool updateZones = false;
+
+			for (int i = ActiveZones.Count - 1; i >= 0; i--) {
+
+				var zone = ActiveZones[i];
+
+				if (!zone.Active || !zone.UseZoneTimer)
+					continue;
+
+				var mins = MyAPIGateway.Session.GameDateTime - zone.TimeCreated;
+
+				if (mins.TotalMinutes >= zone.MinutesToExpiration) {
+
+					ActiveZones.RemoveAt(i);
+					zone.Active = false;
+					updateZones = true;
+					continue;
+
+				}
+
+				for (int j = 0; j < PlayerManager.Players.Count; j++) {
+
+					var player = PlayerManager.Players[j];
+
+					if (!player.ActiveEntity())
+						continue;
+
+					var distFromCenter = player.Distance(zone.Coordinates);
+
+					if (distFromCenter < zone.Radius) {
+
+						//Reset Timer
+						zone.TimeCreated = MyAPIGateway.Session.GameDateTime;
+						updateZones = true;
+						break;
+
+					}
+
+				}
+
+			}
+
+			if (updateZones)
+				FlagUpdateZoneStorage();
+
+		}
+
 		public static void ToggleZonesAtPosition(Vector3D coords, string zoneName = null, bool mode = false) {
 
 			bool updateZones = false;
@@ -568,7 +639,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			if (updateZones)
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 		}
 
@@ -593,14 +664,16 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			if (updateZones)
-				UpdateZoneStorage();
+				FlagUpdateZoneStorage();
 
 		}
 
 		public static void Unload() {
-		
-			
-		
+
+			MES_SessionCore.SaveActions -= UpdateZoneStorage;
+			TaskProcessor.Tick60.Tasks -= AnnounceDepartMessages;
+			TaskProcessor.Tick60.Tasks -= TimerChecks;
+
 		}
 
 	}

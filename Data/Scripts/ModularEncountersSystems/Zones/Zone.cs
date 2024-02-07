@@ -146,9 +146,13 @@ namespace ModularEncountersSystems.Zones {
 			Active = true;
 			PlayerKnownLocation = true;
 
-			if(!string.IsNullOrWhiteSpace(faction))
+			if (!string.IsNullOrWhiteSpace(faction)) {
+
+				UseLimitedFactions = true;
 				Factions.Add(faction);
 
+			}
+				
 			Coordinates = coords;
 			Radius = radius;
 

@@ -457,6 +457,15 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (!AllMesProfileIds.Contains(component.Id) && component.DescriptionText.Contains("[MES Prefab Gravity]")) {
+
+					var profile = new PrefabGravityProfile();
+					profile.InitTags(component.DescriptionText);
+					AllMesProfileIds.Add(component.Id);
+					continue;
+
+				}
+
 				if ((component.DescriptionText.Contains("[RivalAI Autopilot]") || component.DescriptionText.Contains("[MES AI Autopilot]")) && AutoPilotProfiles.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var autopilotObject = new AutoPilotProfile();

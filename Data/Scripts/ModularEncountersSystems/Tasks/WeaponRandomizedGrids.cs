@@ -34,7 +34,7 @@ namespace ModularEncountersSystems.Tasks {
 			if (!_isValid)
 				return;
 
-			if (!_grid?.Npc?.AppliedAttributes?.WeaponRandomizationAggression ?? false)
+			if (_grid?.Npc?.AppliedAttributes?.WeaponRandomizationAggression ?? false)
 				return;
 
 			_grid.SetAutomatedWeaponRanges(false);

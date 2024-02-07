@@ -224,7 +224,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			StrafeMinCooldownMs = 1000;
 			StrafeMaxCooldownMs = 3000;
 			StrafeSpeedCutOff = 100;
-			StrafeDistanceCutOff = 100;
+			StrafeDistanceCutOff = 175;
 
 			StrafeMinimumTargetDistance = 250;
 			StrafeMinimumSafeAngleFromTarget = 25;

@@ -839,7 +839,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AntennaFactionOwner", (s, o) => TagParse.TagStringCheck(s, ref AntennaFactionOwner) },
 				{"CreateKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref CreateKnownPlayerArea) },
 				{"KnownPlayerAreaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref KnownPlayerAreaRadius) },
-				{"KnownPlayerAreaTimer", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaTimer) },
+				{"KnownPlayerAreaTimer", (s, o) => TagParse.TagIntOrDayCheck(s, ref KnownPlayerAreaTimer) },
 				{"KnownPlayerAreaMaxSpawns", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMaxSpawns) },
 				{"KnownPlayerAreaMinThreatForAvoidingAbandonment", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMinThreatForAvoidingAbandonment) },
 				{"DamageToolAttacker", (s, o) => TagParse.TagBoolCheck(s, ref DamageToolAttacker) },

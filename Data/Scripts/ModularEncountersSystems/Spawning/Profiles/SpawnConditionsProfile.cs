@@ -205,6 +205,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public double MinGravity;
 		public double MaxGravity;
 
+		public bool CheckPrefabGravityProfiles;
+
 		public List<string> PlanetBlacklist;
 		public List<string> PlanetWhitelist;
 		public bool PlanetRequiresVacuum;
@@ -539,6 +541,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			MinGravity = -1;
 			MaxGravity = -1;
 
+			CheckPrefabGravityProfiles = false;
+
 			PlanetBlacklist = new List<string>();
 			PlanetWhitelist = new List<string>();
 			PlanetRequiresVacuum = false;
@@ -817,6 +821,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"MaxAirDensity", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAirDensity) },
 				{"MinGravity", (s, o) => TagParse.TagDoubleCheck(s, ref MinGravity) },
 				{"MaxGravity", (s, o) => TagParse.TagDoubleCheck(s, ref MaxGravity) },
+				{"CheckPrefabGravityProfiles", (s, o) => TagParse.TagBoolCheck(s, ref CheckPrefabGravityProfiles) },
 				{"PlanetBlacklist", (s, o) => TagParse.TagStringListCheck(s, ref PlanetBlacklist) },
 				{"PlanetWhitelist", (s, o) => TagParse.TagStringListCheck(s, ref PlanetWhitelist) },
 				{"PlanetRequiresVacuum", (s, o) => TagParse.TagBoolCheck(s, ref PlanetRequiresVacuum) },
@@ -930,7 +935,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 
 
-        public void EditValue(string receivedValue) {
+		public void EditValue(string receivedValue) {
 
 			var processedTag = TagParse.ProcessTag(receivedValue);
 

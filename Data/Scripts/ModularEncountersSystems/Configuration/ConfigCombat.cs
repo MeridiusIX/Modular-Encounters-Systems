@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.Configuration {
 			
 			ModVersion = MES_SessionCore.ModVersion;
 
-			EnableCombatPhaseSystem = true;
+			EnableCombatPhaseSystem = false;
 
 			MinCombatPhaseSeconds = 900;
 			MaxCombatPhaseSeconds = 1800;

@@ -19,6 +19,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool CheckCustomZoneCounters;
 		public List<string> CustomZoneCounterName;
 		public List<int> CustomZoneCounterValue;
+		public List<CounterCompareEnum> CustomZoneCounterCompare;
 		public Dictionary<string, int> CustomZoneCounterReference;
 
 		public bool CheckCustomZoneBools;
@@ -41,6 +42,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			CheckCustomZoneCounters = false;
 			CustomZoneCounterName = new List<string>();
 			CustomZoneCounterValue = new List<int>();
+			CustomZoneCounterCompare = new List<CounterCompareEnum>();
 			CustomZoneCounterReference = new Dictionary<string, int>();
 
 			CheckCustomZoneBools = false;
@@ -51,6 +53,66 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			MinSpawnedZoneEncounters = -1;
 			MaxSpawnedZoneEncounters = -1;
 
+		}
+
+		public bool CheckCounters(Zone zone) {
+
+			bool failedCheck = false;
+
+			for (int i = 0; i < CustomZoneCounterName.Count && i < CustomZoneCounterValue.Count; i++) {
+
+				var compareType = GetCompare(i);
+				long counter = 0;
+
+				if (!zone.CustomCounters.TryGetValue(CustomZoneCounterName[i], out counter)) {
+
+					failedCheck = true;
+					break;
+
+				}
+
+				int target = CustomZoneCounterValue[i];
+
+				if (compareType == CounterCompareEnum.GreaterOrEqual)
+					if (counter >= target)
+						continue;
+
+				if (compareType == CounterCompareEnum.Greater)
+					if (counter > target)
+						continue;
+
+				if (compareType == CounterCompareEnum.Equal)
+					if (counter == target)
+						continue;
+
+				if (compareType == CounterCompareEnum.NotEqual)
+					if (counter != target)
+						continue;
+
+				if (compareType == CounterCompareEnum.Less)
+					if (counter < target)
+						continue;
+
+				if (compareType == CounterCompareEnum.LessOrEqual)
+					if (counter <= target)
+						continue;
+
+				failedCheck = true;
+				break;
+
+			}
+
+			return !failedCheck;		
+
+		}
+
+		private CounterCompareEnum GetCompare(int index) {
+
+			if (index < CustomZoneCounterCompare.Count)
+				return CustomZoneCounterCompare[index];
+
+			return CounterCompareEnum.GreaterOrEqual;
+		
 		}
 
 		public void InitTags(string data) {
@@ -113,6 +175,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//CustomZoneCounterCompare
+				if (tag.StartsWith("[CustomZoneCounterCompare:") == true) {
+
+					TagParse.TagCounterCompareEnumCheck(tag, ref this.CustomZoneCounterCompare);
+
+				}
+
 				//CheckCustomZoneBools
 				if (tag.StartsWith("[CheckCustomZoneBools:") == true) {
 
@@ -150,12 +219,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			}
 
+			/*
 			for (int i = 0; i < CustomZoneCounterName.Count && i < CustomZoneCounterValue.Count; i++) {
 
 				if (!CustomZoneCounterReference.ContainsKey(CustomZoneCounterName[i]))
 					CustomZoneCounterReference.Add(CustomZoneCounterName[i], CustomZoneCounterValue[i]);
 
 			}
+			*/
 
 			for (int i = 0; i < CustomZoneBoolName.Count && i < CustomZoneBoolValue.Count; i++) {
 

@@ -67,7 +67,7 @@ namespace ModularEncountersSystems.Zones {
 
             }
 
-            ZoneManager.UpdateZoneStorage();
+            ZoneManager.FlagUpdateZoneStorage();
 
         }
 
@@ -168,7 +168,7 @@ namespace ModularEncountersSystems.Zones {
 
             if (needsUpdate == true) {
 
-                ZoneManager.UpdateZoneStorage();
+                ZoneManager.FlagUpdateZoneStorage();
 
             }
 
@@ -231,7 +231,7 @@ namespace ModularEncountersSystems.Zones {
             }
 
             if(updateZones)
-                ZoneManager.UpdateZoneStorage();
+                ZoneManager.FlagUpdateZoneStorage();
 
         }
 
@@ -261,7 +261,7 @@ namespace ModularEncountersSystems.Zones {
             }
 
             if (removedLocation)
-                ZoneManager.UpdateZoneStorage();
+                ZoneManager.FlagUpdateZoneStorage();
 
         }
 

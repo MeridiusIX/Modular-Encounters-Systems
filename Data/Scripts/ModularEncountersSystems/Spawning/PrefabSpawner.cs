@@ -429,11 +429,14 @@ namespace ModularEncountersSystems.Spawning {
 				return;
 
 			}
-
-			Vector3D coords = prefab.BoundingSphere.Radius * 1.2 * matrix.Forward + matrix.Translation;
-
+			/*
+			MyVisualScriptLogicProvider.ShowNotificationToAll(matrix.Translation.ToString(), 5000);
+			MyVisualScriptLogicProvider.ShowNotificationToAll(matrix.Forward.ToString(), 5000);
+			MyVisualScriptLogicProvider.ShowNotificationToAll(matrix.Up.ToString(), 5000);
+			*/
 			var dummyList = new List<IMyCubeGrid>();
-			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, prefabId, coords, (Vector3)matrix.Backward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, 0);
+			MyVisualScriptLogicProvider.ShowNotificationToAll("Spawning Prefab [" + prefabId + "] " + matrix.Translation.ToString(), 5000, "White");
+			MyAPIGateway.PrefabManager.SpawnPrefab(dummyList, prefabId, matrix.Translation, (Vector3)matrix.Forward, (Vector3)matrix.Up, Vector3.Zero, Vector3.Zero, null, SpawningOptions.RotateFirstCockpitTowardsDirection, 0);
 
 		}
 

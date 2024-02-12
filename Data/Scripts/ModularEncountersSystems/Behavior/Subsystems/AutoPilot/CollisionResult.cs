@@ -535,6 +535,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				foreach (var voxel in _voxelScanList) {
 
+					if (voxel == null || voxel.MarkedForClose)
+						continue;
+
 					var planet = voxel as MyPlanet;
 
 					if (planet != null)

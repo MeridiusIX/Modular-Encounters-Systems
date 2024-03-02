@@ -37,10 +37,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			}
 
-			for (int i = 0; i < OldBlock.Count && i < Limit.Count; i++) {
+			for (int i = 0; i < NewBlock.Count && i < Limit.Count; i++) {
 
-				if (!CountReplacement.ContainsKey(OldBlock[i]))
-					CountReplacement.Add(OldBlock[i], Limit[i]);
+				if (!CountReplacement.ContainsKey(NewBlock[i]))
+					CountReplacement.Add(NewBlock[i], Limit[i]);
 
 			}
 

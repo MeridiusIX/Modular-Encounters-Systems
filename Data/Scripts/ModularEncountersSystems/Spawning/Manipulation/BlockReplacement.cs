@@ -148,6 +148,11 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			if(!profileLimits.TryGetValue(newId, out limit) || limit == -1)
 				return true;
 
+			existingCounts.TryGetValue(newId, out exist);
+				
+
+
+
 			return exist < limit;
 
 		}

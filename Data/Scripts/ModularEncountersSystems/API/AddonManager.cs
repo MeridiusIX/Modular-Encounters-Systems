@@ -66,12 +66,14 @@ namespace ModularEncountersSystems.API {
 		public static bool DefenseShields = false;
 		private static ulong _defenseShieldsSteamId = 1365616918;
 		private static ulong _defenseShieldsSteamIdNew = 3154379105;
+		private static ulong _defenseShieldsSteamIdForkSC = 3149619582;
 
 		//WeaponCore
 		public static bool WeaponCore = false;
 		private static ulong _weaponCoreSteamId = 1918681825;
 		private static ulong _coreSystemsSteamId = 2189703321;
 		private static ulong _weaponCoreSteamIdNew = 3154371364;
+		private static ulong _weaponCoreSteamIdForkSC = 3149625043;
 
 		//AiEnabled
 		public static bool AiEnabled = false;
@@ -199,7 +201,7 @@ namespace ModularEncountersSystems.API {
 				}
 
 				//Defense Shields
-				if (id == _defenseShieldsSteamId || id == _defenseShieldsSteamIdNew) {
+				if (id == _defenseShieldsSteamId || id == _defenseShieldsSteamIdNew || id == _defenseShieldsSteamIdForkSC) {
 
 					SpawnLogger.Write("Defense Shields Mod Detected", SpawnerDebugEnum.Startup);
 					DefenseShields = true;
@@ -208,7 +210,7 @@ namespace ModularEncountersSystems.API {
 				}
 
 				//WeaponCore
-				if (id == _weaponCoreSteamId || id == _coreSystemsSteamId || id == _weaponCoreSteamIdNew || mod.GetPath().Contains("AppData\\Roaming\\SpaceEngineers\\Mods\\CoreSystems")) {
+				if (id == _weaponCoreSteamId || id == _coreSystemsSteamId || id == _weaponCoreSteamIdNew ||id == _weaponCoreSteamIdForkSC || mod.GetPath().Contains("AppData\\Roaming\\SpaceEngineers\\Mods\\CoreSystems")) {
 
 					SpawnLogger.Write("WeaponCore Mod Detected", SpawnerDebugEnum.Startup);
 					WeaponCore = true;

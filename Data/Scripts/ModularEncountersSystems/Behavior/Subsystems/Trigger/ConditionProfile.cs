@@ -214,6 +214,55 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+
+			//Bool False
+			if (ConditionReference.CheckFalseBooleans == true)
+			{
+				usedConditions++;
+				bool failedCheck = false;
+
+				for (int i = 0; i < ConditionReference.FalseBooleans.Count; i++)
+				{
+
+					var boolName = ConditionReference.FalseBooleans[i];
+
+					try
+					{
+
+						//bool output = false;
+						var output = _settings.GetCustomBoolResult(boolName);
+
+						if (output)
+						{
+							//BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
+							failedCheck = true;
+							continue;
+
+						}
+						else if (ConditionReference.AllowAnyFalseBoolean)
+						{
+							failedCheck = false;
+							break;
+
+						}
+
+					}
+					catch (Exception e)
+					{
+
+						//BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+						//BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+
+					}
+
+				}
+
+				if (!failedCheck)
+					satisfiedConditions++;
+			}
+
+
+
 			if (ConditionReference.CheckCustomCounters == true) {
 
 				usedConditions++;
@@ -393,6 +442,56 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					satisfiedConditions++;
 
 			}
+
+
+			//Bool False
+			if (ConditionReference.CheckFalseSandboxBooleans == true)
+			{
+				usedConditions++;
+				bool failedCheck = false;
+
+				for (int i = 0; i < ConditionReference.FalseSandboxBooleans.Count; i++)
+				{
+
+					var boolName = ConditionReference.FalseSandboxBooleans[i];
+
+					try
+					{
+
+						bool output = false;
+						var result = MyAPIGateway.Utilities.GetVariable(boolName, out output);
+
+						if (output)
+						{
+							//BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
+							failedCheck = true;
+							continue;
+
+						}
+						else if (ConditionReference.AllowAnyFalseSandboxBoolean)
+						{
+							failedCheck = false;
+							break;
+
+						}
+
+					}
+					catch (Exception e)
+					{
+
+						//BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+						//BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+
+					}
+
+				}
+
+				if (!failedCheck)
+					satisfiedConditions++;
+			}
+
+
+
 
 			if (ConditionReference.CheckGridSpeed == true) {
 
@@ -684,6 +783,46 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 				
 			}
+
+			if (ConditionReference.TargetAltitudeCheck)
+			{
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.CurrentPlanet != null)
+				{
+					var altitude = _behavior.AutoPilot.CurrentPlanet.AltitudeAtPosition(_behavior.AutoPilot.Targeting.TargetLastKnownCoords);
+
+
+					if ((ConditionReference.MinTargetAltitude == -1 || altitude > ConditionReference.MinAltitude) && (ConditionReference.MaxAltitude == -1 || altitude < ConditionReference.MaxTargetAltitude))
+					{
+
+						satisfiedConditions++;
+
+					}
+					else
+					{
+
+						BehaviorLogger.Write("Altitude Check Failed. Current Altitude: " + _behavior.AutoPilot.MyAltitude, BehaviorDebugEnum.Condition);
+
+					}
+
+				}
+				else
+				{
+
+					BehaviorLogger.Write("Altitude Check Failed, Not On Planet", BehaviorDebugEnum.Condition);
+
+				}
+
+			}
+
+
+
+
+
+
+
 
 			if (ConditionReference.CheckHorizonAngle) {
 

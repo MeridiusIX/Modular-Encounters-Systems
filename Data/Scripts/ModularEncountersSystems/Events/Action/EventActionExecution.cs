@@ -2,15 +2,18 @@
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Events.Condition;
+using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Zones;
+using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game;
 using VRageMath;
 
 namespace ModularEncountersSystems.Events.Action {
@@ -103,6 +106,10 @@ namespace ModularEncountersSystems.Events.Action {
 				ResetCooldownTimeOfEvents(actions.ResetEventCooldownIds, actions.ResetEventCooldownTags);
 			}
 
+            if (actions.IncreaseRunCountOfEvents)
+            {
+				IncreaseRunCountEvents(actions.IncreaseRunCountEventIds, actions.IncreaseRunCountEventIdAmount, actions.IncreaseRunCountEventTags, actions.IncreaseRunCountEventTagAmount);
+            }
 			if (actions.ToggleEvents)
 			{
 				ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes);
@@ -196,6 +203,8 @@ namespace ModularEncountersSystems.Events.Action {
 				}
 			}
 
+
+
             if (actions.FadeOutPlayers)
             {
 				foreach (var player in PlayerManager.Players)
@@ -207,7 +216,51 @@ namespace ModularEncountersSystems.Events.Action {
 				}
 			}
 
-            if (actions.ChangeReputationWithPlayers)
+			if (actions.AddItemToPlayersInventory)
+			{
+				foreach (var player in PlayerManager.Players)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddItemPlayerConditionIds, player.Player.IdentityId))
+					{
+                        foreach (var raw_id in actions.ItemIds)
+                        {
+							string itemType = raw_id.Split('/')[0];
+							StoreProfileItemTypes storeItemType = (StoreProfileItemTypes)Enum.Parse(typeof(StoreProfileItemTypes), itemType);
+
+							Type type = null;
+
+							if (storeItemType == StoreProfileItemTypes.None)
+								type = typeof(MyObjectBuilder_DefinitionBase);
+
+							if (storeItemType == StoreProfileItemTypes.Ammo)
+								type = typeof(MyObjectBuilder_AmmoMagazine);
+
+							if (storeItemType == StoreProfileItemTypes.Ore)
+								type = typeof(MyObjectBuilder_Ore);
+
+							if (storeItemType == StoreProfileItemTypes.Ingot)
+								type = typeof(MyObjectBuilder_Ingot);
+
+							if (storeItemType == StoreProfileItemTypes.Component)
+								type = typeof(MyObjectBuilder_Component);
+
+							if (storeItemType == StoreProfileItemTypes.Tool)
+								type = typeof(MyObjectBuilder_PhysicalGunObject);
+
+
+							if (storeItemType == StoreProfileItemTypes.Consumable)
+								type = typeof(MyObjectBuilder_ConsumableItem);
+
+							var item = MyDefinitionManager.Static.GetPhysicalItemDefinition(new MyDefinitionId(type, raw_id.Split('/')[1])).Id;
+
+							MyVisualScriptLogicProvider.AddToPlayersInventory(player.Player.IdentityId, item);
+						}
+					}
+				}
+			}
+
+
+			if (actions.ChangeReputationWithPlayers)
             {
 				List<long> players = new List<long>();
 
@@ -474,15 +527,11 @@ namespace ModularEncountersSystems.Events.Action {
 		}
 
 
-		public static void ResetCooldownTimeOfEvents(List<string> ResetEventCooldownNames, List<string> ResetEventCooldownTags, string SpawnGroupName = "")
+		public static void ResetCooldownTimeOfEvents(List<string> ResetEventCooldownNames, List<string> ResetEventCooldownTags)
 		{
 			foreach (var EventName in ResetEventCooldownNames)
 			{
 				var Name = EventName;
-				if (EventName.Contains("{SpawnGroupName}") && SpawnGroupName != null)
-				{
-					Name = EventName.Replace("{SpawnGroupName}", SpawnGroupName);
-				}
 				foreach (var Event in EventManager.EventsList)
 				{
 					if (Name == Event.ProfileSubtypeId)
@@ -507,16 +556,40 @@ namespace ModularEncountersSystems.Events.Action {
 
 		}
 
-		
-		public static void ToggleEvents(List<string> ToggleEventIds, List<bool> ToggleEventIdModes, List<string> ToggleEventTags, List<bool> ToggleEventTagModes, string SpawnGroupName = "")
+		public static void IncreaseRunCountEvents(List<string> IncreaseRunCountEventIds, List<int> IncreaseRunCountEventIdAmount, List<string> IncreaseRunCountEventTags, List<int> IncreaseRunCountEventTagAmount)
+		{
+			for (int i = 0; i < IncreaseRunCountEventIds.Count; i++)
+			{
+				var Name = IncreaseRunCountEventIds[i];
+
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Name == Event.ProfileSubtypeId)
+					{
+						Event.RunCount += IncreaseRunCountEventIdAmount[i];
+					}
+				}
+			}
+
+			for (int i = 0; i < IncreaseRunCountEventTags.Count; i++)
+			{
+				var Tag = IncreaseRunCountEventTags[i];
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Event.Profile.Tags.Contains(Tag))
+					{
+						Event.RunCount += IncreaseRunCountEventTagAmount[i];
+					}
+				}
+			}
+
+		}
+
+		public static void ToggleEvents(List<string> ToggleEventIds, List<bool> ToggleEventIdModes, List<string> ToggleEventTags, List<bool> ToggleEventTagModes)
 		{
 			for (int i = 0; i < ToggleEventIds.Count; i++)
 			{
 				var Name = ToggleEventIds[i];
-				if (Name.Contains("{SpawnGroupName}") && SpawnGroupName != null)
-				{
-					Name = Name.Replace("{SpawnGroupName}", SpawnGroupName);
-				}
 
 				foreach (var Event in EventManager.EventsList)
 				{

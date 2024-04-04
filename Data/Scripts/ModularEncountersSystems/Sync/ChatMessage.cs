@@ -6,6 +6,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Create;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
@@ -128,9 +129,18 @@ namespace ModularEncountersSystems.Sync {
 			if (Message.StartsWith("/MES.Info."))
 				return ProcessInfo();
 
+			//Create
+
+			if (Message.StartsWith("/MES.Create."))
+				return ProcessCreate();
+
+			
+
 			//Debug
 			if (Message.StartsWith("/MES.Debug."))
 				return ProcessDebug();
+
+
 
 			SpawnLogger.Write("Chat Command Type Isn't Recognized", SpawnerDebugEnum.Settings);
 			ReturnMessage = "Chat Command Type Isn't Recognized";
@@ -163,7 +173,7 @@ namespace ModularEncountersSystems.Sync {
 
 			if (Message.StartsWith("/MES.SSE"))
 				Message = Message.Replace("/MES.SSE", "/MES.Spawn.StaticEncounter");
-
+			
 			if (Message.StartsWith("/MES.SP"))
 				Message = Message.Replace("/MES.SP", "/MES.Spawn.Prefab");
 
@@ -1295,6 +1305,46 @@ namespace ModularEncountersSystems.Sync {
 			return false;
 		
 		}
+
+
+		private bool ProcessCreate()
+        {
+
+			var array = GetArray(3, 5);
+
+			if (array == null)
+			{
+
+				SpawnLogger.Write("Array Size Too Small", SpawnerDebugEnum.Settings);
+				return false;
+
+			}
+
+			//GetEligibleSpawnsAtPosition
+			if (array[2] == "Event")
+			{
+				if (array.Length < 4)
+				{
+					ReturnMessage = "Missing Type";
+					return false;
+
+				}
+
+				if (array[3] == "Area")
+				{
+
+					Mode = ChatMsgMode.ReturnMessage;
+					ReturnMessage = "Eligible Spawns Sent To Clipboard.";
+					ClipboardPayload = CreateMaker.CreateEventArea(this,array[4]);
+					return true;
+
+				}
+
+
+
+			}
+			return false;
+        }
 
 		public bool ProcessDebugMode() {
 

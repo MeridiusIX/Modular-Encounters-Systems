@@ -598,7 +598,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (string.IsNullOrWhiteSpace(receivedCommand.CommandCode))
 					continue;
 
-				bool commandCodePass = !trigger.AllowCommandCodePartialMatch ? (receivedCommand.CommandCode.ToLower() == trigger.CommandReceiveCode.ToLower()) : (receivedCommand.CommandCode.ToLower().Contains(trigger.CommandReceiveCode.ToLower()));
+				var commandreceivecode = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, trigger.CommandReceiveCode);
+
+				bool commandCodePass = !trigger.AllowCommandCodePartialMatch ? (receivedCommand.CommandCode.ToLower() == commandreceivecode.ToLower()) : (receivedCommand.CommandCode.ToLower().Contains(commandreceivecode.ToLower()));
 
 				if (trigger.UseTrigger == true && commandCodePass) {
 

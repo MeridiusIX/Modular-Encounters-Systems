@@ -15,7 +15,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 	
 		All,
 		Sequential,
-		Random
+		Random,
+		Condition
 	
 	}
 

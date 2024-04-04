@@ -44,6 +44,8 @@ namespace ModularEncountersSystems.Events
         [ProtoIgnore] public List<EventCondition> Conditions;
         [ProtoIgnore] public List<EventCondition> PersistantConditions;
 
+        [ProtoIgnore] public int RequiredConditionIndex;
+
         [ProtoIgnore]
         public EventProfile Profile
         {
@@ -251,24 +253,29 @@ namespace ModularEncountersSystems.Events
             if (Actions.Count <= 0)
                 return;
 
-
-            if (Profile.ActionExecution == ActionExecutionEnum.All) {
-
+            if(Profile.ActionExecution == ActionExecutionEnum.Condition)
+            {
                 for (int i = 0; i < Actions.Count; i++)
                 {
-
-                    Actions[i].ExecuteAction();
-
+                    if(RequiredConditionIndex == i)
+                        Actions[i].ExecuteAction();
                 }
-
             }
 
+            if (Profile.ActionExecution == ActionExecutionEnum.All)
+            {
+                for (int i = 0; i < Actions.Count; i++)
+                {
+                    Actions[i].ExecuteAction();
+                }
+            }
 
-            if (Profile.ActionExecution == ActionExecutionEnum.Random) {
+            if (Profile.ActionExecution == ActionExecutionEnum.Random)
+            {
                 var index = MathTools.RandomBetween(0, (Actions.Count));
                 Actions[index].ExecuteAction();
 
-                }
+            }
 
             if (Profile.ActionExecution == ActionExecutionEnum.Sequential)
             {

@@ -46,6 +46,13 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<string> ToggleEventTags;
 		public List<bool> ToggleEventTagModes;
 
+		public bool IncreaseRunCountOfEvents;
+		public List<string> IncreaseRunCountEventIds;
+		public List<int> IncreaseRunCountEventIdAmount;
+
+		public List<string> IncreaseRunCountEventTags;
+		public List<int> IncreaseRunCountEventTagAmount;
+
 		public bool ChangeZoneAtPosition;
 		public List<string> ZoneNames;
 		public List<Vector3D> ZoneCoords;
@@ -67,6 +74,9 @@ namespace ModularEncountersSystems.Events.Action {
 		public bool FadeInPlayers;
 		public List<string> FadeInPlayerConditionIds;
 
+		public bool AddItemToPlayersInventory;
+		public List<string> AddItemPlayerConditionIds;
+		public List<string> ItemIds;
 
 		public bool TeleportPlayers;
 		public List<string> TeleportPlayerConditionIds;
@@ -165,6 +175,9 @@ namespace ModularEncountersSystems.Events.Action {
 			GPSVector3Ds = new List<Vector3D>();
 			GPSColors = new List<Vector3D>();
 
+			AddGPSPlayerConditionIds = new List<string>();
+			RemoveGPSPlayerConditionIds = new List<string>();
+
 			ToggleEvents = false;
 			ToggleEventIds = new List<string>();
 			ToggleEventIdModes = new List<bool>();
@@ -176,7 +189,15 @@ namespace ModularEncountersSystems.Events.Action {
 			ResetEventCooldownIds = new List<string>();
 			ResetEventCooldownTags = new List<string>();
 
-			AddTagstoPlayers = false;
+			IncreaseRunCountOfEvents =false;
+			IncreaseRunCountEventIds = new List<string>();
+			IncreaseRunCountEventIdAmount = new List<int>() { 1 };
+
+			IncreaseRunCountEventTags = new List<string>();
+			IncreaseRunCountEventTagAmount = new List<int>() { 1 };
+
+
+		AddTagstoPlayers = false;
 			AddTagsPlayerConditionIds = new List<string>();
 			AddTags = new List<string>();
 
@@ -190,7 +211,9 @@ namespace ModularEncountersSystems.Events.Action {
 			FadeOutPlayers = false;
 			FadeOutPlayerConditionIds = new List<string>();
 
-
+			AddItemToPlayersInventory=false;
+			AddItemPlayerConditionIds = new List<string>();
+			ItemIds = new List<string>();
 
 			TeleportPlayers = false;
 			TeleportPlayerConditionIds = new List<string>();
@@ -253,6 +276,8 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
 
 				{"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
+
+				{"AddTagsToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
 				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
 				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
 
@@ -266,12 +291,13 @@ namespace ModularEncountersSystems.Events.Action {
 				{"FadeOutPlayers", (s, o) => TagParse.TagBoolCheck(s, ref FadeOutPlayers) },
 				{"FadeOutPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref FadeOutPlayerConditionIds) },
 
-				{"BroadcastCommandProfiles", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCommandProfiles) },
+				{"AddItemToPlayersInventory", (s, o) => TagParse.TagBoolCheck(s, ref AddItemToPlayersInventory) },
+				{"AddItemPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddItemPlayerConditionIds) },
+				{"ItemIds", (s, o) => TagParse.TagStringListCheck(s, ref ItemIds) },
+
+				{ "BroadcastCommandProfiles", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCommandProfiles) },
 				{"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
 				{"CommandProfileOriginCoords", (s, o) => TagParse.TagVector3DCheck(s, ref CommandProfileOriginCoords) },
-
-
-
 				
 				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
 				{"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
@@ -279,13 +305,27 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ToggleEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventTags) },
 				{"ToggleEventTagModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventTagModes) },
 
-				{"AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
+				{"IncreaseRunCountOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseRunCountOfEvents) },
+				{"IncreaseRunCountEventIds", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseRunCountEventIds) },
+				{"IncreaseRunCountEventIdAmount", (s, o) => TagParse.TagIntListCheck(s, ref IncreaseRunCountEventIdAmount) },
+				{"IncreaseRunCountEventTags", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseRunCountEventTags) },
+				{"IncreaseRunCountEventTagAmount", (s, o) => TagParse.TagIntListCheck(s, ref IncreaseRunCountEventTagAmount) },
+
+
+
+			{ "AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
 				{"RemoveGPSFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSFromPlayers) },
 				{"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
 				{"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
 				{"GPSDescriptions", (s, o) => TagParse.TagStringListCheck(s, ref GPSDescriptions) },
 				{"GPSCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
+				{"GPSVector3Ds", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
+
 				{"GPSColors", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSColors) },
+				{"AddGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddGPSPlayerConditionIds) },
+				{"RemoveGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveGPSPlayerConditionIds) },
+
+
 
 				{"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
 				{"SpawnCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref SpawnVector3Ds) },

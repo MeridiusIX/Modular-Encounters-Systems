@@ -1565,7 +1565,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 
-			if (actions.AddTagsToPlayers)
+			if (actions.AddTagstoPlayers)
 			{
 				bool SavedPlayerIdentityAlreadyIncluded = false;
 				foreach (var player in PlayerManager.Players)
@@ -1659,12 +1659,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (actions.ResetCooldownTimeOfEvents)
 			{
-				EventActionProfile.ResetCooldownTimeOfEvents(actions.ResetEventCooldownIds, actions.ResetEventCooldownTags, _behavior?.CurrentGrid?.Npc.SpawnGroupName);
+				
+				EventActionProfile.ResetCooldownTimeOfEvents(IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ResetEventCooldownIds), IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ResetEventCooldownTags));
+
+
 			}
 
 			if (actions.ToggleEvents)
 			{
-				EventActionProfile.ToggleEvents(actions.ToggleEventIds, actions.ToggleEventIdModes, actions.ToggleEventTags, actions.ToggleEventTagModes, _behavior?.CurrentGrid?.Npc.SpawnGroupName);
+				EventActionProfile.ToggleEvents(IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ToggleEventIds), actions.ToggleEventIdModes, IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ToggleEventTags), actions.ToggleEventTagModes);
 			}
 
 

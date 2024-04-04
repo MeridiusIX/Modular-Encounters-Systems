@@ -238,14 +238,12 @@ namespace ModularEncountersSystems.Events {
 
 					}
 
-
-
 					continue;
 				}
 
-
+				int index = 0;
 				//Check Conditions
-				if (!EventCondition.AreConditionsMet(thisEvent.Profile.UseAnyPassingCondition, thisEvent.Conditions)) {
+				if (!EventCondition.AreConditionsMet(thisEvent.Profile.UseAnyPassingCondition, thisEvent.Conditions, out index)) {
 
 					if (thisEvent.Profile.OnFailResetCooldown)
                     {
@@ -260,9 +258,10 @@ namespace ModularEncountersSystems.Events {
 
 				}
 
-
+				
 				
 				thisEvent.Ready = true;
+				thisEvent.RequiredConditionIndex = index;
 				_readyEvents.Add(thisEvent);
 			}
 
@@ -273,6 +272,7 @@ namespace ModularEncountersSystems.Events {
 				if (thisEvent.Ready == true) {
 
 					thisEvent.Ready = false;
+
 					thisEvent.ActivateEventActions();
 					thisEvent.RunCount++;
 					_readyEvents.Remove(thisEvent);

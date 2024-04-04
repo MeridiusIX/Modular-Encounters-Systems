@@ -206,6 +206,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 if (profile.CheckReputationwithFaction.Count == profile.MaxPlayerReputation.Count && profile.MaxPlayerReputation.Count == profile.MinPlayerReputation.Count)
                 {
+                    int satisfiedFaction = 0;
 
                     for (int i = 0; i < profile.CheckReputationwithFaction.Count; i++)
                     {
@@ -221,18 +222,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(PlayerId, FactionId);
                             if (rep >= profile.MinPlayerReputation[i] && rep <= profile.MaxPlayerReputation[i])
                             {
-                                satisfiedConditions++;
+                                satisfiedFaction++;
                             }
                                
                         }
 
 
                     }
+
+                    if (satisfiedFaction == profile.CheckReputationwithFaction.Count)
+                        satisfiedConditions++;
+
                 }
                 else
                 {
                     BehaviorLogger.Write("CheckReputationwithFaction, MaxPlayerReputation, and MinPlayerReputation do not match in count. Condition Failed", BehaviorDebugEnum.Condition);
                 }
+
+
 
             }
 

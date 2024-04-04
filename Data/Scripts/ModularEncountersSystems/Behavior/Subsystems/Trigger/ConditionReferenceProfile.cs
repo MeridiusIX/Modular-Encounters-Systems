@@ -30,6 +30,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckTrueBooleans;
 		public List<string> TrueBooleans;
 		public bool AllowAnyTrueBoolean;
+
+		public bool CheckFalseBooleans;
+		public List<string> FalseBooleans;
+		public bool AllowAnyFalseBoolean;
+
 		public bool CheckCustomCounters;
 		public List<string> CustomCounters;
 		public List<int> CustomCountersTargets;
@@ -56,6 +61,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckTrueSandboxBooleans;
 		public List<string> TrueSandboxBooleans;
 		public bool AllowAnyTrueSandboxBoolean;
+
+		public bool CheckFalseSandboxBooleans;
+		public List<string> FalseSandboxBooleans;
+		public bool AllowAnyFalseSandboxBoolean;
+
 		public bool CheckCustomSandboxCounters;
 		public List<string> CustomSandboxCounters;
 		public List<int> CustomSandboxCountersTargets;
@@ -106,6 +116,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool AltitudeCheck;
 		public double MinAltitude;
 		public double MaxAltitude;
+
+		public bool TargetAltitudeCheck;
+		public double MinTargetAltitude;
+		public double MaxTargetAltitude;
 
 		public bool CheckHorizonAngle;
 		public double MinHorizonAngle;
@@ -196,6 +210,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			TrueBooleans = new List<string>();
 			AllowAnyTrueBoolean = false;
 
+			CheckFalseBooleans = false;
+			FalseBooleans = new List<string>();
+			AllowAnyFalseBoolean = false;
+
+
 			CheckCustomCounters = false;
 			CustomCounters = new List<string>();
 			CustomCountersTargets = new List<int>();
@@ -204,6 +223,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckTrueSandboxBooleans = false;
 			TrueSandboxBooleans = new List<string>();
 			AllowAnyTrueSandboxBoolean = false;
+
+			CheckFalseSandboxBooleans = false;
+			FalseSandboxBooleans = new List<string>();
+			AllowAnyFalseSandboxBoolean = false;
 
 			CheckCustomSandboxCounters = false;
 			CustomSandboxCounters = new List<string>();
@@ -266,6 +289,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			AltitudeCheck = false;
 			MinAltitude = -1;
 			MaxAltitude = -1;
+
+			TargetAltitudeCheck = false;
+			MinTargetAltitude = -1;
+			MaxTargetAltitude = -1;
 
 			CheckHorizonAngle = false;
 			MinHorizonAngle = -1;
@@ -356,6 +383,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckTrueBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckTrueBooleans) },
 				{"TrueBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueBooleans) },
 				{"AllowAnyTrueBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyTrueBoolean) },
+				{"CheckFalseBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckFalseBooleans) },
+				{"FalseBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueBooleans) },
+				{"AllowAnyFalseBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyFalseBoolean) },
+
+
 				{"CheckCustomCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomCounters) },
 				{"CustomCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomCounters) },
 				{"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomCountersTargets) },
@@ -376,6 +408,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckTrueSandboxBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckTrueSandboxBooleans) },
 				{"TrueSandboxBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueSandboxBooleans) },
 				{"AllowAnyTrueSandboxBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyTrueSandboxBoolean) },
+				{"CheckFalseSandboxBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckFalseSandboxBooleans) },
+				{"FalseSandboxBooleans", (s, o) => TagParse.TagStringListCheck(s, ref FalseSandboxBooleans) },
+				{"AllowAnyFalseSandboxBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyFalseSandboxBoolean) },
 				{"CheckCustomSandboxCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomSandboxCounters) },
 				{"CustomSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomSandboxCounters) },
 				{"CustomSandboxCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomSandboxCountersTargets) },
@@ -415,6 +450,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref AltitudeCheck) },
 				{"MinAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinAltitude) },
 				{"MaxAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAltitude) },
+				{"TargetAltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref TargetAltitudeCheck) },
+				{"MinTargetAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetAltitude) },
+				{"MaxTargetAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetAltitude) },
 				{"CheckHorizonAngle", (s, o) => TagParse.TagBoolCheck(s, ref CheckHorizonAngle) },
 				{"MinHorizonAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinHorizonAngle) },
 				{"MaxHorizonAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxHorizonAngle) },

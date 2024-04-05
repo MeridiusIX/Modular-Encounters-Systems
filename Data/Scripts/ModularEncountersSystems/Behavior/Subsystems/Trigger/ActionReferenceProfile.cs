@@ -388,7 +388,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SavePlayerIdentity;
 		public bool RemovePlayerIdentity;
 
-		public bool AddTagstoPlayers;
+		public bool AddTagsToPlayers;
 		public bool AddTagsIncludeSavedPlayerIdentity;
 		public List<string> AddTagsPlayerConditionIds;
 		public List<string> AddTags;
@@ -795,7 +795,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SavePlayerIdentity = false;
 			RemovePlayerIdentity = false;
 
-			AddTagstoPlayers = false;
+			AddTagsToPlayers = false;
 			AddTagsIncludeSavedPlayerIdentity = false;
 			AddTagsPlayerConditionIds = new List<string>();
 			AddTags = new List<string>();
@@ -1098,7 +1098,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"SavePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref SavePlayerIdentity) },
 				{"RemovePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentity) },
 
-				{"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
+				{"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsToPlayers) },
+				{"AddTagsToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsToPlayers) },
 				{"AddTagsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsIncludeSavedPlayerIdentity) },
 				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
 				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },

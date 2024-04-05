@@ -1565,7 +1565,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 
-			if (actions.AddTagstoPlayers)
+			if (actions.AddTagsToPlayers)
 			{
 				bool SavedPlayerIdentityAlreadyIncluded = false;
 				foreach (var player in PlayerManager.Players)

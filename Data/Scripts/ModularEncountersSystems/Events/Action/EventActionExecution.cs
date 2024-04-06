@@ -70,32 +70,38 @@ namespace ModularEncountersSystems.Events.Action {
 			//Change Counter
 			if (actions.ChangeCounters) {
 
+				bool fail = false;
 				if (actions.IncreaseCounters.Count != actions.IncreaseCountersAmount.Count)
-					return;
+					fail = true;
 
 				if (actions.DecreaseCounters.Count != actions.DecreaseCountersAmount.Count)
-					return;
+					fail = true;
 
 				if (actions.SetCounters.Count != actions.SetCountersAmount.Count)
 				{
-					return;
+					fail = true;
 				}
 
+                if (!fail)
+                {
+					for (int i = 0; i < actions.SetCounters.Count; i++)
+					{
+						SetCounter(actions.SetCounters[i], actions.SetCountersAmount[i], true);
+					}
 
-				for (int i = 0; i < actions.SetCounters.Count; i++)
-				{
-					SetCounter(actions.SetCounters[i], actions.SetCountersAmount[i], true);
+
+					for (int i = 0; i < actions.IncreaseCounters.Count; i++)
+					{
+						SetCounter(actions.IncreaseCounters[i], Math.Abs(actions.IncreaseCountersAmount[i]), false);
+					}
+
+					for (int i = 0; i < actions.DecreaseCounters.Count; i++)
+					{
+
+						SetCounter(actions.DecreaseCounters[i], -Math.Abs(actions.DecreaseCountersAmount[i]), false);
+					}
 				}
 
-
-				for (int i = 0; i < actions.IncreaseCounters.Count; i++) {
-					SetCounter(actions.IncreaseCounters[i], Math.Abs(actions.IncreaseCountersAmount[i]), false);
-				}
-
-				for (int i = 0; i < actions.DecreaseCounters.Count; i++) {
-
-					SetCounter(actions.DecreaseCounters[i], - Math.Abs(actions.DecreaseCountersAmount[i]), false);
-				}
 
 			}
 

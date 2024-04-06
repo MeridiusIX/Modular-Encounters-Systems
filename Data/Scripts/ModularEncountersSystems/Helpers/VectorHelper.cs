@@ -524,25 +524,30 @@ namespace ModularEncountersSystems.Helpers {
 		public static MatrixD GetPlanetRandomSpawnMatrix(Vector3D coords, double minDist, double maxDist, double minAltitude, double maxAltitude, bool inheritAltitude = false) {
 
 			MatrixD result = MatrixD.Identity;
-			var planet = MyGamePruningStructure.GetClosestPlanet(coords);
-			var upDir = GetPlanetUpDirection(coords);
+			var NearestPlanet = PlanetManager.GetNearestPlanet(coords);
 
-			if (planet == null)
+			if (NearestPlanet == null)
 				return result;
+
+			
+
+			var upDir = NearestPlanet.UpAtPosition(coords);
+
+
 
 			double inheritedAltitude = 0;
 
 			if (inheritAltitude) {
 
-				var npcSurface = GetPlanetSurfaceCoordsAtPosition(coords, planet);
+				var npcSurface = NearestPlanet.SurfaceCoordsAtPosition(coords, true);
 				inheritedAltitude = Vector3D.Distance(npcSurface, coords);
 
 			}
 
 			var perpDir = RandomPerpendicular(upDir);
 			var roughArea = perpDir * RandomDistance(minDist, maxDist) + coords;
-			var surfaceCoords = GetPlanetSurfaceCoordsAtPosition(roughArea, planet);
-			var upAtSurface = Vector3D.Normalize(surfaceCoords - planet.PositionComp.WorldAABB.Center);
+			var surfaceCoords = NearestPlanet.SurfaceCoordsAtPosition(coords);
+			var upAtSurface = Vector3D.Normalize(surfaceCoords - NearestPlanet.Center());
 			var spawnCoords = upAtSurface * (RandomDistance(minAltitude, maxAltitude) + inheritedAltitude) + surfaceCoords;
 			var perpSurfaceDir = RandomPerpendicular(upAtSurface);
 			result = MatrixD.CreateWorld(spawnCoords, perpSurfaceDir, upAtSurface);

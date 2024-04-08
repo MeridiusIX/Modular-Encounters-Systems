@@ -546,7 +546,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			var perpDir = RandomPerpendicular(upDir);
 			var roughArea = perpDir * RandomDistance(minDist, maxDist) + coords;
-			var surfaceCoords = NearestPlanet.SurfaceCoordsAtPosition(coords);
+			var surfaceCoords = NearestPlanet.SurfaceCoordsAtPosition(roughArea);
 			var upAtSurface = Vector3D.Normalize(surfaceCoords - NearestPlanet.Center());
 			var spawnCoords = upAtSurface * (RandomDistance(minAltitude, maxAltitude) + inheritedAltitude) + surfaceCoords;
 			var perpSurfaceDir = RandomPerpendicular(upAtSurface);

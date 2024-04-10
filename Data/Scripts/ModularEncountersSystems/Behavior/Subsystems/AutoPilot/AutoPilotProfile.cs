@@ -101,6 +101,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		public double PadDistanceFromTarget;
 
+		//Bunker
+		public bool TryToLevelWithTarget;
+
 		//Special Maneuvers
 		public int BarrelRollMinDurationMs;
 		public int BarrelRollMaxDurationMs;
@@ -204,6 +207,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			PadDistanceFromTarget = 0;
 
+			TryToLevelWithTarget = false;
 			Unused = true;
 			CollisionEvasionWaypointDistance = 300;
 			CollisionFallEvasionWaypointDistance = 75;
@@ -745,6 +749,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				TagParse.TagDoubleCheck(tag, ref this.PadDistanceFromTarget);
 
 			}
+			//AccountForBunkers
+			if (tag.Contains("[TryToLevelWithTarget:") == true)
+			{
+
+				TagParse.TagBoolCheck(tag, ref this.TryToLevelWithTarget);
+
+			}
+			
+
 
 			//BarrelRollMinDurationMs
 			if (tag.Contains("[BarrelRollMinDurationMs:") == true) {

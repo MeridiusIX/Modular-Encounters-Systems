@@ -263,6 +263,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public string DebugDataB;
 		public string DebugDataC;
 		private static HudAPIv2.HUDMessage _hudText;
+		private bool ShownGps;
 
 		public AutoPilotSystem(IMyRemoteControl remoteControl, IBehavior behavior) {
 
@@ -357,7 +358,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			//Post Constructor Setup
 			_remoteControl = remoteControl;
 			Targeting = new TargetingSystem(_remoteControl);
-
+			ShownGps = false;	
 		}
 
 		public void SetupReferences(IBehavior behavior, StoredSettings settings, TriggerSystem trigger) {
@@ -1081,6 +1082,92 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				_pendingWaypoint = roughPaddedCoords;
 
 			}
+
+
+
+
+			//Bunker busting
+			if (Data.TryToLevelWithTarget && Targeting.HasTarget() && InGravity() && Targeting.Target.IsStatic() && Targeting.Target.Distance(_myPosition) < 1200 && Targeting.Target.CurrentAltitude() < 0)
+			{
+				var targetCoords = Targeting.TargetLastKnownCoords;
+
+				var distanceTargetCore = (Targeting.TargetLastKnownCoords - CurrentPlanet.Center()).Length(); 
+
+				var surfaceTargetCoords = CurrentPlanet.SurfaceCoordsAtPosition(targetCoords);
+
+				var upAtSurface = Vector3D.Normalize(surfaceTargetCoords - CurrentPlanet.Center());
+				var distanceSurfaceTargetCore = (surfaceTargetCoords - CurrentPlanet.Center()).Length();
+
+				Vector3D AxisA = new Vector3D();
+				upAtSurface.CalculatePerpendicularVector(out AxisA);
+				Vector3D AxisB = Vector3D.Cross(upAtSurface, AxisA);
+
+
+				var stepSize = 25; // Define the step size for exploration
+				var maxSteps = 8; // Define the maximum number of steps to explore
+				var tolerance = 0.1; // Define a tolerance value for distance comparison
+
+				var closestSurfacePoint = surfaceTargetCoords;
+				//var closestDistance = Math.Abs((distanceSurfaceTargetCore - distanceTargetCore));
+				double highestAltitude = 0;
+
+				for (int i = -maxSteps; i <= maxSteps; i++)
+				{
+					for (int j = -maxSteps; j <= maxSteps; j++)
+					{
+						// Calculate the exploration point along AxisA and AxisB directions
+						var explorationPoint = surfaceTargetCoords + i * stepSize * AxisA + j * stepSize * AxisB;
+						var surfaceExplorationCoords = CurrentPlanet.SurfaceCoordsAtPosition(explorationPoint);
+
+						// Calculate the distance from the exploration point to the planet's core
+						var distToCore = (explorationPoint - CurrentPlanet.Center()).Length();
+						var distSurfaceToCore = (surfaceExplorationCoords - CurrentPlanet.Center()).Length();
+
+						double Altitude = 0;
+
+						//Altitude
+						if (distToCore> distSurfaceToCore)
+                        {
+							Altitude= (explorationPoint - surfaceExplorationCoords).Length();
+							var diffDistance = distToCore - distanceTargetCore;
+							Altitude = Altitude - diffDistance;
+						}
+						else
+							Altitude = -(explorationPoint - surfaceExplorationCoords).Length();
+
+						if (Altitude > highestAltitude)
+						{
+							highestAltitude = Altitude;
+							closestSurfacePoint = surfaceExplorationCoords;
+
+						}
+					}
+				}
+
+
+				//closestSurfacePoint;
+				var upAtClosestSurfacePoint = Vector3D.Normalize(closestSurfacePoint - CurrentPlanet.Center());
+
+				if (highestAltitude < Data.MinimumPlanetAltitude)
+					highestAltitude = Data.MinimumPlanetAltitude;
+
+				closestSurfacePoint = closestSurfacePoint+ upAtClosestSurfacePoint * highestAltitude;
+
+
+				if (!ShownGps)
+				{
+					MyVisualScriptLogicProvider.AddGPSForAll("Target", "", Targeting.TargetLastKnownCoords, Color.Red);
+					MyVisualScriptLogicProvider.AddGPSForAll("Pos", "", closestSurfacePoint, Color.Beige);
+					ShownGps = true;
+				}
+
+				IndirectWaypointType |= WaypointModificationEnum.TargetPadding;
+				_pendingWaypoint = closestSurfacePoint;
+
+			}
+
+
+
 
 			//Offset
 			//BehaviorLogger.Write("Autopilot: Offset", BehaviorDebugEnum.TempDebug);

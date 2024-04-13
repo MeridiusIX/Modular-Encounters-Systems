@@ -101,6 +101,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		public double PadDistanceFromTarget;
 
+		//Bunker
+		public bool TryToLevelWithTarget;
+
 		//Special Maneuvers
 		public int BarrelRollMinDurationMs;
 		public int BarrelRollMaxDurationMs;
@@ -154,6 +157,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public bool UseSurfaceHoverThrustMode;
 		public double MaxVerticalSpeed;
 		public double HoverPathStepDistance;
+		public double HoverCliffAngle;
+
+		public double HoverUpAngle;
+
 		public BoolEnum UseVelocityCollisionEvasion;
 		public bool UseVerticalRetreat;
 		public bool UseWaterPatrolMode;
@@ -204,6 +211,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			PadDistanceFromTarget = 0;
 
+			TryToLevelWithTarget = false;
 			Unused = true;
 			CollisionEvasionWaypointDistance = 300;
 			CollisionFallEvasionWaypointDistance = 75;
@@ -296,7 +304,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			UseSurfaceHoverThrustMode = false;
 			HoverPathStepDistance = 50;
+			HoverCliffAngle = 80;
 
+			HoverUpAngle = 10;
 			MaxVerticalSpeed = -1;
 
 			UseVerticalRetreat = false;
@@ -745,6 +755,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				TagParse.TagDoubleCheck(tag, ref this.PadDistanceFromTarget);
 
 			}
+			//AccountForBunkers
+			if (tag.Contains("[TryToLevelWithTarget:") == true)
+			{
+
+				TagParse.TagBoolCheck(tag, ref this.TryToLevelWithTarget);
+
+			}
+			
+
 
 			//BarrelRollMinDurationMs
 			if (tag.Contains("[BarrelRollMinDurationMs:") == true) {
@@ -1051,6 +1070,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[HoverPathStepDistance:") == true) {
 
 				TagParse.TagDoubleCheck(tag, ref this.HoverPathStepDistance);
+
+			}
+
+			if (tag.Contains("[HoverCliffAngle:") == true)
+			{
+
+				TagParse.TagDoubleCheck(tag, ref this.HoverCliffAngle);
+
+			}
+
+			if (tag.Contains("[HoverUpAngle:") == true)
+			{
+
+				TagParse.TagDoubleCheck(tag, ref this.HoverUpAngle);
 
 			}
 

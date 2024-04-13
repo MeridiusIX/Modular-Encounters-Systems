@@ -104,6 +104,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public double StaticEncounterPlanetAltitude;
 
 		public bool ForceStaticGrid;
+		public bool DoNotForceStaticGrid;
 		public bool ForceExactPositionAndOrientation;
 		public bool AdminSpawnOnly;
 
@@ -438,6 +439,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			StaticEncounterPlanetAltitude = 0;
 
 			ForceStaticGrid = false;
+			DoNotForceStaticGrid = false;
 			ForceExactPositionAndOrientation = false;
 			AdminSpawnOnly = false;
 
@@ -749,6 +751,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"StaticEncounterPlanetDirection", (s, o) => TagParse.TagVector3DCheck(s, ref StaticEncounterPlanetDirection) },
 				{"StaticEncounterPlanetAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref StaticEncounterPlanetAltitude) },
 				{"ForceStaticGrid", (s, o) => TagParse.TagBoolCheck(s, ref ForceStaticGrid) },
+				{"DoNotForceStaticGrid", (s, o) => TagParse.TagBoolCheck(s, ref DoNotForceStaticGrid) },
+
 				{"ForceExactPositionAndOrientation", (s, o) => TagParse.TagBoolCheck(s, ref ForceExactPositionAndOrientation) },
 				{"AdminSpawnOnly", (s, o) => TagParse.TagBoolCheck(s, ref AdminSpawnOnly) },
 				{"MustSpawnInPlanetaryLane", (s, o) => TagParse.TagBoolCheck(s, ref MustSpawnInPlanetaryLane) },
@@ -999,7 +1003,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				if (this.PlanetaryInstallation == true && !this.InstallationSpawnsOnWaterSurface && setForceStatic == false) {
 
+
+					
 					this.ForceStaticGrid = true;
+
+					if (this.DoNotForceStaticGrid)
+						this.ForceStaticGrid = false;
 
 				}
 

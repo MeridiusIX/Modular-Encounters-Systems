@@ -341,6 +341,15 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
+			if (collection.Conditions.DoNotForceStaticGrid)
+			{
+
+				if (prefab.Prefab.CubeGrids.Length > 0)
+					prefab.Prefab.CubeGrids[0].IsStatic = false;
+
+			}
+
+
 			//Block Replacer Individual
 			if (profile.UseBlockReplacer == true) {
 

@@ -364,6 +364,7 @@ namespace ModularEncountersSystems.Helpers {
         WaterPathing = 1 << 8,
         EscortPathing = 1 << 9,
         CircleTarget = 1 << 10,
+        RoverPathing = 1 << 11
 
 
     }

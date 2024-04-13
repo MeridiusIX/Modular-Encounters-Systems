@@ -242,9 +242,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			var velocityAmount = velocity.Length();
 			var velocityToTargetAngle = VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(GetCurrentWaypoint() - _remoteControl.WorldMatrix.Translation), Vector3D.Normalize(velocity));
 
-			//UP Axis
+			//UP Axisthis.Data.AltitudeTolerance
 			//TODO: change magic 10 to configurable field
-			if (upAngle <= 10) {
+			if (upAngle <= this.Data.HoverUpAngle) {
 
 				var myDistToCore = Vector3D.Distance(_myPosition, planetPos);
 				var targetDistCore = Vector3D.Distance(_currentWaypoint, planetPos);

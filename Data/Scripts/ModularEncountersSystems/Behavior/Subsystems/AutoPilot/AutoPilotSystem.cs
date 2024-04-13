@@ -59,6 +59,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		HeavyYaw = 1 << 13,
 		WaypointFromEscort = 1 << 14,
 		CircleTarget = 1 << 15,
+		RoverNavigation = 1 << 16,
 
 	}
 
@@ -244,6 +245,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		private bool _inGravityLastUpdate;
 		public PlanetEntity CurrentPlanet;
 		public WaterPathing WaterPath;
+		public RoverPathing RoverPath;
+
 		private Vector3D _upDirection;
 		private double _gravityStrength;
 		private double _surfaceDistance;
@@ -316,6 +319,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			CurrentPlanet = null;
 			WaterPath = new WaterPathing(_behavior);
+			RoverPath = new RoverPathing(_behavior);
 			_upDirection = Vector3D.Zero;
 			_gravityStrength = 0;
 			_surfaceDistance = 0;
@@ -1089,6 +1093,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			//Bunker busting
 			if (Data.TryToLevelWithTarget && Targeting.HasTarget() && InGravity() && Targeting.Target.IsStatic() && Targeting.Target.Distance(_myPosition) < 1200 && Targeting.Target.CurrentAltitude() < 0)
 			{
+				/*
+				 
+				WIP
+
 				var targetCoords = Targeting.TargetLastKnownCoords;
 
 				var distanceTargetCore = (Targeting.TargetLastKnownCoords - CurrentPlanet.Center()).Length(); 
@@ -1142,6 +1150,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 						}
 					}
+
 				}
 
 
@@ -1163,6 +1172,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				IndirectWaypointType |= WaypointModificationEnum.TargetPadding;
 				_pendingWaypoint = closestSurfacePoint;
+				*/
 
 			}
 
@@ -1213,6 +1223,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				}
 			
 			}
+
+			//RoverNavigation
+			if (InGravity() && CurrentMode.HasFlag(NewAutoPilotMode.RoverNavigation) && _gravityStrength > 0)
+			{
+
+				if (RoverPath != null)
+				{
+					
+					_pendingWaypoint = RoverPath.GetPathCoords(_myPosition, 50);
+
+
+					if (_pendingWaypoint == Vector3D.Zero)
+						CurrentMode |= NewAutoPilotMode.OffsetWaypoint;
+					else if (_initialWaypoint != _pendingWaypoint)
+					{
+
+						IndirectWaypointType |= WaypointModificationEnum.RoverPathing;
+
+					}
+
+				}
+
+			}
+
 
 			//BehaviorLogger.Write("Autopilot: Projectile Lead", BehaviorDebugEnum.TempDebug);
 			if (Targeting.Target != null && _initialWaypoint == _pendingWaypoint && Targeting.Target.CurrentSpeed() > 0.1) {
@@ -1748,8 +1782,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
-		private void CalculateHoverPath(PlanetEntity planet) {
+		private void CalculateRoverPath(PlanetEntity planet) {
 
+			/*
 			BehaviorLogger.Write("Calculating Hover Path", BehaviorDebugEnum.AutoPilot);
 			var targetDir = Vector3D.Normalize(_pendingWaypoint - _myPosition);
 			var core = planet.Center();
@@ -1772,12 +1807,59 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			var cliffCheckUpAngle = VectorHelper.GetAngleBetweenDirections(_upDirection, Vector3D.Normalize(cliffCheckCoords - _myPosition));
 			var cliffCheckCoreDistance = Vector3D.Distance(cliffCheckCoords, core);
 
+			
 			//Step Altitude Checks
 			bool isStepHigher = stepAheadCoreDistance - myCoreAltitude > 0;
 			bool isCliffHigher = cliffCheckCoreDistance - myCoreAltitude > 0;
 
 			//Cliff Safety Check
-			if (isCliffHigher && cliffCheckUpAngle <= 80) {
+			MyVisualScriptLogicProvider.ShowNotificationToAll($"Angle: {cliffCheckUpAngle}", 500, "green");
+			
+			if (cliffCheckUpAngle <= Data.HoverCliffAngle) {
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Cliff Safety Check", 500, "Red");
+
+				CurrentMode |= NewAutoPilotMode.RoverNavigation;
+
+				return;
+
+			}
+
+			if(!CurrentMode.HasFlag(NewAutoPilotMode.RoverNavigation))
+				_pendingWaypoint = stepAheadCoords;
+			*/
+		}
+		private void CalculateHoverPath(PlanetEntity planet)
+		{
+
+			BehaviorLogger.Write("Calculating Hover Path", BehaviorDebugEnum.AutoPilot);
+			var targetDir = Vector3D.Normalize(_pendingWaypoint - _myPosition);
+			var core = planet.Center();
+
+			//My Position
+			var mySurface = CurrentPlanet.SurfaceCoordsAtPosition(_myPosition);
+			var myAltitude = Vector3D.Distance(_myPosition, mySurface);
+			var myCoreAltitude = Vector3D.Distance(_myPosition, core);
+
+			//Step Ahead
+
+			var stepAheadSurface = CurrentPlanet.SurfaceCoordsAtPosition(targetDir * Data.HoverPathStepDistance + _myPosition);
+			var stepAheadCoords = _upDirection * Data.IdealPlanetAltitude + stepAheadSurface;
+			var stepAheadUpAngle = VectorHelper.GetAngleBetweenDirections(_upDirection, Vector3D.Normalize(stepAheadCoords - _myPosition));
+			var stepAheadCoreDistance = Vector3D.Distance(stepAheadCoords, core);
+
+			//Cliff Check
+			var cliffCheckSurface = CurrentPlanet.SurfaceCoordsAtPosition(targetDir * Data.HoverPathStepDistance + targetDir * (Data.HoverPathStepDistance * 4) + _myPosition);
+			var cliffCheckCoords = _upDirection * Data.IdealPlanetAltitude + cliffCheckSurface;
+			var cliffCheckUpAngle = VectorHelper.GetAngleBetweenDirections(_upDirection, Vector3D.Normalize(cliffCheckCoords - _myPosition));
+			var cliffCheckCoreDistance = Vector3D.Distance(cliffCheckCoords, core);
+
+			//Step Altitude Checks
+			bool isStepHigher = stepAheadCoreDistance - myCoreAltitude > 0;
+			bool isCliffHigher = cliffCheckCoreDistance - myCoreAltitude > 0;
+
+			//Cliff Safety Check
+			if (isCliffHigher && cliffCheckUpAngle <= Data.HoverCliffAngle)
+			{
 
 				_pendingWaypoint = Vector3D.Normalize(stepAheadSurface - core) * cliffCheckCoreDistance + core;
 				IndirectWaypointType |= WaypointModificationEnum.PlanetPathingAscend;
@@ -1788,7 +1870,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			_pendingWaypoint = stepAheadCoords;
 
 		}
-
 		private void CalculateAllowedGravity(PlanetEntity planet) {
 
 			if ((Data.MinGravity < 0 && Data.MaxGravity < 0) || Data.MaxGravity < Data.MinGravity)
@@ -2257,7 +2338,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				MySimpleObjectDraw.DrawLine(_myPosition, _currentWaypoint, MyStringId.GetOrCompute("WeaponLaser"), ref colorGreen, 1.1f);
 				WaterPath.DrawCurrentPath();
-
+				RoverPath.DrawCurrentPath();
 			}
 			
 			 if (_evadeWaypoint != Vector3D.Zero) {

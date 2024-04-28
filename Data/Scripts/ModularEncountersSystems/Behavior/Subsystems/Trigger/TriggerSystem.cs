@@ -488,7 +488,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if (trigger.Triggered == true) {
 
 							BehaviorLogger.Write("Process Damage Actions", BehaviorDebugEnum.Trigger);
-							ProcessTrigger(trigger, info.AttackerId);
+
+							Command newCommand = null;
+
+							var idOwner = DamageHelper.GetAttackOwnerId(info.AttackerId);
+
+							if (FactionHelper.IsIdentityPlayer(idOwner)) 
+							{
+								newCommand = Command.PlayerRelatedCommand(idOwner);
+
+							}
+
+							ProcessTrigger(trigger, info.AttackerId, newCommand);
 
 						}
 

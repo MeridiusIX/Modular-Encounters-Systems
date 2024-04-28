@@ -155,11 +155,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
         public static bool ArePlayerConditionsMet(List<string> ProfilesIds,  long PlayerId, bool UsePositionOverride = false,Vector3D PositionOverride = new Vector3D())
         {
-
             List<PlayerCondition> Profiles = new List<PlayerCondition>();
 
-
             if (ProfilesIds == null)
+                return false;
+
+            if (ProfilesIds.Count <= 0)
                 return false;
 
 
@@ -173,12 +174,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 }
 
             }
+            if (Profiles.Count <= 0)
+                return false;
 
             int usedProfileConditions = 0;
             int satisfieddProfileConditions = 0;
 
-            if (Profiles.Count <=0)
-                return false;
+
             //Holdings check 
             for (int i = 0; i < Profiles.Count; i++)
             {

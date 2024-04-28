@@ -225,6 +225,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool ChangePlayerCredits;
 		public long ChangePlayerCreditsAmount;
+		public bool ChangePlayerCreditsIncludeSavedPlayerIdentity;
+		public List<string> ChangePlayerCreditsPlayerConditionIds;
+		public bool ChangePlayerCreditsOverridePositionInPlayerCondition;
+
 
 		public bool ChangeNpcFactionCredits;
 		public long ChangeNpcFactionCreditsAmount;
@@ -635,6 +639,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ChangePlayerCredits = false;
 			ChangePlayerCreditsAmount = 0;
+			ChangePlayerCreditsIncludeSavedPlayerIdentity =true;
+			ChangePlayerCreditsPlayerConditionIds = new List<string>();
+			ChangePlayerCreditsOverridePositionInPlayerCondition =true;
 
 			ChangeNpcFactionCredits = false;
 			ChangeNpcFactionCreditsAmount = 0;
@@ -972,6 +979,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"InheritLastAttackerFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref InheritLastAttackerFromCommand) },
 				{"ChangePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCredits) },
 				{"ChangePlayerCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangePlayerCreditsAmount) },
+				{"ChangePlayerCreditsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCreditsIncludeSavedPlayerIdentity) },
+				{"ChangePlayerCreditsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ChangePlayerCreditsPlayerConditionIds) },
+				{"ChangePlayerCreditsOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCreditsOverridePositionInPlayerCondition) },
 				{"ChangeNpcFactionCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangeNpcFactionCredits) },
 				{"ChangeNpcFactionCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangeNpcFactionCreditsAmount) },
 				{"ChangeNpcFactionCreditsTag", (s, o) => TagParse.TagStringCheck(s, ref ChangeNpcFactionCreditsTag) },

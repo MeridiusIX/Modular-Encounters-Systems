@@ -548,29 +548,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 			//ChangePlayerCredits
-			if (actions.ChangePlayerCredits && command != null) {
+			if (actions.ChangePlayerCredits) {
 
-				if (command.PlayerIdentity != 0) {
 
-					var player = PlayerManager.GetPlayerWithIdentityId(command.PlayerIdentity);
+				bool SavedPlayerIdentityAlreadyIncluded = false;
+				foreach (var player in PlayerManager.Players)
+				{
+					var ChancePlayerCreditsPlayerConditionIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ChangePlayerCreditsPlayerConditionIds);
 
-					if (player != null) {
+					if (PlayerCondition.ArePlayerConditionsMet(actions.ChangePlayerCreditsPlayerConditionIds, player.Player.IdentityId, actions.ChangePlayerCreditsOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
+					{
+						if ((command?.PlayerIdentity ?? 0) != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
+							SavedPlayerIdentityAlreadyIncluded = true;
 
 						long credits = 0;
 						player.Player.TryGetBalanceInfo(out credits);
 
-						if (actions.ChangePlayerCreditsAmount > 0) {
-
+						if (actions.ChangePlayerCreditsAmount > 0)
+						{
 							player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
 							PaymentSuccessTriggered = true;
 
-						} else {
+						}
+						else
+						{
 
-							if (actions.ChangePlayerCreditsAmount > credits) {
+							if (actions.ChangePlayerCreditsAmount > credits)
+							{
 
 								PaymentFailureTriggered = true;
 
-							} else {
+							}
+							else
+							{
 
 								player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
 								PaymentSuccessTriggered = true;
@@ -582,8 +592,62 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 
 				}
+
+				if (actions.ChangePlayerCreditsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded && command != null)
+				{
+
+					if (command.PlayerIdentity != 0)
+					{
+
+						var player = PlayerManager.GetPlayerWithIdentityId(command.PlayerIdentity);
+
+						if (player != null)
+						{
+
+							long credits = 0;
+							player.Player.TryGetBalanceInfo(out credits);
+
+							if (actions.ChangePlayerCreditsAmount > 0)
+							{
+
+								player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+								PaymentSuccessTriggered = true;
+
+							}
+							else
+							{
+
+								if (actions.ChangePlayerCreditsAmount > credits)
+								{
+
+									PaymentFailureTriggered = true;
+
+								}
+								else
+								{
+
+									player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+									PaymentSuccessTriggered = true;
+
+								}
+
+							}
+
+						}
+
+					}
+				}
+
+
+
 			
 			}
+
+
+
+
+
+
 
 			//ChangeNpcFactionCredits
 			if (actions.ChangeNpcFactionCredits) {

@@ -13,6 +13,7 @@ using VRage.Utils;
 using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Zones;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 {
@@ -45,6 +46,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
         public int PlayerNearDistanceFromVector3;
         public int PlayerNearMinDistanceFromVector3;
 
+
+        public bool CheckPlayerInZone;
+        public List<string> ZoneName;
+
         //Todo:
         public bool CheckPlayerCredits;
         public int MinPlayerCredits;
@@ -69,6 +74,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             IncludedPlayerTag = new List<string>();
             ExcludedPlayerTag = new List<string>();
 
+            CheckPlayerInZone = false;
+            ZoneName = new List<string>();
 
             CheckLastRespawnShipName = false;
             LastRespawnShipName = "";
@@ -91,6 +98,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             {"CheckPlayerTags", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerTags) },
             {"IncludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref IncludedPlayerTag) },
             {"ExcludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref ExcludedPlayerTag) },
+
+            {"CheckPlayerInZone", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerInZone) },
+            {"ZoneName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneName) },
+
 
             {"CheckLastRespawnShipName", (s, o) => TagParse.TagBoolCheck(s, ref CheckLastRespawnShipName) },
             {"LastRespawnShipName", (s, o) => TagParse.TagStringCheck(s, ref LastRespawnShipName) },
@@ -295,6 +306,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
             }
 
+            if (profile.CheckPlayerInZone)
+            {
+                usedConditions++;
+
+                foreach (var item in profile.ZoneName)
+                {
+                    if (ZoneManager.InsideZoneWithName(player.GetPosition(), item))
+                    {
+                        satisfiedConditions++;
+                        break;
+                    }
+
+                }
+
+            }
 
             if (profile.CheckLastRespawnShipName)
             {

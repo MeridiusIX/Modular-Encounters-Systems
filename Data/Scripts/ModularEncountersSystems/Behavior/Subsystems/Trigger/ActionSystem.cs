@@ -34,6 +34,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			BehaviorLogger.Write(trigger.ProfileSubtypeId + " Attempting To Execute Action Profile " + actionsBase.ProfileSubtypeId, BehaviorDebugEnum.Action);
 
 			var actions = actionsBase.ActionReference;
+			
+
 
 			if (actions == null) {
 
@@ -85,6 +87,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
+
+
+			//Playsound cue
+
+			if (actions.PlayDialogueCue)
+            {
+				bool foundDialogueCueId =false;
+
+				ChatProfile chat = null;
+
+				foreach (var dialogueBank in _dialogueBanks)
+                {
+				
+					if(dialogueBank.GetChatProfile(actions.DialogueCueId,ref chat))
+					{
+						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
+						_broadcast.BroadcastRequest(chat, command);
+						break;
+					}
+
+					
+				}
+            }
+
 
 			//PlaySoundAtPosition
 			if (actions.PlaySoundAtPosition && !string.IsNullOrWhiteSpace(actions.SoundAtPosition)) {
@@ -256,7 +282,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					CommandProfile commandProfile = null;
 
-					if (!ProfileManager.CommandProfiles.TryGetValue(commandId, out commandProfile)) {
+
+					var _commandId = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, commandId);
+					if (!ProfileManager.CommandProfiles.TryGetValue(_commandId, out commandProfile)) {
 
 						BehaviorLogger.Write(commandId + ": Command Profile Not Found", BehaviorDebugEnum.Action);
 						continue;
@@ -823,7 +851,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.ResetCooldownTimeOfTriggers) {
 
 				ToggleTriggers(actions.ResetTriggerCooldownNames, CheckEnum.Ignore, CheckEnum.Yes);
-
+				ToggleTagTriggers(actions.ResetTriggerCooldownTags, CheckEnum.Ignore, CheckEnum.Yes);
 			}
 
 			//EnableTriggers
@@ -831,7 +859,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Enable " + actions.EnableTriggerNames.Count + " Triggers.", BehaviorDebugEnum.Action);
 				ToggleTriggers(actions.EnableTriggerNames, CheckEnum.Yes, CheckEnum.Ignore);
-
+				ToggleTagTriggers(actions.EnableTriggerTags, CheckEnum.Yes, CheckEnum.Ignore);
 			}
 
 			//DisableTriggers
@@ -839,6 +867,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Disable Triggers.", BehaviorDebugEnum.Action);
 				ToggleTriggers(actions.DisableTriggerNames, CheckEnum.No, CheckEnum.Ignore);
+				ToggleTagTriggers(actions.DisableTriggerTags, CheckEnum.No, CheckEnum.Ignore);
 			}
 
 			//ManuallyActivateTrigger
@@ -851,6 +880,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (actions.ManuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
 						ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
 
+                    foreach (var tag in manualTrigger.Tags)
+                    {
+						if (actions.ManuallyActivatedTriggerTags.Contains(tag))
+							ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
+
+					}
+					
 				}
 
 			}

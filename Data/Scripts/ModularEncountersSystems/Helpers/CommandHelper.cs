@@ -72,6 +72,10 @@ namespace ModularEncountersSystems.Helpers {
 
         public bool MatchSenderReceiverOwners;
 
+        public bool CheckRelationSenderReceiver;
+        public RelationTypeEnum Relation;
+
+
         public long CommandOwnerId;
 
         public float GridValueScore;
@@ -128,6 +132,9 @@ namespace ModularEncountersSystems.Helpers {
             DelayTicks = 0;
             FromEvent = false;
 
+            CheckRelationSenderReceiver = false;
+            Relation = RelationTypeEnum.None;
+
         }
         public void PrepareEventCommand(CommandProfile profile, Vector3D position)
         {
@@ -151,8 +158,9 @@ namespace ModularEncountersSystems.Helpers {
 
             this.Radius = profile.Radius;
 
+            this.CheckRelationSenderReceiver = false;
 
-    
+
 
         }
 
@@ -166,6 +174,12 @@ namespace ModularEncountersSystems.Helpers {
             this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
             this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
             this.MatchSenderReceiverOwners = profile.MatchSenderReceiverOwners;
+            this.CheckRelationSenderReceiver = profile.CheckRelationSenderReceiver;
+            this.Relation = profile.Relation;
+
+
+
+
             RemoteControl = behavior.RemoteControl;
             CommandOwnerId = behavior.RemoteControl.OwnerId;
             this.RequestEscortSlot = profile.RequestEscortSlot;

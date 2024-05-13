@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Helpers;
+﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -30,6 +31,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool MatchSenderReceiverOwners;
 
+		public bool CheckRelationSenderReceiver;
+		public RelationTypeEnum Relation;
+
+
 		public string Waypoint;
 
 		public CommandProfile() {
@@ -57,6 +62,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			TransmissionType = CommandTransmissionType.None;
 
 			MatchSenderReceiverOwners = true;
+
+			CheckRelationSenderReceiver = false;
+			Relation = RelationTypeEnum.None;
+
 
 			Waypoint = "";
 
@@ -181,6 +190,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						TagParse.TagBoolCheck(tag, ref MatchSenderReceiverOwners);
 
 					}
+
+
+
+					//CheckReputationSenderReceiver
+					if (tag.Contains("[CheckRelationSenderReceiver:") == true)
+					{
+
+						TagParse.TagBoolCheck(tag, ref CheckRelationSenderReceiver);
+
+					}
+
+					//MinReputation
+					if (tag.Contains("[Relation:") == true)
+					{
+
+						TagParse.TagTargetRelationEnumCheck(tag, ref Relation);
+
+					}
+
+
+
 
 					//Waypoint
 					if (tag.Contains("[Waypoint:") == true) {

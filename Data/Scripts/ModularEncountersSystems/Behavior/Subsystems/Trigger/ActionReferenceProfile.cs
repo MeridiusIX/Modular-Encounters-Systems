@@ -135,15 +135,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool ResetCooldownTimeOfTriggers;
 		public List<string> ResetTriggerCooldownNames;
+		public List<string> ResetTriggerCooldownTags;
 
 		public bool EnableTriggers;
 		public List<string> EnableTriggerNames;
+		public List<string> EnableTriggerTags;
 
 		public bool DisableTriggers;
 		public List<string> DisableTriggerNames;
+		public List<string> DisableTriggerTags;
 
 		public bool ManuallyActivateTrigger;
 		public List<string> ManuallyActivatedTriggerNames;
+		public List<string> ManuallyActivatedTriggerTags;
 
 		public bool ChangeInertiaDampeners;
 		public bool InertiaDampenersEnable;
@@ -405,7 +409,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool RemoveTagsOverridePositioninPlayerCondition;
 
 
-
+		public bool PlayDialogueCue;
+		public string DialogueCueId;
 
 
 		public bool ResetCooldownTimeOfEvents;
@@ -551,15 +556,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ResetCooldownTimeOfTriggers = false;
 			ResetTriggerCooldownNames = new List<string>();
+			ResetTriggerCooldownTags = new List<string>();
 
 			ChangeInertiaDampeners = false;
 			InertiaDampenersEnable = false;
 
 			EnableTriggers = false;
 			EnableTriggerNames = new List<string>();
+			EnableTriggerTags = new List<string>();
 
 			DisableTriggers = false;
 			DisableTriggerNames = new List<string>();
+			DisableTriggerTags = new List<string>();
 
 			ChangeRotationDirection = false;
 			RotationDirection = Direction.None;
@@ -599,6 +607,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ManuallyActivateTrigger = false;
 			ManuallyActivatedTriggerNames = new List<string>();
+			ManuallyActivatedTriggerTags = new List<string>();
+
 
 			SendCommandWithoutAntenna = false;
 			SendCommandWithoutAntennaRadius = -1;
@@ -814,7 +824,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			RemoveTags = new List<string>();
 			RemoveTagsOverridePositioninPlayerCondition = false;
 
-
+			PlayDialogueCue = false;
+			DialogueCueId = "";
 
 
 			ResetCooldownTimeOfEvents = false;
@@ -914,14 +925,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ForceDespawn", (s, o) => TagParse.TagBoolCheck(s, ref ForceDespawn) },
 				{"ResetCooldownTimeOfTriggers", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfTriggers) },
 				{"ResetTriggerCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownNames) },
+				{"ResetTriggerCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownTags) },
 				{"BroadcastGenericCommand", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastGenericCommand) },
 				{"BehaviorSpecificEventA", (s, o) => TagParse.TagBoolCheck(s, ref BehaviorSpecificEventA) },
 				{"ChangeInertiaDampeners", (s, o) => TagParse.TagBoolCheck(s, ref ChangeInertiaDampeners) },
 				{"InertiaDampenersEnable", (s, o) => TagParse.TagBoolCheck(s, ref InertiaDampenersEnable) },
 				{"EnableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref EnableTriggers) },
 				{"EnableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerNames) },
+				{"EnableTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerTags) },
 				{"DisableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref DisableTriggers) },
 				{"DisableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerNames) },
+				{"DisableTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerTags) },
 				{"StaggerWarheadDetonation", (s, o) => TagParse.TagBoolCheck(s, ref StaggerWarheadDetonation) },
 				{"ChangeRotationDirection", (s, o) => TagParse.TagBoolCheck(s, ref ChangeRotationDirection) },
 				{"RotationDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref RotationDirection) },
@@ -951,6 +965,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"RazeBlocksTypes", (s, o) => TagParse.TagMyDefIdCheck(s, ref RazeBlocksTypes) },
 				{"ManuallyActivateTrigger", (s, o) => TagParse.TagBoolCheck(s, ref ManuallyActivateTrigger) },
 				{"ManuallyActivatedTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref ManuallyActivatedTriggerNames) },
+				{"ManuallyActivatedTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref ManuallyActivatedTriggerTags) },
 				{"SendCommandWithoutAntenna", (s, o) => TagParse.TagBoolCheck(s, ref SendCommandWithoutAntenna) },
 				{"SendCommandWithoutAntennaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref SendCommandWithoutAntennaRadius) },
 				{"RemoveKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref RemoveKnownPlayerArea) },
@@ -1122,6 +1137,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"RemoveTags", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTags) },
 				{"RemoveTagsOverridePositioninPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsOverridePositioninPlayerCondition) },
 
+				{"PlayDialogueCue", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueCue) },
+
+				{"DialogueCueId", (s, o) => TagParse.TagStringCheck(s, ref DialogueCueId) },
 
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
 				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },

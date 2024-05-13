@@ -206,6 +206,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(60)]
 		public bool UsePlayerFilterProfile;
 
+		//Tags
+		[ProtoMember(61)]
+		public List<string> Tags;
+
 		[ProtoIgnore]
 		public IBehavior Behavior;
 
@@ -317,6 +321,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			PlayerFilterProfileIds = new List<string>();
 			UsePlayerFilterProfile = false;
+
+			Tags = new List<string>();
 
 			ProfileSubtypeId = "";
 
@@ -928,6 +934,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					{
 						TagParse.TagBoolCheck(tag, ref UsePlayerFilterProfile);
 
+					}
+
+					//PlayerFilterProfile
+					if (tag.Contains("[Tags:") == true)
+					{
+						TagParse.TagStringListCheck(tag, ref Tags);
 					}
 
 

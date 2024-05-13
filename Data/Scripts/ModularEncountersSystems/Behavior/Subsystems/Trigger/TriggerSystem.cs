@@ -2,6 +2,7 @@ using ModularEncountersSystems.API;
 using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Watchers;
@@ -36,6 +37,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<TriggerProfile> CompromisedTriggers;
 		public List<string> ExistingTriggers;
 
+		public List<DialogueBank> _dialogueBanks;
+
 		public bool RemoteControlCompromised;
 
 		public bool TimedTriggersProcessed;
@@ -65,6 +68,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CompromisedTriggers = new List<TriggerProfile>();
 			ExistingTriggers = new List<string>();
 
+			_dialogueBanks = new List<DialogueBank>();
 			RemoteControlCompromised = false;
 
 			TimedTriggersProcessed = false;
@@ -594,6 +598,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			
 			}
 
+			if (receivedCommand.CheckRelationSenderReceiver)
+            {
+				var relation = EntityEvaluator.GetRelationBetweenIdentities(receivedCommand.CommandOwnerId, RemoteControl.OwnerId);
+
+                if (receivedCommand.Relation != relation)
+				{
+					BehaviorLogger.Write("Receiver Owner Doesn't Match relation Sender Owner", BehaviorDebugEnum.Command);
+					return;
+				}
+
+
+			}
+
+
 			bool processed = false;
 
 			for (int i = 0; i < CommandTriggers.Count; i++) {
@@ -1061,10 +1079,56 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						resetTrigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
 
 				}
+			}
+		}
+
+		//Tags
+		public void ToggleTagTriggers(List<string> tags, CheckEnum toggle, CheckEnum reset)
+		{
+
+			if (tags == null)
+				return;
+
+			foreach (var tag in tags)
+			{
+
+				ToggleTagTriggers(tag, toggle, reset);
 
 			}
 
 		}
+
+		public void ToggleTagTriggers(string tagName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore)
+		{
+
+			ToggleTagTriggers(Triggers, tagName, toggleMode, resetCooldown);
+			ToggleTagTriggers(DamageTriggers, tagName, toggleMode, resetCooldown);
+			ToggleTagTriggers(CommandTriggers, tagName, toggleMode, resetCooldown);
+			ToggleTagTriggers(CompromisedTriggers, tagName, toggleMode, resetCooldown);
+
+		}
+
+		public void ToggleTagTriggers(List<TriggerProfile> triggers, string tagName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore)
+		{
+
+			foreach (var resetTrigger in triggers)
+			{
+
+				if (resetTrigger.Tags.Contains(tagName))
+				{
+
+					if (toggleMode != CheckEnum.Ignore)
+						resetTrigger.UseTrigger = (toggleMode == CheckEnum.Yes);
+
+					if (resetCooldown == CheckEnum.Yes)
+						resetTrigger.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+
+				}
+			}
+		}
+
+
+
 
 		public void SetSandboxBool(string boolName, bool mode) {
 
@@ -1405,6 +1469,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+
+
 				//TriggerGroups
 				if (tag.Contains("[TriggerGroups:") == true) {
 
@@ -1447,6 +1513,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						ProfileManager.ReportProfileError(tempValue, "Could Not Add Trigger Group Profile To Behavior");
 
 				}
+
+				//Triggers
+				if (tag.Contains("[DialogueBanks:") == true)
+				{
+					bool gotTrigger = false;
+					string FileSource = "";
+					TagParse.TagStringCheck(tag, ref FileSource);
+
+					if (string.IsNullOrWhiteSpace(FileSource) == false)
+					{
+
+						DialogueBank dialogueBank = ProfileManager.GetDialogueBank(FileSource);
+
+						if (dialogueBank != null)
+						{
+							gotTrigger = true;
+							_dialogueBanks.Add(dialogueBank);
+						}
+					}
+
+					if (!gotTrigger)
+						ProfileManager.ReportProfileError(FileSource, "Could Not Add DialogueBank To Behavior");
+
+
+
+				}
+
+
 
 			}
 

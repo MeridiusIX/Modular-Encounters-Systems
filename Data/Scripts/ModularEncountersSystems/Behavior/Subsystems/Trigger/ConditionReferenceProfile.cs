@@ -79,9 +79,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MinTargetDistance;
 		public double MaxTargetDistance;
 
+		public bool CheckTargetSpeed; //DOC
+		public double MinTargetSpeed;
+		public double MaxTargetSpeed;
+
+			
 		public bool CheckTargetAngleFromForward;
 		public double MinTargetAngle;
 		public double MaxTargetAngle;
+
 
 		public bool CheckIfTargetIsChasing;
 		public double MinTargetChaseAngle;
@@ -133,6 +139,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool IsTargetPlayer;
 		public bool IsTargetGrid;
 		public bool IsTargetStatic;
+
+		public bool HasTarget;
+		public bool NoTarget;
 
 		public bool CheckThreatScore;
 		public int CheckThreatScoreMinimum;
@@ -258,6 +267,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MinTargetDistance = -1;
 			MaxTargetDistance = -1;
 
+			CheckTargetSpeed = false;
+			MinTargetSpeed = -1;
+			MaxTargetSpeed = -1;
+
+
 			CheckTargetAngleFromForward = false;
 			MinTargetAngle = -1;
 			MaxTargetAngle = -1;
@@ -265,6 +279,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckIfTargetIsChasing = false;
 			MinTargetChaseAngle = -1;
 			MaxTargetChaseAngle = -1;
+
+			
 
 			CounterCompareTypes = new List<CounterCompareEnum>();
 			SandboxCounterCompareTypes = new List<CounterCompareEnum>();
@@ -307,6 +323,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			IsTargetPlayer = false;
 			IsTargetGrid = false;
 			IsTargetStatic = false;
+
+			HasTarget = false;
+			NoTarget = false;
+
 			IsAttackerHostile = false;
 			IsAttackerNeutral = false;
 			IsAttackerFriendly = false;
@@ -421,6 +441,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckTargetDistance", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetDistance) },
 				{"MinTargetDistance", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetDistance) },
 				{"MaxTargetDistance", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetDistance) },
+				{"CheckTargetSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetSpeed) },
+				{"MinTargetSpeed", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetSpeed) },
+				{"MaxTargetSpeed", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetSpeed) },
 				{"CheckTargetAngleFromForward", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetAngleFromForward) },
 				{"MinTargetAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetAngle) },
 				{"MaxTargetAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetAngle) },
@@ -463,6 +486,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"IsTargetGrid", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetGrid) },
 				{"IsTargetPlayer", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetPlayer) },
 				{"IsTargetStatic", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetStatic) },
+				{"HasTarget", (s, o) => TagParse.TagBoolCheck(s, ref HasTarget) },
+				{"NoTarget", (s, o) => TagParse.TagBoolCheck(s, ref NoTarget) },
 				{"IsAttackerHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerHostile) }, //
 				{"IsAttackerNeutral", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerNeutral) },
 				{"IsAttackerFriendly", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerFriendly) },

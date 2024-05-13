@@ -67,6 +67,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, MyDefinitionBase> DatapadTemplates = new Dictionary<string, MyDefinitionBase>();
 		public static Dictionary<string, StoreItemsContainer> StoreItemContainers = new Dictionary<string, StoreItemsContainer>();
 		public static Dictionary<string, TextTemplate> TextTemplates = new Dictionary<string, TextTemplate>();
+		public static Dictionary<string, DialogueBank> DialogueBanks = new Dictionary<string, DialogueBank>();
 
 		public static List<string> ErrorProfiles = new List<string>();
 
@@ -317,7 +318,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if ((component.DescriptionText.Contains("[RivalAI Condition]") || component.DescriptionText.Contains("[MES AI Condition]")) && ChatObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[RivalAI Condition]") || component.DescriptionText.Contains("[MES AI Condition]")) && ConditionObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var conditionObject = new ConditionProfile();
 					conditionObject.InitTags(component.DescriptionText);
@@ -781,6 +782,52 @@ namespace ModularEncountersSystems.Helpers {
 			return template;
 
 		}
+
+		public static DialogueBank GetDialogueBank(string name)
+		{
+
+			DialogueBank dialogueBank = null;
+
+			if (DialogueBanks.TryGetValue(name, out dialogueBank))
+				return dialogueBank;
+
+			string path = $"Data\\DialogueBanks\\{name}";
+
+			foreach (var mod in MyAPIGateway.Session.Mods)
+			{
+				if (!MyAPIGateway.Utilities.FileExistsInModLocation(path, mod))
+					continue;
+
+				try
+				{
+					var reader = MyAPIGateway.Utilities.ReadFileInModLocation(path, mod);
+					string configContents = reader.ReadToEnd();
+					dialogueBank = MyAPIGateway.Utilities.SerializeFromXML<DialogueBank>(configContents);
+				}
+				catch (Exception exc)
+				{
+					SpawnLogger.Write($"Could not deserialize XML for dialogue bank: {name}", SpawnerDebugEnum.Error);
+					SpawnLogger.Write(exc.ToString(), SpawnerDebugEnum.Error);
+					continue;
+				}
+
+				if (dialogueBank != null)
+					break;
+			}
+
+			if (dialogueBank == null)
+				return null;
+
+			if (dialogueBank.DialogueCues == null)
+				dialogueBank.DialogueCues = new List<DialogueCue>();
+
+			DialogueBanks[name] = dialogueBank;
+			return dialogueBank;
+
+		}
+
+
+
 
 		public static void ReportProfileError(string profileId, string reason) {
 

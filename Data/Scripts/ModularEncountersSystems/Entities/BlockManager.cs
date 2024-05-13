@@ -69,6 +69,7 @@ namespace ModularEncountersSystems.Entities {
 			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_NewRepublic_EWing_RC"));
 			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_Imperial_RC_Largegrid"));
 			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_TIE_Drone_Core"));
+			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "GFA_SG_TIEFighter_Viewport_RivalAI"));
 
 			NanobotBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_ShipWelder), "SELtdSmallNanobotBuildAndRepairSystem"));
 			NanobotBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_ShipWelder), "SELtdLargeNanobotBuildAndRepairSystem"));

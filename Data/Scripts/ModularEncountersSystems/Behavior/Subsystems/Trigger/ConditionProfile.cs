@@ -635,6 +635,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.CheckTargetSpeed)
+			{
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget())
+				{
+
+					var speed = _behavior.AutoPilot.Targeting.Target.CurrentSpeed();
+
+					if ((ConditionReference.MinTargetSpeed == -1 || speed >= ConditionReference.MinTargetSpeed) && (ConditionReference.MaxTargetSpeed == -1 || speed <= ConditionReference.MaxTargetSpeed))
+						satisfiedConditions++;
+
+				}
+
+			}
+
+
 			if (ConditionReference.CheckTargetAngleFromForward) {
 
 				usedConditions++;
@@ -660,7 +678,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
 					var targetVelocity = Vector3D.Normalize(_behavior.AutoPilot.Targeting.Target.CurrentVelocity());
-
+					
 					if (targetVelocity.IsValid() && targetVelocity.Length() > 0) {
 
 						var angle = VectorHelper.GetAngleBetweenDirections(dirFromTarget, targetVelocity);
@@ -1041,7 +1059,38 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
-			
+
+			if (ConditionReference.HasTarget)
+			{
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget())
+				{
+
+					satisfiedConditions++;
+
+				}
+
+			}
+
+			if (ConditionReference.NoTarget)
+			{
+
+				usedConditions++;
+
+				if (!_behavior.AutoPilot.Targeting.HasTarget())
+				{
+
+					satisfiedConditions++;
+
+				}
+
+			}
+
+
+
+
 			if (ConditionReference.IsAttackerHostile) {
 
 				usedConditions++;

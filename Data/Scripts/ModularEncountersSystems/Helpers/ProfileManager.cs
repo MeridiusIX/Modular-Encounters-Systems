@@ -28,6 +28,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, BotSpawnProfile> BotSpawnProfiles = new Dictionary<string, BotSpawnProfile>();
 		public static Dictionary<string, ReplenishmentProfile> ReplenishmentProfiles = new Dictionary<string, ReplenishmentProfile>();
 		public static Dictionary<string, DerelictionProfile> DerelictionProfiles = new Dictionary<string, DerelictionProfile>();
+		public static Dictionary<string, FactionIconProfile> FactionIconProfiles = new Dictionary<string, FactionIconProfile>();
 		public static Dictionary<string, LootGroup> LootGroups = new Dictionary<string, LootGroup>();
 		public static Dictionary<string, LootProfile> LootProfiles = new Dictionary<string, LootProfile>();
 		public static Dictionary<string, ManipulationGroup> ManipulationGroups = new Dictionary<string, ManipulationGroup>();
@@ -104,6 +105,18 @@ namespace ModularEncountersSystems.Helpers {
 					var profile = new DerelictionProfile(component.DescriptionText);
 					profile.ProfileSubtypeId = component.Id.SubtypeName;
 					DerelictionProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
+					continue;
+
+				}
+
+				if (!FactionIconProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Faction Icon]"))
+				{
+
+					var profile = new FactionIconProfile(component.DescriptionText);
+					profile.InitTags(component.DescriptionText);
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					FactionIconProfiles.Add(component.Id.SubtypeName, profile);
 					AllMesProfileIds.Add(component.Id);
 					continue;
 

@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Entities;
+﻿using ModularEncountersSystems.Core;
+using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.World;
 using Sandbox.Definitions;
 using Sandbox.Game.EntityComponents;
@@ -36,7 +37,7 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			if (!_firstRun) {
 
-				if (!_physicsActive)
+				if (!_physicsActive || !MES_SessionCore.IsServer)
 					return;
 
 				_firstRun = true;
@@ -48,6 +49,8 @@ namespace ModularEncountersSystems.BlockLogic {
 				
 				}
 
+				//lol none of this dumb stuff anymore
+/*
 				var _source = _gasTank.Components.Get<MyResourceSourceComponent>();
 				var _sink = _gasTank.Components.Get<MyResourceSinkComponent>();
 				var _definition = _gasTank.SlimBlock.BlockDefinition as MyGasTankDefinition;
@@ -58,6 +61,7 @@ namespace ModularEncountersSystems.BlockLogic {
 					return;
 
 				}
+*/
 
 				Block.RefreshSubGrids();
 
@@ -96,10 +100,9 @@ namespace ModularEncountersSystems.BlockLogic {
 
 			}
 				
-			if (_source.RemainingCapacityByType(_definition.StoredGasId) < _definition.Capacity / 4) {
+			if (_gasTank.FilledRatio <= .25f) {
 
-				_source.SetRemainingCapacityByType(_definition.StoredGasId, _definition.Capacity);
-				_sink.Update();
+				_gasTank.ChangeFilledRatio(1, true);
 
 			}
 

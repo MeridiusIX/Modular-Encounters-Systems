@@ -1135,7 +1135,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 						//Altitude
 						if (distToCore> distSurfaceToCore)
-                        {
+						{
 							Altitude= (explorationPoint - surfaceExplorationCoords).Length();
 							var diffDistance = distToCore - distanceTargetCore;
 							Altitude = Altitude - diffDistance;
@@ -1276,6 +1276,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					Weapons.GetAmmoSpeedDetails(_behavior.BehaviorSettings.RotationDirection, out ammoVel, out ammoInitVel, out ammoAccel);
 
 					if (ammoVel > 0) {
+
+						//Need to finish some code in weapon system to assign a primary static weapon
+						//_pendingWaypoint = MyAPIGateway.Physics.GetWeaponLeadPrediction(Weapons.PrimaryStaticWeapon.Block(), Targeting.Target.GetEntity(), Weapons.PrimaryStaticWeapon.) ;
 
 						_pendingWaypoint = VectorHelper.TrajectoryEstimation(
 						Targeting.TargetLastKnownCoords,

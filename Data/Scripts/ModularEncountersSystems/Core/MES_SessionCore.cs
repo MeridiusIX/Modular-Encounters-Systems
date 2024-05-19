@@ -11,6 +11,7 @@ using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Spawning.Procedural;
+using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Terminal;
@@ -140,6 +141,7 @@ namespace ModularEncountersSystems.Core {
 			ProceduralShipManager.Setup();
 			CombatPhaseManager.Setup();
 			EventManager.Setup();
+			FactionIconProfile.ProcessFactionIcons();
 
 			SessionStartTime = MyAPIGateway.Session.GameDateTime;
 			//AttributeApplication

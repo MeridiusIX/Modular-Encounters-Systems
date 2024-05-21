@@ -276,7 +276,6 @@ namespace ModularEncountersSystems.Zones {
 			sb.Append(" - Strict:                      ").Append(Strict).AppendLine();
 			sb.Append(" - Player Known Location:       ").Append(PlayerKnownLocation).AppendLine();
 			sb.Append(" - No Spawn Zone:               ").Append(NoSpawnZone).AppendLine();
-			sb.Append(" - Use Limited Factions:        ").Append(UseLimitedFactions).AppendLine();
 			sb.Append(" - Coordinates:                 ").Append(Coordinates).AppendLine();
 			sb.Append(" - Radius:                      ").Append(Radius).AppendLine();
 			sb.Append(" - Planetary Zone:              ").Append(PlanetaryZone).AppendLine();
@@ -286,8 +285,13 @@ namespace ModularEncountersSystems.Zones {
 			sb.Append(" - Use Max Spawned Encounters:  ").Append(UseMaxSpawnedEncounters).AppendLine();
 			sb.Append(" - Use Allowed Spawn Groups:    ").Append(UseAllowedSpawnGroups).AppendLine();
 			sb.Append(" - Use Restricted Spawn Groups: ").Append(UseRestrictedSpawnGroups).AppendLine();
-			sb.Append(" - Use Allowed Mod IDs:         ").Append(UseAllowedModIDs).AppendLine();
-			sb.Append(" - Use Restricted Mod IDs:      ").Append(UseRestrictedModIDs).AppendLine();
+
+			sb.Append(" - UseLimitedFactions:          ").Append(UseLimitedFactions).AppendLine();
+			sb.Append(" - Factions:                    ").Append(string.Join(", ", Factions)).AppendLine();
+
+			sb.Append(" - Below is not implemented!!!  ").AppendLine();
+			sb.Append(" - Use Allowed Mod IDs:		   ").Append(UseAllowedModIDs).AppendLine();
+			sb.Append(" - Use Restricted Mod IDs:	   ").Append(UseRestrictedModIDs).AppendLine();
 
 			if (CustomBools.Count > 0) {
 

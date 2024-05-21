@@ -137,6 +137,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		[ProtoMember(41)]
 		public long SavedPlayerIdentityId;
 
+		[ProtoMember(42)]
+		public List<string> ReceivedCommandSenderCode;
+
 		[ProtoIgnore]
 		public EscortProfile ParentEscort { get {
 
@@ -209,7 +212,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			WeaponsSystemProfile = "";
 
 			SavedPlayerIdentityId = 0;
-
+			ReceivedCommandSenderCode = new List<string>();
 		}
 
 		public StoredSettings(StoredSettings oldSettings, bool preserveSettings, bool preserveTriggers, bool preserveTargetProfile) : base() {
@@ -238,7 +241,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			this.ActiveEscorts = oldSettings.ActiveEscorts;
 			this.WeaponsSystemProfile = oldSettings.WeaponsSystemProfile;
 			this.SavedPlayerIdentityId = oldSettings.SavedPlayerIdentityId;
-
+			this.ReceivedCommandSenderCode = oldSettings.ReceivedCommandSenderCode;
 			//Triggers
 			if (preserveTriggers) {
 

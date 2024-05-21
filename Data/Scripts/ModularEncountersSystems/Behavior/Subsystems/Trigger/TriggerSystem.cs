@@ -629,6 +629,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				var commandreceivecode = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, trigger.CommandReceiveCode);
 
+                if (trigger.AllowUniqueCommandCodeSenderOnly)
+                {
+					string uniquestringid = receivedCommand.SenderEntity.EntityId.ToString() + commandreceivecode;
+
+                    if (_settings.ReceivedCommandSenderCode.Contains(uniquestringid))
+                    {
+						continue;
+                    }
+                    else
+                    {
+						_settings.ReceivedCommandSenderCode.Add(uniquestringid);
+					}
+
+                }
+
+
 				bool commandCodePass = !trigger.AllowCommandCodePartialMatch ? (receivedCommand.CommandCode.ToLower() == commandreceivecode.ToLower()) : (receivedCommand.CommandCode.ToLower().Contains(commandreceivecode.ToLower()));
 
 				if (trigger.UseTrigger == true && commandCodePass) {
@@ -1293,6 +1309,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (!PlayerCondition.ArePlayerConditionsMet(control.PlayerFilterProfileIds, player.Player.IdentityId))
 					continue;
+
+
+				if (control.MinPlayerReputation != -1501 || control.MaxPlayerReputation != 1501)
+				{
+					var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(control.FactionTag);
+
+					long factionId = 0;
+
+					if (customfaction != null)
+						factionId = customfaction.FactionId;
+
+
+					if (factionId != 0)
+					{
+						var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.Player.IdentityId, factionId);
+						if (rep < control.MinPlayerReputation || rep > control.MaxPlayerReputation)
+							continue;
+					}
+				}	
 
 				distance = dist;
 				result = player;

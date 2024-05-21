@@ -210,6 +210,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(61)]
 		public List<string> Tags;
 
+		//Tags
+		[ProtoMember(62)]
+		public bool AllowUniqueCommandCodeSenderOnly;
+
 		[ProtoIgnore]
 		public IBehavior Behavior;
 
@@ -324,6 +328,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			Tags = new List<string>();
 
+			AllowUniqueCommandCodeSenderOnly = false;
 			ProfileSubtypeId = "";
 
 
@@ -941,8 +946,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					{
 						TagParse.TagStringListCheck(tag, ref Tags);
 					}
+					
+					//UsePlayerFilterProfile
+					if (tag.Contains("[AllowUniqueCommandCodeSenderOnly:") == true)
+					{
+						TagParse.TagBoolCheck(tag, ref AllowUniqueCommandCodeSenderOnly);
 
-
+					}
 
 				}
 

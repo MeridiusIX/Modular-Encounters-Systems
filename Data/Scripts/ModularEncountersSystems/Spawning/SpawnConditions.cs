@@ -904,7 +904,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (!ZoneValidation(spawnGroup, conditions, collection, environment.Position, adminSpawn, ref failReason)) {
+			if (!ZoneValidation(spawnGroup, conditions, collection, environment.Position, persistentConditionCheck, adminSpawn, ref failReason)) {
 
 				return false;
 
@@ -1856,7 +1856,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position, bool extendFailReasons, ref string failReason){
+		public static bool ZoneValidation(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, Vector3D position,bool persistentConditionCheck, bool extendFailReasons, ref string failReason){
 
 			bool zonePersistentRequirement = false;
 			bool zoneKPLRequirement = false;
@@ -1873,7 +1873,10 @@ namespace ModularEncountersSystems.Spawning {
 				if (!zoneKPLRequirement && zoneCondition.UseKnownPlayerLocation)
 					zoneKPLRequirement = true;
 
+
+
 				for (int j = 0; j < ZoneManager.ActiveZones.Count; j++) {
+
 
 					var zone = ZoneManager.ActiveZones[j];
 
@@ -2001,6 +2004,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
+
 					failReason = "";
 					collection.ActiveZone = zone;
 					collection.ZoneIndex = i;
@@ -2035,14 +2039,11 @@ namespace ModularEncountersSystems.Spawning {
 				return false;
 
 			}
-				
 
-			if (collection.AllowedZoneFactions.Count > 0) {
-
+			if (!persistentConditionCheck && collection.AllowedZoneFactions.Count > 0 && !collection.AllowedZoneFactions.Contains(conditions.FactionOwner)) {
 				failReason = _zoneDebug.ToString();
 				failReason += "   - Zone Check Failed: Allowed Zone Factions Not Satisfied";
 				return false;
-
 			}
 
 			failReason = "";
@@ -2118,6 +2119,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			//Start remove if Lucas fucked up
+
 			if (!forceSpawn)
 			{
 
@@ -2131,6 +2133,7 @@ namespace ModularEncountersSystems.Spawning {
 					bool specificFactionCheck = false;
 
 					IMyFaction checkFaction = faction;
+
 
 					if (faction?.Tag != null && collection.AllowedZoneFactions.Count > 0 && !collection.AllowedZoneFactions.Contains(faction.Tag))
 					{
@@ -2149,9 +2152,9 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
+
 					if (condition.UsePlayerFactionReputation == true)
 					{
-
 						if (string.IsNullOrWhiteSpace(condition.CheckReputationAgainstOtherNPCFaction) == false)
 						{
 
@@ -2174,6 +2177,7 @@ namespace ModularEncountersSystems.Spawning {
 							}
 
 						}
+
 
 						//MyVisualScriptLogicProvider.ShowNotificationToAll("Player Count " + PlayerManager.Players.Count, 4000);
 
@@ -2223,27 +2227,31 @@ namespace ModularEncountersSystems.Spawning {
 
 						}
 
-					}
-
-					if (validFaction == false)
-					{
-
-						factionList.Remove(faction);
-
-						if (specificFactionCheck == true)
+						if (validFaction == false)
 						{
 
-							factionList.Clear();
-							break;
+							factionList.Remove(faction);
+
+							if (specificFactionCheck == true)
+							{
+
+								factionList.Clear();
+								break;
+
+							}
+
+							continue;
 
 						}
 
-						continue;
 
 					}
 
+
+
 				}
-				
+
+
 				//End remove if Lucas fucked up
 
 				//Restore this code if Lucas fucked up

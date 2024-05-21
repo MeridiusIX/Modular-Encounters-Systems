@@ -329,11 +329,9 @@ namespace ModularEncountersSystems.Helpers {
 
                     }
 
-
                 }
 
             }
-
 
         }
 

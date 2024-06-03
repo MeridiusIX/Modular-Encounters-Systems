@@ -25,6 +25,7 @@ namespace ModularEncountersSystems.Spawning {
 		public BlockSizeEnum BlockSize;
 		public bool ClearedContainerTypes;
 		public bool RevertStorage;
+		public bool AppliedGlobalManipulations;
 
 		public PrefabContainer(string SubtypeId) {
 
@@ -50,11 +51,20 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
+		private void ResetContainerValues() {
+
+			ClearedContainerTypes = false;
+			RevertStorage = false;
+			AppliedGlobalManipulations = false;
+
+		}
+
 		public bool InitializePrefabForSpawn(string subtypeId, int index, List<MyObjectBuilder_CubeGrid> gridListOverride = null) {
 
 			var prefab = MyDefinitionManager.Static.GetPrefabDefinition(subtypeId);
 			OriginalPrefab = prefab;
 			OriginalPrefabIndex = index;
+			ResetContainerValues();
 
 			if (prefab?.CubeGrids == null || prefab.CubeGrids.Length == 0)
 				return false;

@@ -382,37 +382,49 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
-			//Global Block Replacer Individual
-			if (Settings.Grids.UseGlobalBlockReplacer == true && profile.IgnoreGlobalBlockReplacer == false) {
+			if (!prefab.AppliedGlobalManipulations) {
 
-				SpawnLogger.Write("Applying Global Individual Block Replacer", SpawnerDebugEnum.Manipulation);
+				//Global Block Replacer Individual
+				if (Settings.Grids.UseGlobalBlockReplacer == true && profile.IgnoreGlobalBlockReplacer == false)
+				{
 
-				var dict = Settings.Grids.GetReplacementReferencePairs();
+					SpawnLogger.Write("Applying Global Individual Block Replacer", SpawnerDebugEnum.Manipulation);
 
-				foreach (var grid in prefab.Prefab.CubeGrids) {
+					var dict = Settings.Grids.GetReplacementReferencePairs();
 
-					BlockReplacement.ApplyBlockReplacements(grid, null, dict);
+					foreach (var grid in prefab.Prefab.CubeGrids)
+					{
 
-				}
-
-			}
-
-			//Global Block Replacer Profiles
-			if (Settings.Grids.UseGlobalBlockReplacer == true && Settings.Grids.GlobalBlockReplacerProfiles.Length > 0 && profile.IgnoreGlobalBlockReplacer == false) {
-
-				SpawnLogger.Write("Applying Global Block Replacement Profiles", SpawnerDebugEnum.Manipulation);
-
-				foreach (var grid in prefab.Prefab.CubeGrids) {
-
-					foreach (var name in Settings.Grids.GlobalBlockReplacerProfiles) {
-
-						BlockReplacement.ApplyBlockReplacements(grid, name, null, _blockReplacementCountLimits);
+						BlockReplacement.ApplyBlockReplacements(grid, null, dict);
 
 					}
 
 				}
 
+				//Global Block Replacer Profiles
+				if (Settings.Grids.UseGlobalBlockReplacer == true && Settings.Grids.GlobalBlockReplacerProfiles.Length > 0 && profile.IgnoreGlobalBlockReplacer == false)
+				{
+
+					SpawnLogger.Write("Applying Global Block Replacement Profiles", SpawnerDebugEnum.Manipulation);
+
+					foreach (var grid in prefab.Prefab.CubeGrids)
+					{
+
+						foreach (var name in Settings.Grids.GlobalBlockReplacerProfiles)
+						{
+
+							BlockReplacement.ApplyBlockReplacements(grid, name, null, _blockReplacementCountLimits);
+
+						}
+
+					}
+
+				}
+
+				prefab.AppliedGlobalManipulations = true;
+
 			}
+			
 
 			//Custom Settings
 			if (prefab.Prefab.CubeGrids.Length > 0 && prefab.Prefab.CubeGrids[0]?.ComponentContainer != null) {

@@ -62,6 +62,8 @@ namespace ModularEncountersSystems.Helpers {
 
         public long DamagerEntityId;
 
+        public int NPCScoreValue;
+
         public bool SingleRecipient;
 
         public bool ReturnToSender;
@@ -238,6 +240,11 @@ namespace ModularEncountersSystems.Helpers {
 
                 GridValueScore = behavior.CurrentGrid?.TargetValue() ?? 0;
 
+            }
+
+            if (profile.SendScoreValue)
+            {
+                this.NPCScoreValue = behavior.CurrentGrid?.Npc.Score ?? 0;
             }
 
             TransmissionType = profile.TransmissionType;

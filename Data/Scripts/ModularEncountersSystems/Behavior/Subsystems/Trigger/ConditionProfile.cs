@@ -270,6 +270,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count) {
 
+
+
+					var selfScore = _behavior.CurrentGrid?.Npc.Score ?? 0;
+					var commandScore = command?.NPCScoreValue ?? 0;
+
+
 					for (int i = 0; i < ConditionReference.CustomCounters.Count; i++) {
 
 						try {
@@ -279,7 +285,31 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							if (i <= ConditionReference.CounterCompareTypes.Count - 1)
 								compareType = ConditionReference.CounterCompareTypes[i];
 
-							if (_settings.GetCustomCounterResult(ConditionReference.CustomCounters[i], ConditionReference.CustomCountersTargets[i], compareType) == false) {
+
+							var counter = ConditionReference.CustomCounters[i];
+							var target = ConditionReference.CustomCountersTargets[i];
+
+							if (ConditionReference.CustomCountersTargetOverrideSelfScore)
+								target = selfScore;
+
+							if (ConditionReference.CustomCountersTargetOverrideCommandScore)
+								target = commandScore;
+
+
+							int? overrideScore = null;
+
+
+							if (counter.Contains("{CommandScore}"))
+							{
+								overrideScore = commandScore;
+							}
+							else if (counter.Contains("{SelfScore}"))
+							{
+								overrideScore = selfScore;
+							}
+
+
+							if (_settings.GetCustomCounterResult(counter, target, compareType, overrideScore) == false) {
 
 								BehaviorLogger.Write(ProfileSubtypeId + ": Counter Amount Condition Not Satisfied: " + ConditionReference.CustomCounters[i], BehaviorDebugEnum.Condition);
 								failedCheck = true;
@@ -290,6 +320,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								break;
 							
 							}
+
+
+
+
 
 						} catch (Exception e) {
 
@@ -302,7 +336,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				} else {
 
-					BehaviorLogger.Write(ProfileSubtypeId + ": Counter Names and Targets List Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
+					BehaviorLogger.Write(ProfileSubtypeId + $": Counter Names ({ConditionReference.CustomCounters.Count}) and Targets List ({ConditionReference.CustomCountersTargets.Count}) Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
 					failedCheck = true;
 
 				}
@@ -834,12 +868,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
-
-
-
-
-
-
 
 
 			if (ConditionReference.CheckHorizonAngle) {

@@ -13,6 +13,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public List<string> Prefabs;
 
+		public int Score; //Used in Commands,Event Conditions. Doing this on prefab saves a lot of triggers/actions for me - CPTARTHUR
 		public List<string> CustomTags;
 		public List<ManipulationProfile> ManipulationProfiles;
 		public List<string> ManipulationGroups;
@@ -22,7 +23,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			ProfileSubtypeId = "";
 
 			Prefabs = new List<string>();
-
+			Score = 0;
 			CustomTags = new List<string>();
 			ManipulationProfiles = new List<ManipulationProfile>();
 			ManipulationGroups = new List<string>();
@@ -50,6 +51,15 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.Contains("[CustomTags:")) {
 
 					TagParse.TagStringListCheck(tag, ref CustomTags);
+					continue;
+
+				}
+
+				//Score
+				if (tag.Contains("[Score:"))
+				{
+
+					TagParse.TagIntCheck(tag, ref Score);
 					continue;
 
 				}

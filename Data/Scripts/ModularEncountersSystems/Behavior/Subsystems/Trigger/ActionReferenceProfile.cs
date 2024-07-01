@@ -80,6 +80,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> SetBooleansTrue;
 		public List<string> SetBooleansFalse;
 		public List<string> IncreaseCounters;
+		public int IncreaseCountersAmount;
+		public int DecreaseCountersAmount;
+		public bool IncreaseCountersUseCommandScore;
+		public bool DecreaseCountersUseCommandScore;
+
+
 		public List<string> DecreaseCounters;
 		public List<string> ResetCounters;
 
@@ -88,7 +94,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> IncreaseSandboxCounters;
 		public List<string> DecreaseSandboxCounters;
 		public int IncreaseSandboxCountersAmount;      
-		public int DecreaseSandboxCountersAmount;      
+		public int DecreaseSandboxCountersAmount;
 
 		public List<string> ResetSandboxCounters;
 
@@ -524,8 +530,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			
 			IncreaseSandboxCountersAmount = 1;
+
 			DecreaseSandboxCountersAmount = -1;
 
+			IncreaseCountersAmount = 1;
+			DecreaseCountersAmount = -1;
+
+			IncreaseCountersUseCommandScore = false;
+			DecreaseCountersUseCommandScore = false;
 
 			BroadcastGenericCommand = false;
 
@@ -907,7 +919,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
 				{"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
 				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) }, 
-				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) }, 
+				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) },
+				{"IncreaseCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseCountersAmount) },
+				{"DecreaseCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseCountersAmount) },
+				{"IncreaseCountersUseCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseCountersUseCommandScore) },
+				{"DecreaseCountersUseCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref DecreaseCountersUseCommandScore) },
+
+
 				{"ResetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetSandboxCounters) },
 				{"ChangeAttackerReputation", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackerReputation) },
 				{"ChangeAttackerReputationFaction", (s, o) => TagParse.TagStringListCheck(s, ref ChangeAttackerReputationFaction) },

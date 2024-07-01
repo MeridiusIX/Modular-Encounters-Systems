@@ -1789,17 +1789,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			foreach (var variable in actions.SetBooleansFalse)
 				_settings.SetCustomBool(variable, false);
 
-			//IncreaseCounters
-			foreach (var variable in actions.IncreaseCounters)
-				_settings.SetCustomCounter(variable, 1);
 
-			//DecreaseCounters
+
+			// IncreaseCounters
+			int increaseAmount = actions.IncreaseCountersUseCommandScore && command != null ? command.NPCScoreValue : Math.Abs(actions.IncreaseCountersAmount);
+			foreach (var variable in actions.IncreaseCounters)
+			{
+				_settings.SetCustomCounter(variable, increaseAmount);
+			}
+
+			// DecreaseCounters
+			int decreaseAmount = actions.DecreaseCountersUseCommandScore && command != null ? -command.NPCScoreValue : -Math.Abs(actions.DecreaseCountersAmount);
 			foreach (var variable in actions.DecreaseCounters)
-				_settings.SetCustomCounter(variable, -1);
+			{
+				_settings.SetCustomCounter(variable, decreaseAmount);
+			}
+
+
 
 			//ResetCounters
 			foreach (var variable in actions.ResetCounters)
-				_settings.SetCustomCounter(variable, 0, true);
+			_settings.SetCustomCounter(variable, 0, true);
 
 			//SetCounters
 			if (actions.SetCounters.Count == actions.SetCountersValues.Count) {

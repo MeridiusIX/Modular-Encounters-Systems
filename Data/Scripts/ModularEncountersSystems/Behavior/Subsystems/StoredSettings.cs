@@ -278,8 +278,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			return result;
 			
 		}
-		
-		public bool GetCustomCounterResult(string varName, int target, CounterCompareEnum compareType){
+
+		public bool GetCustomCounterResult(string varName, int target, CounterCompareEnum compareType, int? overrideresult = null){
 
 			if (string.IsNullOrWhiteSpace(varName)) {
 
@@ -287,11 +287,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				return false;
 
 			}
-				
+
+
 
 			int result = 0;
-			this.StoredCustomCounters.TryGetValue(varName, out result);
-			BehaviorLogger.Write(varName + ": " + result.ToString() + " / " + target.ToString(), BehaviorDebugEnum.Condition);
+
+
+			// Use the override result if it has a value
+			if (overrideresult.HasValue)
+			{
+				result = overrideresult.Value;
+			}
+			else
+			{
+				// Attempt to get the stored counter value
+				if (!this.StoredCustomCounters.TryGetValue(varName, out result))
+				{
+					// Handle the case where the counter is not found
+					BehaviorLogger.Write("Counter not found: " + varName, BehaviorDebugEnum.Condition);
+
+				}
+			}
 
 			if(compareType == CounterCompareEnum.GreaterOrEqual)
 				return (result >= target);

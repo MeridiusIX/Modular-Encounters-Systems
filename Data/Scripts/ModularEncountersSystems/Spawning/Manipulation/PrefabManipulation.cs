@@ -57,6 +57,11 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					if (!data.CustomTags.Contains(tag))
 						data.CustomTags.Add(tag);
 
+				data.Score = prefabData.Score;
+
+
+
+
 				foreach (var profile in prefabData.ManipulationProfiles) {
 
 					//Conditions

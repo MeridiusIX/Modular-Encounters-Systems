@@ -393,6 +393,10 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(37)]
 		public List<int> ManipulationsUsed;
 
+		[ProtoMember(38)]
+		public int Score;
+
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -565,6 +569,7 @@ namespace ModularEncountersSystems.World {
 			OriginalOwnerId = 0;
 			SpawnGroupTimeStamp = DateTime.MinValue;
 			ManipulationsUsed = new List<int>();
+			Score = 0;
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -1124,6 +1129,8 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - SpawnedByMES:        ").Append(SpawnedByMES.ToString()).AppendLine();
 			sb.Append(" - OriginalFaction:     ").Append(OriginalOwnerFaction).AppendLine();
 			sb.Append(" - OriginalOwnerId:     ").Append(OriginalOwnerId).AppendLine();
+
+			sb.Append(" - Score (WIP:     ").Append(Score).AppendLine();
 
 			return sb.ToString();
 			

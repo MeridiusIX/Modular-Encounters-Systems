@@ -24,6 +24,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SendSelfAsTargetEntityId;
 		public bool SendWaypoint;
 		public bool SendGridValue;
+		public bool SendScoreValue;
 
 		public bool RequestEscortSlot;
 
@@ -56,7 +57,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SendSelfAsTargetEntityId = false;
 			SendWaypoint = false;
 			SendGridValue = false;
-
+			SendScoreValue = false; // Stored in NPCDATA
+			
 			RequestEscortSlot = false;
 
 			TransmissionType = CommandTransmissionType.None;
@@ -169,6 +171,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						TagParse.TagBoolCheck(tag, ref SendGridValue);
 
 					}
+
+					//SendScoreValue
+					if (tag.Contains("[SendScoreValue:") == true)
+					{
+
+						TagParse.TagBoolCheck(tag, ref SendScoreValue);
+
+					}
+					
+
 
 					//RequestEscortSlot
 					if (tag.Contains("[RequestEscortSlot:") == true) {

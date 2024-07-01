@@ -38,6 +38,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckCustomCounters;
 		public List<string> CustomCounters;
 		public List<int> CustomCountersTargets;
+		public bool CustomCountersTargetOverrideSelfScore;
+		public bool CustomCountersTargetOverrideCommandScore;
+
+
 		public bool AllowAnyValidCounter;
 
 		public bool CheckGridSpeed;
@@ -229,6 +233,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CustomCountersTargets = new List<int>();
 			AllowAnyValidCounter = false;
 
+			CustomCountersTargetOverrideCommandScore = false;
+			CustomCountersTargetOverrideSelfScore = false;
+
+
 			CheckTrueSandboxBooleans = false;
 			TrueSandboxBooleans = new List<string>();
 			AllowAnyTrueSandboxBoolean = false;
@@ -404,13 +412,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"TrueBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueBooleans) },
 				{"AllowAnyTrueBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyTrueBoolean) },
 				{"CheckFalseBooleans", (s, o) => TagParse.TagBoolCheck(s, ref CheckFalseBooleans) },
-				{"FalseBooleans", (s, o) => TagParse.TagStringListCheck(s, ref TrueBooleans) },
+				{"FalseBooleans", (s, o) => TagParse.TagStringListCheck(s, ref FalseBooleans) },
 				{"AllowAnyFalseBoolean", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyFalseBoolean) },
 
 
 				{"CheckCustomCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomCounters) },
 				{"CustomCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomCounters) },
-				{"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomCountersTargets) },
+				{"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, true ,ref CustomCountersTargets) },
+				{"CustomCountersTargetOverrideCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref CustomCountersTargetOverrideCommandScore) },
+				{"CustomCountersTargetOverrideSelfScore", (s, o) => TagParse.TagBoolCheck(s, ref CustomCountersTargetOverrideSelfScore) },
 				{"AllowAnyValidCounter", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyValidCounter) },
 				{"CheckGridSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSpeed) },
 				{"MinGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MinGridSpeed) },

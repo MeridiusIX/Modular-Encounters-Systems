@@ -546,7 +546,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			if(receivedCommand.Behavior.RemoteControl.EntityId != 0 && receivedCommand.Behavior.RemoteControl.EntityId == RemoteControl.EntityId)
+			if(receivedCommand.RemoteControl.EntityId != 0 && receivedCommand.RemoteControl.EntityId == RemoteControl.EntityId)
             {
 				BehaviorLogger.Write("The command hit the originating grid", BehaviorDebugEnum.Command);
 				return;

@@ -7,6 +7,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Events;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+//using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
@@ -36,8 +37,8 @@ namespace ModularEncountersSystems.Core {
 		public static bool SyncWarning = false;
 		public bool FinalSetup = false;
 
-		public static string ModVersion = "2.71.14";
-		public static int ModVersionValue = 200710014; //Use above value as reference - 3 digits per part (
+		public static string ModVersion = "2.71.15";
+		public static int ModVersionValue = 200710015; //Use above value as reference - 3 digits per part (
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -141,6 +142,7 @@ namespace ModularEncountersSystems.Core {
 			ProceduralShipManager.Setup();
 			CombatPhaseManager.Setup();
 			EventManager.Setup();
+			//MissionManager.Setup();
 			FactionIconProfile.ProcessFactionIcons();
 
 			SessionStartTime = MyAPIGateway.Session.GameDateTime;

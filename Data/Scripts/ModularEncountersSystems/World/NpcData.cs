@@ -396,6 +396,8 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(38)]
 		public int Score;
 
+		[ProtoMember(39)]
+		public long EventInstanceId;
 
 		//Non-Serialized Data
 
@@ -570,6 +572,7 @@ namespace ModularEncountersSystems.World {
 			SpawnGroupTimeStamp = DateTime.MinValue;
 			ManipulationsUsed = new List<int>();
 			Score = 0;
+			EventInstanceId = -1;
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -1130,7 +1133,9 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - OriginalFaction:     ").Append(OriginalOwnerFaction).AppendLine();
 			sb.Append(" - OriginalOwnerId:     ").Append(OriginalOwnerId).AppendLine();
 
-			sb.Append(" - Score (WIP:     ").Append(Score).AppendLine();
+			sb.Append(" - Score (WIP):         ").Append(Score).AppendLine();
+			sb.Append(" - EventInstanceId:     ").Append(EventInstanceId).AppendLine();
+			
 
 			return sb.ToString();
 			

@@ -30,10 +30,11 @@ namespace ModularEncountersSystems.Spawning {
 
 		private static SpawnProfile _currentSpawn;
 		private static long _ownerOverride;
+		private static long _eventInstance;
 		private static MatrixD _spawnMatrix;
 
 
-		public static void BehaviorSpawnRequest(SpawnProfile spawn = null, long ownerOverride = -1) {
+		public static void BehaviorSpawnRequest(SpawnProfile spawn = null, long ownerOverride = -1, long EventInstance = -1) {
 
 			if (spawn != null) {
 
@@ -46,7 +47,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			_currentSpawn = _pendingSpawns[0].Spawn;
 			_ownerOverride = _pendingSpawns[0].OwnerOverride;
-
+			_eventInstance = EventInstance;
 			_pendingSpawns.RemoveAt(0);
 			_spawnInProgress = true;
 			MyAPIGateway.Parallel.Start(SpawningParallelChecks, CompleteSpawning);
@@ -132,7 +133,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending CustomSpawn Data to Spawner", SpawnerDebugEnum.Spawning);
 				var velocity = Vector3D.Transform(_currentSpawn.RelativeSpawnVelocity, _spawnMatrix) - _spawnMatrix.Translation;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, false, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity, _currentSpawn.IgnoreSafetyChecks, ownerOverride:_ownerOverride);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, false, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity, _currentSpawn.IgnoreSafetyChecks, ownerOverride:_ownerOverride,eventInstance:_eventInstance);
 
 				if (result == true) {
 

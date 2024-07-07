@@ -37,6 +37,7 @@ namespace ModularEncountersSystems.Spawning {
 		public Dictionary<string, int> ActiveConditions;
 
 		public long OwnerOverride;
+		public long EventInstanceId;
 
 		public Dictionary<string, List<ImprovedSpawnGroup>> SpawnGroupSublists;
 		public Dictionary<string, List<ImprovedSpawnGroup>> SmallSpawnGroupSublists;
@@ -107,6 +108,7 @@ namespace ModularEncountersSystems.Spawning {
 			ActiveConditions = new Dictionary<string, int>();
 
 			OwnerOverride = -1;
+			EventInstanceId = -1;
 
 			SpawnGroupSublists = new Dictionary<string, List<ImprovedSpawnGroup>>();
 			SmallSpawnGroupSublists = new Dictionary<string, List<ImprovedSpawnGroup>>();

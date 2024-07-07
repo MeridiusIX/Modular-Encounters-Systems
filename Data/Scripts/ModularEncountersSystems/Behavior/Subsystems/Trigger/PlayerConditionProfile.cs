@@ -161,7 +161,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 return false;
 
             if (ProfilesIds.Count <= 0)
-                return false;
+                return true;
 
 
             foreach (var Name in ProfilesIds)

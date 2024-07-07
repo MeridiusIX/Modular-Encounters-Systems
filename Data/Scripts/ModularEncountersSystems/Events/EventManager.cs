@@ -21,12 +21,9 @@ namespace ModularEncountersSystems.Events {
 
 		public static List<Event> EventsList = new List<Event>();
 
-		/*
-		public static List<EventController> EventControllersList = new List<EventController>();
-		*/
+		private static int ticks = 0;
 
 		private static string _saveEventsListName = "MES-EventsList";
-		private static string _saveEventControllersListName = "MES-EventControllersList";
 
 		private static List<Event> _readyEvents = new List<Event>();
 
@@ -52,27 +49,16 @@ namespace ModularEncountersSystems.Events {
 			if (EventsList == null)
 				EventsList = new List<Event>();
 
+
+
 			foreach (var existingEvent in EventsList) {
 
+
 				existingEvent.Init();
-			
-			}
-
-			/*
-			//SpawnLogger.Write("Existing EventController Data", SpawnerDebugEnum.Dev, true);
-			//Get Existing EventController Data
-			string eventControllersListString = "";
-
-			if (MyAPIGateway.Utilities.GetVariable<string>(_saveEventControllersListName, out eventControllersListString)) {
-
-				var eventsListSerialized = Convert.FromBase64String(eventControllersListString);
-				EventControllersList = MyAPIGateway.Utilities.SerializeFromBinary<List<EventController>>(eventsListSerialized);
 
 			}
-			*/
 
-			if (EventsList == null)
-				EventsList = new List<Event>();
+
 
 			//SpawnLogger.Write("Create New Events", SpawnerDebugEnum.Dev, true);
 			//Create New Events
@@ -84,6 +70,7 @@ namespace ModularEncountersSystems.Events {
 
 					if (existingEvent.ProfileSubtypeId == eventProfile.Value.ProfileSubtypeId) {
 
+
 						foundEvent = true;
 						break;
 					
@@ -94,40 +81,13 @@ namespace ModularEncountersSystems.Events {
 				if (foundEvent)
 					continue;
 
+
+
 				EventsList.Add(new Event(eventProfile.Value.ProfileSubtypeId));
 
 			}
 
-			/*
-			//SpawnLogger.Write("Create New Controllers", SpawnerDebugEnum.Dev, true);
-			//Create New Event Controllers
-			foreach (var existingEvent in EventsList) {
 
-				if (string.IsNullOrWhiteSpace(existingEvent?.Profile?.EventControllerId))
-					continue;
-
-				bool gotController = false;
-
-				foreach (var controller in EventControllersList) {
-
-					if (controller.ProfileSubtypeId == existingEvent.ProfileSubtypeId) {
-
-						gotController = true;
-						break;
-					
-					}
-				
-				}
-
-				if (gotController)
-					continue;
-
-				
-				EventControllersList.Add(EventController.CreateController(existingEvent.Profile.EventControllerId));
-				
-			
-			}
-			*/
 
 			//SpawnLogger.Write("Delete Old Events", SpawnerDebugEnum.Dev, true);
 			//Delete Old Events
@@ -136,6 +96,13 @@ namespace ModularEncountersSystems.Events {
 				bool foundEvent = false;
 
 				foreach (var eventProfile in ProfileManager.EventProfiles) {
+
+					if (EventsList[i].Insertable)
+                    {
+						foundEvent = true;
+						break;
+					}
+
 
 					if (eventProfile.Value.ProfileSubtypeId == EventsList[i].ProfileSubtypeId) {
 
@@ -148,6 +115,7 @@ namespace ModularEncountersSystems.Events {
 
 				if (foundEvent)
 					continue;
+
 
 				EventsList.RemoveAt(i);
 
@@ -165,11 +133,27 @@ namespace ModularEncountersSystems.Events {
 			DateTime currentDateTime = MyAPIGateway.Session.GameDateTime;
 			_readyEvents.Clear();
 
+			if (ticks < 10)
+			{
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Delay", 480);
+				ticks++;
+				return;
+			}
+
+
 			//MyVisualScriptLogicProvider.ShowNotificationToAll("EventList Count: " + EventsList.Count, 500);
 
-			for (int i = 0; i < EventsList.Count; i++) {
-
+			for (int i = EventsList.Count - 1; i >= 0; i--)
+			{
 				var thisEvent = EventsList[i];
+
+
+				if (thisEvent.MarkedforRemoval)
+                {
+					EventsList.RemoveAt(i);
+					continue;
+				}
+
 
 				if (!thisEvent.Valid) {
 
@@ -191,26 +175,6 @@ namespace ModularEncountersSystems.Events {
 					continue;
                 }
 
-				/*
-				//Does this event have an Event Controller (previously MainEvent)? If so, check it.
-				if (!string.IsNullOrWhiteSpace(thisEvent.Profile.EventControllerId)) {
-
-					if (thisEvent.Controller == null) {
-
-						continue;
-					
-					}
-
-					//TODO: Maybe we move all EventController checks to the class itself and check with a single method sometime down the road.
-					//TODO: Better yet, we move all the checks against Active, Time, etc into the Condition Profile. That way you could have events that trigger when its Inactive
-					if (!thisEvent.Controller.Active) {
-
-						continue;
-					
-					}
-				
-				}
-				*/
 
 				//Did the event already happen once? && Is the event a unique event?
 				if (thisEvent.RunCount > 0 && thisEvent.Profile.UniqueEvent == true) {
@@ -258,8 +222,7 @@ namespace ModularEncountersSystems.Events {
 
 				}
 
-				
-				
+
 				thisEvent.Ready = true;
 				thisEvent.RequiredConditionIndex = index;
 				_readyEvents.Add(thisEvent);
@@ -299,7 +262,7 @@ namespace ModularEncountersSystems.Events {
 
 				if (currentEvent.CheckingType == CheckType.ExecuteAction) {
 
-					currentEvent.Actions[currentEvent.ActionIndex].ExecuteAction();
+					currentEvent.Actions[currentEvent.ActionIndex].ExecuteAction(currentEvent.InstanceId);
 					currentEvent.ActionIndex++;
 
 					if (currentEvent.ActionIndex >= currentEvent.Actions.Count) {
@@ -321,13 +284,6 @@ namespace ModularEncountersSystems.Events {
 			var eventsListSerialized = MyAPIGateway.Utilities.SerializeToBinary<List<Event>>(EventsList);
 			var eventsListString = Convert.ToBase64String(eventsListSerialized);
 			MyAPIGateway.Utilities.SetVariable<string>(_saveEventsListName, eventsListString);
-
-			/*
-			//EventControllers
-			var eventControllersListSerialized = MyAPIGateway.Utilities.SerializeToBinary<List<EventController>>(EventControllersList);
-			var eventControllersListString = Convert.ToBase64String(eventControllersListSerialized);
-			MyAPIGateway.Utilities.SetVariable<string>(_saveEventControllersListName, eventControllersListString);
-			*/
 
 		}
 

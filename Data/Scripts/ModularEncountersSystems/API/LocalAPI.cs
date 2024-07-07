@@ -1,6 +1,8 @@
 ﻿using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Events;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Sync;
@@ -72,6 +74,10 @@ namespace ModularEncountersSystems.API {
 			dict.Add("SpawnSpaceCargoShip", new Func<Vector3D, List<string>, bool>(SpawnSpaceCargoShip));
 			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
 			dict.Add("RegisterCustomAction", new Action<bool, string, Action<object[]>>(RegisterCustomAction));
+			dict.Add("AddInstanceEvent", new Action<string, List<string>, List<string>>(AddInstanceEventGroup));
+
+
+			
 			return dict;
 
 		}
@@ -370,6 +376,22 @@ namespace ModularEncountersSystems.API {
 
 			}
 								
+		}
+
+
+		//AddInstanceEvent
+		public static void AddInstanceEventGroup(string ProfileSubTypeID,List<string> replacekeys, List<string> replacevalues)
+		{
+
+			TemplateEventGroup tja = null;
+
+			if (!ProfileManager.TemplateEventGroup.TryGetValue(ProfileSubTypeID, out tja))
+			{
+				return;
+			}
+			
+			tja.AddEventsAsInsertible(replacekeys, replacevalues);
+
 		}
 
 	}

@@ -26,6 +26,7 @@ namespace ModularEncountersSystems.Entities {
 		Buttons,
 		Containers,
 		Controllers,
+		Contract,
 		Gravity,
 		Guns,
 		Gyros,

@@ -122,6 +122,14 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<bool> EventControllersActive;
 		public List<bool> EventControllersSetCurrentTime;
 
+
+		public bool AddInstanceEventGroup;
+		public string InstanceEventGroupId;
+		public List<string> InstanceEventGroupReplaceKeys;
+		public List<string> InstanceEventGroupReplaceValues;
+
+		public bool RemoveThisInstanceGroup;
+
 		public bool ActivateCustomAction;
 		public string CustomActionName;
 		public List<string> CustomActionArgumentsString;
@@ -197,7 +205,14 @@ namespace ModularEncountersSystems.Events.Action {
 			IncreaseRunCountEventTagAmount = new List<int>() { 1 };
 
 
-		AddTagstoPlayers = false;
+			AddInstanceEventGroup = false;
+			InstanceEventGroupId = "";
+			InstanceEventGroupReplaceKeys = new List<string>();
+			InstanceEventGroupReplaceValues = new List<string>();
+
+
+
+			AddTagstoPlayers = false;
 			AddTagsPlayerConditionIds = new List<string>();
 			AddTags = new List<string>();
 
@@ -238,6 +253,8 @@ namespace ModularEncountersSystems.Events.Action {
 
 			UseChatBroadcast = false;
 			ChatData = new List<ChatProfile>();
+
+			RemoveThisInstanceGroup = false;
 
 			ActivateCustomAction = false;
 			CustomActionName = "";
@@ -312,8 +329,12 @@ namespace ModularEncountersSystems.Events.Action {
 				{"IncreaseRunCountEventTagAmount", (s, o) => TagParse.TagIntListCheck(s, ref IncreaseRunCountEventTagAmount) },
 
 
+				{"AddInstanceEventGroup", (s, o) => TagParse.TagBoolCheck(s, ref AddInstanceEventGroup) },
+				{"InstanceEventGroupId", (s, o) => TagParse.TagStringCheck(s, ref InstanceEventGroupId) },
+				{"InstanceEventGroupReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref InstanceEventGroupReplaceKeys) },
+				{"InstanceEventGroupReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref InstanceEventGroupReplaceValues) },
 
-			{ "AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
+				{"AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
 				{"RemoveGPSFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSFromPlayers) },
 				{"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
 				{"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
@@ -325,8 +346,8 @@ namespace ModularEncountersSystems.Events.Action {
 				{"AddGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddGPSPlayerConditionIds) },
 				{"RemoveGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveGPSPlayerConditionIds) },
 
-
-
+				{"RemoveThisInstanceGroup", (s, o) => TagParse.TagBoolCheck(s, ref RemoveThisInstanceGroup) },
+				
 				{"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
 				{"SpawnCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref SpawnVector3Ds) },
 				{"SpawnFactionTags", (s, o) => TagParse.TagStringListCheck(s, ref SpawnFactionTags) },

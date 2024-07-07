@@ -38,6 +38,12 @@ namespace ModularEncountersSystems.Events
 
         [ProtoMember(14)] public bool EventEnabled;
 
+        [ProtoMember(15)] public bool Insertable;
+        [ProtoMember(16)] public List<string> ReplaceKeys;
+        [ProtoMember(17)] public List<string> ReplaceValues;
+        [ProtoMember(18)] public long InstanceId;
+        [ProtoMember(19)] public string TemplateProfileSubtype;
+        [ProtoMember(20)] public bool MarkedforRemoval;
 
         [ProtoIgnore] public bool ErrorOnSetup;
         [ProtoIgnore] public string ErrorSetupMsg;
@@ -56,12 +62,31 @@ namespace ModularEncountersSystems.Events
                 if (_profile == null)
                 {
 
-                    if (!ProfileManager.EventProfiles.TryGetValue(ProfileSubtypeId, out _profile))
+                    if (Insertable)
                     {
+                        var customdata = ""; 
+                        if (!ProfileManager.TemplateEventProfiles.TryGetValue(TemplateProfileSubtype, out customdata))
+                        {
+                            ErrorOnSetup = true;
+                            ErrorSetupMsg = "Could Not Find EventProfile With Name [" + TemplateProfileSubtype ?? null + "]";
+                            return null;
+                        }
 
-                        ErrorOnSetup = true;
-                        ErrorSetupMsg = "Could Not Find EventProfile With Name [" + ProfileSubtypeId ?? null + "]";
+                        _profile = new EventProfile();
+                        _profile.ProfileSubtypeId = ProfileSubtypeId;
+                        _profile.InitTags(IdsReplacer.ReplaceCustomData(customdata,ReplaceKeys,ReplaceValues));
+                        _profile.Tags.Add(InstanceId.ToString());
+                    }
+                    else
+                    {
+                        if (!ProfileManager.EventProfiles.TryGetValue(ProfileSubtypeId, out _profile))
+                        {
 
+                            ErrorOnSetup = true;
+                            ErrorSetupMsg = "Could Not Find EventProfile With Name [" + ProfileSubtypeId ?? null + "]";
+                            return null;
+                            
+                        }
                     }
 
                 }
@@ -90,44 +115,6 @@ namespace ModularEncountersSystems.Events
 
         [ProtoIgnore] private EventProfile _profile;
 
-        /*
-        [ProtoIgnore]
-        public EventController Controller
-        {
-
-            get
-            {
-
-                if (_controller != null)
-                    return _controller;
-
-                if (string.IsNullOrWhiteSpace(Profile.EventControllerId))
-                    return null;
-
-                foreach (var controller in EventManager.EventControllersList)
-                {
-
-                    if (controller.ProfileSubtypeId == Profile.EventControllerId)
-                    {
-
-                        _controller = controller;
-                        return _controller;
-
-                    }
-
-                }
-
-                _controller = EventController.CreateController(Profile.EventControllerId);
-                EventManager.EventControllersList.Add(_controller);
-                return _controller;
-
-            }
-
-        }
-
-        [ProtoIgnore] private EventController _controller;
-        */
-
         public Event()
         {
 
@@ -140,6 +127,7 @@ namespace ModularEncountersSystems.Events
         {
 
             ProfileSubtypeId = profileSubtypeId;
+            Insertable = false;
             Init(true);
 
             if (!Valid)
@@ -150,8 +138,25 @@ namespace ModularEncountersSystems.Events
             }
 
 
+             
+        }
+
+        public void InitAsInsertable(string profilesubtypeId, long uniqueValue, List<string> _replacekeys, List<string> _replacevalues)
+        {
+            Insertable = true;
+            ReplaceKeys = _replacekeys;
+            ReplaceValues = _replacevalues;
+            InstanceId = uniqueValue;
+            TemplateProfileSubtype = profilesubtypeId;
+            ProfileSubtypeId = profilesubtypeId + "@" + uniqueValue.ToString();
+
+
+            Init(true);
+
 
         }
+
+
 
         public void Init(bool FirstTime = false)
         {
@@ -168,8 +173,10 @@ namespace ModularEncountersSystems.Events
                 EventEnabled = Profile.UseEvent;
                 RunCount = 0;
                 CurrentActionIndex = 0;
-                CooldownTimeTrigger = 0;
+                CooldownTimeTrigger = MathTools.RandomBetween(Profile.MinCooldownMs, Profile.MaxCooldownMs);
                 LastTriggerTime = MyAPIGateway.Session.GameDateTime;
+                MarkedforRemoval = false;
+
             }
 
             Ready = false;
@@ -184,11 +191,23 @@ namespace ModularEncountersSystems.Events
 
                 EventCondition conditionProfile = null;
 
+                if (Insertable)
+                {
+                    var customdata = "";
+                    if (ProfileManager.TemplateEventConditions.TryGetValue(conditionName, out customdata))
+                    {
+                        conditionProfile = new EventCondition();
+                        conditionProfile.ProfileSubtypeId = conditionName + "@" + InstanceId.ToString();
+                        conditionProfile.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                        PersistantConditions.Add(conditionProfile);
+                        continue;
+
+                    }
+                }
+
                 if (ProfileManager.EventConditions.TryGetValue(conditionName, out conditionProfile))
                 {
-
                     PersistantConditions.Add(conditionProfile);
-
                 }
 
             }
@@ -199,11 +218,22 @@ namespace ModularEncountersSystems.Events
 
                 EventCondition conditionProfile = null;
 
+                if (Insertable)
+                {
+                    var customdata = "";
+                    if (ProfileManager.TemplateEventConditions.TryGetValue(conditionName, out customdata))
+                    {
+                        conditionProfile = new EventCondition();
+                        conditionProfile.ProfileSubtypeId = conditionName + "@" + InstanceId.ToString();
+                        conditionProfile.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                        Conditions.Add(conditionProfile);
+                        continue;
+                    }
+                }
+
                 if (ProfileManager.EventConditions.TryGetValue(conditionName, out conditionProfile))
                 {
-
                     Conditions.Add(conditionProfile);
-
                 }
 
             }
@@ -213,6 +243,34 @@ namespace ModularEncountersSystems.Events
 
             foreach (var actionName in Profile.ActionIds)
             {
+                EventActionProfile actionProfile = null;
+
+                if (Insertable)
+                {
+                    var customdata = "";
+                    if (ProfileManager.TemplateEventActionProfiles.TryGetValue(actionName, out customdata))
+                    {
+
+                        var instancesubtypeId = actionName + "@" + InstanceId.ToString();
+                        var actionReference = new EventActionReferenceProfile();
+                        actionReference.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                        actionReference.ProfileSubtypeId = instancesubtypeId;
+
+                        var actionObject = new EventActionProfile();
+                        actionObject.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                        actionObject.ProfileSubtypeId = instancesubtypeId;
+
+                        Actions.Add(actionObject);
+
+                        ProfileManager.EventActionReferenceProfiles.Add(instancesubtypeId, actionReference);
+
+                        continue;
+                    }
+
+
+                }
+
+
 
                 byte[] bytes = null;
 
@@ -231,13 +289,6 @@ namespace ModularEncountersSystems.Events
                 }
 
             }
-
-
-
-
-
-
-
 
         }
 
@@ -258,7 +309,7 @@ namespace ModularEncountersSystems.Events
                 for (int i = 0; i < Actions.Count; i++)
                 {
                     if(RequiredConditionIndex == i)
-                        Actions[i].ExecuteAction();
+                        Actions[i].ExecuteAction(this.InstanceId);
                 }
             }
 
@@ -266,14 +317,14 @@ namespace ModularEncountersSystems.Events
             {
                 for (int i = 0; i < Actions.Count; i++)
                 {
-                    Actions[i].ExecuteAction();
+                    Actions[i].ExecuteAction(InstanceId);
                 }
             }
 
             if (Profile.ActionExecution == ActionExecutionEnum.Random)
             {
                 var index = MathTools.RandomBetween(0, (Actions.Count));
-                Actions[index].ExecuteAction();
+                Actions[index].ExecuteAction(InstanceId);
 
             }
 

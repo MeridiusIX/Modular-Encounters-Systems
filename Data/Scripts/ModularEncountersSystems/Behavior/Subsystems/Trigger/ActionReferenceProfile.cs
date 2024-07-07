@@ -386,6 +386,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> StoreBlocks;
 		public List<string> StoreProfiles;
 
+		public bool ApplyContractProfiles;
+		public bool ClearContractContentsFirst;
+		public List<string> ContractBlocks;
+		public List<string> ContractBlockProfiles;
+
+
 		public bool ActivateEvent;
 		public List<string> ActivateEventIds;
 		public List<string> ActivateEventTags;
@@ -805,6 +811,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			StoreBlocks = new List<string>();
 			StoreProfiles = new List<string>();
 
+
+			ApplyContractProfiles = false;
+			ClearContractContentsFirst = false;
+			ContractBlocks = new List<string>();
+			ContractBlockProfiles = new List<string>();
+
+
+
 			ActivateEvent = false;
 			ActivateEventIds = new List<string>();
 			ActivateEventTags = new List<string>();
@@ -1127,6 +1141,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"StoreBlocks", (s, o) => TagParse.TagStringListCheck(s, ref StoreBlocks) },
 				{"StoreProfiles", (s, o) => TagParse.TagStringListCheck(s, ref StoreProfiles) },
 
+				{"ApplyContractProfiles", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContractProfiles) },
+				{"ClearContractContentsFirst", (s, o) => TagParse.TagBoolCheck(s, ref ClearContractContentsFirst) },
+				{"ContractBlocks", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlocks) },
+				{"ContractBlockProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
 				{"ActivateEvent", (s, o) => TagParse.TagBoolCheck(s, ref ActivateEvent) },
 				{"ActivateEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventIds) },
 				{"ActivateEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventTags) },

@@ -5,6 +5,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Events.Action;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Spawning.Profiles;
@@ -1490,6 +1491,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (actions.ActivateEvent)
 			{
+				var _ActivateEventTags = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ActivateEventTags);
+				var _ActivateEventIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ActivateEventIds);
+
+
 				//Something doesn't feel right here - CPT
 				for (int i = 0; i < Events.EventManager.EventsList.Count; i++)
 				{
@@ -1500,9 +1505,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						continue;
 					}
 
-					for (int j = 0; j < actions.ActivateEventTags.Count; j++)
+					for (int j = 0; j < _ActivateEventTags.Count; j++)
 					{
-						var thisEventTag = actions.ActivateEventTags[j];
+						var thisEventTag = _ActivateEventTags[j];
 
 						if (thisEvent.Profile.Tags.Contains(thisEventTag))
 						{
@@ -1512,24 +1517,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 
 
-					for (int j = 0; j < actions.ActivateEventIds.Count; j++)
+					for (int j = 0; j < _ActivateEventIds.Count; j++)
 					{
-						var thisEventId = actions.ActivateEventIds[j];
+						var thisEventId = _ActivateEventIds[j];
 
 						var SpawnGroupName = _behavior?.CurrentGrid?.Npc.SpawnGroupName;
 						var Faction = _behavior?.CurrentGrid?.Npc.InitialFaction;
-
-						if (thisEventId.Contains("{SpawnGroupName}") && SpawnGroupName != null)
-						{
-							thisEventId = thisEventId.Replace("{SpawnGroupName}", SpawnGroupName);
-						}
-
-
-						if (thisEventId.Contains("{Faction}") && Faction != null)
-						{
-							thisEventId = thisEventId.Replace("{Faction}", Faction);
-						}
-
 
 						if (thisEvent.ProfileSubtypeId == thisEventId)
 						{
@@ -1595,6 +1588,52 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 			
 			}
+
+			if (actions.ApplyContractProfiles && (_behavior.CurrentGrid?.ActiveEntity() ?? false))
+			{
+
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying contract Profiles.", BehaviorDebugEnum.Action);
+				//BehaviorLogger.Write(string.Format("Store Blocks / Store Profiles ::: {0} / {1}", actions.ContractBlocks.Count, actions.ContractBlocks.Count), BehaviorDebugEnum.Action);
+				MyVisualScriptLogicProvider.ShowNotificationToAll(string.Format("Store Blocks / Store Profiles ::: {0} / {1}", actions.ContractBlocks.Count, actions.ContractBlocks.Count),5000,"Red");
+				for (int i = 0; i < actions.ContractBlockProfiles.Count && i < actions.ContractBlocks.Count; i++)
+				{
+
+					if (string.IsNullOrWhiteSpace(actions.ContractBlockProfiles[i]) || string.IsNullOrWhiteSpace(actions.ContractBlocks[i]))
+						continue;
+
+					ContractBlockProfile profile = null;
+
+					if (!ProfileManager.ContractBlockProfiles.TryGetValue(actions.ContractBlockProfiles[i], out profile))
+					{
+
+						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Mission Profile With Name: " + actions.ContractBlockProfiles[i], BehaviorDebugEnum.Action);
+						continue;
+
+					}
+
+					foreach (var contractblock in _behavior.CurrentGrid.Contracts)
+					{
+
+						if (!contractblock.ActiveEntity() || contractblock.Block.CustomName != actions.ContractBlocks[i] || contractblock.Block.OwnerId != _behavior.RemoteControl.OwnerId)
+							continue;
+
+						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Store Profile With Name: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);
+						profile.ApplyProfileToBlock(contractblock, actions.ClearContractContentsFirst);
+
+
+
+					}
+
+				}
+
+			}
+
+
+
+
+
+
+
 
 			if (actions.UseCurrentPositionAsPatrolReference) {
 

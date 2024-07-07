@@ -62,6 +62,7 @@ namespace ModularEncountersSystems.Entities {
 		public List<BlockEntity> Beacons;
 		public List<BlockEntity> Buttons;
 		public List<BlockEntity> Containers;
+		public List<BlockEntity> Contracts;
 		public List<BlockEntity> Controllers;
 		public List<BlockEntity> Gravity;
 		public List<BlockEntity> Guns;
@@ -133,6 +134,7 @@ namespace ModularEncountersSystems.Entities {
 			Beacons = new List<BlockEntity>();
 			Buttons = new List<BlockEntity>();
 			Containers = new List<BlockEntity>();
+			Contracts = new List<BlockEntity>();
 			Controllers = new List<BlockEntity>();
 			Gravity = new List<BlockEntity>();
 			Guns = new List<BlockEntity>();
@@ -165,6 +167,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockListReference.Add(BlockTypeEnum.Beacons, Beacons);
 			BlockListReference.Add(BlockTypeEnum.Buttons, Buttons);
 			BlockListReference.Add(BlockTypeEnum.Containers, Containers);
+			BlockListReference.Add(BlockTypeEnum.Contract, Contracts);
 			BlockListReference.Add(BlockTypeEnum.Controllers, Controllers);
 			BlockListReference.Add(BlockTypeEnum.Gravity, Gravity);
 			BlockListReference.Add(BlockTypeEnum.Guns, Guns);
@@ -500,6 +503,12 @@ namespace ModularEncountersSystems.Entities {
 
 				assignedBlock = AddBlock(terminalBlock, Containers);
 
+			}
+
+			//Contract
+			if (terminalBlock.BlockDefinition.SubtypeId.Contains("ContractBlock"))
+			{
+				assignedBlock = AddBlock(terminalBlock, Contracts);
 			}
 
 			//Controller

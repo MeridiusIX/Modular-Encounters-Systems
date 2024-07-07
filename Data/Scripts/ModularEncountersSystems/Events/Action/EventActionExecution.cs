@@ -19,7 +19,7 @@ using VRageMath;
 namespace ModularEncountersSystems.Events.Action {
 	public partial class EventActionProfile {
 
-		public void ExecuteAction() {
+		public void ExecuteAction(long instanceId) {
 
 			var actions = ActionReference;
 			var EventBroadcastSystem = new EventBroadcastSystem();
@@ -368,7 +368,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 								spawner.AssignInitialMatrix(WorldMatrix);
 								spawner.CurrentFactionTag = actions.SpawnFactionTags[i];
-								BehaviorSpawnHelper.BehaviorSpawnRequest(spawner);
+								BehaviorSpawnHelper.BehaviorSpawnRequest(spawner,-1, instanceId);
 							}
 
 						}
@@ -452,6 +452,25 @@ namespace ModularEncountersSystems.Events.Action {
 			}
 
 
+            if (actions.AddInstanceEventGroup)
+            {
+				LocalApi.AddInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, actions.InstanceEventGroupReplaceValues);
+            }
+
+
+            if (actions.RemoveThisInstanceGroup)
+            {
+
+				var Tag = instanceId.ToString();
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Event.Profile.Tags.Contains(Tag))
+					{
+						Event.MarkedforRemoval = true;
+					}
+				}
+
+			}
 				/*
 				//SetEventControllers
 				if (actions.SetEventControllers)

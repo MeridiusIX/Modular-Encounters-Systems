@@ -189,6 +189,8 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.ZoneIndex = spawnCollection.ZoneIndex;
 				npcData.UniqueSpawnIdentifier = MyAPIGateway.Session.GameDateTime.ToString("yyyyMMddhhmmssfff-") + NpcManager.SpawnIncrement;
 				npcData.Attributes.OwnershipValidation = true;
+				npcData.EventInstanceId = spawnCollection.EventInstanceId;
+
 
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(spawnCollection.SelectPrefabOffet(sgPrefab.Position, i), environment, spawnCollection.Conditions.CustomPathStartAltitude);

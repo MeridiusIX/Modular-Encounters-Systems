@@ -7,7 +7,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Events;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
-//using ModularEncountersSystems.Missions;
+using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.Progression;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
@@ -142,7 +142,7 @@ namespace ModularEncountersSystems.Core {
 			ProceduralShipManager.Setup();
 			CombatPhaseManager.Setup();
 			EventManager.Setup();
-			//MissionManager.Setup();
+			MissionManager.Setup();
 			FactionIconProfile.ProcessFactionIcons();
 
 			SessionStartTime = MyAPIGateway.Session.GameDateTime;

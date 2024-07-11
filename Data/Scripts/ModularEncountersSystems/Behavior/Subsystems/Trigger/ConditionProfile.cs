@@ -272,7 +272,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 
-					var selfScore = _behavior.CurrentGrid?.Npc.Score ?? 0;
+					var selfScore = _behavior?.CurrentGrid?.Npc?.Score ?? 0;
 					var commandScore = command?.NPCScoreValue ?? 0;
 
 
@@ -1213,14 +1213,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				Vector3D Position = _behavior.CurrentGrid.GetPosition();
 
 				if (ConditionReference.CompareThreatScoreUseSelfValue)
-                {
+				{
 					ThreatScoreCompare = _behavior.CurrentGrid.ThreatScore * ConditionReference.CompareThreatScoreSelfValueMultiplier;
 				}
 
-                if (ConditionReference.CompareThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
-                {
+				if (ConditionReference.CompareThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
+				{
 					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
-                }
+				}
 
 				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CompareThreatScoreRadius, ConditionReference.CompareThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CompareThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
 

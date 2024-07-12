@@ -56,6 +56,7 @@ namespace ModularEncountersSystems.API {
 		//Water Mod
 		public static bool WaterMod = false;
 		private static ulong _waterModSteamId = 2200451495;
+		private static ulong _waterModSteamIdDYG = 3283226082;
 		private static ulong _waterModModIoId = 2148454;
 
 		//Nebula Mod
@@ -185,7 +186,7 @@ namespace ModularEncountersSystems.API {
 				}
 
 				//Water Mod
-				if (id == _waterModSteamId || id == _waterModModIoId) {
+				if (id == _waterModSteamId || _waterModSteamIdDYG || id == _waterModModIoId) {
 
 					SpawnLogger.Write("Water Mod Detected", SpawnerDebugEnum.Startup);
 					WaterMod = true;

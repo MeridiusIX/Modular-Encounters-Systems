@@ -198,7 +198,7 @@ namespace ModularEncountersSystems.API {
 				if (id == _nebulaModSteamId) {
 
 					SpawnLogger.Write("Nebula Mod Detected", SpawnerDebugEnum.Startup);
-					NebulaMod = true;
+					//NebulaMod = true;
 					continue;
 
 				}

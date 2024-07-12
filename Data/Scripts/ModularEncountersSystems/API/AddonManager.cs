@@ -61,7 +61,7 @@ namespace ModularEncountersSystems.API {
 
 		//Nebula Mod
 		public static bool NebulaMod = false;
-		private static ulong _nebulaModSteamId = 2367570463;
+		private static ulong _nebulaModSteamId = 2367570463; //API is an outdated version. Could be fixed, I think... -Cpt
 
 		//Defense Shields
 		public static bool DefenseShields = false;

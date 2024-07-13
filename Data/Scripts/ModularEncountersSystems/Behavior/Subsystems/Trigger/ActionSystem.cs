@@ -743,7 +743,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 			//ChangeAttackersFactionAccount
-			if (actions.ChangeAttackersFactionAccount = true){
+			if (actions.ChangeAttackersFactionAccount == true){
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting FactionAccount Change for Attacker", BehaviorDebugEnum.Action);
 				FactionHelper.ChangeFactionAccountByAmount(RemoteControl, actions.ChangeAttackersFactionAccountByAmount, _settings.LastDamagerEntity);

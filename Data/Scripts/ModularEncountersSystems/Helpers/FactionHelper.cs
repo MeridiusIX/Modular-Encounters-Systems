@@ -361,9 +361,8 @@ namespace ModularEncountersSystems.Helpers {
 			var ownerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(owner);
 			if (ownerFaction != null) {
 
-				BehaviorLogger.Write($"OwnerFactionFound[{ownerFaction.Tag}]" + attackingEntity, BehaviorDebugEnum.Action);
-
 				//Change the balance
+				BehaviorLogger.Write($"Requesting balance change of[{changeAmount}] for [{ownerFaction.Tag}] ID[{attackingEntity}]", BehaviorDebugEnum.Action);
 				ownerFaction.RequestChangeBalance(changeAmount);
 
 				//Notify the players

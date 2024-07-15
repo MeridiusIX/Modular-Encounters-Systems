@@ -1,10 +1,10 @@
-﻿using ProtoBuf;
+﻿using ModularEncountersSystems.Logging;
+
+using ProtoBuf;
 
 using Sandbox.ModAPI;
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 using VRage.Game.ModAPI;
 

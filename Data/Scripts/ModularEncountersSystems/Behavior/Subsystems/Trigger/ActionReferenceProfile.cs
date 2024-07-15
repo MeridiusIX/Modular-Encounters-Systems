@@ -107,6 +107,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public int ReputationMinCap;
 		public int ReputationMaxCap;
 
+		public bool ChangeAttackersFactionAccount;
+		public int ChangeAttackersFactionAccountByAmount;
+
 		public string ProfileSubtypeId;
 
 		public bool BroadcastGenericCommand;
@@ -482,13 +485,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ReputationChangesForAllRadiusPlayerFactionMembers = false;
 			ReputationPlayerConditionIds = new List<string>();
 
-
 			ChangeAttackerReputation = false;
 			ChangeAttackerReputationFaction = new List<string>();
 			ChangeAttackerReputationAmount = new List<int>();
 			ReputationChangesForAllAttackPlayerFactionMembers = false;
 			ReputationMinCap = -1500;
 			ReputationMaxCap = 1500;
+
+			ChangeAttackersFactionAccount = false;
+			ChangeAttackersFactionAccountByAmount = 0;
 
 			ActivateAssertiveAntennas = false;
 
@@ -891,6 +896,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ReputationChangeFactions", (s, o) => TagParse.TagStringListCheck(s, ref ReputationChangeFactions) },
 				{"ReputationPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ReputationPlayerConditionIds) },
 				{"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
+				{"ChangeAttackersFactionAccount", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackersFactionAccount) },
+				{"ChangeAttackersFactionAccountByAmount", (s, o) => TagParse.TagIntCheck(s, ref ChangeAttackersFactionAccountByAmount) },
 				{"ActivateAssertiveAntennas", (s, o) => TagParse.TagBoolCheck(s, ref ActivateAssertiveAntennas) },
 				{"ChangeAntennaOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaOwnership) },
 				{"AntennaFactionOwner", (s, o) => TagParse.TagStringCheck(s, ref AntennaFactionOwner) },

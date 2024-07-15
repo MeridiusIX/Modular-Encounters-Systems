@@ -346,6 +346,44 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void ChangeFactionAccountByAmount(IMyRemoteControl remoteControl, int changeAmount, long attackingEntity){ 
+
+			//Get the players Id
+			var owner = DamageHelper.GetAttackOwnerId(attackingEntity);
+
+			if (owner == 0) {
+
+				BehaviorLogger.Write("No Owner From Provided Id: " + attackingEntity, BehaviorDebugEnum.Action);
+				return;
+
+			}
+
+			var ownerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(owner);
+			if (ownerFaction != null) {
+
+				//Change the balance
+				BehaviorLogger.Write($"Requesting balance change of[{changeAmount}] for [{ownerFaction.Tag}] ID[{attackingEntity}]", BehaviorDebugEnum.Action);
+				ownerFaction.RequestChangeBalance(changeAmount);
+
+				//Notify the players
+				foreach(long playerId in ownerFaction.Members.Keys){ 
+
+					var steamId = MyAPIGateway.Players.TryGetSteamId(playerId);
+					if (steamId > 0) {
+
+						//Notify the player.
+						var message = new BalanceChangeMessage(steamId, ownerFaction.Name, changeAmount);
+						var syncContainer = new SyncContainer(message);
+						SyncManager.SendSyncMesage(syncContainer, steamId);
+
+					}
+
+				}
+
+			}
+
+		}
+
 		public static bool CompareAllowedOwnerTypes(TargetOwnerEnum allowedOwner, TargetOwnerEnum resultOwner) {
 
 			//Owner: Unowned

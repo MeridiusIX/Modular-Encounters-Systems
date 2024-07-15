@@ -17,7 +17,7 @@ namespace ModularEncountersSystems.Sync {
         SuitUpgradeTransaction,
         SuitUpgradeNewPlayerStats,
         ReputationChangeClient,
-
+        FactionAccountBalanceChange
     }
 
     [ProtoContract]
@@ -66,6 +66,14 @@ namespace ModularEncountersSystems.Sync {
 
             this.Mode = SyncMode.ReputationAlert;
             this.Data = MyAPIGateway.Utilities.SerializeToBinary<ReputationMessage>(repAlert);
+            this.Sender = "MES";
+
+        }
+
+        public SyncContainer(BalanceChangeMessage balanceChangeAlert){ 
+
+            this.Mode = SyncMode.FactionAccountBalanceChange;
+            this.Data = MyAPIGateway.Utilities.SerializeToBinary<BalanceChangeMessage>(balanceChangeAlert);
             this.Sender = "MES";
 
         }

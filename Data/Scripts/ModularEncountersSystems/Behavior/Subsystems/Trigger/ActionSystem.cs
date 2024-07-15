@@ -67,7 +67,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			LocalApi.BehaviorTriggerWatcher?.Invoke(RemoteControl, trigger.ProfileSubtypeId, actions.ProfileSubtypeId, _behavior.AutoPilot.Targeting.Target?.GetEntity(), _behavior.AutoPilot.GetCurrentWaypoint());
 
-			BehaviorLogger.Write(actions.ProfileSubtypeId + ": Performing Eligible Actions", BehaviorDebugEnum.Action);
+			BehaviorLogger.Write($"{actions.ProfileSubtypeId}: Performing Eligible Actions: AEI[{attackerEntityId}], DE[{detectedEntity}]", BehaviorDebugEnum.Action);
 
 			//Debug Message
 			if (!string.IsNullOrWhiteSpace(actions.DebugMessage)) {
@@ -197,9 +197,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			} else {
-
-
-
 			}
 
 			//SelfDestruct
@@ -665,16 +662,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 				}
-
-
-
-			
 			}
-
-
-
-
-
 
 
 			//ChangeNpcFactionCredits
@@ -754,6 +742,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//ChangeAttackersFactionAccount
+			if (actions.ChangeAttackersFactionAccount == true){
+
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting FactionAccount Change for Attacker", BehaviorDebugEnum.Action);
+				FactionHelper.ChangeFactionAccountByAmount(RemoteControl, actions.ChangeAttackersFactionAccountByAmount, _settings.LastDamagerEntity);
+
+			}
 
 			//TriggerTimerBlock
 			if (actions.TriggerTimerBlocks == true) {

@@ -218,6 +218,13 @@ namespace ModularEncountersSystems.Sync {
 
                 }
 
+                if (container.Mode == SyncMode.FactionAccountBalanceChange){ 
+
+                    var message = MyAPIGateway.Utilities.SerializeFromBinary<BalanceChangeMessage>(container.Data);
+                    message.DisplayMessage();
+
+                }
+
             } catch(Exception exc) {
 
                 SpawnLogger.Write("Exception in NetworkMessageReceiver", SpawnerDebugEnum.Error, true);

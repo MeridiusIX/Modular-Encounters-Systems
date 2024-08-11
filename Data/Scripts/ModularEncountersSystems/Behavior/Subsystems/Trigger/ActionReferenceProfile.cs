@@ -138,6 +138,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public float AntennaRangeChangeAmount;
 
 		public bool ForceDespawn;
+		public bool TryToDespawnThisGridOnly;
 
 		public bool ResetCooldownTimeOfTriggers;
 		public List<string> ResetTriggerCooldownNames;
@@ -444,6 +445,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeBlocksShareModeAll;
 		public List<string> BlockNamesShareModeAll;
 
+		public bool SaveLocationToSandboxVariable;
+		public string LocationSandboxVariableName;
+
+
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -571,6 +577,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			AntennaRangeChangeAmount = 0;
 
 			ForceDespawn = false;
+			TryToDespawnThisGridOnly = false;
 
 			ResetCooldownTimeOfTriggers = false;
 			ResetTriggerCooldownNames = new List<string>();
@@ -873,8 +880,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			BlockNamesShareModeAll = new List<string>();
 
 			ResetThisStaticEncounter = false;
+			SaveLocationToSandboxVariable = false;
 
-			EditorReference = new Dictionary<string, Action<string, object>> {
+			LocationSandboxVariableName = "";
+
+
+
+		EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
 				{"BarrelRoll", (s, o) => TagParse.TagBoolCheck(s, ref BarrelRoll) },
@@ -955,6 +967,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AntennaRangeChangeType", (s, o) => TagParse.TagStringCheck(s, ref AntennaRangeChangeType) },
 				{"AntennaRangeChangeAmount", (s, o) => TagParse.TagFloatCheck(s, ref AntennaRangeChangeAmount) },
 				{"ForceDespawn", (s, o) => TagParse.TagBoolCheck(s, ref ForceDespawn) },
+				{"TryToDespawnThisGridOnly", (s, o) => TagParse.TagBoolCheck(s, ref TryToDespawnThisGridOnly) },
 				{"ResetCooldownTimeOfTriggers", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfTriggers) },
 				{"ResetTriggerCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownNames) },
 				{"ResetTriggerCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownTags) },
@@ -1197,7 +1210,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ChangeBlocksShareModeAll", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlocksShareModeAll) },
 				{"BlockNamesShareModeAll", (s, o) => TagParse.TagStringListCheck(s, ref BlockNamesShareModeAll) },
 
-			};
+				{"SaveLocationToSandboxVariable", (s, o) => TagParse.TagBoolCheck(s, ref SaveLocationToSandboxVariable) },
+				{"LocationSandboxVariableName", (s, o) => TagParse.TagStringCheck(s, ref LocationSandboxVariableName) },
+
+
+				};
 
 		}
 

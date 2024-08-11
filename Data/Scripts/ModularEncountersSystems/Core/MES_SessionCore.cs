@@ -142,7 +142,7 @@ namespace ModularEncountersSystems.Core {
 			ProceduralShipManager.Setup();
 			CombatPhaseManager.Setup();
 			EventManager.Setup();
-			MissionManager.Setup();
+			InGameContractManager.Setup();
 			FactionIconProfile.ProcessFactionIcons();
 
 			SessionStartTime = MyAPIGateway.Session.GameDateTime;
@@ -213,6 +213,7 @@ namespace ModularEncountersSystems.Core {
 			UnloadActions?.Invoke();
 			Settings.SaveAll();
 
+			Instance = null;
 		}
 
 		private static bool CheckSyncRules() {
@@ -279,6 +280,7 @@ namespace ModularEncountersSystems.Core {
 
 			if (MyAPIGateway.Session.SessionSettings.EnableEncounters)
 				MyAPIGateway.Session.SessionSettings.EnableEncounters = false;
+
 
 		}
 

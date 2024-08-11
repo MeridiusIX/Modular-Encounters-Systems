@@ -199,6 +199,10 @@ namespace ModularEncountersSystems.Events.Condition
 
         public static bool AreConditionsMet(bool anyPassingConditionEventProfile, List<EventCondition> profiles)
         {
+            if (profiles.Count <= 0)
+                return true;
+
+
             int usedProfileConditions = 0;
             int satisfieddProfileConditions = 0;
             //Holdings check 
@@ -209,9 +213,18 @@ namespace ModularEncountersSystems.Events.Condition
                     satisfieddProfileConditions++;
             }
 
+
+
+
             return anyPassingConditionEventProfile ? satisfieddProfileConditions >= 1 : usedProfileConditions == satisfieddProfileConditions;
 
         }
+
+
+
+
+
+
 
         public static bool IsConditionMet(EventCondition Profile)
         {

@@ -21,6 +21,8 @@ namespace ModularEncountersSystems.Helpers {
 			var SpawnGroupName = npcData.SpawnGroupName;
 			var Faction = npcData.InitialFaction;
 			var EventInstanceId = npcData.EventInstanceId.ToString();
+			var CustomVariablesName = npcData.CustomVariablesName;
+
 
 			if (tag.Contains("{SpawnGroupName}") && SpawnGroupName != null)
 			{
@@ -37,7 +39,12 @@ namespace ModularEncountersSystems.Helpers {
 				tag = tag.Replace("{EventInstance}", EventInstanceId);
 			}
 
+			if (tag.Contains("{CustomVariablesName}") && CustomVariablesName != null)
+			{
+				tag = tag.Replace("{CustomVariablesName}", CustomVariablesName);
+			}
 
+			
 
 
 			return tag;

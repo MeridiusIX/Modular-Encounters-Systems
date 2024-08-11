@@ -87,13 +87,13 @@ namespace ModularEncountersSystems.Spawning {
 					try {
 
 						if (!voxel.CenterOffset) {
-
+							MyVisualScriptLogicProvider.ShowNotificationToAll("voxel.CenterOffset", 10000, "Red");
 							voxelSpawn = MyAPIGateway.Session.VoxelMaps.CreateVoxelMapFromStorageName(voxel.StorageName, voxel.StorageName, coords);
 
 						} else {
-
+							MyVisualScriptLogicProvider.ShowNotificationToAll("voxel.CenterOffset", 10000, "Green");
 							voxelSpawn = MyAPIGateway.Session.VoxelMaps.CreatePredefinedVoxelMap(voxel.StorageName, material, matrixVoxel, false);
-						
+
 						}
 
 						if (voxelSpawn != null) {
@@ -105,6 +105,10 @@ namespace ModularEncountersSystems.Spawning {
 
 							}
 
+                        }
+                        else
+                        {
+							MyVisualScriptLogicProvider.ShowNotificationToAll("voxelSpawn is null", 12000, "Red");
 						}
 
 					} catch (Exception e) {
@@ -190,7 +194,7 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.UniqueSpawnIdentifier = MyAPIGateway.Session.GameDateTime.ToString("yyyyMMddhhmmssfff-") + NpcManager.SpawnIncrement;
 				npcData.Attributes.OwnershipValidation = true;
 				npcData.EventInstanceId = spawnCollection.EventInstanceId;
-
+				npcData.CustomVariablesName = spawnCollection.Conditions.CustomVariablesName;
 
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(spawnCollection.SelectPrefabOffet(sgPrefab.Position, i), environment, spawnCollection.Conditions.CustomPathStartAltitude);

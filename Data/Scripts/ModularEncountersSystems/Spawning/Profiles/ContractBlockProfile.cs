@@ -3,6 +3,7 @@ using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Missions;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -113,8 +114,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				}
 
 
-				var mission = new Mission(missionprofile);
-				mission.AddMissionToBlock(block);
+				var mission = new Mission(MissionIds[i]);
+				mission.Init(block);
 
 			}
 

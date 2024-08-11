@@ -5,60 +5,113 @@ using System.Text;
 
 namespace ModularEncountersSystems.Missions {
 
+    public enum MissionType
+    {
+        Custom,
+        Acquisition
+    }
 
     public class MissionProfile
     {
-
         public string ProfileSubtypeId;
+        public List<string> Tags;
         public string Title;
         public string Description;
 
-        public List<string> EventConditionIds;
+        public string Reward;
+        public string Collateral;
+        public string ReputationReward;
+        public string FailReputationPrice;
 
-        public bool OverrideFaction;
-        public string Faction;
 
         public List<string> ReplaceKeys;
         public List<string> ReplaceValues;
 
-        public string InstanceEventGroupId;
+        public MissionType MissionType;
 
-        public bool Unique;
+        public string StoreProfileId;
+
+        public bool SoloMission;
+
+        //Conditions
+        public List<string> PersistantEventConditionIds;
+        public List<string> EventConditionIds;
+        public bool UseAnyPassingEventCondition;
+
+        public List<string> LeadPlayerConditionIds;
+        public List<string> PlayerConditionIds;
+
+
+
+        public string InstanceEventGroupId;
         public bool Exclusive;
 
+        public List<string> CustomApiMapping;
 
         public Dictionary<string, Action<string, object>> EditorReference;
 
         public MissionProfile()
         {
             ProfileSubtypeId = "";
+            Tags = new List<string>();
             Title = "";
             Description = "";
-            EventConditionIds = new List<string>();
-            OverrideFaction = false;
-            Faction = "";
+            Reward = "";
+            Collateral = "";
+            ReputationReward = "";
+            FailReputationPrice = "";
 
-
+            MissionType = MissionType.Custom;
+            StoreProfileId = "";
             ReplaceKeys = new List<string>();
             ReplaceValues = new List<string>();
 
+            SoloMission = false;
+
+            PersistantEventConditionIds = new List<string>();
+            UseAnyPassingEventCondition = false;
+            EventConditionIds = new List<string>();
+
+            LeadPlayerConditionIds = new List<string>();
+
+            PlayerConditionIds = new List<string>();
+
+
             InstanceEventGroupId = "";
 
-            Unique = false;
             Exclusive = false;
+            CustomApiMapping = new List<string>();
 
-
-        EditorReference = new Dictionary<string, Action<string, object>> {
+            EditorReference = new Dictionary<string, Action<string, object>> {
+                {"Tags", (s, o) => TagParse.TagStringListCheck(s, ref Tags) },
                 {"Title", (s, o) => TagParse.TagStringCheck(s, ref Title) },
                 {"Description", (s, o) => TagParse.TagStringCheck(s, ref Description) },
-                {"OverrideFaction", (s, o) => TagParse.TagBoolCheck(s, ref OverrideFaction) },
-                {"Faction", (s, o) => TagParse.TagStringCheck(s, ref Faction) },
-                {"EventConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref EventConditionIds) },
+
+                {"Reward", (s, o) => TagParse.TagStringCheck(s, ref Reward) },
+                {"Collateral", (s, o) => TagParse.TagStringCheck(s, ref Collateral) },
+                {"ReputationReward", (s, o) => TagParse.TagStringCheck(s, ref ReputationReward) },
+                {"FailReputationPrice", (s, o) => TagParse.TagStringCheck(s, ref FailReputationPrice) },
+
                 {"ReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref ReplaceKeys) },
                 {"ReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref ReplaceValues) },
+         
+                {"PersistantEventConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PersistantEventConditionIds) },
+                {"UseAnyPassingEventCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseAnyPassingEventCondition) },
+                {"EventConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref EventConditionIds) },
+
+
+                {"StoreProfileId", (s, o) => TagParse.TagStringCheck(s, ref StoreProfileId) },
+                {"MissionType", (s, o) => TagParse.TagMissionTypeCheck(s, ref MissionType) },
+
+                {"LeadPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref LeadPlayerConditionIds) },
+
+                {"PlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerConditionIds) },
+
+                {"SoloMission", (s, o) => TagParse.TagBoolCheck(s, ref SoloMission) },
+                
                 {"InstanceEventGroupId", (s, o) => TagParse.TagStringCheck(s, ref InstanceEventGroupId) },
                 {"Exclusive", (s, o) => TagParse.TagBoolCheck(s, ref Exclusive) },
-                {"Unique", (s, o) => TagParse.TagBoolCheck(s, ref Unique) },
+                {"CustomApiMapping", (s, o) => TagParse.TagStringListCheck(s, ref CustomApiMapping) },
             };
 
         }

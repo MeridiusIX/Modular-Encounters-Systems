@@ -95,6 +95,27 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+
+
+
+
+		public static void PlayersNearby(Vector3D position, int distance, out List<long> playerId)
+		{
+			playerId = new List<long>();
+
+			foreach (var player in Players)
+			{
+				if (!player.ActiveEntity())
+					continue;
+
+				if (Vector3D.Distance(player.GetPosition(), position) < distance)
+				{
+					playerId.Add(player.Player.IdentityId);
+				}
+			}
+		}
+
+
 		public static void ItemConsumedEvent(IMyCharacter character, MyDefinitionId id) {
 
 			foreach (var player in Players) {
@@ -196,6 +217,8 @@ namespace ModularEncountersSystems.Entities {
 			return null;
 
 		}
+
+
 
 	}
 

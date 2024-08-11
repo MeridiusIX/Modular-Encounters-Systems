@@ -126,7 +126,7 @@ namespace ModularEncountersSystems.Events.Action {
 				foreach(var player in PlayerManager.Players)
 				{
 
-                    if (PlayerCondition.ArePlayerConditionsMet(actions.AddTagsPlayerConditionIds, player.Player.IdentityId))
+                    if (PlayerCondition.ArePlayerConditionsMet(actions.AddTagsPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
                     {
 						foreach (var tag in actions.AddTags)
 						{
@@ -143,7 +143,7 @@ namespace ModularEncountersSystems.Events.Action {
 				foreach (var player in PlayerManager.Players)
 				{
 
-					if (PlayerCondition.ArePlayerConditionsMet(actions.RemoveTagsPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.RemoveTagsPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
 					{
 						foreach (var tag in actions.RemoveTags)
 						{
@@ -173,7 +173,7 @@ namespace ModularEncountersSystems.Events.Action {
 					}
 
 					var newCommand = new Command();
-					newCommand.PrepareEventCommand(commandProfile, actions.CommandProfileOriginCoords);
+					newCommand.PrepareEventCommand(commandProfile, actions.CommandProfileOriginCoords,actions.OverrideCommandCode);
 					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Sending Command: " + newCommand.CommandCode, BehaviorDebugEnum.Action);
 
 					CommandHelper.SendCommand(newCommand);
@@ -188,7 +188,7 @@ namespace ModularEncountersSystems.Events.Action {
 			{
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.TeleportPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.TeleportPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
 					{
 						player.Player.Character.Teleport(MatrixD.CreateWorld(actions.TeleportPlayerCoords));
 
@@ -201,7 +201,7 @@ namespace ModularEncountersSystems.Events.Action {
             {
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeInPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeInPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
 					{
 						MyVisualScriptLogicProvider.ScreenColorFadingStart(2, true, player.Player.IdentityId);
 						MyVisualScriptLogicProvider.ScreenColorFadingMinimalizeHUD(true, player.Player.IdentityId);
@@ -215,7 +215,7 @@ namespace ModularEncountersSystems.Events.Action {
             {
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeOutPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeOutPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
 					{
 						MyVisualScriptLogicProvider.ScreenColorFadingStartSwitch(8, player.Player.IdentityId);
 					}
@@ -226,7 +226,7 @@ namespace ModularEncountersSystems.Events.Action {
 			{
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.AddItemPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddItemPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
 					{
                         foreach (var raw_id in actions.ItemIds)
                         {
@@ -273,7 +273,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.ReputationPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.ReputationPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
 					{
 						players.Add(player.Player.IdentityId);
 					}
@@ -288,7 +288,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
 					{
 						for (int i = 0; i < actions.GPSNames.Count; i++)
 						{
@@ -314,7 +314,7 @@ namespace ModularEncountersSystems.Events.Action {
 			{
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
 					{
 						for (int i = 0; i < actions.GPSNames.Count; i++)
 						{
@@ -330,8 +330,39 @@ namespace ModularEncountersSystems.Events.Action {
 			//ChatBroadcast
 			if (actions.UseChatBroadcast == true) {
 
+				var specificPlayersList = new List<long>();
+
+				if (actions.ChatBroadcastToSpecificPlayers)
+                {
+					foreach (var player in PlayerManager.Players)
+					{
+						if (PlayerCondition.ArePlayerConditionsMet(actions.ChatBroadcastPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+						{
+							specificPlayersList.Add(player.Player.IdentityId);
+						}
+					}
+
+				}
+
+				if (specificPlayersList.Count == 0)
+					specificPlayersList = null;
+
+
 				foreach (var chatData in ChatData) {
-					EventBroadcastSystem.BroadcastRequest(chatData);
+
+					if (actions.UseChatOverrideColor)
+						chatData.Color = actions.ChatOverrideColor;
+
+					if (actions.UseChatOverrideAuthor)
+						chatData.Author = actions.ChatOverrideAuthor;
+
+					if(actions.UseChatOverrideMessage)
+						chatData.ChatMessages = actions.ChatOverrideMessage;
+
+					if(actions.UseChatOverrideAudio)
+						chatData.ChatAudio = actions.ChatOverrideAudio;
+	
+					EventBroadcastSystem.BroadcastRequest(chatData, specificPlayerIds : specificPlayersList);
 
 				}
 
@@ -454,10 +485,11 @@ namespace ModularEncountersSystems.Events.Action {
 
             if (actions.AddInstanceEventGroup)
             {
-				LocalApi.AddInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, actions.InstanceEventGroupReplaceValues);
+				LocalApi.InsertInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, actions.InstanceEventGroupReplaceValues);
             }
 
 
+			//This should be as last.
             if (actions.RemoveThisInstanceGroup)
             {
 
@@ -469,6 +501,7 @@ namespace ModularEncountersSystems.Events.Action {
 						Event.MarkedforRemoval = true;
 					}
 				}
+
 
 			}
 				/*

@@ -126,7 +126,7 @@ namespace ModularEncountersSystems.Files
 
                         chat.BroadcastRandomly = false;
                         chat.ChatMessages = new List<string> { entry.Message };
-                        chat.ChatAudio = new List<string> { entry.Message };
+                        chat.ChatAudio = new List<string> { entry.AudioId };
 
 
                         preparedChat = true;

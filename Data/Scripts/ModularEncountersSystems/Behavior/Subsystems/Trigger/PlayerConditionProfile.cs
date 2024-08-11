@@ -193,11 +193,40 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 return true;
             else
                 return false;
+        }
+
+        public static bool ArePlayerConditionsMet(List<PlayerCondition> Profiles, long PlayerId, bool UsePositionOverride = false, Vector3D PositionOverride = new Vector3D())
+        {
+            if (Profiles == null)
+                return false;
+
+            if (Profiles.Count <= 0)
+                return true;
+
+            int usedProfileConditions = 0;
+            int satisfieddProfileConditions = 0;
+
+
+            //Holdings check 
+            for (int i = 0; i < Profiles.Count; i++)
+            {
+                usedProfileConditions++;
+                if (IsPlayerConditionsMet(Profiles[i], PlayerId, UsePositionOverride, PositionOverride))
+                    satisfieddProfileConditions++;
+            }
+
+            if (usedProfileConditions == satisfieddProfileConditions)
+                return true;
+            else
+                return false;
 
 
         }
 
-        private static bool IsPlayerConditionsMet(PlayerCondition profile, long PlayerId, bool UsepositionOverride = false, Vector3D positionoverride = new Vector3D())
+
+
+
+        public static bool IsPlayerConditionsMet(PlayerCondition profile, long PlayerId, bool UsepositionOverride = false, Vector3D positionoverride = new Vector3D())
         {
             int usedConditions = 0;
             int satisfiedConditions = 0;

@@ -399,6 +399,10 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(39)]
 		public long EventInstanceId;
 
+		[ProtoMember(40)] 
+		public string CustomVariablesName;
+
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]
@@ -573,6 +577,9 @@ namespace ModularEncountersSystems.World {
 			ManipulationsUsed = new List<int>();
 			Score = 0;
 			EventInstanceId = -1;
+			CustomVariablesName = "";
+
+			FriendlyName = "";
 
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
@@ -1132,10 +1139,10 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - SpawnedByMES:        ").Append(SpawnedByMES.ToString()).AppendLine();
 			sb.Append(" - OriginalFaction:     ").Append(OriginalOwnerFaction).AppendLine();
 			sb.Append(" - OriginalOwnerId:     ").Append(OriginalOwnerId).AppendLine();
-
+			sb.Append(" - OriginalName:        ").Append(FriendlyName).AppendLine();
 			sb.Append(" - Score (WIP):         ").Append(Score).AppendLine();
 			sb.Append(" - EventInstanceId:     ").Append(EventInstanceId).AppendLine();
-			
+			sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
 
 			return sb.ToString();
 			

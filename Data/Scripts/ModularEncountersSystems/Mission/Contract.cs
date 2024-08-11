@@ -13,126 +13,129 @@ using VRage.Game.ModAPI;
 using Sandbox.ModAPI.Contracts;
 using VRage.Game;
 using ModularEncountersSystems.Entities;
+using ProtoBuf;
 
 namespace ModularEncountersSystems.Missions
 {
+    //
+
+    [ProtoContract]
+    public class ActiveContract
+    {
+        [ProtoMember(1)]
+        public long ContractId;
+
+        [ProtoMember(2)]
+        public long BlockId;
+
+        [ProtoMember(3)]
+        public int Reward;
+        [ProtoMember(4)]
+        public int ReputationReward;
+        [ProtoMember(5)]
+        public int FailReputationPrice;
+
+        [ProtoMember(6)]
+        public string FactionTag;
+
+
+        public ActiveContract(long ContractId,long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag)
+        {
+            this.ContractId = ContractId;
+            this.BlockId = BlockId;
+ 
+            this.Reward = Reward;
+            this.ReputationReward = ReputationReward;
+            this.FailReputationPrice = FailReputationPrice;
+            this.FactionTag = FactionTag;
+        }
+    }
+
+
+
+
+
+
 
     public class Contract
     {
+
         public long ContractId;
         public BlockEntity SourceBlock;
         public Mission MissionReference;
 
-        public void OnContractAcquired(long identityId)
+        public bool TryToActivateCustomContract(long playerIdentityId)
         {
-            AcquireContractInternal(identityId, SourceBlock.GetPosition());
-        }
 
-
-        private bool PlayerHasMission(long playerId)
-        {
-            foreach (var mission in MissionManager.ActiveMissionList)
+            if (!MissionReference.RunPlayerCondition(playerIdentityId))
             {
-                if (mission.PlayerIds.Contains(playerId))
-                {
-                    return true;
-                }
+                MyVisualScriptLogicProvider.SendChatMessageColored("You do not meet the requirements for this contract.", Color.Olive, "Contracts", playerIdentityId);
+                return false;
             }
-            return false;
-        }
+                
+            Vector3D position = SourceBlock.GetPosition();
+
+            var Players = new List<PlayerEntity>();
+
+            var LeadPlayer = PlayerManager.GetPlayerWithIdentityId(playerIdentityId);
+            Players.Add(LeadPlayer);
 
 
-        public void AcquireContractInternal(long identityId, Vector3D position)
-        {
-            // Function to check if player already has a mission
 
-
-            // Check if player already has a mission or not
-            if (!PlayerHasMission(identityId))
+            if (!MissionReference.Profile.SoloMission)
             {
-                var acceptingPlayerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(identityId);
-
-                MissionReference.PlayerIds.Add(identityId);
+                var acceptingPlayerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerIdentityId);
 
                 List<long> locPlayerIdList;
-                MissionManager.PlayersNearby(position, 100, out locPlayerIdList);
+                PlayerManager.PlayersNearby(position, 400, out locPlayerIdList);
+
                 foreach (var playerId in locPlayerIdList)
                 {
                     var locFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerId);
-                    if (locFaction == acceptingPlayerFaction && playerId != identityId)
+                    if (locFaction == acceptingPlayerFaction && playerId != playerIdentityId)
                     {
-                        // Add all same faction players who don't have a mission open
-                        if (!PlayerHasMission(playerId))
+                        var player = PlayerManager.GetPlayerWithIdentityId(playerId);
+
+                        if (!MissionReference.RunPlayerCondition(playerId, false))
                         {
-                            MissionReference.PlayerIds.Add(playerId);
+                            
+                            MyVisualScriptLogicProvider.SendChatMessageColored($"{player?.Name() ?? "Someone in your faction"} does not meet the requirements for this contract", Color.Olive, "Contracts", playerIdentityId);
+                            return false;
                         }
+
+                        Players.Add(player);
                     }
                 }
 
-                 /*
-                var validRep = true;
-
-
-                foreach (var player in MissionReference.PlayerId)
-                {
-                    var reputation = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player, MissionReference.Faction.FactionId);
-                    if (reputation < -500)
-                    {
-                        validRep = false;
-                        break;
-                    }
-                }
-
-                if (validRep)
-                {
-                    // Code to execute if the reputation is valid
-                }
-                else
-                {
-                    MyVisualScriptLogicProvider.ShowNotificationToAll("Accept missions with neutral or friendly factions", 5000, "Red");
-                    MissionReference.Canceled = true;
-                }
-                */
             }
-            else
+
+
+            LeadPlayer.ProgressionData.Tags.Add($"LeadPlayer@{ContractId}");
+
+            foreach (var player in Players)
             {
-                MyVisualScriptLogicProvider.ShowNotificationToAll("You have already accepted one mission", 5000, "Red");
-                MissionReference.Canceled = true;
+                player.ProgressionData.Tags.Add($"@{ContractId}");
             }
-
-
-
 
             // Remove mission from all contract blocks
-
-            if (this.MissionReference.Exclusive)
+            if (this.MissionReference.Profile.Exclusive)
             {
-                MissionManager.PurgeContractsWithMissionSubtypeId(MissionReference.ProfileSubtypeId);
-            }
-            else
-            {
-                MissionManager.PurgeContract(this.ContractId);
+                InGameContractManager.PurgeContractsWithMissionSubtypeId(MissionReference.ProfileSubtypeId,ContractId);
             }
 
+            var FactionTag = MissionReference.Faction.Tag;
 
 
-
-
-
+            var _activeContract = new ActiveContract(ContractId, SourceBlock.Entity.EntityId, MissionReference.Reward, MissionReference.ReputationReward, MissionReference.FailReputationPrice, FactionTag);
+            InGameContractManager.ActiveContracts.Add(_activeContract);
             MissionReference.Start();
 
-            MissionManager.GeneratedContracts.Remove(this);
 
-
-
+            return true;
         }
 
 
-        public void OnContractEnded()
-        {
-            // nothing
-            MissionManager.PurgeContractsWithMissionSubtypeId(MissionReference.ProfileSubtypeId);
-        }
+
     }
 }
 

@@ -13,6 +13,7 @@ using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using Sandbox.Game;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Missions;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -1298,6 +1299,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 			
 			}
+
+            if (ConditionReference.NoActiveContracts)
+            {
+				usedConditions++;
+				MyVisualScriptLogicProvider.ShowNotificationToAll("Checking for NoActiveContracts", 5000, "Blue");
+				bool fail = false;
+				foreach (var block in _behavior.CurrentGrid.Contracts)
+				{
+					if (InGameContractManager.HasContractBlockActiveContract(block.Entity.EntityId))
+					{
+						MyVisualScriptLogicProvider.ShowNotificationToAll("I can't despawn because I have a active contract", 5000, "Green");
+						fail = true;
+						break;
+
+					}
+
+				}
+
+                if (!fail)
+                {
+					satisfiedConditions++;
+				}
+			}
+
 
 			if (ConditionReference.CheckForSpawnConditions) {
 

@@ -184,6 +184,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckForBlocksOfType;
 		public List<string> BlocksOfType = new List<string>();
 
+		public bool NoActiveContracts;
+
+
 		public bool CheckForSpawnConditions;
 		public List<string> RequiredSpawnConditions;
 
@@ -383,6 +386,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckForPlanetaryLane = false;
 			PlanetaryLanePassValue = true;
 
+			NoActiveContracts = false;
 
 			CheckPlayerReputation = false;
 			CheckReputationwithFaction = new List<string>();
@@ -498,6 +502,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"IsTargetStatic", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetStatic) },
 				{"HasTarget", (s, o) => TagParse.TagBoolCheck(s, ref HasTarget) },
 				{"NoTarget", (s, o) => TagParse.TagBoolCheck(s, ref NoTarget) },
+				{"NoActiveContracts", (s, o) => TagParse.TagBoolCheck(s, ref NoActiveContracts) },
 				{"IsAttackerHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerHostile) }, //
 				{"IsAttackerNeutral", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerNeutral) },
 				{"IsAttackerFriendly", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerFriendly) },

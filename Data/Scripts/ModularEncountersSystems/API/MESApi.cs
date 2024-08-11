@@ -47,7 +47,8 @@ namespace ModularEncountersSystems.API {
 		private Func<Vector3D, List<string>, bool> _spawnSpaceCargoShip;
 		private Action<string, bool> _toggleSpawnGroupEnabled;
 		private Action<bool, string, Action<object[]>> _registerCustomAction;
-
+		private Action<string, List<string>, List<string>> _insertInstanceEventGroup;
+		private Action<bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>> _registerCustomMissionMapping;
 		//Create this object in your SessionComponent LoadData() Method
 		public MESApi() {
 
@@ -332,6 +333,24 @@ namespace ModularEncountersSystems.API {
 		*/
 		public void RegisterCustomAction(bool register, string methodIdentifier, Action<object[]> action) => _registerCustomAction?.Invoke(register, methodIdentifier, action);
 
+		/// <summary>
+		/// (...)
+		/// </summary>
+		/// <param name="register">If true, the method provided will be registered. If false, the provided method will be deregistered.</param>
+		/// <param name="methodIdentifier">A unique name that is used to link your method to a SpawnCondition</param>
+		/// <param name="func">The method you want invoked when Spawning is requested.</param>
+		/*
+			Func Parameters:
+			string:            The Mission SubtypeId
+			string:            The SpawnGroup SubtypeID
+			List<string>:      The Tags of the mission profile
+			Vector3D:          The location of the storeblock on contract accept.
+		*/
+		public void RegisterCustomMissionMapping(bool register, string methodIdentifier, Func<string, string, List<string>, Vector3D, Dictionary<string, string>> func) => _registerCustomMissionMapping?.Invoke(register, methodIdentifier, func);
+
+		public void InsertInstanceEventGroup(string ProfileSubTypeID, List<string> replacekeys, List<string> replacevalues) => _insertInstanceEventGroup?.Invoke(ProfileSubTypeID, replacekeys, replacevalues);
+
+
 		//Run This Method in your SessionComponent UnloadData() Method
 		public void UnregisterListener() {
 
@@ -382,6 +401,8 @@ namespace ModularEncountersSystems.API {
 				_spawnSpaceCargoShip = (Func<Vector3D, List<string>, bool>)dict["SpawnSpaceCargoShip"];
 				_toggleSpawnGroupEnabled = (Action<string, bool>)dict["ToggleSpawnGroupEnabled"];
 				_registerCustomAction = (Action<bool, string, Action<object[]>>)dict["RegisterCustomAction"];
+				_insertInstanceEventGroup = (Action<string, List<string>, List<string>>)dict["InsertInstanceEventGroup"];
+				_registerCustomMissionMapping = (Action< bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>)dict["RegisterCustomMissionMapping"];
 
 			} catch (Exception e) {
 

@@ -250,44 +250,48 @@ namespace ModularEncountersSystems.Events
                     var customdata = "";
                     if (ProfileManager.TemplateEventActionProfiles.TryGetValue(actionName, out customdata))
                     {
-
                         var instancesubtypeId = actionName + "@" + InstanceId.ToString();
-                        var actionReference = new EventActionReferenceProfile();
-                        actionReference.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
-                        actionReference.ProfileSubtypeId = instancesubtypeId;
 
-                        var actionObject = new EventActionProfile();
-                        actionObject.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
-                        actionObject.ProfileSubtypeId = instancesubtypeId;
+                        // Check if instancesubtypeId already exists in the dictionary
+                        if (!ProfileManager.EventActionReferenceProfiles.ContainsKey(instancesubtypeId))
+                        {
+                            var actionReference = new EventActionReferenceProfile();
+                            actionReference.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                            actionReference.ProfileSubtypeId = instancesubtypeId;
 
-                        Actions.Add(actionObject);
+                            var actionObject = new EventActionProfile();
+                            actionObject.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                            actionObject.ProfileSubtypeId = instancesubtypeId;
 
-                        ProfileManager.EventActionReferenceProfiles.Add(instancesubtypeId, actionReference);
+                            Actions.Add(actionObject);
+
+                            ProfileManager.EventActionReferenceProfiles.Add(instancesubtypeId, actionReference);
+                        }
+                        else
+                        {
+                            // Handle the case where the key already exists, if necessary
+                            var actionObject = new EventActionProfile();
+                            actionObject.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                            actionObject.ProfileSubtypeId = instancesubtypeId;
+
+                            Actions.Add(actionObject);
+                        }
 
                         continue;
                     }
-
-
                 }
-
-
 
                 byte[] bytes = null;
 
                 if (ProfileManager.EventActionObjectTemplates.TryGetValue(actionName, out bytes))
                 {
-
                     EventActionProfile action = MyAPIGateway.Utilities.SerializeFromBinary<EventActionProfile>(bytes);
 
                     if (action != null)
                     {
-
                         Actions.Add(action);
-
                     }
-
                 }
-
             }
 
         }

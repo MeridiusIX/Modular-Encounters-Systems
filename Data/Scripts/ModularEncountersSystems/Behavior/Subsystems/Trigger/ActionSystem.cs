@@ -261,7 +261,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//ForceDespawn
 			if (actions.ForceDespawn) {
 
-				_despawn.DespawnGrid();
+
+				if (actions.TryToDespawnThisGridOnly)
+					_despawn.DespawnThisGrid();
+				else
+					_despawn.DespawnGrid();
 
 			}
 
@@ -1819,6 +1823,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				  NpcManager.ResetThisResetThisStaticEncounter(spawngroupname);
 
 			}
+
+
+            if (actions.SaveLocationToSandboxVariable)
+            {
+				MyAPIGateway.Utilities.SetVariable(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.LocationSandboxVariableName), RemoteControl.GetPosition());
+			}
+
+
+
 
 			//SetBooleansTrue
 			foreach (var variable in actions.SetBooleansTrue)

@@ -138,7 +138,7 @@ namespace ModularEncountersSystems.Helpers {
             Relation = RelationTypeEnum.None;
 
         }
-        public void PrepareEventCommand(CommandProfile profile, Vector3D position)
+        public void PrepareEventCommand(CommandProfile profile, Vector3D position, string OverrideCommandCode = "")
         {
 
             this.FromEvent = true;
@@ -152,8 +152,11 @@ namespace ModularEncountersSystems.Helpers {
             this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
 
 
+            if(string.IsNullOrWhiteSpace(OverrideCommandCode))
+                this.CommandCode = profile.CommandCode;
+            else
+                this.CommandCode = OverrideCommandCode;
 
-            this.CommandCode = profile.CommandCode;
 
             this.Position = position;
 

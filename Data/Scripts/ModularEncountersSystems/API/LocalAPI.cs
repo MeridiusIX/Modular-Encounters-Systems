@@ -26,8 +26,12 @@ namespace ModularEncountersSystems.API {
 		public static Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>> BehaviorCustomTriggers = new Dictionary<string, Func<IMyRemoteControl, string, IMyEntity, Vector3D, bool>>();
 		public static Dictionary<string, Func<string, string, string, Vector3D, bool>> SpawnCustomConditions = new Dictionary<string, Func<string, string, string, Vector3D, bool>>();
 
-		public static Dictionary<string, Action<object[]>> CustomActions = new Dictionary<string, Action<object[]>>();
+		public static Dictionary<string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>> MissionCustomMappings = new Dictionary<string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>();
 
+
+		
+
+		public static Dictionary<string, Action<object[]>> CustomActions = new Dictionary<string, Action<object[]>>();
 
 
 		public static void SendApiToMods() {
@@ -73,8 +77,10 @@ namespace ModularEncountersSystems.API {
 			dict.Add("SpawnRandomEncounter", new Func<Vector3D, List<string>, bool>(SpawnRandomEncounter));
 			dict.Add("SpawnSpaceCargoShip", new Func<Vector3D, List<string>, bool>(SpawnSpaceCargoShip));
 			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
+			dict.Add("RegisterCustomMissionMapping", new Action<bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>(RegisterCustomMissionMapping));
+
 			dict.Add("RegisterCustomAction", new Action<bool, string, Action<object[]>>(RegisterCustomAction));
-			dict.Add("AddInstanceEvent", new Action<string, List<string>, List<string>>(AddInstanceEventGroup));
+			dict.Add("InsertInstanceEventGroup", new Action<string, List<string>, List<string>>(InsertInstanceEventGroup));
 
 
 			
@@ -115,6 +121,22 @@ namespace ModularEncountersSystems.API {
 				SpawnCustomConditions.Remove(methodIdentifier);
 
 		}
+
+		public static void RegisterCustomMissionMapping(bool register, string methodIdentifier, Func<string, string, List<string>, Vector3D, Dictionary<string, string>> action)
+		{
+
+			//SpawnGroup
+			//SpawnCondition
+			//SpawnType
+			//Vector3D
+
+			if (register && !MissionCustomMappings.ContainsKey(methodIdentifier))
+				MissionCustomMappings.Add(methodIdentifier, action);
+			else
+				MissionCustomMappings.Remove(methodIdentifier);
+
+		}
+
 
 		public static void RegisterCustomAction(bool register, string methodIdentifier, Action<object[]> action)
 		{
@@ -157,6 +179,10 @@ namespace ModularEncountersSystems.API {
 		public static bool ApiSpawnRequest(Vector3D coords, string source, string spawningTypeString, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false, long ownerOverride = -1) {
 
 			SpawningType type = SpawningType.None;
+
+			if (spawningTypeString.Contains("SpaceRandomEncounter"))
+				spawningTypeString.Replace("SpaceRandomEncounter", "RandomEncounter");
+
 
 			if (!Enum.TryParse<SpawningType>(spawningTypeString, out type))
 				return false;
@@ -380,9 +406,8 @@ namespace ModularEncountersSystems.API {
 
 
 		//AddInstanceEvent
-		public static void AddInstanceEventGroup(string ProfileSubTypeID,List<string> replacekeys, List<string> replacevalues)
+		public static void InsertInstanceEventGroup(string ProfileSubTypeID,List<string> replacekeys, List<string> replacevalues)
 		{
-
 			TemplateEventGroup tja = null;
 
 			if (!ProfileManager.TemplateEventGroup.TryGetValue(ProfileSubTypeID, out tja))
@@ -391,7 +416,6 @@ namespace ModularEncountersSystems.API {
 			}
 			
 			tja.AddEventsAsInsertible(replacekeys, replacevalues);
-
 		}
 
 	}

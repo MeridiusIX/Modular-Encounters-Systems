@@ -51,13 +51,22 @@ namespace ModularEncountersSystems.Events
 
 
 
-		public void AddEventsAsInsertible(List<string> replacekeys, List<string> replacevalues)
+		public long AddEventsAsInsertible(List<string> replacekeys, List<string> replacevalues, long uniqueValue = -1, List<long> PlayerIds = null)
 		{
+			long _uniqueValue = 0;
 
-			var uniqueValue = MyAPIGateway.Session.GameDateTime.Ticks;
+			if(uniqueValue == -1)
+            {
+				_uniqueValue = MyAPIGateway.Session.GameDateTime.Ticks;
+			}
+            else
+            {
+				_uniqueValue = uniqueValue;
+            }
 
             foreach (var eventname in EventIds)
             {
+
 
 				var customdata = "";
 				if (!ProfileManager.TemplateEventProfiles.TryGetValue(eventname, out customdata))
@@ -65,13 +74,19 @@ namespace ModularEncountersSystems.Events
 					continue;
 				}
 
+
+
 				var _event = new Event();
-				_event.InitAsInsertable(eventname, uniqueValue, replacekeys, replacevalues);
+
+				replacekeys.Add("{InstanceId}");
+				replacevalues.Add(uniqueValue.ToString());
+
+				_event.InitAsInsertable(eventname, _uniqueValue, replacekeys, replacevalues);
 
 				EventManager.EventsList.Add(_event);
 			}
 
-
+			return uniqueValue;
 
 		}
 	}

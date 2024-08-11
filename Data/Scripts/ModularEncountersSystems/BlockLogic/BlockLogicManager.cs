@@ -45,6 +45,8 @@ namespace ModularEncountersSystems.BlockLogic {
             RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_Imperial_ProbeDroid_Top_II"));
             RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_Imperial_DroidCarrier_DroidBrain"));
             RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_Imperial_DroidCarrier_DroidBrain_Aggressor"));
+            RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "GFA_SG_TIEFighter_Viewport_RivalAI"));
+
 
             DisposableBeaconIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Beacon), "DisposableNpcBeaconSmall"));
             DisposableBeaconIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Beacon), "DisposableNpcBeaconLarge"));

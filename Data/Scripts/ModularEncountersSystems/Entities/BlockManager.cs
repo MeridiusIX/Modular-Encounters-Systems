@@ -43,7 +43,13 @@ namespace ModularEncountersSystems.Entities {
 					BlockDefinitions.Add(block.Id, block);
 
 			}
-
+            /* 
+            Custom RCs need to be registered in 3 places:
+                - BlockLogicManager.cs
+                - BlockManager.cs
+                - DefinitionHelper.cs
+            Furthermore, the SpawnGroup needs to set [RivalAiReplaceRemoteControl:true]
+            */
 			//Register One-Off Blocks
 			ShieldBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Refinery), "LWTSX_DamageAbsorber"));
 			ShieldBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Refinery), "LargeShipSmallShieldGeneratorBase"));
@@ -69,7 +75,7 @@ namespace ModularEncountersSystems.Entities {
 			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_NewRepublic_EWing_RC"));
 			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_Imperial_RC_Largegrid"));
 			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_TIE_Drone_Core"));
-			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "GFA_SG_TIEFighter_Viewport_RivalAI"));
+			RivalAiBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "GFA_SG_TIEFighter_Viewport"));
 
 			NanobotBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_ShipWelder), "SELtdSmallNanobotBuildAndRepairSystem"));
 			NanobotBlockIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_ShipWelder), "SELtdLargeNanobotBuildAndRepairSystem"));

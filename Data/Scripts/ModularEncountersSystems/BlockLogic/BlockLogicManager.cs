@@ -32,6 +32,13 @@ namespace ModularEncountersSystems.BlockLogic {
 
         public static List<long> TrackedLogicIds = new List<long>();
 
+        /* 
+        Custom RCs need to be registered in 3 places:
+            - BlockLogicManager.cs
+            - BlockManager.cs
+            - DefinitionHelper.cs
+        Furthermore, the SpawnGroup needs to set [RivalAiReplaceRemoteControl:true]
+        */
         public static void Setup() {
 
             RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "RivalAIRemoteControlSmall"));
@@ -45,7 +52,7 @@ namespace ModularEncountersSystems.BlockLogic {
             RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_Imperial_ProbeDroid_Top_II"));
             RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_Imperial_DroidCarrier_DroidBrain"));
             RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "K_Imperial_DroidCarrier_DroidBrain_Aggressor"));
-            RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "GFA_SG_TIEFighter_Viewport_RivalAI"));
+            RivalAiControlModules.Add(new MyDefinitionId(typeof(MyObjectBuilder_RemoteControl), "GFA_SG_TIEFighter_Viewport"));
 
 
             DisposableBeaconIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Beacon), "DisposableNpcBeaconSmall"));

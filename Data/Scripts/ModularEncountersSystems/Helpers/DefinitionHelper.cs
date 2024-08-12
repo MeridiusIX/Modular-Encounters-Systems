@@ -67,7 +67,13 @@ namespace ModularEncountersSystems.Helpers {
 			SetupDropPods();
 
 			ArmorModuleReplacement.Setup();
-
+            /* 
+            Custom RCs need to be registered in 3 places:
+                - BlockLogicManager.cs
+                - BlockManager.cs
+                - DefinitionHelper.cs
+            Furthermore, the SpawnGroup needs to set [RivalAiReplaceRemoteControl:true]
+            */
 			//Build List of RivalAI Control Module SubtypeNames
 			RivalAiControlModules.Add("RivalAIRemoteControlSmall");
 			RivalAiControlModules.Add("RivalAIRemoteControlLarge");
@@ -80,6 +86,7 @@ namespace ModularEncountersSystems.Helpers {
 			RivalAiControlModules.Add("K_Imperial_ProbeDroid_Top_II");
 			RivalAiControlModules.Add("K_Imperial_DroidCarrier_DroidBrain");
 			RivalAiControlModules.Add("K_Imperial_DroidCarrier_DroidBrain_Aggressor");
+			RivalAiControlModules.Add("GFA_SG_TIEFighter_Viewport");
 
 			MES_SessionCore.UnloadActions += Unload;
 

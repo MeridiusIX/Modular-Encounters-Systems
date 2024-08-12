@@ -60,6 +60,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeAntennaOwnership;
 		public string AntennaFactionOwner;
 
+		public bool ChangeAntennaHudText;
+		public string AntennaHudText;
+
+
 		public bool CreateKnownPlayerArea;
 		public double KnownPlayerAreaRadius;
 		public int KnownPlayerAreaTimer;
@@ -460,6 +464,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			StaggerWarheadDetonation = false;
 
 			Retreat = false;
+
+			ChangeAntennaHudText = false;
+			AntennaHudText = "";
+
+
+
 
 			BroadcastCurrentTarget = false;
 			BroadcastDamagerTarget = false;
@@ -901,7 +911,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ActivateAssertiveAntennas", (s, o) => TagParse.TagBoolCheck(s, ref ActivateAssertiveAntennas) },
 				{"ChangeAntennaOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaOwnership) },
 				{"AntennaFactionOwner", (s, o) => TagParse.TagStringCheck(s, ref AntennaFactionOwner) },
-				{"CreateKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref CreateKnownPlayerArea) },
+				{"ChangeAntennaHudText", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaHudText) },
+				{"AntennaHudText", (s, o) => TagParse.TagStringCheck(s, ref AntennaHudText) },
+				{ "CreateKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref CreateKnownPlayerArea) },
 				{"KnownPlayerAreaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref KnownPlayerAreaRadius) },
 				{"KnownPlayerAreaTimer", (s, o) => TagParse.TagIntOrDayCheck(s, ref KnownPlayerAreaTimer) },
 				{"KnownPlayerAreaMaxSpawns", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMaxSpawns) },

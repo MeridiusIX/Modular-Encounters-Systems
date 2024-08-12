@@ -799,6 +799,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (actions.ChangeAntennaHudText == true)
+			{
+
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna Namechange Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+
+				foreach (var antenna in AntennaList)
+				{
+
+					if (antenna == null)
+						continue;
+
+					antenna.HudText = actions.AntennaHudText;
+
+				}
+
+			}
+
+
 			//CreateKnownPlayerArea
 			if (actions.CreateKnownPlayerArea == true) {
 

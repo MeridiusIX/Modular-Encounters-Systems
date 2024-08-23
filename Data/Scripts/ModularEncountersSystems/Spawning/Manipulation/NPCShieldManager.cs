@@ -58,7 +58,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				return false;
 
 			SpawnLogger.Write("DSP: Check if Spawn Eligible", SpawnerDebugEnum.Manipulation);
-			if (!IsGlobalShieldProviderEnabled() || !spawnGroupAdd)
+			if (cubeGrid.IsStatic || !cubeGrid.IsStatic || !IsGlobalShieldProviderEnabled() || !spawnGroupAdd)
 				return false;
 
 			MyObjectBuilder_CubeBlock minArmor = null;

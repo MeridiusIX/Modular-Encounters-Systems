@@ -538,7 +538,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var grid in prefab.Prefab.CubeGrids) {
 
-					if (!grid.IsStatic && !data.Attributes.ShieldActivation && NPCShieldManager.AddDefenseShieldsToGrid(grid, true)) {
+					if (!data.Attributes.ShieldActivation && NPCShieldManager.AddDefenseShieldsToGrid(grid, true)) {
 
 						data.Attributes.ShieldActivation = true;
 						break;

@@ -44,6 +44,10 @@ namespace ModularEncountersSystems.Tasks {
         public void ScreenClose(ResultEnum result) {
 
             _additionalAction?.Invoke(_block);
+
+            if (_block == null)
+                return;
+
             _block.RefreshCustomInfo();
             ControlManager.RefreshMenu(_block);
             _screenClosed = true;

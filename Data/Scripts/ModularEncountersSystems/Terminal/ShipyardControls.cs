@@ -445,6 +445,14 @@ namespace ModularEncountersSystems.Terminal {
 
 		public static void GetPriceQuote(IMyTerminalBlock block) {
 
+			if (block == null)
+			{
+
+				//Shouldn't really be possible, but we'll play it safe
+				return;
+
+			}
+
 			var controls = GetControlValues(block);
 			controls.QuotedPriceValue = -1;
 

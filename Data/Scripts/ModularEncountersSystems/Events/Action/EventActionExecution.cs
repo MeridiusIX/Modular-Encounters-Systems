@@ -5,6 +5,7 @@ using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Zones;
 using Sandbox.Definitions;
@@ -125,8 +126,8 @@ namespace ModularEncountersSystems.Events.Action {
             {
 				foreach(var player in PlayerManager.Players)
 				{
-
-                    if (PlayerCondition.ArePlayerConditionsMet(actions.AddTagsPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					
+                    if (PlayerCondition.ArePlayerConditionsMet(actions.AddTagsPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
                     {
 						foreach (var tag in actions.AddTags)
 						{
@@ -143,7 +144,7 @@ namespace ModularEncountersSystems.Events.Action {
 				foreach (var player in PlayerManager.Players)
 				{
 
-					if (PlayerCondition.ArePlayerConditionsMet(actions.RemoveTagsPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.RemoveTagsPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition,  actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
 						foreach (var tag in actions.RemoveTags)
 						{
@@ -188,7 +189,7 @@ namespace ModularEncountersSystems.Events.Action {
 			{
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.TeleportPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.TeleportPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition,  actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
 						player.Player.Character.Teleport(MatrixD.CreateWorld(actions.TeleportPlayerCoords));
 
@@ -201,7 +202,7 @@ namespace ModularEncountersSystems.Events.Action {
             {
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeInPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeInPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition,  actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
 						MyVisualScriptLogicProvider.ScreenColorFadingStart(2, true, player.Player.IdentityId);
 						MyVisualScriptLogicProvider.ScreenColorFadingMinimalizeHUD(true, player.Player.IdentityId);
@@ -215,7 +216,7 @@ namespace ModularEncountersSystems.Events.Action {
             {
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeOutPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.FadeOutPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition,  actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
 						MyVisualScriptLogicProvider.ScreenColorFadingStartSwitch(8, player.Player.IdentityId);
 					}
@@ -226,7 +227,7 @@ namespace ModularEncountersSystems.Events.Action {
 			{
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.AddItemPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddItemPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition,  actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
                         foreach (var raw_id in actions.ItemIds)
                         {
@@ -273,7 +274,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.ReputationPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.ReputationPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition,  actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
 						players.Add(player.Player.IdentityId);
 					}
@@ -286,21 +287,38 @@ namespace ModularEncountersSystems.Events.Action {
 			if (actions.AddGPSToPlayers)
 			{
 
+				var defaultDescription = "No description available";
+				var defaultColor = new Color(255, 178, 96); //  color as default
+
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition, actions.AddPlayerConditionPlayerTags, actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
 						for (int i = 0; i < actions.GPSNames.Count; i++)
 						{
-							var Color = new Color((Vector3)actions.GPSColors[i]);
+
+							// If GPSDescriptions is empty or index is out of range, use the default description
+							var description = defaultDescription;
+
+
+							// If GPSColors is empty or index is out of range, use the default color
+							var color = defaultColor;
+
 
 							if (actions.UseGPSObjective)
 							{
-								MyVisualScriptLogicProvider.AddGPSObjective(actions.GPSNames[i], actions.GPSDescriptions[i], actions.GPSVector3Ds[i], Color, 0, player.Player.IdentityId);
+								MyVisualScriptLogicProvider.AddGPSObjective(actions.GPSNames[i], description, actions.GPSVector3Ds[i], color, 0, player.Player.IdentityId);
 							}
 							else
 							{
-								MyVisualScriptLogicProvider.AddGPS(actions.GPSNames[i], actions.GPSDescriptions[i], actions.GPSVector3Ds[i], Color, 0, player.Player.IdentityId);
+								MyVisualScriptLogicProvider.AddGPS(actions.GPSNames[i], description, actions.GPSVector3Ds[i], color, 0, player.Player.IdentityId);
+
+								// To do: fix issue where GPS is sometimes not being added.  We can try doing something manual, but why would you want to do that work when the whole gps system sucks. -CPT
+
+								//var gps = MyAPIGateway.Session.GPS.Create(actions.GPSNames[i], description, actions.GPSVector3Ds[i], true);
+								//gps.GPSColor = color;
+								//MyAPIGateway.Session.GPS.AddGps(player.Player.IdentityId, gps);
+
 							}
 						}
 					}
@@ -314,11 +332,11 @@ namespace ModularEncountersSystems.Events.Action {
 			{
 				foreach (var player in PlayerManager.Players)
 				{
-					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.RemoveGPSPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition,  actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
-						for (int i = 0; i < actions.GPSNames.Count; i++)
+						for (int i = 0; i < actions.RemoveGPSNames.Count; i++)
 						{
-							MyVisualScriptLogicProvider.RemoveGPS(actions.GPSNames[i], player.Player.IdentityId);
+							MyVisualScriptLogicProvider.RemoveGPS(actions.RemoveGPSNames[i], player.Player.IdentityId);
 						}
 					}
 				}
@@ -336,7 +354,7 @@ namespace ModularEncountersSystems.Events.Action {
                 {
 					foreach (var player in PlayerManager.Players)
 					{
-						if (PlayerCondition.ArePlayerConditionsMet(actions.ChatBroadcastPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition))
+						if (PlayerCondition.ArePlayerConditionsMet(actions.ChatBroadcastPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition,  actions.OverridePosition,actions.AddPlayerConditionPlayerTags,actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 						{
 							specificPlayersList.Add(player.Player.IdentityId);
 						}
@@ -492,7 +510,6 @@ namespace ModularEncountersSystems.Events.Action {
 			//This should be as last.
             if (actions.RemoveThisInstanceGroup)
             {
-
 				var Tag = instanceId.ToString();
 				foreach (var Event in EventManager.EventsList)
 				{
@@ -501,16 +518,44 @@ namespace ModularEncountersSystems.Events.Action {
 						Event.MarkedforRemoval = true;
 					}
 				}
-
-
 			}
-				/*
-				//SetEventControllers
-				if (actions.SetEventControllers)
-					EventControllerSettings(actions.EventControllerNames, actions.EventControllersActive, actions.EventControllersSetCurrentTime);
-				*/
 
+			//This should be as last.
+			if (actions.TryContractSuccess)
+			{
+				MyAPIGateway.ContractSystem.TryFinishCustomContract(instanceId);
+				var Tag = instanceId.ToString();
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Event.Profile.Tags.Contains(Tag))
+					{
+						Event.MarkedforRemoval = true;
+					}
+				}
 			}
+
+			//This should be as last.
+			if (actions.TryContractFail)
+			{
+				MyAPIGateway.ContractSystem.TryFailCustomContract(instanceId);
+				var Tag = instanceId.ToString();
+				foreach (var Event in EventManager.EventsList)
+				{
+					if (Event.Profile.Tags.Contains(Tag))
+					{
+						Event.MarkedforRemoval = true;
+					}
+				}
+			}
+
+
+			/*
+			//SetEventControllers
+			if (actions.SetEventControllers)
+				EventControllerSettings(actions.EventControllerNames, actions.EventControllersActive, actions.EventControllersSetCurrentTime);
+			*/
+
+		}
 
 		/*
 		private void EventControllerSettings(List<string> names, List<bool> active, List<bool> setCurrentTime) {

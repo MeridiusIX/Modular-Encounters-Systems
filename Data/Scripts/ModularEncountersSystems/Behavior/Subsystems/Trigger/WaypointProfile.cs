@@ -26,8 +26,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		None,
 		Self,
 		Target,
-		Damager
-	
+		Damager,
+		ClosestPlayer
+
 	}
 
 	public class WaypointProfile {

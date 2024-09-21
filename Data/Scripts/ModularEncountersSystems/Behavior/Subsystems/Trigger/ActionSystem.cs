@@ -1598,7 +1598,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying contract Profiles.", BehaviorDebugEnum.Action);
 				//BehaviorLogger.Write(string.Format("Store Blocks / Store Profiles ::: {0} / {1}", actions.ContractBlocks.Count, actions.ContractBlocks.Count), BehaviorDebugEnum.Action);
-				MyVisualScriptLogicProvider.ShowNotificationToAll(string.Format("Store Blocks / Store Profiles ::: {0} / {1}", actions.ContractBlocks.Count, actions.ContractBlocks.Count),5000,"Red");
 				for (int i = 0; i < actions.ContractBlockProfiles.Count && i < actions.ContractBlocks.Count; i++)
 				{
 
@@ -1621,8 +1620,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if (!contractblock.ActiveEntity() || contractblock.Block.CustomName != actions.ContractBlocks[i] || contractblock.Block.OwnerId != _behavior.RemoteControl.OwnerId)
 							continue;
 
-						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Store Profile With Name: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);
-						profile.ApplyProfileToBlock(contractblock, actions.ClearContractContentsFirst);
+						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Contract Profile With Name: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);
+						profile.ApplyProfileToBlock(contractblock, _behavior?.CurrentGrid?.Npc.SpawnGroupName ?? "", actions.ClearContractContentsFirst);
 
 
 

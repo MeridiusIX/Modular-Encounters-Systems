@@ -154,6 +154,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckThreatScoreIncludeOtherNpcOwners;
 		public GridConfigurationEnum CheckThreatScoreGridConfiguration;
 		public bool CheckThreatScoreFromTargetPosition;
+		public bool CheckThreatScoreFromClosestPlayerPosition;
 
 		public bool CompareThreatScore;
 		public int CompareThreatScoreValue;
@@ -362,6 +363,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckThreatScoreIncludeOtherNpcOwners = false;
 			CheckThreatScoreGridConfiguration = GridConfigurationEnum.All;
 			CheckThreatScoreFromTargetPosition = false;
+			CheckThreatScoreFromClosestPlayerPosition = false;
 
 			CompareThreatScore = false;
 			CompareThreatScoreValue = -1;
@@ -519,6 +521,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckThreatScoreIncludeOtherNpcOwners", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreIncludeOtherNpcOwners) },
 				{"CheckThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref CheckThreatScoreGridConfiguration) },
 				{"CheckThreatScoreFromTargetPosition", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreFromTargetPosition) },
+				{"CheckThreatScoreFromClosestPlayerPosition", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreFromClosestPlayerPosition) },
 				{"CompareThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CompareThreatScore) },
 				{"CompareThreatScoreValue", (s, o) => TagParse.TagIntCheck(s, ref CompareThreatScoreValue) },
 				{"CompareThreatScoreUseSelfValue", (s, o) => TagParse.TagBoolCheck(s, ref CompareThreatScoreUseSelfValue) },

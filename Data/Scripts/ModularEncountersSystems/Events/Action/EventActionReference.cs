@@ -63,6 +63,10 @@ namespace ModularEncountersSystems.Events.Action {
 		public bool OverridePlayerConditionPosition;
 		public Vector3D OverridePosition;
 
+		public bool AddPlayerConditionPlayerTags;
+		public List<string> AddIncludedPlayerTags;
+		public List<string> AddExcludedPlayerTag;
+
 		public bool AddTagstoPlayers;
 		public List<string> AddTagsPlayerConditionIds;
 		public List<string> AddTags;
@@ -87,16 +91,19 @@ namespace ModularEncountersSystems.Events.Action {
 		public float TeleportRadius;
 
 		public bool AddGPSToPlayers;
-		public bool AddGPSToAll;
-		public bool RemoveGPSFromPlayers;
+		public bool AddGPSToAll; //Not implemented
 		public List<string> AddGPSPlayerConditionIds;
-		public List<string> RemoveGPSPlayerConditionIds;
-
 		public bool UseGPSObjective;
 		public List<string> GPSNames;
 		public List<string> GPSDescriptions;
 		public List<Vector3D> GPSVector3Ds;
 		public List<Vector3D> GPSColors;
+
+		public bool RemoveGPSFromPlayers;
+		public List<string> RemoveGPSPlayerConditionIds;
+		public List<string> RemoveGPSNames;
+
+
 
 		public bool ChangeReputationWithPlayers;
 		public List<string> ReputationPlayerConditionIds;
@@ -152,6 +159,8 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<string> InstanceEventGroupReplaceValues;
 
 		public bool RemoveThisInstanceGroup;
+		public bool TryContractSuccess;
+		public bool TryContractFail;
 
 		public bool ActivateCustomAction;
 		public string CustomActionName;
@@ -207,6 +216,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 			UseGPSObjective = false;
 			GPSNames = new List<string>();
+			RemoveGPSNames = new List<string>();
 			GPSDescriptions = new List<string>();
 			GPSVector3Ds = new List<Vector3D>();
 			GPSColors = new List<Vector3D>();
@@ -242,6 +252,10 @@ namespace ModularEncountersSystems.Events.Action {
 
 			OverridePlayerConditionPosition = false;
 			OverridePosition = new Vector3D(0,0,0);
+
+			AddPlayerConditionPlayerTags = false;
+			AddIncludedPlayerTags = new List<string>();
+			AddExcludedPlayerTag = new List<string>();
 
 
 
@@ -306,6 +320,8 @@ namespace ModularEncountersSystems.Events.Action {
 			ChatOverrideAudio = new List<string>();
 
 			RemoveThisInstanceGroup = false;
+			TryContractSuccess = false;
+			TryContractFail = false;
 
 			ActivateCustomAction = false;
 			CustomActionName = "";
@@ -346,7 +362,11 @@ namespace ModularEncountersSystems.Events.Action {
 				{"OverridePlayerConditionPosition", (s, o) => TagParse.TagBoolCheck(s, ref OverridePlayerConditionPosition) },
 				{"OverridePosition", (s, o) => TagParse.TagVector3DCheck(s, ref OverridePosition) },
 
-				{"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
+				{"AddPlayerConditionPlayerTags", (s, o) => TagParse.TagBoolCheck(s, ref AddPlayerConditionPlayerTags) },
+				{"AddIncludedPlayerTags", (s, o) => TagParse.TagStringListCheck(s, ref AddIncludedPlayerTags) },
+				{"AddExcludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref AddExcludedPlayerTag) },
+
+				{ "AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
 				{"AddTagsToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
 				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
 				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
@@ -392,6 +412,7 @@ namespace ModularEncountersSystems.Events.Action {
 				{"RemoveGPSFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSFromPlayers) },
 				{"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
 				{"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
+				{"RemoveGPSNames", (s, o) => TagParse.TagStringListCheck(s, ref RemoveGPSNames) },
 				{"GPSDescriptions", (s, o) => TagParse.TagStringListCheck(s, ref GPSDescriptions) },
 				{"GPSCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
 				{"GPSVector3Ds", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
@@ -401,8 +422,10 @@ namespace ModularEncountersSystems.Events.Action {
 				{"RemoveGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveGPSPlayerConditionIds) },
 
 				{"RemoveThisInstanceGroup", (s, o) => TagParse.TagBoolCheck(s, ref RemoveThisInstanceGroup) },
-				
-				{"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
+				{"TryContractSuccess", (s, o) => TagParse.TagBoolCheck(s, ref TryContractSuccess) },
+				{"TryContractFail", (s, o) => TagParse.TagBoolCheck(s, ref TryContractFail) },
+
+				{ "SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
 				{"SpawnCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref SpawnVector3Ds) },
 				{"SpawnFactionTags", (s, o) => TagParse.TagStringListCheck(s, ref SpawnFactionTags) },
 

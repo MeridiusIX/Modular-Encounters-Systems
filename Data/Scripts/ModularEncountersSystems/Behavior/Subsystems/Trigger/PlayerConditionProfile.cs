@@ -153,7 +153,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
 
-        public static bool ArePlayerConditionsMet(List<string> ProfilesIds,  long PlayerId, bool UsePositionOverride = false,Vector3D PositionOverride = new Vector3D())
+        public static bool ArePlayerConditionsMet(List<string> ProfilesIds,  long PlayerId, bool UsePositionOverride = false,Vector3D PositionOverride = new Vector3D(), bool AddPlayerConditionPlayerTags = false, List<string> IncludedPlayerTags = null, List<string> AddExcludedPlayerTag = null)
         {
             List<PlayerCondition> Profiles = new List<PlayerCondition>();
 
@@ -185,7 +185,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             for (int i = 0; i < Profiles.Count; i++)
             {
                 usedProfileConditions++;
-                if (IsPlayerConditionsMet(Profiles[i], PlayerId,UsePositionOverride,PositionOverride))
+                if (IsPlayerConditionsMet(Profiles[i], PlayerId,UsePositionOverride,PositionOverride, AddPlayerConditionPlayerTags,IncludedPlayerTags,AddExcludedPlayerTag))
                     satisfieddProfileConditions++;
             }
 
@@ -226,7 +226,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
 
-        public static bool IsPlayerConditionsMet(PlayerCondition profile, long PlayerId, bool UsepositionOverride = false, Vector3D positionoverride = new Vector3D())
+        public static bool IsPlayerConditionsMet(PlayerCondition profile, long PlayerId, bool UsepositionOverride = false, Vector3D positionoverride = new Vector3D(), bool AddPlayerConditionPlayerTags = false, List<string> IncludedPlayerTags = null, List<string> AddExcludedPlayerTag = null)
         {
             int usedConditions = 0;
             int satisfiedConditions = 0;
@@ -293,8 +293,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 int satisfiedIncludedTag = 0;
                 int satisfiedExcludedTag = 0;
 
+                var _includedPlayerTag = profile.IncludedPlayerTag;
+                var _excludedPlayerTag = profile.ExcludedPlayerTag;
 
-                if (profile.IncludedPlayerTag.Count > 0)
+                if (profile.AllowOverrides && AddPlayerConditionPlayerTags && IncludedPlayerTags != null)
+                {
+                    _includedPlayerTag.AddList(IncludedPlayerTags);
+                }
+
+                if (profile.AllowOverrides && AddPlayerConditionPlayerTags && AddExcludedPlayerTag != null)
+                {
+                    _excludedPlayerTag.AddList(AddExcludedPlayerTag);
+                }
+
+
+                if (_includedPlayerTag.Count > 0)
                 {
                     foreach (var tag in profile.IncludedPlayerTag)
                     {
@@ -303,7 +316,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     }
                 }
 
-                if (profile.ExcludedPlayerTag.Count > 0)
+                if (_excludedPlayerTag.Count > 0)
                 {
                     foreach (var tag in profile.ExcludedPlayerTag)
                     {

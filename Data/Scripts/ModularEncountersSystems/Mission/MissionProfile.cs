@@ -22,6 +22,7 @@ namespace ModularEncountersSystems.Missions {
         public string Collateral;
         public string ReputationReward;
         public string FailReputationPrice;
+        public string Duration;
 
 
         public List<string> ReplaceKeys;
@@ -41,7 +42,7 @@ namespace ModularEncountersSystems.Missions {
         public List<string> LeadPlayerConditionIds;
         public List<string> PlayerConditionIds;
 
-
+        public string OverrideFaction;
 
         public string InstanceEventGroupId;
         public bool Exclusive;
@@ -60,6 +61,8 @@ namespace ModularEncountersSystems.Missions {
             Collateral = "";
             ReputationReward = "";
             FailReputationPrice = "";
+            Duration = "-1";
+            OverrideFaction = "";
 
             MissionType = MissionType.Custom;
             StoreProfileId = "";
@@ -91,6 +94,7 @@ namespace ModularEncountersSystems.Missions {
                 {"Collateral", (s, o) => TagParse.TagStringCheck(s, ref Collateral) },
                 {"ReputationReward", (s, o) => TagParse.TagStringCheck(s, ref ReputationReward) },
                 {"FailReputationPrice", (s, o) => TagParse.TagStringCheck(s, ref FailReputationPrice) },
+                {"Duration", (s, o) => TagParse.TagStringCheck(s, ref Duration) },
 
                 {"ReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref ReplaceKeys) },
                 {"ReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref ReplaceValues) },
@@ -99,8 +103,10 @@ namespace ModularEncountersSystems.Missions {
                 {"UseAnyPassingEventCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseAnyPassingEventCondition) },
                 {"EventConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref EventConditionIds) },
 
+                {"OverrideFaction", (s, o) => TagParse.TagStringCheck(s, ref OverrideFaction) },
 
                 {"StoreProfileId", (s, o) => TagParse.TagStringCheck(s, ref StoreProfileId) },
+ 
                 {"MissionType", (s, o) => TagParse.TagMissionTypeCheck(s, ref MissionType) },
 
                 {"LeadPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref LeadPlayerConditionIds) },

@@ -746,8 +746,18 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 							if (antennaName.Contains(replaceName) && !string.IsNullOrWhiteSpace(replaceName)) {
 
-								(grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
-								break;
+                                if (profile.ReplaceAntennaHudTextInsteadOfName)
+                                {
+									antenna.HudText = newGridName;
+									break;
+
+								}
+								else
+                                {
+									(grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
+									break;
+
+								}
 
 							}
 

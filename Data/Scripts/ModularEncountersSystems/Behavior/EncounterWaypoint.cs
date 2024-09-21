@@ -215,6 +215,21 @@ namespace ModularEncountersSystems.Behavior {
 
 					}
 
+					if(waypointProfile.RelativeEntity == RelativeEntityType.ClosestPlayer)
+                    {
+						IMyEntity entity = null;
+
+						var potentialPlayer = PlayerManager.GetNearestPlayer(behavior.RemoteControl.GetPosition());
+						if(potentialPlayer != null)
+                        {
+							waypoint = waypointProfile.GenerateEncounterWaypoint(potentialPlayer.GetParentEntity());
+						}
+
+					}
+
+
+
+
 				} else {
 
 					waypoint = waypointProfile.GenerateEncounterWaypoint(behavior.RemoteControl);

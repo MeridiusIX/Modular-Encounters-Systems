@@ -23,7 +23,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int MinContracts;
 		public int MaxContracts;
 
-
+		public string StoreProfileId;
 
 		public List<string> MissionIds;
 
@@ -36,7 +36,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			SetupComplete = false;
 
 
-
+			StoreProfileId = "MES-StoreProfile-Example";
 			MinContracts = 10;
 			MaxContracts = 10;
 
@@ -48,6 +48,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				{"MinContracts", (s, o) => TagParse.TagIntCheck(s, ref MinContracts) },
 				{"MaxContracts", (s, o) => TagParse.TagIntCheck(s, ref MaxContracts) },
+				{"StoreProfileId", (s, o) => TagParse.TagStringCheck(s, ref StoreProfileId) },
 
 				{"MissionIds", (s, o) => TagParse.TagStringListCheck(s, ref MissionIds) },
 
@@ -91,7 +92,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		}
 
-		public void ApplyProfileToBlock(BlockEntity block, bool clearExisting = true) {
+		public void ApplyProfileToBlock(BlockEntity block,string spawnGroupName, bool clearExisting = true) {
 
 			if (block == null) {
 
@@ -101,8 +102,15 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			}
 
 
-            for (int i = 0; i < MissionIds.Count; i++)
+            if (clearExisting)
             {
+				InGameContractManager.ClearBlockContracts(block.GetEntityId());
+
+			}
+
+
+			for (int i = 0; i < MissionIds.Count; i++)
+			{
 				MissionProfile missionprofile = null;
 
 				if (!ProfileManager.MissionProfiles.TryGetValue(MissionIds[i], out missionprofile))
@@ -114,8 +122,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				}
 
 
-				var mission = new Mission(MissionIds[i]);
-				mission.Init(block);
+				var mission = new Mission(MissionIds[i], this.StoreProfileId, spawnGroupName);
+				if (!mission.Init(block))
+                {
+					MyVisualScriptLogicProvider.ShowNotificationToAll($"Failed  {MissionIds[i]}", 5000);
+				}
 
 			}
 

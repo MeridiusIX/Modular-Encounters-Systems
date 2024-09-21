@@ -820,7 +820,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 			ApplyContractProfiles = false;
-			ClearContractContentsFirst = false;
+			ClearContractContentsFirst = true;
 			ContractBlocks = new List<string>();
 			ContractBlockProfiles = new List<string>();
 
@@ -1158,6 +1158,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ClearContractContentsFirst", (s, o) => TagParse.TagBoolCheck(s, ref ClearContractContentsFirst) },
 				{"ContractBlocks", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlocks) },
 				{"ContractBlockProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
+				{"ContractProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
 				{"ActivateEvent", (s, o) => TagParse.TagBoolCheck(s, ref ActivateEvent) },
 				{"ActivateEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventIds) },
 				{"ActivateEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventTags) },

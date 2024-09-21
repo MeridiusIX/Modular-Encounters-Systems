@@ -99,6 +99,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public string RandomGridNamePrefix;
 		public List<string> RandomGridNamePattern;
 		public string ReplaceAntennaNameWithRandomizedName;
+		public bool ReplaceAntennaHudTextInsteadOfName;
+
 		public bool ProcessBlocksForCustomGridName;
 
 		public string CustomChatAuthorName;
@@ -293,6 +295,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RandomGridNamePrefix = "";
 			RandomGridNamePattern = new List<string>();
 			ReplaceAntennaNameWithRandomizedName = "";
+			ReplaceAntennaHudTextInsteadOfName = false;
+
 			ProcessBlocksForCustomGridName = false;
 
 			CustomChatAuthorName = null;
@@ -876,6 +880,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//ReplaceAntennaNameWithRandomizedName
+				if (tag.StartsWith("[ReplaceAntennaHudTextInsteadOfName:") == true)
+				{
+
+					TagParse.TagBoolCheck(tag, ref this.ReplaceAntennaHudTextInsteadOfName);
+
+				}
 				//CustomChatAuthorName
 				if (tag.StartsWith("[CustomChatAuthorName:") == true) {
 

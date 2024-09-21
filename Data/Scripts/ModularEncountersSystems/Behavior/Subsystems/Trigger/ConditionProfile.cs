@@ -1199,6 +1199,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
 				}
 
+                if (ConditionReference.CheckThreatScoreFromClosestPlayerPosition)
+                {
+					var closestplayer = PlayerManager.GetNearestPlayer(Position);
+					if(closestplayer != null)
+                    {
+						Position = closestplayer.GetPosition();
+						MyVisualScriptLogicProvider.ShowNotificationToAll(Position.ToString(), 5000);
+                    }
+                }
+
 				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, ConditionReference.CheckThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CheckThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
 
 				if (ThreatScore < (float)ConditionReference.CheckThreatScoreMinimum && (float)ConditionReference.CheckThreatScoreMinimum > 0 && ThreatScore > (float)ConditionReference.CheckThreatScoreMaximum && (float)ConditionReference.CheckThreatScoreMaximum > 0)
@@ -1303,13 +1313,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             if (ConditionReference.NoActiveContracts)
             {
 				usedConditions++;
-				MyVisualScriptLogicProvider.ShowNotificationToAll("Checking for NoActiveContracts", 5000, "Blue");
 				bool fail = false;
 				foreach (var block in _behavior.CurrentGrid.Contracts)
 				{
 					if (InGameContractManager.HasContractBlockActiveContract(block.Entity.EntityId))
 					{
-						MyVisualScriptLogicProvider.ShowNotificationToAll("I can't despawn because I have a active contract", 5000, "Green");
 						fail = true;
 						break;
 
@@ -1362,7 +1370,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (_behavior.AutoPilot.InGravity()) {
 
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+					MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
 
 					if(_behavior.AutoPilot.CalculateMaxGravity() > PlanetManager.GetTotalNaturalGravity(_behavior.RemoteControl.GetPosition()).Length())
 						satisfiedConditions++;

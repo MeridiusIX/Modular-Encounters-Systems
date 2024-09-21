@@ -34,6 +34,7 @@ namespace ModularEncountersSystems.Missions
         public int Collateral;
         public int ReputationReward;
         public int FailReputationPrice;
+        public int Duration;
 
         public List<string> ReplaceKeys;
         public List<string> ReplaceValues;
@@ -46,6 +47,7 @@ namespace ModularEncountersSystems.Missions
         public BlockEntity SourceContractBlock;
         public long InstanceId;
 
+        private string StoreProfileId;
         private StoreProfile _StoreProfile;
 
         StoreProfile StoreProfile
@@ -55,7 +57,7 @@ namespace ModularEncountersSystems.Missions
                 if(_StoreProfile == null)
                 {
                     StoreProfile _profile = null;
-                    if (ProfileManager.StoreProfiles.TryGetValue(Profile.StoreProfileId, out _profile))
+                    if (ProfileManager.StoreProfiles.TryGetValue(StoreProfileId, out _profile))
                     {
                         _StoreProfile = _profile;
                         return _StoreProfile;
@@ -104,30 +106,70 @@ namespace ModularEncountersSystems.Missions
 
         private MissionProfile _profile;
 
-        public Mission(string profileSubtypeId)
+
+
+        
+        public Mission(string profileSubtypeId, string storeProfileId, string spawnGroupName)
         {
             ProfileSubtypeId = profileSubtypeId;
+
+            if (string.IsNullOrEmpty(storeProfileId))
+            {
+                StoreProfileId = "MES-StoreProfile-Example";
+            }
+            else
+            {
+                StoreProfileId = storeProfileId;
+            }
+            SpawnGroupName = spawnGroupName;
         }
+
 
 
         public bool Init(BlockEntity sourceContractBlock)
         {
-            ReplaceKeys = Profile.ReplaceKeys;
-            ReplaceValues = Profile.ReplaceValues;
+            ReplaceKeys = new List<string>();
+            ReplaceValues = new List<string>();
+
+            ReplaceKeys.AddList(Profile.ReplaceKeys);
+            ReplaceValues.AddList(Profile.ReplaceValues);
 
             SourceContractBlock = sourceContractBlock;
-            Faction = sourceContractBlock.Faction();
+
+
+
+            if (!string.IsNullOrEmpty(Profile.OverrideFaction))
+            {
+                Faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(Profile.OverrideFaction);
+
+                //Override faction tag not found
+                if (Faction == null)
+                    return false;
+            }
+            else
+            {
+                Faction = sourceContractBlock.Faction();
+            }
+
+            if (Faction == null)
+                return false;   
+
+
             var coords = sourceContractBlock.GetPosition();
-            
+
             ReplaceKeys.Add("{ContractBlockLocation}");
             ReplaceValues.Add($"{{X:{coords.X} Y:{coords.Y} Z:{coords.Z}}}");
 
             ReplaceKeys.Add("{ContractBlockFaction}");
+            ReplaceValues.Add($"{sourceContractBlock.Faction()?.Tag}");
+
+            ReplaceKeys.Add("{Faction}");
             ReplaceValues.Add($"{Faction.Tag}");
 
 
             if (Profile.CustomApiMapping.Count > 0)
             {
+
                 foreach (var methodName in Profile.CustomApiMapping)
                 {
                     Func<string, string, List<string>, Vector3D, Dictionary<string, string>> func;
@@ -152,12 +194,14 @@ namespace ModularEncountersSystems.Missions
             var CollateralString = IdsReplacer.ReplaceCustomData(Profile.Collateral, ReplaceKeys, ReplaceValues);
             var ReputationRewardString = IdsReplacer.ReplaceCustomData(Profile.ReputationReward, ReplaceKeys, ReplaceValues);
             var FailReputationPriceString = IdsReplacer.ReplaceCustomData(Profile.FailReputationPrice, ReplaceKeys, ReplaceValues);
+            var DurationString = IdsReplacer.ReplaceCustomData(Profile.Duration, ReplaceKeys, ReplaceValues);
 
             // Initialize default values
             Reward = 0;
             Collateral = 0;
             ReputationReward = 0;
             FailReputationPrice = 0;
+            Duration = 0;
 
             // Convert strings to integers
             if (!int.TryParse(RewardString, out Reward))
@@ -179,6 +223,11 @@ namespace ModularEncountersSystems.Missions
             if (!int.TryParse(FailReputationPriceString, out FailReputationPrice))
             {
                 FailReputationPrice = 0; 
+            }
+
+            if (!int.TryParse(DurationString, out Duration))
+            {
+                Duration = 0;
             }
 
 
@@ -235,6 +284,7 @@ namespace ModularEncountersSystems.Missions
 
             if (!RunEventConditions())
                 return false;
+
 
             return AddMissionToBlock();
         }
@@ -301,16 +351,15 @@ namespace ModularEncountersSystems.Missions
 
         public bool AddMissionToBlock()
         {
+
             if (SourceContractBlock == null)
                 return false;
 
-            IMyFaction contractBlockFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(SourceContractBlock.FactionOwner());
 
-            if (contractBlockFaction == null)
-                return false;
-            Faction = contractBlockFaction;
+            
 
             MyAddContractResultWrapper result;
+            IMyPlayerCollection playerCollection;
 
             switch (Profile.MissionType)
             {
@@ -320,12 +369,14 @@ namespace ModularEncountersSystems.Missions
 
                     if (!parsed) return false;
 
+                    playerCollection = MyAPIGateway.Players;
+                    playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, Reward);
 
                     MyContractCustom newContract = new MyContractCustom(definitionId: definitionId,
                         startBlockId: SourceContractBlock.Entity.EntityId,
                         moneyReward: Reward,
                         collateral: Collateral,
-                        duration: 20,
+                        duration: Duration,
                         name: Title,
                         description: Description,
                         reputationReward: ReputationReward,
@@ -345,11 +396,14 @@ namespace ModularEncountersSystems.Missions
                         // set contract values
                         contractObject.ContractId = result.ContractId;
                         InGameContractManager.GeneratedContracts.Add(contractObject);
+                        InGameContractManager.ContractsForRemoval.Add(result.ContractId);
 
                         InstanceId = result.ContractId;
 
                         ReplaceKeys.Add("{InstanceId}");
                         ReplaceValues.Add($"{InstanceId}");
+
+                        //playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, -Reward); Keen already does this?
                         return true;
                     }
 
@@ -361,19 +415,35 @@ namespace ModularEncountersSystems.Missions
                         return false;
 
 
-                    Random random = new Random();
-                    int index = random.Next(StoreProfile.Orders.Count);
+                    int index = MathTools.RandomBetween(0, StoreProfile.Orders.Count); ;
+
+
+                    if (index >= StoreProfile.OrderItems.Count)
+                    {
+                        // Handle case where index is out of range
+                        MyVisualScriptLogicProvider.ShowNotificationToAll($"Acquisition failed {StoreProfile.ProfileSubtypeId}", 5000);
+                        MyVisualScriptLogicProvider.ShowNotificationToAll($"Index: {index}, Count: {StoreProfile.OrderItems.Count}", 5000);
+                        return false;
+                    }
                     var storeItem = StoreProfile.OrderItems[index];
+                    MyVisualScriptLogicProvider.ShowNotificationToAll($"{index}: {storeItem.ItemSubtypeId}", 5000);
+
+                    int amount = storeItem.GetAmount(false);
+                    int reward = (int)((int)storeItem.GetPrice(105, false) * amount);
+
+
+                    playerCollection = MyAPIGateway.Players;
+                    playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, reward);
 
 
 
                     MyContractAcquisition newAcquisition = new MyContractAcquisition(startBlockId: SourceContractBlock.Entity.EntityId,
-                        moneyReward: 0, //(int)storeItem.GetPrice(200,false)
+                        moneyReward: reward, //(int)storeItem.GetPrice(200,false)
                         collateral: 0,
-                        duration: 0,
+                        duration: Duration,
                         endBlockId: SourceContractBlock.Entity.EntityId,
                         itemTypeId: storeItem.GetItemId(),
-                        itemAmount: storeItem.GetAmount(false)
+                        itemAmount: amount
                         );
 
                     Contract contractAcquisitionObject = new Contract();
@@ -385,11 +455,16 @@ namespace ModularEncountersSystems.Missions
                     {
                         // set contract values
                         contractAcquisitionObject.ContractId = result.ContractId;
+                        InGameContractManager.ContractsForRemoval.Add(result.ContractId);
                         InGameContractManager.GeneratedContracts.Add(contractAcquisitionObject);
 
                         InstanceId = result.ContractId;
-
+                        //playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, -reward); Not needed because keen already does this?
                         return true;
+                    }
+                    else
+                    {
+                        MyVisualScriptLogicProvider.ShowNotificationToAll($"{result.Success}? factions have too little money for contracts", 5000);
                     }
 
                     break;
@@ -402,10 +477,6 @@ namespace ModularEncountersSystems.Missions
 
 
 
-
-
-
-            MyVisualScriptLogicProvider.ShowNotificationToAll("Failed to add contract to a block", 20000, "Red");
             return false;
 
         }

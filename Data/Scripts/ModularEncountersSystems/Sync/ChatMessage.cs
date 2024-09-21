@@ -527,8 +527,8 @@ namespace ModularEncountersSystems.Sync {
 					enc.IsValid = false;
 				
 				}
-
 				NpcManager.UpdateStaticEncounters();
+				ReturnMessage = "ClearStaticEncounters";
 				return true;
 
 			}
@@ -553,6 +553,7 @@ namespace ModularEncountersSystems.Sync {
 
 				NpcManager.UniqueGroupsSpawned.Clear();
 				NpcManager.UpdateStaticEncounters();
+				ReturnMessage = "ClearUniqueEncounters";
 				return true;
 
 			}
@@ -1061,6 +1062,21 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			//GetAllProfiles
+			if (array[2] == "GetZoneData")
+			{
+
+				ClipboardPayload = LoggerTools.GetZoneData();
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Loaded Profiles Sent To Clipboard.";
+
+				if (MyAPIGateway.Utilities.IsDedicated)
+					SpawnLogger.Write(ClipboardPayload, SpawnerDebugEnum.GameLog, true);
+
+				return true;
+
+			}
+
 			//GetBlockDefinitions
 			if (array[2] == "GetBlockDefinitions") {
 
@@ -1319,6 +1335,24 @@ namespace ModularEncountersSystems.Sync {
 				return false;
 
 			}
+
+			//GetEligibleSpawnsAtPosition
+			if (array[2] == "Zone")
+			{
+				if (array.Length < 3)
+				{
+					ReturnMessage = "Missing Type";
+					return false;
+
+				}
+
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Eligible Spawns Sent To Clipboard.";
+				ClipboardPayload = CreateMaker.CreateZone(this, array[3]);
+				return true;
+			}
+
+
 
 			//GetEligibleSpawnsAtPosition
 			if (array[2] == "Event")

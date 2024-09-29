@@ -191,6 +191,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckForSpawnConditions;
 		public List<string> RequiredSpawnConditions;
 
+		public bool CheckIfSpawnGroupExist;
+		public string ExistingSpawnGroupName;
+
 		public bool CheckForPlanetaryLane;
 		public bool PlanetaryLanePassValue;
 
@@ -385,6 +388,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckForSpawnConditions = false;
 			RequiredSpawnConditions = new List<string>();
 
+
+			CheckIfSpawnGroupExist = false;
+			ExistingSpawnGroupName = "";
+
+
+
 			CheckForPlanetaryLane = false;
 			PlanetaryLanePassValue = true;
 
@@ -539,6 +548,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"BlocksOfType", (s, o) => TagParse.TagStringListCheck(s, ref BlocksOfType) },
 				{"CheckForSpawnConditions", (s, o) => TagParse.TagBoolCheck(s, ref CheckForSpawnConditions) },
 				{"RequiredSpawnConditions", (s, o) => TagParse.TagStringListCheck(s, ref RequiredSpawnConditions) },
+
+				{"CheckIfSpawnGroupExist", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfSpawnGroupExist) },
+				{"ExistingSpawnGroupName", (s, o) => TagParse.TagStringCheck(s, ref ExistingSpawnGroupName) },
+
+
+
 				{"CheckForPlanetaryLane", (s, o) => TagParse.TagBoolCheck(s, ref CheckForPlanetaryLane) },//CheckForPlanetaryLane
 				{"PlanetaryLanePassValue", (s, o) => TagParse.TagBoolCheck(s, ref PlanetaryLanePassValue) },
 				{"CheckPlayerReputation", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerReputation) },

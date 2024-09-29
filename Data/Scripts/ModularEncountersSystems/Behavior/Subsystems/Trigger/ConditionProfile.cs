@@ -1354,6 +1354,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+            if (ConditionReference.CheckIfSpawnGroupExist)
+            {
+				usedConditions++;
+				var spawngroupname = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, ConditionReference.ExistingSpawnGroupName);
+
+				if (SpawnGroupManager.SpawnGroupNames.Contains(spawngroupname))
+                {
+					MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Green");
+					satisfiedConditions++;
+				}
+                else
+                {
+					MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Red");
+				}
+					
+
+
+
+            }
+
 			if (ConditionReference.CheckForPlanetaryLane) {
 
 				usedConditions++;

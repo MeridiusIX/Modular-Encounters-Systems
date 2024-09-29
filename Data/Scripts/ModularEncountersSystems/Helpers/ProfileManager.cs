@@ -885,6 +885,8 @@ namespace ModularEncountersSystems.Helpers {
 
 			DialogueBank dialogueBank = null;
 
+			
+
 			if (DialogueBanks.TryGetValue(name, out dialogueBank))
 				return dialogueBank;
 
@@ -915,10 +917,27 @@ namespace ModularEncountersSystems.Helpers {
 			if (dialogueBank == null)
 				return null;
 
+
+
 			if (dialogueBank.DialogueCues == null)
 				dialogueBank.DialogueCues = new List<DialogueCue>();
 
-			DialogueBanks[name] = dialogueBank;
+			dialogueBank.init();
+
+
+			// I had issues when two seperate behaviors were trying to add the same dialoguebank at the same time.
+			//Try add is not possible. So I do this instead?? -CptArthur
+            try
+            {
+				DialogueBanks.Add(name, dialogueBank);
+			}
+            catch
+            {
+
+            }
+
+
+
 			return dialogueBank;
 
 		}

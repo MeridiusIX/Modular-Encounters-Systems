@@ -80,7 +80,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					}
 
 					if (!gotData) {
-					
+						
+						_normalData = new TargetProfile();
+						_normalData.UseCustomTargeting = false;
 						//TODO: Default a blank profile and raise an error in logger
 					
 					}
@@ -108,6 +110,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 					if (!gotData) {
 
+						_overrideData = new TargetProfile();
+						_overrideData.UseCustomTargeting = false;
 						//TODO: Default a blank profile and raise an error in logger
 
 					}

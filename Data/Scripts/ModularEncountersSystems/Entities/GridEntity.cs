@@ -750,7 +750,7 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public int AutoRepairBlocks(bool skipSound = false) {
+		public int AutoRepairBlocks(bool skipSound = false, int maxBlocks = -1) {
 
 			if (!ActiveEntity())
 				return 0;
@@ -798,6 +798,12 @@ namespace ModularEncountersSystems.Entities {
 						playedSound = true;
 						MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardConstruct", GetPosition());
 
+					}
+
+					if (maxBlocks == 0 && affectedBlocks >= maxBlocks) {
+
+						break;
+					
 					}
 
 				}

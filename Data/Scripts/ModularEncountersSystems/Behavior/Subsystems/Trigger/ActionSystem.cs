@@ -92,13 +92,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//Playsound cue
 
 			if (actions.PlayDialogueCue)
-            {
+			{
 				bool foundDialogueCueId =false;
 
 				ChatProfile chat = null;
 
 				foreach (var dialogueBank in _dialogueBanks)
-                {
+				{
 				
 					if(dialogueBank.GetChatProfile(actions.DialogueCueId,ref chat))
 					{
@@ -109,7 +109,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					
 				}
-            }
+			}
 
 
 			//PlaySoundAtPosition
@@ -894,8 +894,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (actions.ManuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
 						ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
 
-                    foreach (var tag in manualTrigger.Tags)
-                    {
+					foreach (var tag in manualTrigger.Tags)
+					{
 						if (actions.ManuallyActivatedTriggerTags.Contains(tag))
 							ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
 
@@ -991,6 +991,48 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				_behavior.Grid.BuildProjectedBlocks(actions.MaxProjectedBlocksToBuild);
 
+			}
+
+			//RepairBlocks
+			if (actions.RepairBlocks)
+			{
+				if (!actions.RepairBlocksIncludeSubgrids) {
+
+					_behavior.Grid.BuildProjectedBlocks(actions.MaxProjectedBlocksToBuild);
+
+				} 
+				else 
+				{
+
+					int remainingBlocks = actions.MaxProjectedBlocksToBuild;
+
+					if (_behavior?.CurrentGrid != null)
+					{
+
+						lock (_behavior.CurrentGrid.LinkedGrids)
+						{
+
+							for (int i = _behavior.CurrentGrid.LinkedGrids.Count - 1; i >= 0; i--)
+							{
+
+								var grid = GridManager.GetSafeGridFromIndex(i, _behavior.CurrentGrid.LinkedGrids);
+
+								if (grid == null || !grid.ActiveEntity())
+									continue;
+
+								remainingBlocks -= grid.AutoRepairBlocks(false, remainingBlocks);
+
+								if (remainingBlocks <= 0)
+									break;
+
+							}
+
+						}
+
+					}
+
+				}
+				
 			}
 
 			//ChangeBlockOwnership
@@ -1691,8 +1733,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if ((command?.PlayerIdentity ?? 0)  != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
 							SavedPlayerIdentityAlreadyIncluded = true;
 
-                        foreach (var addtag in actions.AddTags)
-                        {
+						foreach (var addtag in actions.AddTags)
+						{
 							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc?? null, addtag);
 
 							if (player.ProgressionData.Tags.Contains(tag))
@@ -1705,12 +1747,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 				if (actions.AddTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded && command != null)
-                {
+				{
 					var playerid = command?.PlayerIdentity ?? 0;
 					var player = PlayerManager.GetPlayerWithIdentityId(playerid);
 
 					if(player != null)
-                    {
+					{
 						foreach (var addtag in actions.AddTags)
 						{
 							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, addtag);
@@ -1756,7 +1798,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					var player = PlayerManager.GetPlayerWithIdentityId(playerid);
 
 					if (player != null)
-                    {
+					{
 						foreach (var removetag in actions.RemoveTags)
 						{
 							var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, removetag);

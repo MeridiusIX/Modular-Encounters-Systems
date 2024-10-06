@@ -254,6 +254,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool BuildProjectedBlocks;
 		public int MaxProjectedBlocksToBuild;
 
+		public bool RepairBlocks;
+		public int MaxBlocksToRepair;
+		public bool RepairBlocksIncludeSubgrids;
+
 		public bool ForceManualTriggerActivation;
 
 		public bool OverwriteAutopilotProfile;
@@ -687,6 +691,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			BuildProjectedBlocks = false;
 			MaxProjectedBlocksToBuild = -1;
 
+			RepairBlocks = false;
+			MaxBlocksToRepair = -1;
+			RepairBlocksIncludeSubgrids = false;
+
 			ForceManualTriggerActivation = false;
 
 			BroadcastCommandProfiles = false;
@@ -1038,6 +1046,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ChangeNpcFactionCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangeNpcFactionCreditsAmount) },
 				{"ChangeNpcFactionCreditsTag", (s, o) => TagParse.TagStringCheck(s, ref ChangeNpcFactionCreditsTag) },
 				{"BuildProjectedBlocks", (s, o) => TagParse.TagBoolCheck(s, ref BuildProjectedBlocks) },
+				{"RepairBlocks", (s, o) => TagParse.TagBoolCheck(s, ref RepairBlocks) },
+				{"MaxBlocksToRepair", (s, o) => TagParse.TagIntCheck(s, ref MaxBlocksToRepair) },
+				{"RepairBlocksIncludeSubgrids", (s, o) => TagParse.TagBoolCheck(s, ref RepairBlocksIncludeSubgrids) },
 				{"MaxProjectedBlocksToBuild", (s, o) => TagParse.TagIntCheck(s, ref MaxProjectedBlocksToBuild) },
 				{"ForceManualTriggerActivation", (s, o) => TagParse.TagBoolCheck(s, ref ForceManualTriggerActivation) },
 				{"OverwriteAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref OverwriteAutopilotProfile) },

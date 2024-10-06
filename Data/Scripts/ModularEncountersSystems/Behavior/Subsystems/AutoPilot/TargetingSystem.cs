@@ -261,7 +261,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
-			if (!Data.UseCustomTargeting)
+			if (Data == null || !Data.UseCustomTargeting)
 				return;
 
 			if (!skipTimerCheck && !ForceRefresh) {
@@ -286,7 +286,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			bool targetIsOverride = false;
 
-			if (ForceTargetEntityId == 0) {
+			if (ForceTargetEntityId == 0 && Data != null) {
 
 				if (Data.Target == TargetTypeEnum.Player || Data.Target == TargetTypeEnum.PlayerAndBlock || Data.Target == TargetTypeEnum.PlayerAndGrid) {
 
@@ -343,6 +343,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			BehaviorLogger.Write(string.Format(" - Running Evaluation On {0} Potential Targets", targetList.Count), BehaviorDebugEnum.TargetAcquisition);
 			for (int i = targetList.Count - 1; i >= 0; i--) {
 
+				if (targetList[i] == null) {
+
+					targetList.RemoveAt(i);
+					continue;
+
+				}
+
 				targetList[i].RefreshSubGrids();
 
 				if (!EvaluateTarget(targetList[i], data, true))
@@ -356,16 +363,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				BehaviorLogger.Write(" - Filtering Potential Preferred Faction Targets", BehaviorDebugEnum.TargetAcquisition);
 				var factionPreferred = new List<ITarget>();
 
-				for (int i = targetList.Count - 1; i >= 0; i--) {
+				if (data.FactionTargets != null) {
 
-					if (data.FactionTargets.Contains(targetList[i].FactionOwner()))
-						factionPreferred.Add(targetList[i]);
+					for (int i = targetList.Count - 1; i >= 0; i--)
+					{
 
-				}
+						if (data.FactionTargets.Contains(targetList[i].FactionOwner()))
+							factionPreferred.Add(targetList[i]);
 
-				if (factionPreferred.Count > 0) {
+					}
 
-					targetList = factionPreferred;
+					if (factionPreferred.Count > 0)
+					{
+
+						targetList = factionPreferred;
+
+					}
 
 				}
 

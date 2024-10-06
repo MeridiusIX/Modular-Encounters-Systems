@@ -1308,7 +1308,7 @@ namespace ModularEncountersSystems.Sync {
 
 
 		private bool ProcessCreate()
-        {
+		{
 
 			var array = GetArray(3, 5);
 
@@ -1344,7 +1344,7 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 			return false;
-        }
+		}
 
 		public bool ProcessDebugMode() {
 

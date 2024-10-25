@@ -641,9 +641,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
                 if (trigger.AllowUniqueCommandCodeSenderOnly)
                 {
-					string uniquestringid = receivedCommand.SenderEntity.EntityId.ToString() + commandreceivecode;
+					string uniquestringid = (receivedCommand.SenderEntity?.EntityId.ToString() ?? "UnknownSender") + commandreceivecode;
 
-                    if (_settings.ReceivedCommandSenderCode.Contains(uniquestringid))
+
+					if (_settings.ReceivedCommandSenderCode.Contains(uniquestringid))
                     {
 						continue;
                     }

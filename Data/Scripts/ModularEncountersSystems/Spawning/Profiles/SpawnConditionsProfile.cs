@@ -348,7 +348,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public double RequiredBlockCheckRange;
 		public bool RequiredBlockIncludeNPCGrids;
 
-		public string CustomVariablesName;
+
 
 
 		public Dictionary<string, Action<string, object>> EditorReference;
@@ -681,7 +681,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RequiredBlockCheckRange = 5000;
 			RequiredBlockIncludeNPCGrids = false;
 
-			CustomVariablesName = "";
+
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
@@ -949,9 +949,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"RequiredBlockAnySubtypeId", (s, o) => TagParse.TagBoolCheck(s, ref RequiredBlockAnySubtypeId) },
 				{"RequiredBlockCheckRange", (s, o) => TagParse.TagDoubleCheck(s, ref RequiredBlockCheckRange) },
 				{"RequiredBlockIncludeNPCGrids", (s, o) => TagParse.TagBoolCheck(s, ref RequiredBlockIncludeNPCGrids) },
-				{"CustomVariablesName", (s, o) => TagParse.TagStringCheck(s, ref CustomVariablesName) },
 
-				
 				};
 
 		}

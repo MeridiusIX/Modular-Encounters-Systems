@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Logging;
+﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.World;
 using Sandbox.Game;
@@ -16,6 +17,110 @@ namespace ModularEncountersSystems.Create
 
     public class CreateMaker
     {
+
+        public static string CreateZone(ChatMessage msg, string args)
+        {
+            // StringBuilder
+            var sb = new StringBuilder();
+            var array = args.Trim().Split('#');
+
+
+            string VectorCoords = "{" + msg.PlayerPosition.ToString() + "}";
+
+            string Name = "DefaultName";
+            string Distance = "DefaultDistance";
+            bool unique = false;
+
+            // Check if array has expected length and assign values accordingly
+            if (array.Length >= 2)
+            {
+                Name = array[0];
+                Distance = array[1];
+                MyVisualScriptLogicProvider.AddGPSObjectiveForAll($"{Name} {Distance}m", $"You can remove this GPS. It is just to help you.", msg.PlayerPosition, VRageMath.Color.Beige);
+            }
+            else
+            {
+                return sb.Append("Missing Arguments").ToString();
+            }
+
+            var planet = PlanetManager.GetNearestPlanet(msg.PlayerPosition);
+
+            if (planet != null)
+            {
+
+                var up = planet.UpAtPosition(msg.PlayerPosition);
+                var dist = planet.AltitudeAtPosition(msg.PlayerPosition, false);
+
+                // Your XML string with placeholders replaced
+                sb.Append($@"
+	              <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
+                  <Id>
+                    <TypeId>Inventory</TypeId>
+                    <SubtypeId>Zone{Name}</SubtypeId>
+                  </Id>
+                  <Description>
+
+                    [MES Zone]
+		
+                    [PublicName:Zone{Name}]
+
+                    [Active:true]
+                    [Persistent:true]
+                    [Strict:true]
+
+                    [Coordinates:{VectorCoords}]
+                    [Radius:{Distance}]
+		
+		            [PlanetaryZone:true]
+		            [PlanetName:{planet.Planet.Generator.Id.SubtypeName}]
+		            [Direction:{up}]		
+		            [HeightOffset:{dist}]		
+		
+		            [UseZoneAnnounce:false]
+		            [ZoneEnterAnnounce:Entering {Name}]
+		            [ZoneLeaveAnnounce:Leaving {Name}]		
+
+                  </Description>
+
+                </EntityComponent>");
+
+            }
+            else
+            {
+                sb.Append($@"
+	              <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
+                  <Id>
+                    <TypeId>Inventory</TypeId>
+                    <SubtypeId>Zone{Name}</SubtypeId>
+                  </Id>
+                  <Description>
+
+                    [MES Zone]
+		
+                    [PublicName:Zone{Name}]
+
+                    [Active:true]
+                    [Persistent:true]
+                    [Strict:true]
+
+                    [Coordinates:{VectorCoords}]
+                    [Radius:{Distance}]
+		
+		            [UseZoneAnnounce:false]
+		            [ZoneEnterAnnounce:Entering {Name}]
+		            [ZoneLeaveAnnounce:Leaving {Name}]		
+
+                  </Description>
+
+                </EntityComponent>");
+            }
+
+            return sb.ToString();
+
+        }
+
+
+
 
         public static string CreateEventArea(ChatMessage msg, string args)
         {

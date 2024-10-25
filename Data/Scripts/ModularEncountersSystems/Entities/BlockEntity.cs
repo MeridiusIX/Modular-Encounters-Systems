@@ -107,6 +107,34 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
+		public IMyFaction Faction()
+		{
+
+
+			if (Block?.SlimBlock?.CubeGrid?.BigOwners != null)
+			{
+
+				if (Block.SlimBlock.CubeGrid.BigOwners.Count > 0)
+				{
+
+					var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(Block.SlimBlock.CubeGrid.BigOwners[0]);
+
+					if (faction != null)
+					{
+
+						return faction;
+
+					}
+
+				}
+
+			}
+
+			return null;
+
+		}
+
+
 		public double GetCurrentHealth() {
 
 			if (ActiveEntity() && Block?.SlimBlock != null)

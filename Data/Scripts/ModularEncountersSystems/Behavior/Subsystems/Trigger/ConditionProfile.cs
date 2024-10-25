@@ -13,6 +13,7 @@ using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Entities;
 using Sandbox.Game;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.Missions;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -1198,6 +1199,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
 				}
 
+                if (ConditionReference.CheckThreatScoreFromClosestPlayerPosition)
+                {
+					var closestplayer = PlayerManager.GetNearestPlayer(Position);
+					if(closestplayer != null)
+                    {
+						Position = closestplayer.GetPosition();
+						MyVisualScriptLogicProvider.ShowNotificationToAll(Position.ToString(), 5000);
+                    }
+                }
+
 				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, ConditionReference.CheckThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CheckThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
 
 				if (ThreatScore < (float)ConditionReference.CheckThreatScoreMinimum && (float)ConditionReference.CheckThreatScoreMinimum > 0 && ThreatScore > (float)ConditionReference.CheckThreatScoreMaximum && (float)ConditionReference.CheckThreatScoreMaximum > 0)
@@ -1299,6 +1310,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			
 			}
 
+            if (ConditionReference.NoActiveContracts)
+            {
+				usedConditions++;
+				bool fail = false;
+				foreach (var block in _behavior.CurrentGrid.Contracts)
+				{
+					if (InGameContractManager.HasContractBlockActiveContract(block.Entity.EntityId))
+					{
+						fail = true;
+						break;
+
+					}
+
+				}
+
+                if (!fail)
+                {
+					satisfiedConditions++;
+				}
+			}
+
+
 			if (ConditionReference.CheckForSpawnConditions) {
 
 				usedConditions++;
@@ -1321,6 +1354,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+            if (ConditionReference.CheckIfSpawnGroupExist)
+            {
+				usedConditions++;
+				var spawngroupname = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, ConditionReference.ExistingSpawnGroupName);
+
+				if (SpawnGroupManager.SpawnGroupNames.Contains(spawngroupname))
+                {
+					MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Green");
+					satisfiedConditions++;
+				}
+                else
+                {
+					MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Red");
+				}
+					
+
+
+
+            }
+
 			if (ConditionReference.CheckForPlanetaryLane) {
 
 				usedConditions++;
@@ -1337,7 +1390,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (_behavior.AutoPilot.InGravity()) {
 
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+					MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
 
 					if(_behavior.AutoPilot.CalculateMaxGravity() > PlanetManager.GetTotalNaturalGravity(_behavior.RemoteControl.GetPosition()).Length())
 						satisfiedConditions++;

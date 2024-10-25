@@ -29,7 +29,7 @@ namespace ModularEncountersSystems.Files
         public void init()
         {
             setup = true;
-            MyVisualScriptLogicProvider.ShowNotificationToAll("Setup", 5000);
+            MyVisualScriptLogicProvider.ShowNotificationToAll("Setup dialogue cue", 5000);
             _chatProfile = null;
 
             bool gotChat = false;
@@ -126,7 +126,7 @@ namespace ModularEncountersSystems.Files
 
                         chat.BroadcastRandomly = false;
                         chat.ChatMessages = new List<string> { entry.Message };
-                        chat.ChatAudio = new List<string> { entry.Message };
+                        chat.ChatAudio = new List<string> { entry.AudioId };
 
 
                         preparedChat = true;

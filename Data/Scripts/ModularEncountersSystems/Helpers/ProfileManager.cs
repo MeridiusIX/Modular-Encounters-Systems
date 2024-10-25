@@ -7,6 +7,7 @@ using ModularEncountersSystems.Events.Action;
 using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Zones;
@@ -40,6 +41,9 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, SpawnConditionsProfile> SpawnConditionProfiles = new Dictionary<string, SpawnConditionsProfile>();
 		public static Dictionary<string, StaticEncounter> StaticEncounters = new Dictionary<string, StaticEncounter>();
 		public static Dictionary<string, StoreProfile> StoreProfiles = new Dictionary<string, StoreProfile>();
+		public static Dictionary<string, ContractBlockProfile> ContractBlockProfiles = new Dictionary<string, ContractBlockProfile>();
+
+
 		public static Dictionary<string, SuitUpgradesProfile> SuitUpgradesProfiles = new Dictionary<string, SuitUpgradesProfile>();
 		public static Dictionary<MyDefinitionId, WeaponModRulesProfile> WeaponModRulesProfiles = new Dictionary<MyDefinitionId, WeaponModRulesProfile>();
 		public static Dictionary<string, Zone> ZoneProfiles = new Dictionary<string, Zone>();
@@ -87,6 +91,15 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, EventCondition> EventConditions = new Dictionary<string, EventCondition>();
 		public static Dictionary<string, EventActionReferenceProfile> EventActionReferenceProfiles = new Dictionary<string, EventActionReferenceProfile>();
 
+		public static Dictionary<string, string> TemplateEventProfiles = new Dictionary<string, string>();
+		public static Dictionary<string, string> TemplateEventConditions = new Dictionary<string, string>();
+		public static Dictionary<string, string> TemplateEventActionProfiles = new Dictionary<string, string>();
+		public static Dictionary<string, TemplateEventGroup> TemplateEventGroup = new Dictionary<string, TemplateEventGroup>();
+
+		public static Dictionary<string, MissionProfile> MissionProfiles = new Dictionary<string, MissionProfile>();
+
+
+
 		public static void Setup() {
 
 			//First Phase
@@ -133,7 +146,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (!LootProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Shipyard]")) {
+				if (!ShipyardProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Shipyard]")) {
 
 					var profile = new ShipyardProfile();
 					profile.InitTags(component.DescriptionText);
@@ -154,6 +167,19 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 
 				}
+
+				if (!ContractBlockProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Contract Block]"))
+				{
+
+					var profile = new ContractBlockProfile();
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					profile.InitTags(component.DescriptionText);
+					ContractBlockProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
+					continue;
+
+				}
+
 
 				if (component.DescriptionText.Contains("[MES Weapon Mod Rules]")) {
 
@@ -364,6 +390,16 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (!TemplateEventActionProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Action Template]"))
+				{
+
+					TemplateEventActionProfiles.Add(component.Id.SubtypeName, component.DescriptionText);
+					AllMesProfileIds.Add(component.Id);
+					continue;
+				}
+
+
+
 				if (!EventActionReferenceProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Action]")) {
 
 					var actionReference = new EventActionReferenceProfile();
@@ -378,10 +414,19 @@ namespace ModularEncountersSystems.Helpers {
 					EventActionObjectTemplates.Add(component.Id.SubtypeName, targetBytes);
 					EventActionReferenceProfiles.Add(component.Id.SubtypeName, actionReference);
 					AllMesProfileIds.Add(component.Id);
-
+					continue;
 				}
 
-				if (!EventConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Condition]")) {
+				if (!TemplateEventConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Condition Template]")) {
+
+
+					TemplateEventConditions.Add(component.Id.SubtypeName, component.DescriptionText);
+					AllMesProfileIds.Add(component.Id);
+					continue;
+				}
+
+				if (!EventConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Condition]"))
+				{
 
 					var EventCondition = new EventCondition();
 					EventCondition.InitTags(component.DescriptionText);
@@ -390,6 +435,8 @@ namespace ModularEncountersSystems.Helpers {
 					AllMesProfileIds.Add(component.Id);
 					continue;
 				}
+
+
 
 				if (!PlayerConditions.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Player Condition]"))
 				{
@@ -444,6 +491,15 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 
 				}
+				if (!TemplateEventProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event Template]"))
+				{
+
+					TemplateEventProfiles.Add(component.Id.SubtypeName, component.DescriptionText);
+					AllMesProfileIds.Add(component.Id);
+					continue;
+				}
+
+
 
 				if (!EventProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Event]")) {
 
@@ -455,12 +511,27 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 				}
 
+
+				if (!MissionProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Mission]"))
+				{
+
+					var profile = new MissionProfile();
+					profile.ProfileSubtypeId = component.Id.SubtypeName;
+					profile.InitTags(component.DescriptionText);
+					MissionProfiles.Add(component.Id.SubtypeName, profile);
+					AllMesProfileIds.Add(component.Id);
+					continue;
+				}
+
+
+				
+
 			}
 
 			//Forth Phase
 			foreach (var component in DefinitionHelper.EntityComponentDefinitions) {
 
-				if (!SpawnConditionGroups.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Prefab Data]")) {
+				if (!PrefabDataProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Prefab Data]")) {
 
 					var profile = new PrefabDataProfile();
 					profile.InitTags(component.DescriptionText);
@@ -491,7 +562,20 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if ((component.DescriptionText.Contains("[RivalAI TriggerGroup]") || component.DescriptionText.Contains("[MES AI TriggerGroup]")) && TriggerObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
+				if ((component.DescriptionText.Contains("[MES Event TemplateGroup]")) && TemplateEventGroup.ContainsKey(component.Id.SubtypeName) == false)
+				{
+
+					var EventGroupObject = new TemplateEventGroup();
+					EventGroupObject.InitTags(component.DescriptionText);
+					EventGroupObject.ProfileSubtypeId = component.Id.SubtypeName;
+					TemplateEventGroup.Add(component.Id.SubtypeName, EventGroupObject);
+					AllMesProfileIds.Add(component.Id);
+					continue;
+
+				}
+
+
+				if ((component.DescriptionText.Contains("[RivalAI TriggerGroup]") || component.DescriptionText.Contains("[MES AI TriggerGroup]")) && TriggerGroupObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var triggerObject = new TriggerGroupProfile();
 					triggerObject.InitTags(component.DescriptionText);
@@ -801,6 +885,8 @@ namespace ModularEncountersSystems.Helpers {
 
 			DialogueBank dialogueBank = null;
 
+			
+
 			if (DialogueBanks.TryGetValue(name, out dialogueBank))
 				return dialogueBank;
 
@@ -831,10 +917,27 @@ namespace ModularEncountersSystems.Helpers {
 			if (dialogueBank == null)
 				return null;
 
+
+
 			if (dialogueBank.DialogueCues == null)
 				dialogueBank.DialogueCues = new List<DialogueCue>();
 
-			DialogueBanks[name] = dialogueBank;
+			dialogueBank.init();
+
+
+			// I had issues when two seperate behaviors were trying to add the same dialoguebank at the same time.
+			//Try add is not possible. So I do this instead?? -CptArthur
+            try
+            {
+				DialogueBanks.Add(name, dialogueBank);
+			}
+            catch
+            {
+
+            }
+
+
+
 			return dialogueBank;
 
 		}

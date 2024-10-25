@@ -254,6 +254,24 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+
+
+
+		public static void ChangePlayerReputationWithFactions(IMyRemoteControl remoteControl, int amount, List<long> players, string factionTag, bool applyReputationChangeToFactionMembers, int minRep, int maxRep)
+		{
+
+			var amounts = new List<int>();
+			amounts.Add(amount);
+
+			var factionTags = new List<string>();
+			factionTags.Add(factionTag);
+
+
+			ChangePlayerReputationWithFactions(remoteControl, amounts, players, factionTags, applyReputationChangeToFactionMembers, minRep, maxRep);
+		}
+
+
+
 		public static void ChangePlayerReputationWithFactions(IMyRemoteControl remoteControl, List<int> amounts, List<long> players, List<string> factionTags, bool applyReputationChangeToFactionMembers, int minRep, int maxRep) {
 
 			var allPlayerIds = new List<long>(players.ToList());

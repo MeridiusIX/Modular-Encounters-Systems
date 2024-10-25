@@ -2,6 +2,7 @@
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Tasks;
+using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -131,6 +132,7 @@ namespace ModularEncountersSystems.Behavior {
 
 					BehaviorLogger.Write("Exception in Main Behavior Processing", BehaviorDebugEnum.Error, true);
 					BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Error, true);
+					
 
 				}
 

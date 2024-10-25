@@ -173,6 +173,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if (factionTagcheck == false && authorName.Contains("{Faction}"))
 				authorName = authorName.Replace("{Faction}", factionTag);
 
+
+			if (authorName.Contains("{OriginalName}"))
+				authorName = authorName.Replace("{OriginalName}", this._behavior.CurrentGrid?.Npc.FriendlyName ?? this.HighestAntennaRangeName);
+
+
 			bool sentToAll = false;
 
 			SpecificPlayerIds.Clear();
@@ -257,6 +262,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					
 					if(this.RemoteControl?.SlimBlock?.CubeGrid?.CustomName != null && modifiedLabel.Contains("{GridName}"))
 						modifiedLabel = modifiedLabel.Replace("{GridName}", this.RemoteControl.SlimBlock.CubeGrid.CustomName);
+
 
 					modifiedMsg = modifiedMsg.Replace("{GPS}", GetGPSString(modifiedLabel));
 

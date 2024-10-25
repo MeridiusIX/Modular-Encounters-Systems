@@ -954,6 +954,25 @@ namespace ModularEncountersSystems.Logging {
 		
 		}
 
+		public static string GetZoneData()
+		{
+
+			var sb = new StringBuilder();
+
+			foreach (var zone in ZoneManager.ActiveZones)
+			{
+				sb.Append(" - ").Append(zone.ProfileSubtypeId).AppendLine();
+				sb.Append(" - ").Append($"new Vector3D({zone.Coordinates.X}, {zone.Coordinates.Y}, {zone.Coordinates.Z})").AppendLine();
+				sb.Append(" - ").Append(zone.Radius).AppendLine();
+				sb.Append(" - ").Append(zone.PublicName).AppendLine();
+				sb.AppendLine();
+			}
+
+			return sb.ToString();
+
+		}
+
+
 		public static string GetBlockMassData(ChatMessage message) {
 
 			var sb = new StringBuilder();

@@ -60,6 +60,13 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 		//Player Start
+		public bool OverridePlayerConditionPosition;
+		public Vector3D OverridePosition;
+
+		public bool AddPlayerConditionPlayerTags;
+		public List<string> AddIncludedPlayerTags;
+		public List<string> AddExcludedPlayerTag;
+
 		public bool AddTagstoPlayers;
 		public List<string> AddTagsPlayerConditionIds;
 		public List<string> AddTags;
@@ -84,16 +91,19 @@ namespace ModularEncountersSystems.Events.Action {
 		public float TeleportRadius;
 
 		public bool AddGPSToPlayers;
-		public bool AddGPSToAll;
-		public bool RemoveGPSFromPlayers;
+		public bool AddGPSToAll; //Not implemented
 		public List<string> AddGPSPlayerConditionIds;
-		public List<string> RemoveGPSPlayerConditionIds;
-
 		public bool UseGPSObjective;
 		public List<string> GPSNames;
 		public List<string> GPSDescriptions;
 		public List<Vector3D> GPSVector3Ds;
 		public List<Vector3D> GPSColors;
+
+		public bool RemoveGPSFromPlayers;
+		public List<string> RemoveGPSPlayerConditionIds;
+		public List<string> RemoveGPSNames;
+
+
 
 		public bool ChangeReputationWithPlayers;
 		public List<string> ReputationPlayerConditionIds;
@@ -107,6 +117,7 @@ namespace ModularEncountersSystems.Events.Action {
 		public bool BroadcastCommandProfiles;
 		public List<string> CommandProfileIds;
 		public Vector3D CommandProfileOriginCoords;
+		public string OverrideCommandCode;
 
 		public bool SpawnEncounter;
 		//public List<SpawnProfile> SpawnData;
@@ -116,11 +127,40 @@ namespace ModularEncountersSystems.Events.Action {
 
 		public bool UseChatBroadcast;
 		public List<ChatProfile> ChatData;
+		public bool ChatBroadcastToSpecificPlayers;
+		public List<string> ChatBroadcastPlayerConditionIds;
+
+		public bool UseChatOverrideType;
+		public string ChatOverrideType;
+
+		public bool UseChatOverrideColor;
+		public string ChatOverrideColor;
+
+		public bool UseChatOverrideAuthor;
+		public string ChatOverrideAuthor;
+
+		public bool UseChatOverrideMessage;
+		public List<string> ChatOverrideMessage;
+
+		public bool UseChatOverrideAudio;
+		public List<string> ChatOverrideAudio;
+
+
 
 		public bool SetEventControllers;
 		public List<string> EventControllerNames;
 		public List<bool> EventControllersActive;
 		public List<bool> EventControllersSetCurrentTime;
+
+
+		public bool AddInstanceEventGroup;
+		public string InstanceEventGroupId;
+		public List<string> InstanceEventGroupReplaceKeys;
+		public List<string> InstanceEventGroupReplaceValues;
+
+		public bool RemoveThisInstanceGroup;
+		public bool TryContractSuccess;
+		public bool TryContractFail;
 
 		public bool ActivateCustomAction;
 		public string CustomActionName;
@@ -131,6 +171,10 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<long> CustomActionArgumentsLong;
 		public List<double> CustomActionArgumentsDouble;
 		public List<Vector3D> CustomActionArgumentsVector3D;
+
+
+
+		public bool EditFaction;
 
 
 
@@ -168,9 +212,11 @@ namespace ModularEncountersSystems.Events.Action {
 			BroadcastCommandProfiles = false;
 			CommandProfileIds = new List<string>();
 			CommandProfileOriginCoords = new Vector3D();
+			OverrideCommandCode = "";
 
 			UseGPSObjective = false;
 			GPSNames = new List<string>();
+			RemoveGPSNames = new List<string>();
 			GPSDescriptions = new List<string>();
 			GPSVector3Ds = new List<Vector3D>();
 			GPSColors = new List<Vector3D>();
@@ -197,7 +243,23 @@ namespace ModularEncountersSystems.Events.Action {
 			IncreaseRunCountEventTagAmount = new List<int>() { 1 };
 
 
-		AddTagstoPlayers = false;
+			AddInstanceEventGroup = false;
+			InstanceEventGroupId = "";
+			InstanceEventGroupReplaceKeys = new List<string>();
+			InstanceEventGroupReplaceValues = new List<string>();
+
+
+
+			OverridePlayerConditionPosition = false;
+			OverridePosition = new Vector3D(0,0,0);
+
+			AddPlayerConditionPlayerTags = false;
+			AddIncludedPlayerTags = new List<string>();
+			AddExcludedPlayerTag = new List<string>();
+
+
+
+			AddTagstoPlayers = false;
 			AddTagsPlayerConditionIds = new List<string>();
 			AddTags = new List<string>();
 
@@ -239,6 +301,28 @@ namespace ModularEncountersSystems.Events.Action {
 			UseChatBroadcast = false;
 			ChatData = new List<ChatProfile>();
 
+			ChatBroadcastToSpecificPlayers = false;
+			ChatBroadcastPlayerConditionIds = new List<string>();
+
+			UseChatOverrideType = false;
+			ChatOverrideType = "Chat";	
+			
+			UseChatOverrideColor = false;
+			ChatOverrideColor = "Blue";
+
+			UseChatOverrideAuthor = false;
+			ChatOverrideAuthor = "Author";
+
+			UseChatOverrideMessage = false;
+			ChatOverrideMessage = new List<string>(); 
+
+			UseChatOverrideAudio = false;
+			ChatOverrideAudio = new List<string>();
+
+			RemoveThisInstanceGroup = false;
+			TryContractSuccess = false;
+			TryContractFail = false;
+
 			ActivateCustomAction = false;
 			CustomActionName = "";
 
@@ -269,14 +353,20 @@ namespace ModularEncountersSystems.Events.Action {
 				{"IncreaseCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref IncreaseCountersAmount) },
 				{"DecreaseCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref DecreaseCountersAmount) },
 				{"SetCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetCounters) },
-				{"SetCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersAmount) },
+				{"SetCountersAmount", (s, o) => TagParse.TagIntListCheck(s,true, ref SetCountersAmount) },
 
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
 				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
 
-				{"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
+				{"OverridePlayerConditionPosition", (s, o) => TagParse.TagBoolCheck(s, ref OverridePlayerConditionPosition) },
+				{"OverridePosition", (s, o) => TagParse.TagVector3DCheck(s, ref OverridePosition) },
 
+				{"AddPlayerConditionPlayerTags", (s, o) => TagParse.TagBoolCheck(s, ref AddPlayerConditionPlayerTags) },
+				{"AddIncludedPlayerTags", (s, o) => TagParse.TagStringListCheck(s, ref AddIncludedPlayerTags) },
+				{"AddExcludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref AddExcludedPlayerTag) },
+
+				{ "AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
 				{"AddTagsToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagstoPlayers) },
 				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
 				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
@@ -298,6 +388,7 @@ namespace ModularEncountersSystems.Events.Action {
 				{ "BroadcastCommandProfiles", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCommandProfiles) },
 				{"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
 				{"CommandProfileOriginCoords", (s, o) => TagParse.TagVector3DCheck(s, ref CommandProfileOriginCoords) },
+				{"OverrideCommandCode", (s, o) => TagParse.TagStringCheck(s, ref OverrideCommandCode) },
 				
 				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
 				{"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
@@ -312,11 +403,16 @@ namespace ModularEncountersSystems.Events.Action {
 				{"IncreaseRunCountEventTagAmount", (s, o) => TagParse.TagIntListCheck(s, ref IncreaseRunCountEventTagAmount) },
 
 
+				{"AddInstanceEventGroup", (s, o) => TagParse.TagBoolCheck(s, ref AddInstanceEventGroup) },
+				{"InstanceEventGroupId", (s, o) => TagParse.TagStringCheck(s, ref InstanceEventGroupId) },
+				{"InstanceEventGroupReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref InstanceEventGroupReplaceKeys) },
+				{"InstanceEventGroupReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref InstanceEventGroupReplaceValues) },
 
-			{ "AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
+				{"AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
 				{"RemoveGPSFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveGPSFromPlayers) },
 				{"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
 				{"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
+				{"RemoveGPSNames", (s, o) => TagParse.TagStringListCheck(s, ref RemoveGPSNames) },
 				{"GPSDescriptions", (s, o) => TagParse.TagStringListCheck(s, ref GPSDescriptions) },
 				{"GPSCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
 				{"GPSVector3Ds", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
@@ -325,9 +421,11 @@ namespace ModularEncountersSystems.Events.Action {
 				{"AddGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddGPSPlayerConditionIds) },
 				{"RemoveGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveGPSPlayerConditionIds) },
 
+				{"RemoveThisInstanceGroup", (s, o) => TagParse.TagBoolCheck(s, ref RemoveThisInstanceGroup) },
+				{"TryContractSuccess", (s, o) => TagParse.TagBoolCheck(s, ref TryContractSuccess) },
+				{"TryContractFail", (s, o) => TagParse.TagBoolCheck(s, ref TryContractFail) },
 
-
-				{"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
+				{ "SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
 				{"SpawnCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref SpawnVector3Ds) },
 				{"SpawnFactionTags", (s, o) => TagParse.TagStringListCheck(s, ref SpawnFactionTags) },
 
@@ -360,7 +458,28 @@ namespace ModularEncountersSystems.Events.Action {
 				{"CustomActionArgumentsVector3D", (s, o) => TagParse.TagVector3DListCheck(s, ref CustomActionArgumentsVector3D) },
 
 				{ "UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
-				{"DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },
+
+				{ "ChatBroadcastToSpecificPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChatBroadcastToSpecificPlayers) },
+				{ "ChatBroadcastPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ChatBroadcastPlayerConditionIds) },
+
+				{ "UseChatOverrideType", (s, o) => TagParse.TagBoolCheck(s, ref UseChatOverrideType) },
+				{ "ChatOverrideType", (s, o) => TagParse.TagStringCheck(s, ref ChatOverrideType) },
+
+				{ "UseChatOverrideColor", (s, o) => TagParse.TagBoolCheck(s, ref UseChatOverrideColor) },
+				{ "ChatOverrideColor", (s, o) => TagParse.TagStringCheck(s, ref ChatOverrideColor) },
+
+				{ "UseChatOverrideAuthor", (s, o) => TagParse.TagBoolCheck(s, ref UseChatOverrideAuthor) },
+				{ "ChatOverrideAuthor", (s, o) => TagParse.TagStringCheck(s, ref ChatOverrideAuthor) },
+
+				{ "UseChatOverrideMessage", (s, o) => TagParse.TagBoolCheck(s, ref UseChatOverrideMessage) },
+				{ "ChatOverrideMessage", (s, o) => TagParse.TagStringListCheck(s, ref ChatOverrideMessage) },
+
+				{ "UseChatOverrideAudio", (s, o) => TagParse.TagBoolCheck(s, ref UseChatOverrideAudio) },
+				{ "ChatOverrideAudio", (s, o) => TagParse.TagStringListCheck(s, ref ChatOverrideAudio) },
+
+
+
+				{ "DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },
 				{"SetEventControllers", (s, o) => TagParse.TagBoolCheck(s, ref SetEventControllers) },
 				{"EventControllerNames", (s, o) => TagParse.TagStringListCheck(s, ref EventControllerNames) },
 				{"EventControllersActive", (s, o) => TagParse.TagBoolListCheck(s, ref EventControllersActive) },

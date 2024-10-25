@@ -43,6 +43,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public bool PreventOwnershipChange; //Implement / Doc
 
+		public string CustomVariablesName;
+
+
 		public ImprovedSpawnGroup() {
 
 			SpawnGroupEnabled = true;
@@ -83,7 +86,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PauseAutopilotAtPlayerDistance = -1;
 
 			PreventOwnershipChange = false;
-
+			CustomVariablesName = "";
 		}
 
 		public void InitTags(MySpawnGroupDefinition spawnGroup) {

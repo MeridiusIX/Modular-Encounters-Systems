@@ -641,9 +641,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
                 if (trigger.AllowUniqueCommandCodeSenderOnly)
                 {
-					string uniquestringid = receivedCommand.SenderEntity.EntityId.ToString() + commandreceivecode;
+					string uniquestringid = (receivedCommand.SenderEntity?.EntityId.ToString() ?? "UnknownSender") + commandreceivecode;
 
-                    if (_settings.ReceivedCommandSenderCode.Contains(uniquestringid))
+
+					if (_settings.ReceivedCommandSenderCode.Contains(uniquestringid))
                     {
 						continue;
                     }
@@ -1321,14 +1322,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					continue;
 
 
+
 				if (control.MinPlayerReputation != -1501 || control.MaxPlayerReputation != 1501)
 				{
-					var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(control.FactionTag);
-
 					long factionId = 0;
 
-					if (customfaction != null)
-						factionId = customfaction.FactionId;
+					if (control.UseCustomFactionTag == true)
+					{
+						var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(control.FactionTag);
+
+						if (customfaction != null)
+							factionId = customfaction.FactionId;
+					}
+					else
+					{
+						factionId = _owner.FactionId;
+
+					}
 
 
 					if (factionId != 0)

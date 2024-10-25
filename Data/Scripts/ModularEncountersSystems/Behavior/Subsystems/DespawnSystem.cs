@@ -308,7 +308,51 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			*/
 
 		}
-		
+
+		public void DespawnThisGrid()
+		{
+
+			if (_behavior.CurrentGrid != null)
+			{
+
+				_behavior.CurrentGrid.RefreshSubGrids();
+
+				_behavior.CurrentGrid.ForceRemove = true;
+				Cleaning.RemoveGrid(_behavior.CurrentGrid);
+
+				if (_behavior.CurrentGrid.Npc != null)
+					_behavior.CurrentGrid.DespawnSource = "Despawn-Behavior";
+
+				_behavior.CurrentGrid.ForceRemove = true;
+
+
+				if (_behavior.CurrentGrid.Npc != null)
+					_behavior.CurrentGrid.DespawnSource = "Despawn-Behavior";
+
+	
+
+			}
+
+			/*
+			MyAPIGateway.Utilities.InvokeOnGameThread(() => {
+
+				var gridGroup = MyAPIGateway.GridGroups.GetGroup(this.RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Logical);
+
+				foreach(var grid in gridGroup) {
+
+					if(grid.MarkedForClose == false) {
+
+						grid.Close();
+
+					}
+
+				}
+
+			});
+			*/
+
+		}
+
 	}
 	
 }

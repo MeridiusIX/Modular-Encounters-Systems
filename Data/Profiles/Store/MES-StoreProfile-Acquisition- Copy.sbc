@@ -1,0 +1,57 @@
+﻿<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <EntityComponents>
+
+    <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
+      <Id>
+        <TypeId>Inventory</TypeId>
+        <SubtypeId>MES-StoreProfile-Acquisition</SubtypeId>
+      </Id>
+      <Description>
+
+		  [MES Store]
+
+		  [FileSource:MES-StoreItems-Example.xml]
+
+		  [MinOfferItems:4]
+		  [MaxOfferItems:4]
+		  [MinOrderItems:4]
+		  [MaxOrderItems:4]
+
+		  [ItemsRequireInventory:false]
+
+
+		  [Orders:Component/SteelPlate]
+		  [Orders:Component/Construction]
+		  [Orders:Component/Girder]
+		  [Orders:Component/InteriorPlate]
+		  [Orders:Component/Construction]
+		  [Orders:Component/SmallTube]
+		  [Orders:Component/LargeTube]
+		  [Orders:Component/BulletproofGlass]
+		  [Orders:Component/Motor]
+		  [Orders:Component/Display]
+		  [Orders:Component/Computer]
+		  [Orders:Component/RadioCommunicationComponent]
+		  [Orders:Component/Detector]
+		  [Orders:Component/Canvas]
+		  [Orders:Component/SolarCell]
+		  [Orders:Component/PowerCell]
+		  [Orders:Component/Explosives]
+		  [Orders:Component/MedicalComponent]
+		  [Orders:Component/ReactorComponent]
+		  [Orders:Component/MetalGrid]
+		  [Orders:Component/ThrustComponent]
+		  [Orders:Component/GravityGeneratorComponent]
+		  [Orders:Component/Superconductor]
+		  [Orders:Component/ReinforcedDrillbit]
+		  [Orders:Component/ReinforcedPlate]
+		  [Orders:Component/LaserAmplifier]
+
+
+	  </Description>
+
+    </EntityComponent>
+    
+  </EntityComponents>
+</Definitions>

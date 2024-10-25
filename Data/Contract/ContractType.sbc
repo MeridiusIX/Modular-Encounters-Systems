@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ContractTypes>
+    <ContractType xsi:type="MyObjectBuilder_ContractTypeDeliverDefinition">
+      <Id>
+        <TypeId>ContractTypeDefinition</TypeId>
+        <SubtypeId>MESContract</SubtypeId>
+      </Id>
+      <Icon>Textures\GUI\Icons\Contracts\BountyContract.dds</Icon>
+      <Icon>Textures\GUI\Icons\Contracts\HaulingContractHeader.dds</Icon>
+    </ContractType>
+  </ContractTypes>
+</Definitions>

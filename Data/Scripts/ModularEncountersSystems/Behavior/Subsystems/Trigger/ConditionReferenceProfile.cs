@@ -154,6 +154,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckThreatScoreIncludeOtherNpcOwners;
 		public GridConfigurationEnum CheckThreatScoreGridConfiguration;
 		public bool CheckThreatScoreFromTargetPosition;
+		public bool CheckThreatScoreFromClosestPlayerPosition;
 
 		public bool CompareThreatScore;
 		public int CompareThreatScoreValue;
@@ -184,8 +185,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckForBlocksOfType;
 		public List<string> BlocksOfType = new List<string>();
 
+		public bool NoActiveContracts;
+
+
 		public bool CheckForSpawnConditions;
 		public List<string> RequiredSpawnConditions;
+
+		public bool CheckIfSpawnGroupExist;
+		public string ExistingSpawnGroupName;
 
 		public bool CheckForPlanetaryLane;
 		public bool PlanetaryLanePassValue;
@@ -359,6 +366,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckThreatScoreIncludeOtherNpcOwners = false;
 			CheckThreatScoreGridConfiguration = GridConfigurationEnum.All;
 			CheckThreatScoreFromTargetPosition = false;
+			CheckThreatScoreFromClosestPlayerPosition = false;
 
 			CompareThreatScore = false;
 			CompareThreatScoreValue = -1;
@@ -380,9 +388,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckForSpawnConditions = false;
 			RequiredSpawnConditions = new List<string>();
 
+
+			CheckIfSpawnGroupExist = false;
+			ExistingSpawnGroupName = "";
+
+
+
 			CheckForPlanetaryLane = false;
 			PlanetaryLanePassValue = true;
 
+			NoActiveContracts = false;
 
 			CheckPlayerReputation = false;
 			CheckReputationwithFaction = new List<string>();
@@ -498,6 +513,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"IsTargetStatic", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetStatic) },
 				{"HasTarget", (s, o) => TagParse.TagBoolCheck(s, ref HasTarget) },
 				{"NoTarget", (s, o) => TagParse.TagBoolCheck(s, ref NoTarget) },
+				{"NoActiveContracts", (s, o) => TagParse.TagBoolCheck(s, ref NoActiveContracts) },
 				{"IsAttackerHostile", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerHostile) }, //
 				{"IsAttackerNeutral", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerNeutral) },
 				{"IsAttackerFriendly", (s, o) => TagParse.TagBoolCheck(s, ref IsAttackerFriendly) },
@@ -514,6 +530,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckThreatScoreIncludeOtherNpcOwners", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreIncludeOtherNpcOwners) },
 				{"CheckThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref CheckThreatScoreGridConfiguration) },
 				{"CheckThreatScoreFromTargetPosition", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreFromTargetPosition) },
+				{"CheckThreatScoreFromClosestPlayerPosition", (s, o) => TagParse.TagBoolCheck(s, ref CheckThreatScoreFromClosestPlayerPosition) },
 				{"CompareThreatScore", (s, o) => TagParse.TagBoolCheck(s, ref CompareThreatScore) },
 				{"CompareThreatScoreValue", (s, o) => TagParse.TagIntCheck(s, ref CompareThreatScoreValue) },
 				{"CompareThreatScoreUseSelfValue", (s, o) => TagParse.TagBoolCheck(s, ref CompareThreatScoreUseSelfValue) },
@@ -531,6 +548,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"BlocksOfType", (s, o) => TagParse.TagStringListCheck(s, ref BlocksOfType) },
 				{"CheckForSpawnConditions", (s, o) => TagParse.TagBoolCheck(s, ref CheckForSpawnConditions) },
 				{"RequiredSpawnConditions", (s, o) => TagParse.TagStringListCheck(s, ref RequiredSpawnConditions) },
+
+				{"CheckIfSpawnGroupExist", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfSpawnGroupExist) },
+				{"ExistingSpawnGroupName", (s, o) => TagParse.TagStringCheck(s, ref ExistingSpawnGroupName) },
+
+
+
 				{"CheckForPlanetaryLane", (s, o) => TagParse.TagBoolCheck(s, ref CheckForPlanetaryLane) },//CheckForPlanetaryLane
 				{"PlanetaryLanePassValue", (s, o) => TagParse.TagBoolCheck(s, ref PlanetaryLanePassValue) },
 				{"CheckPlayerReputation", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerReputation) },

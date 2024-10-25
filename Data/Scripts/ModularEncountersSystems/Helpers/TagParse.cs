@@ -5,6 +5,7 @@ using ModularEncountersSystems.Events;
 using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Profiles;
 using Sandbox.Common.ObjectBuilders;
@@ -98,6 +99,29 @@ namespace ModularEncountersSystems.Helpers {
 			original = result;
 
 		}
+
+		public static void TagMissionTypeCheck(string tag, ref MissionType original)
+		{
+
+			MissionType result = MissionType.Custom;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2)
+			{
+
+				if (MissionType.TryParse(tagSplit[1], out result) == false)
+				{
+
+					return;
+
+				}
+
+			}
+
+			original = result;
+
+		}
+		
 
 		public static void TagAutoPilotProfileModeCheck(string tag, ref AutoPilotDataMode original) {
 

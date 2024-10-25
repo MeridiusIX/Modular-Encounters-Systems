@@ -20,6 +20,9 @@ namespace ModularEncountersSystems.Helpers {
 
 			var SpawnGroupName = npcData.SpawnGroupName;
 			var Faction = npcData.InitialFaction;
+			var EventInstanceId = npcData.EventInstanceId.ToString();
+			var CustomVariablesName = npcData.CustomVariablesName;
+
 
 			if (tag.Contains("{SpawnGroupName}") && SpawnGroupName != null)
 			{
@@ -30,6 +33,18 @@ namespace ModularEncountersSystems.Helpers {
 			{
 				tag = tag.Replace("{Faction}", Faction);
 			}
+
+			if (tag.Contains("{EventInstance}") && EventInstanceId != null)
+			{
+				tag = tag.Replace("{EventInstance}", EventInstanceId);
+			}
+
+			if (tag.Contains("{CustomVariablesName}") && CustomVariablesName != null)
+			{
+				tag = tag.Replace("{CustomVariablesName}", CustomVariablesName);
+			}
+
+			
 
 
 			return tag;
@@ -55,6 +70,29 @@ namespace ModularEncountersSystems.Helpers {
 
 			return new_tags;
 		}
+
+
+
+
+		public static string ReplaceCustomData(string text, List<string> replaceKeys, List<string> replaceValues)
+		{
+			if (replaceKeys.Count != replaceValues.Count)
+			{
+				return null;
+			}
+
+			for (int i = 0; i < replaceKeys.Count; i++)
+			{
+				text = text.Replace(replaceKeys[i], replaceValues[i]);
+			}
+
+			return text;
+
+		}
+
+
+
+
 
 	}
 

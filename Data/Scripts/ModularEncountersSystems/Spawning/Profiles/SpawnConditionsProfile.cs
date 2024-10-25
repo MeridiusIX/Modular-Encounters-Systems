@@ -349,6 +349,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool RequiredBlockIncludeNPCGrids;
 
 
+
+
 		public Dictionary<string, Action<string, object>> EditorReference;
 
 
@@ -678,6 +680,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RequiredBlockAnySubtypeId = false;
 			RequiredBlockCheckRange = 5000;
 			RequiredBlockIncludeNPCGrids = false;
+
+
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 

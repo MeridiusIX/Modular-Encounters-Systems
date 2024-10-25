@@ -179,6 +179,8 @@ namespace ModularEncountersSystems.Events
 
             }
 
+
+
             Ready = false;
             Conditions = new List<EventCondition>();
             PersistantConditions = new List<EventCondition>();

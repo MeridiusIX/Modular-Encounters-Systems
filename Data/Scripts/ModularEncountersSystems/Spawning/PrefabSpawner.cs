@@ -87,11 +87,11 @@ namespace ModularEncountersSystems.Spawning {
 					try {
 
 						if (!voxel.CenterOffset) {
-							MyVisualScriptLogicProvider.ShowNotificationToAll("voxel.CenterOffset", 10000, "Red");
+							//MyVisualScriptLogicProvider.ShowNotificationToAll("voxel.CenterOffset", 10000, "Red");
 							voxelSpawn = MyAPIGateway.Session.VoxelMaps.CreateVoxelMapFromStorageName(voxel.StorageName, voxel.StorageName, coords);
 
 						} else {
-							MyVisualScriptLogicProvider.ShowNotificationToAll("voxel.CenterOffset", 10000, "Green");
+							//MyVisualScriptLogicProvider.ShowNotificationToAll("voxel.CenterOffset", 10000, "Green");
 							voxelSpawn = MyAPIGateway.Session.VoxelMaps.CreatePredefinedVoxelMap(voxel.StorageName, material, matrixVoxel, false);
 
 						}
@@ -108,7 +108,7 @@ namespace ModularEncountersSystems.Spawning {
                         }
                         else
                         {
-							MyVisualScriptLogicProvider.ShowNotificationToAll("voxelSpawn is null", 12000, "Red");
+							//MyVisualScriptLogicProvider.ShowNotificationToAll("voxelSpawn is null", 12000, "Red");
 						}
 
 					} catch (Exception e) {

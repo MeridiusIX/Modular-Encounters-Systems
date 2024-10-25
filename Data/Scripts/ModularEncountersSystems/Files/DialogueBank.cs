@@ -29,7 +29,6 @@ namespace ModularEncountersSystems.Files
         public void init()
         {
             setup = true;
-            MyVisualScriptLogicProvider.ShowNotificationToAll("Setup dialogue cue", 5000);
             _chatProfile = null;
 
             bool gotChat = false;

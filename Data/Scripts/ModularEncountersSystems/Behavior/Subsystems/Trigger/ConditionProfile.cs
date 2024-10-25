@@ -1205,7 +1205,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if(closestplayer != null)
                     {
 						Position = closestplayer.GetPosition();
-						MyVisualScriptLogicProvider.ShowNotificationToAll(Position.ToString(), 5000);
+						//MyVisualScriptLogicProvider.ShowNotificationToAll(Position.ToString(), 5000);
                     }
                 }
 
@@ -1361,12 +1361,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (SpawnGroupManager.SpawnGroupNames.Contains(spawngroupname))
                 {
-					MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Green");
+					//MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Green");
 					satisfiedConditions++;
 				}
                 else
                 {
-					MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Red");
+					//MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Red");
 				}
 					
 
@@ -1390,7 +1390,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (_behavior.AutoPilot.InGravity()) {
 
-					MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
 
 					if(_behavior.AutoPilot.CalculateMaxGravity() > PlanetManager.GetTotalNaturalGravity(_behavior.RemoteControl.GetPosition()).Length())
 						satisfiedConditions++;

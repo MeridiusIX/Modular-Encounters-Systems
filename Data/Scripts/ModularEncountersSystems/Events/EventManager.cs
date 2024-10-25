@@ -133,9 +133,10 @@ namespace ModularEncountersSystems.Events {
 			DateTime currentDateTime = MyAPIGateway.Session.GameDateTime;
 			_readyEvents.Clear();
 
+
+			// As of writing this, whenever you load into a world the your view is locked for the first second. Players could miss any event messages then.   - CptArthur 
 			if (ticks < 10)
 			{
-				MyVisualScriptLogicProvider.ShowNotificationToAll("Delay", 480);
 				ticks++;
 				return;
 			}

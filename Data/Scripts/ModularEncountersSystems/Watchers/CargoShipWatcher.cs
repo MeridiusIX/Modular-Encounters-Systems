@@ -272,7 +272,7 @@ namespace ModularEncountersSystems.Watchers {
 
 			if (!cargoShip.Npc.CargoShipDriftCheck) {
 
-				if (cargoShip.CubeGrid.Physics != null) {
+				if (cargoShip?.CubeGrid?.Physics != null) {
 
 					cargoShip.Npc.CargoShipDriftCheck = true;
 					cargoShip.Npc.CargoShipDriftVelocity = cargoShip.CubeGrid.Physics.LinearVelocity;
@@ -292,7 +292,7 @@ namespace ModularEncountersSystems.Watchers {
 
 			}
 
-			var currentVelocity = cargoShip.CubeGrid.Physics.LinearVelocity;
+			var currentVelocity = cargoShip.CubeGrid?.Physics?.LinearVelocity ?? Vector3.Zero;
 
 			if (currentVelocity.Length() <= 0.1) {
 

@@ -133,6 +133,7 @@ namespace ModularEncountersSystems.Spawning {
 		public static Dictionary<string, string> UniqueNpcModNames = new Dictionary<string, string>();
 
 		public static List<string> SpawnGroupNames = new List<string>();
+		public static List<string> SubEncounterSpawnGroups = new List<string>();
 		public static List<string> PlanetNames = new List<string>();
 
 		public static List<string> UniqueGroupsSpawned = new List<string>();
@@ -536,10 +537,41 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			//Get Subencounters (for filtering later)
+			foreach (var spawnGroup in regularSpawnGroups) {
+
+				if (spawnGroup == null || spawnGroup.Enabled == false)
+				{
+
+					continue;
+
+				}
+
+				if (spawnGroup.FactionSubEncounters != null) {
+
+					foreach (var subEncounter in spawnGroup.FactionSubEncounters) {
+
+						if (!SubEncounterSpawnGroups.Contains(subEncounter.SubtypeId))
+							SubEncounterSpawnGroups.Add(subEncounter.SubtypeId);
+
+					}
+
+					foreach (var subEncounter in spawnGroup.HostileSubEncounters)
+					{
+
+						if (!SubEncounterSpawnGroups.Contains(subEncounter.SubtypeId))
+							SubEncounterSpawnGroups.Add(subEncounter.SubtypeId);
+
+					}
+
+				}
+
+			}
+
 			//Get Actual SpawnGroups
 			foreach (var spawnGroup in regularSpawnGroups) {
 
-				if (spawnGroup.Enabled == false) {
+				if (spawnGroup == null || spawnGroup.Enabled == false) {
 
 					continue;
 
@@ -681,7 +713,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (spawnGroup.IsPirate == false && spawnGroup.IsEncounter == false && Settings.General.EnableLegacySpaceCargoShipDetection == true) {
+			if (spawnGroup.IsPirate == false && spawnGroup.IsEncounter == false && spawnGroup.IsPlanetaryEncounter == false && spawnGroup.IsGlobalEncounter == false && Settings.General.EnableLegacySpaceCargoShipDetection == true && !SubEncounterSpawnGroups.Contains(spawnGroup.Id.SubtypeName)) {
 
 				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;

@@ -223,6 +223,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
         }
 
+        public bool WorkingCheck()
+        {
+            if (!_valid)
+                return false;
+
+            if (Block == null || Block.MarkedForClose)
+            {
+
+                BehaviorLogger.Write("Removed Thrust - Block Null or Closed", BehaviorDebugEnum.Thrust);
+                _valid = false;
+                return false;
+            }
+
+            _working = Block.IsWorking && Block.IsFunctional;
+
+            return _working;
+        }
+
+
         public bool ValidCheck() {
 
             if (!_valid)
@@ -272,7 +291,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
             double value = (airDensity - minPlanetInfluence) * InvDiffMinMaxPlanetaryInfluence;
             var result = MathHelper.Lerp(effectiveAtMin, effectiveAtMax, MathHelper.Clamp(value, 0f, 1f));
-            return result;
+
+
+            return result * def.ForceMagnitude;
 
         }
 

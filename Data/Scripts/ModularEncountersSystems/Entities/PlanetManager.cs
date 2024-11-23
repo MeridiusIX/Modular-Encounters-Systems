@@ -106,20 +106,21 @@ namespace ModularEncountersSystems.Entities {
 
         }
 
-        public static Vector3 GetTotalNaturalGravity(Vector3D coords) {
+        public static float GetTotalGravity(Vector3D coords) {
 
             Vector3 gravity = Vector3.Zero;
 
             foreach (var planet in Planets) {
 
-                if (planet == null || planet.Planet.Closed || planet.IsPositionInGravity(coords))
+                if (planet == null || planet.Planet.Closed || !planet.IsPositionInGravity(coords))
                     continue;
 
                 gravity += planet.Gravity.GetWorldGravity(coords);
             
             }
 
-            return gravity;
+            var tja = gravity.Length() / 9.81;
+            return (float)tja;
         
         }
 

@@ -799,7 +799,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (ConditionReference.GravityCheck) {
 
 				usedConditions++;
-				var grav = PlanetManager.GetTotalNaturalGravity(_behavior.RemoteControl.GetPosition()).Length();
+				var grav = PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
 
 				if ((ConditionReference.MinGravity == -1000 || grav > ConditionReference.MinGravity) && (ConditionReference.MaxGravity == -1000 || grav < ConditionReference.MaxGravity)) {
 
@@ -812,6 +812,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
+
+
+            if (ConditionReference.IsOnDarkSide)
+            {
+				usedConditions++;
+
+				if(_behavior.AutoPilot.CurrentPlanet != null)
+                {
+					if (MyVisualScriptLogicProvider.IsOnDarkSide(_behavior.AutoPilot.CurrentPlanet.Planet, _behavior.RemoteControl.GetPosition()))
+						satisfiedConditions++;
+
+                }
+
+			}
+
+
 
 			if (ConditionReference.AltitudeCheck) {
 
@@ -1391,8 +1407,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (_behavior.AutoPilot.InGravity()) {
 
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
 
-					if(_behavior.AutoPilot.CalculateMaxGravity() > PlanetManager.GetTotalNaturalGravity(_behavior.RemoteControl.GetPosition()).Length())
+					if(_behavior.AutoPilot.CalculateMaxGravity() > PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()))
 						satisfiedConditions++;
 
 				} else {

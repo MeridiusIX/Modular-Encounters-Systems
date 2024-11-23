@@ -73,7 +73,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//Debug Message
 			if (!string.IsNullOrWhiteSpace(actions.DebugMessage)) {
 
-				MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);
+				MyVisualScriptLogicProvider.SendChatMessage(actions.DebugMessage, RemoteControl.SlimBlock.CubeGrid.CustomName);
+
+
+				//MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);
 			
 			}
 
@@ -299,6 +302,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					var newCommand = new Command();
 					newCommand.PrepareCommand(_behavior, commandProfile, actions, command, attackerEntityId, detectedEntity);
 					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Sending Command: " + newCommand.CommandCode, BehaviorDebugEnum.Action);
+					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Sending Command: " + newCommand.CommandCode, BehaviorDebugEnum.Command);
 					CommandHelper.SendCommand(newCommand);
 
 				}
@@ -1676,7 +1680,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					foreach (var contractblock in _behavior.CurrentGrid.Contracts)
 					{
 
-						if (!contractblock.ActiveEntity() || contractblock.Block.CustomName != actions.ContractBlocks[i] || contractblock.Block.OwnerId != _behavior.RemoteControl.OwnerId)
+						if (!contractblock.ActiveEntity() || contractblock.Block.CustomName != actions.ContractBlocks[i]) //|| contractblock.Block.OwnerId != _behavior.RemoteControl.OwnerId
 							continue;
 
 						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Contract Profile With Name: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);

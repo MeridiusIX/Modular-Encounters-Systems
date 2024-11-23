@@ -112,7 +112,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				foreach (var thrust in ThrustProfiles) {
 
-					if (thrust.ActiveDirection != Base6Directions.Direction.Down)
+					if (thrust.ActiveDirection != Base6Directions.Direction.Up)
+						continue;
+
+					if (!thrust.WorkingCheck())
 						continue;
 
 					totalForceAvailable += (useGravityOnly ? thrust.MaxThrustForceInGravity : thrust.MaxThrustForceInAtmo) * thrust.Block.ThrustMultiplier;

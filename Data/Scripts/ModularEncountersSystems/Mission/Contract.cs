@@ -38,6 +38,10 @@ namespace ModularEncountersSystems.Missions
         [ProtoMember(6)]
         public string FactionTag;
 
+        public ActiveContract()
+        {
+
+        }
 
         public ActiveContract(long ContractId,long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag)
         {

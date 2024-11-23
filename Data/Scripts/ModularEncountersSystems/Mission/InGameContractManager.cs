@@ -401,7 +401,7 @@ namespace ModularEncountersSystems.Missions {
             {
                 var generatedContracts = GeneratedContracts[i];
 
-                if (generatedContracts.SourceBlock.GetEntityId() == blockId)
+                if (generatedContracts.SourceBlock.Entity.EntityId == blockId)
                 {
                     PurgeContract(generatedContracts.ContractId);
                     GeneratedContracts.RemoveAt(i);

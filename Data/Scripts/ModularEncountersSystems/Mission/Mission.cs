@@ -49,6 +49,7 @@ namespace ModularEncountersSystems.Missions
 
         private string StoreProfileId;
         private StoreProfile _StoreProfile;
+        public string InstanceEventGroupId;
 
         StoreProfile StoreProfile
         {
@@ -181,20 +182,26 @@ namespace ModularEncountersSystems.Missions
                     if (func != null)
                     {
                         var dict = func.Invoke(ProfileSubtypeId, SpawnGroupName, Profile.Tags, sourceContractBlock.GetPosition());
+
+                        if (dict == null)
+                            return false;
+
                         ReplaceKeys.AddList(new List<string>(dict.Keys));
                         ReplaceValues.AddList(new List<string>(dict.Values));
                     }
                 }
             }
 
-            Title = IdsReplacer.ReplaceCustomData(Profile.Title, ReplaceKeys, ReplaceValues);
-            Description = IdsReplacer.ReplaceCustomData(Profile.Description, ReplaceKeys, ReplaceValues);
+            InstanceEventGroupId = IdsReplacer.ReplaceText(Profile.InstanceEventGroupId, ReplaceKeys, ReplaceValues);
 
-            var RewardString = IdsReplacer.ReplaceCustomData(Profile.Reward, ReplaceKeys, ReplaceValues);
-            var CollateralString = IdsReplacer.ReplaceCustomData(Profile.Collateral, ReplaceKeys, ReplaceValues);
-            var ReputationRewardString = IdsReplacer.ReplaceCustomData(Profile.ReputationReward, ReplaceKeys, ReplaceValues);
-            var FailReputationPriceString = IdsReplacer.ReplaceCustomData(Profile.FailReputationPrice, ReplaceKeys, ReplaceValues);
-            var DurationString = IdsReplacer.ReplaceCustomData(Profile.Duration, ReplaceKeys, ReplaceValues);
+            Title = IdsReplacer.ReplaceText(Profile.Title, ReplaceKeys, ReplaceValues);
+            Description = IdsReplacer.ReplaceText(Profile.Description, ReplaceKeys, ReplaceValues);
+
+            var RewardString = IdsReplacer.ReplaceText(Profile.Reward, ReplaceKeys, ReplaceValues);
+            var CollateralString = IdsReplacer.ReplaceText(Profile.Collateral, ReplaceKeys, ReplaceValues);
+            var ReputationRewardString = IdsReplacer.ReplaceText(Profile.ReputationReward, ReplaceKeys, ReplaceValues);
+            var FailReputationPriceString = IdsReplacer.ReplaceText(Profile.FailReputationPrice, ReplaceKeys, ReplaceValues);
+            var DurationString = IdsReplacer.ReplaceText(Profile.Duration, ReplaceKeys, ReplaceValues);
 
             // Initialize default values
             Reward = 0;
@@ -340,7 +347,7 @@ namespace ModularEncountersSystems.Missions
 
             TemplateEventGroup tja = null;
 
-            if (!ProfileManager.TemplateEventGroup.TryGetValue(Profile.InstanceEventGroupId, out tja))
+            if (!ProfileManager.TemplateEventGroup.TryGetValue(InstanceEventGroupId, out tja))
             {
                 return;
             }
@@ -356,7 +363,7 @@ namespace ModularEncountersSystems.Missions
                 return false;
 
 
-            
+
 
             MyAddContractResultWrapper result;
             IMyPlayerCollection playerCollection;
@@ -402,6 +409,7 @@ namespace ModularEncountersSystems.Missions
 
                         ReplaceKeys.Add("{InstanceId}");
                         ReplaceValues.Add($"{InstanceId}");
+
 
                         //playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, -Reward); Keen already does this?
                         return true;
@@ -459,6 +467,8 @@ namespace ModularEncountersSystems.Missions
                         InGameContractManager.GeneratedContracts.Add(contractAcquisitionObject);
 
                         InstanceId = result.ContractId;
+
+
                         //playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, -reward); Not needed because keen already does this?
                         return true;
                     }
@@ -473,9 +483,7 @@ namespace ModularEncountersSystems.Missions
 
                     break;
             }
-
-
-
+            
 
             return false;
 

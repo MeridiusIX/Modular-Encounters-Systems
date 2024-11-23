@@ -74,7 +74,7 @@ namespace ModularEncountersSystems.Events
 
                         _profile = new EventProfile();
                         _profile.ProfileSubtypeId = ProfileSubtypeId;
-                        _profile.InitTags(IdsReplacer.ReplaceCustomData(customdata,ReplaceKeys,ReplaceValues));
+                        _profile.InitTags(IdsReplacer.ReplaceText(customdata,ReplaceKeys,ReplaceValues));
                         _profile.Tags.Add(InstanceId.ToString());
                     }
                     else
@@ -200,7 +200,7 @@ namespace ModularEncountersSystems.Events
                     {
                         conditionProfile = new EventCondition();
                         conditionProfile.ProfileSubtypeId = conditionName + "@" + InstanceId.ToString();
-                        conditionProfile.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                        conditionProfile.InitTags(IdsReplacer.ReplaceText(customdata, ReplaceKeys, ReplaceValues));
                         PersistantConditions.Add(conditionProfile);
                         continue;
 
@@ -227,7 +227,7 @@ namespace ModularEncountersSystems.Events
                     {
                         conditionProfile = new EventCondition();
                         conditionProfile.ProfileSubtypeId = conditionName + "@" + InstanceId.ToString();
-                        conditionProfile.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                        conditionProfile.InitTags(IdsReplacer.ReplaceText(customdata, ReplaceKeys, ReplaceValues));
                         Conditions.Add(conditionProfile);
                         continue;
                     }
@@ -258,11 +258,11 @@ namespace ModularEncountersSystems.Events
                         if (!ProfileManager.EventActionReferenceProfiles.ContainsKey(instancesubtypeId))
                         {
                             var actionReference = new EventActionReferenceProfile();
-                            actionReference.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                            actionReference.InitTags(IdsReplacer.ReplaceText(customdata, ReplaceKeys, ReplaceValues));
                             actionReference.ProfileSubtypeId = instancesubtypeId;
 
                             var actionObject = new EventActionProfile();
-                            actionObject.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                            actionObject.InitTags(IdsReplacer.ReplaceText(customdata, ReplaceKeys, ReplaceValues));
                             actionObject.ProfileSubtypeId = instancesubtypeId;
 
                             Actions.Add(actionObject);
@@ -273,7 +273,7 @@ namespace ModularEncountersSystems.Events
                         {
                             // Handle the case where the key already exists, if necessary
                             var actionObject = new EventActionProfile();
-                            actionObject.InitTags(IdsReplacer.ReplaceCustomData(customdata, ReplaceKeys, ReplaceValues));
+                            actionObject.InitTags(IdsReplacer.ReplaceText(customdata, ReplaceKeys, ReplaceValues));
                             actionObject.ProfileSubtypeId = instancesubtypeId;
 
                             Actions.Add(actionObject);

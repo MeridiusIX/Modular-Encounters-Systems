@@ -127,6 +127,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MinAltitude;
 		public double MaxAltitude;
 
+		public bool IsOnDarkSide;
+
+
+
 		public bool TargetAltitudeCheck;
 		public double MinTargetAltitude;
 		public double MaxTargetAltitude;
@@ -321,6 +325,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MinAltitude = -1;
 			MaxAltitude = -1;
 
+			IsOnDarkSide = false;
+
 			TargetAltitudeCheck = false;
 			MinTargetAltitude = -1;
 			MaxTargetAltitude = -1;
@@ -498,6 +504,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref AltitudeCheck) },
 				{"MinAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinAltitude) },
 				{"MaxAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAltitude) },
+				{"IsOnDarkSide", (s, o) => TagParse.TagBoolCheck(s, ref IsOnDarkSide) },
 				{"TargetAltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref TargetAltitudeCheck) },
 				{"MinTargetAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetAltitude) },
 				{"MaxTargetAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetAltitude) },

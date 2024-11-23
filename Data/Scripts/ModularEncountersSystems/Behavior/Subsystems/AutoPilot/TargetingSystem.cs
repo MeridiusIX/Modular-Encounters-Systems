@@ -972,7 +972,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				if (PlanetManager.InGravity(target.GetPosition())) {
 
-					double gravityAtPosition = PlanetManager.GetTotalNaturalGravity(target.GetPosition()).Length();
+					double gravityAtPosition = PlanetManager.GetTotalGravity(target.GetPosition());
 					double gridGravity = 0;
 
 					if (PlanetManager.AirDensityAtPosition(target.GetPosition()) >= 0.7f) {

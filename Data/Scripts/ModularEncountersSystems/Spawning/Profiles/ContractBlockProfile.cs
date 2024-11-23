@@ -104,7 +104,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
             if (clearExisting)
             {
-				InGameContractManager.ClearBlockContracts(block.GetEntityId());
+				InGameContractManager.ClearBlockContracts(block.Entity.EntityId);
 
 			}
 

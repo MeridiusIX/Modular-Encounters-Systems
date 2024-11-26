@@ -48,6 +48,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public float MinGridSpeed;
 		public float MaxGridSpeed;
 
+		public bool CheckGridVerticalSpeed;
+		public float MinGridVerticalSpeed;
+		public float MaxGridVerticalSpeed;
+
+
 		public bool CheckMESBlacklistedSpawnGroups;
 
 		public List<string> SpawnGroupBlacklistContainsAll;
@@ -265,6 +270,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MinGridSpeed = -1;
 			MaxGridSpeed = -1;
 
+			CheckGridVerticalSpeed = false;
+			MinGridVerticalSpeed = -1;
+			MaxGridVerticalSpeed = -1;
+
+
+			
 			CheckMESBlacklistedSpawnGroups = false;
 			SpawnGroupBlacklistContainsAll = new List<string>();
 			SpawnGroupBlacklistContainsAny = new List<string>();
@@ -446,6 +457,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckGridSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSpeed) },
 				{"MinGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MinGridSpeed) },
 				{"MaxGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MaxGridSpeed) },
+
+				{"CheckGridVerticalSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridVerticalSpeed) },
+				{"MinGridVerticalSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MinGridVerticalSpeed) },
+				{"MaxGridVerticalSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MaxGridVerticalSpeed) },
+
+
 				{"CheckMESBlacklistedSpawnGroups", (s, o) => TagParse.TagBoolCheck(s, ref CheckMESBlacklistedSpawnGroups) },
 				{"SpawnGroupBlacklistContainsAll", (s, o) => TagParse.TagStringListCheck(s, ref SpawnGroupBlacklistContainsAll) },
 				{"SpawnGroupBlacklistContainsAny", (s, o) => TagParse.TagStringListCheck(s, ref SpawnGroupBlacklistContainsAny) },

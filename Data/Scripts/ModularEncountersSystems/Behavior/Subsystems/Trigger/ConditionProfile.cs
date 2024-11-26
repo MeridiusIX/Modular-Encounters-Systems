@@ -546,6 +546,55 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.CheckGridVerticalSpeed == true)
+			{
+
+				usedConditions++;
+
+
+				if(_behavior.AutoPilot.CurrentPlanet == null)
+                {
+					BehaviorLogger.Write(ProfileSubtypeId + ": Vertical Speed satisfied", BehaviorDebugEnum.Condition);
+					satisfiedConditions++;
+				}
+                else
+                {
+					var velocity = _remoteControl.SlimBlock.CubeGrid.Physics.LinearVelocity;
+					var upDirection = _behavior.AutoPilot.CurrentPlanet.UpAtPosition(_remoteControl.GetPosition());
+
+
+					// Compute the dot product
+					double velocityProjectionMagnitude = Vector3D.Dot(velocity, upDirection);
+
+					// Compute the projected vector (optional, if you need the vector itself)
+					Vector3D velocityProjection = velocityProjectionMagnitude * upDirection;
+
+
+					float speed = (float)velocityProjection.Length();
+
+
+					if ((ConditionReference.MinGridVerticalSpeed == -1 || speed >= ConditionReference.MinGridVerticalSpeed) && (ConditionReference.MaxGridVerticalSpeed == -1 || speed <= ConditionReference.MaxGridVerticalSpeed))
+					{
+
+						BehaviorLogger.Write(ProfileSubtypeId + ": Grid Vertical Speed in range", BehaviorDebugEnum.Condition);
+						satisfiedConditions++;
+
+					}
+					else
+					{
+
+						BehaviorLogger.Write(ProfileSubtypeId + ": Grid Vertical Speed Not in range", BehaviorDebugEnum.Condition);
+
+					}
+				}
+
+
+
+
+			}
+
+
+
 			if (ConditionReference.CheckMESBlacklistedSpawnGroups) {
 
 				if (ConditionReference.SpawnGroupBlacklistContainsAll.Count > 0) {
@@ -1407,7 +1456,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (_behavior.AutoPilot.InGravity()) {
 
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
 
 					if(_behavior.AutoPilot.CalculateMaxGravity() > PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()))
 						satisfiedConditions++;

@@ -342,9 +342,33 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (!Triggered && UseElseActions && ElseActions.Count > 0) {
 
+
+				/*
+
+					UseElseActions:
+					Specifies if the trigger should instead execute a separate set of Actions when its Type condition 
+					(any any attached Condition Profiles) do not pass their checks. This does not apply to the trigger 
+					Cooldown as a fail condition.
+
+				*/
+
+				if(CooldownTime > 0)
+                {
+					TimeSpan duration = MyAPIGateway.Session.GameDateTime - LastTriggerTime;
+					
+					if(duration.TotalMilliseconds < CooldownTime)
+                    {
+						return;
+					}
+
+
+				}
+
+
 				Triggered = true;
 				LastRunFailed = true;
 				BehaviorLogger.Write(ProfileSubtypeId + ": Else Actions Will Be Activated: " + Type, BehaviorDebugEnum.Trigger);
+
 
 			}
 

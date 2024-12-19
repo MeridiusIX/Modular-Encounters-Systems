@@ -220,6 +220,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string PlayerIdentitySandboxListId;
 
 		public bool CheckSufficientUpwardThrust;
+		public float SufficientUpwardThrustTolerance;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -429,6 +430,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			PlayerIdentitySandboxListId = "";
 
 			CheckSufficientUpwardThrust = false;
+			SufficientUpwardThrustTolerance = 0f;
 
 			ProfileSubtypeId = "";
 
@@ -592,6 +594,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"PlayerIdentitySandboxListId", (s, o) => TagParse.TagStringCheck(s, ref PlayerIdentitySandboxListId) },
 
 				{"CheckSufficientUpwardThrust", (s, o) => TagParse.TagBoolCheck(s, ref CheckSufficientUpwardThrust) },//CheckSufficientUpwardThrust
+				{"SufficientUpwardThrustTolerance", (s, o) => TagParse.TagFloatCheck(s, ref SufficientUpwardThrustTolerance) },//CheckSufficientUpwardThrust
 				
 		};
 

@@ -1458,7 +1458,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
 
-					if(_behavior.AutoPilot.CalculateMaxGravity() > PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()))
+					var difference = _behavior.AutoPilot.CalculateMaxGravity() - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
+
+
+					if (difference > 0 + ConditionReference.SufficientUpwardThrustTolerance)
 						satisfiedConditions++;
 
 				} else {

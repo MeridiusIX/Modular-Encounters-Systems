@@ -119,8 +119,8 @@ namespace ModularEncountersSystems.Entities {
             
             }
 
-            var tja = gravity.Length() / 9.81;
-            return (float)tja;
+            var gravityamount = gravity.Length() / 9.81;
+            return (float)gravityamount;
         
         }
 

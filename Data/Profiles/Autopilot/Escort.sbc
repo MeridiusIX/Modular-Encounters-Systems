@@ -6,7 +6,7 @@
 
       <Id>
         <TypeId>Inventory</TypeId>
-        <SubtypeId>RAI-Generic-Autopilot-Patrol</SubtypeId>
+        <SubtypeId>RAI-Generic-Autopilot-Escort</SubtypeId>
       </Id>
       <Description>
 

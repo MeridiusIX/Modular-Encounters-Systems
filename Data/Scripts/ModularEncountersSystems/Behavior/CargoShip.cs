@@ -140,7 +140,7 @@ namespace ModularEncountersSystems.Behavior {
 
 					SelectNextWaypoint();
 					_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
-					_behavior.ChangeCoreBehaviorMode(BehaviorMode.ApproachTarget);
+					_behavior.ChangeCoreBehaviorMode(BehaviorMode.ApproachWaypoint);
 
 					if (!_firstRun)
 						_behavior.BehaviorTriggerB = true;
@@ -151,8 +151,9 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			//Approach
-			if (_behavior.Mode == BehaviorMode.ApproachTarget) {
+			//Approach in the future the approachtarget check can be removed. for now, it would really only be there for the benefit of ships that are already spawned and moving. 2024-12
+			if (_behavior.Mode == BehaviorMode.ApproachWaypoint || _behavior.Mode == BehaviorMode.ApproachTarget)
+			{
 
 				if (UsePauseAutopilotFromSpawnGroup && _stoppingRange > 0) {
 

@@ -829,6 +829,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+            if (actions.AppendAntennaHudText)
+            {
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna Namechange Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+
+				foreach (var antenna in AntennaList)
+				{
+
+					if (antenna == null)
+						continue;
+
+					antenna.HudText = antenna.HudText + actions.AntennaHudTextSuffix;
+
+				}
+			}
+
 
 			//CreateKnownPlayerArea
 			if (actions.CreateKnownPlayerArea == true) {
@@ -914,6 +930,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 					
 				}
+
+
+				foreach (var manualTrigger in CompromisedTriggers)
+				{
+
+					if (actions.ManuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
+						ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
+
+					foreach (var tag in manualTrigger.Tags)
+					{
+						if (actions.ManuallyActivatedTriggerTags.Contains(tag))
+							ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
+
+					}
+
+				}
+
+
 
 			}
 

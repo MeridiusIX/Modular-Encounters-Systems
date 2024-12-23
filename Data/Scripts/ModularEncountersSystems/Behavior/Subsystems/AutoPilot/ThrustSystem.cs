@@ -93,7 +93,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
-		public float CalculateMaxGravity(bool useGravityOnly = false) {
+		public float CalculateMaxGravity(bool useGravityOnly = false, Direction direction = Direction.Up) {
 
 			if (_remoteControl == null)
 				return 0;
@@ -112,8 +112,31 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				foreach (var thrust in ThrustProfiles) {
 
-					if (thrust.ActiveDirection != Base6Directions.Direction.Up)
-						continue;
+					if(direction == Direction.Up || direction == Direction.None)
+						if (thrust.ActiveDirection != Base6Directions.Direction.Up)
+							continue;
+					
+
+					if (direction == Direction.Backward)
+						if (thrust.ActiveDirection != Base6Directions.Direction.Backward)
+							continue;
+
+					if (direction == Direction.Forward)
+						if (thrust.ActiveDirection != Base6Directions.Direction.Forward)
+							continue;
+
+					if (direction == Direction.Down)
+						if (thrust.ActiveDirection != Base6Directions.Direction.Down)
+							continue;
+
+					if (direction == Direction.Left)
+						if (thrust.ActiveDirection != Base6Directions.Direction.Left)
+							continue;
+
+					if (direction == Direction.Right)
+						if (thrust.ActiveDirection != Base6Directions.Direction.Right)
+							continue;
+
 
 					if (!thrust.WorkingCheck())
 						continue;

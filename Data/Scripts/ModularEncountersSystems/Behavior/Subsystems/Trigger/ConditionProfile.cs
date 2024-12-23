@@ -912,7 +912,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					var altitude = _behavior.AutoPilot.CurrentPlanet.AltitudeAtPosition(_behavior.AutoPilot.Targeting.TargetLastKnownCoords);
 
 
-					if ((ConditionReference.MinTargetAltitude == -1 || altitude > ConditionReference.MinAltitude) && (ConditionReference.MaxAltitude == -1 || altitude < ConditionReference.MaxTargetAltitude))
+					if ((ConditionReference.MinTargetAltitude == -1 || altitude > ConditionReference.MinTargetAltitude) && (ConditionReference.MaxTargetAltitude == -1 || altitude < ConditionReference.MaxTargetAltitude))
 					{
 
 						satisfiedConditions++;
@@ -1276,7 +1276,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, ConditionReference.CheckThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CheckThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
 
-				if (ThreatScore < (float)ConditionReference.CheckThreatScoreMinimum && (float)ConditionReference.CheckThreatScoreMinimum > 0 && ThreatScore > (float)ConditionReference.CheckThreatScoreMaximum && (float)ConditionReference.CheckThreatScoreMaximum > 0)
+				if (ThreatScore > (float)ConditionReference.CheckThreatScoreMinimum && (float)ConditionReference.CheckThreatScoreMinimum > 0 && ThreatScore < (float)ConditionReference.CheckThreatScoreMaximum && (float)ConditionReference.CheckThreatScoreMaximum > 0)
 					satisfiedConditions++;
 			}
 
@@ -1455,10 +1455,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (_behavior.AutoPilot.InGravity()) {
 
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000, "Green");
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection).ToString(), 6000, "Red");
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
 
-					var difference = _behavior.AutoPilot.CalculateMaxGravity() - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
+					var difference = _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.SufficientUpwardThrustDirection) - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
 
 
 					if (difference > 0 + ConditionReference.SufficientUpwardThrustTolerance)
@@ -1472,6 +1474,143 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 				
 			}
+
+			if (ConditionReference.CheckInSufficientUpwardThrust)
+			{
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.InGravity())
+				{
+
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000, "Green");
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection).ToString(), 6000, "Red");
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
+
+					var difference = _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection) - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
+
+
+					if (difference < 0 + ConditionReference.InSufficientUpwardThrustTolerance)
+						satisfiedConditions++;
+
+				}
+				else
+				{
+
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Not In Grav??: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+					//satisfiedConditions++;
+
+				}
+
+			}
+
+
+
+
+			if (ConditionReference.CheckHealthPercentage)
+            {
+				usedConditions++;
+
+				bool fail = false;
+				if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+					fail = true;
+
+				var health = _behavior.CurrentGrid.GetCurrentHealth();
+
+				if (health == 0)
+					fail = true;
+
+				if (!fail)
+				{
+					int percentage = (int)((health / _behavior.BehaviorSettings.InitialGridIntegrity) * 100);
+
+
+					if ((ConditionReference.MinPercentageOfHealthRemaining == -1 || percentage > ConditionReference.MinPercentageOfHealthRemaining) && (ConditionReference.MaxPercentageOfHealthRemaining == -1 || percentage < ConditionReference.MaxPercentageOfHealthRemaining))
+                    {
+						satisfiedConditions++;
+					}
+				}
+
+			}
+
+
+			if (ConditionReference.CheckWeaponsPercentage)
+			{
+				usedConditions++;
+
+				bool fail = false;
+
+
+				if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+					fail = true;
+
+				float weaponcount = _behavior.AutoPilot.Weapons.GetActiveWeaponCount();
+
+
+				if (!fail)
+				{
+
+					int percentage = 0;
+
+					if(weaponcount != 0 && _behavior.BehaviorSettings.InitialWeaponCount != 0)
+                    {
+						percentage = (int)((weaponcount / _behavior.BehaviorSettings.InitialWeaponCount) * 100);
+
+					}
+						
+					if ((ConditionReference.MinPercentageOfWeaponsRemaining == -1 || percentage > ConditionReference.MinPercentageOfWeaponsRemaining) && (ConditionReference.MaxPercentageOfWeaponsRemaining == -1 || percentage < ConditionReference.MaxPercentageOfWeaponsRemaining))
+					{
+						satisfiedConditions++;
+					}
+				}
+
+			}
+
+
+
+            if (ConditionReference.HasNoWeapons)
+            {
+				usedConditions++;
+
+				bool fail = false;
+
+
+				if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+					fail = true;
+
+
+				if(!fail || !_behavior.AutoPilot.Weapons.HasWorkingWeapons())
+                {
+					satisfiedConditions++;
+				}
+
+
+			}
+
+
+			if (ConditionReference.HasWeapons)
+			{
+				usedConditions++;
+
+				bool fail = false;
+
+
+				if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+					fail = true;
+
+
+				if (!fail || _behavior.AutoPilot.Weapons.HasWorkingWeapons())
+				{
+					satisfiedConditions++;
+				}
+
+
+			}
+
+
+
+
+
 
 			if (ConditionReference.MatchAnyCondition == false) {
 

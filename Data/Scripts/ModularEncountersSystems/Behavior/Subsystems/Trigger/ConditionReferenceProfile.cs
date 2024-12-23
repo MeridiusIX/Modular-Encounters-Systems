@@ -221,6 +221,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool CheckSufficientUpwardThrust;
 		public float SufficientUpwardThrustTolerance;
+		public Direction SufficientUpwardThrustDirection;
+
+
+
+		public bool CheckInSufficientUpwardThrust;
+		public float InSufficientUpwardThrustTolerance;
+		public Direction InSufficientUpwardThrustDirection;
+
+		public bool CheckHealthPercentage;
+		public int MinPercentageOfHealthRemaining;
+		public int MaxPercentageOfHealthRemaining;
+
+		public bool CheckWeaponsPercentage;
+		public int MinPercentageOfWeaponsRemaining;
+		public int MaxPercentageOfWeaponsRemaining;
+
+		public bool HasWeapons;
+		public bool HasNoWeapons;
+		
+
+
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -431,6 +452,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			CheckSufficientUpwardThrust = false;
 			SufficientUpwardThrustTolerance = 0f;
+			SufficientUpwardThrustDirection = Direction.Up;
+
+			CheckInSufficientUpwardThrust = false;
+			InSufficientUpwardThrustTolerance = 0f;
+			InSufficientUpwardThrustDirection = Direction.Up;
+
+			CheckHealthPercentage = false;
+			MinPercentageOfHealthRemaining = -1;
+			MaxPercentageOfHealthRemaining = -1;
+
+			CheckWeaponsPercentage =false;
+			MinPercentageOfWeaponsRemaining =-1;
+			MaxPercentageOfWeaponsRemaining = -1;
+
+			HasWeapons =false;
+			HasNoWeapons=false;
 
 			ProfileSubtypeId = "";
 
@@ -595,8 +632,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				{"CheckSufficientUpwardThrust", (s, o) => TagParse.TagBoolCheck(s, ref CheckSufficientUpwardThrust) },//CheckSufficientUpwardThrust
 				{"SufficientUpwardThrustTolerance", (s, o) => TagParse.TagFloatCheck(s, ref SufficientUpwardThrustTolerance) },//CheckSufficientUpwardThrust
+				{"SufficientUpwardThrustDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref SufficientUpwardThrustDirection) },//CheckSufficientUpwardThrust
 				
-		};
+				{"CheckInSufficientUpwardThrust", (s, o) => TagParse.TagBoolCheck(s, ref CheckInSufficientUpwardThrust) },//CheckSufficientUpwardThrust
+				{"InSufficientUpwardThrustTolerance", (s, o) => TagParse.TagFloatCheck(s, ref InSufficientUpwardThrustTolerance) },//CheckSufficientUpwardThrust
+				{"InSufficientUpwardThrustDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref InSufficientUpwardThrustDirection) },//CheckSufficientUpwardThrust
+
+				{"CheckHealthPercentage", (s, o) => TagParse.TagBoolCheck(s, ref CheckHealthPercentage) },//CheckHealthPercentage
+				{"MinPercentageOfHealthRemaining", (s, o) => TagParse.TagIntCheck(s, ref MinPercentageOfHealthRemaining) },//MinPercentageOfHealthRemaining
+				{"MaxPercentageOfHealthRemaining", (s, o) => TagParse.TagIntCheck(s, ref MaxPercentageOfHealthRemaining) },//MaxPercentageOfHealthRemaining
+
+
+				{"CheckWeaponsPercentage", (s, o) => TagParse.TagBoolCheck(s, ref CheckWeaponsPercentage) },//CheckWeaponsPercentage
+				{"MinPercentageOfWeaponsRemaining", (s, o) => TagParse.TagIntCheck(s, ref MinPercentageOfWeaponsRemaining) },//MinPercentageOfWeaponsRemaining
+				{"MaxPercentageOfWeaponsRemaining", (s, o) => TagParse.TagIntCheck(s, ref MaxPercentageOfWeaponsRemaining) },//MaxPercentageOfWeaponsRemaining
+
+				{"HasWeapons", (s, o) => TagParse.TagBoolCheck(s, ref HasWeapons) },//HasWeapons
+				{"HasNoWeapons", (s, o) => TagParse.TagBoolCheck(s, ref HasNoWeapons) },//CheckHealthPercentage
+
+
+
+			};
 
 		}
 

@@ -10,6 +10,7 @@ using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
 using Sandbox.Game;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using System;
@@ -968,7 +969,7 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public long CreditValueProjectedBlocksBuildable(out int buildableBlocks) {
+		public long CreditValueProjectedBlocksBuildable(out int buildableBlocks, List<string> ExcludedComponents = null) {
 
 			long result = 0;
 			buildableBlocks = 0;
@@ -993,6 +994,30 @@ namespace ModularEncountersSystems.Entities {
 
 					foreach (var proBlock in _projectedBlocks) {
 
+
+						if (ExcludedComponents != null || ExcludedComponents.Count > 0)
+                        {
+							bool skip = false;
+
+							var blockDef = proBlock.BlockDefinition as MyCubeBlockDefinition;
+
+							foreach (var item in blockDef.Components)
+							{
+								if (ExcludedComponents.Contains(item.Definition.Id.SubtypeId.ToString()))
+								{
+									skip = true;
+									break;
+
+								}
+							}
+
+							if (skip)
+								continue;
+						}
+
+
+
+
 						if (projector.CanBuild(proBlock, true) == BuildCheckResult.OK) {
 
 							buildableBlocks++;
@@ -1010,7 +1035,7 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public long CreditValueRepair() {
+		public long CreditValueRepair(List<string> ExcludedComponents = null) {
 
 			long result = 0;
 
@@ -1020,6 +1045,30 @@ namespace ModularEncountersSystems.Entities {
 			lock (AllBlocks) {
 
 				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
+
+					if (ExcludedComponents != null || ExcludedComponents.Count > 0)
+					{
+						bool skip = false;
+
+						var blockDef = AllBlocks[i].BlockDefinition as MyCubeBlockDefinition;
+
+						Dictionary<string, int> missing = new Dictionary<string, int>();
+						AllBlocks[i].GetMissingComponents(missing);
+
+
+						foreach (var item in missing)
+						{
+							if (ExcludedComponents.Contains(item.Key))
+							{
+								skip = true;
+								break;
+
+							}
+						}
+
+						if (skip)
+							continue;
+					}
 
 					result += EconomyHelper.GetBlockRepairValue(AllBlocks[i], _missingComponents);
 

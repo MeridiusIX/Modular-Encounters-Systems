@@ -35,7 +35,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int RepairAndConstructionLargeGridBlockLimit;
 		public int RepairAndConstructionCommissionPercentage;
 		public int RepairAndConstructionReputationDiscount;
-		public List<string> RepairAndConstructionExcludedComponentIds; //To-Do To be implemented
+		public List<string> RepairAndConstructionExcludedComponentIds; 
 
 
 

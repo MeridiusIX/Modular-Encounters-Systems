@@ -281,7 +281,7 @@ namespace ModularEncountersSystems.Sync {
 
 			if (ConstructBlocks) {
 
-				constructionCost = grid.CreditValueProjectedBlocksBuildable(out additionaBlocks);
+				constructionCost = grid.CreditValueProjectedBlocksBuildable(out additionaBlocks, profile.RepairAndConstructionExcludedComponentIds);
 
 			}
 
@@ -296,7 +296,7 @@ namespace ModularEncountersSystems.Sync {
 			//Calculate Cost Of Work
 			if (RepairBlocks) {
 
-				repairCost = grid.CreditValueRepair();
+				repairCost = grid.CreditValueRepair(profile.RepairAndConstructionExcludedComponentIds);
 
 			}
 

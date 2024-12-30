@@ -285,7 +285,8 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-			if (!ShipyardControls.GridSelectionRules(projector, grid, ShipyardModes.ScrapPurchasing, profile, -1, additionaBlocks)) {
+			if (!ShipyardControls.GridSelectionRules(projector, grid, ShipyardModes.ScrapPurchasing, profile, -1, additionaBlocks)) //Should this be ShipyardModes.RepairAndConstruction instead
+			{ 
 
 				ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ShipyardRulesNotSatisfied, Mode, sender, ProjectorId);
 				return;

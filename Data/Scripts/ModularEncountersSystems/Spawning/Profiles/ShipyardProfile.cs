@@ -12,7 +12,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public string StoreBlockName;
 		public double InteractionRadius;
-		public int MinReputation;
+		public int MinReputation; //Not used? -CptArthur
 
 		public int ReputationNeededForDiscount;
 		public bool TransactionsUseNpcFactionBalance;
@@ -35,6 +35,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int RepairAndConstructionLargeGridBlockLimit;
 		public int RepairAndConstructionCommissionPercentage;
 		public int RepairAndConstructionReputationDiscount;
+		public List<string> RepairAndConstructionExcludedComponentIds; //To-Do To be implemented
+
+
+
 
 		public bool AllowGridTakeover;
 		public int GridTakeoverSmallGridBlockLimit;
@@ -73,6 +77,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RepairAndConstructionLargeGridBlockLimit = 5000;
 			RepairAndConstructionCommissionPercentage = 115;
 			RepairAndConstructionReputationDiscount = 7;
+			RepairAndConstructionExcludedComponentIds = new List<string>();
 
 			AllowGridTakeover = false;
 			GridTakeoverSmallGridBlockLimit = 2500;
@@ -107,6 +112,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"RepairAndConstructionLargeGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref RepairAndConstructionLargeGridBlockLimit) },
 				{"RepairAndConstructionCommissionPercentage", (s, o) => TagParse.TagIntCheck(s, ref RepairAndConstructionCommissionPercentage) },
 				{"RepairAndConstructionReputationDiscount", (s, o) => TagParse.TagIntCheck(s, ref RepairAndConstructionReputationDiscount) },
+				{"RepairAndConstructionExcludedComponentIds", (s, o) => TagParse.TagStringListCheck(s, ref RepairAndConstructionExcludedComponentIds) },
 
 				{"AllowGridTakeover", (s, o) => TagParse.TagBoolCheck(s, ref AllowGridTakeover) },
 				{"GridTakeoverSmallGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverSmallGridBlockLimit) },

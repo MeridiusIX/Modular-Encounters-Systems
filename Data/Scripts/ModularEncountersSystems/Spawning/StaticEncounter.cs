@@ -318,10 +318,12 @@ namespace ModularEncountersSystems.Spawning {
 		
 		}
 
-		public void ProcessEncounter(ref bool update) {
+		public void ProcessEncounter(ref bool update, bool checkposition = false ,Vector3D position = new Vector3D()) {
 
 			if (!IsValid)
 				return;
+
+
 
 			//Check Conditions Before Checking Players
 			if (UseMaxSpawnAttempts) {
@@ -334,6 +336,7 @@ namespace ModularEncountersSystems.Spawning {
 				}
 			
 			}
+
 
 			if (UseTimeLimit) {
 
@@ -348,7 +351,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (TimeBetweenSpawnAttempts > 1) {
+			
+			if (!checkposition && TimeBetweenSpawnAttempts > 1 ) {
 
 				var timeSpan = MyAPIGateway.Session.GameDateTime - LastSpawnAttempt;
 
@@ -357,46 +361,61 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			for (int i = PlayerManager.Players.Count - 1; i >= 0; i--) {
 
-				var player = PlayerManager.Players[i];
-
-				if (!player.ActiveEntity())
-					continue;
-
-				if (UseSpecificPlayers && !SpecificPlayers.Contains(player.Player.IdentityId)) {
-
-					continue;
-				
+			if (checkposition)
+			{
+				if (Vector3D.Distance(position, this.TriggerCoords) < TriggerRadius)
+				{
+					HandleSpawnAttempt(null, ref update);
+					return;
 				}
+			}
+			else
+			{
+				// Loop through players if checkposition is false
+				for (int i = PlayerManager.Players.Count - 1; i >= 0; i--)
+				{
+					var player = PlayerManager.Players[i];
 
-				if(player.Distance(TriggerCoords) > TriggerRadius) {
+					if (!player.ActiveEntity())
+						continue;
 
-					continue;
+					if (UseSpecificPlayers && !SpecificPlayers.Contains(player.Player.IdentityId))
+						continue;
 
+					if (player.Distance(TriggerCoords) > TriggerRadius)
+						continue;
+
+					SpawnLogger.Write(player.Player.DisplayName + " is within range of static/boss encounter. Attempting spawn.", SpawnerDebugEnum.Spawning);
+
+					HandleSpawnAttempt(player, ref update);
+					break;
 				}
-
-				SpawnLogger.Write(player.Player.DisplayName + " is within range of static/boss encounter. Attempting spawn.", SpawnerDebugEnum.Spawning);
-
-				//Attempt Spawn
-				if (SpawnRequest.CalculateStaticSpawn(this, player, SpawnType, SpecificType)) {
-
-					//Invalidate because it was successfully spawned.
-					InvalidateEncounter();
-
-				} else {
-
-					SpawnAttempts++;
-					LastSpawnAttempt = MyAPIGateway.Session.GameDateTime;
-					update = true;
-					
-				}
-
-				break;
-
 			}
 
 		}
+
+
+		private void HandleSpawnAttempt(PlayerEntity player, ref bool update)
+		{
+
+
+			// Attempt Spawn
+			if (SpawnRequest.CalculateStaticSpawn(this, player, SpawnType, SpecificType))
+			{
+				// Invalidate because it was successfully spawned.
+				InvalidateEncounter();
+			}
+			else
+			{
+				SpawnAttempts++;
+				LastSpawnAttempt = MyAPIGateway.Session.GameDateTime;
+				update = true; 
+			}
+		}
+
+
+
 
 		public void InvalidateEncounter() {
 

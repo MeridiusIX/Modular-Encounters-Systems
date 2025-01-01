@@ -97,6 +97,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MinTargetAngle;
 		public double MaxTargetAngle;
 
+		public bool CheckWaypointAngleFromForward;
+		public double MinWaypointAngle;
+		public double MaxWaypointAngle;
+
+
+
 
 		public bool CheckIfTargetIsChasing;
 		public double MinTargetChaseAngle;
@@ -328,6 +334,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MinTargetAngle = -1;
 			MaxTargetAngle = -1;
 
+			CheckWaypointAngleFromForward = false;
+			MinWaypointAngle = -1;
+			MaxWaypointAngle = -1;
+
 			CheckIfTargetIsChasing = false;
 			MinTargetChaseAngle = -1;
 			MaxTargetChaseAngle = -1;
@@ -534,6 +544,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckTargetAngleFromForward", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetAngleFromForward) },
 				{"MinTargetAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetAngle) },
 				{"MaxTargetAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetAngle) },
+				{"CheckWaypointAngleFromForward", (s, o) => TagParse.TagBoolCheck(s, ref CheckWaypointAngleFromForward) },
+				{"MinWaypointAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinWaypointAngle) },
+				{"MaxWaypointAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxWaypointAngle) },
+
 				{"CheckIfTargetIsChasing", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsChasing) },
 				{"MinTargetChaseAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetChaseAngle) },
 				{"MaxTargetChaseAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetChaseAngle) },

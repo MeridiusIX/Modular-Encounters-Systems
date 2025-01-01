@@ -377,14 +377,14 @@ namespace ModularEncountersSystems.Sync {
 			//Apply Repairs
 			if (RepairBlocks) {
 
-				repairResult = grid.AutoRepairBlocks();
+				repairResult = grid.AutoRepairBlocks(false,-1, profile.RepairAndConstructionExcludedComponentIds);
 			
 			}
 
 			//Construct Blocks
 			if (ConstructBlocks) {
 
-				projResult = grid.AutoConstuctProjectedBlocks(repairResult > 0);
+				projResult = grid.AutoConstuctProjectedBlocks(repairResult > 0, profile.RepairAndConstructionExcludedComponentIds);
 			
 			}
 

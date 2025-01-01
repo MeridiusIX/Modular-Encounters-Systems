@@ -16,6 +16,7 @@ using VRage;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
+using ModularEncountersSystems.World;
 
 namespace ModularEncountersSystems.API {
 	public static class LocalApi {
@@ -76,6 +77,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("SpawnPlanetaryInstallation", new Func<Vector3D, List<string>, bool>(SpawnPlanetaryInstallation));
 			dict.Add("SpawnRandomEncounter", new Func<Vector3D, List<string>, bool>(SpawnRandomEncounter));
 			dict.Add("SpawnSpaceCargoShip", new Func<Vector3D, List<string>, bool>(SpawnSpaceCargoShip));
+			dict.Add("ProcessStaticEncountersAtLocation", new Action<Vector3D>(ProcessStaticEncountersAtLocation));
 			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
 			dict.Add("RegisterCustomMissionMapping", new Action<bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>(RegisterCustomMissionMapping));
 
@@ -388,6 +390,31 @@ namespace ModularEncountersSystems.API {
 			return SpawnRequest.CalculateSpawn(coords, "API Request", SpawningType.SpaceCargoShip, false, false, spawnGroups);
 
 		}
+
+		//
+		public static void ProcessStaticEncountersAtLocation(Vector3D coords)
+		{
+
+
+			bool updateStatics = false;
+
+			//Static Encounters
+			for (int i = NpcManager.StaticEncounters.Count - 1; i >= 0; i--)
+			{
+
+				var encounter = NpcManager.StaticEncounters[i];
+				encounter.ProcessEncounter(ref updateStatics,true,coords);
+
+			}
+
+
+			if (updateStatics)
+				NpcManager.UpdateStaticEncounters();
+
+
+
+		}
+
 
 		public static void ToggleSpawnGroupEnabled(string spawnGroupName, bool toggle) {
 

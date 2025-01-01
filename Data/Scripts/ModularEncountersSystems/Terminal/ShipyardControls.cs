@@ -511,16 +511,17 @@ namespace ModularEncountersSystems.Terminal {
 				if (controls.SelectedGridItem == null || !controls.SelectedGridItem.ActiveEntity()) {
 
 					//Nothing
+					
 
 				} else {
 
 					if(controls.RepairBlocks)
-						controls.QuotedPriceValue += controls.SelectedGridItem.CreditValueRepair();
+						controls.QuotedPriceValue += controls.SelectedGridItem.CreditValueRepair(controls.Profile.RepairAndConstructionExcludedComponentIds);
 
 					int blockCount = 0;
 
 					if(controls.ConstructNewBlocks)
-						controls.QuotedPriceValue += controls.SelectedGridItem.CreditValueProjectedBlocksBuildable(out blockCount);
+						controls.QuotedPriceValue += controls.SelectedGridItem.CreditValueProjectedBlocksBuildable(out blockCount, controls.Profile.RepairAndConstructionExcludedComponentIds);
 
 					if (controls.QuotedPriceValue >= 0) {
 

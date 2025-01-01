@@ -152,7 +152,7 @@ namespace ModularEncountersSystems.Create
     <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
         <Id>
             <TypeId>Inventory</TypeId>
-            <SubtypeId>PlayerCondition-Area-{Name}</SubtypeId>
+            <SubtypeId>PlayerCondition_Area_{Name}</SubtypeId>
         </Id>
         <Description>
             [MES Player Condition]
@@ -162,7 +162,7 @@ namespace ModularEncountersSystems.Create
             [PlayerNearDistanceFromCoords:{distance}]
 
             [CheckPlayerTags:true]
-            [ExcludedPlayerTag:Player_Triggered-Area-{Name}]
+            [ExcludedPlayerTag:Player_Triggered_Area_{Name}]
 
             [CheckPlayerReputation:false]
             [CheckReputationwithFaction:SPRT]
@@ -174,7 +174,7 @@ namespace ModularEncountersSystems.Create
     <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
         <Id>
             <TypeId>Inventory</TypeId>
-            <SubtypeId>PlayerCondition-Area-{Name}-ConsiderTriggered</SubtypeId>
+            <SubtypeId>PlayerCondition_Area_{Name}_ConsiderTriggered</SubtypeId>
         </Id>
         <Description>
             [MES Player Condition]
@@ -187,12 +187,12 @@ namespace ModularEncountersSystems.Create
     <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
         <Id>
             <TypeId>Inventory</TypeId>
-            <SubtypeId>MES-EventPersistantCondition-Area-{Name}</SubtypeId>
+            <SubtypeId>MES_EventPersistantCondition_Area_{Name}</SubtypeId>
         </Id>
         <Description>
             [MES Event Condition]
             [CheckPlayerCondition:true]
-            [PlayerConditionIds:PlayerCondition-Area-{Name}]     
+            [PlayerConditionIds:PlayerCondition_Area_{Name}]     
         </Description>   
     </EntityComponent>
 
@@ -200,7 +200,7 @@ namespace ModularEncountersSystems.Create
     <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
         <Id>
             <TypeId>Inventory</TypeId>
-            <SubtypeId>MES-Event-Area-{Name}</SubtypeId>
+            <SubtypeId>MES_Event_Area_{Name}</SubtypeId>
         </Id>
         <Description>
             [MES Event]
@@ -209,14 +209,14 @@ namespace ModularEncountersSystems.Create
             [UniqueEvent:false]    
             [MinCooldownMs:600000]
             [MaxCooldownMs:600001]
-            [PersistantConditionIds:MES-EventPersistantCondition-Area-{Name}]
+            [PersistantConditionIds:MES_EventPersistantCondition_Area_{Name}]
 
 
             [UseAnyPassingCondition:true]
             [ActionExecution:Condition]
 
-            [ConditionIds:MES-EventCondition-Area-{Name}-A]
-            [ActionIds:MES-EventAction-Area-{Name}-A]
+            [ConditionIds:MES_EventCondition_Area_{Name}_A]
+            [ActionIds:MES_EventAction_Area_{Name}_A]
 
 
 
@@ -228,20 +228,20 @@ namespace ModularEncountersSystems.Create
     <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
         <Id>
             <TypeId>Inventory</TypeId>
-            <SubtypeId>MES-EventCondition-Area-{Name}-A</SubtypeId>
+            <SubtypeId>MES_EventCondition_Area_{Name}_A</SubtypeId>
         </Id>
         <Description>
             [MES Event Condition]
    
             [CheckPlayerCondition:true]
-            [PlayerConditionIds:PlayerCondition-Area-{Name}-A]    
+            [PlayerConditionIds:PlayerCondition_Area_{Name}_A]    
         </Description>   
     </EntityComponent>
 
     <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
         <Id>
             <TypeId>Inventory</TypeId>
-            <SubtypeId>PlayerCondition-Area-{Name}-A</SubtypeId>
+            <SubtypeId>PlayerCondition_Area_{Name}_A</SubtypeId>
         </Id>
         <Description>
             [MES Player Condition]
@@ -262,17 +262,17 @@ namespace ModularEncountersSystems.Create
     <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
         <Id>
             <TypeId>Inventory</TypeId>
-            <SubtypeId>MES-EventAction-Area-{Name}-A</SubtypeId>
+            <SubtypeId>MES_EventAction_Area_{Name}_A</SubtypeId>
         </Id>
         <Description>
             [MES Event Action]
 
             [AddTagstoPlayers:true]
-            [AddTagsPlayerConditionIds:PlayerCondition-Area-{Name}-ConsiderTriggered]
-            [AddTags:Player_Triggered-Area-{Name}]
+            [AddTagsPlayerConditionIds:PlayerCondition_Area_{Name}_ConsiderTriggered]
+            [AddTags:Player_Triggered_Area_{Name}]
 
             [UseChatBroadcast:true]
-            [ChatData:MES-EventChat-Area-{Name}-A]
+            [ChatData:MES_EventChat_Area_{Name}_A]
 
         </Description>
     </EntityComponent>
@@ -280,7 +280,7 @@ namespace ModularEncountersSystems.Create
     <EntityComponent xsi:type=""MyObjectBuilder_InventoryComponentDefinition"">
         <Id>
             <TypeId>Inventory</TypeId>
-            <SubtypeId>MES-EventChat-Area-{Name}-A</SubtypeId>
+            <SubtypeId>MES_EventChat_Area_{Name}_A</SubtypeId>
         </Id> 
         <Description>
             [RivalAI Chat]
@@ -293,7 +293,7 @@ namespace ModularEncountersSystems.Create
             [IgnoredAntennaRangeOverride:1]
             [SendToAllOnlinePlayers:false]
             [SendToSpecificPlayers:true]
-            [PlayerConditionIds:PlayerCondition-Area-{Name}-ConsiderTriggered]
+            [PlayerConditionIds:PlayerCondition_Area_{Name}_ConsiderTriggered]
             [Color:Green]
             [Author:MES]
             [ChatMessages:{Name} A triggered]

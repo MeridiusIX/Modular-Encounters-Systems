@@ -455,6 +455,9 @@ namespace ModularEncountersSystems.Spawning {
 
 		public static bool CalculateStaticSpawn(StaticEncounter encounter, PlayerEntity player, SpawningType type, SpawningType spawnTypes) {
 
+			//Warning PlayerEntity player can be null;
+
+
 			SpawnLogger.Write("Static/Boss Encounter Requested", SpawnerDebugEnum.Spawning);
 
 			//Main Spawner Enabled

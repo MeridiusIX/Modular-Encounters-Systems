@@ -293,7 +293,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 
-			SpawnEncounter = true;
+			SpawnEncounter = false;
 			//SpawnData = new List<SpawnProfile>();
 			SpawnVector3Ds = new List<Vector3D>();
 			SpawnFactionTags = new List<string>();

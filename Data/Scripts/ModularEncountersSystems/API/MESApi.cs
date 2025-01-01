@@ -45,6 +45,7 @@ namespace ModularEncountersSystems.API {
 		private Func<Vector3D, List<string>, bool> _spawnPlanetaryInstallation;
 		private Func<Vector3D, List<string>, bool> _spawnRandomEncounter;
 		private Func<Vector3D, List<string>, bool> _spawnSpaceCargoShip;
+		private Action<Vector3D> _processStaticEncountersAtLocation;
 		private Action<string, bool> _toggleSpawnGroupEnabled;
 		private Action<bool, string, Action<object[]>> _registerCustomAction;
 		private Action<string, List<string>, List<string>> _insertInstanceEventGroup;
@@ -321,6 +322,13 @@ namespace ModularEncountersSystems.API {
 		/// <param name="toggle">true for enabled, false for disabled</param>
 		public void ToggleSpawnGroupEnabled(string spawnGroupName, bool toggle) => _toggleSpawnGroupEnabled?.Invoke(spawnGroupName, toggle);
 
+
+		/// <summary>
+		/// Processes static encounters at a specified location.
+		/// </summary>
+		/// <param name="position">position</param>
+		public void ProcessStaticEncountersAtLocation(Vector3D position) => _processStaticEncountersAtLocation?.Invoke(position);
+
 		/// <summary>
 		/// Allows you to register a method that is invoked when a SpawnGroup's Conditions are being evaluated. The SpawnGroup eligiblity will pass or fail depending on the bool output of your provided method.
 		/// </summary>
@@ -399,6 +407,7 @@ namespace ModularEncountersSystems.API {
 				_spawnPlanetaryInstallation = (Func<Vector3D, List<string>, bool>)dict["SpawnPlanetaryInstallation"];
 				_spawnRandomEncounter = (Func<Vector3D, List<string>, bool>)dict["SpawnRandomEncounter"];
 				_spawnSpaceCargoShip = (Func<Vector3D, List<string>, bool>)dict["SpawnSpaceCargoShip"];
+				_processStaticEncountersAtLocation = (Action<Vector3D>)dict["ProcessStaticEncountersAtLocation"];
 				_toggleSpawnGroupEnabled = (Action<string, bool>)dict["ToggleSpawnGroupEnabled"];
 				_registerCustomAction = (Action<bool, string, Action<object[]>>)dict["RegisterCustomAction"];
 				_insertInstanceEventGroup = (Action<string, List<string>, List<string>>)dict["InsertInstanceEventGroup"];

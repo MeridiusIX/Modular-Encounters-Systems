@@ -754,6 +754,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.CheckWaypointAngleFromForward)
+			{
+
+				usedConditions++;
+
+
+				var dirToWaypoint = Vector3D.Normalize(_behavior.AutoPilot.GetCurrentWaypoint() - _remoteControl.GetPosition());
+				var myForward = _behavior.AutoPilot.RefBlockMatrixRotation.Forward;
+				var angle = VectorHelper.GetAngleBetweenDirections(dirToWaypoint, myForward);
+
+				if ((ConditionReference.MinWaypointAngle == -1 || angle >= ConditionReference.MinWaypointAngle) && (ConditionReference.MaxWaypointAngle == -1 || angle <= ConditionReference.MaxWaypointAngle))
+					satisfiedConditions++;
+
+			}
+
+
+
 			if (ConditionReference.CheckIfTargetIsChasing) {
 
 				usedConditions++;

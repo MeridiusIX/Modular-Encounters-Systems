@@ -684,7 +684,7 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public int AutoConstuctProjectedBlocks(bool skipSound = false) {
+		public int AutoConstuctProjectedBlocks(bool skipSound = false, List<string> ExcludedComponents = null) {
 
 			if (!ActiveEntity())
 				return 0;
@@ -716,6 +716,28 @@ namespace ModularEncountersSystems.Entities {
 					for (int i = _projectedBlocks.Count - 1; i >= 0; i--) {
 
 						var proBlock = _projectedBlocks[i];
+
+						if (ExcludedComponents != null && ExcludedComponents.Count > 0)
+						{
+							bool skip = false;
+
+							var blockDef = proBlock.BlockDefinition as MyCubeBlockDefinition;
+
+							foreach (var item in blockDef.Components)
+							{
+								if (ExcludedComponents.Contains(item.Definition.Id.SubtypeName))
+								{
+									skip = true;
+									_projectedBlocks.RemoveAt(i);
+									break;
+
+								}
+							}
+
+							if (skip)
+								continue;
+						}
+
 
 						if (projector.CanBuild(proBlock, true) != BuildCheckResult.OK) {
 
@@ -760,7 +782,7 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public int AutoRepairBlocks(bool skipSound = false, int maxBlocks = -1) {
+		public int AutoRepairBlocks(bool skipSound = false, int maxBlocks = -1, List<string> ExcludedComponents = null) {
 
 			if (!ActiveEntity())
 				return 0;
@@ -783,8 +805,68 @@ namespace ModularEncountersSystems.Entities {
 					if (block == null)
 						continue;
 
+					Dictionary<string, int> missing = new Dictionary<string, int>();
+					AllBlocks[i].GetMissingComponents(missing);
+
+					MyInventory myInventory = null;
+
+
+					if (ExcludedComponents != null && ExcludedComponents.Count > 0)
+                    {
+
+
+						bool skip = false;
+						foreach (var item in missing)
+						{
+							if (ExcludedComponents.Contains(item.Key))
+							{
+								skip = true;
+								break;
+							}
+						}
+
+						if (skip)
+							continue;
+					}
+
+					if(missing.Count > 0)
+                    {
+						myInventory = new MyInventory();
+
+						MyCubeBlockDefinition blockdef = (MyCubeBlockDefinition)block.BlockDefinition;
+
+
+
+						// Loop through the dictionary
+
+						foreach (var comp in blockdef.Components)
+						{
+							MyObjectBuilder_Component ItemOB = new MyObjectBuilder_Component()
+							{
+								SubtypeName = comp.Definition.Id.SubtypeName,
+							};
+							myInventory.AddItems(comp.Count, ItemOB);
+						}
+
+					}
+
+
+
+
+						
 					if (!block.IsFullIntegrity || block.CurrentDamage > 0)
-						block.IncreaseMountLevel(float.MaxValue, owner);
+                    {
+						var oldint = block.IsFullIntegrity;
+						block.ClearConstructionStockpile(myInventory);
+						block.IncreaseMountLevel(float.MaxValue, owner, myInventory, 99999,true);
+
+						//MyAPIGateway.Utilities.ShowMessage("MES",$"{block.IsFullIntegrity}");
+					}
+
+
+
+					//Sandbox.Game.Entities.Cube.MySlimBlock.DecreaseMountLevelToDesiredRatio
+					//IMySlimBlock.t
 
 					block.FixBones(99999, 99999);
 
@@ -995,7 +1077,7 @@ namespace ModularEncountersSystems.Entities {
 					foreach (var proBlock in _projectedBlocks) {
 
 
-						if (ExcludedComponents != null || ExcludedComponents.Count > 0)
+						if (ExcludedComponents != null && ExcludedComponents.Count > 0)
                         {
 							bool skip = false;
 
@@ -1003,7 +1085,7 @@ namespace ModularEncountersSystems.Entities {
 
 							foreach (var item in blockDef.Components)
 							{
-								if (ExcludedComponents.Contains(item.Definition.Id.SubtypeId.ToString()))
+								if (ExcludedComponents.Contains(item.Definition.Id.SubtypeName))
 								{
 									skip = true;
 									break;
@@ -1046,11 +1128,11 @@ namespace ModularEncountersSystems.Entities {
 
 				for (int i = AllBlocks.Count - 1; i >= 0; i--) {
 
-					if (ExcludedComponents != null || ExcludedComponents.Count > 0)
+					if (ExcludedComponents != null && ExcludedComponents.Count > 0)
 					{
 						bool skip = false;
 
-						var blockDef = AllBlocks[i].BlockDefinition as MyCubeBlockDefinition;
+						//var blockDef = AllBlocks[i].BlockDefinition as MyCubeBlockDefinition;
 
 						Dictionary<string, int> missing = new Dictionary<string, int>();
 						AllBlocks[i].GetMissingComponents(missing);

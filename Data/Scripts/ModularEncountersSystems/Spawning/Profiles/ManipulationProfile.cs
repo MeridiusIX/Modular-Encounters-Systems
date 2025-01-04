@@ -135,7 +135,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<Vector3> RecolorOld;
 		public List<Vector3> RecolorNew;
 		public Dictionary<Vector3, string> ColorSkinReferencePairs;
+		public Dictionary<string, string> SkinReferencePairs;
 		public List<Vector3> ReskinTarget;
+		public List<string> ReskinTargetBySkin;
 		public List<string> ReskinTexture;
 
 		public bool SkinRandomBlocks;
@@ -331,7 +333,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RecolorOld = new List<Vector3>();
 			RecolorNew = new List<Vector3>();
 			ColorSkinReferencePairs = new Dictionary<Vector3, string>();
+			SkinReferencePairs = new Dictionary<string, string>();
 			ReskinTarget = new List<Vector3>();
+			ReskinTargetBySkin = new List<string>();
 			ReskinTexture = new List<string>();
 
 			SkinRandomBlocks = false;
@@ -1064,10 +1068,25 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//SkinReferencePairs
+				if (tag.StartsWith("[SkinReferencePairs:") == true) {
+
+					TagParse.TagStringDictionaryCheck(tag, ref this.SkinReferencePairs);
+					//Logger.Write(this.SkinReferencePairs.Keys.Count.ToString() + " Skin Reference Pairs");
+
+				}
+
 				//ReskinTarget
 				if (tag.StartsWith("[ReskinTarget:") == true) {
 
 					TagParse.TagVector3Check(tag, ref this.ReskinTarget);
+
+				}
+
+				//ReskinTargetBySkin
+				if (tag.StartsWith("[ReskinTargetBySkin:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.ReskinTargetBySkin);
 
 				}
 
@@ -1541,6 +1560,17 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 					if (!this.ColorSkinReferencePairs.ContainsKey(this.ReskinTarget[i]))
 						this.ColorSkinReferencePairs.Add(this.ReskinTarget[i], this.ReskinTexture[i]);
+
+				}
+
+			}
+
+			if (this.ReskinTargetBySkin.Count > 0 && this.ReskinTargetBySkin.Count == this.ReskinTexture.Count) {
+
+				for (int i = 0; i < this.ReskinTargetBySkin.Count; i++) {
+
+					if (!this.SkinReferencePairs.ContainsKey(this.ReskinTargetBySkin[i]))
+						this.SkinReferencePairs.Add(this.ReskinTargetBySkin[i], this.ReskinTexture[i]);
 
 				}
 

@@ -65,7 +65,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			Sensors = new List<IMySensorBlock>();
 			Timers = new List<IMyTimerBlock>();
 			Warheads = new List<IMyWarhead>();
-			
+
 			BuildLists();
 
 		}
@@ -81,7 +81,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				return;
 
 			this.RemoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplit;
-			
+
 			OverrideConnectedGridCheck = true;
 			CheckConnectedGrids();
 
@@ -103,7 +103,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			AddBlock(block, false);
 
 		}
- 
+
 		public void AddBlock(IMySlimBlock block, bool skipTimer = false) {
 
 			if (block == null)
@@ -194,7 +194,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 							break;
 
 						}
-						
+
 					}
 
 				}
@@ -237,7 +237,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			foreach(var projector in Projectors) {
 
-				if (projector == null || projector.MarkedForClose) 
+				if (projector == null || projector.MarkedForClose)
 					continue;
 
 				if (projector.ProjectedGrid == null)
@@ -289,7 +289,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				}
 
 			}
-		
+
 		}
 
 		public void ChangeHighestRangeAntennas(bool enabled) {
@@ -428,11 +428,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						break;
 
 					}
-  
+
 				}
 
 			}
-		
+
 		}
 
 		public void EnableBlocksInGroup(string groupName, SwitchEnum state) {
@@ -562,7 +562,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					continue;
 
 			}
-		
+
 		}
 
 		public IMyRadioAntenna GetActiveAntenna() {
@@ -673,7 +673,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if (datapadOb == null) {
 
 				return false;
-			
+
 			}
 
 			datapadOb.Name = def.DisplayNameString;
@@ -687,7 +687,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			inventory.AddItems(1, datapadOb);
 			return true;
-		
+
 		}
 
 		public void InsertDatapadsIntoSeats(List<string> datapadIds, int count) {
@@ -728,7 +728,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					i--;
 
 			}
-		
+
 		}
 
 		public bool RaycastGridCheck(Vector3D coords) {
@@ -761,7 +761,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 					gotHit = true;
 					break;
-				
+
 				}
 
 			}
@@ -813,7 +813,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
-		public void RecolorBlocks(IMyCubeGrid grid, List<Vector3D> oldColors, List<Vector3D> newColors, List<string> newSkins) {
+		public void RecolorBlocks(IMyCubeGrid grid, List<Vector3D> oldColors, List<string> oldSkins, List<Vector3D> newColors, List<string> newSkins) {
 
 			for (int j = AllBlocks.Count - 1; j >= 0; j--) {
 
@@ -858,6 +858,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					}
 
 				}
+
+				for (int i = 0; i < oldSkins.Count; i++) {
+
+					if (i >= newColors.Count && i >= newSkins.Count)
+						break;
+
+					if (!oldSkins[i].Equals(block.SkinSubtypeId))
+						continue;
+
+					if (i < newColors.Count) {
+
+						if (newColors[i] != new Vector3D(-10, -10, -10))
+							grid.ColorBlocks(block.Min, block.Min, (Vector3)newColors[i]);
+
+					}
+
+					if (i < newSkins.Count) {
+
+						if (!string.IsNullOrWhiteSpace(newSkins[i]))
+							grid.SkinBlocks(block.Min, block.Min, null, newSkins[i]);
+
+					}
+                }
 
 			}
 
@@ -925,13 +948,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 					result = true;
 					break;
-				
+
 				}
 
 			}
 
 			return result;
-		
+
 		}
 
 		public void SetGridAntennaRanges(List<string> names, string operation, float amount) {
@@ -997,9 +1020,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		}
 
 		public void Unload() {
-		
-			
-		
+
+
+
 		}
 
 	}

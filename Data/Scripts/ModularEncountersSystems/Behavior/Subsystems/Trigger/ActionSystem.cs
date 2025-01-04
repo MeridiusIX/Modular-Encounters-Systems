@@ -35,7 +35,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			BehaviorLogger.Write(trigger.ProfileSubtypeId + " Attempting To Execute Action Profile " + actionsBase.ProfileSubtypeId, BehaviorDebugEnum.Action);
 
 			var actions = actionsBase.ActionReference;
-			
+
 
 
 			if (actions == null) {
@@ -77,7 +77,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 				//MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);
-			
+
 			}
 
 			//ChatBroadcast
@@ -103,7 +103,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				foreach (var dialogueBank in _dialogueBanks)
 				{
-				
+
 					if(dialogueBank.GetChatProfile(actions.DialogueCueId,ref chat))
 					{
 						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
@@ -111,7 +111,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						break;
 					}
 
-					
+
 				}
 			}
 
@@ -120,7 +120,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.PlaySoundAtPosition && !string.IsNullOrWhiteSpace(actions.SoundAtPosition)) {
 
 				MyVisualScriptLogicProvider.PlaySingleSoundAtPosition(actions.SoundAtPosition, RemoteControl.GetPosition());
-			
+
 			}
 
 			//BarrellRoll
@@ -183,7 +183,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 							if (_behavior.RemoteControl.SlimBlock.CubeGrid.CustomName != spawner.ParentGridNameRequirement)
 								continue;
-						
+
 						}
 
 						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Spawn", BehaviorDebugEnum.Spawn);
@@ -306,7 +306,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					CommandHelper.SendCommand(newCommand);
 
 				}
-			
+
 			}
 
 			//BroadcastGenericCommand
@@ -443,9 +443,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								_behavior.AutoPilot.Targeting.ForceRefresh = true;
 
 							}
-						
+
 						}
-						
+
 
 					}
 
@@ -521,7 +521,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				foreach (var waypoint in _behavior.AutoPilot.State.CargoShipWaypoints) {
 
 					waypoint.SetValid(false);
-				
+
 				}
 
 			}
@@ -548,7 +548,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Received Waypoint From Command", BehaviorDebugEnum.Action);
 				_behavior.AutoPilot.State.CargoShipWaypoints.Add(command.Waypoint);
-			
+
 			}
 
 			//CancelWaitingAtWaypoint
@@ -574,7 +574,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				var result = _behavior.Escort.ProcessEscortRequest(command);
 				BehaviorLogger.Write(result, BehaviorDebugEnum.Action);
-			
+
 			}
 
 			//SwitchToBehavior
@@ -685,7 +685,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (string.IsNullOrWhiteSpace(actions.ChangeNpcFactionCreditsTag)) {
 
 					faction = _behavior.Owner.Faction;
-				
+
 				} else {
 
 					faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(actions.ChangeNpcFactionCreditsTag);
@@ -928,7 +928,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
 
 					}
-					
+
 				}
 
 
@@ -1011,13 +1011,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//RecolorGrid
 			if (actions.RecolorGrid) {
 
-				_behavior.Grid.RecolorBlocks(RemoteControl.SlimBlock.CubeGrid, actions.OldBlockColors, actions.NewBlockColors, actions.NewBlockSkins);
+				_behavior.Grid.RecolorBlocks(RemoteControl.SlimBlock.CubeGrid, actions.OldBlockColors, actions.OldBlockSkins, actions.NewBlockColors, actions.NewBlockSkins);
 
 				if (actions.RecolorSubGrids) {
 
 					foreach (var cubeGrid in MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical)) {
 
-						_behavior.Grid.RecolorBlocks(cubeGrid, actions.OldBlockColors, actions.NewBlockColors, actions.NewBlockSkins);
+						_behavior.Grid.RecolorBlocks(cubeGrid, actions.OldBlockColors, actions.OldBlockSkins, actions.NewBlockColors, actions.NewBlockSkins);
 
 					}
 
@@ -1046,8 +1046,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					_behavior.Grid.BuildProjectedBlocks(actions.MaxProjectedBlocksToBuild);
 
-				} 
-				else 
+				}
+				else
 				{
 
 					int remainingBlocks = actions.MaxProjectedBlocksToBuild;
@@ -1078,7 +1078,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 
 				}
-				
+
 			}
 
 			//ChangeBlockOwnership
@@ -1088,7 +1088,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					BlockCollectionHelper.ChangeBlockOwnership(RemoteControl.SlimBlock.CubeGrid, actions.OwnershipBlockNames, actions.OwnershipBlockFactions);
 				else
 					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Change Block Ownership Failed. Block Name List and Faction List Count Mismatch.", BehaviorDebugEnum.Action);
-				
+
 			}
 
 			//RazeBlocksNames
@@ -1281,7 +1281,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						var coords = cell;
 						var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
 						IMyCharacter character = null;
-						
+
 						BotSpawner.SpawnBotRequest(botProfile.SerializedData, matrix, out character, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, RemoteControl.OwnerId);
 
 					} else {
@@ -1333,9 +1333,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						_behavior.JetpackInhibitorLogic = null;
 
 					}
-				
+
 				}
-			
+
 			}
 
 			//UseDrillInhibitorEffect
@@ -1446,7 +1446,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.SetGridCleanupExempt && _behavior.CurrentGrid != null) {
 
 				Cleaning.ExemptGrids.Add(new GridCleanupExemption(_behavior.CurrentGrid, actions.GridCleanupExemptDuration));
-			
+
 			}
 
 			//JumpToTarget
@@ -1457,7 +1457,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (jumpResult) {
 
 					EventWatcher.GridJumped(0, "", RemoteControl.SlimBlock.CubeGrid.EntityId);
-				
+
 				}
 
 				BehaviorLogger.Write("Attempt Jump To Target Entity Result: " + jumpResult, BehaviorDebugEnum.Action);
@@ -1536,11 +1536,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							BehaviorLogger.Write("Temporary Planet Timer Could Not Be Created. PlanetEntity Object May Not Be Init Yet.", BehaviorDebugEnum.Action);
 
 						}
-					
+
 					}
 
 				}
-			
+
 			}
 
 			//ChangeBlocksShareModeAll
@@ -1575,19 +1575,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 											break;
 
 										}
-									
+
 									}
 
 								}
-							
+
 							}
-						
+
 						}
-					
+
 					}
-				
+
 				}
-			
+
 			}
 
 			if (actions.ActivateEvent)
@@ -1641,7 +1641,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Custom Data To Blocks. [Block Names: " + actions.CustomDataBlockNames.Count + "] [CustomData TextTemplates: " + actions.CustomDataFiles.Count + "]", BehaviorDebugEnum.Action);
 				_behavior.Grid.AddCustomData(actions.CustomDataBlockNames, actions.CustomDataFiles);
-			
+
 			}
 
 			if (actions.ApplyLcdChanges) {
@@ -1673,7 +1673,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Store Profile With Name: " + actions.StoreProfiles[i], BehaviorDebugEnum.Action);
 						continue;
-					
+
 					}
 
 					foreach (var store in _behavior.CurrentGrid.Stores) {
@@ -1683,11 +1683,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Store Profile With Name: " + actions.StoreProfiles[i], BehaviorDebugEnum.Action);
 						profile.ApplyProfileToBlock(store.Block as IMyStoreBlock, actions.ClearStoreContentsFirst);
-					
+
 					}
-				
+
 				}
-			
+
 			}
 
 			if (actions.ApplyContractProfiles && (_behavior.CurrentGrid?.ActiveEntity() ?? false))
@@ -1738,7 +1738,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.UseCurrentPositionAsPatrolReference) {
 
 				_behavior.BehaviorSettings.PatrolOverrideLocation = _behavior.RemoteControl.GetPosition();
-			
+
 			}
 
 			if (actions.ClearCustomPatrolReference) {
@@ -1750,7 +1750,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			if (actions.SetGridToStatic) {
 
 				_behavior.RemoteControl.SlimBlock.CubeGrid.IsStatic = true;
-			
+
 			}
 
 			if (actions.SetGridToDynamic) {
@@ -1766,9 +1766,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (player != null) {
 
 					player.Progression.Points += (byte)actions.ResearchPointsAmount;
-				
+
 				}
-			
+
 			}
 
 			if (actions.CreateSafeZone) {
@@ -1798,7 +1798,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					}
 
 				}
-			
+
 			}
 
 
@@ -1824,7 +1824,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								continue;
 							player.ProgressionData.Tags.Add(tag);
 						}
-						
+
 					}
 
 				}
@@ -1898,7 +1898,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (actions.ResetCooldownTimeOfEvents)
 			{
-				
+
 				EventActionProfile.ResetCooldownTimeOfEvents(IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ResetEventCooldownIds), IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ResetEventCooldownTags));
 
 
@@ -1912,9 +1912,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (actions.ResetThisStaticEncounter)
 			{
-		
+
 				var spawngroupname = _behavior?.CurrentGrid?.Npc.SpawnGroupName;
-		
+
 				if(spawngroupname != null)
 				  NpcManager.ResetThisResetThisStaticEncounter(spawngroupname);
 
@@ -1984,7 +1984,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				SetSandboxCounter(variable, -Math.Abs(actions.DecreaseSandboxCountersAmount));
 
 			//ResetSandboxCounters
-			foreach (var variable in actions.ResetSandboxCounters) 
+			foreach (var variable in actions.ResetSandboxCounters)
 				SetSandboxCounter(variable, 0);
 
 			//SetSandboxCounters

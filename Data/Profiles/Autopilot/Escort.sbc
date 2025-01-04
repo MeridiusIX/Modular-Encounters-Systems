@@ -2,11 +2,28 @@
 <Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <EntityComponents>
 
+	  
+	  
+	  <!-- 
+	  I changed this to RAI-Generic-Autopilot-Escort that broke existing behavior for npcmodders, so only change if you know what you are doing.
+	
+        @Mike dude		
+        Looks like Escort behaviors fail to load any provided primary autopilot profiles, including the default one
+        Detected Profiles: Error
+        - Primary AutoPilot Data Could Not Be Loaded: [RAI-Generic-Autopilot-Escort]
+ 
+	  @shiftyshadow
+	  I've noticed that the Escort Behavior ignores  [FlyLevelWithGravity:true] in its autopilot profile.  Is there any way to fix this?
+
+      @Mike dude	  
+	  I have this too but I believe it's because Escort is failing to load any custom autopilot profile. 
+	  
+	  -->
     <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
 
       <Id>
         <TypeId>Inventory</TypeId>
-        <SubtypeId>RAI-Generic-Autopilot-Escort</SubtypeId>
+        <SubtypeId>RAI-Generic-Autopilot-Patrol</SubtypeId>
       </Id>
       <Description>
 

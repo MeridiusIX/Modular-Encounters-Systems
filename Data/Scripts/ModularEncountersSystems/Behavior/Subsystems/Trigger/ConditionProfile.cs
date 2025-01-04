@@ -961,7 +961,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					var result = Math.Abs(VectorHelper.GetAngleBetweenDirections(_behavior.AutoPilot.UpDirectionFromPlanet, _behavior.RemoteControl.WorldMatrix.Forward) - 90);
 
-					if ((ConditionReference.MinHorizonAngle == -1 || _behavior.AutoPilot.MyAltitude > ConditionReference.MinHorizonAngle) && (ConditionReference.MaxHorizonAngle == -1 || _behavior.AutoPilot.MyAltitude < ConditionReference.MaxHorizonAngle))
+					if ((ConditionReference.MinHorizonAngle == -1 || result > ConditionReference.MinHorizonAngle) && (ConditionReference.MaxHorizonAngle == -1 || result < ConditionReference.MaxHorizonAngle))
 						satisfiedConditions++;
 				
 				}

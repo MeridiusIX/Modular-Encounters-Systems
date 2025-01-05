@@ -428,14 +428,14 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (conditions.UseTerrainTypeValidation) {
 
-				if (!conditions.AllowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
+				if (conditions.AllowedTerrainTypes.Count > 0 && !conditions.AllowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
 
 					failReason = "   - Allowed Terrain Check Failed";
 					return false;
 
 				}
 
-				if (conditions.DisallowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
+				if (conditions.DisallowedTerrainTypes.Count > 0 && conditions.DisallowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
 
 					failReason = "   - Disallowed Terrain Check Failed";
 					return false;

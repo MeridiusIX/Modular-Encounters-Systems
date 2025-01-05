@@ -1003,13 +1003,13 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (terrain != null) {
 
-					if (!collection.Conditions.AllowedTerrainTypes.Contains(terrain.MaterialTypeName)) {
+					if (collection.Conditions.AllowedTerrainTypes.Count > 0 && !collection.Conditions.AllowedTerrainTypes.Contains(terrain.MaterialTypeName)) {
 
 						return false;
 
 					}
 
-					if (collection.Conditions.DisallowedTerrainTypes.Contains(terrain.MaterialTypeName)) {
+					if (collection.Conditions.DisallowedTerrainTypes.Count > 0 && collection.Conditions.DisallowedTerrainTypes.Contains(terrain.MaterialTypeName)) {
 
 						return false;
 

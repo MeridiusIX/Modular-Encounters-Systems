@@ -173,7 +173,7 @@ namespace ModularEncountersSystems.Spawning {
 					continue;
 
 				}
-
+				
 				//NPC Data
 				var npcData = new NpcData();
 				npcData.AssignAttributes(spawnCollection.SpawnGroup, path.SpawnType);
@@ -195,7 +195,7 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.Attributes.OwnershipValidation = true;
 				npcData.EventInstanceId = spawnCollection.EventInstanceId;
 				npcData.CustomVariablesName = spawnCollection.SpawnGroup.CustomVariablesName;
-
+				npcData.TerrainTypeName = environment.CommonTerrainAtPosition;
 				//Calculate Coordinates
 				npcData.StartCoords = path.GetPrefabStartCoords(spawnCollection.SelectPrefabOffet(sgPrefab.Position, i), environment, spawnCollection.Conditions.CustomPathStartAltitude);
 				npcData.EndCoords = path.GetPrefabEndCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathEndAltitude);

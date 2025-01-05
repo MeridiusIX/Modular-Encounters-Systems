@@ -140,7 +140,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool IsOnDarkSide;
 
-
+		public bool MatchTerrainType;
+		public List<string> TerrainTypeWhitelist;
+		public List<string> TerrainTypeBlacklist;
 
 		public bool TargetAltitudeCheck;
 		public double MinTargetAltitude;
@@ -370,6 +372,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			IsOnDarkSide = false;
 
+			MatchTerrainType = false;
+			TerrainTypeWhitelist = new List<string>();
+			TerrainTypeBlacklist = new List<string>();
+
+
 			TargetAltitudeCheck = false;
 			MinTargetAltitude = -1;
 			MaxTargetAltitude = -1;
@@ -575,6 +582,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"MinAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinAltitude) },
 				{"MaxAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAltitude) },
 				{"IsOnDarkSide", (s, o) => TagParse.TagBoolCheck(s, ref IsOnDarkSide) },
+				{"MatchTerrainType", (s, o) => TagParse.TagBoolCheck(s, ref MatchTerrainType) },
+				{"TerrainTypeWhitelist", (s, o) => TagParse.TagStringListCheck(s, ref TerrainTypeWhitelist) },
+				{"TerrainTypeBlacklist", (s, o) => TagParse.TagStringListCheck(s, ref TerrainTypeBlacklist) },
 				{"TargetAltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref TargetAltitudeCheck) },
 				{"MinTargetAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetAltitude) },
 				{"MaxTargetAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetAltitude) },

@@ -894,6 +894,43 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
+            if (ConditionReference.MatchTerrainType)
+            {
+				if (_behavior.AutoPilot.CurrentPlanet == null)
+				{
+					satisfiedConditions++;
+				}
+
+				//var coords = _behavior.RemoteControl.GetPosition();
+				//var checkSurfaceCoords = _behavior.AutoPilot.CurrentPlanet.SurfaceCoordsAtPosition(coords);
+				//var checkMaterial = _behavior.AutoPilot.CurrentPlanet.Planet.GetMaterialAt(ref checkSurfaceCoords);
+
+				bool fail = false;
+
+				if (ConditionReference.TerrainTypeWhitelist.Count > 0 && !ConditionReference.TerrainTypeWhitelist.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+				{
+					BehaviorLogger.Write("TerrainTypeWhitelist failed", BehaviorDebugEnum.Condition);
+					fail = true;
+				}
+
+				if (ConditionReference.TerrainTypeBlacklist.Count > 0 && ConditionReference.TerrainTypeBlacklist.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+				{
+					BehaviorLogger.Write("TerrainTypeBlacklist failed", BehaviorDebugEnum.Condition);
+					fail = true;
+				}
+
+
+				if (!fail)
+                {
+					satisfiedConditions++;
+				}
+
+
+
+
+			}
+
+
 
 			if (ConditionReference.AltitudeCheck) {
 

@@ -402,6 +402,8 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(40)] 
 		public string CustomVariablesName;
 
+		[ProtoMember(41)]
+		public string TerrainTypeName; //Store data for MatchTerrainType in AI conditions 
 
 		//Non-Serialized Data
 
@@ -580,7 +582,7 @@ namespace ModularEncountersSystems.World {
 			CustomVariablesName = "";
 
 			FriendlyName = "";
-
+			TerrainTypeName = "";
 			_spawnGroup = null;
 			SecondsSinceSpawn = 0;
 			SessionTime = MyAPIGateway.Session.GameDateTime;

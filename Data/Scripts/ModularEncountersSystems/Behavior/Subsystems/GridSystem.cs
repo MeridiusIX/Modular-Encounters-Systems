@@ -864,7 +864,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					if (i >= oldSkins.Count && i >= newSkins.Count)
 						break;
 
-					if (!oldSkins[i].Equals(block.SkinSubtypeId))
+					if (!oldSkins[i].Equals(block.SkinSubtypeId.String))
 						continue;
 
 					if (i < newSkins.Count) {

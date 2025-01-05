@@ -88,6 +88,10 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			var blockColor = new Vector3(block.ColorMaskHSV.X, block.ColorMaskHSV.Y, block.ColorMaskHSV.Z);
 			var blockSkin = block.SkinSubtypeId;
 
+            if (blockSkin == null) {
+                blockSkin = "";
+            }
+
 			//Replace Colors
 			Vector3 outputColor = Vector3.Zero;
 			string outputSkin = "";

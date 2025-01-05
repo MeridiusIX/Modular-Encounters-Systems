@@ -101,7 +101,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> SetSandboxBooleansFalse;
 		public List<string> IncreaseSandboxCounters;
 		public List<string> DecreaseSandboxCounters;
-		public int IncreaseSandboxCountersAmount;      
+		public int IncreaseSandboxCountersAmount;
 		public int DecreaseSandboxCountersAmount;
 
 		public List<string> ResetSandboxCounters;
@@ -193,6 +193,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool RecolorGrid;
 		public bool RecolorSubGrids;
 		public List<Vector3D> OldBlockColors;
+		public List<string> OldBlockSkins;
 		public List<Vector3D> NewBlockColors;
 		public List<string> NewBlockSkins;
 
@@ -292,7 +293,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool CancelWaitingAtWaypoint;
 		public bool SwitchToNextWaypoint;
-		
+
 		public bool HeavyYaw;
 
 		public bool StopAllRotation;
@@ -339,7 +340,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool EnableHighestRangeAntennas;
 		public bool DisableHighestRangeAntennas;
 
-		public bool AssignEscortFromCommand; 
+		public bool AssignEscortFromCommand;
 
 		public bool UseCurrentPositionAsPatrolReference;
 		public bool ClearCustomPatrolReference;
@@ -347,10 +348,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SetGridToStatic;
 		public bool SetGridToDynamic;
 
-		public BoolEnum UseJetpackInhibitorEffect; 
-		public BoolEnum UseDrillInhibitorEffect; 
-		public BoolEnum UseNanobotInhibitorEffect; 
-		public BoolEnum UseJumpInhibitorEffect; 
+		public BoolEnum UseJetpackInhibitorEffect;
+		public BoolEnum UseDrillInhibitorEffect;
+		public BoolEnum UseNanobotInhibitorEffect;
+		public BoolEnum UseJumpInhibitorEffect;
 		public BoolEnum UsePlayerInhibitorEffect;
 
 		public bool ChangeTurretTargetingParameters; //Implement
@@ -358,25 +359,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> TurretTypesForTargetChanges; //Implement
 		public List<string> TurretSubtypesForTargetChange; //Implement
 
-		public bool JumpToTarget; 
-		public bool JumpToJumpedEntity; 
+		public bool JumpToTarget;
+		public bool JumpToJumpedEntity;
 		public bool JumpedEntityMustBeTarget;
 
 		public bool JumpToWaypoint;
 		public string JumpWaypoint;
 
-		public bool SetGridCleanupExempt; 
-		public int GridCleanupExemptDuration; 
+		public bool SetGridCleanupExempt;
+		public int GridCleanupExemptDuration;
 
-		public bool PlaySoundAtPosition; 
-		public string SoundAtPosition; 
+		public bool PlaySoundAtPosition;
+		public string SoundAtPosition;
 
-		public bool SpawnPlanet; 
-		public string PlanetName; 
-		public float PlanetSize; 
+		public bool SpawnPlanet;
+		public string PlanetName;
+		public float PlanetSize;
 		public bool PlanetIgnoreSafeLocation; //Implement //Doc
-		public string PlanetWaypointProfile; 
-		public bool TemporaryPlanet; 
+		public string PlanetWaypointProfile;
+		public bool TemporaryPlanet;
 		public int PlanetTimeLimit;
 
 		public bool AddCustomDataToBlocks;
@@ -564,7 +565,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SetSandboxCounters = new List<string>();
 			SetSandboxCountersValues = new List<int>();
 
-			
+
 			IncreaseSandboxCountersAmount = 1;
 
 			DecreaseSandboxCountersAmount = -1;
@@ -635,6 +636,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			RecolorGrid = false;
 			RecolorSubGrids = false;
 			OldBlockColors = new List<Vector3D>();
+			OldBlockSkins = new List<string>();
 			NewBlockColors = new List<Vector3D>();
 			NewBlockSkins = new List<string>();
 
@@ -900,7 +902,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ToggleEventTags = new List<string>();
 			ToggleEventTagModes = new List<bool>();
 
-			
+
 			DisableAutopilot = false;
 			EnableAutopilot = false;
 
@@ -978,7 +980,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"SetSandboxBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansFalse) },
 				{"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
 				{"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
-				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) }, 
+				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) },
 				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) },
 				{"IncreaseCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseCountersAmount) },
 				{"DecreaseCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseCountersAmount) },
@@ -1030,6 +1032,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"RecolorGrid", (s, o) => TagParse.TagBoolCheck(s, ref RecolorGrid) },
 				{"RecolorSubGrids", (s, o) => TagParse.TagBoolCheck(s, ref RecolorSubGrids) },
 				{"OldBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref OldBlockColors) },
+				{"OldBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref OldBlockSkins) },
 				{"NewBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref NewBlockColors) },
 				{"NewBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref NewBlockSkins) },
 				{"ChangeBlockOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockOwnership) },
@@ -1282,7 +1285,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				foreach (var tag in descSplit) {
 
 					EditValue(tag);
-					
+
 				}
 
 			}

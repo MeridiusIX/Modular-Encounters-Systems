@@ -86,6 +86,11 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 		public static void ReplaceColorsAndSkins(MyObjectBuilder_CubeBlock block, ManipulationProfile profile) {
 
 			var blockColor = new Vector3(block.ColorMaskHSV.X, block.ColorMaskHSV.Y, block.ColorMaskHSV.Z);
+			var blockSkin = block.SkinSubtypeId;
+
+            if (blockSkin == null) {
+                blockSkin = "";
+            }
 
 			//Replace Colors
 			Vector3 outputColor = Vector3.Zero;
@@ -102,6 +107,11 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			if (profile.ColorSkinReferencePairs.TryGetValue(blockColor, out outputSkin)) {
 
 				block.SkinSubtypeId = profile.ColorSkinReferencePairs[blockColor];
+
+			}
+			if (profile.SkinReferencePairs.TryGetValue(blockSkin, out outputSkin)) {
+
+				block.SkinSubtypeId = profile.SkinReferencePairs[blockSkin];
 
 			}
 

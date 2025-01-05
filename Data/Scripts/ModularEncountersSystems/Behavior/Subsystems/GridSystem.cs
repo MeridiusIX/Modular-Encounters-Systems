@@ -861,18 +861,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				for (int i = 0; i < oldSkins.Count; i++) {
 
-					if (i >= newColors.Count && i >= newSkins.Count)
+					if (i >= oldSkins.Count && i >= newSkins.Count)
 						break;
 
 					if (!oldSkins[i].Equals(block.SkinSubtypeId))
 						continue;
-
-					if (i < newColors.Count) {
-
-						if (newColors[i] != new Vector3D(-10, -10, -10))
-							grid.ColorBlocks(block.Min, block.Min, (Vector3)newColors[i]);
-
-					}
 
 					if (i < newSkins.Count) {
 

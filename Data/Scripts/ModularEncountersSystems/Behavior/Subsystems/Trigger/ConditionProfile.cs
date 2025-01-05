@@ -907,13 +907,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				bool fail = false;
 
-				if (ConditionReference.TerrainTypeWhitelist.Count > 0 && !ConditionReference.TerrainTypeWhitelist.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+				if (ConditionReference.TerrainTypeWhitelistNames.Count > 0 && !ConditionReference.TerrainTypeWhitelistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
 				{
 					BehaviorLogger.Write("TerrainTypeWhitelist failed", BehaviorDebugEnum.Condition);
 					fail = true;
 				}
 
-				if (ConditionReference.TerrainTypeBlacklist.Count > 0 && ConditionReference.TerrainTypeBlacklist.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+				if (ConditionReference.TerrainTypeBlacklistNames.Count > 0 && ConditionReference.TerrainTypeBlacklistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
 				{
 					BehaviorLogger.Write("TerrainTypeBlacklist failed", BehaviorDebugEnum.Condition);
 					fail = true;

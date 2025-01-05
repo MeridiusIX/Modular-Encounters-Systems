@@ -7,14 +7,14 @@ using VRageMath;
 namespace ModularEncountersSystems.Spawning.Profiles {
 
 	public enum PrefabSpawnMode {
-	
+
 		None,
 		All,
 		Random,
 		SelectedIndexes,
 		RandomSelectedIndexes,
 		RandomFixedCount,
-	
+
 	}
 
 	public class SpawnConditionsProfile {
@@ -200,6 +200,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public bool UseTerrainTypeValidation;
 		public List<string> AllowedTerrainTypes;
+		public List<string> DisallowedTerrainTypes;
 
 		public double MinAirDensity;
 		public double MaxAirDensity;
@@ -545,6 +546,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			UseTerrainTypeValidation = false;
 			AllowedTerrainTypes = new List<string>();
+			DisallowedTerrainTypes = new List<string>();
 
 			MinAirDensity = -1;
 			MaxAirDensity = -1;
@@ -835,6 +837,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"AllowedWeatherSystems", (s, o) => TagParse.TagStringListCheck(s, ref AllowedWeatherSystems) },
 				{"UseTerrainTypeValidation", (s, o) => TagParse.TagBoolCheck(s, ref UseTerrainTypeValidation) },
 				{"AllowedTerrainTypes", (s, o) => TagParse.TagStringListCheck(s, ref AllowedTerrainTypes) },
+				{"DisallowedTerrainTypes", (s, o) => TagParse.TagStringListCheck(s, ref DisallowedTerrainTypes) },
 				{"MinAirDensity", (s, o) => TagParse.TagDoubleCheck(s, ref MinAirDensity) },
 				{"MaxAirDensity", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAirDensity) },
 				{"MinGravity", (s, o) => TagParse.TagDoubleCheck(s, ref MinGravity) },
@@ -1008,7 +1011,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (this.PlanetaryInstallation == true && !this.InstallationSpawnsOnWaterSurface && setForceStatic == false) {
 
 
-					
+
 					this.ForceStaticGrid = true;
 
 					if (this.DoNotForceStaticGrid)

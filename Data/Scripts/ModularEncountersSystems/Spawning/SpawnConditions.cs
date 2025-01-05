@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.Spawning {
 					spawnTypes |= SpawningType.UnderWaterStation;
 
 				}
-	
+
 			}
 
 			if (type == SpawningType.BossEncounter) {
@@ -108,7 +108,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			if (type == SpawningType.Creature) {
-			
+
 				if(environment.IsOnPlanet && environment.AltitudeAtPosition <= Settings.Creatures.MaxPlayerAltitudeForSpawn)
 					spawnTypes |= SpawningType.Creature;
 
@@ -127,7 +127,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			return spawnTypes;
-		
+
 		}
 
 		public static bool SpawningTypeAllowedForGroup(SpawningType type, SpawnConditionsProfile conditions) {
@@ -366,7 +366,7 @@ namespace ModularEncountersSystems.Spawning {
 				return false;
 
 			}
-				
+
 
 			if (conditions.MaxAirDensity != -1 && environment.AtmosphereAtPosition > conditions.MinAirDensity) {
 
@@ -399,9 +399,9 @@ namespace ModularEncountersSystems.Spawning {
 						return false;
 
 					}
-				
+
 				}
-			
+
 			}
 
 			if (conditions.UseDayOrNightOnly) {
@@ -428,9 +428,16 @@ namespace ModularEncountersSystems.Spawning {
 
 			if (conditions.UseTerrainTypeValidation) {
 
-				if (!conditions.AllowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
+				if (conditions.AllowedTerrainTypes.Count > 0 && !conditions.AllowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
 
 					failReason = "   - Allowed Terrain Check Failed";
+					return false;
+
+				}
+
+				if (conditions.DisallowedTerrainTypes.Count > 0 && conditions.DisallowedTerrainTypes.Contains(environment.CommonTerrainAtPosition)) {
+
+					failReason = "   - Disallowed Terrain Check Failed";
 					return false;
 
 				}
@@ -630,7 +637,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				failReason = "   - SpawnGroup Planet Blacklist/Whitelist Check Failed";
 				return true;
-			
+
 			}
 
 			//SpawnType Blacklist SpawnGroup Name
@@ -690,7 +697,7 @@ namespace ModularEncountersSystems.Spawning {
 				return MathTools.RandomChance(spawnGroup.PlanetaryInstallationChance, spawnGroup.ChanceCeiling);
 
 			}
-				
+
 
 			if ((spawnTypes.HasFlag(SpawningType.BossAtmo) || spawnTypes.HasFlag(SpawningType.BossGravity) || spawnTypes.HasFlag(SpawningType.BossSpace)) && spawnGroup.BossEncounterChance < spawnGroup.ChanceCeiling)
 				return MathTools.RandomChance(spawnGroup.BossEncounterChance, spawnGroup.ChanceCeiling);
@@ -702,7 +709,7 @@ namespace ModularEncountersSystems.Spawning {
 				return MathTools.RandomChance(spawnGroup.DroneEncounterChance, spawnGroup.ChanceCeiling);
 
 			return true;
-		
+
 		}
 
 		public static bool CheckCommonSpawnConditions(ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions, SpawnGroupCollection collection, string source, EnvironmentEvaluation environment, bool adminSpawn, SpawningType type, SpawningType spawnTypes, Dictionary<string, DateTime> playerDroneTracker, bool persistentConditionCheck, ref string failReason) {
@@ -722,7 +729,7 @@ namespace ModularEncountersSystems.Spawning {
 					return false;
 
 				}
-			
+
 			}
 
 			if (playerDroneTracker != null) {
@@ -762,7 +769,7 @@ namespace ModularEncountersSystems.Spawning {
 			if (CheckBlacklists(type, spawnGroup, environment, conditions, ref failReason)) {
 
 				return false;
-			
+
 			}
 
 			if (!adminSpawn && !CheckChance(spawnTypes, conditions)) {
@@ -809,7 +816,7 @@ namespace ModularEncountersSystems.Spawning {
 					return false;
 
 				}
-			
+
 			}
 
 			if (conditions.UniqueEncounter == true && NpcManager.UniqueGroupsSpawned.Contains(spawnGroup.SpawnGroup.Id.SubtypeName) == true) {
@@ -829,7 +836,7 @@ namespace ModularEncountersSystems.Spawning {
 			if (!CheckDateTime(conditions, environment, ref failReason)) {
 
 				return false;
-			
+
 			}
 
 			if (DistanceFromCenterCheck(conditions, environment) == false) {
@@ -1041,7 +1048,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			if (conditions.UseDifficulty) {
-				
+
 				if (Settings.General.Difficulty < conditions.MinDifficulty && conditions.MinDifficulty > 0) {
 
 					failReason = "   - Minimum Difficulty Check Failed";
@@ -1058,7 +1065,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			
+
 			if (Settings.Combat.EnableCombatPhaseSystem && conditions.CombatPhaseChecksInPersistentCondition == persistentConditionCheck && !conditions.IgnoreCombatPhase && source != "Wave Spawner" && !source.Contains("IgnoreCombat")) {
 
 				if (CombatPhaseManager.Active && !conditions.UseCombatPhase) {
@@ -1112,7 +1119,7 @@ namespace ModularEncountersSystems.Spawning {
 
 
 
-				
+
 
 				foreach (var grid in GridManager.Grids)
 				{
@@ -1122,8 +1129,8 @@ namespace ModularEncountersSystems.Spawning {
 					if (foundTheBlocks)
 						break;
 
-					
-					
+
+
 
 					if (!grid.ActiveEntity() || grid.Distance(environment.Position) > checkRange)
 						continue;
@@ -1133,7 +1140,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					foreach (BlockEntity item in grid.AllTerminalBlocks)
 					{
-						
+
 						if (SubtypeIds.Remove(((MyDefinitionId)item.Block.BlockDefinition).SubtypeName))
 						{
 							//MyVisualScriptLogicProvider.ShowNotificationToAll("I got it", 5000);
@@ -1158,7 +1165,7 @@ namespace ModularEncountersSystems.Spawning {
 
 
 
-			
+
 
 
 
@@ -1359,12 +1366,12 @@ namespace ModularEncountersSystems.Spawning {
 						break;
 
 					}
-				
+
 				}
 
 				if (!result)
 					return false;
-			
+
 			}
 
 			/*
@@ -1393,8 +1400,8 @@ namespace ModularEncountersSystems.Spawning {
 					failReason = "   - EventController Check Failed";
 					return false;
 				}
-					
-				
+
+
 
 
 			}
@@ -1415,7 +1422,7 @@ namespace ModularEncountersSystems.Spawning {
 					return false;
 
 				}
-			
+
 			}
 
 			if (conditions.UseDateTimeMonthRange) {
@@ -1471,7 +1478,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 			*/
 			return true;
-		
+
 		}
 
 		public static bool CheckSandboxVariables(List<string> variableNames, List<string> falseVariableNames) {
@@ -1566,7 +1573,7 @@ namespace ModularEncountersSystems.Spawning {
 				//BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Names and Targets List Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
 				return false;
 				}
-			
+
 			return true;
 
 		}
@@ -1617,7 +1624,7 @@ namespace ModularEncountersSystems.Spawning {
 					return false;
 
 				}
-					
+
 
 			}
 
@@ -1694,7 +1701,7 @@ namespace ModularEncountersSystems.Spawning {
 				return false;
 
 			return true;
-		
+
 		}
 
 		private static bool SessionSettingCheck(bool setting, BoolEnum condition) {
@@ -1722,13 +1729,13 @@ namespace ModularEncountersSystems.Spawning {
 				if (modId.Contains(id)) {
 
 					return true;
-				
+
 				}
-			
+
 			}
 
 			return false;
-		
+
 		}
 
 		public static bool CheckCombatSpawnOverrides(bool active, ImprovedSpawnGroup spawnGroup, SpawnConditionsProfile conditions) {
@@ -1885,7 +1892,7 @@ namespace ModularEncountersSystems.Spawning {
 						continue;
 
 					}
-						
+
 
 					if (zone.Persistent) {
 
@@ -1895,7 +1902,7 @@ namespace ModularEncountersSystems.Spawning {
 							continue;
 
 						}
-							
+
 					} else {
 
 						if (!zoneCondition.UseKnownPlayerLocation || !zone.PlayerKnownLocation) {
@@ -1904,7 +1911,7 @@ namespace ModularEncountersSystems.Spawning {
 							continue;
 
 						}
-					
+
 					}
 
 					if (!zone.SandboxBoolCheck()) {
@@ -1931,7 +1938,7 @@ namespace ModularEncountersSystems.Spawning {
 						continue;
 
 					}
-						
+
 					//Max Dist From Center
 					if (zoneCondition.MaxDistanceFromZoneCenter > -1 && distance > zoneCondition.MaxDistanceFromZoneCenter) {
 
@@ -2022,7 +2029,7 @@ namespace ModularEncountersSystems.Spawning {
 				return false;
 
 			}
-				
+
 
 			if (zonePersistentRequirement) {
 
@@ -2405,7 +2412,7 @@ namespace ModularEncountersSystems.Spawning {
 								continue;
 
 							foundValidSignal = true;
-						
+
 						}
 
 						if (!foundValidSignal) {

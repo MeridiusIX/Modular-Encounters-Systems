@@ -108,7 +108,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			return StartCoords;
-		
+
 		}
 
 		public Vector3D GetPrefabEndCoords(Vector3D offset, EnvironmentEvaluation environment, double customEndAltitude = -1) {
@@ -140,7 +140,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				
+
 
 			}
 
@@ -167,7 +167,7 @@ namespace ModularEncountersSystems.Spawning {
 					CalculateLunarPath(path, collection, environment);
 
 				}
-					
+
 				else if (environment.SpaceCargoShipsEligible) {
 
 					CalculateSpacePath(path, collection, environment);
@@ -175,7 +175,7 @@ namespace ModularEncountersSystems.Spawning {
 				}
 
 				return path;
-			
+
 			}
 
 			//Random Encounter
@@ -195,7 +195,7 @@ namespace ModularEncountersSystems.Spawning {
 				if (environment.PlanetaryCargoShipsEligible) {
 
 					CalculateAtmoPath(path, collection, environment);
-				
+
 				} else if (environment.GravityCargoShipsEligible) {
 
 					CalculateGravityPath(path, collection, environment);
@@ -272,7 +272,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			SpawnLogger.Write("No Path For Selected Type: " + type.ToString(), SpawnerDebugEnum.Pathing);
 			return path;
-		
+
 		}
 
 		public static PathDetails GetStaticSpawnPlacement(SpawningType type, SpawningType spawnTypes, SpawnGroupCollection collection, EnvironmentEvaluation environment, StaticEncounter encounter) {
@@ -291,7 +291,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				CalculateStaticCoords(path, collection, environment, spawnTypes);
 				return path;
-			
+
 			}
 
 			SpawnLogger.Write("Static/Boss No Matching SpawnType For Pathing. Got: " + type.ToString() + " and " + spawnTypes.ToString(), SpawnerDebugEnum.Pathing);
@@ -459,7 +459,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		
+
 
 		private static void CalculateAtmoPath(PathDetails path, SpawnGroupCollection collection, EnvironmentEvaluation environment) {
 
@@ -482,7 +482,7 @@ namespace ModularEncountersSystems.Spawning {
 				var startPathPoint = upAtHalfPath * pathHeight + halfPathPointRough;
 
 				var pathDistance = MathTools.RandomBetween(Settings.PlanetaryCargoShips.MinPathDistance, Settings.PlanetaryCargoShips.MaxPathDistance);
-				
+
 				if (environment.NearestPlanet.Planet.GetAirDensity(startPathPoint) < Settings.PlanetaryCargoShips.MinAirDensity) {
 
 					pathHeight = MathTools.Average(Settings.PlanetaryCargoShips.MinSpawningAltitude, Settings.PlanetaryCargoShips.MaxSpawningAltitude);
@@ -573,7 +573,7 @@ namespace ModularEncountersSystems.Spawning {
 						break;
 
 					}
-	
+
 				}
 
 				if (obstructed)
@@ -611,7 +611,7 @@ namespace ModularEncountersSystems.Spawning {
 				if ((collection.Conditions.MinGravity > -1 && gravityAtHalf < collection.Conditions.MinGravity) || (collection.Conditions.MaxGravity > -1 && gravityAtHalf > collection.Conditions.MaxGravity)) {
 
 					continue;
-				
+
 				}
 
 				var upAtHalfPath = environment.NearestPlanet.UpAtPosition(halfPathPointRough);
@@ -777,12 +777,12 @@ namespace ModularEncountersSystems.Spawning {
 			var checkDirections = new List<Vector3D>();
 
 			PopulateSearchDirections(searchDirections, searchMatrix, Settings.PlanetaryInstallations.AggressivePathCheck);
-			
+
 			int searchDirectionAttempts = 0; //This is for Debug
 
 			foreach (var searchDirection in searchDirections) {
 
-				searchDirectionAttempts++; 
+				searchDirectionAttempts++;
 				double searchIncrement = startDist - Settings.PlanetaryInstallations.SearchPathIncrement;
 
 				while (searchIncrement < endDist) {
@@ -853,7 +853,7 @@ namespace ModularEncountersSystems.Spawning {
 
 								badPosition = true;
 								break;
-							
+
 							}
 
 							terrainCheckIncrement += Settings.PlanetaryInstallations.TerrainCheckIncrementDistance;
@@ -913,7 +913,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					path.SpawnMatrix = MatrixD.CreateWorld(coords, dirToPosition, VectorHelper.RandomPerpendicular(dirToPosition));
 					path.PathDirection = dirToPosition;
-					
+
 
 
 				} else {
@@ -1003,7 +1003,13 @@ namespace ModularEncountersSystems.Spawning {
 
 				if (terrain != null) {
 
-					if (!collection.Conditions.AllowedTerrainTypes.Contains(terrain.MaterialTypeName)) {
+					if (collection.Conditions.AllowedTerrainTypes.Count > 0 && !collection.Conditions.AllowedTerrainTypes.Contains(terrain.MaterialTypeName)) {
+
+						return false;
+
+					}
+
+					if (collection.Conditions.DisallowedTerrainTypes.Count > 0 && collection.Conditions.DisallowedTerrainTypes.Contains(terrain.MaterialTypeName)) {
 
 						return false;
 
@@ -1021,7 +1027,7 @@ namespace ModularEncountersSystems.Spawning {
 			if (spawnType.HasFlag(SpawningType.DryLandInstallation) && !isUnderwater) {
 
 				return true;
-			
+
 			}
 
 			if (depth >= collection.Conditions.MinWaterDepth) {
@@ -1043,7 +1049,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			return false;
-		
+
 		}
 
 		private static void CalculateSpaceBossSignalCoords(PathDetails path, SpawnGroupCollection collection, EnvironmentEvaluation environment) {
@@ -1071,7 +1077,7 @@ namespace ModularEncountersSystems.Spawning {
 				path.PathDistance = randDist;
 
 				//Check for Voxels or Grids
-				
+
 				if (IsGridWithinMinDistance(initialCoords, Settings.BossEncounters.MinSignalDistFromOtherEntities, collection.SkipGridSpawnChecks)) {
 
 					continue;
@@ -1187,7 +1193,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					SpawnLogger.Write("Unidentified Boss SpawnType For Path", SpawnerDebugEnum.Pathing);
 					continue;
-				
+
 				}
 
 				bool badPosition = false;
@@ -1235,7 +1241,7 @@ namespace ModularEncountersSystems.Spawning {
 					generateDirections = true;
 
 				}
-			
+
 			} else {
 
 				generateDirections = true;
@@ -1305,12 +1311,12 @@ namespace ModularEncountersSystems.Spawning {
 
 						if (environment.NearestPlanet.WaterDepthAtPosition(coords) < collection.Conditions.MinWaterDepth)
 							continue;
-					
+
 					} else {
 
 						if (environment.NearestPlanet.IsPositionUnderwater(coords))
 							continue;
-					
+
 					}
 
 					//Grids
@@ -1356,9 +1362,9 @@ namespace ModularEncountersSystems.Spawning {
 
 							badCoords = true;
 							break;
-						
+
 						}
-					
+
 					}
 
 					if (badCoords)
@@ -1369,9 +1375,9 @@ namespace ModularEncountersSystems.Spawning {
 					break;
 
 				}
-			
+
 			}
-		
+
 		}
 
 		private static void CalculateOtherPath(PathDetails path, SpawnGroupCollection collection, EnvironmentEvaluation environment, MatrixD spawnMatrix) {
@@ -1402,7 +1408,7 @@ namespace ModularEncountersSystems.Spawning {
 						break;
 
 					}
-				
+
 				}
 
 				if (!collection.SkipGridSpawnChecks) {
@@ -1422,7 +1428,7 @@ namespace ModularEncountersSystems.Spawning {
 				return;
 
 			path.ValidPath = true;
-			
+
 		}
 
 		private static bool IsSpacePathObstructed(BoundingSphereD sphere, BoundingBoxD box, Vector3D startPath, Vector3D endPath, List<MyVoxelBase> voxels, bool skipGridCheck, bool skipVoxelCheck) {
@@ -1449,15 +1455,15 @@ namespace ModularEncountersSystems.Spawning {
 			if (IsGridWithinMinDistance(startPath, Settings.SpaceCargoShips.MinSpawnDistFromEntities, skipGridCheck)) {
 
 				return true;
-			
+
 			}
-			
+
 			if (IsVoxelIntersecting(voxels, startPath, endPath, Settings.SpaceCargoShips.MinSpawnDistFromEntities, skipVoxelCheck)) {
 
 				return true;
 
 			}
-				
+
 			return false;
 
 		}
@@ -1466,7 +1472,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			var midPoint = direction * (pathDistance / 2) + start;
 			return environment.NearestPlanet?.AltitudeAtPosition(midPoint) ?? 0;
-		
+
 		}
 
 		private static bool IsPlanetPathObstructed(BoundingBoxD box, Vector3D start, Vector3D end, double pathDistance, EnvironmentEvaluation environment, bool skipGridCheck, bool skipVoxelCheck, StringBuilder sb = null) {
@@ -1548,7 +1554,7 @@ namespace ModularEncountersSystems.Spawning {
 						return true;
 
 				}
-				
+
 
 			}
 
@@ -1577,7 +1583,7 @@ namespace ModularEncountersSystems.Spawning {
 
 					if (grid.CubeGrid.PositionComp.WorldAABB.Contains(startPath) != ContainmentType.Disjoint)
 						return true;
-				
+
 				}
 
 			}

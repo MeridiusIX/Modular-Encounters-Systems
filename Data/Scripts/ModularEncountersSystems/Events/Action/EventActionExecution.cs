@@ -343,9 +343,46 @@ namespace ModularEncountersSystems.Events.Action {
 
 			}
 
+			//ChangePlayerCredits
+			if (actions.ChangePlayerCredits)
+			{
+
+				foreach (var player in PlayerManager.Players)
+				{
+
+					if (PlayerCondition.ArePlayerConditionsMet(actions.ChangePlayerCreditsPlayerConditionIds, player.Player.IdentityId))
+					{
+
+						long credits = 0;
+						player.Player.TryGetBalanceInfo(out credits);
+
+						if (actions.ChangePlayerCreditsAmount > 0)
+						{
+							player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+
+						}
+						else
+						{
+
+							if (actions.ChangePlayerCreditsAmount > credits)
+							{
+
+							}
+							else
+							{
+								player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+							}
+
+						}
+
+					}
+
+				}
+			}
 
 
-			//ChatBroadcast
+
+				//ChatBroadcast
 			if (actions.UseChatBroadcast == true) {
 
 				var specificPlayersList = new List<long>();

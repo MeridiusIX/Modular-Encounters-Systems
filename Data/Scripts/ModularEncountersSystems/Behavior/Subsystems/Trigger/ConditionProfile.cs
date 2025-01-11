@@ -938,13 +938,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				if (_behavior.AutoPilot.CurrentPlanet != null) {
 
-					if ((ConditionReference.MinAltitude == -1 || _behavior.AutoPilot.MyAltitude > ConditionReference.MinAltitude) && (ConditionReference.MaxAltitude == -1 || _behavior.AutoPilot.MyAltitude < ConditionReference.MaxAltitude)) {
+					var MyAltitude = _behavior.AutoPilot.CurrentPlanet.AltitudeAtPosition(_behavior.RemoteControl.GetPosition(), ConditionReference.AltitudeCheckIgnoreWater);
+
+					if ((ConditionReference.MinAltitude == -1 || MyAltitude > ConditionReference.MinAltitude) && (ConditionReference.MaxAltitude == -1 || MyAltitude < ConditionReference.MaxAltitude)) {
 
 						satisfiedConditions++;
 
 					} else {
 
-						BehaviorLogger.Write("Altitude Check Failed. Current Altitude: " + _behavior.AutoPilot.MyAltitude, BehaviorDebugEnum.Condition);
+						BehaviorLogger.Write("Altitude Check Failed. Current Altitude: " + MyAltitude, BehaviorDebugEnum.Condition);
 
 					}
 
@@ -1559,6 +1561,32 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
+			if (ConditionReference.CheckPlayerCondition)
+			{
+				usedConditions++;
+
+				bool fail = false;
+				if (command == null || command.PlayerIdentity == 0)
+					fail = true;
+
+				var player = PlayerManager.GetPlayerWithIdentityId(command.PlayerIdentity);
+
+				if (player == null)
+				{
+					fail = true;
+				}
+
+				if (!fail)
+				{
+					if (PlayerCondition.ArePlayerConditionsMet(ConditionReference.PlayerConditionIds, player.Player.IdentityId))
+					{
+						satisfiedConditions++;
+					}
+				}
+
+
+
+			}
 
 
 			if (ConditionReference.CheckHealthPercentage)

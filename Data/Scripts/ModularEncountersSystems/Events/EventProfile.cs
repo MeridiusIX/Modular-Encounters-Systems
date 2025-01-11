@@ -24,6 +24,7 @@ namespace ModularEncountersSystems.Events
 
         public int MinCooldownMs;
         public int MaxCooldownMs;
+        public bool StartsReady;
 
         public List<string> PersistantConditionIds;
 
@@ -54,6 +55,7 @@ namespace ModularEncountersSystems.Events
 
             MinCooldownMs = 0;
             MaxCooldownMs = 1;
+            StartsReady = false;
 
             ActionIds = new List<string>();
 
@@ -68,6 +70,7 @@ namespace ModularEncountersSystems.Events
                 {"UniqueEvent", (s, o) => TagParse.TagBoolCheck(s, ref UniqueEvent) },
                 {"MinCooldownMs", (s, o) => TagParse.TagIntCheck(s, ref MinCooldownMs) },
                 {"MaxCooldownMs", (s, o) => TagParse.TagIntCheck(s, ref MaxCooldownMs) },
+                {"StartsReady", (s, o) => TagParse.TagBoolCheck(s, ref StartsReady) },
                 {"PersistantConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PersistantConditionIds) },
                 {"ConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ConditionIds) },
                 {"UseAnyPassingCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseAnyPassingCondition) },

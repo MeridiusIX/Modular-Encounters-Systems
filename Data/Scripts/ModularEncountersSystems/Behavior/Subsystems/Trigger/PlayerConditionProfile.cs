@@ -38,8 +38,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
         public string LastRespawnShipName;
 
         public bool CheckPlayerTags;
-        public List<string> IncludedPlayerTag;
-        public List<string> ExcludedPlayerTag;
+        public List<string> IncludedPlayerTags;
+        public bool AllowAnyIncludedPlayerTag;
+        public List<string> ExcludedPlayerTags;
+        public bool AllowAnyExcludedPlayerTag;
+
+
+
+        public bool CheckPlayerCreditBalance;
+        public int MinPlayerCreditBalance;
+        public int MaxPlayerCreditBalance;
+
 
         public bool CheckPlayerNear;
         public Vector3D PlayerNearVector3;
@@ -71,8 +80,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             MaxPlayerReputation = new List<int>();
 
             CheckPlayerTags = false;
-            IncludedPlayerTag = new List<string>();
-            ExcludedPlayerTag = new List<string>();
+            IncludedPlayerTags = new List<string>();
+            ExcludedPlayerTags = new List<string>();
+
+            CheckPlayerCreditBalance = false;
+            MinPlayerCreditBalance = -1;
+            MaxPlayerCreditBalance = -1;
 
             CheckPlayerInZone = false;
             ZoneName = new List<string>();
@@ -96,9 +109,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 			{"MinPlayerReputation", (s, o) => TagParse.TagIntListCheck(s, ref MinPlayerReputation) },
 			{"MaxPlayerReputation", (s, o) => TagParse.TagIntListCheck(s, ref MaxPlayerReputation) },
             {"CheckPlayerTags", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerTags) },
-            {"IncludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref IncludedPlayerTag) },
-            {"ExcludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref ExcludedPlayerTag) },
-
+            {"IncludedPlayerTags", (s, o) => TagParse.TagStringListCheck(s, ref IncludedPlayerTags) },
+            {"IncludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref IncludedPlayerTags) }, // I fucked up
+            {"ExcludedPlayerTags", (s, o) => TagParse.TagStringListCheck(s, ref ExcludedPlayerTags) },
+            {"ExcludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref ExcludedPlayerTags) },// I fucked up
+            {"AllowAnyExcludedPlayerTag", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyExcludedPlayerTag) },
+            {"AllowAnyIncludedPlayerTag", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyIncludedPlayerTag) },
+            {"CheckPlayerCreditBalance", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerCreditBalance) },//CheckPlayerCreditBalance
+			{"MinPlayerCreditBalance", (s, o) => TagParse.TagIntCheck(s, ref MinPlayerCreditBalance) },//MinPlayerCreditBalance
+			{"MaxPlayerCreditBalance", (s, o) => TagParse.TagIntCheck(s, ref MaxPlayerCreditBalance) },//MaxPlayerCreditBalance
             {"CheckPlayerInZone", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerInZone) },
             {"ZoneName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneName) },
 
@@ -289,12 +308,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             {
 
                 usedConditions++;
+                bool failedCheck = false;
 
-                int satisfiedIncludedTag = 0;
-                int satisfiedExcludedTag = 0;
 
-                var _includedPlayerTag = profile.IncludedPlayerTag;
-                var _excludedPlayerTag = profile.ExcludedPlayerTag;
+                var _includedPlayerTag = profile.IncludedPlayerTags;
+                var _excludedPlayerTag = profile.ExcludedPlayerTags;
 
                 if (profile.AllowOverrides && AddPlayerConditionPlayerTags && IncludedPlayerTags != null)
                 {
@@ -309,25 +327,42 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 if (_includedPlayerTag.Count > 0)
                 {
-                    foreach (var tag in profile.IncludedPlayerTag)
-                    {
-                        if (player.ProgressionData.Tags.Contains(tag))
-                            satisfiedIncludedTag++;
-                    }
-                }
-
-                if (_excludedPlayerTag.Count > 0)
-                {
-                    foreach (var tag in profile.ExcludedPlayerTag)
+                    foreach (var tag in profile.IncludedPlayerTags)
                     {
                         if (!player.ProgressionData.Tags.Contains(tag))
-                            satisfiedExcludedTag++;
+                        {
+                            failedCheck = true;
+                        }
+                        else if (profile.AllowAnyIncludedPlayerTag)
+                        {
+                            failedCheck = false;
+                            break;
+                        }
+                            
                     }
                 }
 
-                if (satisfiedExcludedTag == profile.ExcludedPlayerTag.Count && satisfiedIncludedTag == profile.IncludedPlayerTag.Count)
+                if (_excludedPlayerTag.Count > 0 && !failedCheck)
+                {
+                    foreach (var tag in profile.ExcludedPlayerTags)
+                    {
+                        if (player.ProgressionData.Tags.Contains(tag))
+                        {
+                            failedCheck = true;
+                        }
+                        else if (profile.AllowAnyExcludedPlayerTag)
+                        {
+                            failedCheck = false;
+                            break;
+                        }
+                    }
+                }
+
+
+
+
+                if (!failedCheck)
                     satisfiedConditions++;
-           
 
 
             }
@@ -374,7 +409,32 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     satisfiedConditions++;
             }
 
+            if (profile.CheckPlayerCreditBalance)
+            {
+                usedConditions++;
 
+                bool fail = false;
+
+                long credits = 0;
+
+                if (player != null)
+                {
+                    player.Player.TryGetBalanceInfo(out credits);
+                }
+
+                if (credits == 0)
+                    fail = true;
+
+                if (!fail)
+                {
+
+                    if ((profile.MinPlayerCreditBalance == -1 || credits > profile.MinPlayerCreditBalance) && (profile.MaxPlayerCreditBalance == -1 || credits < profile.MaxPlayerCreditBalance))
+                    {
+                        satisfiedConditions++;
+                    }
+                }
+
+            }
 
 
             if (profile.UseFailCondition)

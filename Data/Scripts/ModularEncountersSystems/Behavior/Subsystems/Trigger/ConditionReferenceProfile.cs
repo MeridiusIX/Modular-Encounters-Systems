@@ -137,6 +137,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool AltitudeCheck;
 		public double MinAltitude;
 		public double MaxAltitude;
+		public bool AltitudeCheckIgnoreWater;
 
 		public bool IsOnDarkSide;
 
@@ -221,6 +222,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MaxPlayerReputationDistanceCheck;
 		public bool AllPlayersReputationMustMatch;
 
+
+		public bool CheckPlayerCondition;
+		public List<string> PlayerConditionIds;
+
 		public bool PlayerIdentityMatches;
 
 		public bool CheckPlayerIdentitySandboxList;
@@ -230,7 +235,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckSufficientUpwardThrust;
 		public float SufficientUpwardThrustTolerance;
 		public Direction SufficientUpwardThrustDirection;
-
 
 
 		public bool CheckInSufficientUpwardThrust;
@@ -367,6 +371,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MaxGravity = -1000;
 
 			AltitudeCheck = false;
+			AltitudeCheckIgnoreWater = true;
 			MinAltitude = -1;
 			MaxAltitude = -1;
 
@@ -375,6 +380,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MatchTerrainType = false;
 			TerrainTypeWhitelistNames = new List<string>();
 			TerrainTypeBlacklistNames = new List<string>();
+
 
 
 			TargetAltitudeCheck = false;
@@ -454,6 +460,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			PlanetaryLanePassValue = true;
 
 			NoActiveContracts = false;
+
+
+
+			CheckPlayerCondition = false;
+			PlayerConditionIds = new List<string>();
 
 			CheckPlayerReputation = false;
 			CheckReputationwithFaction = new List<string>();
@@ -579,6 +590,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"MinGravity", (s, o) => TagParse.TagFloatCheck(s, ref MinGravity) },
 				{"MaxGravity", (s, o) => TagParse.TagFloatCheck(s, ref MaxGravity) },
 				{"AltitudeCheck", (s, o) => TagParse.TagBoolCheck(s, ref AltitudeCheck) },
+				{"AltitudeCheckIgnoreWater", (s, o) => TagParse.TagBoolCheck(s, ref AltitudeCheckIgnoreWater) },
 				{"MinAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MinAltitude) },
 				{"MaxAltitude", (s, o) => TagParse.TagDoubleCheck(s, ref MaxAltitude) },
 				{"IsOnDarkSide", (s, o) => TagParse.TagBoolCheck(s, ref IsOnDarkSide) },
@@ -653,7 +665,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckPlayerIdentitySandboxList", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerIdentitySandboxList) },
 				{"PlayerIdentityInSandboxList", (s, o) => TagParse.TagBoolCheck(s, ref PlayerIdentityInSandboxList) },
 				{"PlayerIdentitySandboxListId", (s, o) => TagParse.TagStringCheck(s, ref PlayerIdentitySandboxListId) },
-
+				{"CheckPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerCondition) },
+				{"PlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerConditionIds) },
 				{"CheckSufficientUpwardThrust", (s, o) => TagParse.TagBoolCheck(s, ref CheckSufficientUpwardThrust) },//CheckSufficientUpwardThrust
 				{"SufficientUpwardThrustTolerance", (s, o) => TagParse.TagFloatCheck(s, ref SufficientUpwardThrustTolerance) },//CheckSufficientUpwardThrust
 				{"SufficientUpwardThrustDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref SufficientUpwardThrustDirection) },//CheckSufficientUpwardThrust
@@ -665,9 +678,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckHealthPercentage", (s, o) => TagParse.TagBoolCheck(s, ref CheckHealthPercentage) },//CheckHealthPercentage
 				{"MinPercentageOfHealthRemaining", (s, o) => TagParse.TagIntCheck(s, ref MinPercentageOfHealthRemaining) },//MinPercentageOfHealthRemaining
 				{"MaxPercentageOfHealthRemaining", (s, o) => TagParse.TagIntCheck(s, ref MaxPercentageOfHealthRemaining) },//MaxPercentageOfHealthRemaining
-
-
-				{"CheckWeaponsPercentage", (s, o) => TagParse.TagBoolCheck(s, ref CheckWeaponsPercentage) },//CheckWeaponsPercentage
+				{ "CheckWeaponsPercentage", (s, o) => TagParse.TagBoolCheck(s, ref CheckWeaponsPercentage) },//CheckWeaponsPercentage
 				{"MinPercentageOfWeaponsRemaining", (s, o) => TagParse.TagIntCheck(s, ref MinPercentageOfWeaponsRemaining) },//MinPercentageOfWeaponsRemaining
 				{"MaxPercentageOfWeaponsRemaining", (s, o) => TagParse.TagIntCheck(s, ref MaxPercentageOfWeaponsRemaining) },//MaxPercentageOfWeaponsRemaining
 

@@ -362,6 +362,9 @@ namespace ModularEncountersSystems.Events
 
         public bool ValidateCooldown()
         {
+            if ((this.Profile.StartsReady && this.RunCount == 0))
+                return true;
+
             if (this.CooldownTimeTrigger > 0)
             {
 

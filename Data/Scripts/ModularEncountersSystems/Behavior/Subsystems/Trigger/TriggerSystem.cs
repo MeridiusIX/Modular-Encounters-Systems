@@ -1575,7 +1575,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					bool gotTrigger = false;
 					string FileSource = "";
 					TagParse.TagStringCheck(tag, ref FileSource);
-
+					//MyAPIGateway.Utilities.ShowMessage("MES", $"{FileSource}");
 					if (string.IsNullOrWhiteSpace(FileSource) == false)
 					{
 

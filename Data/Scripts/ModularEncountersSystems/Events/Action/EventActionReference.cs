@@ -112,6 +112,15 @@ namespace ModularEncountersSystems.Events.Action {
 		public bool ReputationChangesForAllRadiusPlayerFactionMembers;
 		public int ReputationMinCap;
 		public int ReputationMaxCap;
+
+
+
+		public bool ChangePlayerCredits;
+		public long ChangePlayerCreditsAmount;
+		public List<string> ChangePlayerCreditsPlayerConditionIds;
+
+
+
 		//PlayersEnd
 
 		public bool BroadcastCommandProfiles;
@@ -282,6 +291,12 @@ namespace ModularEncountersSystems.Events.Action {
 			TeleportPlayerCoords = new Vector3D();
 			TeleportRadius = 0;
 
+
+			ChangePlayerCredits = false;
+			ChangePlayerCreditsAmount = 0;
+			ChangePlayerCreditsPlayerConditionIds = new List<string>();
+
+
 			ChangeReputationWithPlayers = false;
 			ReputationPlayerConditionIds = new List<string>();
 			ReputationChangeFactions = new List<string>();
@@ -447,7 +462,14 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ReputationMinCap", (s, o) => TagParse.TagIntCheck(s, ref ReputationMinCap) },
 				{"ReputationMaxCap", (s, o) => TagParse.TagIntCheck(s, ref ReputationMaxCap) },
 
-				{"ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
+				{"ChangePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCredits) },
+				{"ChangePlayerCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangePlayerCreditsAmount) },
+				{"ChangePlayerCreditsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ChangePlayerCreditsPlayerConditionIds) },
+
+
+
+
+				{ "ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
 				{"CustomActionName", (s, o) => TagParse.TagStringCheck(s, ref CustomActionName) },
 				{"CustomActionArgumentsString", (s, o) => TagParse.TagStringListCheck(s,false ,ref CustomActionArgumentsString) },
 				{"CustomActionArgumentsBool", (s, o) => TagParse.TagBoolListCheck(s, ref CustomActionArgumentsBool) },

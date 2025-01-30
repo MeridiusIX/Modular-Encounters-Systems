@@ -405,6 +405,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(41)]
 		public string TerrainTypeName; //Store data for MatchTerrainType in AI conditions 
 
+		[ProtoMember(42)]
+		public string Context; // arbitrary user data via MESApi
+
 		//Non-Serialized Data
 
 		[ProtoIgnore]

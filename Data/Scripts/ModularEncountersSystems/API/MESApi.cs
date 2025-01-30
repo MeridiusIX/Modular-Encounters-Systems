@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ProtoBuf;
 using Sandbox.ModAPI;
 using VRage;
 using VRage.Game.ModAPI;
@@ -21,6 +22,7 @@ namespace ModularEncountersSystems.API {
 		private Action<Vector3D, string, double, bool> _changeKnownPlayerLocationSize;
 		private Func<string, string> _convertRandomNamePatterns;
 		private Func<List<string>, MatrixD, Vector3, bool, string, string, bool> _customSpawnRequest;
+		private Func<Dictionary<string, object>, bool> _customSpawnRequest2;
 		private Func<IMyCubeGrid, Vector3D> _getDespawnCoords;
 		private Func<List<string>> _getSpawnGroupBlackList;
 		private Action<string, List<string>> _getSpawnGroupsByType;
@@ -122,6 +124,11 @@ namespace ModularEncountersSystems.API {
 		/// <param name="spawnProfileId">Identifier for your mod so MES can properly log where the spawn request originated from</param>
 		public bool CustomSpawnRequest(List<string> spawnGroups, MatrixD spawningMatrix, Vector3 velocity, bool ignoreSafetyCheck, string factionOverride, string spawnProfileId) => _customSpawnRequest?.Invoke(spawnGroups, spawningMatrix, velocity, ignoreSafetyCheck, factionOverride, spawnProfileId) ?? false;
 
+		/// <summary>
+		/// Used To Spawn A Random SpawnGroup From A Provided List At A Provided Location. The Spawn Will Not Be Categorized As A CargoShip/RandomEncounter/Etc. The spawngroup/conditions must also use the [RivalAiSpawn:true] tag to be able to spawn with this command.
+		/// </summary>
+		public bool CustomSpawnRequest(CustomSpawnRequestArgs args) => _customSpawnRequest2?.Invoke(args.ToDictionary()) ?? false;
+		
 		/// <summary>
 		/// Gets the Despawn Coords that are generated from a ship spawned as either Space or Planet CargoShip.
 		/// Returns Vector3D.Zero if no Coords can be found.
@@ -384,6 +391,7 @@ namespace ModularEncountersSystems.API {
 				_behaviorTriggerActivationWatcher = (Action<bool, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D>>)dict["BehaviorTriggerActivationWatcher"];
 				_chatCommand = (Action<string, MatrixD, long, ulong>)dict["ChatCommand"];
 				_customSpawnRequest = (Func<List<string>, MatrixD, Vector3, bool, string, string, bool>)dict["CustomSpawnRequest"];
+				_customSpawnRequest2 = (Func<Dictionary<string, object>, bool>)dict["CustomSpawnRequest2"];
 				_getDespawnCoords = (Func<IMyCubeGrid, Vector3D>)dict["GetDespawnCoords"];
 				_getSpawnGroupBlackList = (Func<List<string>>)dict["GetSpawnGroupBlackList"];
 				_getSpawnGroupsByType = (Action<string, List<string>>)dict["GetSpawnGroupsByType"];
@@ -420,6 +428,57 @@ namespace ModularEncountersSystems.API {
 			}
 
 
+		}
+
+		public sealed class CustomSpawnRequestArgs
+		{
+			/// <summary>List of SpawnGroups you want to attempt spawning from</summary>
+			public List<string> SpawnGroups;
+
+			/// <summary>The coordinates the Spawn will use</summary>
+			public MatrixD SpawningMatrix;
+			
+			/// <summary>Velocity vector</summary>
+			public Vector3 Velocity;
+			
+			public bool IgnoreSafetyCheck;
+			
+			/// <summary>Faction tag you want spawngroup to use, regardless of its settings</summary>
+			public string FactionOverride;
+			
+			/// <summary>Identifier for your mod so MES can properly log where the spawn request originated from</summary>
+			public string SpawnProfileId;
+			
+			/// <summary>Arbitrary user data to be inserted to NpcData</summary>
+			public string Context;
+
+			public Dictionary<string, object> ToDictionary()
+			{
+				return new Dictionary<string, object>
+				{
+					{ nameof(SpawnGroups), SpawnGroups },
+					{ nameof(SpawningMatrix), SpawningMatrix },
+					{ nameof(Velocity), Velocity },
+					{ nameof(IgnoreSafetyCheck), IgnoreSafetyCheck },
+					{ nameof(FactionOverride), FactionOverride },
+					{ nameof(SpawnProfileId), SpawnProfileId },
+					{ nameof(Context), Context },
+				};
+			}
+
+			public static CustomSpawnRequestArgs FromDictionary(Dictionary<string, object> dictionary)
+			{
+				return new CustomSpawnRequestArgs
+				{
+					SpawnGroups = (List<string>)dictionary[nameof(SpawnGroups)],
+					SpawningMatrix = (MatrixD)dictionary[nameof(SpawningMatrix)],
+					Velocity = (Vector3)dictionary[nameof(Velocity)],
+					IgnoreSafetyCheck = (bool)dictionary[nameof(IgnoreSafetyCheck)],
+					FactionOverride = (string)dictionary[nameof(FactionOverride)],
+					SpawnProfileId = (string)dictionary[nameof(SpawnProfileId)],
+					Context = (string)dictionary[nameof(Context)],
+				};
+			}
 		}
 
 	}

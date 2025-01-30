@@ -47,7 +47,7 @@ namespace ModularEncountersSystems.Spawning {
 		
 		}
 
-		public static bool ProcessSpawning(SpawnGroupCollection spawnCollection, PathDetails path, EnvironmentEvaluation environment) {
+		public static bool ProcessSpawning(SpawnGroupCollection spawnCollection, PathDetails path, EnvironmentEvaluation environment, string context) {
 
 			if (!path.SpawnType.HasFlag(SpawningType.Creature)) {
 
@@ -55,7 +55,7 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnVoxels(spawnCollection, path);
 
 				//Then Do Prefabs
-				SpawnPrefab(spawnCollection, path, environment);
+				SpawnPrefab(spawnCollection, path, environment, context);
 
 			} else {
 			
@@ -123,7 +123,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static void SpawnPrefab(SpawnGroupCollection spawnCollection, PathDetails path, EnvironmentEvaluation environment) {
+		public static void SpawnPrefab(SpawnGroupCollection spawnCollection, PathDetails path, EnvironmentEvaluation environment, string context) {
 
 			string spawnGroupTimeStamp = DateTime.Now.ToString();
 			string faction = spawnCollection.SelectRandomFaction();
@@ -201,6 +201,7 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.EndCoords = path.GetPrefabEndCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathEndAltitude);
 				npcData.Forward = path.SpawnMatrix.Forward;
 				npcData.Up = path.SpawnMatrix.Up;
+				npcData.Context = context;
 
 				Vector3 linearVelocity = Vector3.Zero;
 				Vector3 angularVelocity = Vector3.Zero;

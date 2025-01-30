@@ -107,6 +107,9 @@ namespace ModularEncountersSystems.Spawning {
 		[ProtoMember(29)]
 		public List<string> PreviouslySpawnedPrefabs;
 
+		[ProtoMember(30)]
+		public string Context;
+
 		//Non-Serialized
 
 		[ProtoIgnore]
@@ -189,9 +192,10 @@ namespace ModularEncountersSystems.Spawning {
 
 			PreviouslySpawnedPrefabs = new List<string>();
 
+			Context = "";
 		}
 
-		public void InitBossEncounter(string spawnGroupName, int condition, Vector3D coords, string faction, SpawningType type) {
+		public void InitBossEncounter(string spawnGroupName, int condition, Vector3D coords, string faction, SpawningType type, string context) {
 
 			IsValid = true;
 			IsBoss = true;
@@ -199,6 +203,7 @@ namespace ModularEncountersSystems.Spawning {
 			ConditionIndex = condition;
 			TriggerCoords = coords;
 			Faction = faction;
+			Context = context;
 
 			TriggerRadius = Settings.BossEncounters.TriggerDistance;
 			UseSpecificPlayers = true;

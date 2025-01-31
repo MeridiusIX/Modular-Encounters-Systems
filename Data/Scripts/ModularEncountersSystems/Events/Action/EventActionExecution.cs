@@ -454,6 +454,26 @@ namespace ModularEncountersSystems.Events.Action {
 
 								spawner.AssignInitialMatrix(WorldMatrix);
 								spawner.CurrentFactionTag = actions.SpawnFactionTags[i];
+
+
+								List<string> new_tags = new List<string>();
+
+								foreach (var tag in spawner.SpawnGroups)
+								{
+									var tagnew = tag;
+									if(tagnew.Contains("{Faction}"))
+									{
+										tagnew = tag.Replace("{Faction}", actions.SpawnFactionTags[i]);
+									}
+
+									tagnew = IdsReplacer.ReplaceText(tagnew, actions.SpawnReplaceKeys, actions.SpawnReplaceValues);
+
+									new_tags.Add(tagnew);
+								}
+
+								spawner.SpawnGroups = new_tags;
+
+
 								BehaviorSpawnHelper.BehaviorSpawnRequest(spawner,-1, instanceId);
 							}
 

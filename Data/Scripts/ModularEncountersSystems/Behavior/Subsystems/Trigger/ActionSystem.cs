@@ -101,13 +101,33 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				ChatProfile chat = null;
 
+
+				List<long> tempPlayerIdList = new List<long>();
+
+				if(actions.PlayDialogueToSpecificPlayers && actions.PlayDialoguePlayerConditionIds.Count > 0)
+                {
+					foreach (var player in PlayerManager.Players)
+					{
+						var PlayDialoguePlayerConditionIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.PlayDialoguePlayerConditionIds);
+
+						if (PlayerCondition.ArePlayerConditionsMet(PlayDialoguePlayerConditionIds, player.Player.IdentityId, actions.PlayDialogueOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
+						{
+							tempPlayerIdList.Add(player.Player.IdentityId);
+						}
+					}
+				}
+
+
+
+
+
 				foreach (var dialogueBank in _dialogueBanks)
 				{
 
-					if(dialogueBank.GetChatProfile(actions.DialogueCueId,ref chat))
+					if(dialogueBank.GetChatProfile(actions.DialogueCueId,ref chat, actions.PlayDialogueToSpecificPlayers))
 					{
 						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
-						_broadcast.BroadcastRequest(chat, command);
+						_broadcast.BroadcastRequest(chat, command, tempPlayerIdList);
 						break;
 					}
 
@@ -593,7 +613,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{
 					var ChancePlayerCreditsPlayerConditionIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ChangePlayerCreditsPlayerConditionIds);
 
-					if (PlayerCondition.ArePlayerConditionsMet(actions.ChangePlayerCreditsPlayerConditionIds, player.Player.IdentityId, actions.ChangePlayerCreditsOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
+					if (PlayerCondition.ArePlayerConditionsMet(ChancePlayerCreditsPlayerConditionIds, player.Player.IdentityId, actions.ChangePlayerCreditsOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
 					{
 						if ((command?.PlayerIdentity ?? 0) != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
 							SavedPlayerIdentityAlreadyIncluded = true;

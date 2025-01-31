@@ -84,19 +84,26 @@ namespace ModularEncountersSystems.Missions
             var LeadPlayer = PlayerManager.GetPlayerWithIdentityId(playerIdentityId);
             Players.Add(LeadPlayer);
 
+            var acceptingPlayerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerIdentityId);
 
-
-            if (!MissionReference.Profile.SoloMission)
+            if (!MissionReference.Profile.SoloMission && acceptingPlayerFaction != null)
             {
-                var acceptingPlayerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerIdentityId);
 
-                List<long> locPlayerIdList;
-                PlayerManager.PlayersNearby(position, 400, out locPlayerIdList);
+                List<long> localPlayerIdList;
+                PlayerManager.PlayersNearby(position, 400, out localPlayerIdList);
 
-                foreach (var playerId in locPlayerIdList)
+                foreach (var playerId in localPlayerIdList)
                 {
-                    var locFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerId);
-                    if (locFaction == acceptingPlayerFaction && playerId != playerIdentityId)
+                    if (playerId == playerIdentityId)
+                        continue;
+
+
+                    var localFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerId);
+
+                    if (localFaction == null)
+                        continue;
+
+                    if (localFaction.Equals(acceptingPlayerFaction))
                     {
                         var player = PlayerManager.GetPlayerWithIdentityId(playerId);
 

@@ -439,6 +439,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 		public bool PlayDialogueCue;
+		public bool PlayDialogueToSpecificPlayers;
+		public bool PlayDialogueOverridePositionInPlayerCondition;
+		public List<string> PlayDialoguePlayerConditionIds;
 		public string DialogueCueId;
 
 
@@ -889,7 +892,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			PlayDialogueCue = false;
 			DialogueCueId = "";
-
+			PlayDialogueToSpecificPlayers = false;
+			PlayDialogueOverridePositionInPlayerCondition = false;
+			PlayDialoguePlayerConditionIds = new List<string>();
 
 			ResetCooldownTimeOfEvents = false;
 			ResetEventCooldownIds = new List<string>();
@@ -1013,9 +1018,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"InertiaDampenersEnable", (s, o) => TagParse.TagBoolCheck(s, ref InertiaDampenersEnable) },
 				{"EnableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref EnableTriggers) },
 				{"EnableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerNames) },
+				{"EnableTriggerIds", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerNames) },
 				{"EnableTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerTags) },
 				{"DisableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref DisableTriggers) },
 				{"DisableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerNames) },
+				{"DisableTriggerIds", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerNames) },
 				{"DisableTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerTags) },
 				{"StaggerWarheadDetonation", (s, o) => TagParse.TagBoolCheck(s, ref StaggerWarheadDetonation) },
 				{"ChangeRotationDirection", (s, o) => TagParse.TagBoolCheck(s, ref ChangeRotationDirection) },
@@ -1231,7 +1238,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				{"DialogueCueId", (s, o) => TagParse.TagStringCheck(s, ref DialogueCueId) },
 
-				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
+				{"PlayDialogueToSpecificPlayers", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueToSpecificPlayers) },
+				{"PlayDialogueOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueOverridePositionInPlayerCondition) },
+				{"PlayDialoguePlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayDialoguePlayerConditionIds) },
+
+				{ "ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
 				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
 				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
 

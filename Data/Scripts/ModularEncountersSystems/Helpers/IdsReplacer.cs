@@ -78,7 +78,7 @@ namespace ModularEncountersSystems.Helpers {
 		{
 			if (replaceKeys.Count != replaceValues.Count)
 			{
-				return null;
+				return text;
 			}
 
 			for (int i = 0; i < replaceKeys.Count; i++)

@@ -25,6 +25,8 @@ namespace ModularEncountersSystems.Files
 
         [XmlIgnore]
         private bool setup = false;
+        [XmlIgnore]
+        public string name = "";
 
         public void init()
         {
@@ -81,7 +83,7 @@ namespace ModularEncountersSystems.Files
             }
         }
 
-        public bool GetChatProfile(string cueID, ref ChatProfile chat)
+        public bool GetChatProfile(string cueID, ref ChatProfile chat, bool SendToSpecificPlayers = false)
         {
             if(!this.setup)
                 this.init();
@@ -89,7 +91,8 @@ namespace ModularEncountersSystems.Files
             if (_chatProfile == null)
                 return false;
 
-            chat = _chatProfile;
+            if (chat == null)
+                chat = _chatProfile;
 
             bool preparedChat = false;
 
@@ -126,6 +129,13 @@ namespace ModularEncountersSystems.Files
                         chat.BroadcastRandomly = false;
                         chat.ChatMessages = new List<string> { entry.Message };
                         chat.ChatAudio = new List<string> { entry.AudioId };
+
+                        if (SendToSpecificPlayers)
+                            chat.SendToSpecificPlayers = true;
+                        else
+                        {
+                            chat.SendToSpecificPlayers = false;
+                        }
 
 
                         preparedChat = true;

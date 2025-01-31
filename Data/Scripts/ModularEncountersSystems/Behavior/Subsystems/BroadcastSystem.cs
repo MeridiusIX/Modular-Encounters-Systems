@@ -201,7 +201,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				var playerName = chat.SendToAllOnlinePlayers ? "Player" : player.DisplayName;
 
 
-				if (chat.SendToSpecificPlayers && chat.PlayerConditionIds != null)
+				if (chat.SendToSpecificPlayers && chat.PlayerConditionIds != null && chat.PlayerConditionIds.Count > 0)
 				{
 					if (PlayerCondition.ArePlayerConditionsMet(chat.PlayerConditionIds, playerId))
 						SpecificPlayerIds.Add(playerId);

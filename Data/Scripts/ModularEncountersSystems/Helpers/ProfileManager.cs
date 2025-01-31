@@ -98,6 +98,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static Dictionary<string, MissionProfile> MissionProfiles = new Dictionary<string, MissionProfile>();
 
+		private static readonly object _dialogueBankLock = new object();
 
 
 		public static void Setup() {
@@ -923,18 +924,20 @@ namespace ModularEncountersSystems.Helpers {
 				dialogueBank.DialogueCues = new List<DialogueCue>();
 
 			dialogueBank.init();
+			dialogueBank.name = name;
 
 
 			// I had issues when two seperate behaviors were trying to add the same dialoguebank at the same time.
 			//Try add is not possible. So I do this instead?? -CptArthur
-            try
-            {
-				DialogueBanks.Add(name, dialogueBank);
-			}
-            catch
-            {
 
-            }
+			// Safely add to the dictionary using a lock
+			lock (_dialogueBankLock)
+			{
+				if (!DialogueBanks.ContainsKey(name))
+				{
+					DialogueBanks.Add(name, dialogueBank);
+				}
+			}
 
 
 

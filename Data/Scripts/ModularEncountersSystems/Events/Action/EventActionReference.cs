@@ -132,7 +132,8 @@ namespace ModularEncountersSystems.Events.Action {
 		//public List<SpawnProfile> SpawnData;
 		public List<Vector3D> SpawnVector3Ds;
 		public List<string> SpawnFactionTags;
-
+		public List<string> SpawnReplaceKeys;
+		public List<string> SpawnReplaceValues;
 
 		public bool UseChatBroadcast;
 		public List<ChatProfile> ChatData;
@@ -312,7 +313,8 @@ namespace ModularEncountersSystems.Events.Action {
 			//SpawnData = new List<SpawnProfile>();
 			SpawnVector3Ds = new List<Vector3D>();
 			SpawnFactionTags = new List<string>();
-
+			SpawnReplaceKeys =new List<string>();
+			SpawnReplaceValues = new List<string>();
 			UseChatBroadcast = false;
 			ChatData = new List<ChatProfile>();
 
@@ -443,8 +445,10 @@ namespace ModularEncountersSystems.Events.Action {
 				{ "SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
 				{"SpawnCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref SpawnVector3Ds) },
 				{"SpawnFactionTags", (s, o) => TagParse.TagStringListCheck(s, ref SpawnFactionTags) },
+				{"SpawnReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref SpawnReplaceKeys) },
+				{"SpawnReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref SpawnReplaceValues) },
 
-				{"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+				{ "ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
 				{"ZoneNames", (s, o) => TagParse.TagStringListCheck(s, ref ZoneNames) },
 				{"ZoneCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref ZoneCoords) },
 				{"ZoneToggleActiveModes", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneToggleActiveModes) },

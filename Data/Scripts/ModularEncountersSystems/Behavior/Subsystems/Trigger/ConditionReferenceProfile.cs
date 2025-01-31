@@ -101,12 +101,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MinWaypointAngle;
 		public double MaxWaypointAngle;
 
-
+		public bool HasAntennaForBroadcast;
 
 
 		public bool CheckIfTargetIsChasing;
 		public double MinTargetChaseAngle;
 		public double MaxTargetChaseAngle;
+
+		public bool CheckTargetChaseSpeed; //This can become negative. Neat
+		public double MinTargetChaseSpeed;
+		public double MaxTargetChaseSpeed;
 
 		public List<CounterCompareEnum> CounterCompareTypes;
 		public List<CounterCompareEnum> SandboxCounterCompareTypes;
@@ -348,7 +352,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MinTargetChaseAngle = -1;
 			MaxTargetChaseAngle = -1;
 
-			
+			CheckTargetChaseSpeed = false;
+			MinTargetChaseSpeed = -1;
+			MaxTargetChaseSpeed = -1;
+
+			HasAntennaForBroadcast = false;
 
 			CounterCompareTypes = new List<CounterCompareEnum>();
 			SandboxCounterCompareTypes = new List<CounterCompareEnum>();
@@ -559,6 +567,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckTargetSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetSpeed) },
 				{"MinTargetSpeed", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetSpeed) },
 				{"MaxTargetSpeed", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetSpeed) },
+				{"CheckTargetChaseSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetChaseSpeed) },
+				{"MinTargetChaseSpeed", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetChaseSpeed) },
+				{"MaxTargetChaseSpeed", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetChaseSpeed) },
 				{"CheckTargetAngleFromForward", (s, o) => TagParse.TagBoolCheck(s, ref CheckTargetAngleFromForward) },
 				{"MinTargetAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetAngle) },
 				{"MaxTargetAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetAngle) },
@@ -566,6 +577,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"MinWaypointAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinWaypointAngle) },
 				{"MaxWaypointAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxWaypointAngle) },
 
+				{"HasAntennaForBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref HasAntennaForBroadcast) },
 				{"CheckIfTargetIsChasing", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsChasing) },
 				{"MinTargetChaseAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MinTargetChaseAngle) },
 				{"MaxTargetChaseAngle", (s, o) => TagParse.TagDoubleCheck(s, ref MaxTargetChaseAngle) },

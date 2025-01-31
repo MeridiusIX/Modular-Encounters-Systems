@@ -100,6 +100,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> RandomGridNamePattern;
 		public string ReplaceAntennaNameWithRandomizedName;
 		public bool ReplaceAntennaHudTextInsteadOfName;
+		public string ReplaceBeaconNameWithRandomizedName;
+		public bool ReplaceBeaconHudTextInsteadOfName;
+
+
 
 		public bool ProcessBlocksForCustomGridName;
 
@@ -297,7 +301,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RandomGridNamePrefix = "";
 			RandomGridNamePattern = new List<string>();
 			ReplaceAntennaNameWithRandomizedName = "";
+			ReplaceBeaconNameWithRandomizedName = "";
 			ReplaceAntennaHudTextInsteadOfName = false;
+			ReplaceBeaconHudTextInsteadOfName = false;
 
 			ProcessBlocksForCustomGridName = false;
 
@@ -884,11 +890,26 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//ReplaceBeaconNameWithRandomizedName
+				if (tag.StartsWith("[ReplaceBeaconNameWithRandomizedName:") == true)
+				{
+
+					TagParse.TagStringCheck(tag, ref this.ReplaceBeaconNameWithRandomizedName);
+
+				}
+
 				//ReplaceAntennaNameWithRandomizedName
 				if (tag.StartsWith("[ReplaceAntennaHudTextInsteadOfName:") == true)
 				{
 
 					TagParse.TagBoolCheck(tag, ref this.ReplaceAntennaHudTextInsteadOfName);
+
+				}
+				//ReplaceAntennaNameWithRandomizedName
+				if (tag.StartsWith("[ReplaceBeaconHudTextInsteadOfName:") == true)
+				{
+
+					TagParse.TagBoolCheck(tag, ref this.ReplaceBeaconHudTextInsteadOfName);
 
 				}
 				//CustomChatAuthorName

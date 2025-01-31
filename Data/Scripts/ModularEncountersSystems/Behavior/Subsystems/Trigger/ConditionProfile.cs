@@ -793,6 +793,62 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (ConditionReference.CheckIfTargetIsChasing)
+			{
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget())
+				{
+
+					var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
+					var targetVelocity = Vector3D.Normalize(_behavior.AutoPilot.Targeting.Target.CurrentVelocity());
+
+					if (targetVelocity.IsValid() && targetVelocity.Length() > 0)
+					{
+
+						var angle = VectorHelper.GetAngleBetweenDirections(dirFromTarget, targetVelocity);
+
+						if ((ConditionReference.MinTargetChaseAngle == -1 || angle >= ConditionReference.MinTargetChaseAngle) && (ConditionReference.MaxTargetChaseAngle == -1 || angle <= ConditionReference.MaxTargetChaseAngle))
+							satisfiedConditions++;
+
+					}
+
+				}
+
+			}
+
+			if (ConditionReference.CheckTargetChaseSpeed)
+			{
+
+				usedConditions++;
+
+				if (_behavior.AutoPilot.Targeting.HasTarget())
+				{
+
+					var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
+					var targetVelocity = _behavior.AutoPilot.Targeting.Target.CurrentVelocity();
+
+					if (targetVelocity.IsValid() && targetVelocity.Length() > 0)
+					{
+
+						// Project target velocity onto the direction from the NPC to the target
+						var projectedSpeed = Vector3D.Dot(targetVelocity, dirFromTarget);
+						//MyAPIGateway.Utilities.ShowMessage("MES", projectedSpeed.ToString());
+
+						// Check if the projected speed is within the specified range
+						if ((ConditionReference.MinTargetChaseSpeed == -1 || projectedSpeed >= ConditionReference.MinTargetChaseSpeed) &&
+							(ConditionReference.MaxTargetChaseSpeed == -1 || projectedSpeed <= ConditionReference.MaxTargetChaseSpeed))
+						{
+							satisfiedConditions++;
+						}
+					}
+
+				}
+
+			}
+
+
 			if (ConditionReference.CheckIfGridNameMatches) {
 
 				usedConditions++;
@@ -823,6 +879,44 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
+
+
+            if (ConditionReference.HasAntennaForBroadcast)
+            {
+				usedConditions++;
+
+				var blockList = BlockCollectionHelper.GetGridAntennas(this._remoteControl.SlimBlock.CubeGrid);
+
+				foreach (var antenna in blockList)
+				{
+					if (antenna != null)
+					{
+						continue;
+					}
+
+					if (antenna?.SlimBlock == null)
+					{
+
+						continue;
+
+					}
+
+					if (antenna.IsWorking == false || antenna.IsFunctional == false || antenna.IsBroadcasting == false)
+					{
+
+						continue;
+
+					}
+
+					//if(antenna.Radius < this.HighestRadius)
+
+					satisfiedConditions++;
+					break;
+
+				}
+			}
+
+
 
 			if (ConditionReference.UnderwaterCheck) {
 
@@ -1514,7 +1608,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000, "Green");
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection).ToString(), 6000, "Red");
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
+					//MyVisualScriptLogicProvider.ShowNotificationToAll("Grav on planet: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
 
 					var difference = _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.SufficientUpwardThrustDirection) - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
 

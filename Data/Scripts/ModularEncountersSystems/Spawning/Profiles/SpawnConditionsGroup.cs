@@ -34,6 +34,18 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//SpawnConditionsProfiles Is the same as in SpawnGroup stuff - Bwoah CptArthur
+				if (tag.Contains("[SpawnConditionsProfiles:"))
+				{
+
+					TagParse.TagSpawnConditionsProfileCheck(tag, ref SpawnConditionProfiles);
+					continue;
+
+				}
+
+				
+
+
 			}
 
 		}

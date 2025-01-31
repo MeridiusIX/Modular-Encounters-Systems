@@ -1641,6 +1641,21 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Primary Targeting:   ").Append(AutoPilot.Targeting.NormalData?.ProfileSubtypeId ?? "N/A").AppendLine();
 			sb.Append(" - Override Targeting:  ").Append(AutoPilot.Targeting.OverrideData?.ProfileSubtypeId ?? "N/A").AppendLine();
 
+			if (Trigger._dialogueBanks.Count > 0)
+            {
+				sb.Append(" - Dialogue Banks:      ");
+				foreach (var bank in Trigger._dialogueBanks)
+				{
+
+					sb.Append(bank.name).Append(", ");
+
+				}
+				sb.AppendLine();
+			}
+
+
+
+
 			var totalTriggerCount = Trigger.Triggers.Count + Trigger.DamageTriggers.Count + Trigger.CommandTriggers.Count + Trigger.CompromisedTriggers.Count;
 
 			if (totalTriggerCount > 0) {

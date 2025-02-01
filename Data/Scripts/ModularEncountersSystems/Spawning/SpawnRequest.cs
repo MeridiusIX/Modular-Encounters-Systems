@@ -262,7 +262,7 @@ namespace ModularEncountersSystems.Spawning {
 		
 		}
 
-		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false, long ownerOverride = -1, long eventInstance = -1) {
+		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false, long ownerOverride = -1, long eventInstance = -1, string context = null) {
 
 			SpawnLogger.Write("Spawn Request Received From: " + source, SpawnerDebugEnum.Spawning);
 
@@ -415,7 +415,7 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write("Initializing Boss Encounter", SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write(string.Format("[{0}] Initializing Boss Encounter Event / Signal", string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
 				var bossEncounter = new StaticEncounter();
-				bossEncounter.InitBossEncounter(spawnGroupCollection.SpawnGroup.SpawnGroupName, spawnGroupCollection.ConditionsIndex, path.StartCoords, spawnGroupCollection.SelectRandomFaction(), spawnTypes);
+				bossEncounter.InitBossEncounter(spawnGroupCollection.SpawnGroup.SpawnGroupName, spawnGroupCollection.ConditionsIndex, path.StartCoords, spawnGroupCollection.SelectRandomFaction(), spawnTypes, context);
 				NpcManager.StaticEncounters.Add(bossEncounter);
 				NpcManager.UpdateStaticEncounters();
 				return true;
@@ -436,7 +436,7 @@ namespace ModularEncountersSystems.Spawning {
 			} else {
 
 				SpawnLogger.Write("SpawnGroup Sent To Prefab Spawner", SpawnerDebugEnum.Spawning);
-				result = PrefabSpawner.ProcessSpawning(spawnGroupCollection, path, environment);
+				result = PrefabSpawner.ProcessSpawning(spawnGroupCollection, path, environment, context);
 
 			}
 
@@ -536,7 +536,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			SpawnLogger.Write("Attempting Spawn", SpawnerDebugEnum.Spawning);
 
-			var result = PrefabSpawner.ProcessSpawning(spawnGroupCollection, path, environment);
+			var result = PrefabSpawner.ProcessSpawning(spawnGroupCollection, path, environment, encounter.Context);
 
 			if (!result)
 				return false;

@@ -52,6 +52,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("BehaviorTriggerActivationWatcher", new Action<bool, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D>>(ChangeBehaviorTriggerWatcher));
 			dict.Add("ChatCommand", new Action<string, MatrixD, long, ulong>(ChatManager.ChatFromApi));
 			dict.Add("CustomSpawnRequest", new Func<List<string>, MatrixD, Vector3, bool, string, string, bool>(CustomSpawnRequest));
+			dict.Add("CustomSpawnRequest2", new Func<Dictionary<string, object>, bool>(CustomSpawnRequest2));
 			dict.Add("GetDespawnCoords", new Func<IMyCubeGrid, Vector3D>(GetDespawnCoords));
 			dict.Add("GetPlayerInhibitorData", new Action<long, string, List<MyTuple<IMyRadioAntenna, DateTime>>>(GetPlayerInhibitorData));
 			dict.Add("GetSpawnGroupBlackList", new Func<List<string>>(GetSpawnGroupBlackList));
@@ -175,6 +176,12 @@ namespace ModularEncountersSystems.API {
 
 			return SpawnRequest.CalculateSpawn(spawningMatrix.Translation, "API Request: " + spawnProfileId, SpawningType.OtherNPC, ignoreSafetyCheck, true, spawnGroups, factionOverride, spawningMatrix, velocity);
 
+		}
+
+		public static bool CustomSpawnRequest2(Dictionary<string, object> dict)
+		{
+			var args = MESApi.CustomSpawnRequestArgs.FromDictionary(dict);
+			return SpawnRequest.CalculateSpawn(args.SpawningMatrix.Translation, "API Request: " + args.SpawnProfileId, SpawningType.OtherNPC, args.IgnoreSafetyCheck, true, args.SpawnGroups, args.FactionOverride, args.SpawningMatrix, args.Velocity, context: args.Context);
 		}
 
 		//ApiSpawnRequest

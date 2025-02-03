@@ -84,6 +84,7 @@ namespace ModularEncountersSystems.Entities {
             Enum.TryParse((profile.FactionAccess.ToString()), out zoneOb.AccessTypeFactions);
             Enum.TryParse((profile.GridAccess.ToString()), out zoneOb.AccessTypeGrids);
             Enum.TryParse((profile.PlayerAccess.ToString()), out zoneOb.AccessTypePlayers);
+            Enum.TryParse((profile.FloatingObjectAccess.ToString()), out zoneOb.AccessTypeFloatingObjects);
             Enum.TryParse((profile.AllowedActions.ToString()), out zoneOb.AllowedActions);
 
 

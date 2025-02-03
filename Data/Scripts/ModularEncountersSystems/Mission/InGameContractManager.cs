@@ -83,10 +83,7 @@ namespace ModularEncountersSystems.Missions {
 
             if (isPlayerMade)
             {
-                if(contractDefinitionId.SubtypeId.ToString() == "ObtainAndDeliver")
-                {
-                    return;
-                }
+
 
                 for (int i = GeneratedContracts.Count - 1; i >= 0; i--)
                 {
@@ -152,7 +149,7 @@ namespace ModularEncountersSystems.Missions {
 
         public static void ContractAbandoned(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId)
         {
-            MyVisualScriptLogicProvider.ShowNotificationToAll("ContractAbandoned", 15000, "Red");
+            MyVisualScriptLogicProvider.ShowNotificationToAll("ContractFailed", 15000, "Blue");
             if (isPlayerMade)
             {
                 var contract = GetActiveContract(contractId);
@@ -190,12 +187,13 @@ namespace ModularEncountersSystems.Missions {
 
                     if (player.ProgressionData.Tags.Contains($"@{contractId}"))
                     {
-                        PlayerList.Add(player.GetEntityId());
+                        PlayerList.Add(player.Player.IdentityId);
 
                         player.ProgressionData.Tags.Remove($"@{contractId}");
                     }
 
                 }
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("ContractAbandoned", 15000, "Red");
 
                 FactionHelper.ChangePlayerReputationWithFactions(null, -contract.FailReputationPrice, PlayerList, contract.FactionTag, false, -1501, 1501);
 
@@ -208,7 +206,7 @@ namespace ModularEncountersSystems.Missions {
 
         public static void ContractFailed(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId, bool IsAbandon)
         {
-            MyVisualScriptLogicProvider.ShowNotificationToAll("ContractFailed", 15000, "Red");
+            MyVisualScriptLogicProvider.ShowNotificationToAll("ContractFailed", 15000, "Blue");
             if (isPlayerMade)
             {
                 var contract = GetActiveContract(contractId);
@@ -272,13 +270,13 @@ namespace ModularEncountersSystems.Missions {
                 {
                     if (player.ProgressionData.Tags.Contains($"LeadPlayer@{contractId}"))
                     {
-                        player.Player.RequestChangeBalance(contract.Reward);
+                        //player.Player.RequestChangeBalance(contract.Reward); Keen is able to this. But not reputation
                         player.ProgressionData.Tags.Remove($"LeadPlayer@{contractId}");
                     }
 
                     if (player.ProgressionData.Tags.Contains($"@{contractId}"))
                     {
-                        PlayerList.Add(player.GetEntityId());
+                        PlayerList.Add(player.Player.IdentityId);
 
                         player.ProgressionData.Tags.Remove($"@{contractId}");
                     }
@@ -288,7 +286,10 @@ namespace ModularEncountersSystems.Missions {
                 FactionHelper.ChangePlayerReputationWithFactions(null, contract.ReputationReward, PlayerList, contract.FactionTag, false, -1501, 1501);
 
 
-
+                if (!string.IsNullOrEmpty(contract.ActivateBooleanNameOnSucces))
+                {
+                    MyAPIGateway.Utilities.SetVariable<bool>(contract.ActivateBooleanNameOnSucces, true);
+                }
 
                 RemoveActiveContractInternal(contractId);
 
@@ -299,6 +300,9 @@ namespace ModularEncountersSystems.Missions {
 
         public static void ProcessIngameContract()
         {
+            // To Do
+            // Loop through GeneratedContracts and  check the state MyAPIGateway.ContractSystem.GetContractState()
+            //remove any from the generatedcontract list
 
         }
 

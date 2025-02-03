@@ -57,6 +57,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public SafeZoneAccessType FactionAccess;
 		public SafeZoneAccessType GridAccess;
 		public SafeZoneAccessType PlayerAccess;
+		public SafeZoneAccessType FloatingObjectAccess;
 
 		public SafeZoneAction AllowedActions;
 
@@ -86,6 +87,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			FactionAccess = SafeZoneAccessType.Blacklist;
 			GridAccess = SafeZoneAccessType.Blacklist;
 			PlayerAccess = SafeZoneAccessType.Blacklist;
+			FloatingObjectAccess = SafeZoneAccessType.Blacklist;
 
 			AllowedActions = SafeZoneAction.None;
 
@@ -107,6 +109,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"FactionAccess", (s, o) => TagParse.TagSafeZoneAccessTypeEnumCheck(s, ref FactionAccess) },
 				{"GridAccess", (s, o) => TagParse.TagSafeZoneAccessTypeEnumCheck(s, ref GridAccess) },
 				{"PlayerAccess", (s, o) => TagParse.TagSafeZoneAccessTypeEnumCheck(s, ref PlayerAccess) },
+				{"FloatingObjectAccess", (s, o) => TagParse.TagSafeZoneAccessTypeEnumCheck(s, ref FloatingObjectAccess) },
 				{"AllowedActions", (s, o) => TagParse.TagSafeZoneActionEnumCheck(s, ref AllowedActions) },
 
 			};

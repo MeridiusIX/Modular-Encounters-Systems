@@ -76,6 +76,10 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static string ReplaceText(string text, List<string> replaceKeys, List<string> replaceValues)
 		{
+			if (string.IsNullOrEmpty(text))
+				return text;
+
+
 			if (replaceKeys.Count != replaceValues.Count)
 			{
 				return text;

@@ -38,12 +38,15 @@ namespace ModularEncountersSystems.Missions
         [ProtoMember(6)]
         public string FactionTag;
 
+        [ProtoMember(7)]
+        public string ActivateBooleanNameOnSucces;
+
         public ActiveContract()
         {
 
         }
 
-        public ActiveContract(long ContractId,long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag)
+        public ActiveContract(long ContractId,long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag, string ActivateBooleanNameOnSucces)
         {
             this.ContractId = ContractId;
             this.BlockId = BlockId;
@@ -52,6 +55,7 @@ namespace ModularEncountersSystems.Missions
             this.ReputationReward = ReputationReward;
             this.FailReputationPrice = FailReputationPrice;
             this.FactionTag = FactionTag;
+            this.ActivateBooleanNameOnSucces = ActivateBooleanNameOnSucces;
         }
     }
 
@@ -137,7 +141,7 @@ namespace ModularEncountersSystems.Missions
             var FactionTag = MissionReference.Faction.Tag;
 
 
-            var _activeContract = new ActiveContract(ContractId, SourceBlock.Entity.EntityId, MissionReference.Reward, MissionReference.ReputationReward, MissionReference.FailReputationPrice, FactionTag);
+            var _activeContract = new ActiveContract(ContractId, SourceBlock.Entity.EntityId, MissionReference.Reward, MissionReference.ReputationReward, MissionReference.FailReputationPrice, FactionTag,MissionReference.Profile.ActivateBooleanNameOnSucces);
             InGameContractManager.ActiveContracts.Add(_activeContract);
             MissionReference.Start();
 

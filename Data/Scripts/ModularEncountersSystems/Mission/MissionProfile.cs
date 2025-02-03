@@ -48,6 +48,7 @@ namespace ModularEncountersSystems.Missions {
         public bool Exclusive;
 
         public List<string> CustomApiMapping;
+        public string ActivateBooleanNameOnSucces;
 
         public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -65,7 +66,7 @@ namespace ModularEncountersSystems.Missions {
             OverrideFaction = "";
 
             MissionType = MissionType.Custom;
-            StoreProfileId = "";
+            StoreProfileId = "MES-StoreProfile-Example";
             ReplaceKeys = new List<string>();
             ReplaceValues = new List<string>();
 
@@ -81,6 +82,7 @@ namespace ModularEncountersSystems.Missions {
 
 
             InstanceEventGroupId = "";
+            ActivateBooleanNameOnSucces = "";
 
             Exclusive = false;
             CustomApiMapping = new List<string>();
@@ -118,6 +120,7 @@ namespace ModularEncountersSystems.Missions {
                 {"InstanceEventGroupId", (s, o) => TagParse.TagStringCheck(s, ref InstanceEventGroupId) },
                 {"Exclusive", (s, o) => TagParse.TagBoolCheck(s, ref Exclusive) },
                 {"CustomApiMapping", (s, o) => TagParse.TagStringListCheck(s, ref CustomApiMapping) },
+                {"ActivateBooleanNameOnSucces", (s, o) => TagParse.TagStringCheck(s, ref ActivateBooleanNameOnSucces) },
             };
 
         }

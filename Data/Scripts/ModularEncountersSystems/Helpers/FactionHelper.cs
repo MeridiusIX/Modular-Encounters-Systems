@@ -301,8 +301,10 @@ namespace ModularEncountersSystems.Helpers {
 
 				var tag = factionTags[i];
 				var amount = amounts[i];
+				//MyAPIGateway.Utilities.ShowMessage("MES", $"{tag} {amount}");
 
-				if(tag == "{Self}" && remoteControl != null)
+
+				if (tag == "{Self}" && remoteControl != null)
 				{
 					tag = remoteControl.GetOwnerFactionTag();
 

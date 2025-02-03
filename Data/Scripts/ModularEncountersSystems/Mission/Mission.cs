@@ -47,7 +47,6 @@ namespace ModularEncountersSystems.Missions
         public BlockEntity SourceContractBlock;
         public long InstanceId;
 
-        private string StoreProfileId;
         private StoreProfile _StoreProfile;
         public string InstanceEventGroupId;
 
@@ -58,7 +57,7 @@ namespace ModularEncountersSystems.Missions
                 if(_StoreProfile == null)
                 {
                     StoreProfile _profile = null;
-                    if (ProfileManager.StoreProfiles.TryGetValue(StoreProfileId, out _profile))
+                    if (ProfileManager.StoreProfiles.TryGetValue(Profile.StoreProfileId, out _profile))
                     {
                         _StoreProfile = _profile;
                         return _StoreProfile;
@@ -110,18 +109,11 @@ namespace ModularEncountersSystems.Missions
 
 
         
-        public Mission(string profileSubtypeId, string storeProfileId, string spawnGroupName)
+        public Mission(string profileSubtypeId,string spawnGroupName)
         {
             ProfileSubtypeId = profileSubtypeId;
 
-            if (string.IsNullOrEmpty(storeProfileId))
-            {
-                StoreProfileId = "MES-StoreProfile-Example";
-            }
-            else
-            {
-                StoreProfileId = storeProfileId;
-            }
+            
             SpawnGroupName = spawnGroupName;
         }
 
@@ -343,7 +335,8 @@ namespace ModularEncountersSystems.Missions
 
         public void Start()
         {
-
+            if (string.IsNullOrEmpty(InstanceEventGroupId))
+                return;
 
             TemplateEventGroup tja = null;
 
@@ -434,7 +427,7 @@ namespace ModularEncountersSystems.Missions
                         return false;
                     }
                     var storeItem = StoreProfile.OrderItems[index];
-                    MyVisualScriptLogicProvider.ShowNotificationToAll($"{index}: {storeItem.ItemSubtypeId}", 5000);
+
 
                     int amount = storeItem.GetAmount(false);
                     int reward = (int)((int)storeItem.GetPrice(105, false) * amount);

@@ -695,7 +695,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					var planetPos = _behavior.AutoPilot.CurrentPlanet.Center();
 					var targetCoreDist = _behavior.AutoPilot.Targeting.Target.Distance(planetPos);
 					var myCoreDist = Vector3D.Distance(planetPos, _remoteControl.GetPosition());
-					var difference = targetCoreDist - myCoreDist;
+					var difference = Math.Abs(targetCoreDist - myCoreDist);
 
 					if (difference >= ConditionReference.MinTargetAltitudeDifference && difference <= ConditionReference.MaxTargetAltitudeDifference)
 						satisfiedConditions++;

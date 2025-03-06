@@ -576,6 +576,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			newPattern = ProcessString(newPattern, "NatoLetter", NatoLetter);
 			newPattern = ProcessString(newPattern, "GreekLetter", GreekLetter);
+			newPattern = ProcessString(newPattern, "AurebeshLetter", AurebeshLetter);
 
 			return newPattern;
 

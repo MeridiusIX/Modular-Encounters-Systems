@@ -171,7 +171,7 @@ namespace ModularEncountersSystems.Spawning {
 			if (type.HasFlag(SpawningType.Creature) && conditions.CreatureSpawn)
 				return true;
 
-			if (type.HasFlag(SpawningType.OtherNPC) && (conditions.RivalAiAnySpawn || conditions.RivalAiAtmosphericSpawn || conditions.RivalAiSpaceSpawn || conditions.RivalAiSpawn))
+			if (type.HasFlag(SpawningType.OtherNPC))
 				return true;
 
 			if (type.HasFlag(SpawningType.StaticEncounterSpace) || type.HasFlag(SpawningType.StaticEncounterPlanet) && conditions.StaticEncounter)

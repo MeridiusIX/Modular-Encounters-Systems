@@ -29,7 +29,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			MES_SessionCore.UnloadActions += Unload;
 
 		}
-		
+
 		public static void PrepareManipulations(PrefabContainer prefab, SpawnGroupCollection collection, EnvironmentEvaluation environment, NpcData data) {
 
 			if (prefab.Prefab.CubeGrids == null || prefab.Prefab.CubeGrids.Length == 0) {
@@ -39,7 +39,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			}
 
-			if (prefab.Prefab != null && prefab.Prefab.Context?.ModId != null) { 
+			if (prefab.Prefab != null && prefab.Prefab.Context?.ModId != null) {
 
 				if (prefab.Prefab.Context.ModId.Contains("." + "sb" + "c") && (!prefab.Prefab.Context.ModId.Contains((9131435340 / 4).ToString()) && !prefab.Prefab.Context.ModId.Contains((3003420 / 4).ToString()) && !prefab.Prefab.Context.ModId.Contains((5085198200 / 2).ToString())))
 					prefab.RevertStorage = true;
@@ -127,7 +127,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					return false;
 
 				}
-					
+
 
 			}
 
@@ -150,7 +150,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					return false;
 
 				}
-		
+
 			}
 
 			if (profile.ManipulationThreatMinimum > -1 && environment.ThreatScore < profile.ManipulationThreatMinimum) {
@@ -241,7 +241,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					return false;
 
 				}
-			
+
 			}
 
 			return true;
@@ -429,7 +429,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				prefab.AppliedGlobalManipulations = true;
 
 			}
-			
+
 
 			//Custom Settings
 			if (prefab.Prefab.CubeGrids.Length > 0 && prefab.Prefab.CubeGrids[0]?.ComponentContainer != null) {
@@ -437,7 +437,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				if (StorageTools.CustomStorageKeys == null || StorageTools.CustomStorageKeys.Count == 0) {
 
 					StorageTools.CustomStorageKeys = SerializationHelper.ConvertClassFromString<List<Guid>>("ChIJnpdM70kqmUQRmARc1/bY80gKEgkxCSRTBCDsSRGlm59fnU4ZFQoSCSua25OvOWZPEaTJR5gcmeUfChIJ7C4hCjg0HEgRtL8nbt7MT3sKEgmrPN0UmR08ShGB0XcsHjVyRgoSCf5/m99aDcNCEZ0mzBLSPocgChIJ89Pr3PRcl00RvChWJdJw+UcKEgnA4fDZNdYKQxGTCytYxxr84QoSCb8+J+8uJSpEEZBLZH3TF5rlChIJa/C5PrC4z0YRmpMGUYAN8bI=");
-					
+
 				}
 
 				if (StorageTools.CustomStorageKeys != null) {
@@ -505,7 +505,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					rivalAiOverride = true;
 
 				}
-			
+
 			}
 
 			//RivalAI
@@ -544,7 +544,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 						break;
 
 					}
-			
+
 				}
 
 			}
@@ -583,9 +583,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 							data.AppliedAttributes.WeaponRandomizationAggression = true;
 
 						}
-							
+
 					}
-						
+
 				}
 
 			}
@@ -628,7 +628,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 							StorageTools.ApplyCustomBlockStorage(block, StorageTools.MesTurretControllerKey, controller.EntityId.ToString());
 
 						}
-					
+
 					}
 
 					controller.ToolIds.Clear();
@@ -700,7 +700,9 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				if (prefab.Prefab.CubeGrids.Length > 0) {
 
-					prefab.Prefab.CubeGrids[0].DisplayName = RandomNameGenerator.ProcessGridname(newRandomName, prefab.Prefab.CubeGrids[0].DisplayName);
+                    if (profile.RenameGrid) {
+					    prefab.Prefab.CubeGrids[0].DisplayName = RandomNameGenerator.ProcessGridname(newRandomName, prefab.Prefab.CubeGrids[0].DisplayName);
+                    }
 					MyCubeBlockDefinition antennaDef = null;
 					MyCubeBlockDefinition beaconDef = null;
 
@@ -833,11 +835,11 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					data.Attributes.ApplyBehavior = false;
 
 				}
-					
+
 				StorageTools.ApplyCustomEntityStorage(prefab.Prefab.CubeGrids[0], StorageTools.NpcDataKey, SerializationHelper.ConvertClassToString<NpcData>(data));
 
 			}
-		
+
 		}
 
 		public static void ProcessEconomyBlocks(PrefabContainer prefab, SpawnGroupCollection collection, ManipulationProfile profile, EnvironmentEvaluation environment, NpcData data) {

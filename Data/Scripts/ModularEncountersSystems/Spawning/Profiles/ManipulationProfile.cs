@@ -98,6 +98,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseRandomNameGenerator;
 		public string RandomGridNamePrefix;
 		public List<string> RandomGridNamePattern;
+		public bool RenameGrid;
 		public string ReplaceAntennaNameWithRandomizedName;
 		public bool ReplaceAntennaHudTextInsteadOfName;
 		public string ReplaceBeaconNameWithRandomizedName;
@@ -302,6 +303,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RandomGridNamePattern = new List<string>();
 			ReplaceAntennaNameWithRandomizedName = "";
 			ReplaceBeaconNameWithRandomizedName = "";
+			RenameGrid = true;
 			ReplaceAntennaHudTextInsteadOfName = false;
 			ReplaceBeaconHudTextInsteadOfName = false;
 
@@ -895,6 +897,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{
 
 					TagParse.TagStringCheck(tag, ref this.ReplaceBeaconNameWithRandomizedName);
+
+				}
+
+				//RenameGrid
+				if (tag.StartsWith("[RenameGrid:") == true)
+				{
+
+					TagParse.TagBoolCheck(tag, ref this.RenameGrid);
 
 				}
 

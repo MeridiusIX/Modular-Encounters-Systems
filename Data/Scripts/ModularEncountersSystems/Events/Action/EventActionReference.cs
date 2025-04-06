@@ -498,10 +498,10 @@ namespace ModularEncountersSystems.Events.Action {
 				{ "ChatOverrideAuthor", (s, o) => TagParse.TagStringCheck(s, ref ChatOverrideAuthor) },
 
 				{ "UseChatOverrideMessage", (s, o) => TagParse.TagBoolCheck(s, ref UseChatOverrideMessage) },
-				{ "ChatOverrideMessage", (s, o) => TagParse.TagStringListCheck(s, ref ChatOverrideMessage) },
+				{ "ChatOverrideMessage", (s, o) => TagParse.TagStringListCheck(s,false, ref ChatOverrideMessage) },
 
 				{ "UseChatOverrideAudio", (s, o) => TagParse.TagBoolCheck(s, ref UseChatOverrideAudio) },
-				{ "ChatOverrideAudio", (s, o) => TagParse.TagStringListCheck(s, ref ChatOverrideAudio) },
+				{ "ChatOverrideAudio", (s, o) => TagParse.TagStringListCheck(s, false,ref ChatOverrideAudio) },
 
 
 

@@ -98,8 +98,8 @@ namespace ModularEncountersSystems.Missions {
                 {"FailReputationPrice", (s, o) => TagParse.TagStringCheck(s, ref FailReputationPrice) },
                 {"Duration", (s, o) => TagParse.TagStringCheck(s, ref Duration) },
 
-                {"ReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref ReplaceKeys) },
-                {"ReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref ReplaceValues) },
+                {"ReplaceKeys", (s, o) => TagParse.TagStringListCheck(s,false, ref ReplaceKeys) },
+                {"ReplaceValues", (s, o) => TagParse.TagStringListCheck(s, false,ref ReplaceValues) },
          
                 {"PersistantEventConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PersistantEventConditionIds) },
                 {"UseAnyPassingEventCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseAnyPassingEventCondition) },

@@ -17,6 +17,7 @@ using VRage.Game;
 using VRage.Game.ModAPI;
 using VRageMath;
 
+
 namespace ModularEncountersSystems.Missions
 {
 
@@ -121,11 +122,25 @@ namespace ModularEncountersSystems.Missions
 
         public bool Init(BlockEntity sourceContractBlock)
         {
+
             ReplaceKeys = new List<string>();
             ReplaceValues = new List<string>();
 
+
+            if (Profile.ReplaceKeys.Count != Profile.ReplaceValues.Count)
+            {
+                MyAPIGateway.Utilities.ShowMessage("MES", $"{Profile.ProfileSubtypeId}: From profile: Replacekeys ({Profile.ReplaceKeys.Count}) and replacevalues ({Profile.ReplaceValues.Count}) do not match");
+                MyAPIGateway.Utilities.ShowMessage("MES", $"{string.Join(", ", Profile.ReplaceKeys)}");
+                MyAPIGateway.Utilities.ShowMessage("MES", $"{string.Join(", ", Profile.ReplaceValues)}");
+                return false;
+            }
+
+
+
             ReplaceKeys.AddList(Profile.ReplaceKeys);
             ReplaceValues.AddList(Profile.ReplaceValues);
+
+
 
             SourceContractBlock = sourceContractBlock;
 
@@ -137,7 +152,11 @@ namespace ModularEncountersSystems.Missions
 
                 //Override faction tag not found
                 if (Faction == null)
+                {
+                    MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", "Override faction tag not found");
                     return false;
+                }
+                    
             }
             else
             {
@@ -145,7 +164,11 @@ namespace ModularEncountersSystems.Missions
             }
 
             if (Faction == null)
-                return false;   
+            {
+                MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", "Faction not found??");
+                return false;
+            }
+ 
 
 
             var coords = sourceContractBlock.GetPosition();
@@ -159,6 +182,12 @@ namespace ModularEncountersSystems.Missions
             ReplaceKeys.Add("{Faction}");
             ReplaceValues.Add($"{Faction.Tag}");
 
+            if (ReplaceKeys.Count != ReplaceValues.Count)
+            {
+                MyAPIGateway.Utilities.ShowMessage("MES", $"{Profile.ProfileSubtypeId}: Before API: Replacekeys ({ReplaceKeys.Count}) and replacevalues ({ReplaceValues.Count}) do not match");
+                return false;
+            }
+
 
             if (Profile.CustomApiMapping.Count > 0)
             {
@@ -169,6 +198,7 @@ namespace ModularEncountersSystems.Missions
 
                     if (!LocalApi.MissionCustomMappings.TryGetValue(methodName, out func))
                     {
+                        MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", $"{methodName} - Not Found!");
                         return false;
                     }
                     if (func != null)
@@ -176,13 +206,26 @@ namespace ModularEncountersSystems.Missions
                         var dict = func.Invoke(ProfileSubtypeId, SpawnGroupName, Profile.Tags, sourceContractBlock.GetPosition());
 
                         if (dict == null)
+                        {
+                            MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", $"{methodName} - Api returned null as dict!");
                             return false;
+                        }
+         
 
                         ReplaceKeys.AddList(new List<string>(dict.Keys));
                         ReplaceValues.AddList(new List<string>(dict.Values));
                     }
                 }
             }
+
+            if (ReplaceKeys.Count != ReplaceValues.Count)
+            {
+                MyAPIGateway.Utilities.ShowMessage("MES", $"{Profile.ProfileSubtypeId}: After API: Replacekeys ({ReplaceKeys.Count}) and replacevalues ({ReplaceValues.Count}) do not match");
+                return false;
+            }
+
+
+
 
             InstanceEventGroupId = IdsReplacer.ReplaceText(Profile.InstanceEventGroupId, ReplaceKeys, ReplaceValues);
 

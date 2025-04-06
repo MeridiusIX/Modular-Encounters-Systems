@@ -82,6 +82,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			if (replaceKeys.Count != replaceValues.Count)
 			{
+				MyAPIGateway.Utilities.ShowMessage("MES", "Replacekeys and replaces values do not match");
 				return text;
 			}
 

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Datapad.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Datapad.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="datapadmd">Datapad.md</h1>
+<p>Datapad Profiles in Rival AI are used to dynamically add Datapads to NPC Grids without having to manually add them to the grid. In these profiles, you can define the name/title of the Datapad using the <code>DisplayName</code> tag, and the body is defined using the <code>Description</code> tag.</p>
+<p>To add Datapads to your grid, use the Trigger/Action system. Search for the Action tag <code>AddDatapadsToSeats</code> to get started.</p>
+<p>Because the <code>Description</code> is used for the body, these profiles are read a little differently from regular RivalAI Profiles. In order to define these profiles, you MUST include <code>RivalAI-Datapad</code> at the beginning of your Profile SubtypeId.</p>
+<p>Here is an example of how a Datapad Profile definition is setup:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;Definitions xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+  &lt;EntityComponents&gt;
+
+    &lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
+      &lt;Id&gt;
+          &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
+          &lt;SubtypeId&gt;RivalAI-Datapad-ExampleDataPad&lt;/SubtypeId&gt;
+      &lt;/Id&gt;
+
+      &lt;DisplayName&gt;Datapad Title Goes Here&lt;/DisplayName&gt;
+      &lt;Description&gt;
+
+      Datapad Body Text Goes Here
+
+      &lt;/Description&gt;
+
+    &lt;/EntityComponent&gt;
+
+  &lt;/EntityComponents&gt;
+&lt;/Definitions&gt;
+</code></pre>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

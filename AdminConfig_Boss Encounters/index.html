@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_Boss Encounters.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_Boss Encounters.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_boss-encountersmd">AdminConfig_Boss Encounters.md</h1>
+<p>You can find the Boss Encounters Settings Configuration File in <code>MySaveWorldFolder\Storage\1521905890.sbm_ModularEncountersSpawner\Config-BossEncounters.xml</code>. The settings you can modify are listed below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">EnableSpawns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;EnableSpawns&gt;Value&lt;/EnableSpawns&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.EnableSpawns.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to Enable or Disable All Encounters from this Spawn Type.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayerSpawnCooldown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayerSpawnCooldown&gt;Value&lt;/PlayerSpawnCooldown&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.PlayerSpawnCooldown.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the cooldown time (in seconds) after a Boss Encounter appears before another one can appear for the player. <code>Value</code> can be any integer number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTimerTrigger&gt;Value&lt;/SpawnTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.SpawnTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how often the script should measure the player's distance to see if they've travelled far enough to trigger a Random Encounter spawn. <code>Value</code> can be any integer number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SignalActiveTimer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SignalActiveTimer&gt;Value&lt;/SignalActiveTimer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.SignalActiveTimer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the amount of time (in seconds) that a Boss Encounter GPS Signal will stay active. <code>Value</code> can be any integer number (should not be lower than <code>0</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxShipsPerArea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxShipsPerArea&gt;Value&lt;/MaxShipsPerArea&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MaxShipsPerArea.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if there can should be a maximum amount of Boss Encounter grids near the player area. The <code>AreaSize</code> property below specifies the radius to check. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">AreaSize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;AreaSize&gt;Value&lt;/AreaSize&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.AreaSize.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the area to check for existing Boss Encounters if <code>MaxShipsPerArea</code> is set to <code>true</code>. <code>Value</code> can be any number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">TriggerDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;TriggerDistance&gt;Value&lt;/TriggerDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.TriggerDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how far from the Boss Encounter GPS the player much be before it spawns the Encounter grid(s). <code>Value</code> can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PathCalculationAttempts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PathCalculationAttempts&gt;Value&lt;/PathCalculationAttempts&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.PathCalculationAttempts.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many times the mod should attempt to spawn the encounter grid(s) if a valid path cannot be found. <code>Value</code> can be any integer number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinCoordsDistanceSpace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinCoordsDistanceSpace&gt;Value&lt;/MinCoordsDistanceSpace&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MinCoordsDistanceSpace.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance from the player the Boss Encounter GPS will be created while in Space. <code>Value</code> can be any number (should be higher than <code>0</code> and lower than <code>MaxCoordsDistanceSpace</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxCoordsDistanceSpace</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxCoordsDistanceSpace&gt;Value&lt;/MaxCoordsDistanceSpace&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MaxCoordsDistanceSpace.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum distance from the player the Boss Encounter GPS will be created while in Space. <code>Value</code> can be any number (should be higher than <code>0</code> and higher than <code>MinCoordsDistanceSpace</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinCoordsDistancePlanet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinCoordsDistancePlanet&gt;Value&lt;/MinCoordsDistancePlanet&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MinCoordsDistancePlanet.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance from the player the Boss Encounter GPS will be created while on a Planet. <code>Value</code> can be any number (should be higher than <code>0</code> and lower than <code>MaxCoordsDistancePlanet</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxCoordsDistancePlanet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxCoordsDistancePlanet&gt;Value&lt;/MaxCoordsDistancePlanet&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MaxCoordsDistancePlanet.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum distance from the player the Boss Encounter GPS will be created while on a Planet. <code>Value</code> can be any number (should be higher than <code>0</code> and higher than <code>MinCoordsDistancePlanet</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayersWithinDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayersWithinDistance&gt;Value&lt;/PlayersWithinDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.PlayersWithinDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the distance from where the Boss Encounter GPS is created that players will receive the GPS signal. <code>Value</code> can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinPlanetAltitude</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinPlanetAltitude&gt;Value&lt;/MinPlanetAltitude&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MinPlanetAltitude.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum altitude that Boss Encounter GPS markers and grid(s) will appear from the planet surface (if encounter is Planetary). <code>Value</code> can be any number higher than <code>0</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinSignalDistFromOtherEntities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinSignalDistFromOtherEntities&gt;Value&lt;/MinSignalDistFromOtherEntities&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MinSignalDistFromOtherEntities.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance the Boss Encounter GPS signal will appear from other grid/character entities. <code>Value</code> can be set to any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinSpawnDistFromCoords</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinSpawnDistFromCoords&gt;Value&lt;/MinSpawnDistFromCoords&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MinSpawnDistFromCoords.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum. distance from the Boss Encounter GPS signal that the Encounter grid(s) will appear. <code>Value</code> can be any number higher than <code>0</code> and lower than <code>MaxSpawnDistFromCoords</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxSpawnDistFromCoords</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxSpawnDistFromCoords&gt;Value&lt;/MaxSpawnDistFromCoords&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MaxSpawnDistFromCoords.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum. distance from the Boss Encounter GPS signal that the Encounter grid(s) will appear. <code>Value</code> can be any number higher than <code>0</code> and higher than <code>MinSpawnDistFromCoords</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinAirDensity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinAirDensity&gt;Value&lt;/MinAirDensity&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MinAirDensity.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum air density that is required for a Boss Encounter Signal to appear (for planetary encounters). <code>Value</code> can be any number between <code>0</code> and <code>1</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseMaxSpawnGroupFrequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseMaxSpawnGroupFrequency&gt;Value&lt;/UseMaxSpawnGroupFrequency&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.UseMaxSpawnGroupFrequency.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the spawn group frequency should be set no higher than a provided value. The <code>MaxSpawnGroupFrequency</code> value would be the frequency used if the spawn group frequency is above that value. <code>Value</code> can be set to <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxSpawnGroupFrequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxSpawnGroupFrequency&gt;Value&lt;/MaxSpawnGroupFrequency&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.MaxSpawnGroupFrequency.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the spawning frequency of Boss Encounters if <code>UseMaxSpawnGroupFrequency</code> is set to <code>true</code>. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">DespawnDistanceFromPlayer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;DespawnDistanceFromPlayer&gt;Value&lt;/DespawnDistanceFromPlayer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.BossEncounters.DespawnDistanceFromPlayer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance players must be from the encounter before despawn is triggered. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTypeBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTypeBlacklist&gt;Value&lt;/SpawnTypeBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypeBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypeBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain spawngroups from appearing when this encounter type is used for spawning.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTypePlanetBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTypePlanetBlacklist&gt;Value&lt;/SpawnTypePlanetBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypePlanetBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypePlanetBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain planets from being able to spawn this type of encounter.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>TextTemplate.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "TextTemplate.md", url: "#_top", children: [
+          ]},
+          {title: "How to Create and Use These Files", url: "#how-to-create-and-use-these-files", children: [
+          ]},
+          {title: "File Setup", url: "#file-setup", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="texttemplatemd">TextTemplate.md</h1>
+<p>TextTemplate files are custom XML files that allow you to define text that can be used in various applications. At the time of this page being written, these files can only currently be used for changing Block CustomData.</p>
+<h1 id="how-to-create-and-use-these-files">How to Create and Use These Files</h1>
+<p>These files are not like <code>.sbc</code> files, they can not be placed in any directory in your mod. The files also must end in <code>.xml</code> extensions. Below is the folder/directory you must place these files in:</p>
+<p><code>YourModFolder\Data\TextTemplates\</code></p>
+<p>A full example would be:</p>
+<p><code>YourModFolder\Data\TextTemplates\SomeTextTemplateFile.xml</code></p>
+<p>A single file should contain a single TextTemplate. You cannot store multiple TextTemplates in a single file. When using your TextTemplate, you'll reference it by using its file name. Example:</p>
+<p><code>[SomeTagRequiringTextTemplate:SomeTextTemplateFile.xml]</code></p>
+<h1 id="file-setup">File Setup</h1>
+<p>Depending on what you're using the file for, you'll use one of the following data structures below:</p>
+<p><strong>Custom Data</strong>  </p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
+&lt;TextTemplate xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;CustomData&gt;Some Sample Custom Data&lt;/CustomData&gt;
+&lt;/TextTemplate&gt;
+</code></pre>
+<p><strong>Datapad</strong></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
+&lt;TextTemplate xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;DataPadEntries&gt;
+    &lt;DataPadEntry&gt;
+      &lt;DataPadTitle&gt;Some Title&lt;/DataPadTitle&gt;
+      &lt;DataPadBody&gt;Lorem Ipsum Yaddy Yadda&lt;/DataPadBody&gt;
+    &lt;/DataPadEntry&gt;
+  &lt;/DataPadEntries&gt;
+&lt;/TextTemplate&gt;
+</code></pre>
+<p><strong>LCD Contents</strong></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
+&lt;TextTemplate xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+  &lt;LcdEntries&gt;
+    &lt;LcdEntry&gt;
+      &lt;TextSurfaceIndex&gt;0&lt;/TextSurfaceIndex&gt;
+      &lt;ApplyLcdText&gt;false&lt;/ApplyLcdText&gt;
+      &lt;LcdText&gt;Some Text For LCD&lt;/LcdText&gt;
+      &lt;ApplyLcdImage&gt;false&lt;/ApplyLcdImage&gt;
+      &lt;LcdImages&gt;SomeLcdImageSubtypeId&lt;/LcdImages&gt;
+      &lt;LcdImages&gt;AnotherLcdImageSubtypeId&lt;/LcdImages&gt;
+      &lt;LcdImages&gt;AndAnotherLcdImageSubtypeId&lt;/LcdImages&gt;
+      &lt;LcdImageChangeDelay&gt;3&lt;/LcdImageChangeDelay&gt;
+    &lt;/LcdEntry&gt;
+  &lt;/LcdEntries&gt;
+&lt;/TextTemplate&gt;
+</code></pre>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

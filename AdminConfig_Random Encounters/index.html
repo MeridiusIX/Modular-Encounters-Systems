@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_Random Encounters.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_Random Encounters.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_random-encountersmd">AdminConfig_Random Encounters.md</h1>
+<p>You can find the Random Encounters Settings Configuration File in <code>MySaveWorldFolder\Storage\1521905890.sbm_ModularEncountersSpawner\Config-RandomEncounters.xml</code>. The settings you can modify are listed below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">EnableSpawns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;EnableSpawns&gt;Value&lt;/EnableSpawns&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.EnableSpawns.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to Enable or Disable All Encounters from this Spawn Type.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayerSpawnCooldown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayerSpawnCooldown&gt;Value&lt;/PlayerSpawnCooldown&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.PlayerSpawnCooldown.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the cooldown time (in seconds) after a Random Encounter appears before another one can appear for the player. <code>Value</code> can be any integer number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTimerTrigger&gt;Value&lt;/SpawnTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.SpawnTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how often the script should measure the player's distance to see if they've travelled far enough to trigger a Random Encounter spawn. <code>Value</code> can be any integer number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayerTravelDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayerTravelDistance&gt;Value&lt;/PlayerTravelDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.PlayerTravelDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This settings allows you to specify the distance a player must travel in space before a Random Encounter will spawn. <code>Value</code> can be any number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxShipsPerArea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxShipsPerArea&gt;Value&lt;/MaxShipsPerArea&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.MaxShipsPerArea.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if there can should be a maximum amount of Random Encounter grids near the player area. The <code>AreaSize</code> property below specifies the radius to check. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">AreaSize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;AreaSize&gt;Value&lt;/AreaSize&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.AreaSize.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the area to check for existing Random Encounters if <code>MaxShipsPerArea</code> is set to <code>true</code>. <code>Value</code> can be any number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinSpawnDistanceFromPlayer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinSpawnDistanceFromPlayer&gt;Value&lt;/MinSpawnDistanceFromPlayer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.MinSpawnDistanceFromPlayer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance a Random Encounter will appear from a player position. The distance is calculated as a random value between <code>MinSpawnDistanceFromPlayer</code> and <code>MaxSpawnDistanceFromPlayer</code>. <code>Value</code> can be any number (should not be <code>0</code> or lower and should be lower than <code>MaxSpawnDistanceFromPlayer</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxSpawnDistanceFromPlayer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxSpawnDistanceFromPlayer&gt;Value&lt;/MaxSpawnDistanceFromPlayer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.MaxSpawnDistanceFromPlayer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance a Random Encounter will appear from a player position. The distance is calculated as a random value between <code>MinSpawnDistanceFromPlayer</code> and <code>MaxSpawnDistanceFromPlayer</code>. <code>Value</code> can be any number (should not be <code>0</code> or lower and should be higher than <code>MinSpawnDistanceFromPlayer</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinDistanceFromOtherEntities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinDistanceFromOtherEntities&gt;Value&lt;/MinDistanceFromOtherEntities&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.MinDistanceFromOtherEntities.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance from other entities (grids, players, etc). <code>Value</code> can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnAttempts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnAttempts&gt;Value&lt;/SpawnAttempts&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.SpawnAttempts.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many attempts the mod should make to find a suitable spot to spawn the Random Encounter. <code>Value</code> can take any integer number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseMaxSpawnGroupFrequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseMaxSpawnGroupFrequency&gt;Value&lt;/UseMaxSpawnGroupFrequency&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.UseMaxSpawnGroupFrequency.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the spawn group frequency should be set no higher than a provided value. The <code>MaxSpawnGroupFrequency</code> value would be the frequency used if the spawn group frequency is above that value. <code>Value</code> can be set to <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxSpawnGroupFrequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxSpawnGroupFrequency&gt;Value&lt;/MaxSpawnGroupFrequency&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.MaxSpawnGroupFrequency.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the spawning frequency of Random Encounters if <code>UseMaxSpawnGroupFrequency</code> is set to <code>true</code>. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">DespawnDistanceFromPlayer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;DespawnDistanceFromPlayer&gt;Value&lt;/DespawnDistanceFromPlayer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.DespawnDistanceFromPlayer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance players must be from the encounter before despawn is triggered. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTypeBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTypeBlacklist&gt;Value&lt;/SpawnTypeBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypeBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypeBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain spawngroups from appearing when this encounter type is used for spawning.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTypePlanetBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTypePlanetBlacklist&gt;Value&lt;/SpawnTypePlanetBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypePlanetBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypePlanetBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain planets from being able to spawn this type of encounter.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

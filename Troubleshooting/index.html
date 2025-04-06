@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Troubleshooting.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Troubleshooting.md", url: "#_top", children: [
+          ]},
+          {title: "Advanced Encounters Troubleshooting", url: "#advanced-encounters-troubleshooting", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="troubleshootingmd">Troubleshooting.md</h1>
+<p>Here are some of the most common reasons you may not see encounters when you expect to, or why some encounters might not work properly:  </p>
+<ul>
+<li>
+<p><strong>Planetary Installations Spawn Too High / Too Low From The Ground:</strong> This issue occurs when you're on a planet that is too far from the game world center (0,0,0). The effects don't usually become noticeable until after about 7500km-10000km. The reason this happens is because the vector calculations the game uses with voxels start to become less accurate at longer distances (this is a limitation of the game engine). A common cause of this issue is using worlds generated using the SEWorldGenPlugin, which can place planets at extreme distances from the center of the game world.</p>
+</li>
+<li>
+<p><strong>Ships Falling or Not Behaving Properly While Using Infestation Enabled or Crew Enabled mods:</strong> These mods add NPC characters to seats, or add spiders that infest ships. However, they can also interfere with the regular operation of NPC Ship behaviors because they will sometimes (intentionally) break the Remote Control block that controls all the custom behavior so alternative behavior can be used (eg infestation). Please refer to the settings on those individual mods to address this.  </p>
+</li>
+<li>
+<p><strong>NPC Turrets Not Shooting:</strong> This is more common on servers, but can also happen in single player as well. <a href="https://support.keenswh.com/spaceengineers/pc/topic/22714-1-200-turrets-dont-target-unless-manually-forced">There is a known bug affecting turrets and their ability to acquire a target</a>. MES doesn't manage how NPC turrets work, it only puts ammo in the block and lets the vanilla logic do the rest. As a result, I cannot fix anything related to this on my end. One possible workaround is to use WeaponCore and its Vanilla Weapons Replacement mod, since it uses its own, <em>not broken</em>, targeting logic.  </p>
+</li>
+<li>
+<p><strong>Dedicated Server and Selective Physics Updates:</strong> If you decide to use the Selective Physics Updates option introduced in game version 1.196, you must use a <code>SyncDistance</code> no lower than <code>10000</code>. If the SyncDistance is lower, then the Modular Encounters Systems will be disabled. The reason for this harsh requirement is because most NPC grids operate outside of the default SyncDistance of 3000, and this server option stops their movement (physics) unless a player is within the SyncDistance range. There is no reasonable way to work around this other than increasing the SyncDistance.  </p>
+</li>
+<li>
+<p><strong>Reset Configurations:</strong> Sometimes I will update the default values in a SpawnType configuration file, however these changes will not automatically replace existing configurations in your existing saves. It's worth trying to reset your configuration files by either deleting them or using chat command <code>/MES.Settings.ResetAll</code>. If you've made changes to your configurations, you may want to backup those files before resetting them and testing with the fresh copies.  </p>
+</li>
+<li>
+<p><strong>NPCs Are Spawning With No Ownership:</strong> This is almost always the result of the NPC Faction being tampered with in some way. This can happen if an admin removes the founder from an NPC faction, if a player joins the NPC faction using admin controls, or if another script/plugin makes changes to the faction by adding/removing identities from it. <strong>None of the mods I curate make these sorts of changes</strong>. Unfortunately, I don't have an easy suggestion on how to correct many of these situations, since NPC factions are only generated once per world by the game. If you know how to edit the save file and undo any breaking changes, that is often the best way to handle it - otherwise you may have to create a new save to get NPCs spawning with correct ownership again.  </p>
+</li>
+<li>
+<p><strong>Check What Can Spawn In Your Vicinity:</strong> You can use a simple chat command to see what encounters are potentially eligible to spawm near you. The command is <code>/MES.Info.GetEligibleSpawnsAtPosition</code>. There is also a shorthand version of this command as well: <code>/MES.GESAP</code>. Depending on where you are and what mods you have loaded, it could just be an issue on being in an area where those mods cannot spawn encounters.</p>
+</li>
+<li>
+<p><strong>Too Many Spawns:</strong> If you are playing in multiplayer, you may notice an increase in spawn activity. This is because each player is tied to their own spawning events. So if a bunch of players are all in one area, then a bunch of encounters can potentailly appear pretty quickly. To mitigate this, use the config to reduce the <code>MaxShipsPerArea</code> property of each encounter type to something that is more managable for your play style. The config files also control the time between spawns as well.  </p>
+</li>
+<li>
+<p><strong>Planetary Spawning:</strong> <em>Planetary Cargo Ships</em> will typically only spawn on full sized planets that have a rich atmosphere. If you are using a custom map with modded planets or planets that are too small in size, then the atmosphere required for spawning may not be enough and any spawn attempt will fail. For <em>Planetary Installations</em>, planets that have a rough surface will have less success in seeing installations appear - this is because the mod tries to find relatively flat areas to spawn these installations, so jagged and mountainous areas will likely not see many/any of these spawns.  </p>
+</li>
+<li>
+<p><strong>Planetary Cargo Ships Falling Out Of The Sky:</strong> This is almost always the result of other mods that cause changes to Thurster Balance, Fuel and Hydrogen Re-Balance, and Aerodynamic/Realistic thrust. Many planetary cargo ships are not designed to use these systems and may not work properly as a result.</p>
+</li>
+<li>
+<p><strong>Critical Error In-Game Popup:</strong> These errors are often not a result of something wrong with the mod itself, but rather a result of Steam not downloading the mod properly. This can often be corrected by unsubscribing from the mod in question, waiting a little while, restarting steam, and then re-subscribing to the mod to force a new download.  </p>
+</li>
+<li>
+<p><strong>Encounter Specific Limitations:</strong> Some mods may use additional requirements that must be met before their encounters are able to spawn. These often include conditions such as Threat Score, PCU, Faction Reputation, and other conditions. These conditions are often listed on the mod pages of those encounters, so ensure you read the mod descriptions so that you understand the required conditions for their encounters.  </p>
+</li>
+<li>
+<p><strong>Ships/Drones Not Doing Anything:</strong> This is often because the drone encounters of a mod require the In-Game Scripts World Option to be enabled. When creating a new world, this option is typically OFF by default, so ensure you double check this to ensure it's ON.  </p>
+</li>
+<li>
+<p><strong>Too Many Active Encounters:</strong> If encounters are not spawning, it may be because there are too many active encounters in the world. Try removing some grids using the Admin Tools (Alt+F10).  </p>
+</li>
+<li>
+<p><strong>Current Game Version:</strong> I will often update the Modular Encounters Systems with new features as they are released with Base Game Major Updates. As a result, the framework is only compatible with the latest version of Space Engineers. If you attempt to run it in older versions, the scripts the framework uses to operate may not compile.  </p>
+</li>
+<li>
+<p><strong>Drones Spawning From Antennas:</strong> These are not spawned through the Modular Encounters Systems, so they may have other factors that need to be considered such as the <strong>Enable Drones</strong> world option being turned on, and the <strong>Pirate PCU</strong> limit not being exceeded. Also, because these are not spawned through the Spawner mod, they will not be eligible for prefab manipulations provided by <code>NPC Weapon Upgrades</code> or <code>NPC Defense Shield Provider</code> mods.</p>
+</li>
+<li>
+<p><strong>Torch Concealment:</strong> Concealment Plugin for Torch has been known to cause issues with NPC grids on occasion. I am not familiar with the various settings that the plugin offers (I have not administrated a server in a very long time), but I believe there are options to exclude NPC grids from concealment. I recommend using that option if you run into conflict with the Modular Encounters mods. If issues persist, you may need to disable concealment to use this mod.</p>
+</li>
+<li>
+<p><strong>Circular Reference in Game Log:</strong> This message can appear sometimes in your game log. It's something that often appears when mods use another mod as a dependency (many encounter mods use the framework). The message is harmless and can be ignored.</p>
+</li>
+<li>
+<p><strong>Still Seeing Spawns After Removing The Framework:</strong> If you have removed the Modular Encounters Systems mod, but have left any mods that use it as a dependency, then it is likely those mods are causing it to continue loading. You would need to remove any mod using the framework as a dependency from your mod list.</p>
+</li>
+</ul>
+<h1 id="advanced-encounters-troubleshooting">Advanced Encounters Troubleshooting</h1>
+<p>If you are still not seeing any encounters after following the above advice, then you can try some of these advanced steps:</p>
+<ul>
+<li>
+<p><strong>Checking The Spawn Record</strong>: Using the chat command <code>/MES.IGLSD.SpawnRecord</code> will generate a report that gets saved to your clipboard. You can paste this report into a program like Notepad and see what the result of various spawn attempts have been, and where they may be failing.  </p>
+</li>
+<li>
+<p><strong>Enabling and Checking Debugs</strong>: If the above did not provide any useful answers, you should next try to enable some of the extended monitoring. Enter the chat commands <code>/MES.SpawnDebug.Spawning.true</code> and <code>/MES.SpawnDebug.SpawnGroup.true</code>. Continue to play the game for a while (maybe about 1 hour). If you do not want to wait for encounters to spawn naturally, then you can use the <code>/MES.Spawn.ForceSpawnTimer.Value</code> chat command (see <a href="https://github.com/MeridiusIX/Modular-Encounters-Systems/wiki/Admin-&amp;-Configuration:-Admin-&amp;-Debug-Options">This Page</a> for info on what you can replace <code>Value</code> with). After the game has run for some time (or you've used the ForceSpawnTimer command), use the chat command <code>/MES.IGLSD.Spawning</code> to generate a report that saves to your clipboard. Paste into Notepad or another app and check for messages that may indicate where the Spawning is getting stuck. Below I will cover some of the more common scenarios.  </p>
+</li>
+<li>
+<p><strong>Message: Eligible SpawnGroup Count 0</strong>: If you get this message in the Spawn Report, then it usually means that there are currently no eligible encounters for the area you're currently in. You can get more details on this by entering the chat command <code>/MES.IGLSD.SpawnGroup</code>,  pasting the result into Notepad, and seeing the provided reason that each SpawnGroup cannot spawn. This can be tricky to read at times because it prints a large list containing every SpawnGroup and why it can/can't spawn for EVERY spawn request. It's often better to start from the bottom and work upward to get the most recent data.  </p>
+</li>
+<li>
+<p><strong>Message: SpawnGroup Path/Placement Invalid</strong>: If you get this message in the Spawn Report, then it usually means that while there are potential SpawnGroups that can spawn, they are currently unable to because of the surrounding environment. This could be due to a number of factors such as Planetary Cargo Ship encounters not having sufficient Air Density to fly (ie, atmosphere too shallow at position), terrain being too coarse / ragged for proper Planetary Installation placement, and more. Many of these reasons are covered in better detail earlier in this troubleshooting guide.  </p>
+</li>
+</ul>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

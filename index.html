@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="None">
+    
+    
+    <link rel="shortcut icon" href="./img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Modular Encounters System</title>
+    <link href="./css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="./css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="./css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/bootstrap-3.3.7.min.js"></script>
+    <script src="./js/highlight.pack.js"></script>
+    
+      <script src="./js/elasticlunr.min.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '.';
+      var is_top_frame = (window === window.parent);
+        
+        var pageToc = [
+          {title: "index.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="./js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+<nav class="navbar wm-page-top-frame">
+  <div class="container-fluid wm-top-container">
+    
+    <div class="wm-top-tool pull-right wm-vcenter">
+      <form class="dropdown wm-vcentered" id="wm-search-form" action="./search.html">
+        
+        <button id="wm-search-show" class="btn btn-sm btn-default" type="submit"
+          ><i class="fa fa-search" aria-hidden="true"></i></button>
+
+        <div class="input-group input-group-sm wm-top-search">
+          <input type="text" name="q" class="form-control" id="mkdocs-search-query" placeholder="Search" autocomplete="off">
+          <span class="input-group-btn" role="search">
+            
+            <button class="btn btn-default dropdown-toggle collapse" data-toggle="dropdown" type="button"><span class="caret"></span></button>
+            <ul id="mkdocs-search-results" class="dropdown-menu dropdown-menu-right"></ul>
+            <button id="wm-search-go" class="btn btn-default" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+          </span>
+        </div>
+      </form>
+    </div>
+
+    
+    <div class="wm-top-tool wm-vcenter pull-right wm-small-left">
+      <button id="wm-toc-button" type="button" class="btn btn-sm btn-default wm-vcentered"><i class="fa fa-th-list" aria-hidden="true"></i></button>
+    </div>
+
+    
+    
+
+    
+    <a href="" class="wm-top-brand wm-top-link wm-vcenter">
+      
+      <div class="wm-top-title">
+        Modular Encounters System<br>
+        
+      </div>
+    </a>
+  </div>
+</nav>
+
+  <div id="main-content" class="wm-page-top-frame">
+    
+<nav class="wm-toc-pane">
+  
+  <ul class="wm-toctree">
+        <li class="wm-toc-li wm-toc-lev1 "><a href="" class="wm-article-link wm-toc-text">Home</a>
+</li>
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Player Support</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Encounter-Guide" class="wm-article-link wm-toc-text">Encounter Guide</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Frequently-Asked-Questions" class="wm-article-link wm-toc-text">FAQs</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Troubleshooting" class="wm-article-link wm-toc-text">Troubleshooting</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Bugs,-Issues,-or-Crashes" class="wm-article-link wm-toc-text">Bugs, Issues, or Crashes</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Economy-Stations-FAQ" class="wm-article-link wm-toc-text">Economy Stations FAQ</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Mod-Republishing-and-Reuse" class="wm-article-link wm-toc-text">Mod Republishing Guidelines</a>
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Admin & Configuration</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_General" class="wm-article-link wm-toc-text">General Settings</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Grid" class="wm-article-link wm-toc-text">Grid Settings</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Combat" class="wm-article-link wm-toc-text">Combat Settings</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Space Cargo Ships" class="wm-article-link wm-toc-text">Space Cargo Ships</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Random Encounters" class="wm-article-link wm-toc-text">Random Encounters</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Planetary Cargo Ships" class="wm-article-link wm-toc-text">Planetary Cargo Ships</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Planetary Installations" class="wm-article-link wm-toc-text">Planetary Installations</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Boss Encounters" class="wm-article-link wm-toc-text">Boss Encounters</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Creatures" class="wm-article-link wm-toc-text">Creatures</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_AiEnabled Bot Spawning" class="wm-article-link wm-toc-text">AiEnabled Bot Spawning</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Wave Spawner" class="wm-article-link wm-toc-text">Wave Spawners</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Clean-Up" class="wm-article-link wm-toc-text">Clean-Up</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Spawn Filtering" class="wm-article-link wm-toc-text">Spawn Filtering</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_Timeout" class="wm-article-link wm-toc-text">Timeout</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="AdminConfig_AdminDebugOptions" class="wm-article-link wm-toc-text">Admin & Debug Options</a>
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Modding</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Spawning</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="SpawnGroup" class="wm-article-link wm-toc-text">SpawnGroup</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Spawn-Conditions" class="wm-article-link wm-toc-text">Spawning Conditions</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Zone-Conditions-Profile" class="wm-article-link wm-toc-text">Zone Conditions</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Spawn-Conditions-Groups" class="wm-article-link wm-toc-text">Spawning Conditions Groups</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 wm-toc-opener"><span class="wm-toc-text">Manipulation</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Block-Replacement" class="wm-article-link wm-toc-text">Block Replacement</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Dereliction" class="wm-article-link wm-toc-text">Dereliction</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Loot" class="wm-article-link wm-toc-text">Loot</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Loot-Profile-Group" class="wm-article-link wm-toc-text">Loot Profile Group</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Weapon-Mod-Rules" class="wm-article-link wm-toc-text">Weapon Mod Rules</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Manipulation-Groups" class="wm-article-link wm-toc-text">Manipulation Groups</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Prefab-Data" class="wm-article-link wm-toc-text">Prefab Data</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Replenishment" class="wm-article-link wm-toc-text">Replenishment</a>
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Behaviors (Getting Started)</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 wm-toc-opener"><span class="wm-toc-text">Core Behavior</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Core-Behavior" class="wm-article-link wm-toc-text">Behavior</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Autopilot" class="wm-article-link wm-toc-text">Autopilot</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Command" class="wm-article-link wm-toc-text">Command</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Datapad" class="wm-article-link wm-toc-text">Datapad</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Target" class="wm-article-link wm-toc-text">Target</a>
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev3 wm-toc-opener"><span class="wm-toc-text">Triggers</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Trigger" class="wm-article-link wm-toc-text">Trigger</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 "><a href="Condition" class="wm-article-link wm-toc-text">Condition</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev4 wm-toc-opener"><span class="wm-toc-text">Actions</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev5 "><a href="Action" class="wm-article-link wm-toc-text">Actions</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev5 "><a href="Bot-Spawn" class="wm-article-link wm-toc-text">Bot Spawn</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev5 "><a href="Chat" class="wm-article-link wm-toc-text">Chat</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev5 "><a href="Spawn" class="wm-article-link wm-toc-text">Spawn</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev5 "><a href="TextTemplate" class="wm-article-link wm-toc-text">TextTemplate</a>
+</li>
+  </ul>
+</li>
+
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Trigger-Group" class="wm-article-link wm-toc-text">Trigger Group</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Waypoint" class="wm-article-link wm-toc-text">Waypoint</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Weapons" class="wm-article-link wm-toc-text">Weapons</a>
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 wm-toc-opener"><span class="wm-toc-text">Events (Getting Started)</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Event" class="wm-article-link wm-toc-text">Event</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Event-Conditions" class="wm-article-link wm-toc-text">Event Condition</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Event-Action" class="wm-article-link wm-toc-text">Event Action</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev3 "><a href="Custom-Event-Actions-and-ScenarioTools" class="wm-article-link wm-toc-text">Custom Event Actions</a>
+</li>
+  </ul>
+</li>
+
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Player-Condition-Profile" class="wm-article-link wm-toc-text">Player Conditions (New)</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Zone-Profile" class="wm-article-link wm-toc-text">Zone</a>
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Template / Example Files</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="https://gist.github.com/MeridiusIX/1ae743505ec489d31e6ac17edf16e5e0?ts=2" class="wm-article-link wm-toc-text">SpawnGroup.sbc</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="https://gist.github.com/MeridiusIX/cd9b4decb58dea335290a05b728a7276?ts=2" class="wm-article-link wm-toc-text">Factions.sbc</a>
+</li>
+  </ul>
+</li>
+
+        <li class="wm-toc-li wm-toc-lev1 wm-toc-opener"><span class="wm-toc-text">Modder Resources</span>
+</li>
+<li class="wm-toc-li-nested collapse">
+  <ul class="wm-toctree">
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Armor-Modules" class="wm-article-link wm-toc-text">Armor Modules Included with MES (Page Unavailable)</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="https://gist.github.com/MeridiusIX/415b45b53174c608c6486ce06bb58e2c" class="wm-article-link wm-toc-text">Block Replacement Profiles</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Encounter-Attributes" class="wm-article-link wm-toc-text">Encounter Attributes</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Loot-Profiles" class="wm-article-link wm-toc-text">Loot Profiles</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Modding:-Tutorial-&-Guidelines:-NPC-Grid-Setup-Guidelines" class="wm-article-link wm-toc-text">NPC Grid Setup Guidelines</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="https://gist.github.com/MeridiusIX/8888bbc06a623cac90f8362dd948033c" class="wm-article-link wm-toc-text">Random Name Generator Guide</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Scripting-API" class="wm-article-link wm-toc-text">Scripting API</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Troubleshooting-Tips" class="wm-article-link wm-toc-text">Troubleshooting Tips</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="https://gist.github.com/MeridiusIX/52fbf5679e67107a8cf37706205b5812" class="wm-article-link wm-toc-text">Threat Score Guide</a>
+</li>
+      <li class="wm-toc-li wm-toc-lev2 "><a href="Tutorials" class="wm-article-link wm-toc-text">Tutorials</a>
+</li>
+  </ul>
+</li>
+
+  </ul>
+</nav>
+
+    <div class="wm-content-pane">
+      <iframe class="wm-article" name="article"></iframe>
+    </div>
+  </div>
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="indexmd">index.md</h1>
+<p>hello world</p>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-04-06 11:24:26.207620+00:00
+-->

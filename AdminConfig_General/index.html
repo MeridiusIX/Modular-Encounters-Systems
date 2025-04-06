@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_General.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_General.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_generalmd">AdminConfig_General.md</h1>
+<p>You can find the General Settings Configuration File in <code>MySaveWorldFolder\Storage\1521905890.sbm_ModularEncountersSpawner\Config-General.xml</code>. The settings you can modify are listed below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">EnableLegacySpaceCargoShipDetection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;EnableLegacySpaceCargoShipDetection&gt;Value&lt;/EnableLegacySpaceCargoShipDetection&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.EnableLegacySpaceCargoShipDetection.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if older Cargo Ship mods that do not contain Keens new <code>&lt;IsCargoShip&gt;</code> tag should still be considered for spawning by the Spawner. Default value is <code>true</code>. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseModIdSelectionForSpawning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseModIdSelectionForSpawning&gt;Value&lt;/UseModIdSelectionForSpawning&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.UseModIdSelectionForSpawning.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the spawner should sort all SpawnGroups by mod ID first, choose a random mod ID, and then spawn a random SpawnGroup from that mod ID. This is useful if you have mods loaded with lots of SpawnGroups that may outweigh spawning for other encounter mods. Default value is <code>true</code>. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseWeightedModIdSelection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseWeightedModIdSelection&gt;Value&lt;/UseWeightedModIdSelection&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.UseWeightedModIdSelection.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the encounter mods with more encounters should be weighed higher if <code>UseModIdSelectionForSpawning</code> is enabled. Default value is <code>true</code>. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">LowWeightModIdSpawnGroups</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;LowWeightModIdSpawnGroups&gt;Value&lt;/LowWeightModIdSpawnGroups&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.LowWeightModIdSpawnGroups.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many SpawnGroups a mod must have (or less) to be considered <code>Low</code> weighted, if <code>UseWeightedModIdSelection</code> is enabled. <code>Value</code> can be replaced with any Integer number (eg: <code>1</code>, <code>2</code>, <code>3</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">LowWeightModIdModifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;LowWeightModIdModifier&gt;Value&lt;/LowWeightModIdModifier&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.LowWeightModIdModifier.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many points a mod ID is worth if its considered <code>Low</code> weight, if <code>UseWeightedModIdSelection</code> is enabled. <code>Value</code> can be replaced with any Integer number (eg: <code>1</code>, <code>2</code>, <code>3</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MediumWeightModIdSpawnGroups</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MediumWeightModIdSpawnGroups&gt;Value&lt;/MediumWeightModIdSpawnGroups&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.MediumWeightModIdSpawnGroups.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many SpawnGroups a mod must have (between LowWeightModIdSpawnGroups value and this value) to be considered <code>Medium</code> weighted, if <code>UseWeightedModIdSelection</code> is enabled. <code>Value</code> can be replaced with any Integer number (eg: <code>1</code>, <code>2</code>, <code>3</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MediumWeightModIdModifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MediumWeightModIdModifier&gt;Value&lt;/MediumWeightModIdModifier&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.MediumWeightModIdModifier.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many points a mod ID is worth if its considered <code>Medium</code> weight, if <code>UseWeightedModIdSelection</code> is enabled. <code>Value</code> can be replaced with any Integer number (eg: <code>1</code>, <code>2</code>, <code>3</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">HighWeightModIdSpawnGroups</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;HighWeightModIdSpawnGroups&gt;Value&lt;/HighWeightModIdSpawnGroups&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.HighWeightModIdSpawnGroups.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many SpawnGroups a mod must have (or higher) to be considered <code>High</code> weighted, if <code>UseWeightedModIdSelection</code> is enabled. <code>Value</code> can be replaced with any Integer number (eg: <code>1</code>, <code>2</code>, <code>3</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">HighWeightModIdModifier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;HighWeightModIdModifier&gt;Value&lt;/HighWeightModIdModifier&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.HighWeightModIdModifier.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many points a mod ID is worth if its considered <code>High</code> weight, if <code>UseWeightedModIdSelection</code> is enabled. <code>Value</code> can be replaced with any Integer number (eg: <code>1</code>, <code>2</code>, <code>3</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseMaxNpcGrids</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseMaxNpcGrids&gt;Value&lt;/UseMaxNpcGrids&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.UseMaxNpcGrids.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify whether or not a global limit on NPC grids in the world should be used. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseGlobalEventsTimers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseGlobalEventsTimers&gt;Value&lt;/UseGlobalEventsTimers&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.UseGlobalEventsTimers.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify whether or not the mod should use the spawner timings from Global Events Definitions that are found on start-up. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">IgnorePlanetWhitelists</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;IgnorePlanetWhitelists&gt;Value&lt;/IgnorePlanetWhitelists&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.IgnorePlanetWhitelists.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the spawner should ignore Planet Whitelists found in spawngroups. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">IgnorePlanetBlacklists</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;IgnorePlanetBlacklists&gt;Value&lt;/IgnorePlanetBlacklists&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.IgnorePlanetBlacklists.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the spawner should ignore Planet Blacklists found in spawngroups. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">ThreatRefreshTimerMinimum</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;ThreatRefreshTimerMinimum&gt;Value&lt;/ThreatRefreshTimerMinimum&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.ThreatRefreshTimerMinimum.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting specifies the minimum time a that grids threat scores are refreshed. The refresh doesn't happen at this interval all the time if nothing has spawned and requested a threat score scan. <code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">ThreatReductionHandicap</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;ThreatReductionHandicap&gt;Value&lt;/ThreatReductionHandicap&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.ThreatReductionHandicap.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to set a handicap that is subtracted from all threat scores. You can also provide a negative value for added challenge. <code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>-10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxGlobalNpcGrids</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxGlobalNpcGrids&gt;Value&lt;/MaxGlobalNpcGrids&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.MaxGlobalNpcGrids.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">If <code>UseMaxNpcGrids</code> is set to <code>true</code>, then this setting specifies how many NPCs are allow to exist in the world at once. <code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayerWatcherTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayerWatcherTimerTrigger&gt;Value&lt;/PlayerWatcherTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.PlayerWatcherTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting specifies how often (in seconds) the spawner will check to see if it's time to spawn a new encounter near a player (the actual spawning times for encounters can be found in their respective configuration files). <code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">NpcDistanceCheckTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;NpcDistanceCheckTimerTrigger&gt;Value&lt;/NpcDistanceCheckTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.NpcDistanceCheckTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting specifies how often (in seconds) the mod will check an NPCs distance to the end of its travel path (for Space/Lunar/Planetary Cargo Ship Encounters). <code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">NpcOwnershipCheckTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;NpcOwnershipCheckTimerTrigger&gt;Value&lt;/NpcOwnershipCheckTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.NpcOwnershipCheckTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;"><code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">NpcCleanupCheckTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;NpcCleanupCheckTimerTrigger&gt;Value&lt;/NpcCleanupCheckTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.NpcCleanupCheckTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting specifies how often (in seconds) the mod will check an NPCs ownership to ensure players have not taken ownership of blocks. <code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">NpcBlacklistCheckTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;NpcBlacklistCheckTimerTrigger&gt;Value&lt;/NpcBlacklistCheckTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.NpcBlacklistCheckTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting specifies how often (in seconds) the mod will check each NPC against clean-up settings for its particular encounter type. <code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnedVoxelCheckTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnedVoxelCheckTimerTrigger&gt;Value&lt;/SpawnedVoxelCheckTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.SpawnedVoxelCheckTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting specifies how often (in seconds) the mod will check to see if voxels spawned with the mod have grids nearby (Voxels are deleted if no grids are found nearby at the distance specified in <code>SpawnedVoxelMinimumGridDistance</code>). <code>Value</code> can be replaced with any integer (Eg: <code>5</code>, <code>10</code>, <code>42</code>, etc)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnedVoxelMinimumGridDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnedVoxelMinimumGridDistance&gt;Value&lt;/SpawnedVoxelMinimumGridDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.General.SpawnedVoxelMinimumGridDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting specifies the minimum distance that any grid must be from a mod-spawned voxel, otherwise it is deleted in clean-up. <code>Value</code> can be replaced with any number (Eg: <code>1000</code>, <code>5000</code>, <code>42000</code>, etc). Value should not be lower than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlanetSpawnsDisableList</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlanetSpawnsDisableList&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/PlanetSpawnsDisableList&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.PlanetSpawnsDisableList.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.PlanetSpawnsDisableList.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more planet names that spawns of any kind should not take place on. To add more names to the list, simply create a new line between the <code>&lt;PlanetSpawnsDisableList&gt;</code> and <code>&lt;/PlanetSpawnsDisableList&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> with the exact name of the planet subtypeid you want to restrict.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">NpcGridNameBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;NpcGridNameBlacklist&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/NpcGridNameBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.NpcGridNameBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.NpcGridNameBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more grid names that will be automatically deleted if spawned with NPC ownership. To add more names to the list, simply create a new line between the <code>&lt;NpcGridNameBlacklist&gt;</code> and <code>&lt;/NpcGridNameBlacklist&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> with the exact name of the grid you want to BlackList.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">NpcSpawnGroupBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;NpcSpawnGroupBlacklist&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/NpcSpawnGroupBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.NpcSpawnGroupBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.NpcSpawnGroupBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more SpawnGroups (using their SubtypeIds) that will be removed from the mod spawning pool. To add more groups to the list, simply create a new line between the <code>&lt;NpcSpawnGroupBlacklist&gt;</code> and <code>&lt;/NpcSpawnGroupBlacklist&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> with the exact name of the SpawnGroup SubtypeId you want to BlackList.</td>
+</tr>
+</tbody>
+</table>
+<!--
+|Setting:|UseEconomyBuyingReputationIncrease|
+|:----|:----|
+|XML:|`<UseEconomyBuyingReputationIncrease>Value</UseEconomyBuyingReputationIncrease>`|
+|Chat Command:|`/MES.Settings.General.UseEconomyBuyingReputationIncrease.Value`|
+|Description:|This setting allows you to gain reputation with an NPC faction when buying from their store blocks. This only works on NPC grids spawned via MES (Keen Economy Stations with SafeZones do not get this feature). `Value` can be replaced with `true` or `false`|
+
+|Setting:|EconomyBuyingReputationCostAmount|
+|:----|:----|
+|XML:|`<EconomyBuyingReputationCostAmount>Value</EconomyBuyingReputationCostAmount>`|
+|Chat Command:|`/MES.Settings.General.EconomyBuyingReputationCostAmount.Value`|
+|Description:|This setting allows you to specify how much you must spend at an NPC store before you receive 1 point of reputation increase. `Value` can be replaced with any number greater than `0`|
+-->
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

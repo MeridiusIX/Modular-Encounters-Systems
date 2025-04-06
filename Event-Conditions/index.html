@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Event-Conditions.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Event-Conditions.md", url: "#_top", children: [
+          ]},
+          {title: "Basic", url: "#basic", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="event-conditionsmd">Event-Conditions.md</h1>
+<p>Event Condition Profiles allow you to define some extra conditions that must be met before a Event Profile can execute its Actions. It is important that you use a unique SubtypeId for each Condition Profile you create, otherwise they may not work correctly.</p>
+<p>Here's an example of how a Event Condition Profile Definition is setup:</p>
+<pre><code>&lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
+    &lt;Id&gt;
+      &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
+      &lt;SubtypeId&gt;TAG-EventCondition-Example/SubtypeId&gt;
+    &lt;/Id&gt;
+    &lt;Description&gt;
+
+    [MES Event Condition]
+
+    [CheckTrueBooleans:true]
+    [TrueBooleans:SomeRandomBoolean]  
+
+    [CheckThreatScore:true]
+    [ThreatScoreAmount:600]
+    [ThreatScoreDistance:5000]
+    [ThreatScoreCoords:{X:-1129033.5 Y:126871.5 Z:1293873.5}]
+    [ThreatScoreDistanceFromCoords:90000]
+    [ThreatScoreType:PlayerLocation]
+    [ThreatScoreGridConfiguration:Static]
+        &lt;/Description&gt;
+&lt;/EntityComponent&gt;  
+</code></pre>
+<p><strong><a href="#Basic">Basic</a></strong></p>
+<p><strong><a href="#SandboxVariables">SandboxVariables</a></strong></p>
+<p><strong><a href="#Player">Player</a></strong></p>
+<p><strong><a href="#TheatScore">TheatScore</a></strong></p>
+<h1 id="basic">Basic</h1>
+<!--UseFailCondition  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseFailCondition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseFailCondition:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--UseAnyPassingCondition  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseAnyPassingCondition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseAnyPassingCondition:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr>
+<td style="text-align: left;"># SandboxVariables</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<!--CheckTrueBooleans  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CheckTrueBooleans</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CheckTrueBooleans:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--TrueBooleans  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">TrueBooleans</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[TrueBooleans:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any name string excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--AllowAnyTrueBoolean  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">AllowAnyTrueBoolean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[AllowAnyTrueBoolean:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--CheckFalseBooleans  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CheckFalseBooleans</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CheckFalseBooleans:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--FalseBooleans  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">FalseBooleans</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[FalseBooleans:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any name string excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--AllowAnyFalseBoolean  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">AllowAnyFalseBoolean</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[AllowAnyFalseBoolean:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--CheckCustomCounters  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CheckCustomCounters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CheckCustomCounters:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--CustomCounters  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomCounters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomCounters:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any name string excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CustomCountersTargets  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomCountersTargets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomCountersTargets:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any interger</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CounterCompareTypes  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CounterCompareTypes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CounterCompareTypes:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>GreaterOrEqual</code><br><code>Greater</code><br><code>Equal</code><br><code>NotEqual</code><br><code>Less</code><br><code>LessOrEqual</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr>
+<td style="text-align: left;"># Player</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<!--CheckPlayerCondition   -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CheckPlayerCondition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CheckPlayerCondition :Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--PlayerConditionIds  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PlayerConditionIds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PlayerConditionIds:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any name string excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CheckPlayerNear  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CheckPlayerNear</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CheckPlayerNear:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--PlayerNearCoords  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PlayerNearCoords</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PlayerNearCoords:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">A Vector3D Value in the following format:<br /><code>{X:# Y:# Z:#}</code><br />Replace <code>#</code> with values in meters.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--PlayerNearDistanceFromCoords  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PlayerNearDistanceFromCoords</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PlayerNearDistanceFromCoords:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any interger equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--PlayerFilterIds  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PlayerFilterIds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PlayerFilterIds:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any PlayerFilter Profile SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr>
+<td style="text-align: left;"># TheatScore</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<!--CheckThreatScore  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CheckThreatScore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CheckThreatScore:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--ThreatScoreAmount  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ThreatScoreAmount</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ThreatScoreAmount:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any interger equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--ThreatScoreDistance  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ThreatScoreDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ThreatScoreDistance:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any interger equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--ThreatScoreType  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ThreatScoreType</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ThreatScoreType:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Player<br>PlayerLocation<br>Location</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--ThreatScoreCoords  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ThreatScoreCoords</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ThreatScoreCoords:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">A Vector3D Value in the following format:<br /><code>{X:# Y:# Z:#}</code><br />Replace <code>#</code> with values in meters.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--ThreatScoreDistanceFromCoords  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ThreatScoreDistanceFromCoords</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ThreatScoreDistanceFromCoords:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any interger equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--ThreatScoreGridConfiguration  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ThreatScoreGridConfiguration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ThreatScoreGridConfiguration:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>All</code><br><code>Static</code><br><code>Dynamic</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

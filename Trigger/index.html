@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Trigger.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Trigger.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="triggermd">Trigger.md</h1>
+<p>Trigger Profiles in Rival AI are used to watch for specific events that happen near/to your current NPC grid, and then trigger an <strong>Action Profile</strong> if the conditions are satisfied. This allows for a wide variety of <strong>If THIS, Do THAT</strong> type of behavior. You can attach your Trigger Profiles to any Behavior Profile by adding a <code>[Triggers:Value]</code> tag to the Behavior and replace <code>Value</code> with the SubtypeId of your Trigger Profile. Example:</p>
+<p><code>[Triggers:RAI-ExampleTriggerProfile]</code></p>
+<p>Multiple Trigger Profiles can be attached to a single behavior as well, just include additional <code>[Triggers:Value]</code> lines in your Behavior Profile. It is important that you use a unique SubtypeId for each Trigger Profile you create, otherwise they may not work correctly.</p>
+<p>Here is an example of how a Trigger Profile definition is setup:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;Definitions xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+  &lt;EntityComponents&gt;
+
+    &lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
+      &lt;Id&gt;
+          &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
+          &lt;SubtypeId&gt;RAI-ExampleTriggerProfile&lt;/SubtypeId&gt;
+      &lt;/Id&gt;
+      &lt;Description&gt;
+
+      [RivalAI Trigger]
+
+      &lt;/Description&gt;
+
+    &lt;/EntityComponent&gt;
+
+  &lt;/EntityComponents&gt;
+&lt;/Definitions&gt;
+</code></pre>
+<p>All Trigger Profiles require the <code>Type</code> tag. This is what determines what sort of conditions the Trigger watches for. Here is a list of all the available Types and their descriptions.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Type:</th>
+<th style="text-align: left;">Description:</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>AcquiredTarget</code></td>
+<td style="text-align: left;">A trigger that activates when the NPC has acquired a target when not having a previous target</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ActiveGunsPercentage</code></td>
+<td style="text-align: left;">A trigger that will activate if the NPC Static Guns Remaining are above a certain percentage.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ActiveTurretsPercentage</code></td>
+<td style="text-align: left;">A trigger that will activate if the NPC Turrets Remaining are above a certain percentage.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ActiveWeaponsPercentage</code></td>
+<td style="text-align: left;">A trigger that will activate if the NPC Total Weapons Remaining are above a certain percentage.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BehaviorTriggerA</code></td>
+<td style="text-align: left;">A trigger that is executed when behavior specific events happen (see Behavior Specific Tags for details)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BehaviorTriggerB</code></td>
+<td style="text-align: left;">A trigger that is executed when behavior specific events happen (see Behavior Specific Tags for details)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BehaviorTriggerC</code></td>
+<td style="text-align: left;">A trigger that is executed when behavior specific events happen (see Behavior Specific Tags for details)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BehaviorTriggerD</code></td>
+<td style="text-align: left;">A trigger that is executed when behavior specific events happen (see Behavior Specific Tags for details)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BehaviorTriggerE</code></td>
+<td style="text-align: left;">A trigger that is executed when behavior specific events happen (see Behavior Specific Tags for details)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>BehaviorTriggerF</code></td>
+<td style="text-align: left;">A trigger that is executed when behavior specific events happen (see Behavior Specific Tags for details)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ButtonPress</code></td>
+<td style="text-align: left;">A trigger that is activated when a button panel is pressed on the NPC grid.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ChangedTarget</code></td>
+<td style="text-align: left;">A trigger that activates when any of <code>AcquiredTarget</code>, <code>LostTarget</code>, or <code>SwitchedTarget</code> activate.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>CommandReceived</code></td>
+<td style="text-align: left;">A command listener that executes actions if another NPC Behavior broadcasts a correct Command Code</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Compromised</code></td>
+<td style="text-align: left;">A trigger that is activated when the Remote Control block stops working.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Damage</code></td>
+<td style="text-align: left;">A damage watcher that executes actions when damage to the NPC is detected.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Despawn</code></td>
+<td style="text-align: left;">A trigger that is activated when the NPC is despawned by RivalAI.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>DespawnMES</code></td>
+<td style="text-align: left;">A trigger that is activated when the NPC is despawned by the Modular Encounters Spawner.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>HasTarget</code></td>
+<td style="text-align: left;">A trigger that will activate while NPC has a valid target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>HealthPercentage</code></td>
+<td style="text-align: left;">A trigger that will activate if the NPC health is above a certain percentage.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>InsideZone</code></td>
+<td style="text-align: left;">A trigger that will activate while NPC is inside a specified zone.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>JumpCompleted</code></td>
+<td style="text-align: left;">A trigger that will activate when a Jump Drive completes its jump.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>JumpRequested</code></td>
+<td style="text-align: left;">A trigger that will activate when a nearby Jump Drive is activated.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>LostTarget</code></td>
+<td style="text-align: left;">A trigger that activates when the NPC has lost a target and doesn't acquire a new one.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Manual</code></td>
+<td style="text-align: left;">A trigger that activates when specifically called from another Action Profile.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>NoTarget</code></td>
+<td style="text-align: left;">A trigger that will activate while NPC has no valid target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>NoWeapon</code></td>
+<td style="text-align: left;">A block watcher that executes actions if all weapons on the NPC grid becomes non-fireable</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>OutsideZone</code></td>
+<td style="text-align: left;">A trigger that will activate while NPC is outside a specified zone.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PlayerFar</code></td>
+<td style="text-align: left;">A proximity watcher that executes actions if players are outside a certain range.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PlayerKnownLocation</code></td>
+<td style="text-align: left;">A trigger that will activate if the NPC is inside a Known Player Location belonging to its own faction.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>PlayerNear</code></td>
+<td style="text-align: left;">A proximity watcher that executes actions if players come within a certain range.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Retreat</code></td>
+<td style="text-align: left;">A trigger that will activate if the Retreat BehaviorMode is activated on an NPC.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SensorActive</code></td>
+<td style="text-align: left;">A proximity watcher that executes actions if a named Sensor Block is currently Activated.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SensorIdle</code></td>
+<td style="text-align: left;">A proximity watcher that executes actions if a named Sensor Block is currently Idle.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Session</code></td>
+<td style="text-align: left;">A trigger that only activates once per session (ie: when the encounter spawns or when the game loads/reloads).</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SwitchTarget</code></td>
+<td style="text-align: left;">A trigger that activates when the NPC switches from one target to another.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TargetFar</code></td>
+<td style="text-align: left;">A proximity watcher that executes actions if a target is outside a certain range.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TargetInSafezone</code></td>
+<td style="text-align: left;">A target watcher that executes actions if a target moves into a SafeZone</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TargetNear</code></td>
+<td style="text-align: left;">A proximity watcher that executes actions if a target come within a certain range.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Timer</code></td>
+<td style="text-align: left;">A basic timer trigger that executes actions after the cooldown time limit has passed.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>TurretTarget</code></td>
+<td style="text-align: left;">A turret target watcher that executes actions when a turret acquires a target.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Weather</code></td>
+<td style="text-align: left;">A trigger that will execute if the NPC is within one or more specified Weather Systems.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p>Below are the tags you are able to use in your Trigger Profiles. Please note that some tags are only compatible with certain Trigger Types. Those tags are identified in the <code>Compatible Types:</code> section of each tag description.</p>
+<!--Type  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[Type:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the type of Trigger this profile should use.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>See Table Above For Allowed Values</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--UseTrigger  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseTrigger:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies if an attached Trigger Profile should be used / active.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--TargetDistance  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">TargetDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[TargetDistance:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the distance a player / target must be within before the Trigger activates.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any number greater than <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code><br><code>TargetNear</code><br><code>TargetFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--AllowTargetFarWithoutTarget-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">AllowTargetFarWithoutTarget</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[AllowTargetFarWithoutTarget:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Determines if the Trigger type <code>TargetFar</code> can activate if the behavior does not currently have a target.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>TargetFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--InsideAntenna  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">InsideAntenna</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[InsideAntenna:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies if a target must be within the range of an active Antenna on the NPC grid before activating. Please note that you should still define a <code>TargetDistance</code> distance tag if using this.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--InsideAntennaName  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">InsideAntennaName</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[InsideAntennaName:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the specific block name the antenna must have if using the <code>InsideAntenna</code> tag.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Text Value</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--UsePlayerCondition-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UsePlayerCondition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UsePlayerCondition:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--PlayerConditionIds-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PlayerConditionIds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PlayerConditionIds:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Text Value</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--PlayerNearPositionOffset  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PlayerNearPositionOffset</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PlayerNearPositionOffset:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies an X,Y,Z offset from where the NPC Remote Control is location that is used for <code>PlayerNear</code> calculations instead of just the block's position.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Vector3D Value (Example below)</br ><code>{X:0 Y:0 Z:0}</code></br >X -+ = Left/Right</br >Y -+ = Down/Up</br >Z -+ = Back/Forward</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--MinCooldownMs  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">MinCooldownMs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[MinCooldownMs:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the minimum time (in milliseconds) that a trigger must wait before it can be triggered again.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any integer higher than <code>0</code><br />Must be lower than <code>MaxCooldownMs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--MaxCooldownMs  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">MaxCooldownMs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[MaxCooldownMs:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the maximum time (in milliseconds) that a trigger must wait before it can be triggered again.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any integer higher than <code>0</code><br />Must be higher than <code>MinCooldownMs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--StartsReady  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">StartsReady</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[StartsReady:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies if the trigger timer is ready to activate when the NPC loads.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--MaxActions  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">MaxActions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[MaxActions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies how many times this trigger is allowed to activate its Actions.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any integer higher than <code>0</code><br /><code>-1</code> for no limit</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--ActionExecution  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ActionExecution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ActionExecution:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies how triggers with Multiple Action Profiles will execute. <code>All</code> will execute every Action at once when the trigger is activated. <code>Sequential</code> will process Actions one at a time per activation of Trigger. <code>Random</code> will select a random Action to execute when the Trigger is activated.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>All</code><br /><code>Sequential</code><br /><code>Random</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--Actions  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Actions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[Actions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies which Action Profile will be executed when the Trigger Profile conditions are satisfied.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Action Profile SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!--DamageTypes  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">DamageTypes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[DamageTypes:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the types of Damage that can activate a Trigger Profile using the Damage Type. Below you will find the vanilla damage types - you are not limited to these exclusively, since some modded weapons define their own custom damage types as well.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>Any</code>, <code>Unknown</code>, <code>Explosion</code>, <code>Rocket</code>, <code>Bullet</code>, <br /><code>Mine</code>, <code>Environment</code>, <code>Drill</code>, <code>Radioactivity</code>, <code>Deformation</code>, <br /><code>Suicide</code>, <code>Fall</code>, <code>Weapon</code>, <code>Fire</code>, <code>Squeez</code>, <br /><code>Grind</code>, <code>Weld</code>, <code>Asphyxia</code>, <code>LowPressure</code>, <code>Bolt</code>, <br /><code>Destruction</code>, <code>Debug</code>, <code>Wolf</code>, <code>Spider</code>, <code>Temperature</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>Damage</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!--ExcludedDamageTypes-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ExcludedDamageTypes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ExcludedDamageTypes:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the types of Damage that should be excluded from being able to activate the trigger if you use the <code>Any</code> value in your <code>DamageTypes</code> tag.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>Unknown</code>, <code>Explosion</code>, <code>Rocket</code>, <code>Bullet</code>, <br /><code>Mine</code>, <code>Environment</code>, <code>Drill</code>, <code>Radioactivity</code>, <code>Deformation</code>, <br /><code>Suicide</code>, <code>Fall</code>, <code>Weapon</code>, <code>Fire</code>, <code>Squeez</code>, <br /><code>Grind</code>, <code>Weld</code>, <code>Asphyxia</code>, <code>LowPressure</code>, <code>Bolt</code>, <br /><code>Destruction</code>, <code>Debug</code>, <code>Wolf</code>, <code>Spider</code>, <code>Temperature</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>Damage</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!--MinPlayerReputation  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">MinPlayerReputation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[MinPlayerReputation:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the minimum reputation a nearby player must have with the current NPC.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any integer between <code>-1500</code> and <code>1500</code><br />Must be lower than <code>MaxPlayerReputation</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--MaxPlayerReputation  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">MaxPlayerReputation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[MaxPlayerReputation:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the maximum reputation a nearby player must have with the current NPC.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any integer between <code>-1500</code> and <code>1500</code><br />Must be higher than <code>MinPlayerReputation</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--AllPlayersMustMatchReputation  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">AllPlayersMustMatchReputation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[AllPlayersMustMatchReputation:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies if all players within the range of the <code>CustomReputationRangeCheck</code> value must match the minimum and maximum reputation values. IF they do not, then the trigger will fail to execute.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--CustomReputationRangeCheck  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomReputationRangeCheck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomReputationRangeCheck:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the range that is used to check player reputations if <code>AllPlayersMustMatchReputation</code> is <code>true</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Number Greater Than <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>PlayerNear</code><br><code>PlayerFar</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--Conditions  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Conditions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[Conditions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies allows you to provide a SubtypeId of a Condition Profile that can be used to perform further checks before the Trigger is activated.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Condition Profile SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--ConditionCheckResetsTimer  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ConditionCheckResetsTimer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ConditionCheckResetsTimer:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies if a ConditionCheck (whether successful or not) resets the Cooldown timer for the current Trigger.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--CommandReceiveCode  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CommandReceiveCode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CommandReceiveCode:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies a code that must be received via Antenna Broadcast (codes are sent via Action Profiles) before the Trigger can be activated.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any string text excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>CommandReceived</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--SensorName-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">SensorName</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[SensorName:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies the name of a Sensor Block that is used for triggers that activate using sensors.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any string text excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>SensorActive</code><br /><code>SensorIdle</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--DespawnTypeFromSpawner-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">DespawnTypeFromSpawner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[DespawnTypeFromSpawner:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies the type of Despawn Request from the Modular Encounters Spawner required to activate the trigger.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>Any</code><br /><code>PathEnd</code><br /><code>CleanUp</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>DespawnMES</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--  -->
+
+<!--WeatherTypes-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">WeatherTypes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[WeatherTypes:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the types of Weather that are allowed to activate a Trigger using the <code>Weather</code> type.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Weather SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>Weather</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!--ToggleWithTriggerProfile-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ToggleWithTriggerProfile</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ToggleWithTriggerProfile:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies the name of another attached trigger profile that will have its <code>UseTrigger</code> value turned on when this trigger activates. The <code>UseTrigger</code> value of this trigger is simultanously turned off.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Trigger Profile SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--ToggledProfileResetsCooldown-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ToggledProfileResetsCooldown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ToggledProfileResetsCooldown:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies if the trigger that is enabled while using <code>ToggleWithTriggerProfile</code> should have its cooldown timer reset at the same time.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--UseFailCondition-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseFailCondition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseFailCondition:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies if the trigger should instead activate only when its <code>Type</code> condition (any any attached Condition Profiles) do not pass their checks. This does not apply to the trigger Cooldown as a fail condition.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--UseElseActions-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseElseActions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseElseActions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies if the trigger should instead execute a separate set of Actions when its <code>Type</code> condition (any any attached Condition Profiles) do not pass their checks. This does not apply to the trigger Cooldown as a fail condition.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--ElseActions-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ElseActions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ElseActions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies which Action Profiles will be executed when the Trigger Profile conditions are NOT satisfied if also using the <code>UseElseActions</code> tag.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Action Profile SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!-- ZoneName -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ZoneName</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ZoneName:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the name of a zone the NPC must be inside/outside for the trigger to activate</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;">Any Zone Name</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>InsideZone</code><br /><code>OutsideZone</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- EnableNamedTriggerOnSuccess -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">EnableNamedTriggerOnSuccess</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[EnableNamedTriggerOnSuccess:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the name of a trigger profile that will become enabled if this trigger is activated successfully.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;">Any Trigger Profile SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- DisableNamedTriggerOnSuccess -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">DisableNamedTriggerOnSuccess</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[DisableNamedTriggerOnSuccess:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the name of a trigger profile that will become disabled if this trigger is activated successfully.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;">Any Trigger Profile SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>All</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- JumpedGridActivationDistance -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">JumpedGridActivationDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[JumpedGridActivationDistance:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the max distance from a jump drive activation or jump starting position that is allowed for the trigger to activate.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;">Any Number Greater/Equal To `0'</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>JumpRequested</code><br /><code>JumpCompleted</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- JumpedGridsCanBeNonHostile -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">JumpedGridsCanBeNonHostile</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[JumpedGridsCanBeNonHostile:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies if Jumping/Jumped entity is allowed to be non-hostile to the NPC.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;"><code>true</code><br /><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>JumpRequested</code><br /><code>JumpCompleted</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- DetectSelfAsJumpedGrid -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">DetectSelfAsJumpedGrid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[DetectSelfAsJumpedGrid:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies if the NPC using this trigger is allowed to be the Jumping/Jumped entity.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;"><code>true</code><br /><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>JumpRequested</code><br /><code>JumpCompleted</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- ButtonPanelName-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ButtonPanelName</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ButtonPanelName:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the name of the ButtonPanel block is that monitored when using a <code>ButtonPress</code> trigger.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;">Any ButtonPanel Block Name</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>ButtonPress</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- ButtonPanelIndex-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ButtonPanelIndex</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ButtonPanelIndex:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the button index that is monitored when using a <code>ButtonPress</code> trigger. For example, a 4 button block would have indexes 0, 1, 2, 3.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;">Any ButtonPanel Index</td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>ButtonPress</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- PercentageOfWeaponsRemaining -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PercentageOfWeaponsRemaining</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PercentageOfWeaponsRemaining:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag allows you to specify the percentage of weapons that must be remaining in order for the trigger to be able to activate.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;">Any Number Greater/Equal To <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>ActiveGunsPercentage</code><br /><code>ActiveTurretsPercentage</code>br /&gt;<code>ActiveWeaponsPercentage</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- PercentageOfHealthRemaining -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PercentageOfHealthRemaining</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PercentageOfHealthRemaining:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag allows you to specify the percentage of grid health that must be remaining in order for the trigger to be able to activate.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;">Any Number Greater/Equal To <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Compatible Types:</td>
+<td style="text-align: left;"><code>HealthPercentage</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

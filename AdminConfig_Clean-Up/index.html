@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_Clean-Up.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_Clean-Up.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_clean-upmd">AdminConfig_Clean-Up.md</h1>
+<p>These settings can be found in each of the encounter types configuration files. The settings listed here control the circumstances for when grids of that type should be removed from the game by the clean-up process.</p>
+<p>For the chat commands, replace <code>EncounterType</code> with any of the types of encounter from the other configurations (eg: <code>SpaceCargoShips</code>, <code>RandomEncounters</code>, etc)</p>
+<p>The settings you can modify are listed below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseCleanupSettings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseCleanupSettings&gt;Value&lt;/UseCleanupSettings&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.UseCleanupSettings.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the clean-up process should include encounters from this configuration file type. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">OnlyCleanNpcsFromMes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;OnlyCleanNpcsFromMes&gt;Value&lt;/OnlyCleanNpcsFromMes&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.OnlyCleanNpcsFromMes.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the clean-up process should only target grids that were spawned by Modular Encounters Systems. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupUseDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupUseDistance&gt;Value&lt;/CleanupUseDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupUseDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the clean-up process for this encounter type should remove grids that are too far away from players. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupUseTimer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupUseTimer&gt;Value&lt;/CleanupUseTimer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupUseTimer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the clean-up process for this encounter type should remove grids after a certain amount of time. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupUseBlockLimit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupUseBlockLimit&gt;Value&lt;/CleanupUseBlockLimit&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupUseBlockLimit.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the clean-up process for this encounter type should remove grids that exceed a certain block count. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupDistanceStartsTimer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupDistanceStartsTimer&gt;Value&lt;/CleanupDistanceStartsTimer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupDistanceStartsTimer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the clean-up process for this encounter type should start the clean-up timer for the grid after a player is outside the clean-up distance. <code>CleanupUseDistance</code> and <code>CleanupUseTimer</code> must both be set to <code>true</code> for this feature to work. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupResetTimerWithinDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupResetTimerWithinDistance&gt;Value&lt;/CleanupResetTimerWithinDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupResetTimerWithinDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if <code>CleanupDistanceStartsTimer</code> is set to <code>true</code> and the player is within the clean-up distance limit, then the clean-up timer for that grid will reset to 0. <code>CleanupDistanceStartsTimer</code> must be set to <code>true</code> for this feature to work. <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupDistanceTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupDistanceTrigger&gt;Value&lt;/CleanupDistanceTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupDistanceTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum distance from the nearest player before the grid is removed if <code>CleanupUseDistance</code> is set to <code>true</code>. <code>Value</code> can be any number higher than <code>0</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupTimerTrigger&gt;Value&lt;/CleanupTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the time limit (in seconds) before a grid is removed if <code>CleanupUseTimer</code> is set to true. <code>Value</code> can be set to any integer number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupBlockLimitTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupBlockLimitTrigger&gt;Value&lt;/CleanupBlockLimitTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupBlockLimitTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum amount of blocks a grid is allowed to have. Grids with a higher block count will be removed if <code>CleanupUseBlockLimit</code> is set to <code>true</code>. <code>Value</code> can be set to any integer number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupIncludeUnowned</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupIncludeUnowned&gt;Value&lt;/CleanupIncludeUnowned&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupIncludeUnowned.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if unowned grids spawned by the spawner should also be included in the clean-up process. <code>Value</code> can be set to <code>true</code> or <code>false</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupUnpoweredOverride</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupUnpoweredOverride&gt;Value&lt;/CleanupUnpoweredOverride&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupUnpoweredOverride.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if different Distance and Timer values should be used if the target grid is unpowered. <code>Value</code> can be set to <code>true</code> or <code>false</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupUnpoweredDistanceTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupUnpoweredDistanceTrigger&gt;Value&lt;/CleanupUnpoweredDistanceTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupUnpoweredDistanceTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum distance from the nearest player before the unpowered grid is removed if <code>CleanupUseDistance</code> and <code>CleanupUnpoweredOverride</code> is set to <code>true</code>. <code>Value</code> can be any number higher than <code>0</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">CleanupUnpoweredTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;CleanupUnpoweredTimerTrigger&gt;Value&lt;/CleanupUnpoweredTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.CleanupUnpoweredTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the time limit (in seconds) before the unpowered grid is removed if <code>CleanupUseTimer</code> and <code>CleanupUnpoweredOverride</code> is set to true. <code>Value</code> can be set to any integer number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseBlockDisable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseBlockDisable&gt;Value&lt;/UseBlockDisable&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.EncounterType.UseBlockDisable.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if certain blocks on the NPC grid should be disabled after spawning. <code>Value</code> can be set to <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">DisableBlocksByType</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;DisableBlocksByType&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/DisableBlocksByType&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.DisableBlocksByType.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.DisableBlocksByType.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Block Types (using their TypeId) that will be disabled on NPC grids when they spawn. To add more types to the list, simply create a new line between the <code>&lt;DisableBlocksByType&gt;</code> and <code>&lt;/DisableBlocksByType&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> with the exact name of the Block TypeId you want to Disable.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">DisableBlocksByDefinitionId</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;DisableBlocksByDefinitionId&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/DisableBlocksByDefinitionId&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.DisableBlocksByDefinitionId.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.General.DisableBlocksByDefinitionId.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Block Types (using their MyDefinitionId string) that will be disabled on NPC grids when they spawn. To add more types to the list, simply create a new line between the <code>&lt;DisableBlocksByDefinitionId&gt;</code> and <code>&lt;/DisableBlocksByDefinitionId&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> with the exact name of the Block MyDefinitionId you want to Disable.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

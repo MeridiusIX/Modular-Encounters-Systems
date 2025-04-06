@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Encounter-Attributes.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Encounter-Attributes.md", url: "#_top", children: [
+          ]},
+          {title: "Behavior Difficulty", url: "#behavior-difficulty", children: [
+          ]},
+          {title: "Grid Difficulty", url: "#grid-difficulty", children: [
+          ]},
+          {title: "Environments", url: "#environments", children: [
+          ]},
+          {title: "Encounter Types", url: "#encounter-types", children: [
+          ]},
+          {title: "Spawning Conditions", url: "#spawning-conditions", children: [
+          ]},
+          {title: "Special Abilities", url: "#special-abilities", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="encounter-attributesmd">Encounter-Attributes.md</h1>
+<h1 id="behavior-difficulty">Behavior Difficulty</h1>
+<p>This section defines the various difficulty levels of encounters behaviors, ie how they interact with the player and other entities in the world.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Rating</th>
+<th style="text-align: left;">Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">★☆☆☆☆</td>
+<td style="text-align: left;">No Challenge</td>
+<td style="text-align: left;">Encounters are not hostile.</td>
+</tr>
+<tr>
+<td style="text-align: left;">★★☆☆☆</td>
+<td style="text-align: left;">Minimal</td>
+<td style="text-align: left;">Encounters are passively hostile, will only use turrets if you get close.</td>
+</tr>
+<tr>
+<td style="text-align: left;">★★★☆☆</td>
+<td style="text-align: left;">Average</td>
+<td style="text-align: left;">Encounters will likely not engage players unless provoked or approached.</td>
+</tr>
+<tr>
+<td style="text-align: left;">★★★★☆</td>
+<td style="text-align: left;">Hostile</td>
+<td style="text-align: left;">Encounters will seek players and attack when conditions are met (visibility, signals, etc).</td>
+</tr>
+<tr>
+<td style="text-align: left;">★★★★★</td>
+<td style="text-align: left;">Nightmare</td>
+<td style="text-align: left;">Encounters are easily aware of targets in the area and will relentlessly attack.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="grid-difficulty">Grid Difficulty</h1>
+<p>This section defines how difficult the ships / stations you'll encounter can be.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Rating</th>
+<th style="text-align: left;">Title&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">★☆☆☆☆</td>
+<td style="text-align: left;">No Challenge</td>
+<td style="text-align: left;">Grids are not significantly armed and/or armored.</td>
+</tr>
+<tr>
+<td style="text-align: left;">★★☆☆☆</td>
+<td style="text-align: left;">Minimal</td>
+<td style="text-align: left;">Smaller grids that are lightly armed and/or armored.</td>
+</tr>
+<tr>
+<td style="text-align: left;">★★★☆☆</td>
+<td style="text-align: left;">Average</td>
+<td style="text-align: left;">Average sized grids that are moderately armed and/or armored.</td>
+</tr>
+<tr>
+<td style="text-align: left;">★★★★☆</td>
+<td style="text-align: left;">Difficult</td>
+<td style="text-align: left;">Larger sized grids that are heavily armed and/or armored.</td>
+</tr>
+<tr>
+<td style="text-align: left;">★★★★★</td>
+<td style="text-align: left;">Nightmare</td>
+<td style="text-align: left;">Massive sized grids that are heavily armed and/or armored.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="environments">Environments</h1>
+<p>This section defines the various environments that encounters can appear in.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Space</td>
+<td style="text-align: left;">Encounters can appear in space (zero gravity).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Atmosphere</td>
+<td style="text-align: left;">Encounters can appear on planets with an atmosphere.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Gravity</td>
+<td style="text-align: left;">Encounters can appear on planets without an atmosphere.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Water</td>
+<td style="text-align: left;">Encounters can appear on water surface (while using Water Mod).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Underwater</td>
+<td style="text-align: left;">Encounters can appear under the water surface (while using Water Mod).</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="encounter-types">Encounter Types</h1>
+<p>This section defines the various types of encounters and how/when they generally spawn.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Space Cargo Ship</td>
+<td style="text-align: left;">Encounters that appear on a timer in space, fly in a linear path, and despawn when they reach the end of their path.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Planetary Cargo Ship</td>
+<td style="text-align: left;">Encounters that appear on a timer near a planet's surface, fly in a linear path, and despawn when they reach the end of their path.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Random Encounter</td>
+<td style="text-align: left;">Encounters that appear at random in space as the player travels across large distances.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Planetary Installation</td>
+<td style="text-align: left;">Encounters that appear at random on a planet's surface as the player travels across large distances.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Static Encounter</td>
+<td style="text-align: left;">Encounters that appear once the player has gotten close to where it should appear. These encounters only appear once.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Boss Encounter</td>
+<td style="text-align: left;">Difficult encounters the player can optionally engage by traveling to a designated GPS signal.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Drone Encounter</td>
+<td style="text-align: left;">Encounters that appear randomly on a timer near the player proximity.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Creature</td>
+<td style="text-align: left;">Animal or bot encounters that appear on a planet's surface near the player.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="spawning-conditions">Spawning Conditions</h1>
+<p>This section defines various additional conditions that may also be used when determining if an encounter is eligible to spawn.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Condition&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Chance</td>
+<td style="text-align: left;">Encounters will use an additional chance roll to determine if they're allowed to spawn in certain environments.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Combat Phase</td>
+<td style="text-align: left;">Encounters will only appear during a Combat Phase in the world. If Combat Phases are disabled, then this check is omitted.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Known Player Location</td>
+<td style="text-align: left;">Encounters can designate an area around a player as a Known Player Location, which can potentially allow encounters to spawn more often or detect the player easier.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Reputation</td>
+<td style="text-align: left;">Encounters will only appear if a player's reputation with an NPC faction is at a certain value.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Threat Score</td>
+<td style="text-align: left;">Encounters will only appear once players have progressed / built enough grid resources in an area.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Weather</td>
+<td style="text-align: left;">Certain encounters will only appear during specific weather events or times of the day.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Zones</td>
+<td style="text-align: left;">Certain encounters will only appear in certain areas.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="special-abilities">Special Abilities</h1>
+<p>This section defines special blocks, attributes, and abilities that encounters may possess.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Type&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Defense Shields</td>
+<td style="text-align: left;">Spawns with Defense Shields (if the Defense Shields mod is loaded).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Energy Inhibitor</td>
+<td style="text-align: left;">Drains suit energy from unseated players while in the inhibitor block range (disable the inhibitor block to stop this effect).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Grinder Damage</td>
+<td style="text-align: left;">Damages players that attack an encounter while using a grinder (disable the AI Control Module to stop this effect).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Hand Drill Inhibitor</td>
+<td style="text-align: left;">Disables Hand Drills while in the inhibitor block range (disable the inhibitor block to stop this effect).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Jetpack Inhibitor</td>
+<td style="text-align: left;">Disables Jetpack Dampeners while in the inhibitor block range, and disables Jetpack entirely at closer ranges (disable the inhibitor block to stop this effect).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Jump Drive Inhibitor</td>
+<td style="text-align: left;">Disables Jump Drive blocks while in the inhibitor block range (disable the inhibitor block to stop this effect).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Merchant Equipment</td>
+<td style="text-align: left;">Encounters may include store blocks, Shipyard System, and/or Suit Upgrade Stations.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Nanobot Inhibitor</td>
+<td style="text-align: left;">Disables Nanobot blocks while in the inhibitor block range (disable the inhibitor block to stop this effect).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Personnel Inhibitor</td>
+<td style="text-align: left;">Damages unseated players while in the inhibitor block range (disable the inhibitor block to stop this effect).</td>
+</tr>
+<tr>
+<td style="text-align: left;">Reinforcements</td>
+<td style="text-align: left;">Calls for additional support / spawns drones to assist.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Randomized Weapons</td>
+<td style="text-align: left;">Spawns with randomized weapons, which also includes weapons from mods you may have loaded.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

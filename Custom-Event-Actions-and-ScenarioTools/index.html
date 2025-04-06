@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Custom-Event-Actions-and-ScenarioTools.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Custom-Event-Actions-and-ScenarioTools.md", url: "#_top", children: [
+          ]},
+          {title: "EventActions continuation", url: "#eventactions-continuation", children: [
+              {title: "Tags", url: "#tags" },
+          ]},
+          {title: "Scenario Tools", url: "#scenario-tools", children: [
+              {title: "ScT-CreateGPS", url: "#sct-creategps" },
+              {title: "ScT-RemoveGPS", url: "#sct-removegps" },
+              {title: "ScT-AddNews", url: "#sct-addnews" },
+              {title: "ScT-SpawnPlanetaryInstallation (DON\"T USE)", url: "#sct-spawnplanetaryinstallation-dont-use" },
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="custom-event-actions-and-scenariotoolsmd">Custom-Event-Actions-and-ScenarioTools.md</h1>
+<h1 id="eventactions-continuation">EventActions continuation</h1>
+<h3 id="tags">Tags</h3>
+<!--ActivateCustomAction  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ActivateCustomAction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ActivateCustomAction:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--CustomActionName  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomActionName</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomActionName:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any name string excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+<!--CustomActionArgumentsString  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomActionArgumentsString</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomActionArgumentsString:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any name string excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CustomActionArgumentsBool  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomActionArgumentsBool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomActionArgumentsBool:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CustomActionArgumentsInt  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomActionArgumentsInt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomActionArgumentsInt:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any interger equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CustomActionArgumentsFloat  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomActionArgumentsFloat</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomActionArgumentsFloat:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any float equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CustomActionArgumentsLong  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomActionArgumentsLong</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomActionArgumentsLong:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any long equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CustomActionArgumentsDouble  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomActionArgumentsDouble</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomActionArgumentsDouble:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any double equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<!--CustomActionArgumentsVector3D  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CustomActionArgumentsVector3D</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CustomActionArgumentsVector3D:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">nan</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Vector3D equal or greater than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+<h1 id="scenario-tools">Scenario Tools</h1>
+<p><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2998575759">Mod link</a></p>
+<p>Scenario Tools is an extension of MES. </p>
+<p><strong>Scenario Tools Custom Actions:</strong></p>
+<p><strong>Overview:</strong></p>
+<p><strong><a href="#ScT-CreateGPS">ScT-CreateGPS</a></strong><br />
+<strong><a href="#ScT-RemoveGPS">ScT-RemoveGPS</a></strong><br />
+<strong><a href="#ScT-AddNews">ScT-AddNews</a></strong><br />
+<strong><a href="#ScT-SpawnPlanetaryInstallation">ScT-SpawnPlanetaryInstallation</a></strong><br />
+<strong><a href="#ScT-SpawnPlanetaryBlockade">ScT-SpawnPlanetaryBlockade</a></strong>    </p>
+<h2 id="sct-creategps">ScT-CreateGPS</h2>
+<p>This custom action creates a new GPS marker with specified parameters.</p>
+<p>Parameters:</p>
+<p><code>string</code> name: The name of the GPS marker.</p>
+<p><code>string</code>desc: The description of the GPS marker.</p>
+<p><code>int</code> time: The time (in minutes) the GPS marker will be active.</p>
+<p><code>Vector3D</code>coord: The coordinates of the GPS marker.</p>
+<pre><code>&lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
+  &lt;Id&gt;
+      &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
+      &lt;SubtypeId&gt;MOD-EventAction-Test&lt;/SubtypeId&gt;
+  &lt;/Id&gt;
+  &lt;Description&gt;
+    [MES Event Action]
+    [ActivateCustomAction:true]
+    [CustomActionName:ScT-CreateGPS]
+    [CustomActionArgumentsString:Story Event]
+    [CustomActionArgumentsString:Oh the humanity!]
+    [CustomActionArgumentsInt:120]      
+    [CustomActionArgumentsVector3D:{X:-1725718.78 Y:1493440.69 Z:-698321.45}]
+  &lt;/Description&gt;
+&lt;/EntityComponent&gt;
+</code></pre>
+<p><img alt="" src="https://steamuserimages-a.akamaihd.net/ugc/2029485208071521476/F9E1FFFAD880D21B73D67CE0583E367BD9A3AB47/" /></p>
+<h2 id="sct-removegps">ScT-RemoveGPS</h2>
+<p>Parameters:</p>
+<p><code>string</code> name:Name of the GPS, so that was created by Create GPS</p>
+<p>The name of the GPS.
+Usage:</p>
+<pre><code>&lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
+  &lt;Id&gt;
+      &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
+      &lt;SubtypeId&gt;MOD-EventAction-Test&lt;/SubtypeId&gt;
+  &lt;/Id&gt;
+  &lt;Description&gt;
+    [MES Event Action]
+    [ActivateCustomAction:true]
+    [CustomActionName:ScT-RemoveGPS]
+    [CustomActionArgumentsString:Story Event]
+  &lt;/Description&gt;
+&lt;/EntityComponent&gt;
+</code></pre>
+<h2 id="sct-addnews">ScT-AddNews</h2>
+<p>This custom action adds a news item to a LCD script.</p>
+<p>Parameters:</p>
+<p><code>string</code> text: The text of the news item.</p>
+<pre><code>&lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
+  &lt;Id&gt;
+      &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
+      &lt;SubtypeId&gt;MOD-EventAction-Test&lt;/SubtypeId&gt;
+  &lt;/Id&gt;
+  &lt;Description&gt;
+    [MES Event Action]
+    [ActivateCustomAction:true]
+    [CustomActionName:ScT-AddNews]
+    [CustomActionArgumentsString:FAF Captured Carcosa]
+  &lt;/Description&gt;
+&lt;/EntityComponent&gt;
+</code></pre>
+<p><img alt="" src="https://steamuserimages-a.akamaihd.net/ugc/2029485208071488065/6E482174D5D82826F80A853D68F3BB5F262B723A/" /></p>
+<h2 id="sct-spawnplanetaryinstallation-dont-use">ScT-SpawnPlanetaryInstallation (DON"T USE)</h2>
+<p>Description: This custom action spawns a planetary installation at a specified location.</p>
+<p>Parameters:</p>
+<p><code>string</code> spawnGroup: The group name for the planetary installation.</p>
+<p><code>Vector3D</code> coord: The coordinates of the area where the installation should be spawned .</p>
+<pre><code>&lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
+  &lt;Id&gt;
+      &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
+      &lt;SubtypeId&gt;MOD-EventAction-Test&lt;/SubtypeId&gt;
+  &lt;/Id&gt;
+  &lt;Description&gt;
+    [MES Event Action]
+    [ActivateCustomAction:true]
+    [CustomActionName:ScT-SpawnPlanetaryInstallation]
+    [CustomActionArgumentsString:FAFCarcosa]    
+    [CustomActionArgumentsVector3D:{X:-1169412.7 Y:97934.39 Z:1325510.96}]  
+  &lt;/Description&gt;
+&lt;/EntityComponent&gt;
+
+</code></pre>
+<h3 id="sct-spawnplanetaryblockade-dont-use">ScT-SpawnPlanetaryBlockade (DON"T USE)</h3>
+<p>Description: This custom action spawns a planetary blockade near players within a specified radius.</p>
+<p>This needs to be connected to a Event Condition that uses playernear</p>
+<p>Parameters:</p>
+<p><code>string</code> spawnGroup: The group name for the spawned blockade.</p>
+<p><code>int</code> MinRadius: The minimum radius from players for spawning.</p>
+<p><code>int</code> MaxRadius: The maximum radius from players for spawning.</p>
+<p><code>int</code> SpawnDistance: The distance from players where the blockade should be spawned.</p>
+<p><code>Vector3D</code> PlanetCentercoord: The coordinates of the center of the planet.</p>
+<pre><code>    &lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
+      &lt;Id&gt;
+          &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
+          &lt;SubtypeId&gt;Mod-EventAction-Test&lt;/SubtypeId&gt;
+      &lt;/Id&gt;
+      &lt;Description&gt;
+    [MES Event Action]
+    [ActivateCustomAction:true]
+    [CustomActionName:ScT-SpawnPlanetaryBlockade]
+    [CustomActionArgumentsString:GC-SpawnGroup-HeavyGarrison]
+    [CustomActionArgumentsInt:70000]    
+    [CustomActionArgumentsInt:78000]
+    [CustomActionArgumentsInt:4500]
+    [CustomActionArgumentsVector3D:{X:1449429.5 Y:-622819.5 Z:-2854387.5}]
+      &lt;/Description&gt;
+    &lt;/EntityComponent&gt;  
+</code></pre>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -22,6 +22,7 @@ using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using VRage.Game;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRage.Utils;
@@ -29,8 +30,7 @@ using VRageMath;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 	public partial class TriggerSystem {
-
-		public void ProcessAction(TriggerProfile trigger, ActionProfile actionsBase, long attackerEntityId = 0, long detectedEntity = 0, Command command = null) {
+        public void ProcessAction(TriggerProfile trigger, ActionProfile actionsBase, long attackerEntityId = 0, long detectedEntity = 0, Command command = null) {
 
 			BehaviorLogger.Write(trigger.ProfileSubtypeId + " Attempting To Execute Action Profile " + actionsBase.ProfileSubtypeId, BehaviorDebugEnum.Action);
 
@@ -1100,6 +1100,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				}
 
 			}
+
+            //ChangeGridOwnership
+            if (actions.ChangeGridOwnership) {
+                var blockList = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(RemoteControl.SlimBlock.CubeGrid);
+
+                IMyFaction faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(actions.OwnershipBlockFactions[0]);
+                if (faction != null) {
+                    var newOwner = FactionHelper.GetFactionOwner(faction);
+
+                    foreach (var block in blockList) {
+                        var cubeBlock = block as MyCubeBlock;
+                        cubeBlock.ChangeOwner(newOwner, MyOwnershipShareModeEnum.Faction);
+                        cubeBlock.ChangeBlockOwnerRequest(newOwner, MyOwnershipShareModeEnum.Faction);
+                    }
+                }
+            }
 
 			//ChangeBlockOwnership
 			if (actions.ChangeBlockOwnership) {

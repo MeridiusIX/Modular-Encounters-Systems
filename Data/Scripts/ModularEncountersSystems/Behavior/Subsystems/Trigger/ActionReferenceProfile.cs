@@ -197,6 +197,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<Vector3D> NewBlockColors;
 		public List<string> NewBlockSkins;
 
+		public bool ChangeGridOwnership;
 		public bool ChangeBlockOwnership;
 		public List<string> OwnershipBlockNames;
 		public List<string> OwnershipBlockFactions;
@@ -643,6 +644,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			NewBlockColors = new List<Vector3D>();
 			NewBlockSkins = new List<string>();
 
+			ChangeGridOwnership = false;
 			ChangeBlockOwnership = false;
 			OwnershipBlockNames = new List<string>();
 			OwnershipBlockFactions = new List<string>();
@@ -1042,6 +1044,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"OldBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref OldBlockSkins) },
 				{"NewBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref NewBlockColors) },
 				{"NewBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref NewBlockSkins) },
+				{"ChangeGridOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeGridOwnership) },
 				{"ChangeBlockOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockOwnership) },
 				{"OwnershipBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref OwnershipBlockNames) },
 				{"OwnershipBlockFactions", (s, o) => TagParse.TagStringListCheck(s, ref OwnershipBlockFactions) },

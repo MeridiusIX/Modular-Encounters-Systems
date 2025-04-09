@@ -833,8 +833,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			if (actions.ChangeAntennaHudText == true)
 			{
-
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna Namechange Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+                var antennaHudText = actions.AntennaHudText;
+
+                if (actions.UseRandomNameGenerator) {
+                    antennaHudText = RandomNameGenerator.CreateRandomNameFromPattern(antennaHudText);
+                }
 
 
 				foreach (var antenna in AntennaList)
@@ -843,7 +848,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (antenna == null)
 						continue;
 
-					antenna.HudText = actions.AntennaHudText;
+					antenna.HudText = antennaHudText;
 
 				}
 
@@ -853,6 +858,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             {
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna Namechange Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
 
+                var antennaHudTextSuffix = actions.AntennaHudTextSuffix;
+
+                if (actions.UseRandomNameGenerator) {
+                    antennaHudTextSuffix = RandomNameGenerator.CreateRandomNameFromPattern(antennaHudTextSuffix);
+                }
+
 
 				foreach (var antenna in AntennaList)
 				{
@@ -860,7 +871,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (antenna == null)
 						continue;
 
-					antenna.HudText = antenna.HudText + actions.AntennaHudTextSuffix;
+					antenna.HudText = antenna.HudText + antennaHudTextSuffix;
 
 				}
 			}

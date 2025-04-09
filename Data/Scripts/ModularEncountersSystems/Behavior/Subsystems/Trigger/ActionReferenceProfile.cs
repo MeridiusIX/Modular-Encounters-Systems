@@ -56,10 +56,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<int> ReputationChangeAmount;
 		public List<string> ReputationPlayerConditionIds;
 
+		public bool UseRandomNameGenerator;
+
 		public bool ActivateAssertiveAntennas;
 		public bool ChangeAntennaOwnership;
 		public string AntennaFactionOwner;
-
 		public bool ChangeAntennaHudText;
 		public string AntennaHudText;
 
@@ -490,6 +491,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			Retreat = false;
 
+			UseRandomNameGenerator = false;
 			ChangeAntennaHudText = false;
 			AntennaHudText = "";
 
@@ -956,6 +958,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
 				{"ChangeAttackersFactionAccount", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackersFactionAccount) },
 				{"ChangeAttackersFactionAccountByAmount", (s, o) => TagParse.TagIntCheck(s, ref ChangeAttackersFactionAccountByAmount) },
+				{"UseRandomNameGenerator", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomNameGenerator) },
 				{"ActivateAssertiveAntennas", (s, o) => TagParse.TagBoolCheck(s, ref ActivateAssertiveAntennas) },
 				{"ChangeAntennaOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaOwnership) },
 				{"AntennaFactionOwner", (s, o) => TagParse.TagStringCheck(s, ref AntennaFactionOwner) },

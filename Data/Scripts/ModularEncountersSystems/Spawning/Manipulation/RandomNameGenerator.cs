@@ -493,6 +493,45 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		};
 
+		public static string[] AurebeshLetter = {
+
+			"Aurek",
+			"Besh",
+			"Cresh",
+			"Cherek",
+			"Dorn",
+			"Esk",
+			"Enth",
+			"Onith",
+			"Forn",
+			"Grek",
+			"Herf",
+			"Isk",
+			"Jenth",
+			"Krill",
+			"Krenth",
+			"Leth",
+			"Mern",
+			"Nern",
+			"Nen",
+			"Osk",
+			"Orenth",
+			"Peth",
+			"Qek",
+			"Resh",
+			"Senth",
+			"Shen",
+			"Trill",
+			"Thesh",
+			"Usk",
+			"Vev",
+			"Wesk",
+			"Xesh",
+			"Yirt",
+			"Zerek"
+
+		};
+
 		public static string ProcessGridname(string pattern, string gridName){
 			string newPattern = pattern;
 			string keyword = "DefaultGridName";
@@ -537,6 +576,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			newPattern = ProcessString(newPattern, "NatoLetter", NatoLetter);
 			newPattern = ProcessString(newPattern, "GreekLetter", GreekLetter);
+			newPattern = ProcessString(newPattern, "AurebeshLetter", AurebeshLetter);
 
 			return newPattern;
 

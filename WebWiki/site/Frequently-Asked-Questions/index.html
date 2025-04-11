@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Frequently-Asked-Questions.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Frequently-Asked-Questions.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="frequently-asked-questionsmd">Frequently-Asked-Questions.md</h1>
+<p>Here are some common questions I receive for Modular Encounters Systems (MES) and its add-on mods:</p>
+<p><strong>Q: What order do I need to add MES and other Encounter Mods in the mod list?</strong><br />
+A: MES and Encounter Mods utilizing it can be loaded in any order or position in your mod list. I do not build mods that require a specific load order, nor do I ever plan to - it adds needless complication otherwise.</p>
+<p><strong>Q: How do I decrease / increase the amount of spawns?</strong><br />
+A: You can use the configuration files listed in the <strong>Admin &amp; Configuration</strong> section to control many aspects of spawn timing and frequency. Individual spawngroups can also be blacklisted by providing the spawngroup subtypeID (ie: its name). The configurations cannot change the spawn rates/frequencies of encounters from specific mods (eg: making Reavers less common, etc).</p>
+<p><strong>Q: I see too many of the same things spawning in the area I'm in. How do I get more unique spawns?</strong><br />
+A: If you're in an area that has unfavorable environmental conditions (thin atmosphere, rough terrain, etc), you may see less variety of encounters. You can solve this by moving to more open areas, and using planets have do not have shallow atmosphere (Pertam is an example of a shallow atmosphere world). Planet size is also something to consider, since smaller planets will result in a more shallow atmosphere. Alternatively, you can also add more encounter mods to your world - especially ones that have encounters that can operate in multiple environments.</p>
+<p><strong>Q: How do I turn off Jetpack / Drill / etc Inhibitor blocks?</strong><br />
+A: Shoot them until they break. There are no config options to disable these blocks, nor are there any plans to introduce any. Since turrets seem to become more useless against character entities with each game update, I have no incentive to remove these systems. Only a small percentage of NPC mods use the inhibitor blocks, so you have other options available if you don't enjoy that play style.</p>
+<p><strong>Q: Is MES causing vanilla economy station stores to be empty?</strong><br />
+A: No. What causes that is older mods that re-implement vanilla ore. If they're re-implemented without minimal price data that the economy system requires to generate pricing, then store blocks will be empty because all other item pricing cannot be calculated (ore -&gt; ingot -&gt; component -&gt; block).</p>
+<p><strong>Q: Does MES work the the Exploration Enhancement Mod (EEM)?</strong><br />
+A: Yes. While EEM was not designed to specifically use MES, the spawner is designed in a way that allows virtually all NPC mods to work with it.</p>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

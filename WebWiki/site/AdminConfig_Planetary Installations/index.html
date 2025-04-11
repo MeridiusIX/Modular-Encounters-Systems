@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_Planetary Installations.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_Planetary Installations.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_planetary-installationsmd">AdminConfig_Planetary Installations.md</h1>
+<p>You can find the Planetary Installations Settings Configuration File in <code>MySaveWorldFolder\Storage\1521905890.sbm_ModularEncountersSpawner\Config-PlanetaryInstallations.xml</code>. The settings you can modify are listed below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">EnableSpawns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;EnableSpawns&gt;Value&lt;/EnableSpawns&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.EnableSpawns.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to Enable or Disable All Encounters from this Spawn Type.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayerSpawnCooldown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayerSpawnCooldown&gt;Value&lt;/PlayerSpawnCooldown&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.PlayerSpawnCooldown.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the cooldown time (in seconds) after a Planetary Installation appears before another one can appear for the player. <code>Value</code> can be any integer number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTimerTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTimerTrigger&gt;Value&lt;/SpawnTimerTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.SpawnTimerTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how often the script should measure the player's distance to see if they've travelled far enough to trigger a Planetary Installation spawn. <code>Value</code> can be any integer number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayerDistanceSpawnTrigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayerDistanceSpawnTrigger&gt;Value&lt;/PlayerDistanceSpawnTrigger&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.PlayerDistanceSpawnTrigger.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This settings allows you to specify the distance a player must travel in space before a Planetary Installation will spawn. <code>Value</code> can be any number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxShipsPerArea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxShipsPerArea&gt;Value&lt;/MaxShipsPerArea&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MaxShipsPerArea.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if there can should be a maximum amount of Planetary Installation grids near the player area. The <code>AreaSize</code> property below specifies the radius to check. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">AreaSize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;AreaSize&gt;Value&lt;/AreaSize&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.AreaSize.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the area to check for existing Planetary Installation if <code>MaxShipsPerArea</code> is set to <code>true</code>. <code>Value</code> can be any number (should not be <code>0</code> or lower)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayerMaximumDistanceFromSurface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayerMaximumDistanceFromSurface&gt;Value&lt;/PlayerMaximumDistanceFromSurface&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.PlayerMaximumDistanceFromSurface.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum altitude from the surface the player must be for a Planetary Installation spawn event to trigger. <code>Value</code> can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinimumSpawnDistanceFromPlayers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinimumSpawnDistanceFromPlayers&gt;Value&lt;/MinimumSpawnDistanceFromPlayers&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MinimumSpawnDistanceFromPlayers.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance from the player that the station(s) will appear. <code>Value</code> can be any number higher than <code>0</code> and lower than <code>MaximumSpawnDistanceFromPlayers</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaximumSpawnDistanceFromPlayers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaximumSpawnDistanceFromPlayers&gt;Value&lt;/MaximumSpawnDistanceFromPlayers&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MaximumSpawnDistanceFromPlayers.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum distance from the player that the station(s) will appear. <code>Value</code> can be any number higher than <code>0</code> and higher than <code>MinimumSpawnDistanceFromPlayers</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">AggressivePathCheck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;AggressivePathCheck&gt;Value&lt;/AggressivePathCheck&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.AggressivePathCheck.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the mod should perform terrain checks in 8 directions from the player. If set to <code>false</code>, the mod will only perform checks in 4 directions, which may result in a lower chance of finding a suitable spot to spawn the station(s). <code>Value</code> can be <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SearchPathIncrement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SearchPathIncrement&gt;Value&lt;/SearchPathIncrement&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.SearchPathIncrement.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the distance to the next terrain surface check area if a previous check fails. <code>Value</code> can be any number higher than <code>0</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinimumSpawnDistanceFromOtherGrids</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinimumSpawnDistanceFromOtherGrids&gt;Value&lt;/MinimumSpawnDistanceFromOtherGrids&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MinimumSpawnDistanceFromOtherGrids.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance from other grids and players the station spawn coordinates must be. <code>Value</code> can be any number higher than <code>0</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinimumTerrainVariance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinimumTerrainVariance&gt;Value&lt;/MinimumTerrainVariance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MinimumTerrainVariance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum terrain variance that is allowed when checking a potential area for spawn coordinates. <code>Value</code> can be any number lower than <code>0</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaximumTerrainVariance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaximumTerrainVariance&gt;Value&lt;/MaximumTerrainVariance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MaximumTerrainVariance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum terrain variance that is allowed when checking a potential area for spawn coordinates. <code>Value</code> can be any number higher than <code>0</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">AggressiveTerrainCheck</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;AggressiveTerrainCheck&gt;Value&lt;/AggressiveTerrainCheck&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.AggressiveTerrainCheck.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the mod should check a potenial spawning area in 8 directions to ensure the terrain is level (using <code>MinimumTerrainVariance</code> and <code>MaximumTerrainVariance</code>). If set to <code>false</code>, only 4 directions will be used, which could result in more uneven terrain being used to spawn stations. <code>Value</code> can be <code>true</code> or <code>false</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">TerrainCheckIncrementDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;TerrainCheckIncrementDistance&gt;Value&lt;/TerrainCheckIncrementDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.TerrainCheckIncrementDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how far each directional step from the proposed spawn coords should be checked. <code>Value</code> can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SmallTerrainCheckDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SmallTerrainCheckDistance&gt;Value&lt;/SmallTerrainCheckDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.SmallTerrainCheckDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how far from the proposed spawn coords should be checked for small stations. <code>Value</code> can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MediumSpawnChanceBaseValue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MediumSpawnChanceBaseValue&gt;Value&lt;/MediumSpawnChanceBaseValue&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MediumSpawnChanceBaseValue.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the base chance a medium station has of appearing instead of a small station. <code>Value</code> can be any integer number between <code>0</code> and <code>100</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MediumSpawnChanceIncrement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MediumSpawnChanceIncrement&gt;Value&lt;/MediumSpawnChanceIncrement&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MediumSpawnChanceIncrement.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how much the <code>MediumSpawnChanceBaseValue</code> increases for every small station that spawns. <code>Value</code> can be any integer number between <code>0</code> and <code>100</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MediumSpawnDistanceIncrement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MediumSpawnDistanceIncrement&gt;Value&lt;/MediumSpawnDistanceIncrement&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MediumSpawnDistanceIncrement.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the additional distance from players that is added to <code>MinimumSpawnDistanceFromPlayers</code> and <code>MaximumSpawnDistanceFromPlayers</code> when spawning a medium station. Value can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MediumTerrainCheckDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MediumTerrainCheckDistance&gt;Value&lt;/MediumTerrainCheckDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.MediumTerrainCheckDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how far from the proposed spawn coords should be checked for medium stations. <code>Value</code> can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">LargeSpawnChanceBaseValue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;LargeSpawnChanceBaseValue&gt;Value&lt;/LargeSpawnChanceBaseValue&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.LargeSpawnChanceBaseValue.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the base chance a large station has of appearing instead of a medium station. <code>Value</code> can be any integer number between <code>0</code> and <code>100</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">LargeSpawnChanceIncrement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;LargeSpawnChanceIncrement&gt;Value&lt;/LargeSpawnChanceIncrement&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.LargeSpawnChanceIncrement.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how much the <code>LargeSpawnChanceBaseValue</code> increases for every medium station that spawns. <code>Value</code> can be any integer number between <code>0</code> and <code>100</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">LargeSpawnDistanceIncrement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;LargeSpawnDistanceIncrement&gt;Value&lt;/LargeSpawnDistanceIncrement&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.LargeSpawnDistanceIncrement.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the additional distance from players that is added to <code>MinimumSpawnDistanceFromPlayers</code> and <code>MaximumSpawnDistanceFromPlayers</code> when spawning a large station. Value can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">LargeTerrainCheckDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;LargeTerrainCheckDistance&gt;Value&lt;/LargeTerrainCheckDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.PlanetaryInstallations.LargeTerrainCheckDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how far from the proposed spawn coords should be checked for large stations. <code>Value</code> can be any number higher than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseMaxSpawnGroupFrequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseMaxSpawnGroupFrequency&gt;Value&lt;/UseMaxSpawnGroupFrequency&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.UseMaxSpawnGroupFrequency.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the spawn group frequency should be set no higher than a provided value. The <code>MaxSpawnGroupFrequency</code> value would be the frequency used if the spawn group frequency is above that value. <code>Value</code> can be set to <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxSpawnGroupFrequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxSpawnGroupFrequency&gt;Value&lt;/MaxSpawnGroupFrequency&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.MaxSpawnGroupFrequency.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the spawning frequency of Planetary Installations if <code>UseMaxSpawnGroupFrequency</code> is set to <code>true</code>. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">DespawnDistanceFromPlayer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;DespawnDistanceFromPlayer&gt;Value&lt;/DespawnDistanceFromPlayer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.RandomEncounters.DespawnDistanceFromPlayer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance players must be from the encounter before despawn is triggered. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTypeBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTypeBlacklist&gt;Value&lt;/SpawnTypeBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypeBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypeBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain spawngroups from appearing when this encounter type is used for spawning.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTypePlanetBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTypePlanetBlacklist&gt;Value&lt;/SpawnTypePlanetBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypePlanetBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Creatures.SpawnTypePlanetBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain planets from being able to spawn this type of encounter.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Encounter-Guide.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Encounter-Guide.md", url: "#_top", children: [
+          ]},
+          {title: "What Mods and Settings do you need?", url: "#what-mods-and-settings-do-you-need", children: [
+          ]},
+          {title: "What Types of Encounters Exist?", url: "#what-types-of-encounters-exist", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="encounter-guidemd">Encounter-Guide.md</h1>
+<p>This guide provides some insight into how encounters spawns using the Modular Encounters Systems framework mod. This can be used to understand when you will see NPC grids in your game world.</p>
+<h1 id="what-mods-and-settings-do-you-need">What Mods and Settings do you need?</h1>
+<p>Because the framework is a Mod, you will need to ensure that Experimental Mode is enabled. This is done from the options menu accessed from the title screen.  </p>
+<p>The first mod you will need is the <strong>Modular Encounters Systems</strong>, which is responsible for spawning encounters in your game world. However, most encounter mods that use the features of the framework will often list it as a mod dependency in Steam - which allows Space Engineers to Automatically load it when selecting said encounter mods.  </p>
+<p>Loading the framework mod by itself will not add any new encounters to your game. It is a framework mod that other encounter mods use to spawn their NPCs. I maintain a Steam Collection of mods that are friendly with MES, even if they do not directly use its features. That list can be found <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=1991339991">at this link</a>. Please note this isn't an exhaustive list, so there are other encounter mods on the workshop that should also be compatible.</p>
+<p>For world settings, you may want to enable <strong>In-Game Scripts</strong> and <strong>Enable Drones</strong>. In-game Scripts is what many mods still use for NPC Grid AI, and Enable Drones is the system a lot of mods use to call reinforcements (this is done via 'Pirate Antennas').  </p>
+<p>The world options for <strong>Cargo Ships</strong> and <strong>Random Encounters</strong> will be automatically turned off when using Modular Encounters Systems. The reason these world options are disabled is because the framework implements its own scripting for these features (effectively replacing them), so having them enabled would likely cause conflicts. If you are using older encounter mods that say they need those world options enabled, don't worry - the framework is built to be backwards compatible with them!   </p>
+<h1 id="what-types-of-encounters-exist">What Types of Encounters Exist?</h1>
+<p>There are a handful of ways that encounters can spawn using Modular Encounters Systems. Here are some of the different types and how they are triggered:   </p>
+<ul>
+<li>
+<p><strong>Space Cargo Ship:</strong> These encounters will spawn in space, or while the player is in a shallow gravity field (such as a moon). They typically appear about 5-10 KM from a player and will travel in a linear path for about 10-15 KM before despawning. These spawning events typically occur on a random timer, which is usually about 20-30 minutes.  </p>
+</li>
+<li>
+<p><strong>Random Encounters:</strong> These encounters also appear while you are in space. They will not appear if you are in a gravity well of any kind. They will appear in a random position near a player, about 7-15 KM away. Random Encounter spawns are triggered when the player is exploring space, which means you need to travel a certain distance before they will appear (about 15 KM). There is also a cooldown per player after a spawn is triggered - this is to prevent a player from using their jump drive rapidly to generate new spawns, which can affect game performance if too many grids exist in the world at once.  </p>
+</li>
+<li>
+<p><strong>Planetary Cargo Ships:</strong> These are very similar to their space counterparts, but will spawn typically in planets with a rich atmosphere.  </p>
+</li>
+<li>
+<p><strong>Planetary Installations:</strong> These are similar to Random Encounters in Space, but will spawn as static grids on planets that have a lot of flat surfaces. Players will need to travel about 6 KM before a spawn event is triggered.  </p>
+</li>
+<li>
+<p><strong>Boss Encounters:</strong> These encounters can appear in both Space and on Planets. They initially appear as a purple colored GPS marker, usually accompanied by a message that is broadcast to near-by player using the in-game chat system. The encounter will not physically spawn into the world until a player approaches the GPS signal (getting within about 300m of the signal). These signals will appear on a timer (approx 20min, and will remain visible for about another 20min). You should not approach one of these encounters unless you are well armed and ready for a difficult encounter.  </p>
+</li>
+<li>
+<p><strong>Drone Encounters:</strong> These encounters will spawn near players using a timer and distance system that is set in their individual SpawnGroups. The behavior of these encounters is entirely dependent on how the mod author has configured them. This encounter type could be considered a miscellaneous one.  </p>
+</li>
+<li>
+<p><strong>Static Encounters:</strong> These encounters are designed to always appear at a specific location in the game world once a player gets within a certain range of it. Typically, they will only spawn once, since they are locked to specific locations.  </p>
+</li>
+<li>
+<p><strong>Creature:</strong> These encounters are not grid-based NPCs, but rather character-based. Common examples of these encounters would include the vanilla Wolves and Spiders. These encounters can sometimes use the <strong>AiEnabled</strong> mod to govern their behaviors as well.</p>
+</li>
+</ul>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

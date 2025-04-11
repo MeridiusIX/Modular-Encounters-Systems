@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Bugs,-Issues,-or-Crashes.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Bugs,-Issues,-or-Crashes.md", url: "#_top", children: [
+          ]},
+          {title: "Reporting Issues/Crashes while using Torch and/or Plugins", url: "#reporting-issuescrashes-while-using-torch-andor-plugins", children: [
+          ]},
+          {title: "Crashes", url: "#crashes", children: [
+          ]},
+          {title: "Issues", url: "#issues", children: [
+          ]},
+          {title: "Common Issues and Resolutions", url: "#common-issues-and-resolutions", children: [
+          ]},
+          {title: "Steam Discussions", url: "#steam-discussions", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="bugs-issues-or-crashesmd">Bugs,-Issues,-or-Crashes.md</h1>
+<p>If you are having issues with the mods I curate, please read through this document.</p>
+<h1 id="reporting-issuescrashes-while-using-torch-andor-plugins">Reporting Issues/Crashes while using Torch and/or Plugins</h1>
+<p>If you are experiencing issues or crashing with any of my mods while using Torch and any of its plugins (or any plugins at all), I will ask that you reproduce the issues in an environment where Torch/Plugins are not involved before I consider investigating.</p>
+<p>The reason I am taking this stance is because I have dealt with several instances of 'False Positive' issue/crash reports when Torch/Plugins are involved. This wastes a lot of my time since I end up chasing issues that do not actually exist in my mods. I understand many server operators prefer to use Torch/Plugins, but because of the unpredictible nature of those types of add-ons, I have no way to ensure that my mods will function properly when server admins choose to use them.</p>
+<p>If you need a quick way to test mods in a Standard Dedicated Server, I recommend downloading the Dedicated Server software from your Steam Tools and loading/creating a world to test on your local machine. It will likely run a little choppy, but does provide a quick and easy way to test for specific bugs.</p>
+<h1 id="crashes">Crashes</h1>
+<p>If you are seeing a situation where one of my mods is causing the game/server to crash (either to the desktop or the main menu), <strong>you MUST provide a complete log file before I will investigate</strong>. Without the log file, I cannot see what method/process is responsible for the crash and cannot fix it.</p>
+<p>A snippet of the stack trace is often not sufficient, please provide the entire log.</p>
+<p>If you are playing in Single Player or Hosting Local Multiplayer, you can find the most recent logs by doing the following:</p>
+<ul>
+<li>
+<p>Press <code>Windows Key + R</code>  </p>
+</li>
+<li>
+<p>Enter <code>%AppData%\SpaceEngineers</code> and Press <code>OK</code>  </p>
+</li>
+<li>
+<p>Look for files called <code>SpaceEngineers_YYYYMMDD_HHMMSSmmm.log</code> (<code>YYYYMMDD_HHMMSSmmm</code> will appear instead as a bunch of numbers representing a time stamp for when you started the session)  </p>
+</li>
+<li>
+<p>Identify the most recent log from when the crash occured.  </p>
+</li>
+<li>
+<p>The easiest way to provide me with the log file is to upload it on my <strong><a href="https://discord.gg/8rZpMqq">Discord Server</a></strong>. </p>
+</li>
+</ul>
+<p>If you are playing on a Dedicated Server, then the logs are usually found in the <code>SpaceEngineersDedicated</code> folder and follow the naming format <code>SpaceEngineersDedicated_YYYYMMDD_HHMMSSmmm.log</code>. If you are using a 3rd party hosting company, they may have the logs stored in other directories. Consult with their support services if you are unsure how to locate them.</p>
+<h1 id="issues">Issues</h1>
+<p>If you are experiencing issues that could not be resolved in the other troubleshooting pages, try the following steps first:</p>
+<ul>
+<li>
+<p>Remove any unrelated mods, and test to see if the issue persists.  </p>
+</li>
+<li>
+<p>If the issue doesn't persist, then add the removed mods back a few at a time until you can narrow down which is causing the conflict. If you find another mod that is conflicting, let me know which mod(s) are causing the issue.  </p>
+</li>
+<li>
+<p>If the issue does persist, note any relevant steps to reproduce the issue and provide them to me on the <strong>Workshop Page Comments</strong> or the <strong><a href="https://discord.gg/8rZpMqq">Discord Server</a></strong>.</p>
+</li>
+<li>
+<p>Try clearing your mod cache (Keep in mind this will force steam to redownload all workshop items you are currently subscribed to).  </p>
+</li>
+<li>
+<p><code>Right Click</code> on <code>Space Engineers</code> in your Steam Client Library  </p>
+</li>
+<li>
+<p>Navigate to <code>Manage &gt; Browse Local Files</code>  </p>
+</li>
+<li>
+<p>In the folder that opens, press <code>Alt + UP</code> twice on your keyboard. This should bring you to a folder called <code>steamapps</code></p>
+</li>
+<li>
+<p>Open the <code>workshop</code> folder.</p>
+</li>
+<li>
+<p>Delete the <code>appworkshop_244850.acf</code> file.</p>
+</li>
+<li>
+<p>Open the <code>content</code> folder. Then open the <code>244850</code> folder.</p>
+</li>
+<li>
+<p>Delete everything inside of the <code>244850</code> folder.</p>
+</li>
+<li>
+<p>Restart Steam and wait for it to redownload your mod content.</p>
+</li>
+</ul>
+<h1 id="common-issues-and-resolutions">Common Issues and Resolutions</h1>
+<p>Below is a list of some common issues you may run into, and some potential solutions:</p>
+<ul>
+<li>
+<p><strong>Issues With The Modular Encounters Systems:</strong> If you are having issues with Modular Encounters Systems, <a href="https://github.com/MeridiusIX/Modular-Encounters-Systems/wiki/Encounter-Guide-and-Troubleshooting">try following the steps in this guide</a>, specifically in the <em>Troubleshooting Encounters and Other Issues</em> section. Many issues can be resolved with the advice found in that section.  </p>
+</li>
+<li>
+<p><strong>Logs Showing a Critical Error:</strong> Anytime a mod is reporting a Critical Error, it's almost always the result of a corrupted download from Steam. Try unsubscribing from the mod, restarting Steam, and then resubscribing to the mod. If that doesn't fix it, then follow the steps above regarding clearing your mod cache.  </p>
+</li>
+<li>
+<p><strong>Logs Show Mod Errors With Several <code>Resource not found, setting to null</code> messages:</strong> This typically means that your server cannot resolve the path directory for some icon files used by some modded definitions. This is typically not going to cause any real issues with the mod, despite how many times it can appear in the log.  </p>
+</li>
+<li>
+<p><strong>Logs Show Message Stating <code>Reference issue detected (circular reference or wrong order) for mod</code> one or more times:</strong> This message will often appear if you are using any mods that have other mods listed as dependencies. In reality there's no issue, it's just a poorly worded message by the devs to indicate that dependency mods are being loaded. You will often see this with mods using the Modular Encounters Systems, WeaponCore, and TextHudAPI - since they are some of the most common mods that other mods will use as dependencies.  </p>
+</li>
+</ul>
+<h1 id="steam-discussions">Steam Discussions</h1>
+<p>Please refrain from posting issues in the <u><strong>Discussions</strong></u> sections of my mod pages. The main <u><strong>Comments</strong></u> section is fine, but on most of my mod pages I do not have notifications turned on for Discussions, so I will probably miss them if you post them there.</p>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

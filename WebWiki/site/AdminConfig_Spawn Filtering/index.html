@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_Spawn Filtering.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_Spawn Filtering.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_spawn-filteringmd">AdminConfig_Spawn Filtering.md</h1>
+<p>The values in this section can be found in multiple config files, specifically:</p>
+<ul>
+<li><strong>SpaceCargoShips</strong>  </li>
+<li><strong>RandomEncounters</strong>  </li>
+<li><strong>PlanetaryCargoShips</strong>  </li>
+<li><strong>PlanetaryInstallations</strong>  </li>
+<li><strong>BossEncounters</strong>  </li>
+<li><strong>DroneEncounters</strong>  </li>
+</ul>
+<p>These allow you to prevent certain SpawnGroups from appearing when they are spawned as a particular spawn type, or if the encounter is on a particular planet.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTypeBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTypeBlacklist&gt;Value&lt;/SpawnTypeBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.SpawnTypeBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.SpawnTypeBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain spawngroups or mod ids from appearing when this encounter type is used for spawning. Replace <code>SpawnType</code> with the type of spawn you want to control against (eg: <code>SpaceCargoShips</code>). Replace <code>Value</code> with the SpawnGroup subtypeId or mod Id.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpawnTypePlanetBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpawnTypePlanetBlacklist&gt;Value&lt;/SpawnTypePlanetBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.SpawnTypePlanetBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.SpawnTypePlanetBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain planets from being able to spawn this type of encounter. Replace <code>SpawnType</code> with the type of spawn you want to control against (eg: <code>SpaceCargoShips</code>). Replace <code>Value</code> with the Planet subtypeId.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlanetSpawnFilters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.PlanetSpawnFilters.Add.PlanetId.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.PlanetSpawnFilters.Remove.PlanetId.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to blacklist certain encounters or entire mod IDs from spawning on certain planets. Replace <code>SpawnType</code> with the type of spawn you want to control against (eg: <code>SpaceCargoShips</code>). Replace <code>PlanetId</code> with the EntityId of the planet you want to control spawning on (you can get this with the <code>/MES.GESAP</code> chat command while standing on the planet). Replace <code>Value</code> with the SpawnGroup subtypeId or mod Id.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

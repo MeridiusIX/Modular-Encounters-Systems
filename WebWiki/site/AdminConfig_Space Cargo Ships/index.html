@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_Space Cargo Ships.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_Space Cargo Ships.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_space-cargo-shipsmd">AdminConfig_Space Cargo Ships.md</h1>
+<p>You can find the Space Cargo Ships Settings Configuration File in <code>MySaveWorldFolder\Storage\1521905890.sbm_ModularEncountersSpawner\Config-SpaceCargoShips.xml</code>. The settings you can modify are listed below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">EnableSpawns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;EnableSpawns&gt;Value&lt;/EnableSpawns&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.EnableSpawns.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to Enable or Disable All Encounters from this Spawn Type.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">FirstSpawnTime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;FirstSpawnTime&gt;Value&lt;/FirstSpawnTime&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.FirstSpawnTime.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to set how long (in seconds) after the game starts until the first Cargo Ship Spawn Event triggers. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinSpawnTime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinSpawnTime&gt;Value&lt;/MinSpawnTime&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MinSpawnTime.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to set the minimum time (in seconds) until the next Cargo Ship Spawn Event triggers. The time trigger is a random number between <code>MinSpawnTime</code> and <code>MaxSpawnTime</code>. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code> and should be lower than <code>MaxSpawnTime</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxSpawnTime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxSpawnTime&gt;Value&lt;/MaxSpawnTime&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MaxSpawnTime.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to set the maximum time (in seconds) until the next Cargo Ship Spawn Event triggers. The time trigger is a random number between <code>MinSpawnTime</code> and <code>MaxSpawnTime</code>. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code> and should be higher than <code>MinSpawnTime</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxShipsPerArea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxShipsPerArea&gt;Value&lt;/MaxShipsPerArea&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MaxShipsPerArea.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many Space Cargo Ships can be present in a specified distance from the player. If there are more than the <code>Value</code> in this setting, then no other ships will spawn. The area size is determined in the <code>AreaSize</code> setting below. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">AreaSize</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;AreaSize&gt;Value&lt;/AreaSize&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.AreaSize.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the area radius when checking for existing Space Cargo Ships for <code>MaxShipsPerArea</code>. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxSpawnAttempts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxSpawnAttempts&gt;Value&lt;/MaxSpawnAttempts&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MaxSpawnAttempts.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how many times the spawner should attempt to find a valid random travel path for the Cargo Ship during the spawning phase. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinPathDistanceFromPlayer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinPathDistanceFromPlayer&gt;Value&lt;/MinPathDistanceFromPlayer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MinPathDistanceFromPlayer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance the Cargo Ship travel path should pass the player position. The distance is a random number between <code>MinPathDistanceFromPlayer</code> and <code>MaxPathDistanceFromPlayer</code>. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code> and should be lower than <code>MaxPathDistanceFromPlayer</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxPathDistanceFromPlayer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxPathDistanceFromPlayer&gt;Value&lt;/MaxPathDistanceFromPlayer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MaxPathDistanceFromPlayer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum distance the Cargo Ship travel path should pass the player position. The distance is a random number between <code>MinPathDistanceFromPlayer</code> and <code>MaxPathDistanceFromPlayer</code>. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code> and should be higher than <code>MinPathDistanceFromPlayer</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinLunarSpawnHeight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinLunarSpawnHeight&gt;Value&lt;/MinLunarSpawnHeight&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MinLunarSpawnHeight.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum surface altitude the Cargo Ship travel path should be above the player. The distance is a random number between <code>MinLunarSpawnHeight</code> and <code>MaxLunarSpawnHeight</code>. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code> and should be lower than <code>MaxLunarSpawnHeight</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxLunarSpawnHeight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxLunarSpawnHeight&gt;Value&lt;/MaxLunarSpawnHeight&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MaxLunarSpawnHeight.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum surface altitude the Cargo Ship travel path should be above the player. The distance is a random number between <code>MinLunarSpawnHeight</code> and <code>MaxLunarSpawnHeight</code>. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code> and should be higher than <code>MinLunarSpawnHeight</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinSpawnDistFromEntities</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinSpawnDistFromEntities&gt;Value&lt;/MinSpawnDistFromEntities&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MinSpawnDistFromEntities.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance the encounter should spawn from other grids and players. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinPathDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinPathDistance&gt;Value&lt;/MinPathDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MinPathDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum path distance the cargo ship will travel before despawning. The distance is a random number between <code>MinPathDistance</code> and <code>MaxPathDistance</code>. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code> and should be lower than <code>MaxPathDistance</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxPathDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxPathDistance&gt;Value&lt;/MaxPathDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MaxPathDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the maximum path distance the cargo ship will travel before despawning. The distance is a random number between <code>MinPathDistance</code> and <code>MaxPathDistance</code>. <code>Value</code> can be replaced with any integer number (no lower than <code>0</code> and should be lower than <code>MinPathDistance</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PathCheckStep</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PathCheckStep&gt;Value&lt;/PathCheckStep&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.PathCheckStep.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the distance increment that is used when the spawner checks the Cargo Ship travel path for obstructions / gravity / etc. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">DespawnDistanceFromEndPath</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;DespawnDistanceFromEndPath&gt;Value&lt;/DespawnDistanceFromEndPath&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.DespawnDistanceFromEndPath.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify how far from the end of the Cargo Ship travel path the ship will initiate its despawn. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">DespawnDistanceFromPlayer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;DespawnDistanceFromPlayer&gt;Value&lt;/DespawnDistanceFromPlayer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.DespawnDistanceFromPlayer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum distance players must be from the encounter before despawn is triggered. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseMinimumSpeed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseMinimumSpeed&gt;Value&lt;/UseMinimumSpeed&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.UseMinimumSpeed.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if cargo ships should move at a minimum speed at spawn. If the speed limit specified in the spawn group is lower than the <code>MinimumSpeed</code> value, then that value will be applied. <code>Value</code> can be set to <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinimumSpeed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinimumSpeed&gt;Value&lt;/MinimumSpeed&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MinimumSpeed.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the minimum speed a Cargo Ship should be moving at spawn if <code>UseMinimumSpeed</code> is set to <code>true</code>. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseSpeedOverride</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseSpeedOverride&gt;Value&lt;/UseSpeedOverride&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.UseSpeedOverride.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if cargo ships should all use a specific speed. The <code>SpeedOverride</code> value would be the speed used. <code>Value</code> can be set to <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">SpeedOverride</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;SpeedOverride&gt;Value&lt;/SpeedOverride&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.SpeedOverride.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the speed a Cargo Ship should be moving at spawn if <code>UseSpeedOverride</code> is set to <code>true</code>. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseMaxSpawnGroupFrequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseMaxSpawnGroupFrequency&gt;Value&lt;/UseMaxSpawnGroupFrequency&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.UseMaxSpawnGroupFrequency.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the spawn group frequency should be set no higher than a provided value. The <code>MaxSpawnGroupFrequency</code> value would be the frequency used if the spawn group frequency is above that value. <code>Value</code> can be set to <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxSpawnGroupFrequency</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxSpawnGroupFrequency&gt;Value&lt;/MaxSpawnGroupFrequency&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpaceCargoShips.MaxSpawnGroupFrequency.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the spawning frequency of Space Cargo Ships if <code>UseMaxSpawnGroupFrequency</code> is set to <code>true</code>. <code>Value</code> can be replaced with any number (no lower than <code>0</code>).</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

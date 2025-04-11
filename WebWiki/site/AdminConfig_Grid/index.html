@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_Grid.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_Grid.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_gridmd">AdminConfig_Grid.md</h1>
+<p>You can find the Grids Settings Configuration File in <code>MySaveWorldFolder\Storage\1521905890.sbm_ModularEncountersSpawner\Config-Grids.xml</code>. The settings you can modify are listed below:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">EnableGlobalNPCWeaponRandomizer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;EnableGlobalNPCWeaponRandomizer&gt;Value&lt;/EnableGlobalNPCWeaponRandomizer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.EnableGlobalNPCWeaponRandomizer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if NPC spawns should all have their weapons randomized. This is the same behavior provided by the <code>NPC Weapon Upgrades</code> mod. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">EnableGlobalNPCShieldProvider</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;EnableGlobalNPCShieldProvider&gt;Value&lt;/EnableGlobalNPCShieldProvider&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.EnableGlobalNPCShieldProvider.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if NPC spawns should have Defense Shield blocks added. This is the same behavior provided by the <code>NPC Defense Shield Provider</code> mod. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">RandomWeaponChance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;RandomWeaponChance&gt;Value&lt;/RandomWeaponChance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.RandomWeaponChance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to control the odds (out of 100) that a spawned grid will receive randomized weapons if using the <code>EnableGlobalNPCWeaponRandomizer</code> option (or the NPC Weapons Upgrades mod). SpawnGroups that enable randomized weapons on their own do not use this value.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">RandomWeaponSizeVariance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;RandomWeaponSizeVariance&gt;Value&lt;/RandomWeaponSizeVariance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.RandomWeaponSizeVariance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to control the size variance of weapons that are replaced with the Weapon Randomizer / NPC Weapon Upgrades. The default value of <code>-1</code> does not check for any variance. If set to <code>0</code>, then replaced weapons would need to be an exact match in size to be replaced. If set to a value like <code>2</code>, then the weapons allowed to be used for replacement can be 2 blocks bigger or smaller in all directions (X,Y,Z).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">WeaponReplacerBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;WeaponReplacerBlacklist&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/WeaponReplacerBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Weapons that will not be used in NPC Weapon Randomization. To add more weapons to the list, simply create a new line between the <code>&lt;WeaponReplacerBlacklist&gt;</code> and <code>&lt;/WeaponReplacerBlacklist&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> either the SubtypeName, DefinitionId, or ModID of the weapon(s) you want to Blacklist.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">WeaponReplacerWhitelist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;WeaponReplacerWhitelist&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/WeaponReplacerWhitelist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerWhitelist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerWhitelist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Weapons that will only be used in NPC Weapon Randomization. To add more weapons to the list, simply create a new line between the <code>&lt;WeaponReplacerWhitelist&gt;</code> and <code>&lt;/WeaponReplacerWhitelist&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> either the SubtypeName, DefinitionId, or ModID of the weapon(s) you want to Whitelist.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">WeaponReplacerTargetBlacklist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;WeaponReplacerTargetBlacklist&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/WeaponReplacerTargetBlacklist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerTargetBlacklist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerTargetBlacklist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Weapons that will not be replaced by random weapons in NPC Weapon Randomization. To add more weapons to the list, simply create a new line between the <code>&lt;WeaponReplacerTargetBlacklist&gt;</code> and <code>&lt;/WeaponReplacerTargetBlacklist&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> either the SubtypeName, DefinitionId, or ModID of the weapon(s) you want to Blacklist.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">WeaponReplacerTargetWhitelist</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;WeaponReplacerTargetWhitelist&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/WeaponReplacerTargetWhitelist&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerTargetWhitelist.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerTargetWhitelist.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Weapons that will only be replaced in NPC Weapon Randomization. To add more weapons to the list, simply create a new line between the <code>&lt;WeaponReplacerTargetWhitelist&gt;</code> and <code>&lt;/WeaponReplacerTargetWhitelist&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> either the SubtypeName, DefinitionId, or ModID of the weapon(s) you want to Whitelist.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">WeaponReplacerUseTotalGridMassMultiplier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;WeaponReplacerUseTotalGridMassMultiplier&gt;Value&lt;/WeaponReplacerUseTotalGridMassMultiplier&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerUseTotalGridMassMultiplier.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if randomized weapons should be limited by weight based on the total extra weight added to the grid. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">WeaponReplacerTotalGridMassMultiplier</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;WeaponReplacerTotalGridMassMultiplier&gt;Value&lt;/WeaponReplacerTotalGridMassMultiplier&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.WeaponReplacerTotalGridMassMultiplier.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the multiplier of weight that randomized weapons are allowed to increase the grid mass by if using <code>WeaponReplacerUseTotalGridMassMultiplier</code>. Example: If set to <code>1.5</code>, then the total grid mass would be allowed to be increased to no higher than 150% of its original weight. You can provide any number for this value.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">ShieldProviderChance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;ShieldProviderChance&gt;Value&lt;/ShieldProviderChance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.ShieldProviderChance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to control the odds (out of 100) that a spawned grid will receive Defense Shields blocks if using the <code>EnableGlobalNPCShieldProvider</code> option (or the NPC Defense Shields Provider mod). SpawnGroups that enable Defense Shields on their own do not use this value.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseGlobalBlockReplacer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseGlobalBlockReplacer&gt;Value&lt;/UseGlobalBlockReplacer&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.UseGlobalBlockReplacer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to enable or disable the Global Block Replacement functionality in MES. With this enabled, you can specify block pairs or profiles that will replace blocks in all prefabs spawned through MES. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">GlobalBlockReplacerReference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;GlobalBlockReplacerReference&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/GlobalBlockReplacerReference&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.GlobalBlockReplacerReference.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.GlobalBlockReplacerReference.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Block Replacement Pairs that will be used if <code>GlobalBlockReplacer</code> is enabled. To add more pairs to the list, simply create a new line between the <code>&lt;GlobalBlockReplacerReference&gt;</code> and <code>&lt;/GlobalBlockReplacerReference&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - <code>Value</code> is replaced with two block IDs, separated with the <code>\|</code> symbol (eg: <code>MyObjectBuilder_LargeGatlingTurret/(null)\|MyObjectBuilder_LargeMissileTurret/(null)</code>). Block IDs can be easily retrieved using the chat command <code>/MES.GetBlockDefinitions</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">GlobalBlockReplacerProfiles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;GlobalBlockReplacerProfiles&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/GlobalBlockReplacerProfiles&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.GlobalBlockReplacerProfiles.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.GlobalBlockReplacerProfiles.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Block Replacement Profiles that will be used if <code>GlobalBlockReplacer</code> is enabled. To add more profiles to the list, simply create a new line between the <code>&lt;GlobalBlockReplacerProfiles&gt;</code> and <code>&lt;/GlobalBlockReplacerProfiles&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - <code>Value</code> is replaced with the name of the Block Replacement Profile. <a href="https://gist.github.com/MeridiusIX/415b45b53174c608c6486ce06bb58e2c">Profile names can be found here</a>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseNonPhysicalAmmoForNPCs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseNonPhysicalAmmoForNPCs&gt;Value&lt;/UseNonPhysicalAmmoForNPCs&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.UseNonPhysicalAmmoForNPCs.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to replace all physical ammo in NPC grids with non-physical ammo, meaning they will not drop ammo when weapons are destroyed or hacked. This can be useful for increasing the difficulty of your play-through.  <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">RemoveContainerInventoryFromNPCs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;RemoveContainerInventoryFromNPCs&gt;Value&lt;/RemoveContainerInventoryFromNPCs&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.RemoveContainerInventoryFromNPCs.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to remove any inventory items in the containers of NPC grids when spawned. This can be useful for increasing the difficulty of your play-through.  <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseMaxAmmoInventoryWeight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseMaxAmmoInventoryWeight&gt;Value&lt;/UseMaxAmmoInventoryWeight&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.UseMaxAmmoInventoryWeight.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to control the maximum weight of all ammo added to a grid when it is being auto-replenished at spawn. This can help address issues where modded weapons using heavy ammo can weigh a ship down so much it cannot maintain flight.  <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxAmmoInventoryWeight</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxAmmoInventoryWeight&gt;Value&lt;/MaxAmmoInventoryWeight&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.MaxAmmoInventoryWeight.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to determine the maximum weapon inventory mass that is allowed to be filled with ammo if using the <code>UseMaxAmmoInventoryWeight</code> option. <code>Value</code> should be any number greater than <code>0</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">RandomizedWeaponsUseFullRange</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;RandomizedWeaponsUseFullRange&gt;Value&lt;/RandomizedWeaponsUseFullRange&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.RandomizedWeaponsUseFullRange.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting specifies whether NPCs with Randomized Weapons should have their weapon ranges maximized at spawn. May conflict with Behavior controls that manually set weapon ranges. <code>Value</code> can be replaced with <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">GlobalReplenishmentProfiles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;GlobalReplenishmentProfiles&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/GlobalReplenishmentProfiles&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.GlobalReplenishmentProfiles.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.Grids.GlobalReplenishmentProfiles.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more Global Replenishment Profile names that are used to restrict how much inventory a grid receives when its systems are replenished at spawn. <code>Value</code> should be replaced with any Replenishment Profile SubtypeId.</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

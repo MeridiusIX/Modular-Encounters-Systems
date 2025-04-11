@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Wave-Spawners.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Wave-Spawners.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="wave-spawnersmd">Wave-Spawners.md</h1>
+<p>The spawn types of <code>SpaceCargoShips</code>, <code>PlanetaryCargoShips</code>, and <code>Creatures</code> all have configuration options for Wave Spawning. When it is enabled, it will group players into clusters based on their distance from each other and after a special timer has reached the trigger time, it will execute several spawns of a type in the area of each cluster.</p>
+<p>You can customize the timings, distances, and spawn types with the commands/configs below. Replace <code>SpawnType</code> with one of the spawntypes above matching the configuration you want to change it for.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">EnableWaveSpawner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;EnableWaveSpawner&gt;Value&lt;/EnableWaveSpawner&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.EnableWaveSpawner.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify if the Wave Spawner for Space Cargo Ships should be enabled. Default value is <code>false</code>. <code>Value</code> can be set to <code>true</code> or <code>false</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">UseSpecificRandomGroups</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;UseSpecificRandomGroups&gt;</code><br />   <code>&lt;string&gt;Value1&lt;/string&gt;</code><br />   <code>&lt;string&gt;Value2&lt;/string&gt;</code><br /><code>&lt;/UseSpecificRandomGroups&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Add):</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.UseSpecificRandomGroups.Add.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Remove):</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.UseSpecificRandomGroups.Remove.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify one or more specific SpawnGroups that will only be used with the Space Cargo Ship Wave Spawner. To add more SpawnGroups to the list, simply create a new line between the <code>&lt;UseSpecificRandomGroups&gt;</code> and <code>&lt;/UseSpecificRandomGroups&gt;</code> tags and enter the following <code>&lt;string&gt;Value&lt;/string&gt;</code> - Replace <code>Value</code> with the SubtypeName of the SpawnGroup.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MinWaveSpawnTime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MinWaveSpawnTime&gt;Value&lt;/MinWaveSpawnTime&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.MinWaveSpawnTime.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the Minimum Time between Wave Spawn Events (In Seconds). <code>Value</code> can be replaced with any Integer number (eg: <code>100</code>, <code>200</code>, <code>300</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">MaxWaveSpawnTime</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;MaxWaveSpawnTime&gt;Value&lt;/MaxWaveSpawnTime&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.MaxWaveSpawnTime.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the Maximum Time between Wave Spawn Events (In Seconds). <code>Value</code> can be replaced with any Integer number (eg: <code>100</code>, <code>200</code>, <code>300</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">TotalSpawnEventsPerCluster</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;TotalSpawnEventsPerCluster&gt;Value&lt;/TotalSpawnEventsPerCluster&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.TotalSpawnEventsPerCluster.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the number of SpawnGroups spawned at a Player Cluster during the Wave Spawn Event. <code>Value</code> can be replaced with any Integer number (eg: <code>1</code>, <code>5</code>, <code>10</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">TimeBetweenWaveSpawns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;TimeBetweenWaveSpawns&gt;Value&lt;/TimeBetweenWaveSpawns&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.TimeBetweenWaveSpawns.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the time (in seconds) between SpawnGroups being spawned during Wave Spawn Events. <code>Value</code> can be replaced with any Integer number (eg: <code>1</code>, <code>5</code>, <code>10</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">PlayerClusterDistance</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>&lt;PlayerClusterDistance&gt;Value&lt;/PlayerClusterDistance&gt;</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Settings.SpawnType.PlayerClusterDistance.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This setting allows you to specify the max distance (in meters) that players within are considered a cluster (Waves spawn at clusters, not necessarily at individual players). <code>Value</code> can be replaced with any Integer number (eg: <code>5000</code>, <code>10000</code>, <code>15000</code>)</td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+site_name: Modular Encounters System
+
+nav:
+  - Home: index.md
+  - Player Support:
+      - Encounter Guide: Encounter-Guide
+      - FAQs: Frequently-Asked-Questions
+      - Troubleshooting: Troubleshooting
+      - Bugs, Issues, or Crashes: Bugs,-Issues,-or-Crashes
+      - Economy Stations FAQ: Economy-Stations-FAQ
+      - Mod Republishing Guidelines: Mod-Republishing-and-Reuse
+  - Admin & Configuration:
+      - General Settings: AdminConfig_General
+      - Grid Settings: AdminConfig_Grid
+      - Combat Settings: AdminConfig_Combat
+      - Space Cargo Ships: AdminConfig_Space Cargo Ships
+      - Random Encounters: AdminConfig_Random Encounters
+      - Planetary Cargo Ships: AdminConfig_Planetary Cargo Ships
+      - Planetary Installations: AdminConfig_Planetary Installations
+      - Boss Encounters: AdminConfig_Boss Encounters
+      - Creatures: AdminConfig_Creatures
+      - AiEnabled Bot Spawning: AdminConfig_AiEnabled Bot Spawning
+      - Wave Spawners: AdminConfig_Wave Spawner
+      - Clean-Up: AdminConfig_Clean-Up
+      - Spawn Filtering: AdminConfig_Spawn Filtering
+      - Timeout: AdminConfig_Timeout
+      - Admin & Debug Options: AdminConfig_AdminDebugOptions
+  - Modding:
+      - Spawning:
+          - SpawnGroup: SpawnGroup
+          - Spawning Conditions: Spawn-Conditions
+          - Zone Conditions: Zone-Conditions-Profile
+          - Spawning Conditions Groups: Spawn-Conditions-Groups
+          - Manipulation:
+              - Block Replacement: Block-Replacement
+              - Dereliction: Dereliction
+              - Loot: Loot
+              - Loot Profile Group: Loot-Profile-Group
+              - Weapon Mod Rules: Weapon-Mod-Rules
+              - Manipulation Groups: Manipulation-Groups
+              - Prefab Data: Prefab-Data
+              - Replenishment: Replenishment
+      - Behaviors (Getting Started):
+          - Core Behavior: 
+             - Behavior: Core-Behavior
+             - Autopilot: Autopilot
+             - Command: Command
+             - Datapad: Datapad
+             - Target: Target
+          - Triggers: 
+             - Trigger: Trigger
+             - Condition: Condition
+             - Actions:
+               - Actions: Action
+               - Bot Spawn: Bot-Spawn
+               - Chat: Chat
+               - Spawn: Spawn
+               - TextTemplate: TextTemplate
+          - Trigger Group: Trigger-Group
+          - Waypoint: Waypoint
+          - Weapons: Weapons
+      - Events (Getting Started):
+          - Event: Event
+          - Event Condition: Event-Conditions
+          - Event Action: Event-Action
+          - Custom Event Actions: Custom-Event-Actions-and-ScenarioTools
+      - Player Conditions (New): Player-Condition-Profile
+      - Zone: Zone-Profile
+  - Template / Example Files:
+      - SpawnGroup.sbc: https://gist.github.com/MeridiusIX/1ae743505ec489d31e6ac17edf16e5e0?ts=2
+      - Factions.sbc: https://gist.github.com/MeridiusIX/cd9b4decb58dea335290a05b728a7276?ts=2
+  - Modder Resources:
+    - Armor Modules Included with MES (Page Unavailable): Armor-Modules
+    - Block Replacement Profiles: https://gist.github.com/MeridiusIX/415b45b53174c608c6486ce06bb58e2c
+    - Encounter Attributes: Encounter-Attributes
+    - Loot Profiles: Loot-Profiles
+    - NPC Grid Setup Guidelines: Modding:-Tutorial-&-Guidelines:-NPC-Grid-Setup-Guidelines
+    - Random Name Generator Guide: https://gist.github.com/MeridiusIX/8888bbc06a623cac90f8362dd948033c
+    - Scripting API: Scripting-API
+    - Troubleshooting Tips: Troubleshooting-Tips
+    - Threat Score Guide: https://gist.github.com/MeridiusIX/52fbf5679e67107a8cf37706205b5812
+    - Tutorials: Tutorials
+
+  
+
+theme:
+  name: windmill
+
+extra:
+  extra.article_nav_top: false

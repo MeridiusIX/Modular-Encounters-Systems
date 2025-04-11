@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>Economy-Stations-FAQ.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "Economy-Stations-FAQ.md", url: "#_top", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="economy-stations-faqmd">Economy-Stations-FAQ.md</h1>
+<p><strong>What are Economy Stations?</strong><br />
+Economy Stations are stations that can appear in your world that allow you to buy and sell items, and also fulfill contracts for additional credits and faction reputation. They are often owned by neutral factions, although sometimes they can be owned by Pirates as well. These stations will always be located in a SafeZone, so they cannot be captured or damaged by players.</p>
+<p><strong>Where do these stations appear?</strong><br />
+There are 3 types of location that you can usually find these stations. 
+ - Planetary (On the surface of a planet)
+ - Orbital (Just outside the gravity range of a planet)
+ - Deep Space (You likely will not find these by exploration alone)</p>
+<p><strong>How do I find them?</strong><br />
+Here are a few methods for locating these stations:
+ - Check the Seat Inventory of your RespawnShip. It should contain a DataPad that lists the location of a station nearby.
+ - Try flying around a small moon. Because each planet often has a number of stations, it's often easy to find some around small planet entities.
+ - Some stations also sell DataPads that contain coordinates to other stations in your game world.</p>
+<p><strong>The stations don't appear in the Admin Entity List...</strong><br />
+When there are no players near a station, they seem to temporarily despawn. Once you get close again, they will respawn and should appear in the list.</p>
+<p><strong>Can these stations be added to Existing Saves and/or Custom Planets?</strong><br />
+They can, however it is important to understand how these stations are created by the game. When you load a world with the Enable Economy Option turned on, the game does a one-time evaluation of the world and calculates where all the stations for each faction will appear. Because of this, you need to be careful when enabling the Economy Option to an existing save. For example, if you enable it on an Empty World, all the stations are created in Deep Space - making them all incredibly difficult to ever find. Disabling and Re-enabling Economy after the stations have already been created does not appear to fix this either. Here are some steps you can follow to ensure things go smoothly:
+ - Create your save, ensuring Enable Economy is initially <strong>Disabled</strong><br />
+ - Add planets manually (vanilla or custom, they both work), and make any other initial changes you need.
+ - Once you are satisfied with your save, enable the Economy Option.
+ - Stations should now appear in all areas!</p>
+<p><strong>How do I add stations to an existing save when Economy is already on?</strong><br />
+This one is a little trickier, and you may have to bump up your max faction count -- but to ask the game to generate new stations on an existing save with economy already turned on, the following steps can be used:  </p>
+<ul>
+<li>Save and exit the game.  You cannot make this change to a running game (or running server).  </li>
+<li>Open up the Sandbox.sbc file for your save.  Make sure the one you open is in line with the time when you last saved it. </li>
+<li>Search for <code>MyObjectBuilder_SessionComponentEconomy</code> in this file. It will be near the bottom.</li>
+<li>Change the value for <code>GenerateFactionsOnStart</code> to be <code>true</code> (note the lower case). 
+ <code>&lt;GenerateFactionsOnStart&gt;true&lt;/GenerateFactionsOnStart&gt;</code></li>
+<li>Save and close the file</li>
+<li>Reload your world, switch to spectator mode (admin), fly up to the nearest moon, and teleport your character there (ctrl+spacebar).<ul>
+<li>Make sure to fly around with your jetpack, as stations don't seem to spawn for spectator camera. </li>
+<li>Moons generally have the highest density of stations, so it will be easiest to find one there.</li>
+</ul>
+</li>
+</ul>
+<p><strong>What role does the Modular Encounters Spawner mod have with these stations.</strong><br />
+None. There are a lot of functionalities that the stations have that we cannot access via ModAPI. As a result, I decided that the Modular Encounters Spawner would not manage these stations in any capacity. The spawner mod does not spawn them, and it does not despawn them. Since there's no interaction between them, they should be fully safe to use together.</p>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

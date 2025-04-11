@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    
+    <link rel="shortcut icon" href="../img/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <title>AdminConfig_AdminDebugOptions.md - Modular Encounters System</title>
+    <link href="../css/bootstrap-3.3.7.min.css" rel="stylesheet">
+    <link href="../css/font-awesome-4.7.0.css" rel="stylesheet">
+    <link href="../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/highlight.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="../js/jquery-3.2.1.min.js"></script>
+    <script src="../js/bootstrap-3.3.7.min.js"></script>
+    <script src="../js/highlight.pack.js"></script>
+    
+    <base target="_top">
+    <script>
+      var base_url = '..';
+      var is_top_frame = false;
+        
+        var pageToc = [
+          {title: "AdminConfig_AdminDebugOptions.md", url: "#_top", children: [
+          ]},
+          {title: "BehaviorDebug", url: "#behaviordebug", children: [
+          ]},
+          {title: "Debug", url: "#debug", children: [
+          ]},
+          {title: "Info", url: "#info", children: [
+          ]},
+          {title: "Spawn", url: "#spawn", children: [
+          ]},
+          {title: "SpawnDebug", url: "#spawndebug", children: [
+          ]},
+        ];
+
+    </script>
+    <script src="../js/base.js"></script> 
+</head>
+
+<body>
+<script>
+if (is_top_frame) { $('body').addClass('wm-top-page'); }
+</script>
+
+
+
+<div class="container-fluid wm-page-content">
+  <a name="_top"></a>
+    
+
+    
+
+    <h1 id="adminconfig_admindebugoptionsmd">AdminConfig_AdminDebugOptions.md</h1>
+<p>These commands can be used to force spawn random or specific spawn groups, enable debug mode, get data on loaded spawngroups / active players / active NPCs / etc, and much more. These are chat commands only, so there are no accompanying XML configs.</p>
+<p>Here is a list of command categories:</p>
+<p><a href="#BehaviorDebug"><strong>BehaviorDebug</strong></a><br />
+<a href="#Debug"><strong>Debug</strong></a><br />
+<a href="#Info"><strong>Info</strong></a><br />
+<a href="#Spawn"><strong>Spawn</strong></a><br />
+<a href="#SpawnDebug"><strong>SpawnDebug</strong></a>  </p>
+<h1 id="behaviordebug">BehaviorDebug</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Enable or Disable Behavior Logging</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.BehaviorDebug.Value1.Value2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to enable various forms of logging for Behavior Related events. This can help you troubleshoot issues.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value1:</td>
+<td style="text-align: left;"><code>Action</code><br /><code>AutoPilot</code><br /><code>BehaviorMode</code><br /><code>BehaviorSetup</code><br /><code>BehaviorSpecific</code><br /><code>Chat</code><br /><code>Command</code><br /><code>Condition</code><br /><code>Collision</code><br /><code>Dev</code><br /><code>Error</code><br /><code>GameLog</code> (enable this to write enabled events to game log)<br /><code>General</code><br /><code>Owner</code><br /><code>Settings</code><br /><code>Spawn</code><br /><code>Startup</code><br /><code>TargetAcquisition</code><br /><code>TargetEvaluation</code><br /><code>Thrust</code><br /><code>Trigger</code><br /><code>Weapon</code><br /><code>Target</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value2:</td>
+<td style="text-align: left;"><code>true</code><br /><code>false</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="debug">Debug</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Change Bool</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ChangeBool.Value1.Value2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to manually set or adjust the value of a Sandbox Boolean.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed <code>Value1</code></td>
+<td style="text-align: left;">Name of Sandbox Boolean</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed <code>Value2</code></td>
+<td style="text-align: left;">Any Bool Value (<code>true</code> / <code>false</code>) you want to Set the Sandbox Boolean to.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Change Counter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ChangeCounter.Value1.Value2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to manually set or adjust the value of a Sandbox Counter.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed <code>Value1</code></td>
+<td style="text-align: left;">Name of Sandbox Counter</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed <code>Value2</code></td>
+<td style="text-align: left;">Any Integer Value you want to Set the Sandbox Counter to.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Clear All Timeouts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ClearAllTimeouts</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will remove all Timeout Spawning Restrictions in the game world.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Clear Ship Inventory</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ClearShipInventory</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will clear all inventory blocks of the grid the player is currently sitting on.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Clear Static Encounters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ClearStaticEncounters</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will clear all Static Encounters from the Spawner. This is useful for debugging in case you need to regenerate the static encounters at start up. It is usually recommended to Save/Reload after using this command.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Clear Timeouts At Position</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ClearTimeoutsAtPosition</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will remove all Timeout Spawning Restrictions at the player's current position.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Clear Unique Encounters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ClearUniqueEncounters</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will clear any Unique Encounters that have spawned, allowing them to spawn again.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Create Known Player Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.CreateKPL.FactionValue</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Debug.CreateKPL.FactionValue.RadiusValue</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 3:</td>
+<td style="text-align: left;"><code>/MES.Debug.CreateKPL.FactionValue.RadiusValue.DurationValue</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 4:</td>
+<td style="text-align: left;"><code>/MES.Debug.CreateKPL.FactionValue.RadiusValue.DurationValue.MaxEncounterValue</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to create a Known Player Location at your current position.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value for <code>FactionValue</code>:</td>
+<td style="text-align: left;">Any Faction Tag</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value for <code>RadiusValue</code>:</td>
+<td style="text-align: left;">Any Number Greater Than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value for <code>DurationValue</code>:</td>
+<td style="text-align: left;">Any Integer Greater Than 0</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value for <code>MaxEncounterValue</code>:</td>
+<td style="text-align: left;">Any Integer Greater Than 0, or <code>-1</code> for Unused</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Create Planet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.CreatePlanet.PlanetName.PlanetSize</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a custom sized planet, at sizes smaller than 19000m or greater than 120000m.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value for <code>PlanetName</code>:</td>
+<td style="text-align: left;">Any Planet Name</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value for <code>PlanetSize</code>:</td>
+<td style="text-align: left;">Any Number Greater Than 100</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Draw Paths</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.DrawPaths</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to enable/disable (this command toggles) debug draw on behavior autopilot. This only works while you are offline or local host, it will not work on a dedicated server. While autopilot is active, several lines may be drawn from ships/drones using MES Behavior Autopilot.<br /><br /> - Green: Current Waypoint<br /> - Red: Collision<br /> - Orange: Evasion<br /> - Cyan: Offset Waypoint<br /> - Magenta: Planetary Pathing<br /> - Yellow: Weapon Prediction Waypoint<br /><br />If using a behavior that has water pathing, a Green path may be drawn showing the various water nodes it is currently following.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Force Combat Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.ForceCombatPhase</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to immediately enable Combat Phase in the current world.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Force Peace Phase</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.ForcePeacePhase</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to immediately enable Peace Phase in the current world (stops the current Combat Phase).</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Process Prefabs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ProcessPrefabs.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will spawn all grids from a provided mod, and will collect data while running some tests on its performance. The results of this test are then printed to the user clipboard in a CSV format (can paste into spreadsheet apps such as excel, google sheets, etc). It is important that you only use this command on an empty world you only intend to use for this testing, because all grids are deleted between spawns of prefabs.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value:</td>
+<td style="text-align: left;">Partial or Full string of a Mod's Name (eg: <code>Corruption</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Remove All Npcs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.RemoveAllNpcs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will remove all grids that have NPC Ownership. Any grids with Player Ownership or No Ownership will be ignored.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Reset Reputation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ResetReputation.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to reset all players reputation with a specified faction.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value:</td>
+<td style="text-align: left;">Any NPC Faction Tag</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Reset Zones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ResetZones</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to reset all zones currently loaded in the game world and reload them using the profiles currently present in the mod loadout.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Unlock Admin Blocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.UnlockAdminBlocks</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to unlock all MES Special Blocks (eg: AI Control Module, Inhibitors, etc). This only allows the player that entered the command to use the blocks, and only for the duration of the session.</td>
+</tr>
+</tbody>
+</table>
+<h1 id="info">Info</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Active NPCs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetActiveNpcs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will gather a list of all Active NPC grids identified by the mod and save it to your clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get All Profiles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetAllProfiles</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will gather a list of all MES Profiles and save it to your clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Block Definitions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetBlockDefinitions</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will gather a list of all currently loaded block definition data and save it to your clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Block Mass Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetBlockMassData</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will gather a list of all Blocks in the game and how much they weigh.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Colors From Grid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetColorsFromGrid</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will gather a list of all colors from blocks on a particular grid and save it to your clipboard. You must be sitting in a seat of the grid you want to collect data from.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Diagnostics</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetDiagnostics</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will gather a collection of information about the current session that may be related to the operation of the mod and save it to the Clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Eligible Spawns At Position</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetEligibleSpawnsAtPosition</code><br /><code>/MES.GESAP</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will gather a list of all Spawn Groups that are eligible to spawn at your position and saves it to your clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Grid Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetGridBehavior</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will collect behavior information from a grid your player/spectator camera is pointing at and will return it to your Clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Grid Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetGridData</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will collect data about a grid that was spawned as an NPC from MES. The info in this command is already present in the <code>/MES.Info.GetGridBehavior</code> command, so this is intended to be used if the grid has no behavior.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Grid Matrix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetGridMatrix</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will collect position information from a grid your player/spectator camera is pointing at and will return it to your Clipboard. The command will also pre-format some of this information into tags that can be used to configure Static Encounters.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Item Mass Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetItemMassData</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will gather a list of all Items in the game and how much they weigh.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Logging</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (Regular):</td>
+<td style="text-align: left;"><code>/MES.Info.GetLogging.Value1.Value2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (SpawnDebug):</td>
+<td style="text-align: left;"><code>/MES.IGLSD.Value2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command (BehaviorDebug):</td>
+<td style="text-align: left;"><code>/MES.IGLBD.Value2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will copy logged data from a particular logging type and save it to your clipboard. <code>Value1</code> is replaced with <code>BehaviorDebug</code> or <code>SpawnDebug</code>. <code>Value2</code> is replaced with any of the logging types from the respective logging types in <code>Value1</code>.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Players</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetPlayers</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will collect data on all players currently in the session and save it to your clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Threat Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Info.GetThreatScore</code><br /><code>/MES.GTS</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Info.GetThreatScore.Value</code><br /><code>/MES.GTS.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will get the current Threat Score near your position and save it to your clipboard. By default, a range of <code>5000</code> meters is checked. You can provide a custom distance by replacing the <code>Value</code> text in Chat Command 2</td>
+</tr>
+</tbody>
+</table>
+<h1 id="spawn">Spawn</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Space Cargo Ship</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.SpaceCargoShip</code><br /><code>/MES.SSCS</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Spawn.SpaceCargoShip.Value</code><br /><code>/MES.SSCS.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Space Cargo Ship near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace <code>Value</code> with the SubtypeId of the Spawn Group you want to spawn.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Random Encounter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.RandomEncounter</code><br /><code>/MES.SRE</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Spawn.RandomEncounter.Value</code><br /><code>/MES.SRE.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Random Encounter near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace <code>Value</code> with the SubtypeId of the Spawn Group you want to spawn.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Boss Encounter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.BossEncounter</code><br /><code>/MES.SBE</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Spawn.BossEncounter.Value</code><br /><code>/MES.SBE.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Boss Encounter near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace <code>Value</code> with the SubtypeId of the Spawn Group you want to spawn.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Planetary Cargo Ship</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.PlanetaryCargoShip</code><br /><code>/MES.SPCS</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Spawn.PlanetaryCargoShip.Value</code><br /><code>/MES.SPCS.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Planetary Cargo Ship near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace <code>Value</code> with the SubtypeId of the Spawn Group you want to spawn.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Planetary Installation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.PlanetaryInstallation</code><br /><code>/MES.SPI</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Spawn.PlanetaryInstallation.Value</code><br /><code>/MES.SPI.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Planetary Installation near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace <code>Value</code> with the SubtypeId of the Spawn Group you want to spawn.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Drone Encounter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.DroneEncounter</code><br /><code>/MES.SDE</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Spawn.DroneEncounter.Value</code><br /><code>/MES.SDE.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Drone Encounter near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace <code>Value</code> with the SubtypeId of the Spawn Group you want to spawn.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Prefab</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Spawn.Prefab.Value1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Prefab near your player character. This spawn does not use SpawnGroup rules, it only spawns a grid. The spawned grid will also spawn with Player Ownership.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value <code>Value1</code></td>
+<td style="text-align: left;">Any Prefab SubtypeId</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Prefab Station</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Spawn.PrefabStation.Value1.Value2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Prefab Station near the terrain of your player character. This spawn does not use SpawnGroup rules, it only spawns a grid. The spawned grid will also spawn with Player Ownership. Using <code>Value1</code>, you can specify a Height Offset from the surface, which allows you to test/debug which height is needed for setting up a Planetary Installation height offset.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value <code>Value1</code></td>
+<td style="text-align: left;">Any Positive/Negative Integer</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value <code>Value2</code></td>
+<td style="text-align: left;">Any Prefab SubtypeId</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Creature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.Creature</code><br /><code>/MES.SC</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Spawn.Creature.Value</code><br /><code>/MES.SC.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to spawn a Creature/Bot near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace <code>Value</code> with the SubtypeId of the Spawn Group you want to spawn.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Activate Wave Spawner</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.WaveSpawner.Space</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Spawn.WaveSpawner.Planet</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 3:</td>
+<td style="text-align: left;"><code>/MES.Spawn.WaveSpawner.Creature</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to immediately start a Wave Spawning Event for all players in the current session, regardless of whether or not the specific Wave Spawner is enabled in the world. Depending on the chat command you use, you can start Wave Spawning events for Space Cargo Ships, Planetary Cargo Ships, or Creatures/Bots. These events will honor whatever Wave Spawner settings are currently in place in your config files.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Force Spawn Timer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Spawn.ForceSpawnTimer.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to immediately finish the internal timer for your player and a particular spawning type. This allows you to quickly test / simulate a spawn as it would occur naturally, without having to wait as long. <code>Value</code> can be replaced with any of the following: <br /><br /><code>SpaceCargoShip</code><br /><code>RandomEncounter</code><br /><code>PlanetaryCargoShip</code><br /><code>PlanetaryInstallation</code><br /><code>BossEncounter</code><br /> <code>DroneEncounter</code><br /><code>Creature</code></td>
+</tr>
+</tbody>
+</table>
+<h1 id="spawndebug">SpawnDebug</h1>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Enable or Disable Spawn Logging</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.SpawnDebug.Value1.Value2</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command allows you to enable various forms of logging for Spawner Related events. This can help you troubleshoot issues.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value1:</td>
+<td style="text-align: left;"><code>API</code><br /><code>BlockLogic</code><br /><code>CleanUp</code><br /><code>Dev</code><br /><code>Entity</code><br /><code>Error</code><br /><code>GameLog</code><br /><code>Manipulation</code><br /><code>Pathing</code><br /><code>PostSpawn</code><br /><code>Settings</code><br /><code>SpawnGroup</code><br /><code>Spawning</code><br /><code>SpawnRecord</code><br /><code>Startup</code><br /><code>Zone</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value2:</td>
+<td style="text-align: left;"><code>true</code><br /><code>false</code></td>
+</tr>
+</tbody>
+</table>
+
+  <br>
+    
+
+    <br>
+</div>
+
+<footer class="container-fluid wm-page-content">
+  <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a> using <a href="https://github.com/gristlabs/mkdocs-windmill">Windmill</a> theme by Grist Labs.</p>
+</footer>
+
+</body>
+</html>

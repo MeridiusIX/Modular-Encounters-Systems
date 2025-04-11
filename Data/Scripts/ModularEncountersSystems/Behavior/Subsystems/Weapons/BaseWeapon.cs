@@ -219,8 +219,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				if (collision.HasTarget(maxTargetTrajectory + 50)) {
 
-					if ((collision.Type == CollisionType.Voxel && !collision.CollisionIsWater) || collision.Type == CollisionType.Safezone) {
-
+					//if ((collision.Type == CollisionType.Voxel && !collision.CollisionIsWater) || collision.Type == CollisionType.Safezone) {
+					if ((collision.Type == CollisionType.Voxel && !collision.CollisionIsWater && collision.HasTarget(maxTargetTrajectory - 5)) || collision.Type == CollisionType.Safezone)
+					{
 						//BehaviorLogger.Write(" - Voxel Collision or SafeZone", BehaviorDebugEnum.Weapon);
 						hasCollision = true;
 

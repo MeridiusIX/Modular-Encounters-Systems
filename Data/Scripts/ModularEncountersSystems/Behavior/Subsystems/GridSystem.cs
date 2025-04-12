@@ -374,7 +374,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			ConnectedGrids.Clear();
-			ConnectedGrids = MyAPIGateway.GridGroups.GetGroup(this.RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
+            MyAPIGateway.GridGroups.GetGroup(this.RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical, ConnectedGrids);
 			LastConnectedGridCheck = MyAPIGateway.Session.GameDateTime;
 
 		}

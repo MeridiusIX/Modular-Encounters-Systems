@@ -53,12 +53,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool BossEncounterAtmo;
 		public bool BossEncounterAny;
 
-		public bool RivalAiSpawn;
-		public bool RivalAiSpaceSpawn;
-		public bool RivalAiAtmosphericSpawn;
-		public bool RivalAiAnySpawn;
+		public bool RivalAiSpawn; //Not in use
+		public bool RivalAiSpaceSpawn; //Not in use
+        public bool RivalAiAtmosphericSpawn; //Not in use
+        public bool RivalAiAnySpawn; //Not in use
 
-		public bool DroneEncounter;
+        public bool DroneEncounter;
 		public int MinimumPlayerTime;
 		public int MaximumPlayerTime;
 		public bool FailedDroneSpawnResetsPlayerTime;

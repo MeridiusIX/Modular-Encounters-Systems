@@ -746,8 +746,11 @@ Below are the SpawnGroup tags are specific to Creature Spawning (you can also us
 
 # Other-NPCs
 
+There is no need for these tags anymore. 
+
+
 <!-- RivalAiSpaceSpawn  -->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RivalAiSpaceSpawn|
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RivalAiSpaceSpawn (NOT IN USE)|
 |:----|:----|
 |Tag Format:|`[RivalAiSpaceSpawn:Value]`|
 |Description:|This tag specifies if a RivalAI Spawned Encounter should spawn in Space (No gravity or atmosphere). Please note this tag is only used for encounters spawned by the Spawning System in RivalAI.|
@@ -756,7 +759,7 @@ Below are the SpawnGroup tags are specific to Creature Spawning (you can also us
 |Multiple Tag Allowed:|No|
 
 <!-- RivalAiAtmosphericSpawn  -->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RivalAiAtmosphericSpawn|
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RivalAiAtmosphericSpawn (NOT IN USE)|
 |:----|:----|
 |Tag Format:|`[RivalAiAtmosphericSpawn:Value]`|
 |Description:|This tag specifies if a RivalAI Spawned Encounter should spawn in Atmosphere. Please note this tag is only used for encounters spawned by the Spawning System in RivalAI.|
@@ -765,7 +768,7 @@ Below are the SpawnGroup tags are specific to Creature Spawning (you can also us
 |Multiple Tag Allowed:|No|
 
 <!-- RivalAiAnySpawn  -->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RivalAiAnySpawn|
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RivalAiAnySpawn (NOT IN USE)|
 |:----|:----|
 |Tag Format:|`[RivalAiAnySpawn:Value]`|
 |Description:|This tag specifies if a RivalAI Spawned Encounter should spawn in any environment. Please note this tag is only used for encounters spawned by the Spawning System in RivalAI.|

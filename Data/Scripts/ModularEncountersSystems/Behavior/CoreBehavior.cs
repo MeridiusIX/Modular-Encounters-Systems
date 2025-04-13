@@ -85,6 +85,7 @@ namespace ModularEncountersSystems.Behavior {
 		private Scout _scout;
 		private Sniper _sniper;
 		private Strike _strike;
+		private FighterPlane _fighterplane;
 		private Vulture _vulture;
 
 		private bool _behaviorTriggerA;
@@ -1039,7 +1040,36 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			if (subclass == BehaviorSubclass.Vulture) {
+            if (subclass == BehaviorSubclass.FighterPlane)
+            {
+
+                if (_fighterplane == null)
+                    _fighterplane = new FighterPlane(this);
+
+                ActiveBehavior = _fighterplane;
+
+                if (BehaviorSettings.ActiveBehaviorType != subclass)
+                {
+
+                    Mode = BehaviorMode.Init;
+
+                    if (!BehaviorSettings.SubclassBehaviorDefaultsSet)
+                    {
+
+                        BehaviorSettings.SubclassBehaviorDefaultsSet = true;
+                        ActiveBehavior.SetDefaultTags();
+
+                    }
+
+                }
+
+                BehaviorSettings.ActiveBehaviorType = subclass;
+                return;
+
+            }
+
+
+            if (subclass == BehaviorSubclass.Vulture) {
 
 				if (_vulture == null)
 					_vulture = new Vulture(this);

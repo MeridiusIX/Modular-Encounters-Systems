@@ -56,6 +56,7 @@ namespace ModularEncountersSystems.Helpers {
         Patrol,
         Tunneller,
         Vulture,
+        FighterPlane,
 
     }
 

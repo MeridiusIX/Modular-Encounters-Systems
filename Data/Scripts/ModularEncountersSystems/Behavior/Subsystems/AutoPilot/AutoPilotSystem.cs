@@ -203,7 +203,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		//Offset Stuff
 		private bool _offsetRequiresCalculation;
-		private WaypointOffsetType _offsetType;
+        private bool _offsetRequiresCalculationInDirectionOfVelocity;
+
+
+        private WaypointOffsetType _offsetType;
 		private double _offsetDistanceFromTarget;
 		private double _offsetAltitudeFromTarget;
 		private bool _offsetAltitudeIsMinimum;
@@ -290,7 +293,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			UpDirectionFromPlanet = Vector3D.Zero;
 
 			_offsetRequiresCalculation = false;
-			_offsetType = WaypointOffsetType.None;
+			_offsetRequiresCalculationInDirectionOfVelocity = false;
+            _offsetType = WaypointOffsetType.None;
 			_offsetDistanceFromTarget = 0;
 			_offsetAltitudeFromTarget = 0;
 			_offsetAltitudeIsMinimum = false;
@@ -1411,11 +1415,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
-		public void OffsetWaypointGenerator(bool requestRefresh = false) {
+		public void OffsetWaypointGenerator(bool requestRefresh = false, bool keepInDirectionOfVelocity = false) {
 
 			if (requestRefresh) {
 
 				_offsetRequiresCalculation = true;
+
+				if (keepInDirectionOfVelocity) 
+				{
+					_offsetRequiresCalculationInDirectionOfVelocity = true;
+				}
 				return;
 
 			}
@@ -1428,9 +1437,43 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				if (InGravity()) {
 
-					_offsetDirection = Vector3D.Normalize(MyUtils.GetRandomPerpendicularVector((Vector3)_upDirection));
+                    if (_offsetRequiresCalculationInDirectionOfVelocity)
+                    {
+						_offsetRequiresCalculationInDirectionOfVelocity = false;
 
-					bool reverseDistAlt = false;
+                        if (MyVelocity.LengthSquared() > 0.0001f)
+                        {
+                            // Remove any component in the direction of _upDirection
+                            Vector3D velocityDir = Vector3D.Normalize(MyVelocity);
+                            Vector3D orthogonalDir = velocityDir - Vector3D.Dot(velocityDir, _upDirection) * _upDirection;
+
+                            // Normalize result to get direction along that line
+                            if (orthogonalDir.LengthSquared() > 0.0001f)
+                            {
+                                _offsetDirection = Vector3D.Normalize(orthogonalDir);
+                            }
+                            else
+                            {
+                                // If MyVelocity is parallel to _upDirection, fallback
+                                _offsetDirection = Vector3D.Normalize(MyUtils.GetRandomPerpendicularVector((Vector3)_upDirection));
+                            }
+                        }
+                        else
+                        {
+                            _offsetDirection = Vector3D.Normalize(MyUtils.GetRandomPerpendicularVector((Vector3)_upDirection));
+                        }
+                    }
+                    else
+                    {
+                        _offsetDirection = Vector3D.Normalize(MyUtils.GetRandomPerpendicularVector((Vector3)_upDirection));
+                    }
+
+
+
+
+
+
+                    bool reverseDistAlt = false;
 
 					if (Data.ReverseOffsetDistAltAboveHeight) {
 

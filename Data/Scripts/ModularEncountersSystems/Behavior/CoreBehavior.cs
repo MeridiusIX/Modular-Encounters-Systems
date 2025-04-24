@@ -1748,8 +1748,57 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			//CubeGrid
-			sb.Append("::: Grid Debug Data :::").AppendLine();
+
+            if (BehaviorSettings.StoredCustomCounters != null && BehaviorSettings.StoredCustomCounters.Keys.Count > 0)
+            {
+
+                sb.Append("::: Stored Custom Counters :::").AppendLine();
+
+                foreach (var name in BehaviorSettings.StoredCustomCounters.Keys)
+                {
+
+                    if (string.IsNullOrWhiteSpace(name))
+                        continue;
+
+                    int result = 0;
+
+                    if (BehaviorSettings.StoredCustomCounters.TryGetValue(name, out result))
+                    {
+
+                        sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
+
+                    }
+
+                }
+				sb.AppendLine();
+            }
+
+            if (BehaviorSettings.StoredCustomBooleans != null && BehaviorSettings.StoredCustomBooleans.Keys.Count > 0)
+            {
+
+                sb.Append("::: Stored Custom Bools :::").AppendLine();
+
+                foreach (var name in BehaviorSettings.StoredCustomBooleans.Keys)
+                {
+
+                    if (string.IsNullOrWhiteSpace(name))
+                        continue;
+
+                    bool result = false;
+
+                    if (BehaviorSettings.StoredCustomBooleans.TryGetValue(name, out result))
+                    {
+
+                        sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
+
+                    }
+
+                }
+                sb.AppendLine();
+            }
+
+            //CubeGrid
+            sb.Append("::: Grid Debug Data :::").AppendLine();
 			sb.Append(CurrentGrid.DebugData.ToString());
 			sb.AppendLine();
 

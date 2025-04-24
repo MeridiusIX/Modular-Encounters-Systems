@@ -1749,53 +1749,82 @@ namespace ModularEncountersSystems.Behavior {
 			}
 
 
-            if (BehaviorSettings.StoredCustomCounters != null && BehaviorSettings.StoredCustomCounters.Keys.Count > 0)
+            //Custom variables
+            sb.Append("::: Stored Custom Counters :::").AppendLine();
+
+			if(BehaviorSettings.StoredCustomCounters != null)
+			{
+				if (BehaviorSettings.StoredCustomCounters.Keys.Count > 0)
+				{
+					foreach (var name in BehaviorSettings.StoredCustomCounters.Keys)
+					{
+
+						if (string.IsNullOrWhiteSpace(name))
+							continue;
+
+						int result = 0;
+
+						if (BehaviorSettings.StoredCustomCounters.TryGetValue(name, out result))
+						{
+
+							sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
+
+						}
+
+					}
+
+				}
+				else
+				{
+                    sb.Append("BehaviorSettings.StoredCustomCounters is empty. Note: Custom counters are only added after their value is changed for the first time.").AppendLine();
+                }
+			}
+			else
+			{
+                sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
+            }
+
+            sb.AppendLine();
+
+
+			//Bools
+            sb.Append("::: Stored Custom Bools :::").AppendLine();
+
+            if (BehaviorSettings.StoredCustomBooleans != null)
             {
+				if (BehaviorSettings.StoredCustomBooleans.Keys.Count > 0)
+				{
+                    
 
-                sb.Append("::: Stored Custom Counters :::").AppendLine();
-
-                foreach (var name in BehaviorSettings.StoredCustomCounters.Keys)
-                {
-
-                    if (string.IsNullOrWhiteSpace(name))
-                        continue;
-
-                    int result = 0;
-
-                    if (BehaviorSettings.StoredCustomCounters.TryGetValue(name, out result))
+                    foreach (var name in BehaviorSettings.StoredCustomBooleans.Keys)
                     {
 
-                        sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
+                        if (string.IsNullOrWhiteSpace(name))
+                            continue;
+
+                        bool result = false;
+
+                        if (BehaviorSettings.StoredCustomBooleans.TryGetValue(name, out result))
+                        {
+                            sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
+
+                        }
 
                     }
 
+				}
+				else
+				{
+                    sb.Append("BehaviorSettings.StoredCustomBooleans is empty. Note: Custom bools are only added after their value is changed for the first time.").AppendLine();
                 }
-				sb.AppendLine();
+
+			}
+			else
+			{
+                sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
             }
 
-            if (BehaviorSettings.StoredCustomBooleans != null && BehaviorSettings.StoredCustomBooleans.Keys.Count > 0)
-            {
-
-                sb.Append("::: Stored Custom Bools :::").AppendLine();
-
-                foreach (var name in BehaviorSettings.StoredCustomBooleans.Keys)
-                {
-
-                    if (string.IsNullOrWhiteSpace(name))
-                        continue;
-
-                    bool result = false;
-
-                    if (BehaviorSettings.StoredCustomBooleans.TryGetValue(name, out result))
-                    {
-
-                        sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
-
-                    }
-
-                }
-                sb.AppendLine();
-            }
+            sb.AppendLine();
 
             //CubeGrid
             sb.Append("::: Grid Debug Data :::").AppendLine();

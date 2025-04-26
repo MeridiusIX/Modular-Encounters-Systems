@@ -53,12 +53,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool BossEncounterAtmo;
 		public bool BossEncounterAny;
 
-		public bool RivalAiSpawn; //Not in use
-		public bool RivalAiSpaceSpawn; //Not in use
-        public bool RivalAiAtmosphericSpawn; //Not in use
-        public bool RivalAiAnySpawn; //Not in use
+		public bool RivalAiSpawn; 
+		public bool RivalAiSpaceSpawn; 
+        public bool RivalAiAtmosphericSpawn; 
+        public bool RivalAiAnySpawn;
 
-		public bool NoRivalAiSpawnAllowed;
+
 
         public bool DroneEncounter;
 		public int MinimumPlayerTime;
@@ -398,7 +398,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RivalAiAtmosphericSpawn = false;
 			RivalAiAnySpawn = false;
 
-			NoRivalAiSpawnAllowed = false;
+
 
             DroneEncounter = false;
 			MinimumPlayerTime = -1;
@@ -723,7 +723,6 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"RivalAiSpaceSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiSpaceSpawn) },
 				{"RivalAiAtmosphericSpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiAtmosphericSpawn) },
 				{"RivalAiAnySpawn", (s, o) => TagParse.TagBoolCheck(s, ref RivalAiAnySpawn) },
-                {"NoRivalAiSpawnAllowed", (s, o) => TagParse.TagBoolCheck(s, ref NoRivalAiSpawnAllowed) },
                 {"DroneEncounter", (s, o) => TagParse.TagBoolCheck(s, ref DroneEncounter) },
 				{"MinimumPlayerTime", (s, o) => TagParse.TagIntCheck(s, ref MinimumPlayerTime) },
 				{"MaximumPlayerTime", (s, o) => TagParse.TagIntCheck(s, ref MaximumPlayerTime) },

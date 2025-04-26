@@ -112,22 +112,22 @@ namespace ModularEncountersSystems.API {
 		/// <param name="steamUserId"></param>
 		public void ChatCommand(string message, MatrixD playerPosition, long identityId, ulong steamUserId) => _chatCommand?.Invoke(message, playerPosition, identityId, steamUserId);
 
-		/// <summary>
-		/// Used To Spawn A Random SpawnGroup From A Provided List At A Provided Location. The Spawn Will Not Be Categorized As A CargoShip/RandomEncounter/Etc.
-		/// </summary>
-		/// <param name="spawnGroups">List of SpawnGroups you want to attempt spawning from</param>
-		/// <param name="coords">The coordinates the Spawn will use</param>
-		/// <param name="forwardDir">Forward Direction vector for the spawn</param>
-		/// <param name="upDir">Up Direction Vector for the spawn</param>
-		/// <param name="velocity">Velocity vector</param>
-		/// <param name="factionOverride">Faction tag you want spawngroup to use, regardless of its settings</param>
-		/// <param name="spawnProfileId">Identifier for your mod so MES can properly log where the spawn request originated from</param>
-		public bool CustomSpawnRequest(List<string> spawnGroups, MatrixD spawningMatrix, Vector3 velocity, bool ignoreSafetyCheck, string factionOverride, string spawnProfileId) => _customSpawnRequest?.Invoke(spawnGroups, spawningMatrix, velocity, ignoreSafetyCheck, factionOverride, spawnProfileId) ?? false;
+        /// <summary>
+        /// Used To Spawn A Random SpawnGroup From A Provided List At A Provided Location. The Spawn Will Not Be Categorized As A CargoShip/RandomEncounter/Etc. The spawngroup/conditions must also use the [RivalAiSpawn:true] tag to be able to spawn with this command.
+        /// </summary>
+        /// <param name="spawnGroups">List of SpawnGroups you want to attempt spawning from</param>
+        /// <param name="coords">The coordinates the Spawn will use</param>
+        /// <param name="forwardDir">Forward Direction vector for the spawn</param>
+        /// <param name="upDir">Up Direction Vector for the spawn</param>
+        /// <param name="velocity">Velocity vector</param>
+        /// <param name="factionOverride">Faction tag you want spawngroup to use, regardless of its settings</param>
+        /// <param name="spawnProfileId">Identifier for your mod so MES can properly log where the spawn request originated from</param>
+        public bool CustomSpawnRequest(List<string> spawnGroups, MatrixD spawningMatrix, Vector3 velocity, bool ignoreSafetyCheck, string factionOverride, string spawnProfileId) => _customSpawnRequest?.Invoke(spawnGroups, spawningMatrix, velocity, ignoreSafetyCheck, factionOverride, spawnProfileId) ?? false;
 
-		/// <summary>
-		/// Used To Spawn A Random SpawnGroup From A Provided List At A Provided Location. The Spawn Will Not Be Categorized As A CargoShip/RandomEncounter/Etc.
-		/// </summary>
-		public bool CustomSpawnRequest(CustomSpawnRequestArgs args) => _customSpawnRequest2?.Invoke(args.ToDictionary()) ?? false;
+        /// <summary>
+        /// Used To Spawn A Random SpawnGroup From A Provided List At A Provided Location. The Spawn Will Not Be Categorized As A CargoShip/RandomEncounter/Etc. The spawngroup/conditions must also use the [RivalAiSpawn:true] tag to be able to spawn with this command
+        /// </summary>
+        public bool CustomSpawnRequest(CustomSpawnRequestArgs args) => _customSpawnRequest2?.Invoke(args.ToDictionary()) ?? false;
 		
 		/// <summary>
 		/// Gets the Despawn Coords that are generated from a ship spawned as either Space or Planet CargoShip.

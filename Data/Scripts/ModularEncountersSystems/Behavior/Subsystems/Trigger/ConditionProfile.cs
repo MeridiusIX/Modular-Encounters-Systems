@@ -42,7 +42,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		[ProtoIgnore]
 		private ConditionReferenceProfile _conditionReference;
-		
+
 		[ProtoIgnore]
 		private IMyRemoteControl _remoteControl;
 
@@ -133,7 +133,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					return false;
 
 				}
-					
+
 			}
 
 			if (!_gotWatchedBlocks)
@@ -200,12 +200,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							break;
 
 						}
-						
+
 					} else if (ConditionReference.AllowAnyTrueBoolean) {
 
 						failedCheck = false;
 						break;
-					
+
 					}
 
 				}
@@ -319,7 +319,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							} else if (ConditionReference.AllowAnyValidCounter) {
 
 								break;
-							
+
 							}
 
 
@@ -384,7 +384,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 							failedCheck = false;
 							break;
-						
+
 						}
 
 					} catch (Exception e) {
@@ -454,7 +454,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 								failedCheck = false;
 								break;
-							
+
 							}
 
 						} catch (Exception e) {
@@ -526,6 +526,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
+			if (ConditionReference.CheckGridSize == true) {
+
+				usedConditions++;
+
+                if (_remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Large) {
+					satisfiedConditions++;
+                }
+			}
 
 
 			if (ConditionReference.CheckGridSpeed == true) {
@@ -701,7 +709,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						satisfiedConditions++;
 
 				}
-			
+
 			}
 
 			if (ConditionReference.CheckTargetDistance) {
@@ -779,14 +787,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
 					var targetVelocity = Vector3D.Normalize(_behavior.AutoPilot.Targeting.Target.CurrentVelocity());
-					
+
 					if (targetVelocity.IsValid() && targetVelocity.Length() > 0) {
 
 						var angle = VectorHelper.GetAngleBetweenDirections(dirFromTarget, targetVelocity);
 
 						if ((ConditionReference.MinTargetChaseAngle == -1 || angle >= ConditionReference.MinTargetChaseAngle) && (ConditionReference.MaxTargetChaseAngle == -1 || angle <= ConditionReference.MaxTargetChaseAngle))
 							satisfiedConditions++;
-					
+
 					}
 
 				}
@@ -1049,7 +1057,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					BehaviorLogger.Write("Altitude Check Failed, Not On Planet", BehaviorDebugEnum.Condition);
 
 				}
-				
+
 			}
 
 			if (ConditionReference.TargetAltitudeCheck)
@@ -1096,7 +1104,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					if ((ConditionReference.MinHorizonAngle == -1 || result > ConditionReference.MinHorizonAngle) && (ConditionReference.MaxHorizonAngle == -1 || result < ConditionReference.MaxHorizonAngle))
 						satisfiedConditions++;
-				
+
 				}
 
 			}
@@ -1111,7 +1119,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						satisfiedConditions++;
 
 				}
-			
+
 			}
 
 			if (ConditionReference.CheckIfDamagerIsNpc) {
@@ -1182,13 +1190,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						var gridcoords = _behavior.RemoteControl.GetPosition();
 						ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(gridcoords, ConditionReference.MaxPlayerReputationDistanceCheck);
 						foreach (IMyPlayer Player in ListOfPlayersinRange) {
-							
+
 							ListOfPlayerIds.Add(Player.IdentityId);
 
 						}
 
 					}
-					
+
 				} else {
 
 					//If not, then check for all the players in range
@@ -1205,7 +1213,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				int amountofplayers = ListOfPlayerIds.Count;
 
 				if (ConditionReference.CheckReputationwithFaction.Count == ConditionReference.MaxPlayerReputation.Count && ConditionReference.MaxPlayerReputation.Count == ConditionReference.MinPlayerReputation.Count){
-					
+
 						foreach (long PlayerId in ListOfPlayerIds) {
 
 						int TotalFactions = ConditionReference.CheckReputationwithFaction.Count;
@@ -1373,12 +1381,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				usedConditions++;
 
 				if (command != null) {
-				
+
 					if(MathTools.CompareValues(command.GridValueScore, ConditionReference.CommandGridValue, ConditionReference.CheckCommandGridValueCompare))
 						satisfiedConditions++;
 
 				}
-			
+
 			}
 
 			if (ConditionReference.CompareCommandGridValue) {
@@ -1518,11 +1526,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						satisfiedConditions++;
 						break;
-					
+
 					}
-				
+
 				}
-			
+
 			}
 
             if (ConditionReference.NoActiveContracts)
@@ -1560,7 +1568,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 							satisfiedConditions++;
 							break;
-						
+
 						}
 
 					}
@@ -1583,7 +1591,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {
 					//MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Red");
 				}
-					
+
 
 
 
@@ -1622,7 +1630,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					satisfiedConditions++;
 
 				}
-				
+
 			}
 
 			if (ConditionReference.CheckInSufficientUpwardThrust)
@@ -1733,7 +1741,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						percentage = (int)((weaponcount / _behavior.BehaviorSettings.InitialWeaponCount) * 100);
 
 					}
-						
+
 					if ((ConditionReference.MinPercentageOfWeaponsRemaining == -1 || percentage > ConditionReference.MinPercentageOfWeaponsRemaining) && (ConditionReference.MaxPercentageOfWeaponsRemaining == -1 || percentage < ConditionReference.MaxPercentageOfWeaponsRemaining))
 					{
 						satisfiedConditions++;
@@ -1805,7 +1813,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 		}
-		
+
 		private void SetupWatchedBlocks() {
 
 			BehaviorLogger.Write("Setting Up Required Block Watcher", BehaviorDebugEnum.Condition);
@@ -2034,5 +2042,3 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 	}
 
 }
-
-

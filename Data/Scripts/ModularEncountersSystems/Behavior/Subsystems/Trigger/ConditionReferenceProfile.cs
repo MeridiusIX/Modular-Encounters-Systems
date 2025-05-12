@@ -44,6 +44,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool AllowAnyValidCounter;
 
+		public bool CheckGridSize;
+		public bool GridSizeLarge;
+
 		public bool CheckGridSpeed;
 		public float MinGridSpeed;
 		public float MaxGridSpeed;
@@ -92,7 +95,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MinTargetSpeed;
 		public double MaxTargetSpeed;
 
-			
+
 		public bool CheckTargetAngleFromForward;
 		public double MinTargetAngle;
 		public double MaxTargetAngle;
@@ -255,7 +258,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool HasWeapons;
 		public bool HasNoWeapons;
-		
+
 
 
 
@@ -304,6 +307,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CustomSandboxCountersTargets = new List<int>();
 			AllowAnyValidSandboxCounter = false;
 
+            CheckGridSize = false;
+            GridSizeLarge = true;
+
 			CheckGridSpeed = false;
 			MinGridSpeed = -1;
 			MaxGridSpeed = -1;
@@ -313,7 +319,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MaxGridVerticalSpeed = -1;
 
 
-			
+
 			CheckMESBlacklistedSpawnGroups = false;
 			SpawnGroupBlacklistContainsAll = new List<string>();
 			SpawnGroupBlacklistContainsAny = new List<string>();
@@ -529,6 +535,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CustomCountersTargetOverrideCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref CustomCountersTargetOverrideCommandScore) },
 				{"CustomCountersTargetOverrideSelfScore", (s, o) => TagParse.TagBoolCheck(s, ref CustomCountersTargetOverrideSelfScore) },
 				{"AllowAnyValidCounter", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyValidCounter) },
+				{"CheckGridSize", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSize) },
+				{"GridSizeLarge", (s, o) => TagParse.TagBoolCheck(s, ref GridSizeLarge) },
 				{"CheckGridSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSpeed) },
 				{"MinGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MinGridSpeed) },
 				{"MaxGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MaxGridSpeed) },
@@ -682,7 +690,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckSufficientUpwardThrust", (s, o) => TagParse.TagBoolCheck(s, ref CheckSufficientUpwardThrust) },//CheckSufficientUpwardThrust
 				{"SufficientUpwardThrustTolerance", (s, o) => TagParse.TagFloatCheck(s, ref SufficientUpwardThrustTolerance) },//CheckSufficientUpwardThrust
 				{"SufficientUpwardThrustDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref SufficientUpwardThrustDirection) },//CheckSufficientUpwardThrust
-				
+
 				{"CheckInSufficientUpwardThrust", (s, o) => TagParse.TagBoolCheck(s, ref CheckInSufficientUpwardThrust) },//CheckSufficientUpwardThrust
 				{"InSufficientUpwardThrustTolerance", (s, o) => TagParse.TagFloatCheck(s, ref InSufficientUpwardThrustTolerance) },//CheckSufficientUpwardThrust
 				{"InSufficientUpwardThrustDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref InSufficientUpwardThrustDirection) },//CheckSufficientUpwardThrust
@@ -744,5 +752,3 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 	}
 
 }
-
-

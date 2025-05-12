@@ -530,7 +530,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				usedConditions++;
 
-                if (_remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Large) {
+                if (ConditionReference.GridSizeLarge == true && _remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Large) {
+                    //MyAPIGateway.Utilities.ShowNotification("This is a large grid.");
+					satisfiedConditions++;
+                }
+                else if (ConditionReference.GridSizeLarge == false && _remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Small) {
+                    //MyAPIGateway.Utilities.ShowNotification("This is a small grid.");
 					satisfiedConditions++;
                 }
 			}

@@ -57,7 +57,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					if (!data.CustomTags.Contains(tag))
 						data.CustomTags.Add(tag);
 
-				data.Score = prefabData.Score;
+				data.Score = prefabData.Score; // CPT stuff
 
 
 

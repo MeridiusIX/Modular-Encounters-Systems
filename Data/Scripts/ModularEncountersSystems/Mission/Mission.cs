@@ -337,7 +337,7 @@ namespace ModularEncountersSystems.Missions
 
             if (!EventCondition.AreConditionsMet(false, this.PersistantConditions))
             {
-                MyVisualScriptLogicProvider.ShowNotificationToAll("Conditions not Met", 20000, "Red");
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("Conditions not Met", 20000, "Red");
                 return false;
             }
 
@@ -345,7 +345,7 @@ namespace ModularEncountersSystems.Missions
 
             if (!EventCondition.AreConditionsMet(Profile.UseAnyPassingEventCondition, this.Conditions))
             {
-                MyVisualScriptLogicProvider.ShowNotificationToAll("Conditions not Met", 20000, "Red");
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("Conditions not Met", 20000, "Red");
                 return false;
             }
 

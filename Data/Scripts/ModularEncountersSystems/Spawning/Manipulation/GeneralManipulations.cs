@@ -6,6 +6,7 @@ using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
+using Sandbox.ModAPI.Ingame;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -100,6 +101,36 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 					continue;
 
 				}
+
+				if (true)
+				{
+
+					var task = block as MyObjectBuilder_BasicMissionBlock;
+
+					if (task?.ComponentContainer?.Components != null)
+					{
+						foreach (var componentData in block.ComponentContainer.Components)
+						{
+							
+							var autopilot = componentData?.Component as MyObjectBuilder_BasicMissionAutopilot;
+
+							if (autopilot != null)
+							{
+
+								var waypoints = new List<MyObjectBuilder_AutopilotWaypoint>();
+								var waypoint = new MyObjectBuilder_AutopilotWaypoint();
+								waypoint.Coords = data.EndCoords;
+								waypoint.Name = "Destination";
+
+								autopilot.Waypoints = waypoints;
+                                autopilot.Waypoints.Add(waypoint);
+								autopilot.CurrentWaypoint = waypoint;
+
+							}
+						}
+					}
+				}
+
 
 				if (profile.EraseIngameScripts == true) {
 

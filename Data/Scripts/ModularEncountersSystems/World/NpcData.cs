@@ -408,9 +408,19 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(42)]
 		public string Context; // arbitrary user data via MESApi
 
-		//Non-Serialized Data
+        [ProtoMember(43)]
+        public string AntennaThoughtBubble; // arbitrary user data via MESApi
 
-		[ProtoIgnore]
+
+        [ProtoMember(44)]
+        public bool AntennaThoughtBubblePercentageActive; // arbitrary user data via MESApi
+
+        [ProtoMember(45)]
+        public int AntennaThoughtBubblePercentage; // arbitrary user data via MESApi
+
+        //Non-Serialized Data
+
+        [ProtoIgnore]
 		public ImprovedSpawnGroup SpawnGroup {
 
 			get {

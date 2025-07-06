@@ -213,8 +213,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		//PlayerKnownLocation
-		public bool CheckPlayerKnownLocation(TriggerProfile trigger) {
+
+        //PaymentSuccess
+        public bool CheckAntennaThoughtBubblePercentageReachedMin(TriggerProfile trigger)
+        {
+
+            return AntennaThoughtBubblePercentageReachedMinTriggered;
+
+        }
+
+        //PaymentFailure
+        public bool CheckAntennaThoughtBubblePercentageReachedMax(TriggerProfile trigger)
+        {
+
+            return AntennaThoughtBubblePercentageReachedMaxTriggered;
+
+        }
+
+
+
+        //PlayerKnownLocation
+        public bool CheckPlayerKnownLocation(TriggerProfile trigger) {
 
 			return KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(RemoteControl.GetPosition(), true, _behavior.Owner.Faction?.Tag);
 

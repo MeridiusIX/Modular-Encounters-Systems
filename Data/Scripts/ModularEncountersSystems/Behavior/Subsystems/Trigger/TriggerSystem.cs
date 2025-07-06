@@ -51,7 +51,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool PaymentSuccessTriggered;
 		public bool PaymentFailureTriggered;
 
-		public DateTime LastTriggerRun;
+		public bool AntennaThoughtBubblePercentageReachedMinTriggered;
+		public bool AntennaThoughtBubblePercentageReachedMaxTriggered;
+
+
+        public DateTime LastTriggerRun;
 
 		public Action OnComplete;
 		public Action<IMyCubeGrid, string> DespawnFromMES;
@@ -321,8 +325,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				//PlayerKnownLocation
-				if (trigger.Type == "PlayerKnownLocation") {
+                //PaymentSuccess
+                if (trigger.Type == "AntennaThoughtBubblePercentageReachedMin")
+                {
+
+                    trigger.ActivateTrigger(CheckAntennaThoughtBubblePercentageReachedMin);
+                    continue;
+
+                }
+
+                //PaymentFailure
+                if (trigger.Type == "AntennaThoughtBubblePercentageReachedMax")
+                {
+
+                    trigger.ActivateTrigger(CheckAntennaThoughtBubblePercentageReachedMax);
+                    continue;
+
+                }
+
+
+
+                //PlayerKnownLocation
+                if (trigger.Type == "PlayerKnownLocation") {
 
 					trigger.ActivateTrigger(CheckPlayerKnownLocation);
 					continue;
@@ -440,7 +464,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			_behavior.BehaviorTriggerG = false;
 			PaymentSuccessTriggered = false;
 			PaymentFailureTriggered = false;
-			TimedTriggersProcessed = true;
+
+			AntennaThoughtBubblePercentageReachedMinTriggered = false;
+			AntennaThoughtBubblePercentageReachedMaxTriggered = false;
+
+            TimedTriggersProcessed = true;
 
 		}
 

@@ -67,9 +67,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool AppendAntennaHudText;
 		public string AntennaHudTextSuffix;
 
+		public bool SetAntennaThoughtBubble;
+		public string SetAntennaThoughtBubbleName;
+		public bool ClearAntennaThoughtBubble;
+
+		public bool StartAntennaThoughtBubblePercentage;
+		public int StartAntennaThoughtBubblePercentageValue;
+
+        public bool IncreaseAntennaThoughtBubblePercentage;
+        public int IncreaseAntennaThoughtBubblePercentageAmount;
+
+        public bool DecreaseAntennaThoughtBubblePercentage;
+        public int DecreaseAntennaThoughtBubblePercentageAmount;
+
+		public bool EndAntennaThoughtBubblePercentage;
 
 
-		public bool CreateKnownPlayerArea;
+        public bool CreateKnownPlayerArea;
 		public double KnownPlayerAreaRadius;
 		public int KnownPlayerAreaTimer;
 		public int KnownPlayerAreaMaxSpawns;
@@ -498,6 +512,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			AppendAntennaHudText = false;
 			AntennaHudTextSuffix = "";
 
+
+
+			SetAntennaThoughtBubble = false;
+			SetAntennaThoughtBubbleName = "";
+			ClearAntennaThoughtBubble = false;
+
+			StartAntennaThoughtBubblePercentage = false;
+			StartAntennaThoughtBubblePercentageValue = 1;
+
+			IncreaseAntennaThoughtBubblePercentage= false;
+			IncreaseAntennaThoughtBubblePercentageAmount =1;
+
+			DecreaseAntennaThoughtBubblePercentage= false;
+			DecreaseAntennaThoughtBubblePercentageAmount = 1;
+
+			EndAntennaThoughtBubblePercentage =false;
 
 			BroadcastCurrentTarget = false;
 			BroadcastDamagerTarget = false;
@@ -966,7 +996,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AntennaHudText", (s, o) => TagParse.TagStringCheck(s, ref AntennaHudText) },
 				{"AppendAntennaHudText", (s, o) => TagParse.TagBoolCheck(s, ref AppendAntennaHudText) },
 				{"AntennaHudTextSuffix", (s, o) => TagParse.TagStringCheck(s, ref AntennaHudTextSuffix) },
-				{"CreateKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref CreateKnownPlayerArea) },
+                {"SetAntennaThoughtBubble", (s, o) => TagParse.TagBoolCheck(s, ref SetAntennaThoughtBubble) },
+                {"SetAntennaThoughtBubbleName", (s, o) => TagParse.TagStringCheck(s, ref SetAntennaThoughtBubbleName) },
+                {"ClearAntennaThoughtBubble", (s, o) => TagParse.TagBoolCheck(s, ref ClearAntennaThoughtBubble) },
+                {"StartAntennaThoughtBubblePercentage", (s, o) => TagParse.TagBoolCheck(s, ref StartAntennaThoughtBubblePercentage) },
+                {"StartAntennaThoughtBubblePercentageValue", (s, o) => TagParse.TagIntCheck(s, ref StartAntennaThoughtBubblePercentageValue) },
+                {"IncreaseAntennaThoughtBubblePercentage", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseAntennaThoughtBubblePercentage) },
+                {"IncreaseAntennaThoughtBubblePercentageAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseAntennaThoughtBubblePercentageAmount) },
+                {"DecreaseAntennaThoughtBubblePercentage", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseAntennaThoughtBubblePercentage) },
+                {"DecreaseAntennaThoughtBubblePercentageAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseAntennaThoughtBubblePercentageAmount) },
+                {"EndAntennaThoughtBubblePercentage", (s, o) => TagParse.TagBoolCheck(s, ref EndAntennaThoughtBubblePercentage) },
+                {"CreateKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref CreateKnownPlayerArea) },
 				{"KnownPlayerAreaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref KnownPlayerAreaRadius) },
 				{"KnownPlayerAreaTimer", (s, o) => TagParse.TagIntOrDayCheck(s, ref KnownPlayerAreaTimer) },
 				{"KnownPlayerAreaMaxSpawns", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMaxSpawns) },

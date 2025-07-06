@@ -877,8 +877,220 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
-			//CreateKnownPlayerArea
-			if (actions.CreateKnownPlayerArea == true) {
+			if (actions.SetAntennaThoughtBubble)
+			{
+                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna SetAntennaThoughtBubble Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+                var thought = actions.SetAntennaThoughtBubbleName;
+
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+
+                if (npcdata != null)
+                {
+					npcdata.AntennaThoughtBubble = thought;
+                    foreach (var antenna in AntennaList)
+                    {
+
+                        if (antenna == null)
+                            continue;
+
+                        antenna.HudText = Utilities.SetAntennaThoughtBubble(antenna.HudText, thought, npcdata.AntennaThoughtBubblePercentageActive, npcdata.AntennaThoughtBubblePercentage);
+
+                    }
+                }
+
+            }
+
+            if (actions.ClearAntennaThoughtBubble)
+            {
+                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna SetAntennaThoughtBubble Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+                var thought = actions.SetAntennaThoughtBubbleName;
+
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+
+                if (npcdata != null)
+                {
+                    npcdata.AntennaThoughtBubble = "";
+                    foreach (var antenna in AntennaList)
+                    {
+
+                        if (antenna == null)
+                            continue;
+
+                        antenna.HudText = Utilities.ClearAntennaThoughtBubble(antenna.HudText);
+
+                    }
+                }
+
+            }
+
+            if (actions.StartAntennaThoughtBubblePercentage)
+            {
+                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna StartAntennaThoughtBubblePercentage Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+                var startingvalue = actions.StartAntennaThoughtBubblePercentageValue;
+
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+
+                if (npcdata != null)
+                {
+                    npcdata.AntennaThoughtBubblePercentage = startingvalue;
+					npcdata.AntennaThoughtBubblePercentageActive = true;
+
+                    foreach (var antenna in AntennaList)
+                    {
+
+                        if (antenna == null)
+                            continue;
+
+                        antenna.HudText = Utilities.SetAntennaThoughtBubble(antenna.HudText, npcdata.AntennaThoughtBubble, true,startingvalue);
+
+                    }
+                }
+
+            }
+
+            if (actions.IncreaseAntennaThoughtBubblePercentage)
+            {
+                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna StartAntennaThoughtBubblePercentage Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+                var increasevalue = actions.IncreaseAntennaThoughtBubblePercentageAmount; ;
+
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+
+                if (npcdata != null)
+                {
+
+                    var currentvalue = npcdata.AntennaThoughtBubblePercentage;
+
+                    //If  not active then activate and start at 1...
+                    if (!npcdata.AntennaThoughtBubblePercentageActive)
+					{
+						npcdata.AntennaThoughtBubblePercentageActive = true;
+						npcdata.AntennaThoughtBubblePercentage = 1;
+                        currentvalue = 1;
+
+                    }
+
+
+
+
+                    var newvalue = currentvalue + Math.Abs(increasevalue);
+
+					newvalue = Math.Min(100, newvalue);
+                    newvalue = Math.Max(0, newvalue);
+
+					if(newvalue <= 0)
+					{
+						AntennaThoughtBubblePercentageReachedMinTriggered = true;
+
+                    }
+
+					if (newvalue >= 100)
+					{
+                        AntennaThoughtBubblePercentageReachedMaxTriggered = true;
+                    }
+
+
+                    
+
+                    foreach (var antenna in AntennaList)
+                    {
+
+                        if (antenna == null)
+                            continue;
+
+                        antenna.HudText = Utilities.SetAntennaThoughtBubble(antenna.HudText, npcdata.AntennaThoughtBubble, true, newvalue);
+
+                    }
+                }
+
+            }
+
+            if (actions.DecreaseAntennaThoughtBubblePercentage)
+            {
+                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna StartAntennaThoughtBubblePercentage Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+                var decreasevalue = actions.DecreaseAntennaThoughtBubblePercentageAmount; ;
+
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+
+                if (npcdata != null)
+                {
+                    var currentvalue = npcdata.AntennaThoughtBubblePercentage;
+
+
+                    //If  not active then activate and start at 100
+                    if (!npcdata.AntennaThoughtBubblePercentageActive)
+                    {
+                        npcdata.AntennaThoughtBubblePercentageActive = true;
+                        npcdata.AntennaThoughtBubblePercentage = 100;
+						currentvalue = 100;
+
+                    }
+
+ 
+                    var newvalue = currentvalue - Math.Abs(decreasevalue);
+
+                    newvalue = Math.Min(100, newvalue);
+                    newvalue = Math.Max(0, newvalue);
+
+                    if (newvalue <= 0)
+                    {
+                        AntennaThoughtBubblePercentageReachedMinTriggered = true;
+                    }
+
+                    if (newvalue >= 100)
+                    {
+                        AntennaThoughtBubblePercentageReachedMaxTriggered = true;
+                    }
+
+                    foreach (var antenna in AntennaList)
+                    {
+
+                        if (antenna == null)
+                            continue;
+
+                        antenna.HudText = Utilities.SetAntennaThoughtBubble(antenna.HudText, npcdata.AntennaThoughtBubble, true, newvalue);
+
+                    }
+                }
+
+            }
+
+
+            if (actions.EndAntennaThoughtBubblePercentage)
+            {
+                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna StartAntennaThoughtBubblePercentage Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
+
+                var decreasevalue = actions.DecreaseAntennaThoughtBubblePercentageAmount; ;
+
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+
+                if (npcdata != null)
+                {
+					npcdata.AntennaThoughtBubblePercentageActive = false;
+					npcdata.AntennaThoughtBubblePercentage = 10;
+
+
+
+                    foreach (var antenna in AntennaList)
+                    {
+
+                        if (antenna == null)
+                            continue;
+
+                        antenna.HudText = Utilities.SetAntennaThoughtBubble(antenna.HudText, npcdata.AntennaThoughtBubble, false, 10);
+
+                    }
+                }
+
+            }
+
+
+            //CreateKnownPlayerArea
+            if (actions.CreateKnownPlayerArea == true) {
 
 				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Creation of Known Player Area in MES", BehaviorDebugEnum.Action);
 				KnownPlayerLocationManager.AddKnownPlayerLocation(RemoteControl.GetPosition(), _owner.Faction?.Tag, actions.KnownPlayerAreaRadius, actions.KnownPlayerAreaTimer, actions.KnownPlayerAreaMaxSpawns, actions.KnownPlayerAreaMinThreatForAvoidingAbandonment);

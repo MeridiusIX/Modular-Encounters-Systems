@@ -102,7 +102,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				}
 
-				if (false)
+				if (true)
 				{
 
 					var task = block as MyObjectBuilder_BasicMissionBlock;

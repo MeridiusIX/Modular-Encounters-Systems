@@ -17,6 +17,9 @@ using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
 using ModularEncountersSystems.World;
+using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Logging;
+using System.ComponentModel.Design;
 
 namespace ModularEncountersSystems.API {
 	public static class LocalApi {
@@ -81,8 +84,8 @@ namespace ModularEncountersSystems.API {
 			dict.Add("ProcessStaticEncountersAtLocation", new Action<Vector3D>(ProcessStaticEncountersAtLocation));
 			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
 			dict.Add("RegisterCustomMissionMapping", new Action<bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>(RegisterCustomMissionMapping));
-
-			dict.Add("RegisterCustomAction", new Action<bool, string, Action<object[]>>(RegisterCustomAction));
+            dict.Add("SendBehaviorCommand", new Action<List<string>,Vector3D, string>(SendBehaviorCommand));
+            dict.Add("RegisterCustomAction", new Action<bool, string, Action<object[]>>(RegisterCustomAction));
 			dict.Add("InsertInstanceEventGroup", new Action<string, List<string>, List<string>>(InsertInstanceEventGroup));
 
 
@@ -293,6 +296,30 @@ namespace ModularEncountersSystems.API {
 			return npcGrid.Npc.EndCoords;
 
 		}
+
+		public static void SendBehaviorCommand(List<string> commandProfileIds, Vector3D originCoords, string overrideCommandCode)
+		{
+            foreach (var commandId in commandProfileIds)
+            {
+
+                CommandProfile commandProfile = null;
+
+                if (!ProfileManager.CommandProfiles.TryGetValue(commandId, out commandProfile))
+                {
+
+                    BehaviorLogger.Write(commandId + ": Command Profile Not Found", BehaviorDebugEnum.Action);
+                    continue;
+
+                }
+
+                var newCommand = new Command();
+                newCommand.PrepareEventCommand(commandProfile, originCoords, overrideCommandCode);
+                BehaviorLogger.Write("MESAPI" + ": Sending Command: " + newCommand.CommandCode, BehaviorDebugEnum.Action);
+
+                CommandHelper.SendCommand(newCommand);
+
+            }
+        }
 
 		public static bool IsPositionInKnownPlayerLocation(Vector3D coords, bool mustMatchFaction, string faction) {
 

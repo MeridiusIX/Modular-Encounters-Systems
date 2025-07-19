@@ -51,6 +51,7 @@ namespace ModularEncountersSystems.API {
 		private Action<string, bool> _toggleSpawnGroupEnabled;
 		private Action<bool, string, Action<object[]>> _registerCustomAction;
 		private Action<string, List<string>, List<string>> _insertInstanceEventGroup;
+		private Action<List<string>, Vector3D, string> _sendBehaviorCommand;
 		private Action<bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>> _registerCustomMissionMapping;
 		//Create this object in your SessionComponent LoadData() Method
 		public MESApi() {
@@ -363,7 +364,15 @@ namespace ModularEncountersSystems.API {
 		*/
 		public void RegisterCustomMissionMapping(bool register, string methodIdentifier, Func<string, string, List<string>, Vector3D, Dictionary<string, string>> func) => _registerCustomMissionMapping?.Invoke(register, methodIdentifier, func);
 
-		public void InsertInstanceEventGroup(string ProfileSubTypeID, List<string> replacekeys, List<string> replacevalues) => _insertInstanceEventGroup?.Invoke(ProfileSubTypeID, replacekeys, replacevalues);
+        /// <summary>
+        /// Allows you to send a Behavior Command..
+        /// </summary>
+        /// <param name="commandProfileIds">The names (SubtypeIds) of the Commandprofiles  you want to send</param>
+        /// <param name="originCoords">Vector3D from where the commandprofile is send</param>
+		///  <param name="overrideCommandCode">string</param>
+        public void SendBehaviorCommand(List<string> commandProfileIds, Vector3D originCoords, string overrideCommandCode) => _sendBehaviorCommand?.Invoke(commandProfileIds, originCoords, overrideCommandCode);
+
+        public void InsertInstanceEventGroup(string ProfileSubTypeID, List<string> replacekeys, List<string> replacevalues) => _insertInstanceEventGroup?.Invoke(ProfileSubTypeID, replacekeys, replacevalues);
 
 
 		//Run This Method in your SessionComponent UnloadData() Method
@@ -419,6 +428,7 @@ namespace ModularEncountersSystems.API {
 				_toggleSpawnGroupEnabled = (Action<string, bool>)dict["ToggleSpawnGroupEnabled"];
 				_registerCustomAction = (Action<bool, string, Action<object[]>>)dict["RegisterCustomAction"];
 				_insertInstanceEventGroup = (Action<string, List<string>, List<string>>)dict["InsertInstanceEventGroup"];
+				_sendBehaviorCommand = (Action<List<string>, Vector3D, string>)dict["SendBehaviorCommand"];
 				_registerCustomMissionMapping = (Action< bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>)dict["RegisterCustomMissionMapping"];
 
 			} catch (Exception e) {

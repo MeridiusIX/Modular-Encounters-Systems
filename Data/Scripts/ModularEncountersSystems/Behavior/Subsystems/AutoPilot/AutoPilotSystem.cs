@@ -1513,7 +1513,38 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				_offsetMatrix = Targeting.Target.GetEntity().PositionComp.WorldMatrixRef;
 
-			} else {
+
+				if (!keepInDirectionOfVelocity && Data.OffsetMaxAngleFromTarget != 180)
+				{
+                    //180 means that it can fly past the target on its way to the next waypoint
+                    //angle like 90 means it will come close
+                    //angle like 10 means that it should really try to keep a distance
+					//
+
+                    double angle = 0;
+                    var vectorTargetToWaypoint = new Vector3D(0, 0, 0);
+
+                    if (InGravity())
+                    {
+                        vectorTargetToWaypoint = Vector3D.Normalize(CurrentPlanet.SurfaceCoordsAtPosition(_initialWaypoint) - CurrentPlanet.SurfaceCoordsAtPosition(_offsetMatrix.Translation));
+
+                        angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
+
+                    }
+                    else
+                    {
+                        vectorTargetToWaypoint = Vector3D.Normalize(_initialWaypoint - _offsetMatrix.Translation);
+                        angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
+                    }
+
+                    if (angle > Data.OffsetMaxAngleFromTarget)
+                    {
+                        _offsetDirection = VectorHelper.LimitedDirection(_offsetDirection, vectorTargetToWaypoint, Data.OffsetMaxAngleFromTarget);
+                    }
+                }
+
+
+            } else {
 
 				if (_offsetMatrix == MatrixD.Identity) {
 
@@ -1524,7 +1555,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					} else {
 
 						_offsetMatrix = MatrixD.CreateWorld(_initialWaypoint, _remoteControl.WorldMatrix.Forward, _remoteControl.WorldMatrix.Up);
-
+						
 					}
 				
 				}

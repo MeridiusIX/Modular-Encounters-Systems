@@ -453,8 +453,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> RemoveTags;
 		public bool RemoveTagsOverridePositioninPlayerCondition;
 
+        public bool TeleportPlayers;
+		public bool TeleportPlayersIncludeSavedPlayerIdentity;
+        public List<string> TeleportPlayerConditionIds;
+        public Vector3D TeleportPlayerCoords;
+		public bool TeleportPlayerOverridePositionInPlayerCondition;
 
-		public bool PlayDialogueCue;
+
+		public bool ProcessStaticEncountersAtLocation;
+		public Vector3D ProcessStaticEncountersLocation;
+
+        public bool PlayDialogueCue;
 		public bool PlayDialogueToSpecificPlayers;
 		public bool PlayDialogueOverridePositionInPlayerCondition;
 		public List<string> PlayDialoguePlayerConditionIds;
@@ -924,7 +933,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			RemoveTags = new List<string>();
 			RemoveTagsOverridePositioninPlayerCondition = false;
 
-			PlayDialogueCue = false;
+            TeleportPlayers = false;
+			TeleportPlayersIncludeSavedPlayerIdentity = false;
+            TeleportPlayerConditionIds = new List<string>();
+            TeleportPlayerCoords = new Vector3D();
+			TeleportPlayerOverridePositionInPlayerCondition = false;
+
+			ProcessStaticEncountersAtLocation = false;
+			ProcessStaticEncountersLocation = new Vector3D(0, 0, 0);
+
+            PlayDialogueCue = false;
 			DialogueCueId = "";
 			PlayDialogueToSpecificPlayers = false;
 			PlayDialogueOverridePositionInPlayerCondition = false;
@@ -1272,18 +1290,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
 				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
 				{"AddTagsOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsOverridePositionInPlayerCondition) },
-
-
 				{"RemoveTagsFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsFromPlayers) },
 				{"RemoveTagsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsIncludeSavedPlayerIdentity) },
 				{"RemoveTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTagsPlayerConditionIds) },
 				{"RemoveTags", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTags) },
 				{"RemoveTagsOverridePositioninPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsOverridePositioninPlayerCondition) },
+                {"TeleportPlayers", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayers) },
+                {"TeleportPlayersIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayersIncludeSavedPlayerIdentity) },
+                {"TeleportPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref TeleportPlayerConditionIds) },
+                {"TeleportPlayerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TeleportPlayerCoords) },
+                {"TeleportPlayerOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayerOverridePositionInPlayerCondition) },
+                {"ProcessStaticEncountersAtLocation", (s, o) => TagParse.TagBoolCheck(s, ref ProcessStaticEncountersAtLocation) },
+                {"ProcessStaticEncountersLocation", (s, o) => TagParse.TagVector3DCheck(s, ref ProcessStaticEncountersLocation) },
 
-				{"PlayDialogueCue", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueCue) },
-
+             
+                {"PlayDialogueCue", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueCue) },
 				{"DialogueCueId", (s, o) => TagParse.TagStringCheck(s, ref DialogueCueId) },
-
 				{"PlayDialogueToSpecificPlayers", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueToSpecificPlayers) },
 				{"PlayDialogueOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueOverridePositionInPlayerCondition) },
 				{"PlayDialoguePlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayDialoguePlayerConditionIds) },

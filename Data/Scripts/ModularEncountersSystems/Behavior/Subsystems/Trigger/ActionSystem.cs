@@ -93,6 +93,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
+			
+
+
 			//Playsound cue
 
 			if (actions.PlayDialogueCue)
@@ -134,6 +137,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 			}
+
+			if (actions.ProcessStaticEncountersAtLocation)
+			{
+                bool updateStatics = false;
+
+                //Static Encounters
+                for (int i = NpcManager.StaticEncounters.Count - 1; i >= 0; i--)
+                {
+
+                    var encounter = NpcManager.StaticEncounters[i];
+                    encounter.ProcessEncounter(ref updateStatics, true, actions.ProcessStaticEncountersLocation);
+
+                }
+
+                if (updateStatics)
+                    NpcManager.UpdateStaticEncounters();
+            }
 
 
 			//PlaySoundAtPosition
@@ -2155,7 +2175,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
-			if (actions.ResetCooldownTimeOfEvents)
+            if (actions.TeleportPlayers)
+            {
+                bool SavedPlayerIdentityAlreadyIncluded = false;
+                foreach (var player in PlayerManager.Players)
+                {
+                    var TeleportPlayersConditionIds = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.TeleportPlayerConditionIds);
+
+                    if (PlayerCondition.ArePlayerConditionsMet(TeleportPlayersConditionIds, player.Player.IdentityId, actions.TeleportPlayerOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
+                    {
+                        if ((command?.PlayerIdentity ?? 0) != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
+                            SavedPlayerIdentityAlreadyIncluded = true;
+
+                        player.Player.Character.Teleport(MatrixD.CreateWorld(actions.TeleportPlayerCoords));
+                    }
+
+                }
+
+                if (actions.AddTagsIncludeSavedPlayerIdentity && !SavedPlayerIdentityAlreadyIncluded && command != null)
+                {
+                    var playerid = command?.PlayerIdentity ?? 0;
+                    var player = PlayerManager.GetPlayerWithIdentityId(playerid);
+
+                    if (player != null)
+                    {
+                        player.Player.Character.Teleport(MatrixD.CreateWorld(actions.TeleportPlayerCoords));
+                    }
+                }
+            }
+
+
+
+
+            if (actions.ResetCooldownTimeOfEvents)
 			{
 
 				EventActionProfile.ResetCooldownTimeOfEvents(IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ResetEventCooldownIds), IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.ResetEventCooldownTags));

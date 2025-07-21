@@ -22,6 +22,7 @@ namespace ModularEncountersSystems.Terminal {
 		ScrapPurchasing,
 		RepairAndConstruction,
 		GridTakeover,
+		CustomReplacement
 
 	}
 
@@ -107,7 +108,8 @@ namespace ModularEncountersSystems.Terminal {
 		internal static IMyTerminalControlLabel _labelBlueprint;
 		internal static IMyTerminalControlLabel _labelScrap;
 		internal static IMyTerminalControlLabel _labelRepair;
-		internal static IMyTerminalControlLabel _labelTakeover;
+        internal static IMyTerminalControlLabel _labelReplacement;
+        internal static IMyTerminalControlLabel _labelTakeover;
 		internal static IMyTerminalControlLabel _labelLimits;
 		internal static IMyTerminalControlLabel _labelQuote;
 		internal static IMyTerminalControlLabel _labelConfirmation;
@@ -128,7 +130,8 @@ namespace ModularEncountersSystems.Terminal {
 		internal static IMyTerminalControlButton _confirmButtonBlueprint;
 		internal static IMyTerminalControlButton _confirmButtonScrap;
 		internal static IMyTerminalControlButton _confirmButtonConstruct;
-		internal static IMyTerminalControlButton _confirmButtonTakeover;
+        internal static IMyTerminalControlButton _confirmButtonReplacement;
+        internal static IMyTerminalControlButton _confirmButtonTakeover;
 		internal static IMyTerminalControlCheckbox _useServerPrice;
 
 		public static void DisplayControls(IMyTerminalBlock block, List<IMyTerminalControl> controls) {
@@ -190,6 +193,11 @@ namespace ModularEncountersSystems.Terminal {
 				_labelRepair = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlLabel, IMyTerminalBlock>("MES-Shipyard-LabelRepair");
 				_labelRepair.Enabled = (b) => { return true; };
 				_labelRepair.Label = MyStringId.GetOrCompute("Repair And Construction");
+
+                _labelReplacement = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlLabel, IMyTerminalBlock>("MES-Shipyard-LabelReplacement");
+                _labelReplacement.Enabled = (b) => { return true; };
+                _labelReplacement.Label = MyStringId.GetOrCompute("Custom Replacement");
+                
 
 				_labelTakeover = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlLabel, IMyTerminalBlock>("MES-Shipyard-LabelTakeover");
 				_labelTakeover.Enabled = (b) => { return true; };
@@ -330,7 +338,13 @@ namespace ModularEncountersSystems.Terminal {
 				_confirmButtonConstruct.Tooltip = MyStringId.GetOrCompute("Constructs and/or Repairs all eligible blocks for the quoted price.");
 				_confirmButtonConstruct.Action = ConfirmOrder;
 
-				_confirmButtonTakeover = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlButton, IMyTerminalBlock>("MES-Shipyard-ConfirmTakeover");
+                _confirmButtonReplacement = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlButton, IMyTerminalBlock>("MES-Shipyard-ConfirmReplacement");
+                _confirmButtonReplacement.Enabled = (b) => { return true; };
+                _confirmButtonReplacement.Title = MyStringId.GetOrCompute("Replace Blocks");
+                _confirmButtonReplacement.Tooltip = MyStringId.GetOrCompute("Replaces all eligible blocks for the quoted price.");
+                _confirmButtonReplacement.Action = ConfirmOrder;
+
+                _confirmButtonTakeover = MyAPIGateway.TerminalControls.CreateControl<IMyTerminalControlButton, IMyTerminalBlock>("MES-Shipyard-ConfirmTakeover");
 				_confirmButtonTakeover.Enabled = (b) => { return true; };
 				_confirmButtonTakeover.Title = MyStringId.GetOrCompute("Take Ownership of Grid");
 				_confirmButtonTakeover.Tooltip = MyStringId.GetOrCompute("Grants you full ownership of the grid for the quoted price.");
@@ -430,7 +444,20 @@ namespace ModularEncountersSystems.Terminal {
 
 			}
 
-			if (controlValues.Mode == ShipyardModes.GridTakeover) {
+            if (controlValues.Mode == ShipyardModes.CustomReplacement)
+            {
+
+                controls.Add(_labelReplacement);
+                controls.Add(_gridSelect);
+                controls.Add(_separatorB);
+                controls.Add(_labelConfirmation);
+                controls.Add(_confirmButtonReplacement);
+                controls.Add(_useServerPrice);
+
+            }
+
+
+            if (controlValues.Mode == ShipyardModes.GridTakeover) {
 
 				controls.Add(_labelTakeover);
 				controls.Add(_gridSelect);
@@ -538,7 +565,32 @@ namespace ModularEncountersSystems.Terminal {
 
 			}
 
-			if (controls.Mode == ShipyardModes.GridTakeover) {
+            if (controls.Mode == ShipyardModes.CustomReplacement)
+            {
+
+                if (controls.SelectedGridItem == null || !controls.SelectedGridItem.ActiveEntity())
+                {
+                    //Nothing
+                }
+                else
+                {
+                    controls.QuotedPriceValue = controls.SelectedGridItem.CreditValueReplacement(controls.Profile.ReplaceBlockReference);
+
+                    if (controls.QuotedPriceValue >= 0)
+                    {
+                        controls.QuotedPriceValue = controls.Profile.GetReplacementPrice(controls.QuotedPriceValue, rep);
+
+                    }
+
+                    if (controls.QuotedPriceValue == 1)
+                        controls.QuotedPriceValue = 0;
+
+
+                }
+
+            }
+
+            if (controls.Mode == ShipyardModes.GridTakeover) {
 
 				if (controls.SelectedGridItem == null || !controls.SelectedGridItem.ActiveEntity()) {
 
@@ -697,8 +749,25 @@ namespace ModularEncountersSystems.Terminal {
 
 				}
 
-				//AllowGridTakeover
-				if (controls.Profile.AllowGridTakeover) {
+                //AllowRepairAndConstruction
+                if (controls.Profile.AllowCustomReplacement)
+                {
+
+                    var item = new MyTerminalControlListBoxItem(MyStringId.GetOrCompute("Custom Replacement"), MyStringId.GetOrCompute("Custom Replacement"), ShipyardModes.CustomReplacement);
+                    items.Add(item);
+
+                    controls.SmallGridLimit.Clear();
+                    controls.SmallGridLimit.Append(controls.Profile.CustomReplacementSmallGridBlockLimit.ToString());
+                    controls.LargeGridLimit.Clear();
+                    controls.LargeGridLimit.Append(controls.Profile.CustomReplacementLargeGridBlockLimit.ToString());
+
+                    if (controls.Mode == ShipyardModes.CustomReplacement)
+                        selected.Add(item);
+
+                }
+
+                //AllowGridTakeover
+                if (controls.Profile.AllowGridTakeover) {
 
 					var item = new MyTerminalControlListBoxItem(MyStringId.GetOrCompute("Grid Takeover"), MyStringId.GetOrCompute("Grid Takeover"), ShipyardModes.GridTakeover);
 					items.Add(item);
@@ -872,7 +941,19 @@ namespace ModularEncountersSystems.Terminal {
 
 			}
 
-			if (mode == ShipyardModes.GridTakeover) {
+            if (mode == ShipyardModes.CustomReplacement)
+            {
+
+                if (size == MyCubeSize.Small && count > profile.CustomReplacementSmallGridBlockLimit)
+                    return false;
+
+                if (size == MyCubeSize.Large && count > profile.CustomReplacementLargeGridBlockLimit)
+                    return false;
+
+            }
+
+
+            if (mode == ShipyardModes.GridTakeover) {
 
 				if (size == MyCubeSize.Small && count > profile.GridTakeoverSmallGridBlockLimit)
 					return false;

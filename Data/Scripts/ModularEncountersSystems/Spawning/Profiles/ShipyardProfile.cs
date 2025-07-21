@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game;
 
 namespace ModularEncountersSystems.Spawning.Profiles {
 	public class ShipyardProfile {
@@ -35,12 +36,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public int RepairAndConstructionLargeGridBlockLimit;
 		public int RepairAndConstructionCommissionPercentage;
 		public int RepairAndConstructionReputationDiscount;
-		public List<string> RepairAndConstructionExcludedComponentIds; 
+		public List<string> RepairAndConstructionExcludedComponentIds;
+
+		public bool AllowCustomReplacement;
+        public int CustomReplacementSmallGridBlockLimit;
+        public int CustomReplacementLargeGridBlockLimit;
+        public int CustomReplacementCommissionPercentage;
+        public int CustomReplacementReputationDiscount;
+        public List<MyDefinitionId> OldBlock;
+        public List<MyDefinitionId> NewBlock;
+        public Dictionary<MyDefinitionId, MyDefinitionId> ReplaceBlockReference;
 
 
 
-
-		public bool AllowGridTakeover;
+        public bool AllowGridTakeover;
 		public int GridTakeoverSmallGridBlockLimit;
 		public int GridTakeoverLargeGridBlockLimit;
 		public int GridTakeoverPricePerComputerMultiplier;
@@ -79,7 +88,17 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RepairAndConstructionReputationDiscount = 7;
 			RepairAndConstructionExcludedComponentIds = new List<string>();
 
-			AllowGridTakeover = false;
+
+			AllowCustomReplacement = false;
+			CustomReplacementSmallGridBlockLimit= 2500;
+			CustomReplacementLargeGridBlockLimit= 5000;
+			CustomReplacementCommissionPercentage = 115;
+			CustomReplacementReputationDiscount=7;
+			OldBlock = new List<MyDefinitionId>();
+            NewBlock = new List<MyDefinitionId>();
+			ReplaceBlockReference = new Dictionary<MyDefinitionId, MyDefinitionId>();
+
+            AllowGridTakeover = false;
 			GridTakeoverSmallGridBlockLimit = 2500;
 			GridTakeoverLargeGridBlockLimit = 5000;
 			GridTakeoverPricePerComputerMultiplier = 100;
@@ -114,7 +133,17 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"RepairAndConstructionReputationDiscount", (s, o) => TagParse.TagIntCheck(s, ref RepairAndConstructionReputationDiscount) },
 				{"RepairAndConstructionExcludedComponentIds", (s, o) => TagParse.TagStringListCheck(s, ref RepairAndConstructionExcludedComponentIds) },
 
-				{"AllowGridTakeover", (s, o) => TagParse.TagBoolCheck(s, ref AllowGridTakeover) },
+
+                {"AllowCustomReplacement", (s, o) => TagParse.TagBoolCheck(s, ref AllowCustomReplacement) },
+                {"CustomReplacementSmallGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref CustomReplacementSmallGridBlockLimit) },
+                {"CustomReplacementLargeGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref CustomReplacementLargeGridBlockLimit) },
+                {"CustomReplacementCommissionPercentage", (s, o) => TagParse.TagIntCheck(s, ref CustomReplacementCommissionPercentage) },
+                {"CustomReplacementReputationDiscount", (s, o) => TagParse.TagIntCheck(s, ref CustomReplacementReputationDiscount) },
+                {"OldBlock", (s, o) => TagParse.TagMyDefIdCheck(s, ref OldBlock) },
+                {"NewBlock", (s, o) => TagParse.TagMyDefIdCheck(s, ref NewBlock) },
+                {"ReplaceBlockReference", (s, o) => TagParse.TagMDIDictionaryCheck(s, ref ReplaceBlockReference) },
+
+                {"AllowGridTakeover", (s, o) => TagParse.TagBoolCheck(s, ref AllowGridTakeover) },
 				{"GridTakeoverSmallGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverSmallGridBlockLimit) },
 				{"GridTakeoverLargeGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverLargeGridBlockLimit) },
 				{"GridTakeoverPricePerComputerMultiplier", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverPricePerComputerMultiplier) },
@@ -148,7 +177,17 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		}
 
-		public long GetTakeoverPrice(long rawValue, int rep) {
+        public long GetReplacementPrice(long rawValue, int rep)
+        {
+
+            int percentage = CustomReplacementCommissionPercentage - (rep >= ReputationNeededForDiscount ? CustomReplacementReputationDiscount : 0);
+            float multiplier = ((float)percentage / 100);
+            return (long)Math.Floor(rawValue * multiplier);
+
+        }
+
+
+        public long GetTakeoverPrice(long rawValue, int rep) {
 
 			int percentage = 100 - (rep >= ReputationNeededForDiscount ? GridTakeoverReputationDiscount : 0);
 			float multiplier = ((float)percentage / 100);
@@ -170,7 +209,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				return;
 
 			referenceMethod?.Invoke(receivedValue, null);
-
+			
 		}
 
 		public void InitTags(string customData) {
@@ -187,7 +226,22 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			}
 
-		}
+			//Create Dictionairy
+            if (this.OldBlock.Count > 0 && this.OldBlock.Count == this.NewBlock.Count)
+            {
+
+                for (int i = 0; i < this.OldBlock.Count; i++)
+                {
+
+                    if (!this.ReplaceBlockReference.ContainsKey(this.OldBlock[i]))
+                        this.ReplaceBlockReference.Add(this.OldBlock[i], this.NewBlock[i]);
+
+                }
+
+            }
+
+
+        }
 
 	}
 }

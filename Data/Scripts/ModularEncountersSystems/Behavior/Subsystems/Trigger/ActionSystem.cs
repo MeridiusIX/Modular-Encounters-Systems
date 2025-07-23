@@ -925,7 +925,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             {
                 BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Antenna SetAntennaThoughtBubble Change Block Count: " + AntennaList.Count, BehaviorDebugEnum.Action);
 
-                var thought = actions.SetAntennaThoughtBubbleName;
+
 
                 var npcdata = _behavior?.CurrentGrid?.Npc;
 
@@ -1004,16 +1004,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if(newvalue <= 0)
 					{
 						AntennaThoughtBubblePercentageReachedMinTriggered = true;
-
+						newvalue = 0;
                     }
 
 					if (newvalue >= 100)
 					{
                         AntennaThoughtBubblePercentageReachedMaxTriggered = true;
+						newvalue = 100;
                     }
 
+					npcdata.AntennaThoughtBubblePercentage = newvalue;
 
-                    
+
 
                     foreach (var antenna in AntennaList)
                     {

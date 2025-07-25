@@ -84,7 +84,7 @@ namespace ModularEncountersSystems.API {
 			dict.Add("ProcessStaticEncountersAtLocation", new Action<Vector3D>(ProcessStaticEncountersAtLocation));
 			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
 			dict.Add("RegisterCustomMissionMapping", new Action<bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>(RegisterCustomMissionMapping));
-            dict.Add("SendBehaviorCommand", new Action<List<string>,Vector3D, string>(SendBehaviorCommand));
+            dict.Add("SendBehaviorCommand", new Action<List<string>,Vector3D, string,double,long>(SendBehaviorCommand));
             dict.Add("RegisterCustomAction", new Action<bool, string, Action<object[]>>(RegisterCustomAction));
 			dict.Add("InsertInstanceEventGroup", new Action<string, List<string>, List<string>>(InsertInstanceEventGroup));
 
@@ -297,7 +297,7 @@ namespace ModularEncountersSystems.API {
 
 		}
 
-		public static void SendBehaviorCommand(List<string> commandProfileIds, Vector3D originCoords, string overrideCommandCode)
+		public static void SendBehaviorCommand(List<string> commandProfileIds, Vector3D originCoords, string overrideCommandCode ="", double overrideRadius = -1, long commandOwnerId = 0)
 		{
             foreach (var commandId in commandProfileIds)
             {

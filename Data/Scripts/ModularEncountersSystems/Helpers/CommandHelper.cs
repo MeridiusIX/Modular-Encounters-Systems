@@ -138,7 +138,7 @@ namespace ModularEncountersSystems.Helpers {
             Relation = RelationTypeEnum.None;
 
         }
-        public void PrepareEventCommand(CommandProfile profile, Vector3D position, string OverrideCommandCode = "")
+        public void PrepareEventCommand(CommandProfile profile, Vector3D position, string overrideCommandCode = "",double overrideRadius = -1, long commandOwnerId =0)
         {
 
             this.FromEvent = true;
@@ -152,19 +152,18 @@ namespace ModularEncountersSystems.Helpers {
             this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
 
 
-            if(string.IsNullOrWhiteSpace(OverrideCommandCode))
+            if(string.IsNullOrWhiteSpace(overrideCommandCode))
                 this.CommandCode = profile.CommandCode;
             else
-                this.CommandCode = OverrideCommandCode;
+                this.CommandCode = overrideCommandCode;
 
+
+            if(overrideRadius < 0)
+                this.Radius = profile.Radius;
+            else
+                this.Radius = overrideRadius;
 
             this.Position = position;
-
-
-            this.Radius = profile.Radius;
-
-            this.CheckRelationSenderReceiver = false;
-
 
 
         }

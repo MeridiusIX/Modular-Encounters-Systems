@@ -370,7 +370,7 @@ namespace ModularEncountersSystems.API {
         /// <param name="commandProfileIds">The names (SubtypeIds) of the Commandprofiles  you want to send</param>
         /// <param name="originCoords">Vector3D from where the commandprofile is send</param>
 		///  <param name="overrideCommandCode">string</param>
-        public void SendBehaviorCommand(List<string> commandProfileIds, Vector3D originCoords, string overrideCommandCode = "", double overrideRadius = -1, long commandOwnerId = 0) => _sendBehaviorCommand?.Invoke(commandProfileIds, originCoords, overrideCommandCode);
+        public void SendBehaviorCommand(List<string> commandProfileIds, Vector3D originCoords, string overrideCommandCode = "", double overrideRadius = -1, long commandOwnerId = 0) => _sendBehaviorCommand?.Invoke(commandProfileIds, originCoords, overrideCommandCode, overrideRadius, commandOwnerId);
 
         public void InsertInstanceEventGroup(string ProfileSubTypeID, List<string> replacekeys, List<string> replacevalues) => _insertInstanceEventGroup?.Invoke(ProfileSubTypeID, replacekeys, replacevalues);
 
@@ -428,7 +428,7 @@ namespace ModularEncountersSystems.API {
 				_toggleSpawnGroupEnabled = (Action<string, bool>)dict["ToggleSpawnGroupEnabled"];
 				_registerCustomAction = (Action<bool, string, Action<object[]>>)dict["RegisterCustomAction"];
 				_insertInstanceEventGroup = (Action<string, List<string>, List<string>>)dict["InsertInstanceEventGroup"];
-				_sendBehaviorCommand = (Action<List<string>, Vector3D, string>)dict["SendBehaviorCommand"];
+				_sendBehaviorCommand = (Action<List<string>, Vector3D, string,double,long>)dict["SendBehaviorCommand"];
 				_registerCustomMissionMapping = (Action< bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>)dict["RegisterCustomMissionMapping"];
 
 			} catch (Exception e) {

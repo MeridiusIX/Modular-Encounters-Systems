@@ -5,6 +5,7 @@ using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
@@ -1296,10 +1297,42 @@ namespace ModularEncountersSystems.Behavior {
 
 			BehaviorSettings.Behavior = this;
 
-			//TODO: Refactor This Into TriggerSystem
 
-			BehaviorLogger.Write("Beginning Individual Trigger Reference Setup", BehaviorDebugEnum.BehaviorSetup);
-			foreach (var trigger in Trigger.Triggers) {
+            //Dialoguebank
+            try
+            {
+                BehaviorLogger.Write("Beginning DialogueBank setup", BehaviorDebugEnum.BehaviorSetup);
+
+                if (Trigger._dialogueBanks != null && Trigger._dialogueBanks.Count > 0)
+                {
+                    Random rng = new Random();
+                    int index = rng.Next(Trigger._dialogueBanks.Count); // Get a valid random index
+
+                    var selectedBank = Trigger._dialogueBanks[index];
+
+                    if (selectedBank != null)
+                    {
+                        Trigger._dialogueBank = selectedBank;
+                        BehaviorLogger.Write($"Selected dialogue bank at index {index}", BehaviorDebugEnum.BehaviorSetup);
+                    }
+                    else
+                    {
+                        BehaviorLogger.Write("Selected dialogue bank was null", BehaviorDebugEnum.BehaviorSetup);
+                    }
+                }
+                else
+                {
+                    BehaviorLogger.Write("DialogueBanks list is null or empty", BehaviorDebugEnum.BehaviorSetup);
+                }
+            }
+            catch (Exception ex)
+            {
+                BehaviorLogger.Write($"Exception while selecting dialogue bank: {ex.Message}", BehaviorDebugEnum.BehaviorSetup);
+            }
+
+
+            //TODO: Refactor This Into TriggerSystem
+            foreach (var trigger in Trigger.Triggers) {
 
 				trigger.Conditions.SetReferences(this.RemoteControl, this);
 
@@ -1680,7 +1713,10 @@ namespace ModularEncountersSystems.Behavior {
 					sb.Append(bank.name).Append(", ");
 
 				}
-				sb.AppendLine();
+
+                sb.Append(" - Selected Dialogue Bank:      ").Append(Trigger._dialogueBank ?? null).AppendLine(); ;
+
+                sb.AppendLine();
 			}
 
 

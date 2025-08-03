@@ -155,7 +155,7 @@ namespace ModularEncountersSystems.Zones {
 
                 }
 
-                if (zone.MaxSpawnedEncounters >= 0 && zone.SpawnedEncounters >= zone.MaxSpawnedEncounters) {
+                if (zone.UseMaxSpawnedEncounters && zone.MaxSpawnedEncounters >= 0 && zone.SpawnedEncounters >= zone.MaxSpawnedEncounters) {
 
                     SpawnLogger.Write(string.Format("Player Known Location At [{0}] Has Been Removed Because it has Exceeded Spawn Count", zone.Coordinates), SpawnerDebugEnum.Zone);
                     ZoneManager.ActiveZones.RemoveAt(i);
@@ -239,20 +239,24 @@ namespace ModularEncountersSystems.Zones {
 
             bool removedLocation = false;
 
-            for (int i = ZoneManager.ActiveZones.Count - 1; i >= 0; i--) {
+            for (int i = ZoneManager.ActiveZones.Count - 1; i >= 0; i--)
+            {
 
                 var zone = ZoneManager.ActiveZones[i];
 
                 if (!zone.PlayerKnownLocation)
                     continue;
 
-                if (zone.Sphere.Contains(coords) != ContainmentType.Disjoint) {
+                if (zone.Sphere.Contains(coords) != ContainmentType.Disjoint)
+                {
 
-                    if (removeAllZones || !zone.Factions.Contains(faction) || zone.Factions.Count == 0) {
+                    if (removeAllZones || zone.Factions.Contains(faction) || zone.Factions.Count == 0)
+                    {
 
                         SpawnLogger.Write(string.Format("Player Known Location At [{0}] Has Been Removed", zone.Coordinates), SpawnerDebugEnum.Zone);
                         ZoneManager.ActiveZones.RemoveAt(i);
                         removedLocation = true;
+                        AlertPlayersOfRemovedKPL(zone.Coordinates, zone.Radius, faction);
 
                     }
 
@@ -262,6 +266,39 @@ namespace ModularEncountersSystems.Zones {
 
             if (removedLocation)
                 ZoneManager.FlagUpdateZoneStorage();
+
+        }
+
+        public static void AlertPlayersOfRemovedKPL(Vector3D coords, double radius, string faction) {
+
+            foreach (var playerEnt in PlayerManager.Players) {
+
+                if (!playerEnt.ActiveEntity())
+                    continue;
+
+                if (playerEnt.Player.IsBot == true) {
+
+                    continue;
+
+                }
+
+                if (Vector3D.Distance(playerEnt.Player.GetPosition(), coords) > radius) {
+
+                    continue;
+
+                }
+
+                if (string.IsNullOrWhiteSpace(faction)) {
+
+                    MyVisualScriptLogicProvider.ShowNotification("This area is no longer identified as \"Player Occupied\"", 5000, "Red", playerEnt.Player.IdentityId);
+
+                } else {
+
+                    MyVisualScriptLogicProvider.ShowNotification("This area is no longer identified as \"Player Occupied\" by " + faction, 5000, "Red", playerEnt.Player.IdentityId);
+
+                }
+
+            }
 
         }
 

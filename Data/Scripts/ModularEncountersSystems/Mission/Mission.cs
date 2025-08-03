@@ -123,6 +123,13 @@ namespace ModularEncountersSystems.Missions
         public bool Init(BlockEntity sourceContractBlock)
         {
 
+            // Remove mission from all contract blocks
+            if (this.Profile.Exclusive && InGameContractManager.IsAContractWithMissionSubtypeIdActive(this.ProfileSubtypeId))
+            {
+                return false;
+            }
+
+
             ReplaceKeys = new List<string>();
             ReplaceValues = new List<string>();
 

@@ -13,6 +13,7 @@ using VRage.Game.ModAPI;
 using Sandbox.ModAPI.Contracts;
 using VRage.Game;
 using ModularEncountersSystems.Entities;
+using System.Diagnostics.Contracts;
 
 namespace ModularEncountersSystems.Missions {
 
@@ -363,6 +364,24 @@ namespace ModularEncountersSystems.Missions {
                 }
             }
         }
+
+        public static bool IsAContractWithMissionSubtypeIdActive(string missionProfileSubtypeId)
+        {
+
+            for (int i = ActiveContracts.Count - 1; i >= 0; i--)
+            {
+                var ActiveContract = ActiveContracts[i];
+
+                if (ActiveContract.MissionProfileSubtypeId == missionProfileSubtypeId)
+                {
+                    return true;
+
+                }
+            }
+
+            return false;
+        }
+
 
 
         public static ActiveContract GetActiveContract(long contractId)

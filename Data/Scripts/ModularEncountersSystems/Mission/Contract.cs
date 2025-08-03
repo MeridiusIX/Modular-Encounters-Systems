@@ -41,12 +41,17 @@ namespace ModularEncountersSystems.Missions
         [ProtoMember(7)]
         public string ActivateBooleanNameOnSucces;
 
+        [ProtoMember(7)]
+        public string MissionProfileSubtypeId;
+
+        
+
         public ActiveContract()
         {
 
         }
 
-        public ActiveContract(long ContractId,long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag, string ActivateBooleanNameOnSucces)
+        public ActiveContract(long ContractId,long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag, string ActivateBooleanNameOnSucces, string profileSubtypeId)
         {
             this.ContractId = ContractId;
             this.BlockId = BlockId;
@@ -56,6 +61,7 @@ namespace ModularEncountersSystems.Missions
             this.FailReputationPrice = FailReputationPrice;
             this.FactionTag = FactionTag;
             this.ActivateBooleanNameOnSucces = ActivateBooleanNameOnSucces;
+            this.MissionProfileSubtypeId = profileSubtypeId;
         }
     }
 
@@ -132,7 +138,7 @@ namespace ModularEncountersSystems.Missions
                 player.ProgressionData.Tags.Add($"@{ContractId}");
             }
 
-            // Remove mission from all contract blocks
+            // Remove all other contracts with this type contract blocks
             if (this.MissionReference.Profile.Exclusive)
             {
                 InGameContractManager.PurgeContractsWithMissionSubtypeId(MissionReference.ProfileSubtypeId,ContractId);
@@ -141,7 +147,12 @@ namespace ModularEncountersSystems.Missions
             var FactionTag = MissionReference.Faction.Tag;
 
 
-            var _activeContract = new ActiveContract(ContractId, SourceBlock.Entity.EntityId, MissionReference.Reward, MissionReference.ReputationReward, MissionReference.FailReputationPrice, FactionTag,MissionReference.Profile.ActivateBooleanNameOnSucces);
+            var _activeContract = new ActiveContract(ContractId,
+                SourceBlock.Entity.EntityId, MissionReference.Reward,
+                MissionReference.ReputationReward, MissionReference.FailReputationPrice,
+                FactionTag,MissionReference.Profile.ActivateBooleanNameOnSucces,
+                MissionReference.ProfileSubtypeId);
+
             InGameContractManager.ActiveContracts.Add(_activeContract);
             MissionReference.Start();
 

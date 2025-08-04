@@ -124,18 +124,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 
-				foreach (var dialogueBank in _dialogueBanks)
+
+				if(_dialogueBank.GetChatProfile(actions.DialogueCueId,ref chat, actions.PlayDialogueToSpecificPlayers))
 				{
-
-					if(dialogueBank.GetChatProfile(actions.DialogueCueId,ref chat, actions.PlayDialogueToSpecificPlayers))
-					{
-						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
-						_broadcast.BroadcastRequest(chat, command, tempPlayerIdList);
-						break;
-					}
-
+					BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
+					_broadcast.BroadcastRequest(chat, command, tempPlayerIdList);
 
 				}
+
 			}
 
 			if (actions.ProcessStaticEncountersAtLocation)

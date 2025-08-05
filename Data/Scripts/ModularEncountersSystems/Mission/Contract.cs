@@ -41,7 +41,7 @@ namespace ModularEncountersSystems.Missions
         [ProtoMember(7)]
         public string ActivateBooleanNameOnSucces;
 
-        [ProtoMember(7)]
+        [ProtoMember(8)]
         public string MissionProfileSubtypeId;
 
         

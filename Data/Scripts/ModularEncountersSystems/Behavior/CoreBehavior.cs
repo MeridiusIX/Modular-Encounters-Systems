@@ -1714,7 +1714,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				}
 
-                sb.Append(" - Selected Dialogue Bank:      ").Append(Trigger._dialogueBank ?? null).AppendLine(); ;
+                sb.Append(" - Selected Dialogue Bank:      ").Append(Trigger._dialogueBank?.name ?? null).AppendLine(); ;
 
                 sb.AppendLine();
 			}

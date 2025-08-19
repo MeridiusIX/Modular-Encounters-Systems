@@ -1106,6 +1106,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
             }
 
+            if (actions.AddInstanceEventGroup)
+            {
+				var instanceEventGroupReplaceValues = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.InstanceEventGroupReplaceValues);
+                LocalApi.InsertInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, instanceEventGroupReplaceValues);
+            }
+
 
             //CreateKnownPlayerArea
             if (actions.CreateKnownPlayerArea == true) {

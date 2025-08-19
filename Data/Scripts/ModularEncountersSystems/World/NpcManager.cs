@@ -262,7 +262,18 @@ namespace ModularEncountersSystems.World {
 
 		}
 
-		public static void ResetThisResetThisStaticEncounter(string spawnGroupName)
+        public static void ResetThisUniqueSpawnGroup(string spawnGroupName)
+        {
+			if (NpcManager.UniqueGroupsSpawned.Contains(spawnGroupName))
+			{
+				NpcManager.UniqueGroupsSpawned.Remove(spawnGroupName);
+
+			}
+        }
+
+
+
+        public static void ResetThisResetThisStaticEncounter(string spawnGroupName)
 		{
 			if (NpcManager.UniqueGroupsSpawned.Contains(spawnGroupName))
 			{

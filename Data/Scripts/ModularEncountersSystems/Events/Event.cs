@@ -144,8 +144,9 @@ namespace ModularEncountersSystems.Events
         public void InitAsInsertable(string profilesubtypeId, long uniqueValue, List<string> _replacekeys, List<string> _replacevalues)
         {
             Insertable = true;
-            ReplaceKeys = _replacekeys;
-            ReplaceValues = _replacevalues;
+            // ??
+            ReplaceKeys = new List<string>(_replacekeys);
+            ReplaceValues = new List<string>(_replacevalues);
             InstanceId = uniqueValue;
             TemplateProfileSubtype = profilesubtypeId;
             ProfileSubtypeId = profilesubtypeId + "@" + uniqueValue.ToString();

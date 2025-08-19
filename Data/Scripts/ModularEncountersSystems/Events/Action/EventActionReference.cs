@@ -157,6 +157,8 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 
+
+
 		public bool SetEventControllers;
 		public List<string> EventControllerNames;
 		public List<bool> EventControllersActive;
@@ -183,6 +185,8 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<Vector3D> CustomActionArgumentsVector3D;
 
 
+		public bool ResetUniqueSpawnGroup;
+		public string ResetUniqueSpawnGroupName;
 
 		public bool EditFaction;
 
@@ -358,6 +362,11 @@ namespace ModularEncountersSystems.Events.Action {
 			EventControllersActive = new List<bool>();
 			EventControllersSetCurrentTime = new List<bool>();
 
+			ResetUniqueSpawnGroup = false;
+			ResetUniqueSpawnGroupName= "";
+
+
+
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
 				{"ChangeBooleans", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBooleans) },
@@ -504,12 +513,13 @@ namespace ModularEncountersSystems.Events.Action {
 				{ "ChatOverrideAudio", (s, o) => TagParse.TagStringListCheck(s, false,ref ChatOverrideAudio) },
 
 
-
 				{ "DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },
 				{"SetEventControllers", (s, o) => TagParse.TagBoolCheck(s, ref SetEventControllers) },
 				{"EventControllerNames", (s, o) => TagParse.TagStringListCheck(s, ref EventControllerNames) },
 				{"EventControllersActive", (s, o) => TagParse.TagBoolListCheck(s, ref EventControllersActive) },
 				{"EventControllersSetCurrentTime", (s, o) => TagParse.TagBoolListCheck(s, ref EventControllersSetCurrentTime) },
+				{ "ResetUniqueSpawnGroup", (s, o) => TagParse.TagBoolCheck(s, ref ResetUniqueSpawnGroup) },
+				{ "ResetUniqueSpawnGroupName", (s, o) => TagParse.TagStringCheck(s, ref ResetUniqueSpawnGroupName) },
 			};
 
 		}

@@ -7,6 +7,7 @@ using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
 using Sandbox.Definitions;
 using Sandbox.Game;
@@ -50,7 +51,11 @@ namespace ModularEncountersSystems.Events.Action {
 
 			//DebugHudMessage
 			if (!string.IsNullOrWhiteSpace(actions.DebugHudMessage))
-				MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);
+			{
+                MyAPIGateway.Utilities.ShowMessage("MES-EVENT", actions.DebugHudMessage);
+                MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);
+            }
+
 
 			//Booleans
 			if (actions.ChangeBooleans == true) {
@@ -562,6 +567,12 @@ namespace ModularEncountersSystems.Events.Action {
             {
 				LocalApi.InsertInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, actions.InstanceEventGroupReplaceValues);
             }
+
+
+			if (actions.ResetUniqueSpawnGroup)
+			{
+				NpcManager.ResetThisUniqueSpawnGroup(actions.ResetUniqueSpawnGroupName);
+			}
 
 
 			//This should be as last.

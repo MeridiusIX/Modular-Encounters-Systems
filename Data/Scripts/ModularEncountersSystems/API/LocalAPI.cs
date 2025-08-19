@@ -475,8 +475,9 @@ namespace ModularEncountersSystems.API {
 			{
 				return;
 			}
-			
-			tja.AddEventsAsInsertible(replacekeys, replacevalues);
+
+
+            tja.AddEventsAsInsertible(replacekeys, replacevalues);
 		}
 
 	}

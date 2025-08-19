@@ -71,7 +71,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 
 	}
-	public partial class AutoPilotSystem {
+
+    public enum RouteDirection
+    {
+        Unset,      // instead of None, indicates not yet assigned
+        Forward,    // instead of Normal
+        Backward    // instead of Reversed
+    }
+
+    public partial class AutoPilotSystem {
 
 		//Non-Configurable
 		private IMyRemoteControl _remoteControl;

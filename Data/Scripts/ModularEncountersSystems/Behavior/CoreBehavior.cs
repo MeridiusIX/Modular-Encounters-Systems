@@ -81,7 +81,8 @@ namespace ModularEncountersSystems.Behavior {
 		private HorseFighter _horsefighter;
 		private Hunter _hunter;
 		private Nautical _nautical;
-		private Passive _passive;
+		private NauticalRoutes _nauticalRoutes;
+        private Passive _passive;
 		private Patrol _patrol;
 		private Scout _scout;
 		private Sniper _sniper;
@@ -914,7 +915,36 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			if (subclass == BehaviorSubclass.Passive) {
+            if (subclass == BehaviorSubclass.NauticalRoutes)
+            {
+
+                if (_nauticalRoutes == null)
+                    _nauticalRoutes = new NauticalRoutes(this);
+
+                ActiveBehavior = _nauticalRoutes;
+
+                if (BehaviorSettings.ActiveBehaviorType != subclass)
+                {
+
+                    Mode = BehaviorMode.Init;
+
+                    if (!BehaviorSettings.SubclassBehaviorDefaultsSet)
+                    {
+
+                        BehaviorSettings.SubclassBehaviorDefaultsSet = true;
+                        ActiveBehavior.SetDefaultTags();
+
+                    }
+
+                }
+
+                BehaviorSettings.ActiveBehaviorType = subclass;
+                return;
+
+            }
+
+
+            if (subclass == BehaviorSubclass.Passive) {
 
 				if (_passive == null)
 					_passive = new Passive(this);
@@ -1331,6 +1361,7 @@ namespace ModularEncountersSystems.Behavior {
             }
 
 
+
             //TODO: Refactor This Into TriggerSystem
             foreach (var trigger in Trigger.Triggers) {
 
@@ -1722,7 +1753,7 @@ namespace ModularEncountersSystems.Behavior {
 
 
 
-			var totalTriggerCount = Trigger.Triggers.Count + Trigger.DamageTriggers.Count + Trigger.CommandTriggers.Count + Trigger.CompromisedTriggers.Count;
+            var totalTriggerCount = Trigger.Triggers.Count + Trigger.DamageTriggers.Count + Trigger.CommandTriggers.Count + Trigger.CompromisedTriggers.Count;
 
 			if (totalTriggerCount > 0) {
 

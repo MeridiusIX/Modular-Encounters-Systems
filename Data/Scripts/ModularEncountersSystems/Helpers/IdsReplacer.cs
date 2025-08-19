@@ -82,8 +82,16 @@ namespace ModularEncountersSystems.Helpers {
 
 			if (replaceKeys.Count != replaceValues.Count)
 			{
-				MyAPIGateway.Utilities.ShowMessage("MES", "Replacekeys and replaces values do not match");
-				return text;
+				MyAPIGateway.Utilities.ShowMessage("MES", $"Big error");
+
+                var clipboardText =
+                    $"{text} \n \n" +
+                    $"replaceKeys ({replaceKeys.Count}): {string.Join(", ", replaceKeys)}\n" +
+                    $"replaceValues ({replaceValues.Count}): {string.Join(", ", replaceValues)}";
+
+                VRage.Utils.MyClipboardHelper.SetClipboard(clipboardText);
+
+                return text;
 			}
 
 			for (int i = 0; i < replaceKeys.Count; i++)

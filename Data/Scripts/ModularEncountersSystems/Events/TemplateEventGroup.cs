@@ -64,29 +64,34 @@ namespace ModularEncountersSystems.Events
 				_uniqueValue = uniqueValue;
             }
 
+
+
+            var keys = new List<string>(replacekeys);
+            var values = new List<string>(replacevalues);
+
+            keys.Add("{InstanceId}");
+            values.Add(_uniqueValue.ToString());
+
             foreach (var eventname in EventIds)
             {
-
-
 				var customdata = "";
 				if (!ProfileManager.TemplateEventProfiles.TryGetValue(eventname, out customdata))
 				{
 					continue;
 				}
 
-
-
 				var _event = new Event();
 
-				replacekeys.Add("{InstanceId}");
-				replacevalues.Add(uniqueValue.ToString());
 
-				_event.InitAsInsertable(eventname, _uniqueValue, replacekeys, replacevalues);
 
+                _event.InitAsInsertable(eventname, _uniqueValue, keys, values);
 				EventManager.EventsList.Add(_event);
-			}
 
-			return uniqueValue;
+
+
+            }
+
+            return _uniqueValue;
 
 		}
 	}

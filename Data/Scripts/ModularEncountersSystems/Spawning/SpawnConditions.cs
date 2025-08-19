@@ -466,7 +466,7 @@ namespace ModularEncountersSystems.Spawning {
 				}
 
 				/*
-				if (spawnGroup.MinWaterDepth > 0 && environment.NearestPlanet.WaterDepthAtPosition(environment.SurfaceCoords) < spawnGroup.MinWaterDepth) {
+				if (conditions.MinWaterDepth > 0 && environment.NearestPlanet.WaterDepthAtPosition(environment.SurfaceCoords) < conditions.MinWaterDepth) {
 
 					failReason = "   - Water Depth Check Failed";
 					return false;

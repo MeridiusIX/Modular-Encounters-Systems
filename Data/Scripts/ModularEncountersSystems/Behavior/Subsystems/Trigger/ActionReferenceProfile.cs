@@ -492,6 +492,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SaveLocationToSandboxVariable;
 		public string LocationSandboxVariableName;
 
+		public bool AddInstanceEventGroup;
+		public string InstanceEventGroupId;
+		public List<string> InstanceEventGroupReplaceKeys;
+		public List<string> InstanceEventGroupReplaceValues;
+
 
 
 		public Dictionary<string, Action<string, object>> EditorReference;
@@ -971,6 +976,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			LocationSandboxVariableName = "";
 
+			AddInstanceEventGroup = false;
+			InstanceEventGroupId = "";
+			InstanceEventGroupReplaceKeys = new List<string>();
+			InstanceEventGroupReplaceValues = new List<string>();
+
 
 
 		EditorReference = new Dictionary<string, Action<string, object>> {
@@ -1332,7 +1342,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				{"SaveLocationToSandboxVariable", (s, o) => TagParse.TagBoolCheck(s, ref SaveLocationToSandboxVariable) },
 				{"LocationSandboxVariableName", (s, o) => TagParse.TagStringCheck(s, ref LocationSandboxVariableName) },
-
+				{"AddInstanceEventGroup", (s, o) => TagParse.TagBoolCheck(s, ref AddInstanceEventGroup) },
+				{"InstanceEventGroupId", (s, o) => TagParse.TagStringCheck(s, ref InstanceEventGroupId) },
+				{"InstanceEventGroupReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref InstanceEventGroupReplaceKeys) },
+				{"InstanceEventGroupReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref InstanceEventGroupReplaceValues) },
 
 				};
 

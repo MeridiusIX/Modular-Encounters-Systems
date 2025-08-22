@@ -253,7 +253,6 @@ namespace ModularEncountersSystems.Behavior {
         private void ReturnToRoute()
         {
 
-            MyAPIGateway.Utilities.ShowMessage("AaW", " ReturnToRoute ");
             _behavior.ChangeCoreBehaviorMode(BehaviorMode.ApproachWaypoint);
             _behavior.AutoPilot.ActivateAutoPilot(_NauticalRoute, NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.LevelWithGravity | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.WaypointFromTarget | NewAutoPilotMode.WaterNavigation);
 

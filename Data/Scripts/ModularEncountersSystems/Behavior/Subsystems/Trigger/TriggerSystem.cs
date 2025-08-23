@@ -513,7 +513,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				var trigger = DamageTriggers[i];
 
 				var damageType = info.Type.ToString();
-
+				//MyAPIGateway.Utilities.ShowMessage("AaW", damageType);
 				if ((trigger.DamageTypes.Contains(damageType) || trigger.DamageTypes.Contains("Any")) && !trigger.ExcludedDamageTypes.Contains(damageType)) {
 
 					if (trigger.UseTrigger == true) {

@@ -405,44 +405,50 @@ namespace ModularEncountersSystems.Watchers {
 
 		public static void RemoveGrid(GridEntity grid, bool singleGrid = false) {
 
-			if (!FlaggedForRemoval.Contains(grid))
-				FlaggedForRemoval.Add(grid);
+			bool isGridCleanupNeeded = TryFlagForRemoval(grid);
 
-			if (singleGrid) {
+			if (!singleGrid) {
 
-				if (!PendingGridsForRemoval) {
+				foreach (var linkedGrid in grid.LinkedGrids) {
 
-					PendingGridsForRemoval = true;
-					TaskProcessor.Tasks.Add(new GridCleanup());
-					
+					if (TryFlagForRemoval(linkedGrid)) {
+
+						isGridCleanupNeeded = true;
+
+					}
+
 				}
-
-				return;
 
 			}
 
-			foreach (var gridEntity in grid.LinkedGrids) {
+			if (isGridCleanupNeeded && !PendingGridsForRemoval) {
 
-				if (gridEntity.Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || gridEntity.Ownership.HasFlag(GridOwnershipEnum.PlayerMinority)) {
-
-					continue;
-				
-				}
-
-				if (!PendingGridsForRemoval) {
-
-					PendingGridsForRemoval = true;
-					TaskProcessor.Tasks.Add(new GridCleanup());
-
-				}
-
-				if (!FlaggedForRemoval.Contains(gridEntity))
-					FlaggedForRemoval.Add(gridEntity);
+				PendingGridsForRemoval = true;
+				TaskProcessor.Tasks.Add(new GridCleanup());
 
 			}
 
 		}
 
-	}
+        private static bool TryFlagForRemoval(GridEntity grid) {
+
+            if (grid.Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || grid.Ownership.HasFlag(GridOwnershipEnum.PlayerMinority)) {
+
+                return false;
+
+            }
+
+            if (FlaggedForRemoval.Contains(grid)) {
+
+				return false;
+
+			}
+
+			FlaggedForRemoval.Add(grid);
+            return true;
+
+        }
+
+    }
 
 }

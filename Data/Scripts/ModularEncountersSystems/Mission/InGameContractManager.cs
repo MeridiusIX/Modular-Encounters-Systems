@@ -150,7 +150,7 @@ namespace ModularEncountersSystems.Missions {
 
         public static void ContractAbandoned(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId)
         {
-            MyVisualScriptLogicProvider.ShowNotificationToAll("ContractFailed", 15000, "Blue");
+
             if (isPlayerMade)
             {
                 var contract = GetActiveContract(contractId);
@@ -207,7 +207,7 @@ namespace ModularEncountersSystems.Missions {
 
         public static void ContractFailed(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId, bool IsAbandon)
         {
-            MyVisualScriptLogicProvider.ShowNotificationToAll("ContractFailed", 15000, "Blue");
+
             if (isPlayerMade)
             {
                 var contract = GetActiveContract(contractId);

@@ -149,16 +149,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (!ShipyardProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Shipyard]")) {
 
-					var profile = new ShipyardProfile();
-					profile.InitTags(component.DescriptionText);
-					profile.ProfileSubtypeId = component.Id.SubtypeName;
-					ShipyardProfiles.Add(component.Id.SubtypeName, profile);
-					AllMesProfileIds.Add(component.Id);
-					continue;
-
-				}
 
 				if (!StoreProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Store]")) {
 
@@ -290,7 +281,19 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (!ReplenishmentProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Replenishment]")) {
+                if (!ShipyardProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Shipyard]"))
+                {
+
+                    var profile = new ShipyardProfile();
+                    profile.InitTags(component.DescriptionText);
+                    profile.ProfileSubtypeId = component.Id.SubtypeName;
+                    ShipyardProfiles.Add(component.Id.SubtypeName, profile);
+                    AllMesProfileIds.Add(component.Id);
+                    continue;
+
+                }
+
+                if (!ReplenishmentProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Replenishment]")) {
 
 					ReplenishmentProfiles.Add(component.Id.SubtypeName, new ReplenishmentProfile(component.DescriptionText));
 					AllMesProfileIds.Add(component.Id);

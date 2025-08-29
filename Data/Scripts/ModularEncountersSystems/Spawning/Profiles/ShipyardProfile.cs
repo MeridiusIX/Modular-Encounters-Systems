@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,7 +47,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
         public List<MyDefinitionId> OldBlock;
         public List<MyDefinitionId> NewBlock;
         public Dictionary<MyDefinitionId, MyDefinitionId> ReplaceBlockReference;
-
+		public List<string> BlockReplacementProfileIds;
 
 
         public bool AllowGridTakeover;
@@ -97,6 +98,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			OldBlock = new List<MyDefinitionId>();
             NewBlock = new List<MyDefinitionId>();
 			ReplaceBlockReference = new Dictionary<MyDefinitionId, MyDefinitionId>();
+            BlockReplacementProfileIds = new List<string>();
+
+
 
             AllowGridTakeover = false;
 			GridTakeoverSmallGridBlockLimit = 2500;
@@ -142,6 +146,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
                 {"OldBlock", (s, o) => TagParse.TagMyDefIdCheck(s, ref OldBlock) },
                 {"NewBlock", (s, o) => TagParse.TagMyDefIdCheck(s, ref NewBlock) },
                 {"ReplaceBlockReference", (s, o) => TagParse.TagMDIDictionaryCheck(s, ref ReplaceBlockReference) },
+                {"BlockReplacementProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref BlockReplacementProfileIds) },
 
                 {"AllowGridTakeover", (s, o) => TagParse.TagBoolCheck(s, ref AllowGridTakeover) },
 				{"GridTakeoverSmallGridBlockLimit", (s, o) => TagParse.TagIntCheck(s, ref GridTakeoverSmallGridBlockLimit) },
@@ -237,8 +242,56 @@ namespace ModularEncountersSystems.Spawning.Profiles {
                         this.ReplaceBlockReference.Add(this.OldBlock[i], this.NewBlock[i]);
 
                 }
-
             }
+
+            for (int i = 0; i < this.BlockReplacementProfileIds.Count; i++)
+            {
+
+				var profileName = this.BlockReplacementProfileIds[i];
+
+                BlockReplacementProfile profile = null;
+
+
+                if (!string.IsNullOrWhiteSpace(profileName))
+                {
+
+                    if (!ProfileManager.BlockReplacementProfiles.TryGetValue(profileName, out profile))
+                    {
+
+                        SpawnLogger.Write(" - Could not get Block Replacement Profile with name: " + profileName, SpawnerDebugEnum.Manipulation);
+                        continue;
+
+                    }
+
+                }
+                else
+                {
+                    SpawnLogger.Write(" - Provided Block Replacement Profile Null or Blank", SpawnerDebugEnum.Manipulation);
+                    continue;
+
+                }
+
+				if (profile != null)
+				{
+
+                    foreach (var kvp in profile.Replacement)
+                    {
+                        var oldBlock = kvp.Key;
+                        var newBlock = kvp.Value;
+
+                        if (!this.ReplaceBlockReference.ContainsKey(oldBlock))
+                        {
+                            this.ReplaceBlockReference.Add(oldBlock, newBlock);
+                        }
+                    }
+
+                }
+            }
+
+
+
+
+
 
 
         }

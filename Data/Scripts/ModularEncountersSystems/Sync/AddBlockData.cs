@@ -12,6 +12,9 @@ using VRage.Game;
 using VRage.Utils;
 using VRage.ObjectBuilders;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Spawning.Procedural;
+using ModularEncountersSystems.Tasks;
+using VRage.ModAPI;
 
 namespace ModularEncountersSystems.Sync
 {
@@ -37,12 +40,32 @@ namespace ModularEncountersSystems.Sync
         public void Received()
         {
 
-            var Grid = GridManager.GetGridEntity(CubeGrid_EntityId);
+            IMyEntity gridEntity = null;
 
-            if (Grid != null)
+            if (MyAPIGateway.Entities.TryGetEntityById(CubeGrid_EntityId, out gridEntity))
             {
-                Grid.CubeGrid.AddBlock(NewBlock_ob,false); 
+
+                var grid = gridEntity as IMyCubeGrid;
+
+                if (grid != null)
+                {
+
+                    var task = new AddBlock(NewBlock_ob, grid);
+                    TaskProcessor.Tasks.Add(task);
+
+
+                }
+                else
+                {
+                    MyAPIGateway.Utilities.ShowMessage("MES", "Send id is not cubegrid?");
+                }
+
             }
+            else
+            {
+                MyAPIGateway.Utilities.ShowMessage("MES","could not find Cubegrid via ID");
+            }
+
         }
     }
 

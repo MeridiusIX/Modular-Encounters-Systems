@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Behavior;
+using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Sync;
@@ -35,7 +36,7 @@ namespace ModularEncountersSystems.Tasks {
         public override void Run() {
 
             _block.EntityId = 0;
-
+            MyAPIGateway.Utilities.ShowMessage("MES.Addblock", "trying");
             var spawned_block = _parentGrid.AddBlock(_block, false);
             //MyLog.Default.WriteLineAndConsole($"newblock:{spawned_block != null}");
             //MyVisualScriptLogicProvider.SendChatMessage($"newblock:{spawned_block != null}");
@@ -44,10 +45,7 @@ namespace ModularEncountersSystems.Tasks {
                 //Try again!
                 return;
             }
-
-            var addblockdata = new AddBlockData(spawned_block.GetObjectBuilder(true), _parentGrid.EntityId);
-            var syncContainer = new SyncContainer(addblockdata);
-            SyncManager.SendSyncMesage(syncContainer, 0, false,true);
+            MyAPIGateway.Utilities.ShowMessage("MES.Addblock", "Success");
 
             // gently remind the client that a new block has been spawned
             //MyAPIGateway.Multiplayer.SendMessageToOthers(SyncManager.NetworkId, MyAPIGateway.Utilities.SerializeToBinary<MyObjectBuilder_CubeBlock>(spawned_block.GetObjectBuilder(true)));

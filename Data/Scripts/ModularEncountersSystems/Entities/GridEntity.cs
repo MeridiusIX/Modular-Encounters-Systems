@@ -4,6 +4,7 @@ using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
 using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
@@ -1007,9 +1008,12 @@ namespace ModularEncountersSystems.Entities {
                     var grid = block.CubeGrid;
                     grid.RemoveBlock(block);
 
-                    //grid.AddBlock(newBlockBuilder,false);
-                    var task = new AddBlock(newBlockBuilder, grid);
-                    TaskProcessor.Tasks.Add(task);
+                    grid.AddBlock(newBlockBuilder,false);
+
+
+                    var addblockdata = new AddBlockData(newBlockBuilder, grid.EntityId);
+                    var syncContainer = new SyncContainer(addblockdata);
+                    SyncManager.SendSyncMesage(syncContainer, 0, true, true);
 
 
                     affectedBlocks++;

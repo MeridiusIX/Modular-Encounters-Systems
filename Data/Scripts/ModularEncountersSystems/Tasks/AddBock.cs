@@ -45,12 +45,16 @@ namespace ModularEncountersSystems.Tasks {
                 return;
             }
 
+            var addblockdata = new AddBlockData(spawned_block.GetObjectBuilder(true), _parentGrid.EntityId);
+            var syncContainer = new SyncContainer(addblockdata);
+            SyncManager.SendSyncMesage(syncContainer, 0, false,true);
+
             // gently remind the client that a new block has been spawned
-            MyAPIGateway.Multiplayer.SendMessageToOthers(SyncManager.NetworkId, MyAPIGateway.Utilities.SerializeToBinary<MyObjectBuilder_CubeBlock>(spawned_block.GetObjectBuilder(true)));
+            //MyAPIGateway.Multiplayer.SendMessageToOthers(SyncManager.NetworkId, MyAPIGateway.Utilities.SerializeToBinary<MyObjectBuilder_CubeBlock>(spawned_block.GetObjectBuilder(true)));
 
             // gently remind the client that it belongs to a grid, this could be particularly problematic when it was the only block in the grid
 
-            MyAPIGateway.Multiplayer.SendMessageToOthers(SyncManager.NetworkId, MyAPIGateway.Utilities.SerializeToBinary<MyObjectBuilder_EntityBase>(_parentGrid.GetObjectBuilder(true)));
+            //MyAPIGateway.Multiplayer.SendMessageToOthers(SyncManager.NetworkId, MyAPIGateway.Utilities.SerializeToBinary<MyObjectBuilder_EntityBase>(_parentGrid.GetObjectBuilder(true)));
 
 
             _isValid =false;

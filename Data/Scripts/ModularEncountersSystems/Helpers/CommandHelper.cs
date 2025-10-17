@@ -151,6 +151,10 @@ namespace ModularEncountersSystems.Helpers {
             this.MatchSenderReceiverOwners = false;
             this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
 
+            this.CommandOwnerId = commandOwnerId;
+            this.CheckRelationSenderReceiver = profile.CheckRelationSenderReceiver;
+            this.Relation = profile.Relation;
+
 
             if(string.IsNullOrWhiteSpace(overrideCommandCode))
                 this.CommandCode = profile.CommandCode;
@@ -196,7 +200,7 @@ namespace ModularEncountersSystems.Helpers {
             {
                 this.CommandCode = profile.CommandCode;
             }
-            
+
 
 
 
@@ -356,7 +360,7 @@ namespace ModularEncountersSystems.Helpers {
                 CommandTrigger?.Invoke(command);
             else
                 TaskProcessor.Tasks.Add(new DelayedCommand(command));
-        
+
         }
 
     }

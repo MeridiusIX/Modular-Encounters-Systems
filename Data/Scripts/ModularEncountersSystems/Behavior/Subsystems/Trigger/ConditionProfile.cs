@@ -1472,20 +1472,41 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 
-			if (ConditionReference.CommandGravityCheck) {
+            if (ConditionReference.CommandGravityCheck)
+            {
 
-				usedConditions++;
+                usedConditions++;
 
-				if (command != null) {
+                if (command != null)
+                {
 
-					var match = PlanetManager.InGravity(command.Position) == PlanetManager.InGravity(_behavior.RemoteControl.GetPosition());
+                    var match = PlanetManager.InGravity(command.Position) == PlanetManager.InGravity(_behavior.RemoteControl.GetPosition());
 
-					if(match == ConditionReference.CommandGravityMatches)
-						satisfiedConditions++;
+                    if (match == ConditionReference.CommandGravityMatches)
+                        satisfiedConditions++;
 
-				}
+                }
 
-			}
+            }
+
+
+            if (ConditionReference.CommandCheckRelationSenderReceiver)
+            {
+
+                usedConditions++;
+
+                if (command != null)
+                {
+
+                    var relation = EntityEvaluator.GetRelationBetweenIdentities(command.CommandOwnerId, _behavior.RemoteControl.OwnerId);
+
+                    if (relation == ConditionReference.CommandRelation)
+                        satisfiedConditions++;
+
+                }
+
+            }
+
 
 			if (ConditionReference.PlayerIdentityMatches) {
 

@@ -541,6 +541,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
+			if (ConditionReference.CheckGridStatic == true) {
+
+				usedConditions++;
+
+                if (ConditionReference.GridStatic == true && _remoteControl.CubeGrid.IsStatic == true) {
+                    //MyAPIGateway.Utilities.ShowNotification("This is a static grid.");
+					satisfiedConditions++;
+                }
+                else if (ConditionReference.GridStatic == false && _remoteControl.CubeGrid.IsStatic == false) {
+                    //MyAPIGateway.Utilities.ShowNotification("This is a dynamic grid.");
+					satisfiedConditions++;
+                }
+			}
+
+
 			if (ConditionReference.CheckGridSpeed == true) {
 
 				usedConditions++;

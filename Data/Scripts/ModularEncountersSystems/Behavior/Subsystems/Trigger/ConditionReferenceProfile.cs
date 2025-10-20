@@ -46,6 +46,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool CheckGridSize;
 		public bool GridSizeLarge;
+		public bool CheckGridStatic;
+		public bool GridStatic;
 
 		public bool CheckGridSpeed;
 		public float MinGridSpeed;
@@ -313,6 +315,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             CheckGridSize = false;
             GridSizeLarge = true;
 
+            CheckGridStatic = false;
+			GridStatic = false;
+
 			CheckGridSpeed = false;
 			MinGridSpeed = -1;
 			MaxGridSpeed = -1;
@@ -543,6 +548,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"AllowAnyValidCounter", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyValidCounter) },
 				{"CheckGridSize", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSize) },
 				{"GridSizeLarge", (s, o) => TagParse.TagBoolCheck(s, ref GridSizeLarge) },
+				{"CheckGridStatic", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridStatic) },
+				{"GridStatic", (s, o) => TagParse.TagBoolCheck(s, ref GridStatic) },
 				{"CheckGridSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSpeed) },
 				{"MinGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MinGridSpeed) },
 				{"MaxGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MaxGridSpeed) },

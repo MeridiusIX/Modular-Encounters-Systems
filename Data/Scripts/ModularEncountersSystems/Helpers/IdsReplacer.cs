@@ -32,6 +32,11 @@ namespace ModularEncountersSystems.Helpers
                 tag = tag.Replace("{SpawnGroupName}", SpawnGroupName);
             }
 
+            if (tag.Contains("{SpawnGroupNameTruncated}") && SpawnGroupName != null)
+            {
+                tag = tag.Replace("{SpawnGroupNameTruncated}", SpawnGroupName.Replace("_SpawnGroup", ""));
+            }
+
             if (tag.Contains("{Faction}") && Faction != null)
             {
                 tag = tag.Replace("{Faction}", Faction);

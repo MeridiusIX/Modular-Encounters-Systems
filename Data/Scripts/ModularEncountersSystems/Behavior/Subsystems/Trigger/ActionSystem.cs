@@ -93,7 +93,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			}
 
 
-			
+
 
 
 			//Playsound cue
@@ -1048,7 +1048,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
                     }
 
- 
+
                     var newvalue = currentvalue - Math.Abs(decreasevalue);
 
                     newvalue = Math.Min(100, newvalue);
@@ -1182,16 +1182,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//ManuallyActivateTrigger
 			if (actions.ManuallyActivateTrigger) {
 
-				BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Manually Activate Triggers.", BehaviorDebugEnum.Action);
+                BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Manually Activate Triggers.", BehaviorDebugEnum.Action);
+
+                List<string> manuallyActivatedTriggerNames = new List<string>();
+                foreach (var manuallyActivatedTriggerName in actions.ManuallyActivatedTriggerNames)
+                {
+                    manuallyActivatedTriggerNames.Add(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, manuallyActivatedTriggerName));
+                }
+
+                List<string> manuallyActivatedTriggerTags = new List<string>();
+                foreach (var manuallyActivatedTriggerTag in actions.ManuallyActivatedTriggerTags)
+                {
+                    manuallyActivatedTriggerTags.Add(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, manuallyActivatedTriggerTag));
+                }
 
 				foreach (var manualTrigger in Triggers) {
 
-					if (actions.ManuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
+					if (manuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
 						ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
 
 					foreach (var tag in manualTrigger.Tags)
 					{
-						if (actions.ManuallyActivatedTriggerTags.Contains(tag))
+						if (manuallyActivatedTriggerTags.Contains(tag))
 							ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
 
 					}
@@ -1202,12 +1214,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				foreach (var manualTrigger in CompromisedTriggers)
 				{
 
-					if (actions.ManuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
+					if (manuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
 						ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
 
 					foreach (var tag in manualTrigger.Tags)
 					{
-						if (actions.ManuallyActivatedTriggerTags.Contains(tag))
+						if (manuallyActivatedTriggerTags.Contains(tag))
 							ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
 
 					}
@@ -1524,6 +1536,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
 					else
 						ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+
+			}
+
+			//CustomStrings
+			if (actions.SetCustomStrings) {
+
+                BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Set Custom Strings.", BehaviorDebugEnum.Action);
+
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+                npcdata.CustomStrings = actions.CustomStrings;
 
 			}
 

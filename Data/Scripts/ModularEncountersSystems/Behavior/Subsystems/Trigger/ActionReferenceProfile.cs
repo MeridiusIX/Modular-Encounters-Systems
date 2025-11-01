@@ -258,7 +258,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> SetCounters;
 		public List<string> SetSandboxCounters;
 		public List<int> SetCountersValues;
-		public List<int> SetSandboxCountersValues;
+        public List<int> SetSandboxCountersValues;
+
+		public bool SetCustomStrings;
+		public Dictionary<string, string> CustomStrings;
 
 		public bool InheritLastAttackerFromCommand;
 
@@ -624,7 +627,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			DecreaseCountersAmount = -1;
 
 			IncreaseCountersUseCommandScore = false;
-			DecreaseCountersUseCommandScore = false;
+            DecreaseCountersUseCommandScore = false;
+
+			SetCustomStrings = false;
+			CustomStrings = new Dictionary<string, string>();
 
 			BroadcastGenericCommand = false;
 
@@ -1154,6 +1160,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"SetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxCounters) },
 				{"SetCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersValues) },
 				{"SetSandboxCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetSandboxCountersValues) },
+				{"SetCustomStrings", (s, o) => TagParse.TagBoolCheck(s, ref SetCustomStrings) },
+				{"CustomStrings", (s, o) => TagParse.TagStringDictCheck(s, ref CustomStrings) },
 				{"InheritLastAttackerFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref InheritLastAttackerFromCommand) },
 				{"ChangePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCredits) },
 				{"ChangePlayerCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangePlayerCreditsAmount) },
@@ -1313,7 +1321,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"ProcessStaticEncountersAtLocation", (s, o) => TagParse.TagBoolCheck(s, ref ProcessStaticEncountersAtLocation) },
                 {"ProcessStaticEncountersLocation", (s, o) => TagParse.TagVector3DCheck(s, ref ProcessStaticEncountersLocation) },
 
-             
+
                 {"PlayDialogueCue", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueCue) },
 				{"DialogueCueId", (s, o) => TagParse.TagStringCheck(s, ref DialogueCueId) },
 				{"PlayDialogueToSpecificPlayers", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueToSpecificPlayers) },

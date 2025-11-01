@@ -399,11 +399,11 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(39)]
 		public long EventInstanceId;
 
-		[ProtoMember(40)] 
+		[ProtoMember(40)]
 		public string CustomVariablesName;
 
 		[ProtoMember(41)]
-		public string TerrainTypeName; //Store data for MatchTerrainType in AI conditions 
+		public string TerrainTypeName; //Store data for MatchTerrainType in AI conditions
 
 		[ProtoMember(42)]
 		public string Context; // arbitrary user data via MESApi
@@ -418,6 +418,9 @@ namespace ModularEncountersSystems.World {
         [ProtoMember(45)]
         public int AntennaThoughtBubblePercentage; // arbitrary user data via MESApi
 
+		[ProtoMember(46)]
+		public Dictionary<string, string> CustomStrings;
+
         //Non-Serialized Data
 
         [ProtoIgnore]
@@ -428,7 +431,7 @@ namespace ModularEncountersSystems.World {
 				if (_spawnGroup == null) {
 
 					_spawnGroup = SpawnGroupManager.GetSpawnGroupByName(SpawnGroupName);
-				
+
 				}
 
 				return _spawnGroup;
@@ -593,6 +596,7 @@ namespace ModularEncountersSystems.World {
 			Score = 0;
 			EventInstanceId = -1;
 			CustomVariablesName = "";
+			CustomStrings = new Dictionary<string, string>();
 
 			FriendlyName = "";
 			TerrainTypeName = "";
@@ -606,7 +610,7 @@ namespace ModularEncountersSystems.World {
 		}
 
 		public void AssignAttributes(ImprovedSpawnGroup spawnGroup, SpawningType type) {
-			
+
 			if(SpawnRequest.IsCargoShip(type))
 				Attributes.IsCargoShip = true;
 
@@ -648,7 +652,7 @@ namespace ModularEncountersSystems.World {
 				AppliedAttributes.OldFlagsProcessed = true;
 				Attributes.ApplyAttributesFromFlags(OldAttributes);
 				AppliedAttributes.ApplyAttributesFromFlags(OldAppliedAttributes);
-			
+
 			}
 
 			SpawnLogger.Write("Processing Primary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
@@ -685,7 +689,7 @@ namespace ModularEncountersSystems.World {
 
 			MyAPIGateway.Utilities.InvokeOnGameThread(() => ProcessSecondaryAttributes());
 
-			
+
 
 		}
 
@@ -714,7 +718,7 @@ namespace ModularEncountersSystems.World {
 				SpawnLogger.Write("Start Matrix Translation:    " + Grid.CubeGrid.WorldMatrix.Translation, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Forward:        " + Grid.CubeGrid.WorldMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Up:             " + Grid.CubeGrid.WorldMatrix.Up, SpawnerDebugEnum.Spawning);
-				
+
 
 				var newMatrix = MatrixD.CreateWorld(StartCoords, Forward, Up);
 				Grid.CubeGrid.IsStatic = false;
@@ -722,7 +726,7 @@ namespace ModularEncountersSystems.World {
 				Grid.CubeGrid.IsStatic = true;
 				//MyVisualScriptLogicProvider.ShowNotificationToAll("Fix MAtrix", 1000);
 
-				
+
 				SpawnLogger.Write("Provided Matrix Translation: " + newMatrix.Translation, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Provided Matrix Forward:     " + newMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Provided Matrix Up:          " + newMatrix.Up, SpawnerDebugEnum.Spawning);
@@ -822,14 +826,14 @@ namespace ModularEncountersSystems.World {
 			try {
 
 				block.UpdateVisual();
-			
+
 			} catch (Exception e) {
 
 				SpawnLogger.Write("Block Failed To Update Visuals using IMySlimBlock.UpdateVisual(): " + block?.BlockDefinition?.Id.ToString() ?? "null definition", SpawnerDebugEnum.Error, true);
 				SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error, true);
 
 			}
-		
+
 		}
 
 		public void ProcessTertiaryAttributes() {
@@ -896,7 +900,7 @@ namespace ModularEncountersSystems.World {
 						continue;
 
 					}
-						
+
 					var controllerBlock = controller.Block as IMyTurretControlBlock;
 
 					if (controllerBlock == null) {
@@ -905,7 +909,7 @@ namespace ModularEncountersSystems.World {
 						continue;
 
 					}
-						
+
 					for (int i = tools.Count - 1; i >= 0; i--) {
 
 						string blockKey = "";
@@ -928,7 +932,7 @@ namespace ModularEncountersSystems.World {
 							//SpawnLogger.Write(string.Format("Keys Not Matched: [{0}] [{1}]", controllerBlock.CustomName, tools[i].Block.CustomName), SpawnerDebugEnum.PostSpawn);
 
 						}
-					
+
 					}
 
 				}
@@ -988,7 +992,7 @@ namespace ModularEncountersSystems.World {
 					Grid.Inhibitors.Add(randBlock);
 
 				}
-				
+
 			} else {
 
 				AppliedAttributes.UseJetpackDisable = true;
@@ -1157,10 +1161,12 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - OriginalName:        ").Append(FriendlyName).AppendLine();
 			sb.Append(" - Score (WIP):         ").Append(Score).AppendLine();
 			sb.Append(" - EventInstanceId:     ").Append(EventInstanceId).AppendLine();
-			sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
+            sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
+
+            foreach (var item in CustomStrings) sb.Append(" - CustomString: " + item.Key + " (").Append(item.Value + ")").AppendLine();
 
 			return sb.ToString();
-			
+
 		}
 
 	}

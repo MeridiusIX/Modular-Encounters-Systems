@@ -121,7 +121,7 @@ namespace ModularEncountersSystems.Helpers {
 			original = result;
 
 		}
-		
+
 
 		public static void TagAutoPilotProfileModeCheck(string tag, ref AutoPilotDataMode original) {
 
@@ -666,7 +666,7 @@ namespace ModularEncountersSystems.Helpers {
 						continue;
 
 					}
-		
+
 					result.Add(number);
 
 				}
@@ -1225,6 +1225,23 @@ namespace ModularEncountersSystems.Helpers {
 					result.Add(tagSplit[1]);
 
 				}
+
+			}
+
+		}
+
+		public static void TagStringDictCheck(string tag, ref Dictionary<string, string> result) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+                var array = tagSplit[1].Split(',');
+
+                if (!string.IsNullOrWhiteSpace(array[0]) && !string.IsNullOrWhiteSpace(array[1])) {
+
+                    result.Add(array[0], array[1]);
+                }
 
 			}
 

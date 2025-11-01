@@ -569,7 +569,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				foreach (var waypointName in actions.WaypointsToAdd) {
 
-					var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, waypointName);
+					var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, waypointName));
 
 					if (waypoint != null && waypoint.Valid) {
 
@@ -1789,7 +1789,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//JumpToWaypoint
 			if (actions.JumpToWaypoint && _behavior.CurrentGrid != null) {
 
-				var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, actions.JumpWaypoint);
+				var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.JumpWaypoint));
 				var jumpResult = _behavior.Grid.JumpToCoords(waypoint.GetCoords());
 
 				if (jumpResult) {
@@ -1807,7 +1807,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				WaypointProfile waypoint = null;
 
-				if (ProfileManager.WaypointProfiles.TryGetValue(actions.PlanetWaypointProfile, out waypoint)) {
+				if (ProfileManager.WaypointProfiles.TryGetValue(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.PlanetWaypointProfile), out waypoint)) {
 
 					var coords = waypoint.GenerateEncounterWaypoint(RemoteControl);
 					var pos = coords.GetCoords();

@@ -270,7 +270,7 @@ namespace ModularEncountersSystems.Helpers {
 
                 WaypointProfile waypointProfile = null;
 
-                if (ProfileManager.WaypointProfiles.TryGetValue(profile.Waypoint, out waypointProfile)) {
+                if (ProfileManager.WaypointProfiles.TryGetValue(IdsReplacer.ReplaceId(behavior?.CurrentGrid?.Npc ?? null, profile.Waypoint), out waypointProfile)) {
 
                     if ((int)waypointProfile.Waypoint > 2) {
 

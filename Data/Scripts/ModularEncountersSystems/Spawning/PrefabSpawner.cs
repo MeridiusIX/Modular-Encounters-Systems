@@ -34,17 +34,17 @@ namespace ModularEncountersSystems.Spawning {
 				if (prefab.Valid) {
 
 					Prefabs.Add(prefab);
-				
+
 				} else {
-				
+
 					//TODO: Logger That Prefab isnt valid
-				
+
 				}
 
 			}
 
 			MES_SessionCore.UnloadActions += Unload;
-		
+
 		}
 
 		public static bool ProcessSpawning(SpawnGroupCollection spawnCollection, PathDetails path, EnvironmentEvaluation environment, string context) {
@@ -58,15 +58,15 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnPrefab(spawnCollection, path, environment, context);
 
 			} else {
-			
+
 				//Determine if Creatures are Keen or jTurp
-			
+
 			}
 
-			
+
 
 			return true;
-		
+
 		}
 
 		public static void SpawnVoxels(SpawnGroupCollection spawnCollection, PathDetails path) {
@@ -164,7 +164,7 @@ namespace ModularEncountersSystems.Spawning {
 						break;
 
 					}
-				
+
 				}
 
 				if (prefab == null) {
@@ -173,7 +173,7 @@ namespace ModularEncountersSystems.Spawning {
 					continue;
 
 				}
-				
+
 				//NPC Data
 				var npcData = new NpcData();
 				npcData.AssignAttributes(spawnCollection.SpawnGroup, path.SpawnType);
@@ -201,7 +201,9 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.EndCoords = path.GetPrefabEndCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathEndAltitude);
 				npcData.Forward = path.SpawnMatrix.Forward;
 				npcData.Up = path.SpawnMatrix.Up;
-				npcData.Context = context;
+                npcData.Context = context;
+
+                npcData.ParentId = spawnCollection.ParentId;
 
 				Vector3 linearVelocity = Vector3.Zero;
 				Vector3 angularVelocity = Vector3.Zero;
@@ -550,7 +552,7 @@ namespace ModularEncountersSystems.Spawning {
 		public static void Unload() {
 
 			Prefabs.Clear();
-		
+
 		}
 
 	}

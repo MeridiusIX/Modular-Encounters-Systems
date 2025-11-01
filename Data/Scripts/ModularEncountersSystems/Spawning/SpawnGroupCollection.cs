@@ -70,24 +70,28 @@ namespace ModularEncountersSystems.Spawning {
 
 				return Conditions.SkipGridSpawnChecks;
 
-			} 
-
-		}
-
-		public bool SkipVoxelSpawnChecks {
-			get {
-
-				if (IgnoreAllSafetyChecks)
-					return true;
-
-				if (Conditions == null)
-					return false;
-
-				return Conditions.SkipVoxelSpawnChecks;
-
 			}
 
 		}
+
+		public bool SkipVoxelSpawnChecks
+        {
+            get
+            {
+
+                if (IgnoreAllSafetyChecks)
+                    return true;
+
+                if (Conditions == null)
+                    return false;
+
+                return Conditions.SkipVoxelSpawnChecks;
+
+            }
+
+        }
+
+        public long ParentId;
 
 		public SpawnGroupCollection() {
 
@@ -125,7 +129,9 @@ namespace ModularEncountersSystems.Spawning {
 			AllowedZoneSpawns = new List<string>();
 			OnlyAllowedZoneSpawns = new List<string>();
 			AllowedZoneFactions = new List<string>();
-			RestrictedZoneSpawnGroups = new List<string>();
+            RestrictedZoneSpawnGroups = new List<string>();
+
+            ParentId = 0;
 
 		}
 
@@ -236,7 +242,7 @@ namespace ModularEncountersSystems.Spawning {
 					ConditionsIndex = 0;
 
 				}
-				
+
 				Conditions = SpawnGroup.SpawnConditionsProfiles[ConditionsIndex];
 				SelectPrefabIndexes();
 				return true;
@@ -261,9 +267,9 @@ namespace ModularEncountersSystems.Spawning {
 				for (int i = 0; i < spawnGroup.Prefabs.Count; i++) {
 
 					PrefabIndexes.Add(i);
-				
+
 				}
-			
+
 			}
 
 			if (conditions.PrefabSpawningMode == PrefabSpawnMode.Random) {
@@ -277,7 +283,7 @@ namespace ModularEncountersSystems.Spawning {
 					PrefabIndexes.Add(MathTools.RandomBetween(0, spawnGroup.Prefabs.Count));
 
 				}
-			
+
 			}
 
 			if (conditions.PrefabSpawningMode == PrefabSpawnMode.SelectedIndexes) {
@@ -369,14 +375,14 @@ namespace ModularEncountersSystems.Spawning {
 				return Faction;
 
 			if (SpawnGroup == null) {
-			
+
 				Faction = "Nobody";
 				SpawnLogger.Write("SpawnGroup Null: " + SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Faction [" + Faction + "] Selected For SpawnGroup " + SpawnGroup.SpawnGroupName, SpawnerDebugEnum.Spawning);
 				return Faction;
 
 			}
-			
+
 
 			List<string> factions = null;
 

@@ -104,6 +104,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoIgnore]
 		public Random Rnd;
 
+		[ProtoIgnore]
+		public long ParentId;
+
 		public SpawnProfile() {
 
 			UseSpawn = false;
@@ -140,7 +143,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			FailedAttemptsToIncreaseCount = 5;
 
-			ProcessAsAdminSpawn = false;
+            ProcessAsAdminSpawn = false;
+
+            ParentId = 0;
 
 			CurrentPositionMatrix = MatrixD.Identity;
 			CurrentFactionTag = "";

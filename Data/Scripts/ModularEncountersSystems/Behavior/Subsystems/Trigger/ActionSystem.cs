@@ -229,7 +229,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 							spawner.AssignInitialMatrix(RemoteControl.WorldMatrix);
 							spawner.CurrentFactionTag = spawner.ForceSameFactionOwnership && !string.IsNullOrWhiteSpace(_owner.Faction?.Tag) ? _owner.Faction.Tag : "";
 
-							spawner.SpawnGroups = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, spawner.SpawnGroups);
+                            spawner.SpawnGroups = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, spawner.SpawnGroups);
+
+                            spawner.ParentId = _behavior.RemoteControl.OwnerId;
 
 							BehaviorSpawnHelper.BehaviorSpawnRequest(spawner);
 

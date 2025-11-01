@@ -209,6 +209,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
         public bool CommandCheckRelationSenderReceiver;
 		public RelationTypeEnum CommandRelation;
+        public bool CommandCheckFromParent;
+        public bool CommandFromParent;
 
 		public bool UseFailCondition;
 
@@ -468,7 +470,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             CommandGravityMatches = false;
 
             CommandCheckRelationSenderReceiver = false;
-			CommandRelation = RelationTypeEnum.None;
+            CommandRelation = RelationTypeEnum.None;
+
+            CommandCheckFromParent = false;
+            CommandFromParent = false;
 
 			UseFailCondition = false;
 
@@ -677,6 +682,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CommandGravityMatches", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityMatches) },
 				{"CommandCheckRelationSenderReceiver", (s, o) => TagParse.TagBoolCheck(s, ref CommandCheckRelationSenderReceiver) },
 				{"CommandRelation", (s, o) => TagParse.TagTargetRelationEnumCheck(s, ref CommandRelation) },
+				{"CommandCheckFromParent", (s, o) => TagParse.TagBoolCheck(s, ref CommandCheckFromParent) },
+				{"CommandFromParent", (s, o) => TagParse.TagBoolCheck(s, ref CommandFromParent) },
 				{"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },
 				{"CheckForBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref CheckForBlocksOfType) },
 				{"BlocksOfType", (s, o) => TagParse.TagStringListCheck(s, ref BlocksOfType) },

@@ -14,6 +14,7 @@ using ModularEncountersSystems.Entities;
 using Sandbox.Game;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Missions;
+using ModularEncountersSystems.World;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -1516,6 +1517,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                     var relation = EntityEvaluator.GetRelationBetweenIdentities(command.CommandOwnerId, _behavior.RemoteControl.OwnerId);
 
                     if (relation == ConditionReference.CommandRelation)
+                        satisfiedConditions++;
+
+                }
+
+            }
+
+
+            if (ConditionReference.CommandCheckFromParent)
+            {
+
+                usedConditions++;
+
+                if (command != null)
+                {
+
+                    var parent = Equals(command.CommandOwnerId, _behavior?.CurrentGrid?.Npc.ParentId);
+
+                    if (parent == ConditionReference.CommandFromParent)
                         satisfiedConditions++;
 
                 }

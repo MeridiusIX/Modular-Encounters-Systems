@@ -516,6 +516,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoIgnore]
 		public IMyRemoteControl PrimaryRemoteControl;
 
+		[ProtoIgnore]
+		public long ParentId;
+
 		public NpcData() {
 
 			SetDefaults();
@@ -605,7 +608,9 @@ namespace ModularEncountersSystems.World {
 			SessionTime = MyAPIGateway.Session.GameDateTime;
 			SecondsSinceSessionLive = 0;
 			Grid = null;
-			KeenEconomyStation = BoolEnum.None;
+            KeenEconomyStation = BoolEnum.None;
+
+            ParentId = 0;
 
 		}
 

@@ -421,6 +421,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(46)]
 		public Dictionary<string, string> CustomStrings;
 
+		[ProtoMember(47)]
+		public Dictionary<string, int> CustomCountersVariables;
+
         //Non-Serialized Data
 
         [ProtoIgnore]
@@ -600,6 +603,7 @@ namespace ModularEncountersSystems.World {
 			EventInstanceId = -1;
 			CustomVariablesName = "";
 			CustomStrings = new Dictionary<string, string>();
+			CustomCountersVariables = new Dictionary<string, int>();
 
 			FriendlyName = "";
 			TerrainTypeName = "";
@@ -1169,6 +1173,7 @@ namespace ModularEncountersSystems.World {
             sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
 
             foreach (var item in CustomStrings) sb.Append(" - CustomString: " + item.Key + " (").Append(item.Value + ")").AppendLine();
+            foreach (var item in CustomCountersVariables) sb.Append(" - CustomCountersTargetVariable: " + item.Key + " (").Append(item.Value + ")").AppendLine();
 
 			return sb.ToString();
 

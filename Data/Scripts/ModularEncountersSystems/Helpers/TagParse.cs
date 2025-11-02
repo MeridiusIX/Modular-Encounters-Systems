@@ -1247,6 +1247,27 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagStringIntDictCheck(string tag, ref Dictionary<string, int> result) {
+
+            var tagSplit = ProcessTag(tag);
+
+
+			if (tagSplit.Length == 2) {
+
+                var array = tagSplit[1].Split(',');
+
+                if (!string.IsNullOrWhiteSpace(array[0]) && !string.IsNullOrWhiteSpace(array[1])) {
+
+                    int value = 0;
+                    if (Int32.TryParse(array[1], out value))
+
+                    result.Add(array[0], value);
+                }
+
+			}
+
+		}
+
 		public static void TagSwitchEnumCheck(string tag, ref SwitchEnum original) {
 
 			SwitchEnum result = SwitchEnum.Off;

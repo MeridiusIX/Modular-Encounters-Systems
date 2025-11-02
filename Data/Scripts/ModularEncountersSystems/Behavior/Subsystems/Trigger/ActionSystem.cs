@@ -1551,6 +1551,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//SetCustomCountersVariables
+			if (actions.SetCustomCountersVariables) {
+
+                BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Set Custom Counter Target Variable.", BehaviorDebugEnum.Action);
+
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+                npcdata.CustomCountersVariables = actions.CustomCountersVariables;
+
+			}
+
 			//Toggle Zone
 			if (actions.ZoneToggleActive)
 				ZoneManager.ToggleZones(actions.ZoneName, actions.ZoneToggleActiveMode);
@@ -2272,21 +2282,54 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			foreach (var variable in actions.SetBooleansTrue)
 				_settings.SetCustomBool(variable, true);
 
-			//SetBooleansFalse
-			foreach (var variable in actions.SetBooleansFalse)
-				_settings.SetCustomBool(variable, false);
+            //SetBooleansFalse
+            foreach (var variable in actions.SetBooleansFalse)
+                _settings.SetCustomBool(variable, false);
 
 
 
-			// IncreaseCounters
-			int increaseAmount = actions.IncreaseCountersUseCommandScore && command != null ? command.NPCScoreValue : Math.Abs(actions.IncreaseCountersAmount);
+            // IncreaseCounters
+            var customCountersVariables = _behavior?.CurrentGrid?.Npc.CustomCountersVariables;
+            int increaseAmount = 0;
+            if (actions.IncreaseCountersUseAmountVariable)
+            {
+                foreach (var counterVar in customCountersVariables)
+                {
+                    if (actions.IncreaseCountersAmountVariable == "{" + counterVar.Key + "}")
+                    {
+                        increaseAmount = actions.IncreaseCountersUseCommandScore && command != null ? command.NPCScoreValue : Math.Abs(counterVar.Value);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                increaseAmount = actions.IncreaseCountersUseCommandScore && command != null ? command.NPCScoreValue : Math.Abs(actions.IncreaseCountersAmount);
+            }
+
 			foreach (var variable in actions.IncreaseCounters)
-			{
-				_settings.SetCustomCounter(variable, increaseAmount);
+            {
+                _settings.SetCustomCounter(variable, increaseAmount);
 			}
 
 			// DecreaseCounters
-			int decreaseAmount = actions.DecreaseCountersUseCommandScore && command != null ? -command.NPCScoreValue : -Math.Abs(actions.DecreaseCountersAmount);
+            int decreaseAmount = 0;
+            if (actions.DecreaseCountersUseAmountVariable)
+            {
+                foreach (var counterVar in customCountersVariables)
+                {
+                    if (actions.DecreaseCountersAmountVariable == "{" + counterVar.Key + "}")
+                    {
+                        decreaseAmount = actions.DecreaseCountersUseCommandScore && command != null ? -command.NPCScoreValue : -Math.Abs(counterVar.Value);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                decreaseAmount = actions.DecreaseCountersUseCommandScore && command != null ? -command.NPCScoreValue : -Math.Abs(actions.DecreaseCountersAmount);
+            }
+
 			foreach (var variable in actions.DecreaseCounters)
 			{
 				_settings.SetCustomCounter(variable, decreaseAmount);
@@ -2298,13 +2341,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			foreach (var variable in actions.ResetCounters)
 			_settings.SetCustomCounter(variable, 0, true);
 
-			//SetCounters
-			if (actions.SetCounters.Count == actions.SetCountersValues.Count) {
+            //SetCounters
+            if (actions.SetCounters.Count == actions.SetCountersValues.Count)
+            {
 
-				for (int i = 0; i < actions.SetCounters.Count; i++)
-					_settings.SetCustomCounter(actions.SetCounters[i], actions.SetCountersValues[i], false, true);
+                for (int i = 0; i < actions.SetCounters.Count; i++)
+                    _settings.SetCustomCounter(actions.SetCounters[i], actions.SetCountersValues[i], false, true);
 
-			}
+            }
+            else if (actions.SetCounters.Count > 0 && actions.SetCountersUseAmountVariable)
+            {
+                foreach (var counterVar in customCountersVariables)
+                {
+                    if (actions.SetCountersAmountVariable == "{" + counterVar.Key + "}")
+                    {
+                        for (int i = 0; i < actions.SetCounters.Count; i++)
+                            _settings.SetCustomCounter(actions.SetCounters[i], counterVar.Value, false, true);
+                        break;
+                    }
+                }
+            }
 
 			//SetSandboxBooleansTrue
 			foreach (var variable in actions.SetSandboxBooleansTrue)

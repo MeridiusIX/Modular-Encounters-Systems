@@ -270,12 +270,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				usedConditions++;
 				bool failedCheck = false;
 
-				if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count) {
+				if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count || ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersVariables.Count) {
 
 
 
 					var selfScore = _behavior?.CurrentGrid?.Npc?.Score ?? 0;
-					var commandScore = command?.NPCScoreValue ?? 0;
+                    var commandScore = command?.NPCScoreValue ?? 0;
+
+					var customCountersVariables = _behavior?.CurrentGrid?.Npc.CustomCountersVariables;
 
 
 					for (int i = 0; i < ConditionReference.CustomCounters.Count; i++) {
@@ -288,8 +290,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								compareType = ConditionReference.CounterCompareTypes[i];
 
 
-							var counter = ConditionReference.CustomCounters[i];
-							var target = ConditionReference.CustomCountersTargets[i];
+                            var counter = ConditionReference.CustomCounters[i];
+
+                            var target = 0;
+                            if (ConditionReference.CustomCountersTargets.Count > 0)
+                            {
+                                target = ConditionReference.CustomCountersTargets[i];
+                            }
+                            else
+                            {
+                                foreach (var targetVar in customCountersVariables)
+                                {
+                                    if (ConditionReference.CustomCountersVariables[i] == "{" + targetVar.Key + "}")
+                                    {
+                                        target = targetVar.Value;
+                                        break;
+                                    }
+                                }
+                            }
 
 							if (ConditionReference.CustomCountersTargetOverrideSelfScore)
 								target = selfScore;
@@ -338,7 +356,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				} else {
 
-					BehaviorLogger.Write(ProfileSubtypeId + $": Counter Names ({ConditionReference.CustomCounters.Count}) and Targets List ({ConditionReference.CustomCountersTargets.Count}) Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
+					BehaviorLogger.Write(ProfileSubtypeId + $": Counter Names ({ConditionReference.CustomCounters.Count}) and Targets List ({ConditionReference.CustomCountersTargets.Count + ConditionReference.CustomCountersVariables.Count}) Counts Don't Match. Check Your Condition Profile. Note: CustomCountersVariables cannot be used at the same time as CustomCountersTargets", BehaviorDebugEnum.Condition);
 					failedCheck = true;
 
 				}

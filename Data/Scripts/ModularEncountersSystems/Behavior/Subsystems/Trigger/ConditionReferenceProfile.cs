@@ -38,6 +38,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckCustomCounters;
 		public List<string> CustomCounters;
 		public List<int> CustomCountersTargets;
+		public List<string> CustomCountersVariables;
 		public bool CustomCountersTargetOverrideSelfScore;
 		public bool CustomCountersTargetOverrideCommandScore;
 
@@ -295,6 +296,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckCustomCounters = false;
 			CustomCounters = new List<string>();
 			CustomCountersTargets = new List<int>();
+			CustomCountersVariables = new List<string>();
 			AllowAnyValidCounter = false;
 
 			CustomCountersTargetOverrideCommandScore = false;
@@ -548,6 +550,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckCustomCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomCounters) },
 				{"CustomCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomCounters) },
 				{"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, true ,ref CustomCountersTargets) },
+				{"CustomCountersVariables", (s, o) => TagParse.TagStringListCheck(s, ref CustomCountersVariables) },
 				{"CustomCountersTargetOverrideCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref CustomCountersTargetOverrideCommandScore) },
 				{"CustomCountersTargetOverrideSelfScore", (s, o) => TagParse.TagBoolCheck(s, ref CustomCountersTargetOverrideSelfScore) },
 				{"AllowAnyValidCounter", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyValidCounter) },

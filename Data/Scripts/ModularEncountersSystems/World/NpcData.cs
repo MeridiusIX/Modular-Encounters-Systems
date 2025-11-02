@@ -1173,7 +1173,7 @@ namespace ModularEncountersSystems.World {
             sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
 
             foreach (var item in CustomStrings) sb.Append(" - CustomString: " + item.Key + " (").Append(item.Value + ")").AppendLine();
-            foreach (var item in CustomCountersVariables) sb.Append(" - CustomCountersTargetVariable: " + item.Key + " (").Append(item.Value + ")").AppendLine();
+            foreach (var item in CustomCountersVariables) sb.Append(" - CustomCountersVariable: " + item.Key + " (").Append(item.Value + ")").AppendLine();
 
 			return sb.ToString();
 

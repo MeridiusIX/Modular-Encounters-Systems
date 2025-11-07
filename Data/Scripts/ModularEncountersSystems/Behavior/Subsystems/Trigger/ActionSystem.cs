@@ -232,6 +232,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                             spawner.SpawnGroups = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, spawner.SpawnGroups);
 
                             spawner.ParentId = _behavior.RemoteControl.OwnerId;
+                            spawner.ParentBehavior = _behavior;
 
 							BehaviorSpawnHelper.BehaviorSpawnRequest(spawner);
 

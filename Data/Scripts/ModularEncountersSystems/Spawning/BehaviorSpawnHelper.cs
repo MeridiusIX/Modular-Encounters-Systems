@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
@@ -56,66 +57,84 @@ namespace ModularEncountersSystems.Spawning {
 
 		private static void SpawningParallelChecks() {
 
-			if (_currentSpawn.SpawningType != SpawnTypeEnum.CustomSpawn) {
+            if (_currentSpawn.SpawningType != SpawnTypeEnum.CustomSpawn)
+            {
 
-				_spawnMatrix = _currentSpawn.CurrentPositionMatrix;
-				return;
+                _spawnMatrix = _currentSpawn.CurrentPositionMatrix;
+                return;
 
-			}
+            }
 
-			if (_currentSpawn.UseRelativeSpawnPosition) {
+            if (_currentSpawn.UseRelativeSpawnPosition)
+            {
+                var spawnCoords = Vector3D.Transform(_currentSpawn.RelativeSpawnOffset, _currentSpawn.CurrentPositionMatrix);
+                _spawnMatrix = MatrixD.CreateWorld(spawnCoords, _currentSpawn.CurrentPositionMatrix.Forward, _currentSpawn.CurrentPositionMatrix.Up);
 
-				var spawnCoords = Vector3D.Transform(_currentSpawn.RelativeSpawnOffset, _currentSpawn.CurrentPositionMatrix);
-				_spawnMatrix = MatrixD.CreateWorld(spawnCoords, _currentSpawn.CurrentPositionMatrix.Forward, _currentSpawn.CurrentPositionMatrix.Up);
+            }
+            else if (_currentSpawn.UseWaypoint)
+            {
+                var waypoint = EncounterWaypoint.CalculateWaypoint(_currentSpawn.ParentBehavior, IdsReplacer.ReplaceId(_currentSpawn.ParentBehavior?.CurrentGrid?.Npc ?? null, _currentSpawn.Waypoint));
+                var spawnCoords = waypoint.GetCoords();
+                //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> GPS:spawn_waypoint:" + waypoint.GetCoords().X + ":" + waypoint.GetCoords().Y + ":" + waypoint.GetCoords().Z + "::");
+                _spawnMatrix = MatrixD.CreateWorld(spawnCoords, _currentSpawn.CurrentPositionMatrix.Forward, _currentSpawn.CurrentPositionMatrix.Up);
+            }
+            else
+            {
 
-			} else {
+                var upDir = VectorHelper.GetPlanetUpDirection(_currentSpawn.CurrentPositionMatrix.Translation);
+                var playerList = new List<IMyPlayer>();
+                MyAPIGateway.Players.GetPlayers(playerList);
 
-				var upDir = VectorHelper.GetPlanetUpDirection(_currentSpawn.CurrentPositionMatrix.Translation);
-				var playerList = new List<IMyPlayer>();
-				MyAPIGateway.Players.GetPlayers(playerList);
+                for (int i = 0; i < 15; i++)
+                {
 
-				for (int i = 0; i < 15; i++) {
+                    if (upDir == Vector3D.Zero)
+                    {
 
-					if (upDir == Vector3D.Zero) {
+                        var spawnCoords = VectorHelper.RandomDirection() * VectorHelper.RandomDistance(_currentSpawn.MinDistance, _currentSpawn.MaxDistance) + _currentSpawn.CurrentPositionMatrix.Translation;
+                        var forwardDir = Vector3D.Normalize(spawnCoords - _currentSpawn.CurrentPositionMatrix.Translation);
+                        var upPerpDir = Vector3D.CalculatePerpendicularVector(forwardDir);
+                        _spawnMatrix = MatrixD.CreateWorld(spawnCoords, forwardDir, upPerpDir);
 
-						var spawnCoords = VectorHelper.RandomDirection() * VectorHelper.RandomDistance(_currentSpawn.MinDistance, _currentSpawn.MaxDistance) + _currentSpawn.CurrentPositionMatrix.Translation;
-						var forwardDir = Vector3D.Normalize(spawnCoords - _currentSpawn.CurrentPositionMatrix.Translation);
-						var upPerpDir = Vector3D.CalculatePerpendicularVector(forwardDir);
-						_spawnMatrix = MatrixD.CreateWorld(spawnCoords, forwardDir, upPerpDir);
+                    }
+                    else
+                    {
 
-					} else {
+                        _spawnMatrix = VectorHelper.GetPlanetRandomSpawnMatrix(_currentSpawn.CurrentPositionMatrix.Translation, _currentSpawn.MinDistance, _currentSpawn.MaxDistance, _currentSpawn.MinAltitude, _currentSpawn.MaxAltitude, _currentSpawn.InheritNpcAltitude);
 
-						_spawnMatrix = VectorHelper.GetPlanetRandomSpawnMatrix(_currentSpawn.CurrentPositionMatrix.Translation, _currentSpawn.MinDistance, _currentSpawn.MaxDistance, _currentSpawn.MinAltitude, _currentSpawn.MaxAltitude, _currentSpawn.InheritNpcAltitude);
+                    }
 
-					}
+                    foreach (var player in playerList)
+                    {
 
-					foreach (var player in playerList) {
+                        if (player.IsBot || player.Controller?.ControlledEntity?.Entity == null)
+                        {
 
-						if (player.IsBot || player.Controller?.ControlledEntity?.Entity == null) {
+                            continue;
 
-							continue;
+                        }
 
-						}
+                        if (Vector3D.Distance(_spawnMatrix.Translation, player.GetPosition()) < 100)
+                        {
 
-						if (Vector3D.Distance(_spawnMatrix.Translation, player.GetPosition()) < 100) {
+                            SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Player Too Close To Possible Spawn Coords. Attempt " + (i + 1).ToString(), SpawnerDebugEnum.Spawning);
+                            _spawnMatrix = MatrixD.Identity;
+                            break;
 
-							SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Player Too Close To Possible Spawn Coords. Attempt " + (i + 1).ToString(), SpawnerDebugEnum.Spawning);
-							_spawnMatrix = MatrixD.Identity;
-							break;
+                        }
 
-						}
+                    }
 
-					}
+                    if (_spawnMatrix != MatrixD.Identity)
+                    {
 
-					if (_spawnMatrix != MatrixD.Identity) {
+                        break;
 
-						break;
+                    }
 
-					}
+                }
 
-				}
-
-			}
+            }
 
 		}
 

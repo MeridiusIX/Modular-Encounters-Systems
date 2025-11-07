@@ -95,6 +95,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(28)]
 		public bool ProcessAsAdminSpawn;
 
+		[ProtoMember(29)]
+		public bool UseWaypoint;
+
+		[ProtoMember(30)]
+		public string Waypoint;
+
 		[ProtoIgnore]
 		public MatrixD CurrentPositionMatrix;
 
@@ -106,6 +112,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		[ProtoIgnore]
 		public long ParentId;
+
+		[ProtoIgnore]
+		public IBehavior ParentBehavior;
 
 		public SpawnProfile() {
 
@@ -150,6 +159,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CurrentPositionMatrix = MatrixD.Identity;
 			CurrentFactionTag = "";
 			Rnd = new Random();
+
+            UseWaypoint = false;
+			Waypoint = "";
 
 		}
 
@@ -417,6 +429,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[ProcessAsAdminSpawn:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref ProcessAsAdminSpawn);
+
+					}
+
+					//UseWaypoint
+					if (tag.Contains("[UseWaypoint:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref UseWaypoint);
+
+					}
+
+					//Waypoint
+					if (tag.Contains("[Waypoint:") == true){
+
+						TagParse.TagStringCheck(tag, ref Waypoint);
 
 					}
 

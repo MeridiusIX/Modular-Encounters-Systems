@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using Sandbox.Common.ObjectBuilders;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -124,7 +125,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				SpawnLogger.Write("StoreProfile with ID [" + ProfileSubtypeId + "] Missing File Source. Cannot Link StoreItems.", SpawnerDebugEnum.Error);
 				return;
-			
+
 			}
 
 			StoreItemsContainer _storeContainer = ProfileManager.GetStoreItemContainer(FileSource);
@@ -162,7 +163,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 					RequiredOrderItems.Add(item);
 
 			}
-		
+
 		}
 
 		public void InitTags(string customData) {
@@ -268,7 +269,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				_tempFirstItem = _tempItems[i];
 
 				for (int j = _tempItems.Count - 1; j >= 0; j--) {
-				
+
 					_tempSecondItem = _tempItems[j];
 
 					if (_tempFirstItem.Amount == 0)
@@ -346,13 +347,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 						break;
 
 					}
-				
+
 				}
-			
+
 			}
 
 			var newItem = CreateStoreItem(block, item, offer ? StoreItemTypes.Offer : StoreItemTypes.Order, (int)additionalAdd);
-			
+
 
 			if (newItem.PricePerUnit <= 0) {
 
@@ -382,16 +383,16 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			BehaviorLogger.Write(" - Item Added", BehaviorDebugEnum.Action);
 
 			if (!offer) {
-				
+
 				var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(block.OwnerId);
 
 				if (faction != null)
 					faction.RequestChangeBalance(newItem.PricePerUnit * (newItem.Amount - newItem.RemovedAmount));
-				
+
 				//MyAPIGateway.Players.RequestChangeBalance(block.OwnerId, (newItem.PricePerUnit * (newItem.Amount - newItem.RemovedAmount)));
 
 			}
-				
+
 
 		}
 
@@ -402,11 +403,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			if (item.ItemType == StoreProfileItemTypes.Prefab) {
 
 				return block.CreateStoreItem(item.ItemSubtypeId, 1, (int)item.GetPrice(offer: offer), item.PCU);
-			
+
 			}
 
 			if (item.ItemType == StoreProfileItemTypes.Oxygen) {
-			
+
 				return block.CreateStoreItem(item.GetAmount(types == StoreItemTypes.Offer) + extra, (int)item.GetPrice(offer: offer), StoreItemTypes.Offer, ItemTypes.Oxygen);
 
 			}
@@ -424,12 +425,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				if (id.HasValue) {
 
-					
+
 					unique.Add(id.Value);
 					return block.CreateStoreItem(id.Value, item.GetAmount(types == StoreItemTypes.Offer) + extra, (int)item.GetPrice(offer: offer, overrideId: id), types);
 
 				}
-					
+
 
 			}
 
@@ -446,14 +447,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 					return block.CreateStoreItem(id.Value, item.GetAmount(types == StoreItemTypes.Offer) + extra, (int)item.GetPrice(offer: offer, overrideId: id), types);
 
 				}
-					
+
 
 			}
 
 			if (item.ItemType == StoreProfileItemTypes.None) {
 
 				return null;
-			
+
 			}
 
 			return block.CreateStoreItem(item.GetItemId(), item.GetAmount(types == StoreItemTypes.Offer) + extra, (int)item.GetPrice(offer: offer), types);
@@ -517,7 +518,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 					LimitAmountAndValue(item, _storeLimits.MaxOreAmount, _storeLimits.MaxOreValue);
 					return;
-				
+
 				}
 
 				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_Ingot)) {
@@ -555,6 +556,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				if (item.Item.Value.TypeId == typeof(MyObjectBuilder_SeedItem)) {
+
+					LimitAmountAndValue(item, _storeLimits.MaxSeedAmount, _storeLimits.MaxSeedValue);
+					return;
+
+				}
+
 			}
 
 			if (item.ItemType == ItemTypes.Hydrogen || item.ItemType == ItemTypes.Oxygen) {
@@ -583,7 +591,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 					item.Amount -= difference; //was += previously. hopefully that was a derp
 
 				}
-			
+
 			}
 
 			if (maxValue > -1) {
@@ -617,10 +625,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			return null;
 
-			
-			
-			
-			
+
+
+
+
 
 		}
 
@@ -646,12 +654,12 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			return null;
 
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
 
 		}
 
@@ -659,7 +667,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			list.Clear();
 
-			for (int i = 0; i < itemCount; i++) 
+			for (int i = 0; i < itemCount; i++)
 				list.Add(i);
 
 			int itemCountTracker = itemCount;
@@ -669,7 +677,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				list.RemoveAt(MathTools.RandomBetween(0, list.Count));
 				itemCountTracker--;
-			
+
 			}
 
 		}

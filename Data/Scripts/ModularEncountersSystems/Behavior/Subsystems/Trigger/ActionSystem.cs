@@ -73,7 +73,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//Debug Message
 			if (!string.IsNullOrWhiteSpace(actions.DebugMessage)) {
 
-				MyVisualScriptLogicProvider.SendChatMessage(actions.DebugMessage, RemoteControl.SlimBlock.CubeGrid.CustomName);
+				MyVisualScriptLogicProvider.SendChatMessage(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.DebugMessage), RemoteControl.SlimBlock.CubeGrid.CustomName);
 
 
 				//MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);

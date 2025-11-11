@@ -2244,6 +2244,47 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             }
 
 
+            if (actions.AddGPSToPlayers)
+            {
+
+                var defaultDescription = "No description available";
+                var defaultColor = new Color(255, 178, 96); //  color as default
+
+                foreach (var player in PlayerManager.Players)
+                {
+                    if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId, actions.AddGPSPlayerOverridePositionInPlayerCondition, _behavior.RemoteControl.GetPosition()))
+                    {
+                        for (int i = 0; i < actions.GPSNames.Count; i++)
+                        {
+
+                            // If GPSDescriptions is empty or index is out of range, use the default description
+                            var description = defaultDescription;
+
+
+                            // If GPSColors is empty or index is out of range, use the default color
+                            var color = defaultColor;
+
+
+                            if (actions.UseGPSObjective)
+                            {
+                                MyVisualScriptLogicProvider.AddGPSObjective(actions.GPSNames[i], description, actions.GPSVector3Ds[i], color, 0, player.Player.IdentityId);
+                            }
+                            else
+                            {
+                                MyVisualScriptLogicProvider.AddGPS(actions.GPSNames[i], description, actions.GPSVector3Ds[i], color, 0, player.Player.IdentityId);
+
+                                // To do: fix issue where GPS is sometimes not being added.  We can try doing something manual, but why would you want to do that work when the whole gps system sucks. -CPT
+
+                                //var gps = MyAPIGateway.Session.GPS.Create(actions.GPSNames[i], description, actions.GPSVector3Ds[i], true);
+                                //gps.GPSColor = color;
+                                //MyAPIGateway.Session.GPS.AddGps(player.Player.IdentityId, gps);
+
+                            }
+                        }
+                    }
+                }
+            }
+
 
 
             if (actions.ResetCooldownTimeOfEvents)

@@ -471,8 +471,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
         public Vector3D TeleportPlayerCoords;
 		public bool TeleportPlayerOverridePositionInPlayerCondition;
 
+        public bool AddGPSToPlayers;
+        public List<string> AddGPSPlayerConditionIds;
+        public bool UseGPSObjective;
+        public List<string> GPSNames;
+        public List<string> GPSDescriptions;
+        public List<Vector3D> GPSVector3Ds;
+        public List<Vector3D> GPSColors;
+        public bool AddGPSPlayerOverridePositionInPlayerCondition;
 
-		public bool ProcessStaticEncountersAtLocation;
+
+        public bool ProcessStaticEncountersAtLocation;
 		public Vector3D ProcessStaticEncountersLocation;
 
         public bool PlayDialogueCue;
@@ -970,7 +979,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             TeleportPlayerCoords = new Vector3D();
 			TeleportPlayerOverridePositionInPlayerCondition = false;
 
-			ProcessStaticEncountersAtLocation = false;
+            AddGPSToPlayers = false;
+            UseGPSObjective = false;
+            GPSNames = new List<string>();
+            GPSDescriptions = new List<string>();
+            GPSVector3Ds = new List<Vector3D>();
+            GPSColors = new List<Vector3D>();
+            AddGPSPlayerConditionIds = new List<string>();
+            AddGPSPlayerOverridePositionInPlayerCondition = false;
+
+
+            ProcessStaticEncountersAtLocation = false;
 			ProcessStaticEncountersLocation = new Vector3D(0, 0, 0);
 
             PlayDialogueCue = false;
@@ -1347,6 +1366,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"TeleportPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref TeleportPlayerConditionIds) },
                 {"TeleportPlayerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TeleportPlayerCoords) },
                 {"TeleportPlayerOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayerOverridePositionInPlayerCondition) },
+
+                {"AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
+                {"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
+                {"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
+                {"GPSDescriptions", (s, o) => TagParse.TagStringListCheck(s, ref GPSDescriptions) },
+                {"GPSCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
+                {"GPSVector3Ds", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
+
+                {"GPSColors", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSColors) },
+                {"AddGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddGPSPlayerConditionIds) },
+                {"AddGPSPlayerOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSPlayerOverridePositionInPlayerCondition) },
+
+
+
                 {"ProcessStaticEncountersAtLocation", (s, o) => TagParse.TagBoolCheck(s, ref ProcessStaticEncountersAtLocation) },
                 {"ProcessStaticEncountersLocation", (s, o) => TagParse.TagVector3DCheck(s, ref ProcessStaticEncountersLocation) },
 

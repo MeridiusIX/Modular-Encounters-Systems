@@ -1548,7 +1548,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Set Custom Strings.", BehaviorDebugEnum.Action);
 
                 var npcdata = _behavior?.CurrentGrid?.Npc;
-                npcdata.CustomStrings = actions.CustomStrings;
+                foreach (var customvar in actions.CustomStrings)
+                {
+                    npcdata.CustomStrings[customvar.Key] = customvar.Value;
+                }
 
 			}
 
@@ -1558,7 +1561,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Set Custom Counter Target Variable.", BehaviorDebugEnum.Action);
 
                 var npcdata = _behavior?.CurrentGrid?.Npc;
-                npcdata.CustomCountersVariables = actions.CustomCountersVariables;
+                foreach (var customvar in actions.CustomCountersVariables)
+                {
+                    npcdata.CustomCountersVariables[customvar.Key] = customvar.Value;
+                }
 
 			}
 

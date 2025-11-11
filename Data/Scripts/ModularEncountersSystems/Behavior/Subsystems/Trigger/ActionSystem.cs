@@ -1987,19 +1987,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					StoreProfile profile = null;
 
-					if (!ProfileManager.StoreProfiles.TryGetValue(actions.StoreProfiles[i], out profile)) {
+					if (!ProfileManager.StoreProfiles.TryGetValue(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.StoreProfiles[i]), out profile)) {
 
-						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Store Profile With Name: " + actions.StoreProfiles[i], BehaviorDebugEnum.Action);
+						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Store Profile With Name: " + IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.StoreProfiles[i]), BehaviorDebugEnum.Action);
 						continue;
 
 					}
 
-					foreach (var store in _behavior.CurrentGrid.Stores) {
+                    foreach (var store in _behavior.CurrentGrid.Stores) {
 
-						if (!store.ActiveEntity() || store.Block.CustomName != actions.StoreBlocks[i] || store.Block.OwnerId != _behavior.RemoteControl.OwnerId)
+						if (!store.ActiveEntity() || store.Block.CustomName != IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.StoreBlocks[i]) || store.Block.OwnerId != _behavior.RemoteControl.OwnerId)
 							continue;
 
-						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Store Profile With Name: " + actions.StoreProfiles[i], BehaviorDebugEnum.Action);
+						BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Store Profile With Name: " + IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.StoreProfiles[i]), BehaviorDebugEnum.Action);
 						profile.ApplyProfileToBlock(store.Block as IMyStoreBlock, actions.ClearStoreContentsFirst);
 
 					}

@@ -123,11 +123,20 @@ namespace ModularEncountersSystems.Missions
         public bool Init(BlockEntity sourceContractBlock)
         {
 
+
+
             // Remove mission from all contract blocks
             if (this.Profile.Exclusive && InGameContractManager.IsAContractWithMissionSubtypeIdActive(this.ProfileSubtypeId))
             {
                 return false;
             }
+
+
+            SetupEventCondition();
+            if (!RunEventConditions())
+                return false;
+
+
 
 
             ReplaceKeys = new List<string>();
@@ -280,6 +289,14 @@ namespace ModularEncountersSystems.Missions
             }
 
 
+
+
+            return AddMissionToBlock();
+        }
+
+
+        public void SetupEventCondition()
+        {
             LeadPlayerConditions = new List<PlayerCondition>();
             PlayerConditions = new List<PlayerCondition>();
 
@@ -331,13 +348,7 @@ namespace ModularEncountersSystems.Missions
             }
 
 
-            if (!RunEventConditions())
-                return false;
-
-
-            return AddMissionToBlock();
         }
-
 
         public bool RunEventConditions()
         {

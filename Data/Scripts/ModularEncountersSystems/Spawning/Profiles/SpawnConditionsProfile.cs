@@ -90,7 +90,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool MustSpawnUnderwater;
 		public double MinWaterDepth;
 
-		public bool StaticEncounter;
+		public float MinWaterCoverage; //[0-1]
+		public float MaxWaterCoverage;//[0-1]
+
+
+        public bool StaticEncounter;
 		public bool UniqueEncounter;
 
 		public Vector3D TriggerCoords;
@@ -430,7 +434,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			MustSpawnUnderwater = false;
 			MinWaterDepth = 0;
 
-			StaticEncounter = false;
+			MinWaterCoverage = -1;
+			MaxWaterCoverage = -1;
+
+            StaticEncounter = false;
 			UniqueEncounter = false;
 
 			TriggerCoords = Vector3D.Zero;
@@ -749,7 +756,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"CanSpawnUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref CanSpawnUnderwater) },
 				{"MustSpawnUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref MustSpawnUnderwater) },
 				{"MinWaterDepth", (s, o) => TagParse.TagDoubleCheck(s, ref MinWaterDepth) },
-				{"StaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref StaticEncounter) },
+                {"MinWaterCoverage", (s, o) => TagParse.TagFloatCheck(s, ref MinWaterCoverage) },
+                {"MaxWaterCoverage", (s, o) => TagParse.TagFloatCheck(s, ref MaxWaterCoverage) },
+                {"StaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref StaticEncounter) },
 				{"UniqueEncounter", (s, o) => TagParse.TagBoolCheck(s, ref UniqueEncounter) },
 				{"TriggerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TriggerCoords) },
 				{"TriggerRadius", (s, o) => TagParse.TagDoubleCheck(s, ref TriggerRadius) },

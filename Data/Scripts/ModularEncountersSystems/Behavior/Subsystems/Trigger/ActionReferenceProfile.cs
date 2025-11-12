@@ -249,7 +249,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> EnableBlockNames;
 		public List<SwitchEnum> EnableBlockStates;
 
-		public bool ChangeAutopilotProfile;
+        public bool HighlightBlocks;
+        public List<string> HighlightBlockNames;
+        public List<bool> HighlightBlockModes;
+
+        public bool ChangeAutopilotProfile;
 		public AutoPilotDataMode AutopilotProfile;
 
 		public bool CreateRandomLightning;
@@ -766,7 +770,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			EnableBlockNames = new List<string>();
 			EnableBlockStates = new List<SwitchEnum>();
 
-			ChangeAutopilotProfile = false;
+            HighlightBlocks = false;
+            HighlightBlockNames = new List<string>();
+            HighlightBlockModes = new List<bool>();
+
+            ChangeAutopilotProfile = false;
 			AutopilotProfile = AutoPilotDataMode.Primary;
 
 			OverwriteAutopilotProfile = false;
@@ -1194,6 +1202,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"EnableBlocks", (s, o) => TagParse.TagBoolCheck(s, ref EnableBlocks) },
                 {"EnableBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableBlockNames) },
                 {"EnableBlockStates", (s, o) => TagParse.TagSwitchEnumCheck(s, ref EnableBlockStates) },
+                {"HighlightBlocks", (s, o) => TagParse.TagBoolCheck(s, ref HighlightBlocks) },
+                {"HighlightBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref HighlightBlockNames) },
+                {"HighlightBlockModes", (s, o) => TagParse.TagBoolListCheck(s, ref HighlightBlockModes) },
                 {"ChangeAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotProfile) },
                 {"AutopilotProfile", (s, o) => TagParse.TagAutoPilotProfileModeCheck(s, ref AutopilotProfile) },
                 {"Ramming", (s, o) => TagParse.TagBoolCheck(s, ref Ramming) },

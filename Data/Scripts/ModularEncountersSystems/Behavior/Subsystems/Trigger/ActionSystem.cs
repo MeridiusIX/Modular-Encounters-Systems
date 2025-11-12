@@ -626,7 +626,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					_behavior.AutoPilot.State.CargoShipWaypoints[0].Valid = false;
 
 				}
-
+				
 			}
 
 			//AssignEscortFromCommand
@@ -1335,8 +1335,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			//BuildProjectedBlocks
-			if (actions.BuildProjectedBlocks) {
+            //Enable Blocks
+            if (actions.HighlightBlocks)
+            {
+
+                _behavior.Grid.HighlightBlocks(actions.HighlightBlockNames, actions.HighlightBlockModes);
+
+            }
+
+
+            
+
+            //BuildProjectedBlocks
+            if (actions.BuildProjectedBlocks) {
 
 				_behavior.Grid.BuildProjectedBlocks(actions.MaxProjectedBlocksToBuild);
 

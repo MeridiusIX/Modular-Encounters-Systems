@@ -465,7 +465,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				/*
+                /*
 				if (conditions.MinWaterDepth > 0 && environment.NearestPlanet.WaterDepthAtPosition(environment.SurfaceCoords) < conditions.MinWaterDepth) {
 
 					failReason = "   - Water Depth Check Failed";
@@ -474,7 +474,26 @@ namespace ModularEncountersSystems.Spawning {
 				}
 				*/
 
-			}
+                if (environment.WaterInSurroundingAreaRatio < (float)conditions.MinWaterCoverage && (float)conditions.MinWaterCoverage > 0)
+                {
+
+                    failReason = "   - Minimum WaterInSurroundingAreaRatio Check Failed";
+                    return false;
+
+                }
+
+                if (environment.WaterInSurroundingAreaRatio > (float)conditions.MaxWaterCoverage && (float)conditions.MaxWaterCoverage > 0)
+                {
+
+                    failReason = "   - Maximum WaterInSurroundingAreaRatio Check Failed";
+                    return false;
+
+                }
+
+
+
+
+            }
 
 			return true;
 

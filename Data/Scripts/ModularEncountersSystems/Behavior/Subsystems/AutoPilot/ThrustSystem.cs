@@ -115,7 +115,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					if(direction == Direction.Up || direction == Direction.None)
 						if (thrust.ActiveDirection != Base6Directions.Direction.Up)
 							continue;
-					
+
 
 					if (direction == Direction.Backward)
 						if (thrust.ActiveDirection != Base6Directions.Direction.Backward)
@@ -292,7 +292,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 						upDistance = Vector3D.Dot(_currentWaypoint - _myPosition, _upDirection);
 						upVelocityAmt = Vector3D.Dot(velocity, RefBlockMatrixRotation.Up);
 						invertedDir = false;
-						
+
 
 					} else {
 
@@ -322,7 +322,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 								if (!invertedDir || (invertedDir && MyAltitude > Data.IdealPlanetAltitude * 1.33))
 									limitSpeed = false;
-							
+
 							}
 
 							if (limitSpeed) {
@@ -396,7 +396,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 						_debugThrustUpMode = "Drifting At Desired Speed";
 
 					}
-	
+
 				} else {
 
 					_debugThrustUpMode = "At Desired Altitude Range";
@@ -404,7 +404,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				}
 
-				
+
 
 			} else {
 
@@ -423,7 +423,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				if (this.YawAngleDifference <= this.Data.AngleAllowedForForwardThrust) {
 
-					
+
 					var stoppingDist = CalculateStoppingDistance(velocity, _forwardDir, Base6Directions.Direction.Backward);
 					var forwardDistance = Vector3D.Dot(_currentWaypoint - _myPosition, _forwardDir);
 					bool skipCheck = false;
@@ -471,7 +471,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 						_thrustToApply.SetZ(true, false, 0.0001f, _orientation);
 
 					}
-						
+
 				} else {
 
 					_thrustToApply.SetZ(false, false, 0, _orientation);
@@ -501,7 +501,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				var gravLen = gravity.Length();
 				accel += Vector3D.Dot(Vector3D.Normalize(gravity), travelDir) * gravLen;
-			
+
 			}
 
 			if (accel <= 0)
@@ -659,7 +659,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 					}
 
-					if (UpDirectionFromPlanet != Vector3D.Zero && MyAltitude < Data.MinimumPlanetAltitude) {
+					if (UpDirectionFromPlanet != Vector3D.Zero && MyAltitude < (State.MinAltitudeOverride != -1 ? State.MinAltitudeOverride : Data.MinimumPlanetAltitude)) {
 
 						var thrustDir = VectorHelper.GetThrustDirectionsAwayFromDirection(Collision.Matrix, -UpDirectionFromPlanet);
 
@@ -838,7 +838,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				result += thrust.GetEffectiveThrust(transformedDirection);
 
 			return result;
-		
+
 		}
 
 		//Parallel

@@ -92,6 +92,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		[ProtoMember(21)]
 		public int HeadingTowardsNode;
 
+		[ProtoMember(22)]
+		public int MinAltitudeOverride;
+
 
         public AutoPilotState() {
 
@@ -126,7 +129,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
             NodePositions = new List<Vector3D>();
 			HeadingTowardsNode =0;
 
-
+			MinAltitudeOverride = -1;
 
     }
 

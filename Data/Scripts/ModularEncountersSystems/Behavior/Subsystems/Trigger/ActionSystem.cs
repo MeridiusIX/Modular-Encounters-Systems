@@ -208,6 +208,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//ChangeAutopilotMinAltitude
+			if (actions.ChangeAutopilotMinAltitude == true) {
+
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Changing AutoPilot MinAltitude To: " + actions.NewAutopilotMinAltitude.ToString(), BehaviorDebugEnum.Action);
+				_autopilot.State.MinAltitudeOverride = actions.NewAutopilotMinAltitude;
+				var blockList = BlockCollectionHelper.GetGridControllers(RemoteControl.SlimBlock.CubeGrid);
+
+				foreach (var block in blockList) {
+
+					var tBlock = block as IMyRemoteControl;
+
+					if (tBlock != null) {
+
+						tBlock.SpeedLimit = actions.NewAutopilotMinAltitude >= 0 ? actions.NewAutopilotMinAltitude : 100;
+
+					}
+
+				}
+
+			}
+
 			//SpawnReinforcements
 			if (actions.SpawnEncounter == true) {
 

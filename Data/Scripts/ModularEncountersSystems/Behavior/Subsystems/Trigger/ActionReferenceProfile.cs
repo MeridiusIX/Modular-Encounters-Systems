@@ -23,6 +23,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool ChangeAutopilotSpeed;
 		public float NewAutopilotSpeed;
+		public bool ChangeAutopilotMinAltitude;
+		public int NewAutopilotMinAltitude;
 
 		public bool SpawnEncounter;
 
@@ -533,6 +535,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ChangeAutopilotSpeed = false;
 			NewAutopilotSpeed = 0;
 
+			ChangeAutopilotMinAltitude = false;
+			NewAutopilotMinAltitude = 0;
+
 			SpawnEncounter = false;
 
 			SelfDestruct = false;
@@ -1035,6 +1040,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"Strafe", (s, o) => TagParse.TagBoolCheck(s, ref Strafe) },
                 {"ChangeAutopilotSpeed", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotSpeed) },
                 {"NewAutopilotSpeed", (s, o) => TagParse.TagFloatCheck(s, ref NewAutopilotSpeed) },
+                {"ChangeAutopilotMinAltitude", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotMinAltitude) },
+                {"NewAutopilotMinAltitude", (s, o) => TagParse.TagIntCheck(s, ref NewAutopilotMinAltitude) },
                 {"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
                 {"SelfDestruct", (s, o) => TagParse.TagBoolCheck(s, ref SelfDestruct) },
                 {"Retreat", (s, o) => TagParse.TagBoolCheck(s, ref Retreat) },

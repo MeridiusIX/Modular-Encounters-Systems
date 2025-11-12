@@ -396,8 +396,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				//InsideZone
-				if (trigger.Type == "InsideZone") {
+                //InsideZone
+                if (trigger.Type == "Position")
+                {
+
+                    trigger.ActivateTrigger(Position);
+                    continue;
+
+                }
+
+                //InsideZone
+                if (trigger.Type == "InsideZone") {
 
 					trigger.ActivateTrigger(InsideZone);
 					continue;

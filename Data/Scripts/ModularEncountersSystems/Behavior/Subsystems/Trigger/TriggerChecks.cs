@@ -277,8 +277,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		//InsideZone
-		public bool InsideZone(TriggerProfile trigger) {
+        //Position
+        public bool Position(TriggerProfile trigger)
+        {
+
+            var dist = Vector3D.Distance(trigger.GlobalPosition, _behavior.RemoteControl.GetPosition());
+            return dist < trigger.TargetDistance;
+
+        }
+
+        //InsideZone
+        public bool InsideZone(TriggerProfile trigger) {
 
 			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName);
 

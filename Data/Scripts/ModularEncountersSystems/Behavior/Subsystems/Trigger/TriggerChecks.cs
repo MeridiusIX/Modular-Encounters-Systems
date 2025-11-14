@@ -70,6 +70,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+        //WaypointNear
+        public bool CheckWaypointNear(TriggerProfile trigger)
+        {
+
+            return _behavior.AutoPilot.State.CurrentWaypoint != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CurrentWaypoint) < trigger.TargetDistance;
+
+        }
+
+		//WaypointFar
+		public bool CheckWaypointFar(TriggerProfile trigger) {
+
+			return _behavior.AutoPilot.State.CurrentWaypoint != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CurrentWaypoint) > trigger.TargetDistance;
+
+		}
+
 		//TurretTarget
 		public bool CheckTurretTarget(TriggerProfile trigger) {
 

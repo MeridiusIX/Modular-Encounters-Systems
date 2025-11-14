@@ -611,6 +611,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			//AddCustomCountersVariablesFromCommand
+			if (actions.AddCustomCountersVariablesFromCommand && command?.CustomCountersVariables != null) {
+
+				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Custom Counters Variables From Command", BehaviorDebugEnum.Action);
+                var npcdata = _behavior?.CurrentGrid?.Npc;
+                foreach (var customVars in command.CustomCountersVariables)
+                {
+                    npcdata.CustomCountersVariables[customVars.Key] = customVars.Value;
+                }
+
+			}
+
 			//CancelWaitingAtWaypoint
 			if (actions.CancelWaitingAtWaypoint) {
 
@@ -626,7 +638,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					_behavior.AutoPilot.State.CargoShipWaypoints[0].Valid = false;
 
 				}
-				
+
 			}
 
 			//AssignEscortFromCommand
@@ -1344,7 +1356,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             }
 
 
-            
+
 
             //BuildProjectedBlocks
             if (actions.BuildProjectedBlocks) {

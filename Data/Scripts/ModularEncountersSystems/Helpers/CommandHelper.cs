@@ -5,6 +5,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Tasks;
 using Sandbox.ModAPI;
 using System;
+using System.Collections.Generic;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
@@ -91,6 +92,7 @@ namespace ModularEncountersSystems.Helpers {
         public int DelayTicks;
 
         public bool FromEvent;
+        public Dictionary<string, int> CustomCountersVariables;
 
         public Command() {
 
@@ -136,6 +138,8 @@ namespace ModularEncountersSystems.Helpers {
 
             CheckRelationSenderReceiver = false;
             Relation = RelationTypeEnum.None;
+
+            CustomCountersVariables = new Dictionary<string, int>();
 
         }
         public void PrepareEventCommand(CommandProfile profile, Vector3D position, string overrideCommandCode = "",double overrideRadius = -1, long commandOwnerId =0)
@@ -184,7 +188,6 @@ namespace ModularEncountersSystems.Helpers {
             this.MatchSenderReceiverOwners = profile.MatchSenderReceiverOwners;
             this.CheckRelationSenderReceiver = profile.CheckRelationSenderReceiver;
             this.Relation = profile.Relation;
-
 
 
 
@@ -255,9 +258,11 @@ namespace ModularEncountersSystems.Helpers {
 
             TransmissionType = profile.TransmissionType;
 
-            if (receivedCommand != null) {
+            if (receivedCommand != null)
+            {
 
-                if (profile.ReturnToSender) {
+                if (profile.ReturnToSender)
+                {
 
                     this.SingleRecipient = true;
                     this.Recipient = receivedCommand.RemoteControl.EntityId;
@@ -265,6 +270,22 @@ namespace ModularEncountersSystems.Helpers {
                 }
 
             }
+            if (profile.CustomCountersVariables != null)
+                this.CustomCountersVariables = profile.CustomCountersVariables;
+
+            if (profile.CustomCountersVariablesReferences != null)
+            {
+                VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>> 1");
+                foreach (var customVarRef in profile.CustomCountersVariablesReferences) {
+                    VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>> 2");
+                    if (behavior?.CurrentGrid?.Npc != null && behavior.CurrentGrid.Npc.CustomCountersVariables.ContainsKey(customVarRef.Value))
+                    {
+                        VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>> 3");
+                        this.CustomCountersVariables[customVarRef.Key] = behavior.CurrentGrid.Npc.CustomCountersVariables[customVarRef.Value];
+                    }
+                }
+            }
+            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>> 4");
 
             if (profile.SendWaypoint) {
 

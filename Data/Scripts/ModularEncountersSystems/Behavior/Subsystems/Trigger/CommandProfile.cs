@@ -36,7 +36,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public RelationTypeEnum Relation;
 
 
-		public string Waypoint;
+        public string Waypoint;
+        public Dictionary<string, int> CustomCountersVariables;
+        public Dictionary<string, string> CustomCountersVariablesReferences;
 
 		public CommandProfile() {
 
@@ -58,7 +60,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SendWaypoint = false;
 			SendGridValue = false;
 			SendScoreValue = false; // Stored in NPCDATA
-			
+
 			RequestEscortSlot = false;
 
 			TransmissionType = CommandTransmissionType.None;
@@ -69,7 +71,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			Relation = RelationTypeEnum.None;
 
 
-			Waypoint = "";
+            Waypoint = "";
+
+            CustomCountersVariables = new Dictionary<string, int>();
+            CustomCountersVariablesReferences = new Dictionary<string,string>();
 
 		}
 
@@ -179,7 +184,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						TagParse.TagBoolCheck(tag, ref SendScoreValue);
 
 					}
-					
+
 
 
 					//RequestEscortSlot
@@ -223,11 +228,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 
+                    //Waypoint
+                    if (tag.Contains("[Waypoint:") == true)
+                    {
 
-					//Waypoint
-					if (tag.Contains("[Waypoint:") == true) {
+                        TagParse.TagStringCheck(tag, ref Waypoint);
 
-						TagParse.TagStringCheck(tag, ref Waypoint);
+                    }
+
+					//CustomCountersVariables
+					if (tag.Contains("[CustomCountersVariables:") == true) {
+
+						TagParse.TagStringIntDictCheck(tag, ref CustomCountersVariables);
+
+					}
+
+					//CustomCountersVariablesReferences
+					if (tag.Contains("[CustomCountersVariablesReferences:") == true) {
+
+						TagParse.TagStringStringDictCheck(tag, ref CustomCountersVariablesReferences);
 
 					}
 

@@ -101,6 +101,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(30)]
 		public string Waypoint;
 
+		[ProtoMember(31)]
+		public Dictionary<string, int> CustomCountersVariables;
+
+		[ProtoMember(32)]
+		public List<string> TransferCustomCountersVariables;
+
+		[ProtoMember(33)]
+		public Dictionary<string, string> CustomCountersVariablesReferences;
+
 		[ProtoIgnore]
 		public MatrixD CurrentPositionMatrix;
 
@@ -161,7 +170,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			Rnd = new Random();
 
             UseWaypoint = false;
-			Waypoint = "";
+            Waypoint = "";
+
+            CustomCountersVariables = new Dictionary<string, int>();
+            TransferCustomCountersVariables = new List<string>();
+            CustomCountersVariablesReferences = new Dictionary<string, string>();
 
 		}
 
@@ -443,6 +456,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[Waypoint:") == true){
 
 						TagParse.TagStringCheck(tag, ref Waypoint);
+
+					}
+
+					//CustomCountersVariables
+					if (tag.Contains("[CustomCountersVariables:") == true){
+
+						TagParse.TagStringIntDictCheck(tag, ref CustomCountersVariables);
+
+					}
+
+					//TransferCustomCountersVariables
+					if (tag.Contains("[TransferCustomCountersVariables:") == true){
+
+						TagParse.TagStringListCheck(tag, ref TransferCustomCountersVariables);
+
+					}
+
+					//CustomCountersVariables
+					if (tag.Contains("[CustomCountersVariablesReferences:") == true){
+
+						TagParse.TagStringStringDictCheck(tag, ref CustomCountersVariablesReferences);
 
 					}
 

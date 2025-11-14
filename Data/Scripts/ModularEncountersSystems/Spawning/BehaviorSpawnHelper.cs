@@ -140,19 +140,39 @@ namespace ModularEncountersSystems.Spawning {
 
 		private static void CompleteSpawning() {
 
-			if (_spawnMatrix == MatrixD.Identity) {
+            if (_spawnMatrix == MatrixD.Identity)
+            {
 
-				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Coords Could Not Be Calculated. Aborting Process", SpawnerDebugEnum.Spawning);
-				PerformNextSpawn();
-				return;
+                SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Spawn Coords Could Not Be Calculated. Aborting Process", SpawnerDebugEnum.Spawning);
+                PerformNextSpawn();
+                return;
 
-			}
+            }
+
+            var parentCustomCountersVariables = _currentSpawn.ParentBehavior?.CurrentGrid?.Npc?.CustomCountersVariables ?? null;
+            if (_currentSpawn.TransferCustomCountersVariables != null)
+            {
+                if (parentCustomCountersVariables != null)
+                    foreach (var transferCounter in _currentSpawn.TransferCustomCountersVariables)
+                    {
+                        if (parentCustomCountersVariables.ContainsKey(transferCounter))
+                            _currentSpawn.CustomCountersVariables[transferCounter] = parentCustomCountersVariables[transferCounter];
+                    }
+            }
+            if (_currentSpawn.CustomCountersVariablesReferences != null)
+            {
+                if (parentCustomCountersVariables != null)
+                    foreach (var transferCounter in _currentSpawn.CustomCountersVariablesReferences)
+                    {
+                        _currentSpawn.CustomCountersVariables[transferCounter.Key] = parentCustomCountersVariables[transferCounter.Value];
+                    }
+            }
 
 			if (_currentSpawn.SpawningType == SpawnTypeEnum.CustomSpawn) {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending CustomSpawn Data to Spawner", SpawnerDebugEnum.Spawning);
 				var velocity = Vector3D.Transform(_currentSpawn.RelativeSpawnVelocity, _spawnMatrix) - _spawnMatrix.Translation;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, false, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity, _currentSpawn.IgnoreSafetyChecks, ownerOverride:_ownerOverride,eventInstance:_eventInstance, parentId:_currentSpawn.ParentId);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.OtherNPC, false, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, _spawnMatrix, velocity, _currentSpawn.IgnoreSafetyChecks, ownerOverride:_ownerOverride,eventInstance:_eventInstance, parentId:_currentSpawn.ParentId, customCountersVariables: _currentSpawn.CustomCountersVariables);
 
 				if (result == true) {
 
@@ -175,7 +195,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending SpaceCargoShip Data to Spawner", SpawnerDebugEnum.Spawning);
 				var spawns = _currentSpawn.SpawnGroups.Count > 0 ? _currentSpawn.SpawnGroups : null;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.SpaceCargoShip, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.SpaceCargoShip, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId, customCountersVariables: _currentSpawn.CustomCountersVariables);
 
 				if (result == true) {
 
@@ -198,7 +218,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending RandomEncounter Data to Spawner", SpawnerDebugEnum.Spawning);
 				var spawns = _currentSpawn.SpawnGroups.Count > 0 ? _currentSpawn.SpawnGroups : null;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.RandomEncounter, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.RandomEncounter, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId, customCountersVariables: _currentSpawn.CustomCountersVariables);
 
 				if (result == true) {
 
@@ -221,7 +241,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending PlanetaryCargoShip Data to Spawner", SpawnerDebugEnum.Spawning);
 				var spawns = _currentSpawn.SpawnGroups.Count > 0 ? _currentSpawn.SpawnGroups : null;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.PlanetaryCargoShip, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.PlanetaryCargoShip, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId, customCountersVariables: _currentSpawn.CustomCountersVariables);
 
 				if (result == true) {
 
@@ -244,7 +264,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending PlanetaryInstallation Data to Spawner", SpawnerDebugEnum.Spawning);
 				var spawns = _currentSpawn.SpawnGroups.Count > 0 ? _currentSpawn.SpawnGroups : null;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.PlanetaryInstallation, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.PlanetaryInstallation, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId, customCountersVariables: _currentSpawn.CustomCountersVariables);
 
 				if (result == true) {
 
@@ -267,7 +287,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending BossEncounter Data to Spawner", SpawnerDebugEnum.Spawning);
 				var spawns = _currentSpawn.SpawnGroups.Count > 0 ? _currentSpawn.SpawnGroups : null;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.BossEncounter, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.BossEncounter, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId, customCountersVariables: _currentSpawn.CustomCountersVariables);
 
 				if (result == true) {
 
@@ -290,7 +310,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write(_currentSpawn.ProfileSubtypeId + ": Sending Creature Data to Spawner", SpawnerDebugEnum.Spawning);
 				var spawns = _currentSpawn.SpawnGroups.Count > 0 ? _currentSpawn.SpawnGroups : null;
-				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.Creature, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId);
+				var result = SpawnRequest.CalculateSpawn(_spawnMatrix.Translation, _currentSpawn.ProfileSubtypeId, SpawningType.Creature, _currentSpawn.IgnoreSafetyChecks, _currentSpawn.ProcessAsAdminSpawn, _currentSpawn.SpawnGroups, _currentSpawn.CurrentFactionTag, parentId:_currentSpawn.ParentId, customCountersVariables: _currentSpawn.CustomCountersVariables);
 
 				if (result == true) {
 

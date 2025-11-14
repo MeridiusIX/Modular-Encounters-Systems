@@ -93,6 +93,8 @@ namespace ModularEncountersSystems.Spawning {
 
         public long ParentId;
 
+        public Dictionary<string, int> CustomCountersVariables;
+
 		public SpawnGroupCollection() {
 
 			SpawnGroup = null;
@@ -132,6 +134,7 @@ namespace ModularEncountersSystems.Spawning {
             RestrictedZoneSpawnGroups = new List<string>();
 
             ParentId = 0;
+            CustomCountersVariables = new Dictionary<string, int>();
 
 		}
 

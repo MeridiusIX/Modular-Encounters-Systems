@@ -205,6 +205,13 @@ namespace ModularEncountersSystems.Spawning {
 
                 npcData.ParentId = spawnCollection.ParentId;
 
+                if (spawnCollection.CustomCountersVariables != null) {
+                    foreach (var counterVar in spawnCollection.CustomCountersVariables)
+                    {
+                        npcData.CustomCountersVariables[counterVar.Key] = counterVar.Value;
+                    }
+                }
+
 				Vector3 linearVelocity = Vector3.Zero;
 				Vector3 angularVelocity = Vector3.Zero;
 

@@ -563,14 +563,24 @@ namespace ModularEncountersSystems.Sync {
 			{
 				if (array.Length >= 4 && !string.IsNullOrWhiteSpace(array[3]))
 				{
-					NpcManager.ResetThisResetThisStaticEncounter(array[3]);
+					NpcManager.ResetThisResetThisStaticEncounter(array[3], true);
 					return true;
 				}
 			}
 
+            //MES.Debug.ResetThisStaticEncounters
+            if (array[2] == "ResetThisUniqueSpawnGroup")
+            {
+                if (array.Length >= 4 && !string.IsNullOrWhiteSpace(array[3]))
+                {
+                    NpcManager.ResetThisUniqueSpawnGroup(array[3], true);
+                    return true;
+                }
+            }
 
-			//MES.Debug.CreateIdStorage
-			if (array[2] == "CreateIdStorage") {
+
+            //MES.Debug.CreateIdStorage
+            if (array[2] == "CreateIdStorage") {
 
 				ClipboardPayload = LoggerTools.CreateIdStorage(this, array);
 				Mode = ChatMsgMode.ReturnMessage;

@@ -262,18 +262,24 @@ namespace ModularEncountersSystems.World {
 
 		}
 
-        public static void ResetThisUniqueSpawnGroup(string spawnGroupName)
+        public static void ResetThisUniqueSpawnGroup(string spawnGroupName, bool ShowHudMessage = false)
         {
 			if (NpcManager.UniqueGroupsSpawned.Contains(spawnGroupName))
 			{
 				NpcManager.UniqueGroupsSpawned.Remove(spawnGroupName);
-
-			}
+                if (ShowHudMessage)
+                    MyVisualScriptLogicProvider.ShowNotificationToAll($"Reset: {spawnGroupName}", 5000, "White");
+            }
+			else
+			{
+                if (ShowHudMessage)
+                    MyVisualScriptLogicProvider.ShowNotificationToAll($"Could not find `{spawnGroupName}` in UniqueGroupsSpawned: ", 5000, "Red");
+            }
         }
 
 
 
-        public static void ResetThisResetThisStaticEncounter(string spawnGroupName)
+        public static void ResetThisResetThisStaticEncounter(string spawnGroupName, bool ShowHudMessage = false)
 		{
 			if (NpcManager.UniqueGroupsSpawned.Contains(spawnGroupName))
 			{
@@ -312,8 +318,9 @@ namespace ModularEncountersSystems.World {
 
 							SpawnLogger.Write("Adding Static Encounter: " + (!string.IsNullOrWhiteSpace(activeEncounter.SpawnGroupName) ? activeEncounter.SpawnGroupName : "(invalid)"), SpawnerDebugEnum.Startup);
 							NpcManager.StaticEncounters.Add(activeEncounter);
-
-						}
+                            if (ShowHudMessage)
+                                MyVisualScriptLogicProvider.ShowNotificationToAll($"Reset: {spawnGroupName}", 5000, "White");
+                        }
 						else
 						{
 
@@ -325,8 +332,13 @@ namespace ModularEncountersSystems.World {
 				}
 
 				UpdateStaticEncounters();
-				//MyVisualScriptLogicProvider.ShowNotificationToAll($"{spawnGroupName} despawned, and reset", 5000, "Red");
+
 			}
+			else
+			{
+				if(ShowHudMessage)
+					MyVisualScriptLogicProvider.ShowNotificationToAll($"Could not find `{spawnGroupName}` in UniqueGroupsSpawned: ", 5000, "Red");
+            }
 
 		}
 

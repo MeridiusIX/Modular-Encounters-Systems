@@ -77,7 +77,19 @@ namespace ModularEncountersSystems.Entities {
 			return true;
 
 		}
-		public double BroadcastRange(bool onlyAntenna = false) {
+
+        public bool ClosedEntity()
+        {
+
+            if (Closed)
+                return false;
+
+            return true;
+
+        }
+
+
+        public double BroadcastRange(bool onlyAntenna = false) {
 
 			return EntityEvaluator.GridBroadcastRange(LinkedGrids, onlyAntenna);
 

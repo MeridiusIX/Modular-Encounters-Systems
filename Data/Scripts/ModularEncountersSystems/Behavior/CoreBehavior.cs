@@ -1736,7 +1736,7 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Override Targeting:  ").Append(AutoPilot.Targeting.OverrideData?.ProfileSubtypeId ?? "N/A").AppendLine();
 
 			if (Trigger._dialogueBanks.Count > 0)
-            {
+			{
 				sb.Append(" - Dialogue Banks:      ");
 				foreach (var bank in Trigger._dialogueBanks)
 				{
@@ -1745,15 +1745,15 @@ namespace ModularEncountersSystems.Behavior {
 
 				}
 
-                sb.Append(" - Selected Dialogue Bank:      ").Append(Trigger._dialogueBank?.name ?? null).AppendLine(); ;
+				sb.Append(" - Selected Dialogue Bank:      ").Append(Trigger._dialogueBank?.name ?? null).AppendLine(); ;
 
-                sb.AppendLine();
+				sb.AppendLine();
 			}
 
 
 
 
-            var totalTriggerCount = Trigger.Triggers.Count + Trigger.DamageTriggers.Count + Trigger.CommandTriggers.Count + Trigger.CompromisedTriggers.Count;
+			var totalTriggerCount = Trigger.Triggers.Count + Trigger.DamageTriggers.Count + Trigger.CommandTriggers.Count + Trigger.CompromisedTriggers.Count;
 
 			if (totalTriggerCount > 0) {
 
@@ -1816,10 +1816,10 @@ namespace ModularEncountersSystems.Behavior {
 			}
 
 
-            //Custom variables
-            sb.Append("::: Stored Custom Counters :::").AppendLine();
+			//Custom variables
+			sb.Append("::: Stored Custom Counters :::").AppendLine();
 
-			if(BehaviorSettings.StoredCustomCounters != null)
+			if (BehaviorSettings.StoredCustomCounters != null)
 			{
 				if (BehaviorSettings.StoredCustomCounters.Keys.Count > 0)
 				{
@@ -1843,63 +1843,64 @@ namespace ModularEncountersSystems.Behavior {
 				}
 				else
 				{
-                    sb.Append("BehaviorSettings.StoredCustomCounters is empty. Note: Custom counters are only added after their value is changed for the first time.").AppendLine();
-                }
+					sb.Append("BehaviorSettings.StoredCustomCounters is empty. Note: Custom counters are only added after their value is changed for the first time.").AppendLine();
+				}
 			}
 			else
 			{
-                sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
-            }
+				sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
+			}
 
-            sb.AppendLine();
+			sb.AppendLine();
 
 
 			//Bools
-            sb.Append("::: Stored Custom Bools :::").AppendLine();
+			sb.Append("::: Stored Custom Bools :::").AppendLine();
 
-            if (BehaviorSettings.StoredCustomBooleans != null)
-            {
+			if (BehaviorSettings.StoredCustomBooleans != null)
+			{
 				if (BehaviorSettings.StoredCustomBooleans.Keys.Count > 0)
 				{
-                    
 
-                    foreach (var name in BehaviorSettings.StoredCustomBooleans.Keys)
-                    {
 
-                        if (string.IsNullOrWhiteSpace(name))
-                            continue;
+					foreach (var name in BehaviorSettings.StoredCustomBooleans.Keys)
+					{
 
-                        bool result = false;
+						if (string.IsNullOrWhiteSpace(name))
+							continue;
 
-                        if (BehaviorSettings.StoredCustomBooleans.TryGetValue(name, out result))
-                        {
-                            sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
+						bool result = false;
 
-                        }
+						if (BehaviorSettings.StoredCustomBooleans.TryGetValue(name, out result))
+						{
+							sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
 
-                    }
+						}
+
+					}
 
 				}
 				else
 				{
-                    sb.Append("BehaviorSettings.StoredCustomBooleans is empty. Note: Custom bools are only added after their value is changed for the first time.").AppendLine();
-                }
+					sb.Append("BehaviorSettings.StoredCustomBooleans is empty. Note: Custom bools are only added after their value is changed for the first time.").AppendLine();
+				}
 
 			}
 			else
 			{
-                sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
-            }
+				sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
+			}
 
-            sb.AppendLine();
+			sb.AppendLine();
 
-            //CubeGrid
-            sb.Append("::: Grid Debug Data :::").AppendLine();
+			//CubeGrid
+			sb.Append("::: Grid Debug Data :::").AppendLine();
 			sb.Append(CurrentGrid.DebugData.ToString());
 			sb.AppendLine();
 
 			//Grid NPC Data
-			if (CurrentGrid.Npc != null) {
+			if (CurrentGrid.Npc != null) 
+			{
 
 				sb.Append("::: Grid NPC Data :::").AppendLine();
 				sb.Append(CurrentGrid.Npc.ToString());
@@ -1907,7 +1908,19 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			return sb.ToString();
+			if (CurrentGrid != null)
+			{
+                var allBlocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(CurrentGrid);
+                sb.Append("::: Grid IMyTerminalBlock Blocks Names :::").AppendLine();
+                foreach (var block in allBlocks)
+				{
+                    sb.Append(block.CustomName.Trim());
+                    sb.AppendLine();
+                }
+
+            }
+
+            return sb.ToString();
 		
 		}
 

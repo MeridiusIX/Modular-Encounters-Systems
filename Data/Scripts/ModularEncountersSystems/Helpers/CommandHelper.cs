@@ -275,17 +275,13 @@ namespace ModularEncountersSystems.Helpers {
 
             if (profile.CustomCountersVariablesReferences != null)
             {
-                VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>> 1");
                 foreach (var customVarRef in profile.CustomCountersVariablesReferences) {
-                    VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>> 2");
                     if (behavior?.CurrentGrid?.Npc != null && behavior.CurrentGrid.Npc.CustomCountersVariables.ContainsKey(customVarRef.Value))
                     {
-                        VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>> 3");
                         this.CustomCountersVariables[customVarRef.Key] = behavior.CurrentGrid.Npc.CustomCountersVariables[customVarRef.Value];
                     }
                 }
             }
-            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>> 4");
 
             if (profile.SendWaypoint) {
 

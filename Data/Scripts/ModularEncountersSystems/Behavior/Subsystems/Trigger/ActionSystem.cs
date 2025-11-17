@@ -586,27 +586,31 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			//AddWaypoints
-			if (actions.AddWaypoints) {
+            //AddWaypoints
+            if (actions.AddWaypoints)
+            {
 
-				foreach (var waypointName in actions.WaypointsToAdd) {
+                foreach (var waypointName in actions.WaypointsToAdd)
+                {
 
-					var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, waypointName));
+                    var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, waypointName));
 
-					if (waypoint != null && waypoint.Valid) {
+                    if (waypoint != null && waypoint.Valid)
+                    {
 
-						_behavior.AutoPilot.State.CargoShipWaypoints.Add(waypoint);
+                        _behavior.AutoPilot.State.CargoShipWaypoints.Add(waypoint);
 
-					}
+                    }
 
-				}
+                }
 
-			}
+            }
 
 			//AddWaypointFromCommand
 			if (actions.AddWaypointFromCommand && command?.Waypoint != null) {
 
-				BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Received Waypoint From Command", BehaviorDebugEnum.Action);
+                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Received Waypoint From Command", BehaviorDebugEnum.Action);
+                //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> " + command.Waypoint.GetGPS("target_waypoint"));
 				_behavior.AutoPilot.State.CargoShipWaypoints.Add(command.Waypoint);
 
 			}

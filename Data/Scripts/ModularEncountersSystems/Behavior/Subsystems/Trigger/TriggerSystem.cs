@@ -187,6 +187,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				//WaypointNear
 				if (trigger.Type == "WaypointNear") {
 
+                    //if (CheckWaypointNear(trigger))
+                    //{
+                    //    VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> " + CheckWaypointNear(trigger) + " GPS:RC:" + RemoteControl.GetPosition().X + ":" +  + RemoteControl.GetPosition().Y + ":" +  + RemoteControl.GetPosition().Z + ":: | GPS:WP:" + _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords().X + ":" + _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords().Y + ":" + _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords().Z + ":: | ");
+                    //}
 					trigger.ActivateTrigger(CheckWaypointNear);
 					continue;
 
@@ -198,7 +202,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					//BehaviorLogger.Write("Checking WaypointFar Trigger: " + trigger.ProfileSubtypeId, BehaviorDebugEnum.Trigger);
 					if (trigger.UseTrigger == true) {
 
-						if (_behavior.AutoPilot.State.CurrentWaypoint != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CurrentWaypoint) > trigger.TargetDistance) {
+						if (_behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords() != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords()) > trigger.TargetDistance) {
 
 							trigger.ActivateTrigger(CheckWaypointFar);
 

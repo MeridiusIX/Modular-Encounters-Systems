@@ -74,14 +74,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
         public bool CheckWaypointNear(TriggerProfile trigger)
         {
 
-            return _behavior.AutoPilot.State.CurrentWaypoint != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CurrentWaypoint) < trigger.TargetDistance;
+            return _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords() != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords()) < trigger.TargetDistance;
 
         }
 
 		//WaypointFar
 		public bool CheckWaypointFar(TriggerProfile trigger) {
 
-			return _behavior.AutoPilot.State.CurrentWaypoint != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CurrentWaypoint) > trigger.TargetDistance;
+			return _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords() != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords()) > trigger.TargetDistance;
 
 		}
 

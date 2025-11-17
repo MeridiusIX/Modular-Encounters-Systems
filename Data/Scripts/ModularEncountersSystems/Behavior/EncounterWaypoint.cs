@@ -101,52 +101,113 @@ namespace ModularEncountersSystems.Behavior {
 		public void SetValid(bool state) {
 
 			Valid = state;
-		
+
 		}
 
-		public Vector3D GetCoords() {
+        public Vector3D GetCoords()
+        {
 
-			if (AliveTimeSeconds > 0) {
+            if (AliveTimeSeconds > 0)
+            {
 
-				var span = MyAPIGateway.Session.GameDateTime - CreationTime;
+                var span = MyAPIGateway.Session.GameDateTime - CreationTime;
 
-				if (span.TotalSeconds >= AliveTimeSeconds)
-					SetValid(false);
+                if (span.TotalSeconds >= AliveTimeSeconds)
+                    SetValid(false);
 
-			}
+            }
 
-			if (Waypoint == WaypointType.RelativeOffset) {
+            if (Waypoint == WaypointType.RelativeOffset)
+            {
 
-				if (Entity == null) {
+                if (Entity == null)
+                {
 
-					if (!MyAPIGateway.Entities.TryGetEntityById(EntityId, out Entity)) {
+                    if (!MyAPIGateway.Entities.TryGetEntityById(EntityId, out Entity))
+                    {
 
-						SetValid(false);
-						return LastValidWaypoint;
+                        SetValid(false);
+                        return LastValidWaypoint;
 
-					}
-						
+                    }
 
-				} else if (Entity.MarkedForClose || Entity.Closed) {
 
-					SetValid(false);
-					return LastValidWaypoint;
-				
-				}
+                }
+                else if (Entity.MarkedForClose || Entity.Closed)
+                {
 
-				LastValidWaypoint = Vector3D.Transform(Offset, Entity.WorldMatrix);
-				return LastValidWaypoint;
+                    SetValid(false);
+                    return LastValidWaypoint;
 
-			} else {
+                }
 
-				if (LastValidWaypoint == Vector3D.Zero)
-					LastValidWaypoint = Offset;
+                LastValidWaypoint = Vector3D.Transform(Offset, Entity.WorldMatrix);
+                return LastValidWaypoint;
 
-				return LastValidWaypoint;
+            }
+            else
+            {
 
-			}
-		
-		}
+                if (LastValidWaypoint == Vector3D.Zero)
+                    LastValidWaypoint = Offset;
+
+                return LastValidWaypoint;
+
+            }
+
+        }
+
+        public string GetGPS(string name)
+        {
+
+            if (AliveTimeSeconds > 0)
+            {
+
+                var span = MyAPIGateway.Session.GameDateTime - CreationTime;
+
+                if (span.TotalSeconds >= AliveTimeSeconds)
+                    SetValid(false);
+
+            }
+
+            if (Waypoint == WaypointType.RelativeOffset)
+            {
+
+                if (Entity == null)
+                {
+
+                    if (!MyAPIGateway.Entities.TryGetEntityById(EntityId, out Entity))
+                    {
+
+                        SetValid(false);
+                        return "GPS:" + name + ":" + LastValidWaypoint.X + ":" + LastValidWaypoint.Y + ":" + LastValidWaypoint.Z + ":#FF82F175:";
+
+                    }
+
+
+                }
+                else if (Entity.MarkedForClose || Entity.Closed)
+                {
+
+                    SetValid(false);
+                    return "GPS:" + name + ":" + LastValidWaypoint.X + ":" + LastValidWaypoint.Y + ":" + LastValidWaypoint.Z + ":#FF82F175:";
+
+                }
+
+                LastValidWaypoint = Vector3D.Transform(Offset, Entity.WorldMatrix);
+                return "GPS:" + name + ":" + LastValidWaypoint.X + ":" + LastValidWaypoint.Y + ":" + LastValidWaypoint.Z + ":#FF82F175:";
+
+            }
+            else
+            {
+
+                if (LastValidWaypoint == Vector3D.Zero)
+                    LastValidWaypoint = Offset;
+
+                return "GPS:" + name + ":" + LastValidWaypoint.X + ":" + LastValidWaypoint.Y + ":" + LastValidWaypoint.Z + ":#FF82F175:";
+
+            }
+        }
 
 		public static EncounterWaypoint CalculateWaypoint(IBehavior behavior, string waypointProfileId) {
 
@@ -246,4 +307,3 @@ namespace ModularEncountersSystems.Behavior {
 	}
 
 }
-	

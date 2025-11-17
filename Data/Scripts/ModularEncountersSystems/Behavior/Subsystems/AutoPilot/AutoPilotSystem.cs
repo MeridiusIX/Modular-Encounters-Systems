@@ -688,13 +688,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
-		public void PrepareAutopilot() {
+        public void PrepareAutopilot()
+        {
 
-			bool hasWaypoint = _currentWaypoint != Vector3D.Zero;
-			ProcessRotationParallel(hasWaypoint);
-			ProcessThrustParallel(hasWaypoint);
+            bool hasWaypoint = _currentWaypoint != Vector3D.Zero;
+            ProcessRotationParallel(hasWaypoint);
+            ProcessThrustParallel(hasWaypoint);
 
-		}
+        }
+
+        public string GetGPS(string name, Vector3D vector)
+        {
+            var gps = "GPS:" + name + ":" + vector.X + ":" + vector.Y + ":" + vector.Z + ":#FF82F175:";
+            return gps;
+        }
 
 		public string GetAutopilotData() {
 
@@ -711,9 +718,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			sb.Append(" - Current Profile:                    ").Append(Data?.ProfileSubtypeId ?? "null").AppendLine();
 			sb.Append(" - Speed:                              ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
 			sb.Append(" - Altitude:                           ").Append(MyAltitude.ToString()).AppendLine();
-			sb.Append(" - Position:                           ").Append(_remoteControl.GetPosition().ToString()).AppendLine();
-			sb.Append(" - Initial Waypoint:                   ").Append(_initialWaypoint.ToString()).AppendLine();
-			sb.Append(" - Current Waypoint:                   ").Append(_currentWaypoint.ToString()).AppendLine();
+			sb.Append(" - Position:                           ").Append(GetGPS("Position", _remoteControl.GetPosition())).AppendLine();
+			sb.Append(" - Initial Waypoint:                   ").Append(GetGPS("Initial Waypoint", _initialWaypoint)).AppendLine();
+			sb.Append(" - Current Waypoint:                   ").Append(GetGPS("Current Waypoint", _currentWaypoint)).AppendLine();
 			sb.Append(" - Offset Waypoint:                    ").Append(_calculatedOffsetWaypoint.ToString()).AppendLine();
 			sb.Append(" - Offset Distance:                    ").Append(_offsetDistance.ToString()).AppendLine();
 			sb.Append(" - Offset Altitude:                    ").Append(_offsetAltitude.ToString()).AppendLine();

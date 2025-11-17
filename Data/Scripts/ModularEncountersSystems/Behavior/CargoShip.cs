@@ -408,6 +408,12 @@ namespace ModularEncountersSystems.Behavior {
 
 		}
 
+        public string GetGPS(string name, Vector3D vector)
+        {
+            var gps = "GPS:" + name + ":" + vector.X + ":" + vector.Y + ":" + vector.Z + ":#FF82F175:";
+            return gps;
+        }
+
 		public override string ToString() {
 
 			var sb = new StringBuilder();
@@ -418,7 +424,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (_cargoShipWaypoint.Valid) {
 
-				sb.Append(" - Waypoint:                    ").Append(_cargoShipWaypoint.GetCoords()).AppendLine();
+				sb.Append(" - Waypoint:                    ").Append(_cargoShipWaypoint.GetGPS("Waypoint")).AppendLine();
 
 			}
 
@@ -431,8 +437,8 @@ namespace ModularEncountersSystems.Behavior {
 				var mySeaLevel = _behavior.AutoPilot.UpDirectionFromPlanet * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
 				var despawnSeaLevel = despawnUp * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
 				sb.Append(" - Planet AvgRadius Distance:   ").Append(_behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius).AppendLine();
-				sb.Append(" - Position At AvgRadius:       ").Append(mySeaLevel).AppendLine();
-				sb.Append(" - Despawn Coords At AvgRadius: ").Append(despawnSeaLevel).AppendLine();
+				sb.Append(" - Position At AvgRadius:       ").Append(GetGPS("Position At AvgRadius", mySeaLevel)).AppendLine();
+				sb.Append(" - Despawn Coords At AvgRadius: ").Append(GetGPS("Despawn Coords At AvgRadius", despawnSeaLevel)).AppendLine();
 
 			}
 

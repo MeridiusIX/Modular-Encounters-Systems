@@ -73,7 +73,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			//Debug Message
 			if (!string.IsNullOrWhiteSpace(actions.DebugMessage)) {
 
-				MyVisualScriptLogicProvider.SendChatMessage(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.DebugMessage), RemoteControl.SlimBlock.CubeGrid.CustomName);
+                var message = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.DebugMessage);
+
+                foreach (var customVar in _behavior?.CurrentGrid?.Npc?.CustomCountersVariables)
+                {
+                    if (message.Contains("{" + customVar.Key + "}"))
+                    {
+                        message = message.Replace("{" + customVar.Key + "}", customVar.Value.ToString());
+                    }
+                }
+
+				MyVisualScriptLogicProvider.SendChatMessage(message, RemoteControl.SlimBlock.CubeGrid.CustomName);
 
 
 				//MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);

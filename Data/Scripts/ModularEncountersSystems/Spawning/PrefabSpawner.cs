@@ -247,7 +247,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				var options = SpawnGroupManager.CreateSpawningOptions(spawnCollection.Conditions, sgPrefab);
+				var options = SpawnGroupManager.CreateSpawningOptions(spawnCollection.Conditions, sgPrefab, spawnCollection.SpawnGroup);
 
 				if (spawnCollection.Conditions.ForceExactPositionAndOrientation) {
 

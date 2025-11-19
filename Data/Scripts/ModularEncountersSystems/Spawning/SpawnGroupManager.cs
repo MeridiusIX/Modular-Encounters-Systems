@@ -122,7 +122,7 @@ namespace ModularEncountersSystems.Spawning {
 					Creatures++;
 
 			}
-		
+
 		}
 
 	}
@@ -196,7 +196,7 @@ namespace ModularEncountersSystems.Spawning {
 					var persistentConditions = spawnGroup.UseFirstConditionsAsPersistent ? spawnGroup.SpawnConditionsProfiles[0] : spawnGroup.PersistentConditions;
 
 					SpawnLogger.Queue(" - Checking Group [" + spawnGroup.SpawnGroupName + "] Using Persistent Conditions [" + persistentConditions.ProfileSubtypeId + "]", SpawnerDebugEnum.SpawnGroup);
-					
+
 					//Eligible Names
 					if (eligibleNames != null && eligibleNames.Count > 0 && !eligibleNames.Contains(spawnGroup.SpawnGroupName)) {
 
@@ -238,7 +238,7 @@ namespace ModularEncountersSystems.Spawning {
 
 						if (c >= spawnGroup.SpawnConditionsProfiles.Count)
 							break;
-					
+
 					}
 
 					var conditions = spawnGroup.SpawnConditionsProfiles[c];
@@ -444,7 +444,7 @@ namespace ModularEncountersSystems.Spawning {
 				} else {
 
 					SpawnLogger.ProcessQueue();
-				
+
 				}
 
 			}
@@ -454,25 +454,25 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static SpawningOptions CreateSpawningOptions(SpawnConditionsProfile spawnGroup, MySpawnGroupDefinition.SpawnGroupPrefab prefab) {
+		public static SpawningOptions CreateSpawningOptions(SpawnConditionsProfile spawnConditions, MySpawnGroupDefinition.SpawnGroupPrefab prefab, ImprovedSpawnGroup spawnGroup) {
 
 			var options = SpawningOptions.None;
 
-			if (spawnGroup.RotateFirstCockpitToForward == true) {
+			if (spawnConditions.RotateFirstCockpitToForward == true) {
 
 				SpawnLogger.Write("Added Internal Spawning Option: RotateFirstCockpitToForward", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.RotateFirstCockpitTowardsDirection;
 
 			}
 
-			if (spawnGroup.SpawnRandomCargo == true) {
+			if (spawnConditions.SpawnRandomCargo == true) {
 
 				SpawnLogger.Write("Added Internal Spawning Option: SpawnRandomCargo", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.SpawnRandomCargo;
 
 			}
 
-			if (spawnGroup.DisableDampeners == true) {
+			if (spawnConditions.DisableDampeners == true) {
 
 				SpawnLogger.Write("Added Internal Spawning Option: DisableDampeners", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.DisableDampeners;
@@ -481,17 +481,24 @@ namespace ModularEncountersSystems.Spawning {
 
 			//options |= SpawningOptions.SetNeutralOwner;
 
-			if (spawnGroup.ReactorsOn == false) {
+			if (spawnConditions.ReactorsOn == false) {
 
 				SpawnLogger.Write("Added Internal Spawning Option: TurnOffReactors", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.TurnOffReactors;
 
 			}
 
-			if (prefab.PlaceToGridOrigin == true || spawnGroup.UseGridOrigin) {
+			if (prefab.PlaceToGridOrigin == true || spawnConditions.UseGridOrigin) {
 
 				SpawnLogger.Write("Added Internal Spawning Option: PlaceToGridOrigin", SpawnerDebugEnum.Spawning);
 				options |= SpawningOptions.UseGridOrigin;
+
+			}
+
+			if (spawnGroup.IsBaseGame || spawnGroup.ApplyFactionColor) {
+
+				SpawnLogger.Write("Added Internal Spawning Option: ReplaceColor", SpawnerDebugEnum.Spawning);
+				options |= SpawningOptions.ReplaceColor;
 
 			}
 
@@ -609,7 +616,7 @@ namespace ModularEncountersSystems.Spawning {
 						ProfileManager.ZoneProfiles.Add(spawnGroup.Id.SubtypeName, zone);
 						SpawnGroupNames.Remove(spawnGroup.Id.SubtypeName);
 						continue;
-					
+
 					}
 
 					if (spawnGroup.DescriptionText.Contains("[Modular Encounters SpawnGroup]") == true) {
@@ -634,7 +641,7 @@ namespace ModularEncountersSystems.Spawning {
 			foreach (var spawnGroup in SpawnGroups) {
 
 				TotalSpawnGroups.ProcessSpawnGroup(spawnGroup);
-			
+
 			}
 
 			if (SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("LnNibQ=="))) == true && (!SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MTUyMTkwNTg5MA=="))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("NzUwODU1"))) && !SpawnGroupManager.GroupInstance.Contains(Encoding.UTF8.GetString(Convert.FromBase64String("MjU0MjU5OTEwMA=="))))) {
@@ -654,7 +661,7 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnGroupNames.Add(spawnGroup.SpawnGroupName);
 
 			}
-				
+
 
 		}
 
@@ -666,6 +673,7 @@ namespace ModularEncountersSystems.Spawning {
 			var factionList = MyAPIGateway.Session.Factions.Factions;
 			var factionTags = new List<string>();
 			factionTags.Add("Nobody");
+            thisSpawnGroup.IsBaseGame = spawnGroup.Context.IsBaseGame;
 
 			foreach (var faction in factionList.Keys) {
 

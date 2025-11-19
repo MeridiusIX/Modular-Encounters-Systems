@@ -44,6 +44,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool PreventOwnershipChange; //Implement / Doc
 
 		public string CustomVariablesName;
+		public bool ApplyFactionColor;
+        public bool IsBaseGame;
 
 
 		public ImprovedSpawnGroup() {
@@ -87,6 +89,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 			PreventOwnershipChange = false;
 			CustomVariablesName = "";
+
+            ApplyFactionColor = false;
+            IsBaseGame = false;
 		}
 
 		public void InitTags(MySpawnGroupDefinition spawnGroup) {
@@ -257,6 +262,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
+				//ApplyFactionColor
+				if (tag.StartsWith("[ApplyFactionColor:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.ApplyFactionColor);
+
+				}
+
 			}
 
 			//Spawn Condition Groups
@@ -275,9 +287,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 							SpawnConditionsProfiles.Add(condition);
 
 					}
-				
+
 				}
-			
+
 			}
 
 			//Manipulation Groups
@@ -311,11 +323,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 						break;
 
 					}
-					
+
 				}
 
 			}
-				
+
 		}
 
 	}

@@ -83,6 +83,7 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(29)] public bool ApplyContainerTypes;
 		[ProtoMember(30)] public bool UseEnergyDisable;
 		[ProtoMember(31)] public bool OwnershipValidation;
+		[ProtoMember(32)] public bool NoRC;
 
 		public NewNpcAttributes() {
 
@@ -117,6 +118,7 @@ namespace ModularEncountersSystems.World {
 			ApplyContainerTypes = false;
 			UseEnergyDisable = false;
 			OwnershipValidation = false;
+            NoRC = false;
 
 		}
 

@@ -9,6 +9,8 @@ using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.World;
 using Sandbox.Definitions;
 using Sandbox.Game;
+using Sandbox.Game.Entities;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -148,7 +150,7 @@ namespace ModularEncountersSystems.Spawning {
 			for (int i = 0; i < spawnCollection.PrefabIndexes.Count; i++) {
 
 				var sgPrefab = spawnCollection.SpawnGroup.SpawnGroup.Prefabs[spawnCollection.PrefabIndexes[i]];
-
+                //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> prefab: " + sgPrefab.SubtypeId);
 				//Select Prefab Container
 				PrefabContainer prefab = null;
 
@@ -288,7 +290,8 @@ namespace ModularEncountersSystems.Spawning {
 
 					gridListDummy.Clear();
 					NpcManager.SpawnedNpcData.Add(npcData);
-					MyAPIGateway.PrefabManager.SpawnPrefab(gridListDummy, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner);
+                    var grids = new List<IMyCubeGrid>();
+					MyAPIGateway.PrefabManager.SpawnPrefab(grids, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner, false, () => GridsSpawned(grids, npcData));
 					spawnCollection.SpawnedPrefabs++;
 
 				} catch (Exception exc) {
@@ -302,6 +305,24 @@ namespace ModularEncountersSystems.Spawning {
 
 
 		}
+
+        static void GridsSpawned(List<IMyCubeGrid> grids, NpcData data)
+        {
+            foreach(MyCubeGrid grid in grids)
+            {
+                var mainGrid = grid.GetBiggestGridInGroup();
+                if(mainGrid == null) throw new Exception("Main grid was null when trying to spawn prefab.");
+
+                if(mainGrid.Storage == null)
+                    mainGrid.Storage = new MyModStorageComponent();
+
+                if(!mainGrid.Storage.ContainsKey(StorageTools.NpcDataKey))
+                {
+                    //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>> assigning NPCData: " + grid.DisplayName);
+                    mainGrid.Storage[StorageTools.NpcDataKey] = SerializationHelper.ConvertClassToString<NpcData>(data);
+                }
+            }
+        }
 
 		//Tie in Spawn Costs
 		public static void ApplySpawningCosts(SpawnConditionsProfile spawnGroup, string factionTag) {

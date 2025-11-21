@@ -46,6 +46,8 @@ namespace ModularEncountersSystems.Tasks {
                     _grid.Npc = new NpcData();
                     _grid.Npc.Grid = _grid;
                     _grid.Npc.SpawnType = SpawningType.OtherNPC;
+
+                    //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> registered NPC: " + _grid.GridName + " MES Spawn: " + _grid.Npc.SpawnedByMES);
                 }
 
             }

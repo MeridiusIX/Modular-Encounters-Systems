@@ -13,7 +13,7 @@ using System.Text;
 namespace ModularEncountersSystems.Watchers {
 
 	public static class Cleaning {
-		
+
 		public static List<GridCleanupExemption> ExemptGrids = new List<GridCleanupExemption>();
 
 		public static bool PendingGridsForRemoval = false;
@@ -27,7 +27,7 @@ namespace ModularEncountersSystems.Watchers {
 			GridCleanupData.LoadData();
 
 			TaskProcessor.Tick60.Tasks += CleanupProcess;
-			
+
 		}
 
 		public static void CleanupProcess() {
@@ -50,7 +50,7 @@ namespace ModularEncountersSystems.Watchers {
 
 					GridCleanupData.RemoveData(grid);
 					continue;
-				
+
 				}
 
 				//Economy Station Check
@@ -58,7 +58,7 @@ namespace ModularEncountersSystems.Watchers {
 
 					GridCleanupData.RemoveData(grid);
 					continue;
-				
+
 				}
 
 				//Drop Container
@@ -94,7 +94,7 @@ namespace ModularEncountersSystems.Watchers {
 						break;
 
 					}
-				
+
 				}
 
 				if (gotExemptGrid)
@@ -102,11 +102,11 @@ namespace ModularEncountersSystems.Watchers {
 
 				//Get Config and Cleanup Data
 				var type = grid.GetSpawningTypeFromLinkedGrids();
-				
+
 				if (type == SpawningType.None) {
 
 					continue;
-				
+
 				}
 
 				var config = Settings.GetConfig(type);
@@ -121,7 +121,7 @@ namespace ModularEncountersSystems.Watchers {
 						config = Settings.GetConfig(SpawningType.OtherNPC);
 
 					}
-				
+
 				}
 
 				var data = GridCleanupData.GetData(grid);
@@ -129,7 +129,7 @@ namespace ModularEncountersSystems.Watchers {
 				if (config == null || data == null || config.UseCleanupSettings == false) {
 
 					continue;
-				
+
 				}
 
 				//MES Grids Only
@@ -141,21 +141,14 @@ namespace ModularEncountersSystems.Watchers {
 				}
 
 				//Unowned Filtering
-				if (config.CleanupIncludeUnowned) {
-
-					if (grid.Ownership.HasFlag(GridOwnershipEnum.NpcMajority) || grid.Ownership.HasFlag(GridOwnershipEnum.NpcMinority)) {
-
-						continue;
-
-					}
-
-					if (!grid.Npc.SpawnedByMES) {
-
-						continue;
-					
-					}
-
-				}
+                if (!grid.Ownership.HasFlag(GridOwnershipEnum.NpcMajority) && !grid.Ownership.HasFlag(GridOwnershipEnum.NpcMinority))
+                {
+                    if (grid.Npc.SpawnedByMES && !config.CleanupIncludeUnowned)
+                    {
+                        GridCleanupData.RemoveData(grid);
+                        continue;
+                    }
+                }
 
 				//Determine Block Count
 				if (config.CleanupUseBlockLimit) {
@@ -172,7 +165,7 @@ namespace ModularEncountersSystems.Watchers {
 						continue;
 
 					}
-				
+
 				}
 
 				var player = PlayerManager.GetNearestPlayer(grid.GetPosition());
@@ -196,7 +189,7 @@ namespace ModularEncountersSystems.Watchers {
 						continue;
 
 					}
-				
+
 				}
 
 				//Determine Timer
@@ -286,11 +279,11 @@ namespace ModularEncountersSystems.Watchers {
 					return false;
 
 				}
-				
+
 			}
 
 			return true;
-		
+
 		}
 
 		public static void ForceRemoveGrid(GridEntity grid, string reason = null) {
@@ -318,7 +311,7 @@ namespace ModularEncountersSystems.Watchers {
 					return grid.Npc.KeenEconomyStation == BoolEnum.True ? true : false;
 
 				}
-					
+
 
 				spawnedByOther = !grid.Npc.SpawnedByMES;
 
@@ -339,7 +332,7 @@ namespace ModularEncountersSystems.Watchers {
 			}
 
 			return result;
-		
+
 		}
 
 		public static bool IsGridNameEconomyPattern(string gridName) {
@@ -372,7 +365,7 @@ namespace ModularEncountersSystems.Watchers {
 			}
 
 			var nameSplit = gridName.Split(' ');
-			
+
 			if (nameSplit.Length < 3) {
 
 				return false;
@@ -414,7 +407,7 @@ namespace ModularEncountersSystems.Watchers {
 
 					PendingGridsForRemoval = true;
 					TaskProcessor.Tasks.Add(new GridCleanup());
-					
+
 				}
 
 				return;
@@ -426,7 +419,7 @@ namespace ModularEncountersSystems.Watchers {
 				if (gridEntity.Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || gridEntity.Ownership.HasFlag(GridOwnershipEnum.PlayerMinority)) {
 
 					continue;
-				
+
 				}
 
 				if (!PendingGridsForRemoval) {

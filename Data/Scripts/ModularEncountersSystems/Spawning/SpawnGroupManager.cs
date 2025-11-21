@@ -739,6 +739,8 @@ namespace ModularEncountersSystems.Spawning {
 				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomMinerFaction = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomBuilderFaction = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomTraderFaction = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomMilitaryFaction = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomPirateFaction = true;
 
 			}
 

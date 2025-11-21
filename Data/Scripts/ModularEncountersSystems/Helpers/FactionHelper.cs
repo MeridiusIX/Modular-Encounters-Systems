@@ -19,6 +19,8 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMyFaction> NpcBuilderFactions = new List<IMyFaction>();
 		public static List<IMyFaction> NpcMinerFactions = new List<IMyFaction>();
 		public static List<IMyFaction> NpcTraderFactions = new List<IMyFaction>();
+		public static List<IMyFaction> NpcMilitaryFactions = new List<IMyFaction>();
+		public static List<IMyFaction> NpcPirateFactions = new List<IMyFaction>();
 
 		public static List<string> NpcFactionTags = new List<string>();
 		public static List<string> EconomyFactionTags = new List<string>();
@@ -62,9 +64,9 @@ namespace ModularEncountersSystems.Helpers {
 							MyAPIGateway.Session.Factions.PromoteMember(faction.FactionId, member.PlayerId);
 
 					}
-					
+
 				}
-				
+
 			}
 
 			if (faction.FounderId != 0)
@@ -82,7 +84,7 @@ namespace ModularEncountersSystems.Helpers {
 					break;
 
 				}
-			
+
 			}
 
 			return result;
@@ -97,18 +99,18 @@ namespace ModularEncountersSystems.Helpers {
 					continue;
 
 				return GetFactionOwner(faction);
-			
+
 			}
 
 			return 0;
-		
+
 		}
 
 
 
 		public static void PopulateNpcFactionLists() {
 
-			
+
 			EconomyStationTypes.Add("MiningStation");
 			EconomyStationTypes.Add("OrbitalStation");
 			EconomyStationTypes.Add("Outpost");
@@ -137,7 +139,7 @@ namespace ModularEncountersSystems.Helpers {
 									break;
 
 								}
-						
+
 						}
 
 						if (!identityBlank) {
@@ -146,9 +148,9 @@ namespace ModularEncountersSystems.Helpers {
 							break;
 
 						}
-					
+
 					}
-				
+
 				}
 
 				if (playerDetected)
@@ -183,6 +185,20 @@ namespace ModularEncountersSystems.Helpers {
 
 						EconomyFactionTags.Add(faction.Tag);
 						NpcBuilderFactions.Add(faction);
+
+					}
+
+					if (factionOB.FactionType == MyFactionTypes.Military) {
+
+						EconomyFactionTags.Add(faction.Tag);
+						NpcMilitaryFactions.Add(faction);
+
+					}
+
+					if (factionOB.FactionType == MyFactionTypes.Pirate) {
+
+						EconomyFactionTags.Add(faction.Tag);
+						NpcPirateFactions.Add(faction);
 
 					}
 
@@ -241,7 +257,7 @@ namespace ModularEncountersSystems.Helpers {
 					if(!PlayerCondition.ArePlayerConditionsMet(ReputationPlayerConditionIds, player.IdentityId))
 						continue;
 
-	
+
 
 
 				if (player.IdentityId != 0 && !playerIds.Contains(player.IdentityId))
@@ -337,7 +353,7 @@ namespace ModularEncountersSystems.Helpers {
 					if (proposedRep >= minRep && proposedRep <= maxRep)
 						newRep = MathHelper.Clamp(oldRep + amount, minRep, maxRep);
 					else {
-					
+
 						if((proposedRep < minRep && Math.Sign(amount) == 1) || (proposedRep > minRep && Math.Sign(amount) == -1))
 							newRep = oldRep + amount;
 
@@ -366,7 +382,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static void ChangeFactionAccountByAmount(IMyRemoteControl remoteControl, int changeAmount, long attackingEntity){ 
+		public static void ChangeFactionAccountByAmount(IMyRemoteControl remoteControl, int changeAmount, long attackingEntity){
 
 			//Get the players Id
 			var owner = DamageHelper.GetAttackOwnerId(attackingEntity);
@@ -386,7 +402,7 @@ namespace ModularEncountersSystems.Helpers {
 				ownerFaction.RequestChangeBalance(changeAmount);
 
 				//Notify the players
-				foreach(long playerId in ownerFaction.Members.Keys){ 
+				foreach(long playerId in ownerFaction.Members.Keys){
 
 					var steamId = MyAPIGateway.Players.TryGetSteamId(playerId);
 					if (steamId > 0) {

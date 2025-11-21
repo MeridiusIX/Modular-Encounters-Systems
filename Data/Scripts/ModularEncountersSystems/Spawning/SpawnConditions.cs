@@ -2084,7 +2084,7 @@ namespace ModularEncountersSystems.Spawning {
 			var factionList = new List<IMyFaction>();
 			var initialFactionTag = !string.IsNullOrWhiteSpace(factionOverride) ? factionOverride : (!string.IsNullOrWhiteSpace(spawnGroup.FactionOverride) ? spawnGroup.FactionOverride : condition.FactionOwner);
 
-			if (!string.IsNullOrWhiteSpace(factionOverride) || (condition.UseRandomBuilderFaction == false && condition.UseRandomMinerFaction == false && condition.UseRandomTraderFaction == false)) {
+			if (!string.IsNullOrWhiteSpace(factionOverride) || (condition.UseRandomBuilderFaction == false && condition.UseRandomMinerFaction == false && condition.UseRandomTraderFaction == false && condition.UseRandomMilitaryFaction == false && condition.UseRandomPirateFaction == false)) {
 
 				if (Settings.General.NpcSpawnGroupBlacklist.Contains(initialFactionTag))
 					return resultList;
@@ -2126,6 +2126,20 @@ namespace ModularEncountersSystems.Spawning {
 			if (condition.UseRandomTraderFaction == true) {
 
 				var tempList = factionList.Concat(FactionHelper.NpcTraderFactions);
+				factionList = new List<IMyFaction>(tempList.ToList());
+
+			}
+
+			if (condition.UseRandomMilitaryFaction == true) {
+
+				var tempList = factionList.Concat(FactionHelper.NpcMilitaryFactions);
+				factionList = new List<IMyFaction>(tempList.ToList());
+
+			}
+
+			if (condition.UseRandomPirateFaction == true) {
+
+				var tempList = factionList.Concat(FactionHelper.NpcPirateFactions);
 				factionList = new List<IMyFaction>(tempList.ToList());
 
 			}

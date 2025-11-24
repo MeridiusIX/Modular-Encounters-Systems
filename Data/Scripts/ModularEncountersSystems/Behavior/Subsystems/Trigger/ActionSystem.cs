@@ -2923,8 +2923,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             }
             catch (Exception e)
             {
-                //BehaviorLogger.Write($"{actions.ProfileSubtypeId}: Error while executing action: '{lastAction}'", BehaviorDebugEnum.Error);
-                VRage.Utils.MyLog.Default.WriteLine($"MES / Error: Error while executing action: '{lastAction}' in Action Profile '{actions.ProfileSubtypeId}'");
+                BehaviorLogger.Write($"{actions.ProfileSubtypeId}: Error while executing action: '{lastAction}'", BehaviorDebugEnum.Error, true);
                 throw (e);
             }
         }

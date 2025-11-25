@@ -128,7 +128,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     List<long> tempPlayerIdList = new List<long>();
 
-                    if (actions.PlayDialogueToSpecificPlayers && actions.PlayDialoguePlayerConditionIds.Count > 0)
+                    if (actions.PlayDialogueToSpecificPlayers && actions.PlayDialoguePlayerConditionIds.Count > 0 && _behavior.RemoteControl != null)
                     {
                         foreach (var player in PlayerManager.Players)
                         {
@@ -370,7 +370,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 //RecalculateDespawnCoords
                 lastAction = "RecalculateDespawnCoords";
-                if (actions.RecalculateDespawnCoords)
+                if (actions.RecalculateDespawnCoords && this.RemoteControl != null)
                 {
 
                     _behavior.AutoPilot.State.CargoShipDespawn = new EncounterWaypoint(_behavior.AutoPilot.CalculateDespawnCoords(this.RemoteControl.GetPosition()));
@@ -435,7 +435,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 //BroadcastGenericCommand
                 lastAction = "BroadcastGenericCommand";
-                if (actions.BroadcastGenericCommand == true)
+                if (actions.BroadcastGenericCommand == true && RemoteControl != null)
                 {
 
                     BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Broadcast of Generic Command", BehaviorDebugEnum.Action);
@@ -473,7 +473,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 //BroadcastDamagerTarget
                 lastAction = "BroadcastDamagerTarget";
-                if (actions.BroadcastDamagerTarget == true && detectedEntity != 0)
+                if (actions.BroadcastDamagerTarget == true && detectedEntity != 0 && RemoteControl != null)
                 {
 
                     BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Broadcast of Damager", BehaviorDebugEnum.Action);
@@ -782,7 +782,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 //ChangePlayerCredits
                 lastAction = "ChangePlayerCredits";
-                if (actions.ChangePlayerCredits)
+                if (actions.ChangePlayerCredits && _behavior.RemoteControl != null)
                 {
 
 
@@ -2381,7 +2381,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 }
 
                 lastAction = "ApplyStoreProfiles";
-                if (actions.ApplyStoreProfiles && (_behavior.CurrentGrid?.ActiveEntity() ?? false))
+                if (actions.ApplyStoreProfiles && (_behavior.CurrentGrid?.ActiveEntity() ?? false) && _behavior.RemoteControl != null)
                 {
 
                     BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Store Profiles.", BehaviorDebugEnum.Action);
@@ -2459,7 +2459,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
                 lastAction = "UseCurrentPositionAsPatrolReference";
-                if (actions.UseCurrentPositionAsPatrolReference)
+                if (actions.UseCurrentPositionAsPatrolReference && _behavior.RemoteControl != null)
                 {
 
                     _behavior.BehaviorSettings.PatrolOverrideLocation = _behavior.RemoteControl.GetPosition();
@@ -2475,7 +2475,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 }
 
                 lastAction = "SetGridToStatic";
-                if (actions.SetGridToStatic)
+                if (actions.SetGridToStatic && _behavior.RemoteControl != null)
                 {
 
                     _behavior.RemoteControl.SlimBlock.CubeGrid.IsStatic = true;
@@ -2483,7 +2483,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 }
 
                 lastAction = "SetGridToDynamic";
-                if (actions.SetGridToDynamic)
+                if (actions.SetGridToDynamic && _behavior.RemoteControl != null)
                 {
 
                     _behavior.RemoteControl.SlimBlock.CubeGrid.IsStatic = false;
@@ -2506,7 +2506,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 }
 
                 lastAction = "CreateSafeZone";
-                if (actions.CreateSafeZone)
+                if (actions.CreateSafeZone && _behavior.RemoteControl != null)
                 {
 
                     if (actions.IgnoreOtherSafeZonesDuringCreation || !SafeZoneManager.IsPositionInSafeZone(_behavior.RemoteControl.GetPosition()))
@@ -2541,7 +2541,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 }
 
                 lastAction = "AddTagsToPlayers";
-                if (actions.AddTagsToPlayers)
+                if (actions.AddTagsToPlayers && _behavior.RemoteControl != null)
                 {
                     bool SavedPlayerIdentityAlreadyIncluded = false;
                     foreach (var player in PlayerManager.Players)
@@ -2587,7 +2587,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 }
 
                 lastAction = "RemoveTagsFromPlayers";
-                if (actions.RemoveTagsFromPlayers)
+                if (actions.RemoveTagsFromPlayers && _behavior.RemoteControl != null)
                 {
                     bool SavedPlayerIdentityAlreadyIncluded = false;
                     foreach (var player in PlayerManager.Players)
@@ -2637,7 +2637,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
                 lastAction = "TeleportPlayers";
-                if (actions.TeleportPlayers)
+                if (actions.TeleportPlayers && _behavior.RemoteControl != null)
                 {
                     bool SavedPlayerIdentityAlreadyIncluded = false;
                     foreach (var player in PlayerManager.Players)
@@ -2668,7 +2668,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
                 lastAction = "AddGPSToPlayers";
-                if (actions.AddGPSToPlayers)
+                if (actions.AddGPSToPlayers && _behavior.RemoteControl != null)
                 {
 
                     var defaultDescription = "No description available";

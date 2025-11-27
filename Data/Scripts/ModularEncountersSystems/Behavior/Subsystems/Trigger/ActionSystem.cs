@@ -2762,7 +2762,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastAction = "IncreaseCounters";
                 var customCountersVariables = _behavior?.CurrentGrid?.Npc.CustomCountersVariables;
                 int increaseAmount = 0;
-                if (actions.IncreaseCountersUseAmountVariable)
+                if (actions.IncreaseCountersUseAmountVariable && customCountersVariables != null)
                 {
                     foreach (var counterVar in customCountersVariables)
                     {
@@ -2786,7 +2786,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 // DecreaseCounters
                 lastAction = "DecreaseCounters";
                 int decreaseAmount = 0;
-                if (actions.DecreaseCountersUseAmountVariable)
+                if (actions.DecreaseCountersUseAmountVariable && customCountersVariables != null)
                 {
                     foreach (var counterVar in customCountersVariables)
                     {
@@ -2823,7 +2823,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                         _settings.SetCustomCounter(actions.SetCounters[i], actions.SetCountersValues[i], false, true);
 
                 }
-                else if (actions.SetCounters.Count > 0 && actions.SetCountersUseAmountVariable)
+                else if (actions.SetCounters.Count > 0 && actions.SetCountersUseAmountVariable && customCountersVariables != null)
                 {
                     foreach (var counterVar in customCountersVariables)
                     {

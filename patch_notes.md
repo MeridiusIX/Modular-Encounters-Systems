@@ -1,6 +1,6 @@
-# Update 2.71.42
+# Update 2.71.43
 
-* Added improved logging for exceptions in Action System.
-
+* Added null checks around Actions involving Remote Controls.
+* Fixed IncreaseCounters not using the new variables crashing MES.
 
 enenra & CptArthur

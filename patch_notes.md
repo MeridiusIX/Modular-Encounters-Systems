@@ -1,6 +1,5 @@
-# Update 2.71.43
+# Update 2.71.44
 
-* Added null checks around Actions involving Remote Controls.
-* Fixed IncreaseCounters not using the new variables crashing MES.
+* Another change to attempt IncreaseCounters crash fix.
 
 enenra & CptArthur

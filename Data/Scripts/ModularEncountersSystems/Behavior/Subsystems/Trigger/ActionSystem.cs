@@ -2760,7 +2760,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 // IncreaseCounters
                 lastAction = "IncreaseCounters";
-                var customCountersVariables = _behavior?.CurrentGrid?.Npc.CustomCountersVariables;
+                var customCountersVariables = _behavior?.CurrentGrid?.Npc?.CustomCountersVariables;
                 int increaseAmount = 0;
                 if (actions.IncreaseCountersUseAmountVariable && customCountersVariables != null)
                 {

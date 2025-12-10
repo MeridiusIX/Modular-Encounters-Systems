@@ -165,7 +165,7 @@ namespace ModularEncountersSystems.World {
 
 								totalChecks++;
 								var checkCoordsRough = direction * (j * 1000) + coords;
-								var checkSurfaceCoords = NearestPlanet.SurfaceCoordsAtPosition(checkCoordsRough);
+								var checkSurfaceCoords = NearestPlanet.SurfaceCoordsAtPosition(checkCoordsRough,true);
 
 								if (NearestPlanet.IsPositionUnderwater(checkSurfaceCoords))
 									waterHits++;
@@ -183,8 +183,8 @@ namespace ModularEncountersSystems.World {
 
 					SpawnLogger.Write("Water Hits: " + waterHits.ToString(), SpawnerDebugEnum.Pathing);
 					SpawnLogger.Write("Total Hits: " + totalChecks.ToString(), SpawnerDebugEnum.Pathing);
-					WaterInSurroundingAreaRatio = (float)waterHits / (float)totalChecks;
-
+					WaterInSurroundingAreaRatio = (float)waterHits / (float)totalChecks; // I never seen this higher than 0.6 on the oceans on Agaris weird.
+					
 
 				}
 

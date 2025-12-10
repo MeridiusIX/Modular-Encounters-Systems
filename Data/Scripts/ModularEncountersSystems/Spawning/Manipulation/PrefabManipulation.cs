@@ -685,133 +685,140 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 			//Economy Stuff
 			ProcessEconomyBlocks(prefab, collection, profile, environment, data);
 
-			//Random Name Generator
-			if (profile.UseRandomNameGenerator && profile.RandomGridNamePattern.Count > 0) {
+            //Random Name Generator
+            if (profile.UseRandomNameGenerator && profile.RandomGridNamePattern.Count > 0)
+            {
 
-				//TODO: Review for possible crash
+                //TODO: Review for possible crash
 
-				SpawnLogger.Write("Randomizing Grid Name", SpawnerDebugEnum.Manipulation);
+                SpawnLogger.Write("Randomizing Grid Name", SpawnerDebugEnum.Manipulation);
 
-				var pattern = profile.RandomGridNamePattern.Count == 1 ? profile.RandomGridNamePattern[0] : profile.RandomGridNamePattern[MathTools.RandomBetween(0, profile.RandomGridNamePattern.Count)];
+                var pattern = profile.RandomGridNamePattern.Count == 1 ? profile.RandomGridNamePattern[0] : profile.RandomGridNamePattern[MathTools.RandomBetween(0, profile.RandomGridNamePattern.Count)];
 
-				string newGridName = RandomNameGenerator.CreateRandomNameFromPattern(pattern);
-				data.FriendlyName = newGridName;
-				string newRandomName = profile.RandomGridNamePrefix + newGridName;
+                string newGridName = RandomNameGenerator.CreateRandomNameFromPattern(pattern);
+                data.FriendlyName = newGridName;
+                string newRandomName = profile.RandomGridNamePrefix + newGridName;
 
-				if (prefab.Prefab.CubeGrids.Length > 0) {
+                if (prefab.Prefab.CubeGrids.Length > 0)
+                {
 
-                    if (profile.RenameGrid) {
-					    prefab.Prefab.CubeGrids[0].DisplayName = RandomNameGenerator.ProcessGridname(newRandomName, prefab.Prefab.CubeGrids[0].DisplayName);
+                    if (profile.RenameGrid)
+                    {
+                        prefab.Prefab.CubeGrids[0].DisplayName = RandomNameGenerator.ProcessGridname(newRandomName, prefab.Prefab.CubeGrids[0].DisplayName);
                     }
-					MyCubeBlockDefinition antennaDef = null;
-					MyCubeBlockDefinition beaconDef = null;
+                    MyCubeBlockDefinition antennaDef = null;
+                    MyCubeBlockDefinition beaconDef = null;
 
-					foreach (var grid in prefab.Prefab.CubeGrids)
-					{
+                    foreach (var grid in prefab.Prefab.CubeGrids)
+                    {
 
-						bool foundAntenna = false;
-						bool foundBeacon = false;
+                        bool foundAntenna = false;
+                        bool foundBeacon = false;
 
-						for (int i = 0; i < grid.CubeBlocks.Count; i++)
-						{
+                        for (int i = 0; i < grid.CubeBlocks.Count; i++)
+                        {
 
-							if (profile.ProcessBlocksForCustomGridName)
-							{
+                            if (profile.ProcessBlocksForCustomGridName)
+                            {
 
-								if (grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock != null)
-								{
+                                if (grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock != null)
+                                {
 
-									var termBlock = grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock;
+                                    var termBlock = grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock;
 
-									if (!string.IsNullOrWhiteSpace(termBlock.CustomName) && termBlock.CustomName.Contains("{GridName}"))
-										termBlock.CustomName = termBlock.CustomName.Replace("{GridName}", newGridName);
+                                    if (!string.IsNullOrWhiteSpace(termBlock.CustomName) && termBlock.CustomName.Contains("{GridName}"))
+                                        termBlock.CustomName = termBlock.CustomName.Replace("{GridName}", newGridName);
 
-								}
+                                }
 
-							}
+                            }
 
-							var antenna = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
-							var beacon = grid.CubeBlocks[i] as MyObjectBuilder_Beacon;
-
-
-							if (foundAntenna && string.IsNullOrWhiteSpace(profile.ReplaceBeaconNameWithRandomizedName))
-								break;
-
-							if (foundBeacon && string.IsNullOrWhiteSpace(profile.ReplaceAntennaNameWithRandomizedName))
-								break;
-
-							if (foundBeacon && foundAntenna)
-								break;
+                            var antenna = grid.CubeBlocks[i] as MyObjectBuilder_RadioAntenna;
+                            var beacon = grid.CubeBlocks[i] as MyObjectBuilder_Beacon;
 
 
+                            if (foundAntenna && string.IsNullOrWhiteSpace(profile.ReplaceBeaconNameWithRandomizedName))
+                                break;
+
+                            if (foundBeacon && string.IsNullOrWhiteSpace(profile.ReplaceAntennaNameWithRandomizedName))
+                                break;
+
+                            if (foundBeacon && foundAntenna)
+                                break;
 
 
-							if (antenna != null && !foundAntenna)
-							{
-								if (antenna.CustomName == null)
-								{
-									antennaDef = null;
-									if (!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(antenna.GetId(), out antennaDef))
-										continue;
 
-									antenna.CustomName = antennaDef.DisplayNameText;
-									if (antenna.CustomName == null)
-										continue;
-								}
 
-								var antennaName = antenna.CustomName.ToUpper();
-								var replaceName = profile.ReplaceAntennaNameWithRandomizedName.ToUpper();
+                            if (antenna != null && !foundAntenna)
+                            {
+                                if (antenna.CustomName == null)
+                                {
+                                    antennaDef = null;
+                                    if (!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(antenna.GetId(), out antennaDef))
+                                        continue;
 
-								if (antennaName.Contains(replaceName) && !string.IsNullOrWhiteSpace(replaceName))
-								{
-									if (profile.ReplaceAntennaHudTextInsteadOfName)
-									{
-										antenna.HudText = newGridName;
-									}
-									else
-									{
-										(grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
-									}
-									foundAntenna = true;
-								}
-							}
+                                    antenna.CustomName = antennaDef.DisplayNameText;
+                                    if (antenna.CustomName == null)
+                                        continue;
+                                }
 
-							if (beacon != null && !foundBeacon)
-							{
-								if (beacon.CustomName == null)
-								{
-									beaconDef = null;
-									if (!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(beacon.GetId(), out beaconDef))
-										continue;
+                                var antennaName = antenna.CustomName.ToUpper();
+                                var replaceName = profile.ReplaceAntennaNameWithRandomizedName.ToUpper();
 
-									beacon.CustomName = beaconDef.DisplayNameText;
-									if (beacon.CustomName == null)
-										continue;
-								}
+                                if (antennaName.Contains(replaceName) && !string.IsNullOrWhiteSpace(replaceName))
+                                {
+                                    if (profile.ReplaceAntennaHudTextInsteadOfName)
+                                    {
+                                        antenna.HudText = newGridName;
+                                    }
+                                    else
+                                    {
+                                        (grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
+                                    }
+                                    foundAntenna = true;
+                                }
+                            }
 
-								var beaconName = beacon.CustomName.ToUpper();
-								var replaceName = profile.ReplaceBeaconNameWithRandomizedName.ToUpper();
+                            if (beacon != null && !foundBeacon)
+                            {
+                                if (beacon.CustomName == null)
+                                {
+                                    beaconDef = null;
+                                    if (!DefinitionHelper.AllBlockDefinitionsDictionary.TryGetValue(beacon.GetId(), out beaconDef))
+                                        continue;
 
-								if (beaconName.Contains(replaceName) && !string.IsNullOrWhiteSpace(replaceName))
-								{
-									if (profile.ReplaceBeaconHudTextInsteadOfName)
-									{
-										beacon.HudText = newGridName;
-									}
-									else
-									{
-										(grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
-									}
-									foundBeacon = true;
-								}
-							}
+                                    beacon.CustomName = beaconDef.DisplayNameText;
+                                    if (beacon.CustomName == null)
+                                        continue;
+                                }
 
-						}
-					}
+                                var beaconName = beacon.CustomName.ToUpper();
+                                var replaceName = profile.ReplaceBeaconNameWithRandomizedName.ToUpper();
 
-				}
+                                if (beaconName.Contains(replaceName) && !string.IsNullOrWhiteSpace(replaceName))
+                                {
+                                    if (profile.ReplaceBeaconHudTextInsteadOfName)
+                                    {
+                                        beacon.HudText = newGridName;
+                                    }
+                                    else
+                                    {
+                                        (grid.CubeBlocks[i] as MyObjectBuilder_TerminalBlock).CustomName = newGridName;
+                                    }
+                                    foundBeacon = true;
+                                }
+                            }
 
-			}
+                        }
+                    }
+
+                }
+
+            }
+            else if (profile.UseRandomNameGenerator && profile.RandomGridNamePrefix != "")
+            {
+                prefab.Prefab.CubeGrids[0].DisplayName = profile.RandomGridNamePrefix + prefab.Prefab.CubeGrids[0].DisplayName;
+            }
 
 			if(profile.CustomChatAuthorName != null) {
 

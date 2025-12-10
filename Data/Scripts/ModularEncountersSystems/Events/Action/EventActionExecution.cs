@@ -7,6 +7,7 @@ using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.Spawning;
+using ModularEncountersSystems.World;
 using ModularEncountersSystems.Zones;
 using Sandbox.Definitions;
 using Sandbox.Game;
@@ -48,9 +49,13 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 
-			//DebugHudMessage
-			if (!string.IsNullOrWhiteSpace(actions.DebugHudMessage))
-				MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);
+            //DebugHudMessage
+            if (!string.IsNullOrWhiteSpace(actions.DebugHudMessage))
+			{
+                MyAPIGateway.Utilities.ShowMessage("MES-EVENT", actions.DebugHudMessage);
+                MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);
+            }
+
 
 			//Booleans
 			if (actions.ChangeBooleans == true) {
@@ -290,11 +295,11 @@ namespace ModularEncountersSystems.Events.Action {
 				var defaultDescription = "No description available";
 				var defaultColor = new Color(255, 178, 96); //  color as default
 
-				foreach (var player in PlayerManager.Players)
+                foreach (var player in PlayerManager.Players)
 				{
 					if (PlayerCondition.ArePlayerConditionsMet(actions.AddGPSPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition, actions.AddPlayerConditionPlayerTags, actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
-						for (int i = 0; i < actions.GPSNames.Count; i++)
+                        for (int i = 0; i < actions.GPSNames.Count; i++)
 						{
 
 							// If GPSDescriptions is empty or index is out of range, use the default description
@@ -350,7 +355,7 @@ namespace ModularEncountersSystems.Events.Action {
 				foreach (var player in PlayerManager.Players)
 				{
 
-					if (PlayerCondition.ArePlayerConditionsMet(actions.ChangePlayerCreditsPlayerConditionIds, player.Player.IdentityId))
+					if (PlayerCondition.ArePlayerConditionsMet(actions.ChangePlayerCreditsPlayerConditionIds, player.Player.IdentityId, actions.OverridePlayerConditionPosition, actions.OverridePosition, actions.AddPlayerConditionPlayerTags, actions.AddIncludedPlayerTags, actions.AddExcludedPlayerTag))
 					{
 
 						long credits = 0;
@@ -562,6 +567,12 @@ namespace ModularEncountersSystems.Events.Action {
             {
 				LocalApi.InsertInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, actions.InstanceEventGroupReplaceValues);
             }
+
+
+			if (actions.ResetUniqueSpawnGroup)
+			{
+				NpcManager.ResetThisUniqueSpawnGroup(actions.ResetUniqueSpawnGroupName);
+			}
 
 
 			//This should be as last.

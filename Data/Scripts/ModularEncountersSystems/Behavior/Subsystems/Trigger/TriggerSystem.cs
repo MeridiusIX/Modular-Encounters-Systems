@@ -38,8 +38,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> ExistingTriggers;
 
 		public List<DialogueBank> _dialogueBanks;
+        public DialogueBank _dialogueBank;
 
-		public bool RemoteControlCompromised;
+        public bool RemoteControlCompromised;
 
 		public bool TimedTriggersProcessed;
 
@@ -51,7 +52,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool PaymentSuccessTriggered;
 		public bool PaymentFailureTriggered;
 
-		public DateTime LastTriggerRun;
+		public bool AntennaThoughtBubblePercentageReachedMinTriggered;
+		public bool AntennaThoughtBubblePercentageReachedMaxTriggered;
+
+
+        public DateTime LastTriggerRun;
 
 		public Action OnComplete;
 		public Action<IMyCubeGrid, string> DespawnFromMES;
@@ -69,6 +74,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ExistingTriggers = new List<string>();
 
 			_dialogueBanks = new List<DialogueBank>();
+			_dialogueBank = new DialogueBank();
+
 			RemoteControlCompromised = false;
 
 			TimedTriggersProcessed = false;
@@ -126,7 +133,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				//PlayerFar
 				if (trigger.Type == "PlayerFar") {
 
-					if (trigger.UsePlayerFilterProfile) 
+					if (trigger.UsePlayerFilterProfile)
 						trigger.ActivateTrigger(CheckPlayerFarPlayerCondition);
 					else
 						trigger.ActivateTrigger(CheckPlayerFar);
@@ -168,6 +175,36 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if (_behavior.BehaviorSettings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords) > trigger.TargetDistance) {
 
 							trigger.ActivateTrigger(CheckDespawnFar);
+
+						}
+
+					}
+
+					continue;
+
+				}
+
+				//WaypointNear
+				if (trigger.Type == "WaypointNear") {
+
+                    //if (CheckWaypointNear(trigger))
+                    //{
+                    //    VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> " + CheckWaypointNear(trigger) + " GPS:RC:" + RemoteControl.GetPosition().X + ":" +  + RemoteControl.GetPosition().Y + ":" +  + RemoteControl.GetPosition().Z + ":: | GPS:WP:" + _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords().X + ":" + _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords().Y + ":" + _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords().Z + ":: | ");
+                    //}
+					trigger.ActivateTrigger(CheckWaypointNear);
+					continue;
+
+				}
+
+				//WaypointFar
+				if (trigger.Type == "WaypointFar") {
+
+					//BehaviorLogger.Write("Checking WaypointFar Trigger: " + trigger.ProfileSubtypeId, BehaviorDebugEnum.Trigger);
+					if (trigger.UseTrigger == true) {
+
+						if (_behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords() != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords()) > trigger.TargetDistance) {
+
+							trigger.ActivateTrigger(CheckWaypointFar);
 
 						}
 
@@ -321,8 +358,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				//PlayerKnownLocation
-				if (trigger.Type == "PlayerKnownLocation") {
+                //PaymentSuccess
+                if (trigger.Type == "AntennaThoughtBubblePercentageReachedMin")
+                {
+
+                    trigger.ActivateTrigger(CheckAntennaThoughtBubblePercentageReachedMin);
+                    continue;
+
+                }
+
+                //PaymentFailure
+                if (trigger.Type == "AntennaThoughtBubblePercentageReachedMax")
+                {
+
+                    trigger.ActivateTrigger(CheckAntennaThoughtBubblePercentageReachedMax);
+                    continue;
+
+                }
+
+
+
+                //PlayerKnownLocation
+                if (trigger.Type == "PlayerKnownLocation") {
 
 					trigger.ActivateTrigger(CheckPlayerKnownLocation);
 					continue;
@@ -369,8 +426,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-				//InsideZone
-				if (trigger.Type == "InsideZone") {
+                //InsideZone
+                if (trigger.Type == "Position")
+                {
+
+                    trigger.ActivateTrigger(Position);
+                    continue;
+
+                }
+
+                //InsideZone
+                if (trigger.Type == "InsideZone") {
 
 					trigger.ActivateTrigger(InsideZone);
 					continue;
@@ -440,7 +506,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			_behavior.BehaviorTriggerG = false;
 			PaymentSuccessTriggered = false;
 			PaymentFailureTriggered = false;
-			TimedTriggersProcessed = true;
+
+			AntennaThoughtBubblePercentageReachedMinTriggered = false;
+			AntennaThoughtBubblePercentageReachedMaxTriggered = false;
+
+            TimedTriggersProcessed = true;
 
 		}
 
@@ -482,7 +552,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				var trigger = DamageTriggers[i];
 
 				var damageType = info.Type.ToString();
-
+				//MyAPIGateway.Utilities.ShowMessage("AaW", damageType);
 				if ((trigger.DamageTypes.Contains(damageType) || trigger.DamageTypes.Contains("Any")) && !trigger.ExcludedDamageTypes.Contains(damageType)) {
 
 					if (trigger.UseTrigger == true) {
@@ -497,7 +567,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 							var idOwner = DamageHelper.GetAttackOwnerId(info.AttackerId);
 
-							if (FactionHelper.IsIdentityPlayer(idOwner)) 
+							if (FactionHelper.IsIdentityPlayer(idOwner))
 							{
 								newCommand = Command.PlayerRelatedCommand(idOwner);
 
@@ -605,7 +675,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					return;
 
 				}
-			
+
 			}
 
 			if (receivedCommand.CheckRelationSenderReceiver)
@@ -791,7 +861,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						continue;
 
 					}
-						
+
 
 					bool isSelfGrid = grid.CubeGrid == RemoteControl.SlimBlock.CubeGrid;
 
@@ -801,7 +871,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						continue;
 
 					}
-						
+
 
 					if (trigger.DetectSelfAsJumpedGrid && !isSelfGrid) {
 
@@ -809,7 +879,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						continue;
 
 					}
-						
+
 
 					if (!trigger.DetectSelfAsJumpedGrid && Vector3D.Distance(RemoteControl.GetPosition(), startCoords) > trigger.JumpedGridActivationDistance) {
 
@@ -817,7 +887,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						continue;
 
 					}
-						
+
 
 					if (!trigger.DetectSelfAsJumpedGrid && !trigger.JumpedGridsCanBeNonHostile && !grid.RelationTypes(RemoteControl.OwnerId).HasFlag(RelationTypeEnum.Enemy)) {
 
@@ -825,7 +895,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						continue;
 
 					}
-						
+
 
 					trigger.JumpedGrid = grid;
 					trigger.JumpStart = startCoords;
@@ -874,7 +944,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 						if ((trigger.MinPlayerReputation >= -1500 && rep < trigger.MinPlayerReputation) || (trigger.MaxPlayerReputation <= 1500 && rep > trigger.MaxPlayerReputation))
 							continue;
-					
+
 					}
 
 
@@ -1012,7 +1082,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				trigger.UseTrigger = false;
 				ToggleTriggers(trigger.ToggleWithTriggerProfile, CheckEnum.Yes, trigger.ToggledProfileResetsCooldown ? CheckEnum.Yes : CheckEnum.Ignore);
-			
+
 			}
 
 			if (!string.IsNullOrWhiteSpace(trigger.EnableNamedTriggerOnSuccess)) {
@@ -1031,7 +1101,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				//Trigger doesn't have actions. Shouldn't be possible to get here with that, but we'll play it safe anyway
 				return;
-			
+
 			}
 
 			//Action Execution
@@ -1081,7 +1151,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				ToggleTriggers(name, toggle, reset);
 
 			}
-		
+
 		}
 
 		public void ToggleTriggers(string triggerName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore) {
@@ -1090,7 +1160,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ToggleTriggers(DamageTriggers, triggerName, toggleMode, resetCooldown);
 			ToggleTriggers(CommandTriggers, triggerName, toggleMode, resetCooldown);
 			ToggleTriggers(CompromisedTriggers, triggerName, toggleMode, resetCooldown);
-			
+
 		}
 
 		public void ToggleTriggers(List<TriggerProfile> triggers, string triggerName = "", CheckEnum toggleMode = CheckEnum.Ignore, CheckEnum resetCooldown = CheckEnum.Ignore) {
@@ -1231,7 +1301,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					player = TargetHelper.GetClosestPlayerWithReputation(remotePosition, _owner.FactionId, control);
 
 				}
-			} 
+			}
 
 			else {
 
@@ -1266,7 +1336,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
-			
+
 
 			if (control.InsideAntenna == true) {
 
@@ -1347,7 +1417,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 						if (rep < control.MinPlayerReputation || rep > control.MaxPlayerReputation)
 							continue;
 					}
-				}	
+				}
 
 				distance = dist;
 				result = player;

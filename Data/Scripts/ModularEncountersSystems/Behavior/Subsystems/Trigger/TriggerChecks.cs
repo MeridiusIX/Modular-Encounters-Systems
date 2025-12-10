@@ -55,17 +55,33 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		//DespawnNear
-		public bool CheckDespawnNear(TriggerProfile trigger) {
+        //DespawnNear
+        public bool CheckDespawnNear(TriggerProfile trigger)
+        {
 
-			return _behavior.BehaviorSettings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords) < trigger.TargetDistance;
+            return _behavior.BehaviorSettings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords) < trigger.TargetDistance;
 
-		}
+        }
 
 		//DespawnFar
 		public bool CheckDespawnFar(TriggerProfile trigger) {
 
 			return _behavior.BehaviorSettings.DespawnCoords != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.BehaviorSettings.DespawnCoords) > trigger.TargetDistance;
+
+		}
+
+        //WaypointNear
+        public bool CheckWaypointNear(TriggerProfile trigger)
+        {
+
+            return _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords() != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords()) < trigger.TargetDistance;
+
+        }
+
+		//WaypointFar
+		public bool CheckWaypointFar(TriggerProfile trigger) {
+
+			return _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords() != Vector3D.Zero && Vector3D.Distance(RemoteControl.GetPosition(), _behavior.AutoPilot.State.CargoShipWaypoints[0].GetCoords()) > trigger.TargetDistance;
 
 		}
 
@@ -212,8 +228,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		//PlayerKnownLocation
-		public bool CheckPlayerKnownLocation(TriggerProfile trigger) {
+
+        //PaymentSuccess
+        public bool CheckAntennaThoughtBubblePercentageReachedMin(TriggerProfile trigger)
+        {
+
+            return AntennaThoughtBubblePercentageReachedMinTriggered;
+
+        }
+
+        //PaymentFailure
+        public bool CheckAntennaThoughtBubblePercentageReachedMax(TriggerProfile trigger)
+        {
+
+            return AntennaThoughtBubblePercentageReachedMaxTriggered;
+
+        }
+
+
+
+        //PlayerKnownLocation
+        public bool CheckPlayerKnownLocation(TriggerProfile trigger) {
 
 			return KnownPlayerLocationManager.IsPositionInKnownPlayerLocation(RemoteControl.GetPosition(), true, _behavior.Owner.Faction?.Tag);
 
@@ -257,8 +292,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
-		//InsideZone
-		public bool InsideZone(TriggerProfile trigger) {
+        //Position
+        public bool Position(TriggerProfile trigger)
+        {
+
+            var dist = Vector3D.Distance(trigger.GlobalPosition, _behavior.RemoteControl.GetPosition());
+            return dist < trigger.TargetDistance;
+
+        }
+
+        //InsideZone
+        public bool InsideZone(TriggerProfile trigger) {
 
 			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName);
 

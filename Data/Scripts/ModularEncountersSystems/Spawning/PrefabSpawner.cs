@@ -9,6 +9,8 @@ using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.World;
 using Sandbox.Definitions;
 using Sandbox.Game;
+using Sandbox.Game.Entities;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -34,17 +36,17 @@ namespace ModularEncountersSystems.Spawning {
 				if (prefab.Valid) {
 
 					Prefabs.Add(prefab);
-				
+
 				} else {
-				
+
 					//TODO: Logger That Prefab isnt valid
-				
+
 				}
 
 			}
 
 			MES_SessionCore.UnloadActions += Unload;
-		
+
 		}
 
 		public static bool ProcessSpawning(SpawnGroupCollection spawnCollection, PathDetails path, EnvironmentEvaluation environment, string context) {
@@ -58,15 +60,15 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnPrefab(spawnCollection, path, environment, context);
 
 			} else {
-			
+
 				//Determine if Creatures are Keen or jTurp
-			
+
 			}
 
-			
+
 
 			return true;
-		
+
 		}
 
 		public static void SpawnVoxels(SpawnGroupCollection spawnCollection, PathDetails path) {
@@ -148,7 +150,7 @@ namespace ModularEncountersSystems.Spawning {
 			for (int i = 0; i < spawnCollection.PrefabIndexes.Count; i++) {
 
 				var sgPrefab = spawnCollection.SpawnGroup.SpawnGroup.Prefabs[spawnCollection.PrefabIndexes[i]];
-
+                //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> prefab: " + sgPrefab.SubtypeId);
 				//Select Prefab Container
 				PrefabContainer prefab = null;
 
@@ -164,7 +166,7 @@ namespace ModularEncountersSystems.Spawning {
 						break;
 
 					}
-				
+
 				}
 
 				if (prefab == null) {
@@ -173,7 +175,7 @@ namespace ModularEncountersSystems.Spawning {
 					continue;
 
 				}
-				
+
 				//NPC Data
 				var npcData = new NpcData();
 				npcData.AssignAttributes(spawnCollection.SpawnGroup, path.SpawnType);
@@ -201,7 +203,16 @@ namespace ModularEncountersSystems.Spawning {
 				npcData.EndCoords = path.GetPrefabEndCoords(sgPrefab.Position, environment, spawnCollection.Conditions.CustomPathEndAltitude);
 				npcData.Forward = path.SpawnMatrix.Forward;
 				npcData.Up = path.SpawnMatrix.Up;
-				npcData.Context = context;
+                npcData.Context = context;
+
+                npcData.ParentId = spawnCollection.ParentId;
+
+                if (spawnCollection.CustomCountersVariables != null) {
+                    foreach (var counterVar in spawnCollection.CustomCountersVariables)
+                    {
+                        npcData.CustomCountersVariables[counterVar.Key] = counterVar.Value;
+                    }
+                }
 
 				Vector3 linearVelocity = Vector3.Zero;
 				Vector3 angularVelocity = Vector3.Zero;
@@ -238,7 +249,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				var options = SpawnGroupManager.CreateSpawningOptions(spawnCollection.Conditions, sgPrefab);
+				var options = SpawnGroupManager.CreateSpawningOptions(spawnCollection.Conditions, sgPrefab, spawnCollection.SpawnGroup);
 
 				if (spawnCollection.Conditions.ForceExactPositionAndOrientation) {
 
@@ -279,7 +290,8 @@ namespace ModularEncountersSystems.Spawning {
 
 					gridListDummy.Clear();
 					NpcManager.SpawnedNpcData.Add(npcData);
-					MyAPIGateway.PrefabManager.SpawnPrefab(gridListDummy, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner);
+                    var grids = new List<IMyCubeGrid>();
+					MyAPIGateway.PrefabManager.SpawnPrefab(grids, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner, false, () => GridsSpawned(grids, npcData));
 					spawnCollection.SpawnedPrefabs++;
 
 				} catch (Exception exc) {
@@ -293,6 +305,24 @@ namespace ModularEncountersSystems.Spawning {
 
 
 		}
+
+        static void GridsSpawned(List<IMyCubeGrid> grids, NpcData data)
+        {
+            foreach(MyCubeGrid grid in grids)
+            {
+                var mainGrid = grid.GetBiggestGridInGroup();
+                if(mainGrid == null) throw new Exception("Main grid was null when trying to spawn prefab.");
+
+                if(mainGrid.Storage == null)
+                    mainGrid.Storage = new MyModStorageComponent();
+
+                if(!mainGrid.Storage.ContainsKey(StorageTools.NpcDataKey))
+                {
+                    //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>> assigning NPCData: " + grid.DisplayName);
+                    mainGrid.Storage[StorageTools.NpcDataKey] = SerializationHelper.ConvertClassToString<NpcData>(data);
+                }
+            }
+        }
 
 		//Tie in Spawn Costs
 		public static void ApplySpawningCosts(SpawnConditionsProfile spawnGroup, string factionTag) {
@@ -550,7 +580,7 @@ namespace ModularEncountersSystems.Spawning {
 		public static void Unload() {
 
 			Prefabs.Clear();
-		
+
 		}
 
 	}

@@ -23,11 +23,11 @@ using Ingame = Sandbox.ModAPI.Ingame;
 namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 	public enum AutoPilotDataMode {
-	
+
 		Primary,
 		Secondary,
 		Tertiary
-	
+
 	}
 
 	public enum AutoPilotType {
@@ -71,7 +71,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 
 	}
-	public partial class AutoPilotSystem {
+
+    public enum RouteDirection
+    {
+        Unset,      // instead of None, indicates not yet assigned
+        Forward,    // instead of Normal
+        Backward    // instead of Reversed
+    }
+
+    public partial class AutoPilotSystem {
 
 		//Non-Configurable
 		private IMyRemoteControl _remoteControl;
@@ -130,7 +138,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				State.PrimaryAutoPilot = value;
 
 			}
-		
+
 		}
 
 		//New AutoPilot
@@ -151,7 +159,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					State.AutoPilotFlags = value;
 
 			}
-		
+
 		}
 
 		public NewAutoPilotMode UserCustomMode { get { return Data.FlyLevelWithGravity ? NewAutoPilotMode.LevelWithGravity : NewAutoPilotMode.None; } }
@@ -165,6 +173,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public WeaponSystem Weapons;
 
 		public double MaxSpeed { get { return State.MaxSpeedOverride != -1 ? State.MaxSpeedOverride : Data.IdealMaxSpeed; } }
+		public double MinAltitude { get { return State.MinAltitudeOverride != -1 ? State.MinAltitudeOverride : Data.MinimumPlanetAltitude; } }
 
 		public WaypointModificationEnum DirectWaypointType;
 		public WaypointModificationEnum IndirectWaypointType;
@@ -366,7 +375,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			//Post Constructor Setup
 			_remoteControl = remoteControl;
 			Targeting = new TargetingSystem(_remoteControl);
-			ShownGps = false;	
+			ShownGps = false;
 		}
 
 		public void SetupReferences(IBehavior behavior, StoredSettings settings, TriggerSystem trigger) {
@@ -403,7 +412,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 						} else {
 
 							ProfileManager.ReportProfileError(profileId, "Primary AutoPilot Data Could Not Be Loaded");
-						
+
 						}
 
 					}
@@ -510,7 +519,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public void ThreadedAutoPilotCalculations() {
 
 			_myPosition = _remoteControl.GetPosition();
-			
+
 			DirectWaypointType = WaypointModificationEnum.None;
 			IndirectWaypointType = WaypointModificationEnum.None;
 
@@ -618,7 +627,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				return;
 
 			}
-				
+
 
 			_remoteControl.SetAutoPilotEnabled(false); //
 			_remoteControl.ClearWaypoints();
@@ -627,9 +636,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				return;
 
 			/*
-			 
+
 			//Obsolete Since Vanilla Autopilot is Rewritten
-			 
+
 			if (UseStuckMovementCorrection && _upDirection != Vector3D.Zero) {
 
 				var timeSpan = MyAPIGateway.Session.GameDateTime - _lastAutoPilotCorrection;
@@ -679,13 +688,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
-		public void PrepareAutopilot() {
+        public void PrepareAutopilot()
+        {
 
-			bool hasWaypoint = _currentWaypoint != Vector3D.Zero;
-			ProcessRotationParallel(hasWaypoint);
-			ProcessThrustParallel(hasWaypoint);
+            bool hasWaypoint = _currentWaypoint != Vector3D.Zero;
+            ProcessRotationParallel(hasWaypoint);
+            ProcessThrustParallel(hasWaypoint);
 
-		}
+        }
+
+        public string GetGPS(string name, Vector3D vector)
+        {
+            var gps = "GPS:" + name + ":" + vector.X + ":" + vector.Y + ":" + vector.Z + ":#FF82F175:";
+            return gps;
+        }
 
 		public string GetAutopilotData() {
 
@@ -702,9 +718,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			sb.Append(" - Current Profile:                    ").Append(Data?.ProfileSubtypeId ?? "null").AppendLine();
 			sb.Append(" - Speed:                              ").Append(Math.Round(MyVelocity.Length(), 4).ToString()).AppendLine();
 			sb.Append(" - Altitude:                           ").Append(MyAltitude.ToString()).AppendLine();
-			sb.Append(" - Position:                           ").Append(_remoteControl.GetPosition().ToString()).AppendLine();
-			sb.Append(" - Initial Waypoint:                   ").Append(_initialWaypoint.ToString()).AppendLine();
-			sb.Append(" - Current Waypoint:                   ").Append(_currentWaypoint.ToString()).AppendLine();
+			sb.Append(" - Position:                           ").Append(GetGPS("Position", _remoteControl.GetPosition())).AppendLine();
+			sb.Append(" - Initial Waypoint:                   ").Append(GetGPS("Initial Waypoint", _initialWaypoint)).AppendLine();
+			sb.Append(" - Current Waypoint:                   ").Append(GetGPS("Current Waypoint", _currentWaypoint)).AppendLine();
 			sb.Append(" - Offset Waypoint:                    ").Append(_calculatedOffsetWaypoint.ToString()).AppendLine();
 			sb.Append(" - Offset Distance:                    ").Append(_offsetDistance.ToString()).AppendLine();
 			sb.Append(" - Offset Altitude:                    ").Append(_offsetAltitude.ToString()).AppendLine();
@@ -769,7 +785,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			}
 
 			return sb.ToString();
-		
+
 		}
 
 		private void ApplyAutopilot() {
@@ -923,7 +939,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			if (CurrentPlanet != null && CurrentPlanet.Gravity != null && CurrentPlanet.Gravity.IsPositionInRange(_myPosition)) {
 
-				
+
 				_upDirection = CurrentPlanet.UpAtPosition(_myPosition);
 				_gravityStrength = CurrentPlanet.Gravity.GetWorldGravity(_myPosition).Length();
 				_surfaceDistance = Vector3D.Distance(CurrentPlanet.SurfaceCoordsAtPosition(_myPosition), _myPosition);
@@ -1042,7 +1058,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				}
 
-			} 
+			}
 
 			if (_requiresNavigationAroundCollision) {
 
@@ -1056,9 +1072,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 					_pendingWaypoint = _evadeWaypoint;
 					return;
-				
+
 				}
-				
+
 				_requiresNavigationAroundCollision = false;
 
 
@@ -1077,10 +1093,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					var distsurfaceToCore = Vector3D.Distance(surfaceCoords, CurrentPlanet.Center());
 					var distroughToCore = Vector3D.Distance(surfaceCoords, CurrentPlanet.Center());
 
-					if (distRoughToSurface < Data.MinimumPlanetAltitude || distsurfaceToCore > distroughToCore) {
+					if (distRoughToSurface < MinAltitude || distsurfaceToCore > distroughToCore) {
 
 						var upAtSurface = Vector3D.Normalize(surfaceCoords - CurrentPlanet.Center());
-						roughPaddedCoords = upAtSurface * MathTools.ValueBetween(Data.MinimumPlanetAltitude, Data.IdealPlanetAltitude);
+						roughPaddedCoords = upAtSurface * MathTools.ValueBetween(MinAltitude, Data.IdealPlanetAltitude);
 
 					}
 
@@ -1098,12 +1114,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (Data.TryToLevelWithTarget && Targeting.HasTarget() && InGravity() && Targeting.Target.IsStatic() && Targeting.Target.Distance(_myPosition) < 1200 && Targeting.Target.CurrentAltitude() < 0)
 			{
 				/*
-				 
+
 				WIP
 
 				var targetCoords = Targeting.TargetLastKnownCoords;
 
-				var distanceTargetCore = (Targeting.TargetLastKnownCoords - CurrentPlanet.Center()).Length(); 
+				var distanceTargetCore = (Targeting.TargetLastKnownCoords - CurrentPlanet.Center()).Length();
 
 				var surfaceTargetCoords = CurrentPlanet.SurfaceCoordsAtPosition(targetCoords);
 
@@ -1161,8 +1177,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				//closestSurfacePoint;
 				var upAtClosestSurfacePoint = Vector3D.Normalize(closestSurfacePoint - CurrentPlanet.Center());
 
-				if (highestAltitude < Data.MinimumPlanetAltitude)
-					highestAltitude = Data.MinimumPlanetAltitude;
+				if (highestAltitude < MinAltitude)
+					highestAltitude = MinAltitude;
 
 				closestSurfacePoint = closestSurfacePoint+ upAtClosestSurfacePoint * highestAltitude;
 
@@ -1225,7 +1241,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					}
 
 				}
-			
+
 			}
 
 			//RoverNavigation
@@ -1234,7 +1250,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				if (RoverPath != null)
 				{
-					
+
 					_pendingWaypoint = RoverPath.GetPathCoords(_myPosition, 50);
 
 
@@ -1311,7 +1327,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
-		
+
 
 		private void CalculateEvadeCoords() {
 
@@ -1376,7 +1392,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				}
 
 			}
-			
+
 		}
 
 		private void CalculateFallEvadeCoords() {
@@ -1421,7 +1437,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				_offsetRequiresCalculation = true;
 
-				if (keepInDirectionOfVelocity) 
+				if (keepInDirectionOfVelocity)
 				{
 					_offsetRequiresCalculationInDirectionOfVelocity = true;
 				}
@@ -1484,7 +1500,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 					if (reverseDistAlt) {
 
-						_offsetAltitude = MathTools.RandomBetween(Data.OffsetPlanetMinDistFromTarget, Data.OffsetPlanetMaxDistFromTarget); 
+						_offsetAltitude = MathTools.RandomBetween(Data.OffsetPlanetMinDistFromTarget, Data.OffsetPlanetMaxDistFromTarget);
 						_offsetDistance = MathTools.RandomBetween(Data.OffsetPlanetMinTargetAltitude, Data.OffsetPlanetMaxTargetAltitude);
 
 					} else {
@@ -1505,7 +1521,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					_offsetDistance = MathTools.RandomBetween(Data.OffsetSpaceMinDistFromTarget, Data.OffsetSpaceMaxDistFromTarget);
 
 				}
-			
+
 			}
 
 			//Update Position and Matrix
@@ -1513,7 +1529,38 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				_offsetMatrix = Targeting.Target.GetEntity().PositionComp.WorldMatrixRef;
 
-			} else {
+
+				if (!keepInDirectionOfVelocity && Data.OffsetMaxAngleFromTarget != 180)
+				{
+                    //180 means that it can fly past the target on its way to the next waypoint
+                    //angle like 90 means it will come close
+                    //angle like 10 means that it should really try to keep a distance
+					//
+
+                    double angle = 0;
+                    var vectorTargetToWaypoint = new Vector3D(0, 0, 0);
+
+                    if (InGravity())
+                    {
+                        vectorTargetToWaypoint = Vector3D.Normalize(CurrentPlanet.SurfaceCoordsAtPosition(_initialWaypoint) - CurrentPlanet.SurfaceCoordsAtPosition(_offsetMatrix.Translation));
+
+                        angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
+
+                    }
+                    else
+                    {
+                        vectorTargetToWaypoint = Vector3D.Normalize(_initialWaypoint - _offsetMatrix.Translation);
+                        angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
+                    }
+
+                    if (angle > Data.OffsetMaxAngleFromTarget)
+                    {
+                        _offsetDirection = VectorHelper.LimitedDirection(_offsetDirection, vectorTargetToWaypoint, Data.OffsetMaxAngleFromTarget);
+                    }
+                }
+
+
+            } else {
 
 				if (_offsetMatrix == MatrixD.Identity) {
 
@@ -1526,9 +1573,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 						_offsetMatrix = MatrixD.CreateWorld(_initialWaypoint, _remoteControl.WorldMatrix.Forward, _remoteControl.WorldMatrix.Up);
 
 					}
-				
+
 				}
-			
+
 			}
 
 			var translation = _offsetMatrix.Translation;
@@ -1542,10 +1589,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				var upAtRoughCoords = Vector3D.Normalize(roughPerpendicularCoords - worldCenter);
 				var centerToRoughDist = Vector3D.Distance(worldCenter, roughPerpendicularCoords);
 				var centerToSurfaceDist = Vector3D.Distance(worldCenter, roughCoordsSurface);
-				var minToIdealPlanetAltitude = MathTools.ValueBetween(Data.MinimumPlanetAltitude, Data.IdealPlanetAltitude);
+				var minToIdealPlanetAltitude = MathTools.ValueBetween(MinAltitude, Data.IdealPlanetAltitude);
 				var offsetAlt = _offsetAltitude > minToIdealPlanetAltitude ? _offsetAltitude : minToIdealPlanetAltitude;
 
-				if ((centerToRoughDist - centerToSurfaceDist) < Data.MinimumPlanetAltitude) {
+				if ((centerToRoughDist - centerToSurfaceDist) < MinAltitude) {
 
 					_pendingWaypoint = upAtRoughCoords * offsetAlt + roughCoordsSurface;
 
@@ -1554,7 +1601,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					var candidateWaypoint = upAtRoughCoords * _offsetAltitude + roughPerpendicularCoords;
 					var centerToCandidateDist = Vector3D.Distance(worldCenter, candidateWaypoint);
 
-					if ((centerToCandidateDist - centerToSurfaceDist) < Data.MinimumPlanetAltitude) {
+					if ((centerToCandidateDist - centerToSurfaceDist) < MinAltitude) {
 
 						_pendingWaypoint = upAtRoughCoords * offsetAlt + roughCoordsSurface;
 
@@ -1565,7 +1612,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					}
 
 				}
-			
+
 			} else {
 
 				_pendingWaypoint = _offsetDirection * _offsetDistance + translation;
@@ -1583,14 +1630,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				_circleTargetRequiresReset = true;
 				return;
-			
+
 			}
 
 			if (nextWaypoint) {
 
 				_circleTargetNextWaypoint = true;
 				return;
-			
+
 			}
 
 			//Check Gravity
@@ -1616,13 +1663,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 						_circleTargetRequiresReset = true;
 
 					}
-				
+
 				}
-			
+
 			}
 
 			var targetCoords = Targeting.HasTarget() ? Targeting.Target.GetPosition() : _myPosition;
-			
+
 			//Reset
 			if (_circleTargetRequiresReset) {
 
@@ -1736,7 +1783,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			//Planet Circumnavigation Safety Stuff
 			if (angleBetweenWaypoint > 45) {
-			
+
 				var directionFromTarget = Vector3D.Normalize(_myPosition - _pendingWaypoint);
 				var lineFromTarget = directionFromTarget * (Vector3D.Distance(_pendingWaypoint, _myPosition) * 0.8) + _pendingWaypoint;
 				var surfaceAtLineTermination = CurrentPlanet.SurfaceCoordsAtPosition(lineFromTarget);
@@ -1747,8 +1794,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			Vector3D directionToTarget = Vector3D.Normalize(_pendingWaypoint - _myPosition);
 			double distanceToTarget = Vector3D.Distance(_pendingWaypoint, _myPosition);
 
-			double requiredAltitude = _requiresClimbToIdealAltitude ? this.Data.IdealPlanetAltitude : this.Data.MinimumPlanetAltitude;
-			
+			double requiredAltitude = _requiresClimbToIdealAltitude ? this.Data.IdealPlanetAltitude : this.MinAltitude;
+
 
 			Vector3D mySurfaceCoords = CurrentPlanet.SurfaceCoordsAtPosition(_myPosition);
 			Vector3D waypointSurfaceCoords = CurrentPlanet.SurfaceCoordsAtPosition(_pendingWaypoint);
@@ -1782,7 +1829,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			double waypointAltitudeDifferenceFromHighestTerrain = waypointCoreDistance - highestTerrainCoreDistance;
 
 			//Terrain Higher Than Me
-			if (myAltitudeDifferenceFromHighestTerrain < this.Data.MinimumPlanetAltitude) {
+			if (myAltitudeDifferenceFromHighestTerrain < this.MinAltitude) {
 
 				//BehaviorLogger.Write("Planet Pathing: Terrain Higher Than NPC", BehaviorDebugEnum.Dev);
 				IndirectWaypointType |= WaypointModificationEnum.PlanetPathingAscend;
@@ -1812,7 +1859,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			}
 
 			//No Obstruction Case
-			if (waypointAltitudeDifferenceFromHighestTerrain >= this.Data.MinimumPlanetAltitude) {
+			if (waypointAltitudeDifferenceFromHighestTerrain >= this.MinAltitude) {
 
 				BehaviorLogger.Write("Planet Pathing: No Obstruction", BehaviorDebugEnum.AutoPilot);
 				_calculatedPlanetPathWaypoint = _pendingWaypoint;
@@ -1841,7 +1888,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			var myCoreAltitude = Vector3D.Distance(_myPosition, core);
 
 			//Step Ahead
-			
+
 			var stepAheadSurface = CurrentPlanet.SurfaceCoordsAtPosition(targetDir * Data.HoverPathStepDistance + _myPosition);
 			var stepAheadCoords = _upDirection * Data.IdealPlanetAltitude + stepAheadSurface;
 			var stepAheadUpAngle = VectorHelper.GetAngleBetweenDirections(_upDirection, Vector3D.Normalize(stepAheadCoords - _myPosition));
@@ -1853,14 +1900,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			var cliffCheckUpAngle = VectorHelper.GetAngleBetweenDirections(_upDirection, Vector3D.Normalize(cliffCheckCoords - _myPosition));
 			var cliffCheckCoreDistance = Vector3D.Distance(cliffCheckCoords, core);
 
-			
+
 			//Step Altitude Checks
 			bool isStepHigher = stepAheadCoreDistance - myCoreAltitude > 0;
 			bool isCliffHigher = cliffCheckCoreDistance - myCoreAltitude > 0;
 
 			//Cliff Safety Check
 			MyVisualScriptLogicProvider.ShowNotificationToAll($"Angle: {cliffCheckUpAngle}", 500, "green");
-			
+
 			if (cliffCheckUpAngle <= Data.HoverCliffAngle) {
 				MyVisualScriptLogicProvider.ShowNotificationToAll("Cliff Safety Check", 500, "Red");
 
@@ -1939,8 +1986,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				newCoords = up * minDistance + planet.Center();
 
-				if (Vector3D.Distance(newCoords, planet.Center()) - surfaceCoreDistance < Data.MinimumPlanetAltitude)
-					newCoords = up * Data.MinimumPlanetAltitude + surfaceCoords;
+				if (Vector3D.Distance(newCoords, planet.Center()) - surfaceCoreDistance < MinAltitude)
+					newCoords = up * MinAltitude + surfaceCoords;
 
 				currentDistance = Vector3D.Distance(newCoords, planet.Center());
 
@@ -1951,8 +1998,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				newCoords = up * maxDistance + planet.Center();
 
-				if (Vector3D.Distance(newCoords, planet.Center()) - surfaceCoreDistance < Data.MinimumPlanetAltitude)
-					newCoords = up * Data.MinimumPlanetAltitude + surfaceCoords;
+				if (Vector3D.Distance(newCoords, planet.Center()) - surfaceCoreDistance < MinAltitude)
+					newCoords = up * MinAltitude + surfaceCoords;
 
 				currentDistance = Vector3D.Distance(newCoords, planet.Center());
 
@@ -2077,7 +2124,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				if (VectorHelper.GetAngleBetweenDirections(-_offsetDirection, _upDirection) < minSafeAngle)
 					return;
-			
+
 			}
 
 			_offsetDirection *= -1;
@@ -2133,7 +2180,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					return true;
 
 				}
-			
+
 			}
 
 			if (InGravity() && MyAltitude < Data.IdealPlanetAltitude) {
@@ -2167,7 +2214,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public Vector3D GetCurrentWaypoint() {
 
 			return _currentWaypoint;
-		
+
 		}
 
 		public Vector3D GetPendingWaypoint() {
@@ -2179,7 +2226,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public PlanetEntity GetCurrentPlanet() {
 
 			return CurrentPlanet;
-		
+
 		}
 
 		public Vector3D CalculateDespawnCoords(Vector3D coords) {
@@ -2199,7 +2246,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				double distDifference = -1;
 
 				var forwardDespawnCoreDistDifference = Math.Abs(surfaceDistanceCore - GetCoreDistanceFromPotentialDespawn(surfaceMatrix, surfaceMatrix.Forward, distance, center));
-				
+
 				if (distDifference == -1) {
 
 					distDifference = forwardDespawnCoreDistDifference;
@@ -2250,7 +2297,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					result = -randomDir * distance + coords;
 
 					if(SpaceDespawnInsideGravity(result)){
-					
+
 						result = Vector3D.CalculatePerpendicularVector(randomDir) + coords;
 
 					}
@@ -2258,7 +2305,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				}
 
 				return result;
-			
+
 			}
 
 		}
@@ -2291,7 +2338,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public bool IsAvoidingCollision() {
 
 			return _requiresNavigationAroundCollision;
-		
+
 		}
 
 		public bool IsWaypointThroughVelocityCollision(int timeToCollision = -1, CollisionType type = CollisionType.None) {
@@ -2306,7 +2353,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				return true;
 
 			return false;
-		
+
 		}
 
 		public void SetAutoPilotDataMode(AutoPilotDataMode mode) {
@@ -2315,7 +2362,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			State.UseFlyLevelWithGravity = Data.FlyLevelWithGravity;
 			State.UseFlyLevelWithGravityIdle = Data.LevelWithGravityWhenIdle;
 			ActivateAutoPilot(_initialWaypoint, State.NormalAutopilotFlags);
-		
+
 		}
 
 		public void AssignAutoPilotDataMode(string profileId, AutoPilotDataMode mode) {
@@ -2342,7 +2389,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			_applyBarrelRoll = true;
 			_barrelRollStart = MyAPIGateway.Session.GameDateTime;
 			_barrelRollDuration = MathTools.RandomBetween(Data.BarrelRollMinDurationMs, Data.BarrelRollMaxDurationMs);
-		
+
 		}
 
 		public void ActivateHeavyYaw() {
@@ -2386,7 +2433,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				WaterPath.DrawCurrentPath();
 				RoverPath.DrawCurrentPath();
 			}
-			
+
 			 if (_evadeWaypoint != Vector3D.Zero) {
 
 				MySimpleObjectDraw.DrawLine(_myPosition + new Vector3D(1.5, 1.5, 0), _evadeWaypoint + new Vector3D(1.5, 1.5, 0), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
@@ -2412,7 +2459,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			}
 
 			//Collisions
-			
+
 			if (Collision.ForwardResult.Type != CollisionType.None) {
 
 				MySimpleObjectDraw.DrawLine(_myPosition, Collision.ForwardResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
@@ -2448,7 +2495,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				MySimpleObjectDraw.DrawLine(_myPosition, Collision.DownResult.GetCollisionCoords(), MyStringId.GetOrCompute("WeaponLaser"), ref colorRed, 1.1f);
 
 			}
-			
+
 		}
 
 		internal Vector4 ConvertColor(Color color) {

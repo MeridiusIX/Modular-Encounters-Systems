@@ -311,8 +311,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 bool failedCheck = false;
 
 
-                var _includedPlayerTag = profile.IncludedPlayerTags;
-                var _excludedPlayerTag = profile.ExcludedPlayerTags;
+                var _includedPlayerTag = new List<string>(profile.IncludedPlayerTags);
+                var _excludedPlayerTag = new List<string>(profile.ExcludedPlayerTags);
+
 
                 if (profile.AllowOverrides && AddPlayerConditionPlayerTags && IncludedPlayerTags != null)
                 {
@@ -327,7 +328,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 if (_includedPlayerTag.Count > 0)
                 {
-                    foreach (var tag in profile.IncludedPlayerTags)
+                    foreach (var tag in _includedPlayerTag)
                     {
                         if (!player.ProgressionData.Tags.Contains(tag))
                         {
@@ -344,7 +345,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 if (_excludedPlayerTag.Count > 0 && !failedCheck)
                 {
-                    foreach (var tag in profile.ExcludedPlayerTags)
+                    foreach (var tag in _excludedPlayerTag)
                     {
                         if (player.ProgressionData.Tags.Contains(tag))
                         {

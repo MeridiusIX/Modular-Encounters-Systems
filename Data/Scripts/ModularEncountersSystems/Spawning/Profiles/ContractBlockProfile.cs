@@ -122,7 +122,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				var mission = new Mission(MissionIds[i], spawnGroupName);
 				if (!mission.Init(block))
                 {
-					MyVisualScriptLogicProvider.ShowNotificationToAll($"Failed  {MissionIds[i]}", 5000);
+					//MyVisualScriptLogicProvider.ShowNotificationToAll($"Failed  {MissionIds[i]}", 5000);
 				}
 
 			}

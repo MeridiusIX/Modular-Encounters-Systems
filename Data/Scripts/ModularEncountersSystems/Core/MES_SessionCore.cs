@@ -37,8 +37,8 @@ namespace ModularEncountersSystems.Core {
 		public static bool SyncWarning = false;
 		public bool FinalSetup = false;
 
-		public static string ModVersion = "2.71.28";
-		public static int ModVersionValue = 200710028; //Use above value as reference - 3 digits per part (
+		public static string ModVersion = "2.71.44";
+		public static int ModVersionValue = 200710044; //Use above value as reference - 3 digits per part (
 		public static MES_SessionCore Instance;
 
 		public static bool IsServer;
@@ -158,7 +158,7 @@ namespace ModularEncountersSystems.Core {
 
 				FinalSetup = true;
 				MyAPIGateway.Utilities.UnregisterMessageHandler(21521905890, CompareVersions);
-			
+
 			}
 
 			if (!ModEnabled) {
@@ -176,7 +176,7 @@ namespace ModularEncountersSystems.Core {
 				UnloadActions?.Invoke();
 				MyAPIGateway.Utilities.InvokeOnGameThread(() => { this.UpdateOrder = MyUpdateOrder.NoUpdate; });
 				return;
-			
+
 			}
 
 			TaskProcessor.Process();
@@ -201,9 +201,9 @@ namespace ModularEncountersSystems.Core {
 					Settings.SaveAll();
 
 				}
-					
-			
-			}); 
+
+
+			});
 
 			return base.GetObjectBuilder();
 		}
@@ -256,7 +256,7 @@ namespace ModularEncountersSystems.Core {
 			}
 
 			return true;
-		
+
 		}
 
 		private static void CompareVersions(object data) {

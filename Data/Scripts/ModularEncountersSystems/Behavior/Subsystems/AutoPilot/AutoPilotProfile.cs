@@ -37,14 +37,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double OffsetPlanetMinTargetAltitude;
 		public double OffsetPlanetMaxTargetAltitude;
 
+
+
 		//Offset Misc Config
 		public bool ReverseOffsetDistAltAboveHeight;
 		public double ReverseOffsetHeight;
 		public int WaypointWaitTimeTrigger;
 		public int WaypointAbandonTimeTrigger;
+		public double OffsetMaxAngleFromTarget;
 
-		//Circle Target Config
-		public bool CircleTargetClockwise;
+        //Circle Target Config
+        public bool CircleTargetClockwise;
 		public bool CircleTargetRadiusConstriction;
 		public double CircleTargetRadiusConstrictionAmount;
 		public bool CircleTargetAltitudeConstriction;
@@ -258,7 +261,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			WaypointWaitTimeTrigger = 5;
 			WaypointAbandonTimeTrigger = 30;
 
-			TargetApproachTimer = 30;
+			OffsetMaxAngleFromTarget = 180;
+
+            TargetApproachTimer = 30;
 			TargetEngageTimer = 10;
 
 			TimeBetweenNewTargetChecks = 15;
@@ -898,8 +903,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
-			//RotateTowardsTargetWhileAtPosition
-			if (tag.Contains("[RotateTowardsTargetWhileAtPosition:") == true) {
+
+            //WaypointAbandonTimeTrigger
+            if (tag.Contains("[OffsetMaxAngleFromTarget:") == true)
+            {
+
+                TagParse.TagDoubleCheck(tag, ref this.OffsetMaxAngleFromTarget);
+
+            }
+            
+
+            //RotateTowardsTargetWhileAtPosition
+            if (tag.Contains("[RotateTowardsTargetWhileAtPosition:") == true) {
 
 				TagParse.TagBoolCheck(tag, ref this.RotateTowardsTargetWhileAtPosition);
 

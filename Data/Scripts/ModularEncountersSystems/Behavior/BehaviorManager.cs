@@ -291,8 +291,17 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			//Passive
-			if (customData.Contains("[BehaviorName:Passive]")) {
+            //Nautical
+            if (customData.Contains("[BehaviorName:NauticalRoutes]"))
+            {
+
+                return BehaviorSubclass.NauticalRoutes;
+
+            }
+
+
+            //Passive
+            if (customData.Contains("[BehaviorName:Passive]")) {
 
 				return BehaviorSubclass.Passive;
 

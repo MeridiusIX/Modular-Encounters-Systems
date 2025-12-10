@@ -214,7 +214,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					var terminalBlock = grid.AllTerminalBlocks[j];
 
-					if (terminalBlock == null || !terminalBlock.ActiveEntity() || terminalBlock.Block as T == null)
+					if (terminalBlock == null || !terminalBlock.ClosedEntity() || terminalBlock.Block as T == null)
 						continue;
 
 					resultList.Add(terminalBlock.Block);

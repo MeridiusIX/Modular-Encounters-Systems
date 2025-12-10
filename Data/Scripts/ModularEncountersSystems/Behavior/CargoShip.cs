@@ -34,8 +34,8 @@ namespace ModularEncountersSystems.Behavior {
 		public string DefaultWeaponProfile { get { return _defaultWeaponProfile; } }
 		private string _defaultWeaponProfile;
 
-		private EncounterWaypoint _cargoShipWaypoint { 
-			
+		private EncounterWaypoint _cargoShipWaypoint {
+
 			get {
 
 				if (_behavior.AutoPilot.State.CargoShipWaypoints.Count > 0) {
@@ -63,8 +63,8 @@ namespace ModularEncountersSystems.Behavior {
 
 				return _behavior.AutoPilot.State.CargoShipDespawn;
 
-			} 
-		
+			}
+
 		}
 
 		public CargoShip(IBehavior behavior){
@@ -91,7 +91,7 @@ namespace ModularEncountersSystems.Behavior {
 			}
 
 			BehaviorLogger.Write(_behavior.Mode.ToString(), BehaviorDebugEnum.General);
-			
+
 			if(_behavior.Mode != BehaviorMode.Retreat && _behavior.BehaviorSettings.DoRetreat == true){
 
 				_behavior.ChangeCoreBehaviorMode(BehaviorMode.Retreat);
@@ -109,7 +109,7 @@ namespace ModularEncountersSystems.Behavior {
 				foreach (var waypoint in CustomWaypoints) {
 
 					_behavior.AutoPilot.State.CargoShipWaypoints.Add(new EncounterWaypoint(waypoint));
-				
+
 				}
 
 				SelectNextWaypoint();
@@ -171,7 +171,7 @@ namespace ModularEncountersSystems.Behavior {
 						_behavior.AutoPilot.ActivateAutoPilot(_cargoShipWaypoint.GetCoords(), NewAutoPilotMode.RotateToWaypoint | NewAutoPilotMode.ThrustForward | NewAutoPilotMode.PlanetaryPathing, CheckEnum.Yes, CheckEnum.No);
 
 					}
-				
+
 				}
 
 				if (_cargoShipWaypoint == null) {
@@ -210,7 +210,7 @@ namespace ModularEncountersSystems.Behavior {
 						if (_behavior.Despawn.NearestPlayer == null || _behavior.Despawn.PlayerDistance > 1200) {
 
 							_behavior.BehaviorSettings.DoDespawn = true;
-						
+
 						}
 
 						_behavior.ChangeCoreBehaviorMode(BehaviorMode.Retreat);
@@ -223,7 +223,7 @@ namespace ModularEncountersSystems.Behavior {
 						_behavior.BehaviorTriggerA = true;
 
 					}
-				
+
 				}
 
 			}
@@ -282,9 +282,9 @@ namespace ModularEncountersSystems.Behavior {
 						waypointTolerance = Settings.SpaceCargoShips.DespawnDistanceFromEndPath;
 
 					}
-				
+
 				}
-			
+
 			}
 
 			return dist < waypointTolerance;
@@ -301,35 +301,38 @@ namespace ModularEncountersSystems.Behavior {
 
 				return Vector3D.Distance(mySeaLevel, despawnSeaLevel);
 
-			} 
+			}
 
-			return Vector3D.Distance(_behavior.RemoteControl.GetPosition(), _behavior.AutoPilot.State.InitialWaypoint); 
+			return Vector3D.Distance(_behavior.RemoteControl.GetPosition(), _behavior.AutoPilot.State.InitialWaypoint);
 
 		}
 
 		private void SelectNextWaypoint() {
 
-			if (!_behavior.AutoPilot.State.CargoShipDespawn.Valid) {
+            if (!_behavior.AutoPilot.State.CargoShipDespawn.Valid)
+            {
 
-				var despawnCoords = Vector3D.Zero;
+                var despawnCoords = Vector3D.Zero;
 
-				BehaviorLogger.Write("Setting Initial CargoShip Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
-				//BehaviorLogger.Write("Behavior Null: " + (_behavior == null), BehaviorDebugEnum.Dev);
-				//BehaviorLogger.Write("Current Grid Null: " + (_behavior.CurrentGrid == null), BehaviorDebugEnum.Dev);
-				//BehaviorLogger.Write("NPC Data Null: " + (_behavior.CurrentGrid.Npc == null), BehaviorDebugEnum.Dev);
+                BehaviorLogger.Write("Setting Initial CargoShip Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
+                //BehaviorLogger.Write("Behavior Null: " + (_behavior == null), BehaviorDebugEnum.Dev);
+                //BehaviorLogger.Write("Current Grid Null: " + (_behavior.CurrentGrid == null), BehaviorDebugEnum.Dev);
+                //BehaviorLogger.Write("NPC Data Null: " + (_behavior.CurrentGrid.Npc == null), BehaviorDebugEnum.Dev);
 
-				if (_behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.EndCoords != Vector3D.Zero && _behavior.CurrentGrid.Npc.StartCoords != _behavior.CurrentGrid.Npc.EndCoords)
-					despawnCoords = _behavior.CurrentGrid.Npc.EndCoords;
+                if (_behavior.CurrentGrid.Npc != null && _behavior.CurrentGrid.Npc.EndCoords != Vector3D.Zero && _behavior.CurrentGrid.Npc.StartCoords != _behavior.CurrentGrid.Npc.EndCoords)
+                    despawnCoords = _behavior.CurrentGrid.Npc.EndCoords;
 
-				if (despawnCoords == Vector3D.Zero) {
+                if (despawnCoords == Vector3D.Zero)
+                {
 
-					BehaviorLogger.Write("Could Not Get From MES, or Start/End are the Same. Creating Manual Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
-					despawnCoords = _behavior.AutoPilot.CalculateDespawnCoords(_behavior.RemoteControl.GetPosition());
+                    BehaviorLogger.Write("Could Not Get From MES, or Start/End are the Same. Creating Manual Despawn Waypoint", BehaviorDebugEnum.BehaviorSpecific);
+                    despawnCoords = _behavior.AutoPilot.CalculateDespawnCoords(_behavior.RemoteControl.GetPosition());
 
-				}
+                }
 
-				BehaviorLogger.Write("Setting Autopilot State", BehaviorDebugEnum.Dev);
-				_behavior.AutoPilot.State.CargoShipDespawn = new EncounterWaypoint(despawnCoords);
+                BehaviorLogger.Write("Setting Autopilot State", BehaviorDebugEnum.Dev);
+                _behavior.AutoPilot.State.CargoShipDespawn = new EncounterWaypoint(despawnCoords);
+                _behavior.BehaviorSettings.DespawnCoords = despawnCoords;
 
 			}
 
@@ -405,6 +408,12 @@ namespace ModularEncountersSystems.Behavior {
 
 		}
 
+        public string GetGPS(string name, Vector3D vector)
+        {
+            var gps = "GPS:" + name + ":" + vector.X + ":" + vector.Y + ":" + vector.Z + ":#FF82F175:";
+            return gps;
+        }
+
 		public override string ToString() {
 
 			var sb = new StringBuilder();
@@ -415,21 +424,21 @@ namespace ModularEncountersSystems.Behavior {
 
 			if (_cargoShipWaypoint.Valid) {
 
-				sb.Append(" - Waypoint:                    ").Append(_cargoShipWaypoint.GetCoords()).AppendLine();
+				sb.Append(" - Waypoint:                    ").Append(_cargoShipWaypoint.GetGPS("Waypoint")).AppendLine();
 
 			}
 
 			sb.Append(" - Distance To Waypoint:        ").Append(GetDistanceToWaypoint()).AppendLine();
 			sb.Append(" - Arrived At Waypoint:         ").Append(ArrivedAtWaypoint()).AppendLine();
-			
+
 			if (_behavior.AutoPilot.CurrentPlanet != null) {
 
 				var despawnUp = Vector3D.Normalize(_behavior.AutoPilot.State.InitialWaypoint - _behavior.AutoPilot.CurrentPlanet.Center());
 				var mySeaLevel = _behavior.AutoPilot.UpDirectionFromPlanet * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
 				var despawnSeaLevel = despawnUp * _behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius + _behavior.AutoPilot.CurrentPlanet.Center();
 				sb.Append(" - Planet AvgRadius Distance:   ").Append(_behavior.AutoPilot.CurrentPlanet.Planet.AverageRadius).AppendLine();
-				sb.Append(" - Position At AvgRadius:       ").Append(mySeaLevel).AppendLine();
-				sb.Append(" - Despawn Coords At AvgRadius: ").Append(despawnSeaLevel).AppendLine();
+				sb.Append(" - Position At AvgRadius:       ").Append(GetGPS("Position At AvgRadius", mySeaLevel)).AppendLine();
+				sb.Append(" - Despawn Coords At AvgRadius: ").Append(GetGPS("Despawn Coords At AvgRadius", despawnSeaLevel)).AppendLine();
 
 			}
 
@@ -441,4 +450,3 @@ namespace ModularEncountersSystems.Behavior {
 	}
 
 }
-	

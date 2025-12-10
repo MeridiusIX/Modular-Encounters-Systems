@@ -84,7 +84,8 @@ nav:
   
 
 theme:
-  name: windmill
+  name: kpn
 
 extra:
   extra.article_nav_top: false
+  repo_icon: 'github'

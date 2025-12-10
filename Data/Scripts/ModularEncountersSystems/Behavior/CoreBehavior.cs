@@ -5,6 +5,7 @@ using ModularEncountersSystems.Behavior.Subsystems.AutoPilot;
 using ModularEncountersSystems.Behavior.Subsystems.Trigger;
 using ModularEncountersSystems.BlockLogic;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
@@ -80,7 +81,8 @@ namespace ModularEncountersSystems.Behavior {
 		private HorseFighter _horsefighter;
 		private Hunter _hunter;
 		private Nautical _nautical;
-		private Passive _passive;
+		private NauticalRoutes _nauticalRoutes;
+        private Passive _passive;
 		private Patrol _patrol;
 		private Scout _scout;
 		private Sniper _sniper;
@@ -913,7 +915,36 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			if (subclass == BehaviorSubclass.Passive) {
+            if (subclass == BehaviorSubclass.NauticalRoutes)
+            {
+
+                if (_nauticalRoutes == null)
+                    _nauticalRoutes = new NauticalRoutes(this);
+
+                ActiveBehavior = _nauticalRoutes;
+
+                if (BehaviorSettings.ActiveBehaviorType != subclass)
+                {
+
+                    Mode = BehaviorMode.Init;
+
+                    if (!BehaviorSettings.SubclassBehaviorDefaultsSet)
+                    {
+
+                        BehaviorSettings.SubclassBehaviorDefaultsSet = true;
+                        ActiveBehavior.SetDefaultTags();
+
+                    }
+
+                }
+
+                BehaviorSettings.ActiveBehaviorType = subclass;
+                return;
+
+            }
+
+
+            if (subclass == BehaviorSubclass.Passive) {
 
 				if (_passive == null)
 					_passive = new Passive(this);
@@ -1296,10 +1327,43 @@ namespace ModularEncountersSystems.Behavior {
 
 			BehaviorSettings.Behavior = this;
 
-			//TODO: Refactor This Into TriggerSystem
 
-			BehaviorLogger.Write("Beginning Individual Trigger Reference Setup", BehaviorDebugEnum.BehaviorSetup);
-			foreach (var trigger in Trigger.Triggers) {
+            //Dialoguebank
+            try
+            {
+                BehaviorLogger.Write("Beginning DialogueBank setup", BehaviorDebugEnum.BehaviorSetup);
+
+                if (Trigger._dialogueBanks != null && Trigger._dialogueBanks.Count > 0)
+                {
+                    Random rng = new Random();
+                    int index = rng.Next(Trigger._dialogueBanks.Count); // Get a valid random index
+
+                    var selectedBank = Trigger._dialogueBanks[index];
+
+                    if (selectedBank != null)
+                    {
+                        Trigger._dialogueBank = selectedBank;
+                        BehaviorLogger.Write($"Selected dialogue bank at index {index}", BehaviorDebugEnum.BehaviorSetup);
+                    }
+                    else
+                    {
+                        BehaviorLogger.Write("Selected dialogue bank was null", BehaviorDebugEnum.BehaviorSetup);
+                    }
+                }
+                else
+                {
+                    BehaviorLogger.Write("DialogueBanks list is null or empty", BehaviorDebugEnum.BehaviorSetup);
+                }
+            }
+            catch (Exception ex)
+            {
+                BehaviorLogger.Write($"Exception while selecting dialogue bank: {ex.Message}", BehaviorDebugEnum.BehaviorSetup);
+            }
+
+
+
+            //TODO: Refactor This Into TriggerSystem
+            foreach (var trigger in Trigger.Triggers) {
 
 				trigger.Conditions.SetReferences(this.RemoteControl, this);
 
@@ -1672,7 +1736,7 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Override Targeting:  ").Append(AutoPilot.Targeting.OverrideData?.ProfileSubtypeId ?? "N/A").AppendLine();
 
 			if (Trigger._dialogueBanks.Count > 0)
-            {
+			{
 				sb.Append(" - Dialogue Banks:      ");
 				foreach (var bank in Trigger._dialogueBanks)
 				{
@@ -1680,6 +1744,9 @@ namespace ModularEncountersSystems.Behavior {
 					sb.Append(bank.name).Append(", ");
 
 				}
+
+				sb.Append(" - Selected Dialogue Bank:      ").Append(Trigger._dialogueBank?.name ?? null).AppendLine(); ;
+
 				sb.AppendLine();
 			}
 
@@ -1749,10 +1816,10 @@ namespace ModularEncountersSystems.Behavior {
 			}
 
 
-            //Custom variables
-            sb.Append("::: Stored Custom Counters :::").AppendLine();
+			//Custom variables
+			sb.Append("::: Stored Custom Counters :::").AppendLine();
 
-			if(BehaviorSettings.StoredCustomCounters != null)
+			if (BehaviorSettings.StoredCustomCounters != null)
 			{
 				if (BehaviorSettings.StoredCustomCounters.Keys.Count > 0)
 				{
@@ -1776,63 +1843,64 @@ namespace ModularEncountersSystems.Behavior {
 				}
 				else
 				{
-                    sb.Append("BehaviorSettings.StoredCustomCounters is empty. Note: Custom counters are only added after their value is changed for the first time.").AppendLine();
-                }
+					sb.Append("BehaviorSettings.StoredCustomCounters is empty. Note: Custom counters are only added after their value is changed for the first time.").AppendLine();
+				}
 			}
 			else
 			{
-                sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
-            }
+				sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
+			}
 
-            sb.AppendLine();
+			sb.AppendLine();
 
 
 			//Bools
-            sb.Append("::: Stored Custom Bools :::").AppendLine();
+			sb.Append("::: Stored Custom Bools :::").AppendLine();
 
-            if (BehaviorSettings.StoredCustomBooleans != null)
-            {
+			if (BehaviorSettings.StoredCustomBooleans != null)
+			{
 				if (BehaviorSettings.StoredCustomBooleans.Keys.Count > 0)
 				{
-                    
 
-                    foreach (var name in BehaviorSettings.StoredCustomBooleans.Keys)
-                    {
 
-                        if (string.IsNullOrWhiteSpace(name))
-                            continue;
+					foreach (var name in BehaviorSettings.StoredCustomBooleans.Keys)
+					{
 
-                        bool result = false;
+						if (string.IsNullOrWhiteSpace(name))
+							continue;
 
-                        if (BehaviorSettings.StoredCustomBooleans.TryGetValue(name, out result))
-                        {
-                            sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
+						bool result = false;
 
-                        }
+						if (BehaviorSettings.StoredCustomBooleans.TryGetValue(name, out result))
+						{
+							sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
 
-                    }
+						}
+
+					}
 
 				}
 				else
 				{
-                    sb.Append("BehaviorSettings.StoredCustomBooleans is empty. Note: Custom bools are only added after their value is changed for the first time.").AppendLine();
-                }
+					sb.Append("BehaviorSettings.StoredCustomBooleans is empty. Note: Custom bools are only added after their value is changed for the first time.").AppendLine();
+				}
 
 			}
 			else
 			{
-                sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
-            }
+				sb.Append("!!! If you are reading this please @cptarthur in the MES discord, and send this whole MES.Info.GetGridBehavior output").AppendLine();
+			}
 
-            sb.AppendLine();
+			sb.AppendLine();
 
-            //CubeGrid
-            sb.Append("::: Grid Debug Data :::").AppendLine();
+			//CubeGrid
+			sb.Append("::: Grid Debug Data :::").AppendLine();
 			sb.Append(CurrentGrid.DebugData.ToString());
 			sb.AppendLine();
 
 			//Grid NPC Data
-			if (CurrentGrid.Npc != null) {
+			if (CurrentGrid.Npc != null) 
+			{
 
 				sb.Append("::: Grid NPC Data :::").AppendLine();
 				sb.Append(CurrentGrid.Npc.ToString());
@@ -1840,7 +1908,19 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			return sb.ToString();
+			if (CurrentGrid != null)
+			{
+                var allBlocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(CurrentGrid);
+                sb.Append("::: Grid IMyTerminalBlock Blocks Names :::").AppendLine();
+                foreach (var block in allBlocks)
+				{
+                    sb.Append(block.CustomName.Trim());
+                    sb.AppendLine();
+                }
+
+            }
+
+            return sb.ToString();
 		
 		}
 

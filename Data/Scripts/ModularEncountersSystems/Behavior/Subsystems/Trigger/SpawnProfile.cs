@@ -95,6 +95,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(28)]
 		public bool ProcessAsAdminSpawn;
 
+		[ProtoMember(29)]
+		public bool UseWaypoint;
+
+		[ProtoMember(30)]
+		public string Waypoint;
+
+		[ProtoMember(31)]
+		public Dictionary<string, int> CustomCountersVariables;
+
+		[ProtoMember(32)]
+		public List<string> TransferCustomCountersVariables;
+
+		[ProtoMember(33)]
+		public Dictionary<string, string> CustomCountersVariablesReferences;
+
 		[ProtoIgnore]
 		public MatrixD CurrentPositionMatrix;
 
@@ -103,6 +118,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		[ProtoIgnore]
 		public Random Rnd;
+
+		[ProtoIgnore]
+		public long ParentId;
+
+		[ProtoIgnore]
+		public IBehavior ParentBehavior;
 
 		public SpawnProfile() {
 
@@ -140,11 +161,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			FailedAttemptsToIncreaseCount = 5;
 
-			ProcessAsAdminSpawn = false;
+            ProcessAsAdminSpawn = false;
+
+            ParentId = 0;
 
 			CurrentPositionMatrix = MatrixD.Identity;
 			CurrentFactionTag = "";
 			Rnd = new Random();
+
+            UseWaypoint = false;
+            Waypoint = "";
+
+            CustomCountersVariables = new Dictionary<string, int>();
+            TransferCustomCountersVariables = new List<string>();
+            CustomCountersVariablesReferences = new Dictionary<string, string>();
 
 		}
 
@@ -412,6 +442,41 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[ProcessAsAdminSpawn:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref ProcessAsAdminSpawn);
+
+					}
+
+					//UseWaypoint
+					if (tag.Contains("[UseWaypoint:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref UseWaypoint);
+
+					}
+
+					//Waypoint
+					if (tag.Contains("[Waypoint:") == true){
+
+						TagParse.TagStringCheck(tag, ref Waypoint);
+
+					}
+
+					//CustomCountersVariables
+					if (tag.Contains("[CustomCountersVariables:") == true){
+
+						TagParse.TagStringIntDictCheck(tag, ref CustomCountersVariables);
+
+					}
+
+					//TransferCustomCountersVariables
+					if (tag.Contains("[TransferCustomCountersVariables:") == true){
+
+						TagParse.TagStringListCheck(tag, ref TransferCustomCountersVariables);
+
+					}
+
+					//CustomCountersVariables
+					if (tag.Contains("[CustomCountersVariablesReferences:") == true){
+
+						TagParse.TagStringStringDictCheck(tag, ref CustomCountersVariablesReferences);
 
 					}
 

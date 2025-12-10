@@ -300,6 +300,8 @@ namespace ModularEncountersSystems.Entities {
 			if (!result.HasValue)
 				return 0;
 
+            result = result * -1; //Yeah. Correction -CptArthur
+
 			return result.Value > 0 ? result.Value : 0;
 
 		}

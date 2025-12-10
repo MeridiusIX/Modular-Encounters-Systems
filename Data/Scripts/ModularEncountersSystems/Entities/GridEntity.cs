@@ -4,7 +4,9 @@ using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Spawning.Manipulation;
+using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.Tasks;
+using ModularEncountersSystems.Terminal;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders;
@@ -20,6 +22,7 @@ using VRage.Game;
 using VRage.Game.ModAPI;
 using VRage.Game.ModAPI.Interfaces;
 using VRage.ModAPI;
+using VRage.ObjectBuilders;
 using VRageMath;
 
 namespace ModularEncountersSystems.Entities {
@@ -906,7 +909,154 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		private void BlockRemoved(IMySlimBlock block) {
+        public int AutoReplaceBocks(Dictionary<MyDefinitionId, MyDefinitionId> referenceDict, bool skipSound = false, int maxBlocks = -1,  bool relaxedSize = false)
+        {
+            if (!ActiveEntity())
+                return 0;
+
+            List<MyDefinitionId> unusedDefinitions = new List<MyDefinitionId>();
+            var reference = referenceDict;
+
+
+            long owner = 0;
+            int affectedBlocks = 0;
+
+            if (CubeGrid?.BigOwners != null && CubeGrid.BigOwners.Count > 0)
+                owner = CubeGrid.BigOwners[0];
+
+            int particlesDisplayed = 0;
+            bool playedSound = skipSound;
+
+            lock (AllBlocks)
+            {
+
+                for (int i = AllBlocks.Count - 1; i >= 0; i--)
+                {
+                    var block = AllBlocks[i];
+
+                    var block_objB = block.GetObjectBuilder(true);
+
+                    var id = block_objB.GetId();
+
+                    if (unusedDefinitions.Contains(id))
+                        continue;
+
+                    var replaceId = new MyDefinitionId();
+
+                    if (!reference.TryGetValue(id, out replaceId))
+                    {
+
+                        unusedDefinitions.Add(id);
+                        continue;
+
+                    }
+
+                    var targetBlockDef = MyDefinitionManager.Static.GetCubeBlockDefinition(id);
+                    var newBlockDef = MyDefinitionManager.Static.GetCubeBlockDefinition(replaceId);
+
+                    if (targetBlockDef == null)
+                        continue;
+                    if (newBlockDef == null)
+                    {
+                        continue;
+
+                    }
+
+                    if (!relaxedSize && targetBlockDef.Size != newBlockDef.Size)
+                        continue;
+
+                    var newBlockBuilder = MyObjectBuilderSerializer.CreateNewObject(newBlockDef.Id) as MyObjectBuilder_CubeBlock;
+
+                    if (newBlockBuilder == null)
+                        continue;
+
+
+                    if (block_objB.GetId().TypeId == newBlockBuilder.GetId().TypeId)
+                    {
+                        continue;
+
+
+                    }
+
+
+                    if (id.TypeId == typeof(MyObjectBuilder_Beacon) && replaceId.TypeId == typeof(MyObjectBuilder_RadioAntenna))
+                    {
+
+                        (newBlockBuilder as MyObjectBuilder_TerminalBlock).CustomName = (block as MyObjectBuilder_TerminalBlock).CustomName;
+                        (newBlockBuilder as MyObjectBuilder_RadioAntenna).BroadcastRadius = (block as MyObjectBuilder_Beacon).BroadcastRadius;
+
+                    }
+
+                    if (id.TypeId == typeof(MyObjectBuilder_RadioAntenna) && replaceId.TypeId == typeof(MyObjectBuilder_Beacon))
+                    {
+
+                        (newBlockBuilder as MyObjectBuilder_TerminalBlock).CustomName = (block as MyObjectBuilder_TerminalBlock).CustomName;
+                        (newBlockBuilder as MyObjectBuilder_Beacon).BroadcastRadius = (block as MyObjectBuilder_RadioAntenna).BroadcastRadius;
+
+                    }
+
+					Quaternion orientation;
+					block.Orientation.GetQuaternion(out orientation);
+
+
+                    newBlockBuilder.BlockOrientation = new SerializableBlockOrientation(ref orientation); ;
+                    newBlockBuilder.Min = block_objB.Min;
+                    newBlockBuilder.ColorMaskHSV = block_objB.ColorMaskHSV;
+                    newBlockBuilder.Owner = block_objB.Owner;
+                    newBlockBuilder.EntityId = 0;
+
+                    var grid = block.CubeGrid;
+                    grid.RemoveBlock(block);
+
+                    grid.AddBlock(newBlockBuilder,false);
+
+
+                    var addblockdata = new AddBlockData(newBlockBuilder, grid.EntityId);
+                    var syncContainer = new SyncContainer(addblockdata);
+                    SyncManager.SendSyncMesage(syncContainer, 0, true, true);
+
+
+                    affectedBlocks++;
+
+                    if (particlesDisplayed < 6)
+                    {
+
+                        if (MathTools.RandomChance(4))
+                        {
+
+                            particlesDisplayed++;
+                            Vector3D worldCenter = Vector3D.Zero;
+                            AllBlocks[i].ComputeWorldCenter(out worldCenter);
+                            MyVisualScriptLogicProvider.CreateParticleEffectAtPosition("OxyLeakLarge", worldCenter);
+
+                        }
+
+                    }
+
+                    if (!playedSound)
+                    {
+
+                        playedSound = true;
+                        MyVisualScriptLogicProvider.PlaySingleSoundAtPosition("MES-ShipyardConstruct", GetPosition());
+
+                    }
+
+                    if (maxBlocks == 0 && affectedBlocks >= maxBlocks)
+                    {
+
+                        break;
+
+                    }
+
+                }
+
+            }
+
+            return affectedBlocks;
+
+        }
+
+        private void BlockRemoved(IMySlimBlock block) {
 
 			CleanBlockLists(block);
 
@@ -1162,7 +1312,78 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public void GetAllFatBlocks(List<IMySlimBlock> blocks, bool clearList = false) {
+        public long CreditValueReplacement(Dictionary<MyDefinitionId, MyDefinitionId> referenceDict, bool relaxedSize = false)
+        {
+            List<MyDefinitionId> unusedDefinitions = new List<MyDefinitionId>();
+            var reference = referenceDict;
+
+            long result = 0;
+
+            if (!ActiveEntity())
+                return 0;
+
+            lock (AllBlocks)
+            {
+
+                for (int i = AllBlocks.Count - 1; i >= 0; i--)
+                {
+
+                    var block = AllBlocks[i].GetObjectBuilder(true);
+                    var id = block.GetId();
+
+                    if (unusedDefinitions.Contains(id))
+                        continue;
+
+                    var replaceId = new MyDefinitionId();
+
+                    if (!reference.TryGetValue(id, out replaceId))
+                    {
+
+                        unusedDefinitions.Add(id);
+                        continue;
+
+                    }
+
+                    var targetBlockDef = MyDefinitionManager.Static.GetCubeBlockDefinition(id);
+                    var newBlockDef = MyDefinitionManager.Static.GetCubeBlockDefinition(replaceId);
+
+                    if (targetBlockDef == null)
+                        continue;
+                    if (newBlockDef == null)
+                    {
+                        continue;
+
+                    }
+
+                    if (!relaxedSize && targetBlockDef.Size != newBlockDef.Size)
+                        continue;
+
+                    var newBlockBuilder = MyObjectBuilderSerializer.CreateNewObject(newBlockDef.Id) as MyObjectBuilder_CubeBlock;
+
+                    if (newBlockBuilder == null)
+                        continue;
+
+
+                    if (block.GetId().TypeId == newBlockBuilder.GetId().TypeId)
+                    {
+                        continue;
+                    }
+
+                    long thisPrice = 0;
+                    EconomyHelper.MinimumValuesMaster.TryGetValue(newBlockBuilder.GetId(), out thisPrice);
+
+
+                    result += thisPrice;
+
+                }
+
+            }
+
+            return result;
+
+        }
+
+        public void GetAllFatBlocks(List<IMySlimBlock> blocks, bool clearList = false) {
 
 			if (clearList)
 				blocks.Clear();

@@ -225,6 +225,19 @@ namespace ModularEncountersSystems.Sync {
 
                 }
 
+                if (container.Mode == SyncMode.AddBlock)
+                {
+                    if (MyAPIGateway.Multiplayer.IsServer)
+                        return;
+
+
+                    var message = MyAPIGateway.Utilities.SerializeFromBinary<AddBlockData>(container.Data);
+                    message.Received();
+
+                }
+
+
+
             } catch(Exception exc) {
 
                 SpawnLogger.Write("Exception in NetworkMessageReceiver", SpawnerDebugEnum.Error, true);

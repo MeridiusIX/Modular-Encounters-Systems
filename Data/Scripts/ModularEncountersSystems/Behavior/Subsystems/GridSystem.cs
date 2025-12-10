@@ -435,6 +435,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
+
+
 		public void EnableBlocksInGroup(string groupName, SwitchEnum state) {
 
 			var terminal = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(RemoteControl.SlimBlock.CubeGrid);
@@ -879,7 +881,55 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
-		public void RenameBlocks(List<string> oldNames, List<string> newNames, string actionId) {
+        public void HighlightBlocks(List<string> names, List<bool> states)
+        {
+
+            if (names.Count != states.Count)
+                return;
+
+            for (int i = AllFunctionalBlocks.Count - 1; i >= 0; i--)
+            {
+
+                var block = AllFunctionalBlocks[i];
+
+                if (!CheckBlockValid(block))
+                {
+
+                    AllFunctionalBlocks.RemoveAt(i);
+                    continue;
+
+                }
+
+                if (string.IsNullOrWhiteSpace(block.CustomName))
+                    continue;
+
+                IBlockLogic logic = null;
+                BlockLogicManager.LogicBlocks.TryGetValue(block.EntityId, out logic);
+
+                for (int j = 0; j < names.Count; j++)
+                {
+
+                    if (block.CustomName == names[j])
+                    {
+
+                        if (!states[j])
+                            MyVisualScriptLogicProvider.SetHighlightLocal(block.Name, thickness: -1);
+
+                        if (states[j])
+                            MyVisualScriptLogicProvider.SetHighlightLocal(block.Name, thickness: 2, pulseTimeInFrames: 6, color: Color.SkyBlue);
+
+
+                    }
+
+
+                }
+
+            }
+
+        }
+
+
+        public void RenameBlocks(List<string> oldNames, List<string> newNames, string actionId) {
 
 			if (oldNames.Count != newNames.Count) {
 

@@ -14,6 +14,7 @@ using ModularEncountersSystems.Entities;
 using Sandbox.Game;
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Missions;
+using ModularEncountersSystems.World;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
@@ -269,12 +270,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				usedConditions++;
 				bool failedCheck = false;
 
-				if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count) {
+				if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count || ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersVariables.Count) {
 
 
 
 					var selfScore = _behavior?.CurrentGrid?.Npc?.Score ?? 0;
-					var commandScore = command?.NPCScoreValue ?? 0;
+                    var commandScore = command?.NPCScoreValue ?? 0;
+
+					var customCountersVariables = _behavior?.CurrentGrid?.Npc.CustomCountersVariables;
 
 
 					for (int i = 0; i < ConditionReference.CustomCounters.Count; i++) {
@@ -287,8 +290,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 								compareType = ConditionReference.CounterCompareTypes[i];
 
 
-							var counter = ConditionReference.CustomCounters[i];
-							var target = ConditionReference.CustomCountersTargets[i];
+                            var counter = ConditionReference.CustomCounters[i];
+
+                            var target = 0;
+                            if (ConditionReference.CustomCountersTargets.Count > 0)
+                            {
+                                target = ConditionReference.CustomCountersTargets[i];
+                            }
+                            else
+                            {
+                                foreach (var targetVar in customCountersVariables)
+                                {
+                                    if (ConditionReference.CustomCountersVariables[i] == "{" + targetVar.Key + "}")
+                                    {
+                                        target = targetVar.Value;
+                                        break;
+                                    }
+                                }
+                            }
 
 							if (ConditionReference.CustomCountersTargetOverrideSelfScore)
 								target = selfScore;
@@ -337,7 +356,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				} else {
 
-					BehaviorLogger.Write(ProfileSubtypeId + $": Counter Names ({ConditionReference.CustomCounters.Count}) and Targets List ({ConditionReference.CustomCountersTargets.Count}) Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
+					BehaviorLogger.Write(ProfileSubtypeId + $": Counter Names ({ConditionReference.CustomCounters.Count}) and Targets List ({ConditionReference.CustomCountersTargets.Count + ConditionReference.CustomCountersVariables.Count}) Counts Don't Match. Check Your Condition Profile. Note: CustomCountersVariables cannot be used at the same time as CustomCountersTargets", BehaviorDebugEnum.Condition);
 					failedCheck = true;
 
 				}
@@ -536,6 +555,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 }
                 else if (ConditionReference.GridSizeLarge == false && _remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Small) {
                     //MyAPIGateway.Utilities.ShowNotification("This is a small grid.");
+					satisfiedConditions++;
+                }
+			}
+
+
+			if (ConditionReference.CheckGridStatic == true) {
+
+				usedConditions++;
+
+                if (ConditionReference.GridStatic == true && _remoteControl.CubeGrid.IsStatic == true) {
+                    //MyAPIGateway.Utilities.ShowNotification("This is a static grid.");
+					satisfiedConditions++;
+                }
+                else if (ConditionReference.GridStatic == false && _remoteControl.CubeGrid.IsStatic == false) {
+                    //MyAPIGateway.Utilities.ShowNotification("This is a dynamic grid.");
 					satisfiedConditions++;
                 }
 			}
@@ -1472,20 +1506,59 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 
-			if (ConditionReference.CommandGravityCheck) {
+            if (ConditionReference.CommandGravityCheck)
+            {
 
-				usedConditions++;
+                usedConditions++;
 
-				if (command != null) {
+                if (command != null)
+                {
 
-					var match = PlanetManager.InGravity(command.Position) == PlanetManager.InGravity(_behavior.RemoteControl.GetPosition());
+                    var match = PlanetManager.InGravity(command.Position) == PlanetManager.InGravity(_behavior.RemoteControl.GetPosition());
 
-					if(match == ConditionReference.CommandGravityMatches)
-						satisfiedConditions++;
+                    if (match == ConditionReference.CommandGravityMatches)
+                        satisfiedConditions++;
 
-				}
+                }
 
-			}
+            }
+
+
+            if (ConditionReference.CommandCheckRelationSenderReceiver)
+            {
+
+                usedConditions++;
+
+                if (command != null)
+                {
+
+                    var relation = EntityEvaluator.GetRelationBetweenIdentities(command.CommandOwnerId, _behavior.RemoteControl.OwnerId);
+
+                    if (relation == ConditionReference.CommandRelation)
+                        satisfiedConditions++;
+
+                }
+
+            }
+
+
+            if (ConditionReference.CommandCheckFromParent)
+            {
+
+                usedConditions++;
+
+                if (command != null)
+                {
+
+                    var parent = Equals(command.CommandOwnerId, _behavior?.CurrentGrid?.Npc.ParentId);
+
+                    if (parent == ConditionReference.CommandFromParent)
+                        satisfiedConditions++;
+
+                }
+
+            }
+
 
 			if (ConditionReference.PlayerIdentityMatches) {
 

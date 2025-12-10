@@ -23,6 +23,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool ChangeAutopilotSpeed;
 		public float NewAutopilotSpeed;
+		public bool ChangeAutopilotMinAltitude;
+		public int NewAutopilotMinAltitude;
 
 		public bool SpawnEncounter;
 
@@ -67,9 +69,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool AppendAntennaHudText;
 		public string AntennaHudTextSuffix;
 
+		public bool SetAntennaThoughtBubble;
+		public string SetAntennaThoughtBubbleName;
+		public bool ClearAntennaThoughtBubble;
+
+		public bool StartAntennaThoughtBubblePercentage;
+		public int StartAntennaThoughtBubblePercentageValue;
+
+        public bool IncreaseAntennaThoughtBubblePercentage;
+        public int IncreaseAntennaThoughtBubblePercentageAmount;
+
+        public bool DecreaseAntennaThoughtBubblePercentage;
+        public int DecreaseAntennaThoughtBubblePercentageAmount;
+
+		public bool EndAntennaThoughtBubblePercentage;
 
 
-		public bool CreateKnownPlayerArea;
+        public bool CreateKnownPlayerArea;
 		public double KnownPlayerAreaRadius;
 		public int KnownPlayerAreaTimer;
 		public int KnownPlayerAreaMaxSpawns;
@@ -91,6 +107,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> IncreaseCounters;
 		public int IncreaseCountersAmount;
 		public int DecreaseCountersAmount;
+		public bool IncreaseCountersUseAmountVariable;
+		public bool DecreaseCountersUseAmountVariable;
+		public string IncreaseCountersAmountVariable;
+		public string DecreaseCountersAmountVariable;
 		public bool IncreaseCountersUseCommandScore;
 		public bool DecreaseCountersUseCommandScore;
 
@@ -229,7 +249,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> EnableBlockNames;
 		public List<SwitchEnum> EnableBlockStates;
 
-		public bool ChangeAutopilotProfile;
+        public bool HighlightBlocks;
+        public List<string> HighlightBlockNames;
+        public List<bool> HighlightBlockModes;
+
+        public bool ChangeAutopilotProfile;
 		public AutoPilotDataMode AutopilotProfile;
 
 		public bool CreateRandomLightning;
@@ -244,7 +268,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> SetCounters;
 		public List<string> SetSandboxCounters;
 		public List<int> SetCountersValues;
-		public List<int> SetSandboxCountersValues;
+		public bool SetCountersUseAmountVariable;
+		public string SetCountersAmountVariable;
+        public List<int> SetSandboxCountersValues;
+
+		public bool SetCustomStrings;
+		public Dictionary<string, string> CustomStrings;
+
+		public bool SetCustomCountersVariables;
+		public Dictionary<string, int> CustomCountersVariables;
 
 		public bool InheritLastAttackerFromCommand;
 
@@ -291,6 +323,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> WaypointsToAdd;
 
 		public bool AddWaypointFromCommand;
+		public bool AddCustomCountersVariablesFromCommand;
 		public bool RecalculateDespawnCoords;
 
 		public bool CancelWaitingAtWaypoint;
@@ -439,8 +472,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<string> RemoveTags;
 		public bool RemoveTagsOverridePositioninPlayerCondition;
 
+        public bool TeleportPlayers;
+		public bool TeleportPlayersIncludeSavedPlayerIdentity;
+        public List<string> TeleportPlayerConditionIds;
+        public Vector3D TeleportPlayerCoords;
+		public bool TeleportPlayerOverridePositionInPlayerCondition;
 
-		public bool PlayDialogueCue;
+        public bool AddGPSToPlayers;
+        public List<string> AddGPSPlayerConditionIds;
+        public bool UseGPSObjective;
+        public List<string> GPSNames;
+        public List<string> GPSDescriptions;
+        public List<Vector3D> GPSVector3Ds;
+        public List<Vector3D> GPSColors;
+        public bool AddGPSPlayerOverridePositionInPlayerCondition;
+
+
+        public bool ProcessStaticEncountersAtLocation;
+		public Vector3D ProcessStaticEncountersLocation;
+
+        public bool PlayDialogueCue;
 		public bool PlayDialogueToSpecificPlayers;
 		public bool PlayDialogueOverridePositionInPlayerCondition;
 		public List<string> PlayDialoguePlayerConditionIds;
@@ -469,6 +520,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SaveLocationToSandboxVariable;
 		public string LocationSandboxVariableName;
 
+		public bool AddInstanceEventGroup;
+		public string InstanceEventGroupId;
+		public List<string> InstanceEventGroupReplaceKeys;
+		public List<string> InstanceEventGroupReplaceValues;
+
 
 
 		public Dictionary<string, Action<string, object>> EditorReference;
@@ -484,6 +540,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ChangeAutopilotSpeed = false;
 			NewAutopilotSpeed = 0;
 
+			ChangeAutopilotMinAltitude = false;
+			NewAutopilotMinAltitude = 0;
+
 			SpawnEncounter = false;
 
 			SelfDestruct = false;
@@ -498,6 +557,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			AppendAntennaHudText = false;
 			AntennaHudTextSuffix = "";
 
+
+
+			SetAntennaThoughtBubble = false;
+			SetAntennaThoughtBubbleName = "";
+			ClearAntennaThoughtBubble = false;
+
+			StartAntennaThoughtBubblePercentage = false;
+			StartAntennaThoughtBubblePercentageValue = 1;
+
+			IncreaseAntennaThoughtBubblePercentage= false;
+			IncreaseAntennaThoughtBubblePercentageAmount =1;
+
+			DecreaseAntennaThoughtBubblePercentage= false;
+			DecreaseAntennaThoughtBubblePercentageAmount = 1;
+
+			EndAntennaThoughtBubblePercentage =false;
 
 			BroadcastCurrentTarget = false;
 			BroadcastDamagerTarget = false;
@@ -561,7 +636,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			DecreaseCounters = new List<string>();
 			ResetCounters = new List<string>();
 			SetCounters = new List<string>();
-			SetCountersValues = new List<int>();
+            SetCountersValues = new List<int>();
+
+			SetCountersUseAmountVariable = false;
+			SetCountersAmountVariable = "";
 
 			SetSandboxBooleansTrue = new List<string>();
 			SetSandboxBooleansFalse = new List<string>();
@@ -577,10 +655,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			DecreaseSandboxCountersAmount = -1;
 
 			IncreaseCountersAmount = 1;
-			DecreaseCountersAmount = -1;
+            DecreaseCountersAmount = -1;
+
+			IncreaseCountersUseAmountVariable = false;
+			DecreaseCountersUseAmountVariable = false;
+			IncreaseCountersAmountVariable = "";
+			DecreaseCountersAmountVariable = "";
 
 			IncreaseCountersUseCommandScore = false;
-			DecreaseCountersUseCommandScore = false;
+            DecreaseCountersUseCommandScore = false;
+
+			SetCustomStrings = false;
+			CustomStrings = new Dictionary<string, string>();
+
+			SetCustomCountersVariables = false;
+			CustomCountersVariables = new Dictionary<string, int>();
 
 			BroadcastGenericCommand = false;
 
@@ -682,7 +771,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			EnableBlockNames = new List<string>();
 			EnableBlockStates = new List<SwitchEnum>();
 
-			ChangeAutopilotProfile = false;
+            HighlightBlocks = false;
+            HighlightBlockNames = new List<string>();
+            HighlightBlockModes = new List<bool>();
+
+            ChangeAutopilotProfile = false;
 			AutopilotProfile = AutoPilotDataMode.Primary;
 
 			OverwriteAutopilotProfile = false;
@@ -740,7 +833,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			AddWaypoints = false;
 			WaypointsToAdd = new List<string>();
 
-			AddWaypointFromCommand = false;
+            AddWaypointFromCommand = false;
+            AddCustomCountersVariablesFromCommand = false;
 			RecalculateDespawnCoords = false;
 
 			CancelWaitingAtWaypoint = false;
@@ -894,7 +988,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			RemoveTags = new List<string>();
 			RemoveTagsOverridePositioninPlayerCondition = false;
 
-			PlayDialogueCue = false;
+            TeleportPlayers = false;
+			TeleportPlayersIncludeSavedPlayerIdentity = false;
+            TeleportPlayerConditionIds = new List<string>();
+            TeleportPlayerCoords = new Vector3D();
+			TeleportPlayerOverridePositionInPlayerCondition = false;
+
+            AddGPSToPlayers = false;
+            UseGPSObjective = false;
+            GPSNames = new List<string>();
+            GPSDescriptions = new List<string>();
+            GPSVector3Ds = new List<Vector3D>();
+            GPSColors = new List<Vector3D>();
+            AddGPSPlayerConditionIds = new List<string>();
+            AddGPSPlayerOverridePositionInPlayerCondition = false;
+
+
+            ProcessStaticEncountersAtLocation = false;
+			ProcessStaticEncountersLocation = new Vector3D(0, 0, 0);
+
+            PlayDialogueCue = false;
 			DialogueCueId = "";
 			PlayDialogueToSpecificPlayers = false;
 			PlayDialogueOverridePositionInPlayerCondition = false;
@@ -923,356 +1036,409 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			LocationSandboxVariableName = "";
 
+			AddInstanceEventGroup = false;
+			InstanceEventGroupId = "";
+			InstanceEventGroupReplaceKeys = new List<string>();
+			InstanceEventGroupReplaceValues = new List<string>();
+
 
 
 		EditorReference = new Dictionary<string, Action<string, object>> {
 
-				{"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
-				{"BarrelRoll", (s, o) => TagParse.TagBoolCheck(s, ref BarrelRoll) },
-				{"Strafe", (s, o) => TagParse.TagBoolCheck(s, ref Strafe) },
-				{"ChangeAutopilotSpeed", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotSpeed) },
-				{"NewAutopilotSpeed", (s, o) => TagParse.TagFloatCheck(s, ref NewAutopilotSpeed) },
-				{"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
-				{"SelfDestruct", (s, o) => TagParse.TagBoolCheck(s, ref SelfDestruct) },
-				{"Retreat", (s, o) => TagParse.TagBoolCheck(s, ref Retreat) },
-				{"TerminateBehavior", (s, o) => TagParse.TagBoolCheck(s, ref TerminateBehavior) },
-				{"BroadcastCurrentTarget", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCurrentTarget) },
-				{"SwitchToReceivedTarget", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToReceivedTarget) },
-				{"SwitchTargetToDamager", (s, o) => TagParse.TagBoolCheck(s, ref SwitchTargetToDamager) },
-				{"BroadcastDamagerTarget", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastDamagerTarget) },
-				{"BroadcastSendCode", (s, o) => TagParse.TagStringCheck(s, ref BroadcastSendCode) },
-				{"SwitchToBehavior", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToBehavior) },
-				{"NewBehavior", (s, o) => TagParse.TagStringCheck(s, ref NewBehavior) },
-				{"PreserveSettingsOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveSettingsOnBehaviorSwitch) },
-				{"PreserveTriggersOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveTriggersOnBehaviorSwitch) },
-				{"PreserveTargetDataOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveTargetDataOnBehaviorSwitch) },
-				{"RefreshTarget", (s, o) => TagParse.TagBoolCheck(s, ref RefreshTarget) },
-				{"SwitchTargetProfile", (s, o) => TagParse.TagBoolCheck(s, ref SwitchTargetProfile) },
-				{"NewTargetProfile", (s, o) => TagParse.TagStringCheck(s, ref NewTargetProfile) },
-				{"TriggerTimerBlocks", (s, o) => TagParse.TagBoolCheck(s, ref TriggerTimerBlocks) },
-				{"TimerBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref TimerBlockNames) },
-				{"ChangeReputationWithPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationWithPlayers) },
-				{"ReputationChangeRadius", (s, o) => TagParse.TagDoubleCheck(s, ref ReputationChangeRadius) },
-				{"ReputationChangeFactions", (s, o) => TagParse.TagStringListCheck(s, ref ReputationChangeFactions) },
-				{"ReputationPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ReputationPlayerConditionIds) },
-				{"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
-				{"ChangeAttackersFactionAccount", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackersFactionAccount) },
-				{"ChangeAttackersFactionAccountByAmount", (s, o) => TagParse.TagIntCheck(s, ref ChangeAttackersFactionAccountByAmount) },
-				{"UseRandomNameGenerator", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomNameGenerator) },
-				{"ActivateAssertiveAntennas", (s, o) => TagParse.TagBoolCheck(s, ref ActivateAssertiveAntennas) },
-				{"ChangeAntennaOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaOwnership) },
-				{"AntennaFactionOwner", (s, o) => TagParse.TagStringCheck(s, ref AntennaFactionOwner) },
-				{"ChangeAntennaHudText", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaHudText) },
-				{"AntennaHudText", (s, o) => TagParse.TagStringCheck(s, ref AntennaHudText) },
-				{"AppendAntennaHudText", (s, o) => TagParse.TagBoolCheck(s, ref AppendAntennaHudText) },
-				{"AntennaHudTextSuffix", (s, o) => TagParse.TagStringCheck(s, ref AntennaHudTextSuffix) },
-				{"CreateKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref CreateKnownPlayerArea) },
-				{"KnownPlayerAreaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref KnownPlayerAreaRadius) },
-				{"KnownPlayerAreaTimer", (s, o) => TagParse.TagIntOrDayCheck(s, ref KnownPlayerAreaTimer) },
-				{"KnownPlayerAreaMaxSpawns", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMaxSpawns) },
-				{"KnownPlayerAreaMinThreatForAvoidingAbandonment", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMinThreatForAvoidingAbandonment) },
-				{"DamageToolAttacker", (s, o) => TagParse.TagBoolCheck(s, ref DamageToolAttacker) },
-				{"DamageToolAttackerAmount", (s, o) => TagParse.TagFloatCheck(s, ref DamageToolAttackerAmount) },
-				{"DamageToolAttackerParticle", (s, o) => TagParse.TagStringCheck(s, ref DamageToolAttackerParticle) },
-				{"DamageToolAttackerSound", (s, o) => TagParse.TagStringCheck(s, ref DamageToolAttackerSound) },
-				{"PlayParticleEffectAtRemote", (s, o) => TagParse.TagBoolCheck(s, ref PlayParticleEffectAtRemote) },
-				{"ParticleEffectId", (s, o) => TagParse.TagStringCheck(s, ref ParticleEffectId) },
-				{"ParticleEffectOffset", (s, o) => TagParse.TagVector3DCheck(s, ref ParticleEffectOffset) },
-				{"ParticleEffectScale", (s, o) => TagParse.TagFloatCheck(s, ref ParticleEffectScale) },
-				{"ParticleEffectMaxTime", (s, o) => TagParse.TagFloatCheck(s, ref ParticleEffectMaxTime) },
-				{"ParticleEffectColor", (s, o) => TagParse.TagVector3DCheck(s, ref ParticleEffectColor) },
-				{"SetBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansTrue) },
-				{"SetBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansFalse) },
-				{"IncreaseCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseCounters) },
-				{"DecreaseCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseCounters) },
-				{"ResetCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetCounters) },
-				{"SetSandboxBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansTrue) },
-				{"SetSandboxBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansFalse) },
-				{"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
-				{"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
-				{"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) },
-				{"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) },
-				{"IncreaseCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseCountersAmount) },
-				{"DecreaseCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseCountersAmount) },
-				{"IncreaseCountersUseCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseCountersUseCommandScore) },
-				{"DecreaseCountersUseCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref DecreaseCountersUseCommandScore) },
+                {"UseChatBroadcast", (s, o) => TagParse.TagBoolCheck(s, ref UseChatBroadcast) },
+                {"BarrelRoll", (s, o) => TagParse.TagBoolCheck(s, ref BarrelRoll) },
+                {"Strafe", (s, o) => TagParse.TagBoolCheck(s, ref Strafe) },
+                {"ChangeAutopilotSpeed", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotSpeed) },
+                {"NewAutopilotSpeed", (s, o) => TagParse.TagFloatCheck(s, ref NewAutopilotSpeed) },
+                {"ChangeAutopilotMinAltitude", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotMinAltitude) },
+                {"NewAutopilotMinAltitude", (s, o) => TagParse.TagIntCheck(s, ref NewAutopilotMinAltitude) },
+                {"SpawnEncounter", (s, o) => TagParse.TagBoolCheck(s, ref SpawnEncounter) },
+                {"SelfDestruct", (s, o) => TagParse.TagBoolCheck(s, ref SelfDestruct) },
+                {"Retreat", (s, o) => TagParse.TagBoolCheck(s, ref Retreat) },
+                {"TerminateBehavior", (s, o) => TagParse.TagBoolCheck(s, ref TerminateBehavior) },
+                {"BroadcastCurrentTarget", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCurrentTarget) },
+                {"SwitchToReceivedTarget", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToReceivedTarget) },
+                {"SwitchTargetToDamager", (s, o) => TagParse.TagBoolCheck(s, ref SwitchTargetToDamager) },
+                {"BroadcastDamagerTarget", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastDamagerTarget) },
+                {"BroadcastSendCode", (s, o) => TagParse.TagStringCheck(s, ref BroadcastSendCode) },
+                {"SwitchToBehavior", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToBehavior) },
+                {"NewBehavior", (s, o) => TagParse.TagStringCheck(s, ref NewBehavior) },
+                {"PreserveSettingsOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveSettingsOnBehaviorSwitch) },
+                {"PreserveTriggersOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveTriggersOnBehaviorSwitch) },
+                {"PreserveTargetDataOnBehaviorSwitch", (s, o) => TagParse.TagBoolCheck(s, ref PreserveTargetDataOnBehaviorSwitch) },
+                {"RefreshTarget", (s, o) => TagParse.TagBoolCheck(s, ref RefreshTarget) },
+                {"SwitchTargetProfile", (s, o) => TagParse.TagBoolCheck(s, ref SwitchTargetProfile) },
+                {"NewTargetProfile", (s, o) => TagParse.TagStringCheck(s, ref NewTargetProfile) },
+                {"TriggerTimerBlocks", (s, o) => TagParse.TagBoolCheck(s, ref TriggerTimerBlocks) },
+                {"TimerBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref TimerBlockNames) },
+                {"ChangeReputationWithPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationWithPlayers) },
+                {"ReputationChangeRadius", (s, o) => TagParse.TagDoubleCheck(s, ref ReputationChangeRadius) },
+                {"ReputationChangeFactions", (s, o) => TagParse.TagStringListCheck(s, ref ReputationChangeFactions) },
+                {"ReputationPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ReputationPlayerConditionIds) },
+                {"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
+                {"ChangeAttackersFactionAccount", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackersFactionAccount) },
+                {"ChangeAttackersFactionAccountByAmount", (s, o) => TagParse.TagIntCheck(s, ref ChangeAttackersFactionAccountByAmount) },
+                {"UseRandomNameGenerator", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomNameGenerator) },
+                {"ActivateAssertiveAntennas", (s, o) => TagParse.TagBoolCheck(s, ref ActivateAssertiveAntennas) },
+                {"ChangeAntennaOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaOwnership) },
+                {"AntennaFactionOwner", (s, o) => TagParse.TagStringCheck(s, ref AntennaFactionOwner) },
+                {"ChangeAntennaHudText", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaHudText) },
+                {"AntennaHudText", (s, o) => TagParse.TagStringCheck(s, ref AntennaHudText) },
+                {"AppendAntennaHudText", (s, o) => TagParse.TagBoolCheck(s, ref AppendAntennaHudText) },
+                {"AntennaHudTextSuffix", (s, o) => TagParse.TagStringCheck(s, ref AntennaHudTextSuffix) },
+                {"SetAntennaThoughtBubble", (s, o) => TagParse.TagBoolCheck(s, ref SetAntennaThoughtBubble) },
+                {"SetAntennaThoughtBubbleName", (s, o) => TagParse.TagStringCheck(s, ref SetAntennaThoughtBubbleName) },
+                {"ClearAntennaThoughtBubble", (s, o) => TagParse.TagBoolCheck(s, ref ClearAntennaThoughtBubble) },
+                {"StartAntennaThoughtBubblePercentage", (s, o) => TagParse.TagBoolCheck(s, ref StartAntennaThoughtBubblePercentage) },
+                {"StartAntennaThoughtBubblePercentageValue", (s, o) => TagParse.TagIntCheck(s, ref StartAntennaThoughtBubblePercentageValue) },
+                {"IncreaseAntennaThoughtBubblePercentage", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseAntennaThoughtBubblePercentage) },
+                {"IncreaseAntennaThoughtBubblePercentageAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseAntennaThoughtBubblePercentageAmount) },
+                {"DecreaseAntennaThoughtBubblePercentage", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseAntennaThoughtBubblePercentage) },
+                {"DecreaseAntennaThoughtBubblePercentageAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseAntennaThoughtBubblePercentageAmount) },
+                {"EndAntennaThoughtBubblePercentage", (s, o) => TagParse.TagBoolCheck(s, ref EndAntennaThoughtBubblePercentage) },
+                {"CreateKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref CreateKnownPlayerArea) },
+                {"KnownPlayerAreaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref KnownPlayerAreaRadius) },
+                {"KnownPlayerAreaTimer", (s, o) => TagParse.TagIntOrDayCheck(s, ref KnownPlayerAreaTimer) },
+                {"KnownPlayerAreaMaxSpawns", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMaxSpawns) },
+                {"KnownPlayerAreaMinThreatForAvoidingAbandonment", (s, o) => TagParse.TagIntCheck(s, ref KnownPlayerAreaMinThreatForAvoidingAbandonment) },
+                {"DamageToolAttacker", (s, o) => TagParse.TagBoolCheck(s, ref DamageToolAttacker) },
+                {"DamageToolAttackerAmount", (s, o) => TagParse.TagFloatCheck(s, ref DamageToolAttackerAmount) },
+                {"DamageToolAttackerParticle", (s, o) => TagParse.TagStringCheck(s, ref DamageToolAttackerParticle) },
+                {"DamageToolAttackerSound", (s, o) => TagParse.TagStringCheck(s, ref DamageToolAttackerSound) },
+                {"PlayParticleEffectAtRemote", (s, o) => TagParse.TagBoolCheck(s, ref PlayParticleEffectAtRemote) },
+                {"ParticleEffectId", (s, o) => TagParse.TagStringCheck(s, ref ParticleEffectId) },
+                {"ParticleEffectOffset", (s, o) => TagParse.TagVector3DCheck(s, ref ParticleEffectOffset) },
+                {"ParticleEffectScale", (s, o) => TagParse.TagFloatCheck(s, ref ParticleEffectScale) },
+                {"ParticleEffectMaxTime", (s, o) => TagParse.TagFloatCheck(s, ref ParticleEffectMaxTime) },
+                {"ParticleEffectColor", (s, o) => TagParse.TagVector3DCheck(s, ref ParticleEffectColor) },
+                {"SetBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansTrue) },
+                {"SetBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetBooleansFalse) },
+                {"IncreaseCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseCounters) },
+                {"DecreaseCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseCounters) },
+                {"ResetCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetCounters) },
+                {"SetSandboxBooleansTrue", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansTrue) },
+                {"SetSandboxBooleansFalse", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxBooleansFalse) },
+                {"IncreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref IncreaseSandboxCounters) },
+                {"DecreaseSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref DecreaseSandboxCounters) },
+                {"IncreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseSandboxCountersAmount) },
+                {"DecreaseSandboxCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseSandboxCountersAmount) },
+                {"IncreaseCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref IncreaseCountersAmount) },
+                {"DecreaseCountersAmount", (s, o) => TagParse.TagIntCheck(s, ref DecreaseCountersAmount) },
+
+                {"IncreaseCountersUseAmountVariable", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseCountersUseAmountVariable) },
+                {"DecreaseCountersUseAmountVariable", (s, o) => TagParse.TagBoolCheck(s, ref DecreaseCountersUseAmountVariable) },
+                {"IncreaseCountersAmountVariable", (s, o) => TagParse.TagStringCheck(s, ref IncreaseCountersAmountVariable) },
+                {"DecreaseCountersAmountVariable", (s, o) => TagParse.TagStringCheck(s, ref DecreaseCountersAmountVariable) },
+                {"IncreaseCountersUseCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref IncreaseCountersUseCommandScore) },
+                {"DecreaseCountersUseCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref DecreaseCountersUseCommandScore) },
 
 
-				{"ResetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetSandboxCounters) },
-				{"ChangeAttackerReputation", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackerReputation) },
-				{"ChangeAttackerReputationFaction", (s, o) => TagParse.TagStringListCheck(s, ref ChangeAttackerReputationFaction) },
-				{"ChangeAttackerReputationAmount", (s, o) => TagParse.TagIntListCheck(s, ref ChangeAttackerReputationAmount) },
-				{"ReputationChangesForAllAttackPlayerFactionMembers", (s, o) => TagParse.TagBoolCheck(s, ref ReputationChangesForAllAttackPlayerFactionMembers) },
-				{"ChangeTargetProfile", (s, o) => TagParse.TagBoolCheck(s, ref ChangeTargetProfile) },
-				{"NewTargetProfileId", (s, o) => TagParse.TagStringCheck(s, ref NewTargetProfileId) },
-				{"ChangeBlockNames", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockNames) },
-				{"ChangeBlockNamesFrom", (s, o) => TagParse.TagStringListCheck(s, ref ChangeBlockNamesFrom) },
-				{"ChangeBlockNamesTo", (s, o) => TagParse.TagStringListCheck(s, ref ChangeBlockNamesTo) },
-				{"ChangeAntennaRanges", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaRanges) },
-				{"AntennaNamesForRangeChange", (s, o) => TagParse.TagStringListCheck(s, ref AntennaNamesForRangeChange) },
-				{"AntennaRangeChangeType", (s, o) => TagParse.TagStringCheck(s, ref AntennaRangeChangeType) },
-				{"AntennaRangeChangeAmount", (s, o) => TagParse.TagFloatCheck(s, ref AntennaRangeChangeAmount) },
-				{"ForceDespawn", (s, o) => TagParse.TagBoolCheck(s, ref ForceDespawn) },
-				{"TryToDespawnThisGridOnly", (s, o) => TagParse.TagBoolCheck(s, ref TryToDespawnThisGridOnly) },
-				{"ResetCooldownTimeOfTriggers", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfTriggers) },
-				{"ResetTriggerCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownNames) },
-				{"ResetTriggerCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownTags) },
-				{"BroadcastGenericCommand", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastGenericCommand) },
-				{"BehaviorSpecificEventA", (s, o) => TagParse.TagBoolCheck(s, ref BehaviorSpecificEventA) },
-				{"ChangeInertiaDampeners", (s, o) => TagParse.TagBoolCheck(s, ref ChangeInertiaDampeners) },
-				{"InertiaDampenersEnable", (s, o) => TagParse.TagBoolCheck(s, ref InertiaDampenersEnable) },
-				{"EnableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref EnableTriggers) },
-				{"EnableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerNames) },
-				{"EnableTriggerIds", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerNames) },
-				{"EnableTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerTags) },
-				{"DisableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref DisableTriggers) },
-				{"DisableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerNames) },
-				{"DisableTriggerIds", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerNames) },
-				{"DisableTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerTags) },
-				{"StaggerWarheadDetonation", (s, o) => TagParse.TagBoolCheck(s, ref StaggerWarheadDetonation) },
-				{"ChangeRotationDirection", (s, o) => TagParse.TagBoolCheck(s, ref ChangeRotationDirection) },
-				{"RotationDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref RotationDirection) },
-				{"GenerateExplosion", (s, o) => TagParse.TagBoolCheck(s, ref GenerateExplosion) },
-				{"ExplosionOffsetFromRemote", (s, o) => TagParse.TagVector3DCheck(s, ref ExplosionOffsetFromRemote) },
-				{"ExplosionRange", (s, o) => TagParse.TagIntCheck(s, ref ExplosionRange) },
-				{"ExplosionDamage", (s, o) => TagParse.TagIntCheck(s, ref ExplosionDamage) },
-				{"ExplosionIgnoresVoxels", (s, o) => TagParse.TagBoolCheck(s, ref ExplosionIgnoresVoxels) },
-				{"GridEditable", (s, o) => TagParse.TagCheckEnumCheck(s, ref GridEditable) },
-				{"SubGridsEditable", (s, o) => TagParse.TagCheckEnumCheck(s, ref SubGridsEditable) },
-				{"GridDestructible", (s, o) => TagParse.TagCheckEnumCheck(s, ref GridDestructible) },
-				{"SubGridsDestructible", (s, o) => TagParse.TagCheckEnumCheck(s, ref SubGridsDestructible) },
-				{"RecolorGrid", (s, o) => TagParse.TagBoolCheck(s, ref RecolorGrid) },
-				{"RecolorSubGrids", (s, o) => TagParse.TagBoolCheck(s, ref RecolorSubGrids) },
-				{"OldBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref OldBlockColors) },
-				{"OldBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref OldBlockSkins) },
-				{"NewBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref NewBlockColors) },
-				{"NewBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref NewBlockSkins) },
-				{"ChangeGridOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeGridOwnership) },
-				{"ChangeBlockOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockOwnership) },
-				{"OwnershipBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref OwnershipBlockNames) },
-				{"OwnershipBlockFactions", (s, o) => TagParse.TagStringListCheck(s, ref OwnershipBlockFactions) },
-				{"ChangeBlockDamageMultipliers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockDamageMultipliers) },
-				{"DamageMultiplierBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref DamageMultiplierBlockNames) },
-				{"DamageMultiplierValues", (s, o) => TagParse.TagIntListCheck(s, ref DamageMultiplierValues) },
-				{"RazeBlocksWithNames", (s, o) => TagParse.TagBoolCheck(s, ref RazeBlocksWithNames) },
-				{"RazeBlocksNames", (s, o) => TagParse.TagStringListCheck(s, ref RazeBlocksNames) },
-				{"RazeBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref RazeBlocksOfType) },
-				{"RazeBlocksTypes", (s, o) => TagParse.TagMyDefIdCheck(s, ref RazeBlocksTypes) },
-				{"ManuallyActivateTrigger", (s, o) => TagParse.TagBoolCheck(s, ref ManuallyActivateTrigger) },
-				{"ManuallyActivatedTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref ManuallyActivatedTriggerNames) },
-				{"ManuallyActivatedTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref ManuallyActivatedTriggerTags) },
-				{"SendCommandWithoutAntenna", (s, o) => TagParse.TagBoolCheck(s, ref SendCommandWithoutAntenna) },
-				{"SendCommandWithoutAntennaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref SendCommandWithoutAntennaRadius) },
-				{"RemoveKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref RemoveKnownPlayerArea) },
-				{"RemoveAllKnownPlayerAreas", (s, o) => TagParse.TagBoolCheck(s, ref RemoveAllKnownPlayerAreas) },
-				{"Chance", (s, o) => TagParse.TagIntCheck(s, ref Chance) },
-				{"EnableBlocks", (s, o) => TagParse.TagBoolCheck(s, ref EnableBlocks) },
-				{"EnableBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableBlockNames) },
-				{"EnableBlockStates", (s, o) => TagParse.TagSwitchEnumCheck(s, ref EnableBlockStates) },
-				{"ChangeAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotProfile) },
-				{"AutopilotProfile", (s, o) => TagParse.TagAutoPilotProfileModeCheck(s, ref AutopilotProfile) },
-				{"Ramming", (s, o) => TagParse.TagBoolCheck(s, ref Ramming) },
-				{"CreateRandomLightning", (s, o) => TagParse.TagBoolCheck(s, ref CreateRandomLightning) },
-				{"CreateLightningAtAttacker", (s, o) => TagParse.TagBoolCheck(s, ref CreateLightningAtAttacker) },
-				{"LightningDamage", (s, o) => TagParse.TagIntCheck(s, ref LightningDamage) },
-				{"LightningExplosionRadius", (s, o) => TagParse.TagIntCheck(s, ref LightningExplosionRadius) },
-				{"LightningColor", (s, o) => TagParse.TagVector3DCheck(s, ref LightningColor) },
-				{"LightningMinDistance", (s, o) => TagParse.TagDoubleCheck(s, ref LightningMinDistance) },
-				{"LightningMaxDistance", (s, o) => TagParse.TagDoubleCheck(s, ref LightningMaxDistance) },
-				{"CreateLightningAtTarget", (s, o) => TagParse.TagBoolCheck(s, ref CreateLightningAtTarget) },
-				{"SelfDestructTimerPadding", (s, o) => TagParse.TagIntCheck(s, ref SelfDestructTimerPadding) },
-				{"SelfDestructTimeBetweenBlasts", (s, o) => TagParse.TagIntCheck(s, ref SelfDestructTimeBetweenBlasts) },
-				{"SetCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetCounters) },
-				{"SetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxCounters) },
-				{"SetCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersValues) },
-				{"SetSandboxCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetSandboxCountersValues) },
-				{"InheritLastAttackerFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref InheritLastAttackerFromCommand) },
-				{"ChangePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCredits) },
-				{"ChangePlayerCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangePlayerCreditsAmount) },
-				{"ChangePlayerCreditsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCreditsIncludeSavedPlayerIdentity) },
-				{"ChangePlayerCreditsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ChangePlayerCreditsPlayerConditionIds) },
-				{"ChangePlayerCreditsOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCreditsOverridePositionInPlayerCondition) },
-				{"ChangeNpcFactionCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangeNpcFactionCredits) },
-				{"ChangeNpcFactionCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangeNpcFactionCreditsAmount) },
-				{"ChangeNpcFactionCreditsTag", (s, o) => TagParse.TagStringCheck(s, ref ChangeNpcFactionCreditsTag) },
-				{"BuildProjectedBlocks", (s, o) => TagParse.TagBoolCheck(s, ref BuildProjectedBlocks) },
-				{"RepairBlocks", (s, o) => TagParse.TagBoolCheck(s, ref RepairBlocks) },
-				{"MaxBlocksToRepair", (s, o) => TagParse.TagIntCheck(s, ref MaxBlocksToRepair) },
-				{"RepairBlocksIncludeSubgrids", (s, o) => TagParse.TagBoolCheck(s, ref RepairBlocksIncludeSubgrids) },
-				{"MaxProjectedBlocksToBuild", (s, o) => TagParse.TagIntCheck(s, ref MaxProjectedBlocksToBuild) },
-				{"ForceManualTriggerActivation", (s, o) => TagParse.TagBoolCheck(s, ref ForceManualTriggerActivation) },
-				{"OverwriteAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref OverwriteAutopilotProfile) },
-				{"OverwriteAutopilotMode", (s, o) => TagParse.TagAutoPilotProfileModeCheck(s, ref OverwriteAutopilotMode) },
-				{"OverwriteAutopilotId", (s, o) => TagParse.TagStringCheck(s, ref OverwriteAutopilotId) },
-				{"BroadcastCommandProfiles", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCommandProfiles) },
-				{"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
-				{"AddWaypointFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AddWaypointFromCommand) },
-				{"RecalculateDespawnCoords", (s, o) => TagParse.TagBoolCheck(s, ref RecalculateDespawnCoords) },
-				{"AddDatapadsToSeats", (s, o) => TagParse.TagBoolCheck(s, ref AddDatapadsToSeats) },
-				{"DatapadNamesToAdd", (s, o) => TagParse.TagStringListCheck(s, ref DatapadNamesToAdd) },
-				{"DatapadCountToAdd", (s, o) => TagParse.TagIntCheck(s, ref DatapadCountToAdd) },
-				{"ToggleBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref ToggleBlocksOfType) },
-				{"BlockTypesToToggle", (s, o) => TagParse.TagMyDefIdCheck(s, ref BlockTypesToToggle) },
-				{"BlockTypeToggles", (s, o) => TagParse.TagSwitchEnumCheck(s, ref BlockTypeToggles) },
-				{"ClearAllWaypoints", (s, o) => TagParse.TagBoolCheck(s, ref ClearAllWaypoints) },
-				{"AddWaypoints", (s, o) => TagParse.TagBoolCheck(s, ref AddWaypoints) },
-				{"WaypointsToAdd", (s, o) => TagParse.TagStringListCheck(s, ref WaypointsToAdd) },
-				{"CancelWaitingAtWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref CancelWaitingAtWaypoint) },
-				{"SwitchToNextWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToNextWaypoint) },
-				{"HeavyYaw", (s, o) => TagParse.TagBoolCheck(s, ref HeavyYaw) },
-				{"StopAllRotation", (s, o) => TagParse.TagBoolCheck(s, ref StopAllRotation) },
-				{"StopAllThrust", (s, o) => TagParse.TagBoolCheck(s, ref StopAllThrust) },
-				{"RandomGyroRotation", (s, o) => TagParse.TagBoolCheck(s, ref RandomGyroRotation) },
-				{"RandomThrustDirection", (s, o) => TagParse.TagBoolCheck(s, ref RandomThrustDirection) },
-				{"ParentGridNameRequirement", (s, o) => TagParse.TagStringCheck(s, ref ParentGridNameRequirement) },
-				{"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
-				{"ZoneName", (s, o) => TagParse.TagStringCheck(s, ref ZoneName) },
-				{"ZoneToggleActive", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActive) },
-				{"ZoneToggleActiveMode", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveMode) },
-				{"ZoneToggleActiveAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveAtPosition) },
-				{"ZoneToggleActiveAtPositionMode", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveAtPositionMode) },
-				{"ZoneRadiusChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneRadiusChangeType) },
-				{"ZoneRadiusChangeAmount", (s, o) => TagParse.TagDoubleCheck(s, ref ZoneRadiusChangeAmount) },
-				{"ZoneCustomCounterChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChange) },
-				{"ZoneCustomCounterChangeUseKPL", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChangeUseKPL) },
-				{"ZoneCustomCounterChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneCustomCounterChangeType) },
-				{"ZoneCustomCounterChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomCounterChangeName) },
-				{"ZoneCustomCounterChangeAmount", (s, o) => TagParse.TagLongCheck(s, ref ZoneCustomCounterChangeAmount) },
-				{"ZoneCustomBoolChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChange) },
-				{"ZoneCustomBoolChangeUseKPL", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChangeUseKPL) },
-				{"ZoneCustomBoolChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomBoolChangeName) },
-				{"ZoneCustomBoolChangeValue", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeValue) },
-				{"AddBotsToGrid", (s, o) => TagParse.TagBoolCheck(s, ref AddBotsToGrid) },
-				{"BotCount", (s, o) => TagParse.TagIntCheck(s, ref BotCount) },
-				{"BotSpawnProfileNames", (s, o) => TagParse.TagStringListCheck(s, ref BotSpawnProfileNames) },
-				{"OnlySpawnBotsInPressurizedRooms", (s, o) => TagParse.TagBoolCheck(s, ref OnlySpawnBotsInPressurizedRooms) },
-				{"ChangeBehaviorSubclass", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBehaviorSubclass) },
-				{"NewBehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref NewBehaviorSubclass) },
-				{"SetWeaponsToMinRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMinRange) },
-				{"SetWeaponsToMaxRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMaxRange) },
-				{"EnableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref EnableHighestRangeAntennas) },
-				{"DisableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref DisableHighestRangeAntennas) },
-				{"AssignEscortFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AssignEscortFromCommand) },
-				{"UseCurrentPositionAsPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref UseCurrentPositionAsPatrolReference) },
-				{"ClearCustomPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref ClearCustomPatrolReference) },
-				{"SetGridToStatic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToStatic) },
-				{"SetGridToDynamic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToDynamic) },
-				{"UseJetpackInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseJetpackInhibitorEffect) },
-				{"UseDrillInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseDrillInhibitorEffect) },
-				{"UseNanobotInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseNanobotInhibitorEffect) },
-				{"UseJumpInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseJumpInhibitorEffect) },
-				{"UsePlayerInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UsePlayerInhibitorEffect) },
-				{"ChangeTurretTargetingParameters", (s, o) => TagParse.TagBoolCheck(s, ref ChangeTurretTargetingParameters) },
-				{"TurretTargetType", (s, o) => TagParse.TagStringCheck(s, ref TurretTargetType) },
-				{"TurretTypesForTargetChanges", (s, o) => TagParse.TagStringListCheck(s, ref TurretTypesForTargetChanges) },
-				{"TurretSubtypesForTargetChange", (s, o) => TagParse.TagStringListCheck(s, ref TurretSubtypesForTargetChange) },
-				{"JumpToTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpToTarget) },
-				{"JumpToJumpedEntity", (s, o) => TagParse.TagBoolCheck(s, ref JumpToJumpedEntity) },
-				{"JumpedEntityMustBeTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpedEntityMustBeTarget) },
-				{"JumpToWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref JumpToWaypoint) },
-				{"JumpWaypoint", (s, o) => TagParse.TagStringCheck(s, ref JumpWaypoint) },
-				{"SetGridCleanupExempt", (s, o) => TagParse.TagBoolCheck(s, ref SetGridCleanupExempt) },
-				{"GridCleanupExemptDuration", (s, o) => TagParse.TagIntCheck(s, ref GridCleanupExemptDuration) },
-				{"PlaySoundAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref PlaySoundAtPosition) },
-				{"SoundAtPosition", (s, o) => TagParse.TagStringCheck(s, ref SoundAtPosition) },
+                {"ResetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref ResetSandboxCounters) },
+                {"ChangeAttackerReputation", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackerReputation) },
+                {"ChangeAttackerReputationFaction", (s, o) => TagParse.TagStringListCheck(s, ref ChangeAttackerReputationFaction) },
+                {"ChangeAttackerReputationAmount", (s, o) => TagParse.TagIntListCheck(s, ref ChangeAttackerReputationAmount) },
+                {"ReputationChangesForAllAttackPlayerFactionMembers", (s, o) => TagParse.TagBoolCheck(s, ref ReputationChangesForAllAttackPlayerFactionMembers) },
+                {"ChangeTargetProfile", (s, o) => TagParse.TagBoolCheck(s, ref ChangeTargetProfile) },
+                {"NewTargetProfileId", (s, o) => TagParse.TagStringCheck(s, ref NewTargetProfileId) },
+                {"ChangeBlockNames", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockNames) },
+                {"ChangeBlockNamesFrom", (s, o) => TagParse.TagStringListCheck(s, ref ChangeBlockNamesFrom) },
+                {"ChangeBlockNamesTo", (s, o) => TagParse.TagStringListCheck(s, ref ChangeBlockNamesTo) },
+                {"ChangeAntennaRanges", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAntennaRanges) },
+                {"AntennaNamesForRangeChange", (s, o) => TagParse.TagStringListCheck(s, ref AntennaNamesForRangeChange) },
+                {"AntennaRangeChangeType", (s, o) => TagParse.TagStringCheck(s, ref AntennaRangeChangeType) },
+                {"AntennaRangeChangeAmount", (s, o) => TagParse.TagFloatCheck(s, ref AntennaRangeChangeAmount) },
+                {"ForceDespawn", (s, o) => TagParse.TagBoolCheck(s, ref ForceDespawn) },
+                {"TryToDespawnThisGridOnly", (s, o) => TagParse.TagBoolCheck(s, ref TryToDespawnThisGridOnly) },
+                {"ResetCooldownTimeOfTriggers", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfTriggers) },
+                {"ResetTriggerCooldownNames", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownNames) },
+                {"ResetTriggerCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetTriggerCooldownTags) },
+                {"BroadcastGenericCommand", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastGenericCommand) },
+                {"BehaviorSpecificEventA", (s, o) => TagParse.TagBoolCheck(s, ref BehaviorSpecificEventA) },
+                {"ChangeInertiaDampeners", (s, o) => TagParse.TagBoolCheck(s, ref ChangeInertiaDampeners) },
+                {"InertiaDampenersEnable", (s, o) => TagParse.TagBoolCheck(s, ref InertiaDampenersEnable) },
+                {"EnableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref EnableTriggers) },
+                {"EnableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerNames) },
+                {"EnableTriggerIds", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerNames) },
+                {"EnableTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref EnableTriggerTags) },
+                {"DisableTriggers", (s, o) => TagParse.TagBoolCheck(s, ref DisableTriggers) },
+                {"DisableTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerNames) },
+                {"DisableTriggerIds", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerNames) },
+                {"DisableTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref DisableTriggerTags) },
+                {"StaggerWarheadDetonation", (s, o) => TagParse.TagBoolCheck(s, ref StaggerWarheadDetonation) },
+                {"ChangeRotationDirection", (s, o) => TagParse.TagBoolCheck(s, ref ChangeRotationDirection) },
+                {"RotationDirection", (s, o) => TagParse.TagDirectionEnumCheck(s, ref RotationDirection) },
+                {"GenerateExplosion", (s, o) => TagParse.TagBoolCheck(s, ref GenerateExplosion) },
+                {"ExplosionOffsetFromRemote", (s, o) => TagParse.TagVector3DCheck(s, ref ExplosionOffsetFromRemote) },
+                {"ExplosionRange", (s, o) => TagParse.TagIntCheck(s, ref ExplosionRange) },
+                {"ExplosionDamage", (s, o) => TagParse.TagIntCheck(s, ref ExplosionDamage) },
+                {"ExplosionIgnoresVoxels", (s, o) => TagParse.TagBoolCheck(s, ref ExplosionIgnoresVoxels) },
+                {"GridEditable", (s, o) => TagParse.TagCheckEnumCheck(s, ref GridEditable) },
+                {"SubGridsEditable", (s, o) => TagParse.TagCheckEnumCheck(s, ref SubGridsEditable) },
+                {"GridDestructible", (s, o) => TagParse.TagCheckEnumCheck(s, ref GridDestructible) },
+                {"SubGridsDestructible", (s, o) => TagParse.TagCheckEnumCheck(s, ref SubGridsDestructible) },
+                {"RecolorGrid", (s, o) => TagParse.TagBoolCheck(s, ref RecolorGrid) },
+                {"RecolorSubGrids", (s, o) => TagParse.TagBoolCheck(s, ref RecolorSubGrids) },
+                {"OldBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref OldBlockColors) },
+                {"OldBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref OldBlockSkins) },
+                {"NewBlockColors", (s, o) => TagParse.TagVector3DListCheck(s, ref NewBlockColors) },
+                {"NewBlockSkins", (s, o) => TagParse.TagStringListCheck(s, ref NewBlockSkins) },
+                {"ChangeGridOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeGridOwnership) },
+                {"ChangeBlockOwnership", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockOwnership) },
+                {"OwnershipBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref OwnershipBlockNames) },
+                {"OwnershipBlockFactions", (s, o) => TagParse.TagStringListCheck(s, ref OwnershipBlockFactions) },
+                {"ChangeBlockDamageMultipliers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlockDamageMultipliers) },
+                {"DamageMultiplierBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref DamageMultiplierBlockNames) },
+                {"DamageMultiplierValues", (s, o) => TagParse.TagIntListCheck(s, ref DamageMultiplierValues) },
+                {"RazeBlocksWithNames", (s, o) => TagParse.TagBoolCheck(s, ref RazeBlocksWithNames) },
+                {"RazeBlocksNames", (s, o) => TagParse.TagStringListCheck(s, ref RazeBlocksNames) },
+                {"RazeBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref RazeBlocksOfType) },
+                {"RazeBlocksTypes", (s, o) => TagParse.TagMyDefIdCheck(s, ref RazeBlocksTypes) },
+                {"ManuallyActivateTrigger", (s, o) => TagParse.TagBoolCheck(s, ref ManuallyActivateTrigger) },
+                {"ManuallyActivatedTriggerNames", (s, o) => TagParse.TagStringListCheck(s, ref ManuallyActivatedTriggerNames) },
+                {"ManuallyActivatedTriggerTags", (s, o) => TagParse.TagStringListCheck(s, ref ManuallyActivatedTriggerTags) },
+                {"SendCommandWithoutAntenna", (s, o) => TagParse.TagBoolCheck(s, ref SendCommandWithoutAntenna) },
+                {"SendCommandWithoutAntennaRadius", (s, o) => TagParse.TagDoubleCheck(s, ref SendCommandWithoutAntennaRadius) },
+                {"RemoveKnownPlayerArea", (s, o) => TagParse.TagBoolCheck(s, ref RemoveKnownPlayerArea) },
+                {"RemoveAllKnownPlayerAreas", (s, o) => TagParse.TagBoolCheck(s, ref RemoveAllKnownPlayerAreas) },
+                {"Chance", (s, o) => TagParse.TagIntCheck(s, ref Chance) },
+                {"EnableBlocks", (s, o) => TagParse.TagBoolCheck(s, ref EnableBlocks) },
+                {"EnableBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref EnableBlockNames) },
+                {"EnableBlockStates", (s, o) => TagParse.TagSwitchEnumCheck(s, ref EnableBlockStates) },
+                {"HighlightBlocks", (s, o) => TagParse.TagBoolCheck(s, ref HighlightBlocks) },
+                {"HighlightBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref HighlightBlockNames) },
+                {"HighlightBlockModes", (s, o) => TagParse.TagBoolListCheck(s, ref HighlightBlockModes) },
+                {"ChangeAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAutopilotProfile) },
+                {"AutopilotProfile", (s, o) => TagParse.TagAutoPilotProfileModeCheck(s, ref AutopilotProfile) },
+                {"Ramming", (s, o) => TagParse.TagBoolCheck(s, ref Ramming) },
+                {"CreateRandomLightning", (s, o) => TagParse.TagBoolCheck(s, ref CreateRandomLightning) },
+                {"CreateLightningAtAttacker", (s, o) => TagParse.TagBoolCheck(s, ref CreateLightningAtAttacker) },
+                {"LightningDamage", (s, o) => TagParse.TagIntCheck(s, ref LightningDamage) },
+                {"LightningExplosionRadius", (s, o) => TagParse.TagIntCheck(s, ref LightningExplosionRadius) },
+                {"LightningColor", (s, o) => TagParse.TagVector3DCheck(s, ref LightningColor) },
+                {"LightningMinDistance", (s, o) => TagParse.TagDoubleCheck(s, ref LightningMinDistance) },
+                {"LightningMaxDistance", (s, o) => TagParse.TagDoubleCheck(s, ref LightningMaxDistance) },
+                {"CreateLightningAtTarget", (s, o) => TagParse.TagBoolCheck(s, ref CreateLightningAtTarget) },
+                {"SelfDestructTimerPadding", (s, o) => TagParse.TagIntCheck(s, ref SelfDestructTimerPadding) },
+                {"SelfDestructTimeBetweenBlasts", (s, o) => TagParse.TagIntCheck(s, ref SelfDestructTimeBetweenBlasts) },
+                {"SetCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetCounters) },
+                {"SetSandboxCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetSandboxCounters) },
+                {"SetCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetCountersValues) },
+                {"SetCountersUseAmountVariable", (s, o) => TagParse.TagBoolCheck(s, ref SetCountersUseAmountVariable) },
+                {"SetCountersAmountVariable", (s, o) => TagParse.TagStringCheck(s, ref SetCountersAmountVariable) },
+                {"SetSandboxCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetSandboxCountersValues) },
+                {"SetCustomStrings", (s, o) => TagParse.TagBoolCheck(s, ref SetCustomStrings) },
+                {"CustomStrings", (s, o) => TagParse.TagStringDictCheck(s, ref CustomStrings) },
+                {"SetCustomCountersVariables", (s, o) => TagParse.TagBoolCheck(s, ref SetCustomCountersVariables) },
+                {"CustomCountersVariables", (s, o) => TagParse.TagStringIntDictCheck(s, ref CustomCountersVariables) },
+                {"InheritLastAttackerFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref InheritLastAttackerFromCommand) },
+                {"ChangePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCredits) },
+                {"ChangePlayerCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangePlayerCreditsAmount) },
+                {"ChangePlayerCreditsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCreditsIncludeSavedPlayerIdentity) },
+                {"ChangePlayerCreditsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ChangePlayerCreditsPlayerConditionIds) },
+                {"ChangePlayerCreditsOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCreditsOverridePositionInPlayerCondition) },
+                {"ChangeNpcFactionCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangeNpcFactionCredits) },
+                {"ChangeNpcFactionCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangeNpcFactionCreditsAmount) },
+                {"ChangeNpcFactionCreditsTag", (s, o) => TagParse.TagStringCheck(s, ref ChangeNpcFactionCreditsTag) },
+                {"BuildProjectedBlocks", (s, o) => TagParse.TagBoolCheck(s, ref BuildProjectedBlocks) },
+                {"RepairBlocks", (s, o) => TagParse.TagBoolCheck(s, ref RepairBlocks) },
+                {"MaxBlocksToRepair", (s, o) => TagParse.TagIntCheck(s, ref MaxBlocksToRepair) },
+                {"RepairBlocksIncludeSubgrids", (s, o) => TagParse.TagBoolCheck(s, ref RepairBlocksIncludeSubgrids) },
+                {"MaxProjectedBlocksToBuild", (s, o) => TagParse.TagIntCheck(s, ref MaxProjectedBlocksToBuild) },
+                {"ForceManualTriggerActivation", (s, o) => TagParse.TagBoolCheck(s, ref ForceManualTriggerActivation) },
+                {"OverwriteAutopilotProfile", (s, o) => TagParse.TagBoolCheck(s, ref OverwriteAutopilotProfile) },
+                {"OverwriteAutopilotMode", (s, o) => TagParse.TagAutoPilotProfileModeCheck(s, ref OverwriteAutopilotMode) },
+                {"OverwriteAutopilotId", (s, o) => TagParse.TagStringCheck(s, ref OverwriteAutopilotId) },
+                {"BroadcastCommandProfiles", (s, o) => TagParse.TagBoolCheck(s, ref BroadcastCommandProfiles) },
+                {"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
+                {"AddWaypointFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AddWaypointFromCommand) },
+                {"AddCustomCountersVariablesFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AddCustomCountersVariablesFromCommand) },
+                {"RecalculateDespawnCoords", (s, o) => TagParse.TagBoolCheck(s, ref RecalculateDespawnCoords) },
+                {"AddDatapadsToSeats", (s, o) => TagParse.TagBoolCheck(s, ref AddDatapadsToSeats) },
+                {"DatapadNamesToAdd", (s, o) => TagParse.TagStringListCheck(s, ref DatapadNamesToAdd) },
+                {"DatapadCountToAdd", (s, o) => TagParse.TagIntCheck(s, ref DatapadCountToAdd) },
+                {"ToggleBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref ToggleBlocksOfType) },
+                {"BlockTypesToToggle", (s, o) => TagParse.TagMyDefIdCheck(s, ref BlockTypesToToggle) },
+                {"BlockTypeToggles", (s, o) => TagParse.TagSwitchEnumCheck(s, ref BlockTypeToggles) },
+                {"ClearAllWaypoints", (s, o) => TagParse.TagBoolCheck(s, ref ClearAllWaypoints) },
+                {"AddWaypoints", (s, o) => TagParse.TagBoolCheck(s, ref AddWaypoints) },
+                {"WaypointsToAdd", (s, o) => TagParse.TagStringListCheck(s, ref WaypointsToAdd) },
+                {"CancelWaitingAtWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref CancelWaitingAtWaypoint) },
+                {"SwitchToNextWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref SwitchToNextWaypoint) },
+                {"HeavyYaw", (s, o) => TagParse.TagBoolCheck(s, ref HeavyYaw) },
+                {"StopAllRotation", (s, o) => TagParse.TagBoolCheck(s, ref StopAllRotation) },
+                {"StopAllThrust", (s, o) => TagParse.TagBoolCheck(s, ref StopAllThrust) },
+                {"RandomGyroRotation", (s, o) => TagParse.TagBoolCheck(s, ref RandomGyroRotation) },
+                {"RandomThrustDirection", (s, o) => TagParse.TagBoolCheck(s, ref RandomThrustDirection) },
+                {"ParentGridNameRequirement", (s, o) => TagParse.TagStringCheck(s, ref ParentGridNameRequirement) },
+                {"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+                {"ZoneName", (s, o) => TagParse.TagStringCheck(s, ref ZoneName) },
+                {"ZoneToggleActive", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActive) },
+                {"ZoneToggleActiveMode", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveMode) },
+                {"ZoneToggleActiveAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveAtPosition) },
+                {"ZoneToggleActiveAtPositionMode", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveAtPositionMode) },
+                {"ZoneRadiusChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneRadiusChangeType) },
+                {"ZoneRadiusChangeAmount", (s, o) => TagParse.TagDoubleCheck(s, ref ZoneRadiusChangeAmount) },
+                {"ZoneCustomCounterChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChange) },
+                {"ZoneCustomCounterChangeUseKPL", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomCounterChangeUseKPL) },
+                {"ZoneCustomCounterChangeType", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneCustomCounterChangeType) },
+                {"ZoneCustomCounterChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomCounterChangeName) },
+                {"ZoneCustomCounterChangeAmount", (s, o) => TagParse.TagLongCheck(s, ref ZoneCustomCounterChangeAmount) },
+                {"ZoneCustomBoolChange", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChange) },
+                {"ZoneCustomBoolChangeUseKPL", (s, o) => TagParse.TagBoolCheck(s, ref ZoneCustomBoolChangeUseKPL) },
+                {"ZoneCustomBoolChangeName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneCustomBoolChangeName) },
+                {"ZoneCustomBoolChangeValue", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeValue) },
+                {"AddBotsToGrid", (s, o) => TagParse.TagBoolCheck(s, ref AddBotsToGrid) },
+                {"BotCount", (s, o) => TagParse.TagIntCheck(s, ref BotCount) },
+                {"BotSpawnProfileNames", (s, o) => TagParse.TagStringListCheck(s, ref BotSpawnProfileNames) },
+                {"OnlySpawnBotsInPressurizedRooms", (s, o) => TagParse.TagBoolCheck(s, ref OnlySpawnBotsInPressurizedRooms) },
+                {"ChangeBehaviorSubclass", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBehaviorSubclass) },
+                {"NewBehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref NewBehaviorSubclass) },
+                {"SetWeaponsToMinRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMinRange) },
+                {"SetWeaponsToMaxRange", (s, o) => TagParse.TagBoolCheck(s, ref SetWeaponsToMaxRange) },
+                {"EnableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref EnableHighestRangeAntennas) },
+                {"DisableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref DisableHighestRangeAntennas) },
+                {"AssignEscortFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AssignEscortFromCommand) },
+                {"UseCurrentPositionAsPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref UseCurrentPositionAsPatrolReference) },
+                {"ClearCustomPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref ClearCustomPatrolReference) },
+                {"SetGridToStatic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToStatic) },
+                {"SetGridToDynamic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToDynamic) },
+                {"UseJetpackInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseJetpackInhibitorEffect) },
+                {"UseDrillInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseDrillInhibitorEffect) },
+                {"UseNanobotInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseNanobotInhibitorEffect) },
+                {"UseJumpInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UseJumpInhibitorEffect) },
+                {"UsePlayerInhibitorEffect", (s, o) => TagParse.TagBoolEnumCheck(s, ref UsePlayerInhibitorEffect) },
+                {"ChangeTurretTargetingParameters", (s, o) => TagParse.TagBoolCheck(s, ref ChangeTurretTargetingParameters) },
+                {"TurretTargetType", (s, o) => TagParse.TagStringCheck(s, ref TurretTargetType) },
+                {"TurretTypesForTargetChanges", (s, o) => TagParse.TagStringListCheck(s, ref TurretTypesForTargetChanges) },
+                {"TurretSubtypesForTargetChange", (s, o) => TagParse.TagStringListCheck(s, ref TurretSubtypesForTargetChange) },
+                {"JumpToTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpToTarget) },
+                {"JumpToJumpedEntity", (s, o) => TagParse.TagBoolCheck(s, ref JumpToJumpedEntity) },
+                {"JumpedEntityMustBeTarget", (s, o) => TagParse.TagBoolCheck(s, ref JumpedEntityMustBeTarget) },
+                {"JumpToWaypoint", (s, o) => TagParse.TagBoolCheck(s, ref JumpToWaypoint) },
+                {"JumpWaypoint", (s, o) => TagParse.TagStringCheck(s, ref JumpWaypoint) },
+                {"SetGridCleanupExempt", (s, o) => TagParse.TagBoolCheck(s, ref SetGridCleanupExempt) },
+                {"GridCleanupExemptDuration", (s, o) => TagParse.TagIntCheck(s, ref GridCleanupExemptDuration) },
+                {"PlaySoundAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref PlaySoundAtPosition) },
+                {"SoundAtPosition", (s, o) => TagParse.TagStringCheck(s, ref SoundAtPosition) },
 
-				{"SpawnPlanet", (s, o) => TagParse.TagBoolCheck(s, ref SpawnPlanet) },
-				{"PlanetName", (s, o) => TagParse.TagStringCheck(s, ref PlanetName) },
-				{"PlanetSize", (s, o) => TagParse.TagFloatCheck(s, ref PlanetSize) },
-				{"PlanetIgnoreSafeLocation", (s, o) => TagParse.TagBoolCheck(s, ref PlanetIgnoreSafeLocation) },
-				{"PlanetWaypointProfile", (s, o) => TagParse.TagStringCheck(s, ref PlanetWaypointProfile) },
-				{"TemporaryPlanet", (s, o) => TagParse.TagBoolCheck(s, ref TemporaryPlanet) },
-				{"PlanetTimeLimit", (s, o) => TagParse.TagIntCheck(s, ref PlanetTimeLimit) },
+                {"SpawnPlanet", (s, o) => TagParse.TagBoolCheck(s, ref SpawnPlanet) },
+                {"PlanetName", (s, o) => TagParse.TagStringCheck(s, ref PlanetName) },
+                {"PlanetSize", (s, o) => TagParse.TagFloatCheck(s, ref PlanetSize) },
+                {"PlanetIgnoreSafeLocation", (s, o) => TagParse.TagBoolCheck(s, ref PlanetIgnoreSafeLocation) },
+                {"PlanetWaypointProfile", (s, o) => TagParse.TagStringCheck(s, ref PlanetWaypointProfile) },
+                {"TemporaryPlanet", (s, o) => TagParse.TagBoolCheck(s, ref TemporaryPlanet) },
+                {"PlanetTimeLimit", (s, o) => TagParse.TagIntCheck(s, ref PlanetTimeLimit) },
 
-				{"AddCustomDataToBlocks", (s, o) => TagParse.TagBoolCheck(s, ref AddCustomDataToBlocks) },
-				{"CustomDataBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref CustomDataBlockNames) },
-				{"CustomDataFiles", (s, o) => TagParse.TagTextTemplateCheck(s, ref CustomDataFiles) },
+                {"AddCustomDataToBlocks", (s, o) => TagParse.TagBoolCheck(s, ref AddCustomDataToBlocks) },
+                {"CustomDataBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref CustomDataBlockNames) },
+                {"CustomDataFiles", (s, o) => TagParse.TagTextTemplateCheck(s, ref CustomDataFiles) },
 
-				{"ApplyContainerTypeToInventoryBlock", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContainerTypeToInventoryBlock) },
-				{"ContainerTypeBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeBlockNames) },
-				{"ContainerTypeSubtypeIds", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeSubtypeIds) },
+                {"ApplyContainerTypeToInventoryBlock", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContainerTypeToInventoryBlock) },
+                {"ContainerTypeBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeBlockNames) },
+                {"ContainerTypeSubtypeIds", (s, o) => TagParse.TagStringListCheck(s, ref ContainerTypeSubtypeIds) },
 
-				{"DebugMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugMessage) },
+                {"DebugMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugMessage) },
 
-				{"ApplyLcdChanges", (s, o) => TagParse.TagBoolCheck(s, ref ApplyLcdChanges) },
-				{"LcdTextTemplateFile", (s, o) => TagParse.TagStringCheck(s, ref LcdTextTemplateFile) },
-				{"LcdBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref LcdBlockNames) },
-				{"LcdTemplateIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref LcdTemplateIndexes) },
+                {"ApplyLcdChanges", (s, o) => TagParse.TagBoolCheck(s, ref ApplyLcdChanges) },
+                {"LcdTextTemplateFile", (s, o) => TagParse.TagStringCheck(s, ref LcdTextTemplateFile) },
+                {"LcdBlockNames", (s, o) => TagParse.TagStringListCheck(s, ref LcdBlockNames) },
+                {"LcdTemplateIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref LcdTemplateIndexes) },
 
-				{"AddResearchPoints", (s, o) => TagParse.TagBoolCheck(s, ref AddResearchPoints) },
-				{"ResearchPointsAmount", (s, o) => TagParse.TagIntCheck(s, ref ResearchPointsAmount) },
+                {"AddResearchPoints", (s, o) => TagParse.TagBoolCheck(s, ref AddResearchPoints) },
+                {"ResearchPointsAmount", (s, o) => TagParse.TagIntCheck(s, ref ResearchPointsAmount) },
 
-				{"ApplyStoreProfiles", (s, o) => TagParse.TagBoolCheck(s, ref ApplyStoreProfiles) },
-				{"ClearStoreContentsFirst", (s, o) => TagParse.TagBoolCheck(s, ref ClearStoreContentsFirst) },
-				{"StoreBlocks", (s, o) => TagParse.TagStringListCheck(s, ref StoreBlocks) },
-				{"StoreProfiles", (s, o) => TagParse.TagStringListCheck(s, ref StoreProfiles) },
+                {"ApplyStoreProfiles", (s, o) => TagParse.TagBoolCheck(s, ref ApplyStoreProfiles) },
+                {"ClearStoreContentsFirst", (s, o) => TagParse.TagBoolCheck(s, ref ClearStoreContentsFirst) },
+                {"StoreBlocks", (s, o) => TagParse.TagStringListCheck(s, ref StoreBlocks) },
+                {"StoreProfiles", (s, o) => TagParse.TagStringListCheck(s, ref StoreProfiles) },
 
-				{"ApplyContractProfiles", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContractProfiles) },
-				{"ClearContractContentsFirst", (s, o) => TagParse.TagBoolCheck(s, ref ClearContractContentsFirst) },
-				{"ContractBlocks", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlocks) },
-				{"ContractBlockProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
-				{"ContractProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
-				{"ActivateEvent", (s, o) => TagParse.TagBoolCheck(s, ref ActivateEvent) },
-				{"ActivateEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventIds) },
-				{"ActivateEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventTags) },
+                {"ApplyContractProfiles", (s, o) => TagParse.TagBoolCheck(s, ref ApplyContractProfiles) },
+                {"ClearContractContentsFirst", (s, o) => TagParse.TagBoolCheck(s, ref ClearContractContentsFirst) },
+                {"ContractBlocks", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlocks) },
+                {"ContractBlockProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
+                {"ContractProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
+                {"ActivateEvent", (s, o) => TagParse.TagBoolCheck(s, ref ActivateEvent) },
+                {"ActivateEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventIds) },
+                {"ActivateEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventTags) },
 
-				{"CreateSafeZone", (s, o) => TagParse.TagBoolCheck(s, ref CreateSafeZone) },
-				{"SafeZoneProfile", (s, o) => TagParse.TagStringCheck(s, ref SafeZoneProfile) },
-				{"LinkSafeZoneToRemoteControl", (s, o) => TagParse.TagBoolCheck(s, ref LinkSafeZoneToRemoteControl) },
-				{"SafeZonePositionGridCenter", (s, o) => TagParse.TagBoolCheck(s, ref SafeZonePositionGridCenter) },
-				{"SafeZonePositionTerrainSurface", (s, o) => TagParse.TagBoolCheck(s, ref SafeZonePositionTerrainSurface) },
-				{"IgnoreOtherSafeZonesDuringCreation", (s, o) => TagParse.TagBoolCheck(s, ref IgnoreOtherSafeZonesDuringCreation) },
+                {"CreateSafeZone", (s, o) => TagParse.TagBoolCheck(s, ref CreateSafeZone) },
+                {"SafeZoneProfile", (s, o) => TagParse.TagStringCheck(s, ref SafeZoneProfile) },
+                {"LinkSafeZoneToRemoteControl", (s, o) => TagParse.TagBoolCheck(s, ref LinkSafeZoneToRemoteControl) },
+                {"SafeZonePositionGridCenter", (s, o) => TagParse.TagBoolCheck(s, ref SafeZonePositionGridCenter) },
+                {"SafeZonePositionTerrainSurface", (s, o) => TagParse.TagBoolCheck(s, ref SafeZonePositionTerrainSurface) },
+                {"IgnoreOtherSafeZonesDuringCreation", (s, o) => TagParse.TagBoolCheck(s, ref IgnoreOtherSafeZonesDuringCreation) },
 
-				{"SavePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref SavePlayerIdentity) },
-				{"RemovePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentity) },
+                {"SavePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref SavePlayerIdentity) },
+                {"RemovePlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemovePlayerIdentity) },
 
-				{"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsToPlayers) },
-				{"AddTagsToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsToPlayers) },
-				{"AddTagsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsIncludeSavedPlayerIdentity) },
-				{"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
-				{"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
-				{"AddTagsOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsOverridePositionInPlayerCondition) },
+                {"AddTagstoPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsToPlayers) },
+                {"AddTagsToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsToPlayers) },
+                {"AddTagsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsIncludeSavedPlayerIdentity) },
+                {"AddTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddTagsPlayerConditionIds) },
+                {"AddTags", (s, o) => TagParse.TagStringListCheck(s, ref AddTags) },
+                {"AddTagsOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref AddTagsOverridePositionInPlayerCondition) },
+                {"RemoveTagsFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsFromPlayers) },
+                {"RemoveTagsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsIncludeSavedPlayerIdentity) },
+                {"RemoveTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTagsPlayerConditionIds) },
+                {"RemoveTags", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTags) },
+                {"RemoveTagsOverridePositioninPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsOverridePositioninPlayerCondition) },
+                {"TeleportPlayers", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayers) },
+                {"TeleportPlayersIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayersIncludeSavedPlayerIdentity) },
+                {"TeleportPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref TeleportPlayerConditionIds) },
+                {"TeleportPlayerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TeleportPlayerCoords) },
+                {"TeleportPlayerOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayerOverridePositionInPlayerCondition) },
 
+                {"AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
+                {"UseGPSObjective", (s, o) => TagParse.TagBoolCheck(s, ref UseGPSObjective) },
+                {"GPSNames", (s, o) => TagParse.TagStringListCheck(s, ref GPSNames) },
+                {"GPSDescriptions", (s, o) => TagParse.TagStringListCheck(s, ref GPSDescriptions) },
+                {"GPSCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
+                {"GPSVector3Ds", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
 
-				{"RemoveTagsFromPlayers", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsFromPlayers) },
-				{"RemoveTagsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsIncludeSavedPlayerIdentity) },
-				{"RemoveTagsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTagsPlayerConditionIds) },
-				{"RemoveTags", (s, o) => TagParse.TagStringListCheck(s, ref RemoveTags) },
-				{"RemoveTagsOverridePositioninPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref RemoveTagsOverridePositioninPlayerCondition) },
-
-				{"PlayDialogueCue", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueCue) },
-
-				{"DialogueCueId", (s, o) => TagParse.TagStringCheck(s, ref DialogueCueId) },
-
-				{"PlayDialogueToSpecificPlayers", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueToSpecificPlayers) },
-				{"PlayDialogueOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueOverridePositionInPlayerCondition) },
-				{"PlayDialoguePlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayDialoguePlayerConditionIds) },
-
-				{ "ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
-				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
-				{"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
-
-				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
-
-				{"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
-				{"ToggleEventIdModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventIdModes) },
-
-				{"ToggleEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventTags) },
-				{"ToggleEventTagModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventTagModes) },
-
-				{"ResetThisStaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref ResetThisStaticEncounter) },
-
-				{"DisableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref DisableAutopilot) },
-				{"EnableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref EnableAutopilot) },
-
-				{"ChangeBlocksShareModeAll", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlocksShareModeAll) },
-				{"BlockNamesShareModeAll", (s, o) => TagParse.TagStringListCheck(s, ref BlockNamesShareModeAll) },
-
-				{"SaveLocationToSandboxVariable", (s, o) => TagParse.TagBoolCheck(s, ref SaveLocationToSandboxVariable) },
-				{"LocationSandboxVariableName", (s, o) => TagParse.TagStringCheck(s, ref LocationSandboxVariableName) },
+                {"GPSColors", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSColors) },
+                {"AddGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddGPSPlayerConditionIds) },
+                {"AddGPSPlayerOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSPlayerOverridePositionInPlayerCondition) },
 
 
-				};
+
+                {"ProcessStaticEncountersAtLocation", (s, o) => TagParse.TagBoolCheck(s, ref ProcessStaticEncountersAtLocation) },
+                {"ProcessStaticEncountersLocation", (s, o) => TagParse.TagVector3DCheck(s, ref ProcessStaticEncountersLocation) },
+
+
+                {"PlayDialogueCue", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueCue) },
+                {"DialogueCueId", (s, o) => TagParse.TagStringCheck(s, ref DialogueCueId) },
+                {"PlayDialogueToSpecificPlayers", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueToSpecificPlayers) },
+                {"PlayDialogueOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueOverridePositionInPlayerCondition) },
+                {"PlayDialoguePlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayDialoguePlayerConditionIds) },
+
+                { "ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
+                {"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
+                {"ResetEventCooldownTags", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownTags) },
+
+                {"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
+
+                {"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
+                {"ToggleEventIdModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventIdModes) },
+
+                {"ToggleEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventTags) },
+                {"ToggleEventTagModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventTagModes) },
+
+                {"ResetThisStaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref ResetThisStaticEncounter) },
+
+                {"DisableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref DisableAutopilot) },
+                {"EnableAutopilot", (s, o) => TagParse.TagBoolCheck(s, ref EnableAutopilot) },
+
+                {"ChangeBlocksShareModeAll", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBlocksShareModeAll) },
+                {"BlockNamesShareModeAll", (s, o) => TagParse.TagStringListCheck(s, ref BlockNamesShareModeAll) },
+
+                {"SaveLocationToSandboxVariable", (s, o) => TagParse.TagBoolCheck(s, ref SaveLocationToSandboxVariable) },
+                {"LocationSandboxVariableName", (s, o) => TagParse.TagStringCheck(s, ref LocationSandboxVariableName) },
+                {"AddInstanceEventGroup", (s, o) => TagParse.TagBoolCheck(s, ref AddInstanceEventGroup) },
+                {"InstanceEventGroupId", (s, o) => TagParse.TagStringCheck(s, ref InstanceEventGroupId) },
+                {"InstanceEventGroupReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref InstanceEventGroupReplaceKeys) },
+                {"InstanceEventGroupReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref InstanceEventGroupReplaceValues) },
+
+                };
 
 		}
 

@@ -81,7 +81,28 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static Vector3D GetRandomDespawnCoords(Vector3D coords, double distance = 8000, double altitude = 1500) {
+
+        public static Vector3D LimitedDirection(Vector3D from, Vector3D to, double maxAngleDeg)
+        {
+            from = Vector3D.Normalize(from);
+            to = Vector3D.Normalize(to);
+
+            double dot = Vector3D.Dot(from, to);
+            double maxDot = Math.Cos(MathHelper.ToRadians(maxAngleDeg));
+
+            if (dot >= maxDot)
+                return to; // al binnen limiet
+
+            // Lerp een beetje richting 'to', dan normaliseren (nlerp)
+            double t = (1.0 - maxDot) / (1.0 - dot); // t ∈ [0, 1]
+            Vector3D result = Vector3D.Normalize(Vector3D.Lerp(from, to, t));
+            return result;
+        }
+
+
+
+
+        public static Vector3D GetRandomDespawnCoords(Vector3D coords, double distance = 8000, double altitude = 1500) {
 
 			Vector3D result = Vector3D.Zero;
 

@@ -17,7 +17,8 @@ namespace ModularEncountersSystems.Sync {
         SuitUpgradeTransaction,
         SuitUpgradeNewPlayerStats,
         ReputationChangeClient,
-        FactionAccountBalanceChange
+        FactionAccountBalanceChange,
+        AddBlock
     }
 
     [ProtoContract]
@@ -53,7 +54,16 @@ namespace ModularEncountersSystems.Sync {
             Sender = "MES";
 
         }
-        
+        public SyncContainer(AddBlockData addBlockData)
+        {
+            this.Mode = SyncMode.AddBlock;
+            this.Data = MyAPIGateway.Utilities.SerializeToBinary<AddBlockData>(addBlockData);
+            this.Sender = "MES";
+        }
+
+
+
+
         public SyncContainer(Effects effect){
             
             this.Mode = SyncMode.Effect;

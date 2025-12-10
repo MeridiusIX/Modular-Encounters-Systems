@@ -83,6 +83,7 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(29)] public bool ApplyContainerTypes;
 		[ProtoMember(30)] public bool UseEnergyDisable;
 		[ProtoMember(31)] public bool OwnershipValidation;
+		[ProtoMember(32)] public bool NoRC;
 
 		public NewNpcAttributes() {
 
@@ -117,6 +118,7 @@ namespace ModularEncountersSystems.World {
 			ApplyContainerTypes = false;
 			UseEnergyDisable = false;
 			OwnershipValidation = false;
+            NoRC = false;
 
 		}
 
@@ -399,18 +401,34 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(39)]
 		public long EventInstanceId;
 
-		[ProtoMember(40)] 
+		[ProtoMember(40)]
 		public string CustomVariablesName;
 
 		[ProtoMember(41)]
-		public string TerrainTypeName; //Store data for MatchTerrainType in AI conditions 
+		public string TerrainTypeName; //Store data for MatchTerrainType in AI conditions
 
 		[ProtoMember(42)]
 		public string Context; // arbitrary user data via MESApi
 
-		//Non-Serialized Data
+        [ProtoMember(43)]
+        public string AntennaThoughtBubble; // arbitrary user data via MESApi
 
-		[ProtoIgnore]
+
+        [ProtoMember(44)]
+        public bool AntennaThoughtBubblePercentageActive; // arbitrary user data via MESApi
+
+        [ProtoMember(45)]
+        public int AntennaThoughtBubblePercentage; // arbitrary user data via MESApi
+
+		[ProtoMember(46)]
+		public Dictionary<string, string> CustomStrings;
+
+		[ProtoMember(47)]
+		public Dictionary<string, int> CustomCountersVariables;
+
+        //Non-Serialized Data
+
+        [ProtoIgnore]
 		public ImprovedSpawnGroup SpawnGroup {
 
 			get {
@@ -418,7 +436,7 @@ namespace ModularEncountersSystems.World {
 				if (_spawnGroup == null) {
 
 					_spawnGroup = SpawnGroupManager.GetSpawnGroupByName(SpawnGroupName);
-				
+
 				}
 
 				return _spawnGroup;
@@ -503,6 +521,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoIgnore]
 		public IMyRemoteControl PrimaryRemoteControl;
 
+		[ProtoIgnore]
+		public long ParentId;
+
 		public NpcData() {
 
 			SetDefaults();
@@ -583,6 +604,8 @@ namespace ModularEncountersSystems.World {
 			Score = 0;
 			EventInstanceId = -1;
 			CustomVariablesName = "";
+			CustomStrings = new Dictionary<string, string>();
+			CustomCountersVariables = new Dictionary<string, int>();
 
 			FriendlyName = "";
 			TerrainTypeName = "";
@@ -591,12 +614,14 @@ namespace ModularEncountersSystems.World {
 			SessionTime = MyAPIGateway.Session.GameDateTime;
 			SecondsSinceSessionLive = 0;
 			Grid = null;
-			KeenEconomyStation = BoolEnum.None;
+            KeenEconomyStation = BoolEnum.None;
+
+            ParentId = 0;
 
 		}
 
 		public void AssignAttributes(ImprovedSpawnGroup spawnGroup, SpawningType type) {
-			
+
 			if(SpawnRequest.IsCargoShip(type))
 				Attributes.IsCargoShip = true;
 
@@ -638,7 +663,7 @@ namespace ModularEncountersSystems.World {
 				AppliedAttributes.OldFlagsProcessed = true;
 				Attributes.ApplyAttributesFromFlags(OldAttributes);
 				AppliedAttributes.ApplyAttributesFromFlags(OldAppliedAttributes);
-			
+
 			}
 
 			SpawnLogger.Write("Processing Primary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
@@ -675,7 +700,7 @@ namespace ModularEncountersSystems.World {
 
 			MyAPIGateway.Utilities.InvokeOnGameThread(() => ProcessSecondaryAttributes());
 
-			
+
 
 		}
 
@@ -704,7 +729,7 @@ namespace ModularEncountersSystems.World {
 				SpawnLogger.Write("Start Matrix Translation:    " + Grid.CubeGrid.WorldMatrix.Translation, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Forward:        " + Grid.CubeGrid.WorldMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Start Matrix Up:             " + Grid.CubeGrid.WorldMatrix.Up, SpawnerDebugEnum.Spawning);
-				
+
 
 				var newMatrix = MatrixD.CreateWorld(StartCoords, Forward, Up);
 				Grid.CubeGrid.IsStatic = false;
@@ -712,7 +737,7 @@ namespace ModularEncountersSystems.World {
 				Grid.CubeGrid.IsStatic = true;
 				//MyVisualScriptLogicProvider.ShowNotificationToAll("Fix MAtrix", 1000);
 
-				
+
 				SpawnLogger.Write("Provided Matrix Translation: " + newMatrix.Translation, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Provided Matrix Forward:     " + newMatrix.Forward, SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write("Provided Matrix Up:          " + newMatrix.Up, SpawnerDebugEnum.Spawning);
@@ -812,14 +837,14 @@ namespace ModularEncountersSystems.World {
 			try {
 
 				block.UpdateVisual();
-			
+
 			} catch (Exception e) {
 
 				SpawnLogger.Write("Block Failed To Update Visuals using IMySlimBlock.UpdateVisual(): " + block?.BlockDefinition?.Id.ToString() ?? "null definition", SpawnerDebugEnum.Error, true);
 				SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error, true);
 
 			}
-		
+
 		}
 
 		public void ProcessTertiaryAttributes() {
@@ -886,7 +911,7 @@ namespace ModularEncountersSystems.World {
 						continue;
 
 					}
-						
+
 					var controllerBlock = controller.Block as IMyTurretControlBlock;
 
 					if (controllerBlock == null) {
@@ -895,7 +920,7 @@ namespace ModularEncountersSystems.World {
 						continue;
 
 					}
-						
+
 					for (int i = tools.Count - 1; i >= 0; i--) {
 
 						string blockKey = "";
@@ -918,7 +943,7 @@ namespace ModularEncountersSystems.World {
 							//SpawnLogger.Write(string.Format("Keys Not Matched: [{0}] [{1}]", controllerBlock.CustomName, tools[i].Block.CustomName), SpawnerDebugEnum.PostSpawn);
 
 						}
-					
+
 					}
 
 				}
@@ -978,7 +1003,7 @@ namespace ModularEncountersSystems.World {
 					Grid.Inhibitors.Add(randBlock);
 
 				}
-				
+
 			} else {
 
 				AppliedAttributes.UseJetpackDisable = true;
@@ -1107,6 +1132,12 @@ namespace ModularEncountersSystems.World {
 
 		}
 
+        public string GetGPS(string name, Vector3D vector)
+        {
+            var gps = "GPS:" + name + ":" + vector.X + ":" + vector.Y + ":" + vector.Z + ":#FF82F175:";
+            return gps;
+        }
+
 		public override string ToString() {
 
 			var sb = new StringBuilder();
@@ -1125,12 +1156,12 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - SpawnerPrefabId:     ").Append(!string.IsNullOrWhiteSpace(SpawnerPrefabId) ? SpawnerPrefabId : "N/A").AppendLine();
 			sb.Append(" - BehaviorName:        ").Append(!string.IsNullOrWhiteSpace(BehaviorName) ? BehaviorName : "N/A").AppendLine();
 			sb.Append(" - BehaviorTriggerDist: ").Append(BehaviorTriggerDist.ToString()).AppendLine();
-			sb.Append(" - StartCoords:         ").Append(StartCoords.ToString()).AppendLine();
+			sb.Append(" - StartCoords:         ").Append(GetGPS("StartCoords",StartCoords)).AppendLine();
 			sb.Append(" - Start Coords Dist:   ").Append(Vector3D.Distance(StartCoords, Grid.GetPosition())).AppendLine();
 			var startEndDir = Vector3D.Normalize(EndCoords - StartCoords);
 			var startPosDir = Vector3D.Normalize(Grid.GetPosition() - StartCoords);
 			sb.Append(" - Start/End Angle:     ").Append(VectorHelper.GetAngleBetweenDirections(startEndDir, startPosDir)).AppendLine();
-			sb.Append(" - EndCoords:           ").Append(EndCoords.ToString()).AppendLine();
+			sb.Append(" - EndCoords:           ").Append(GetGPS("EndCoords", EndCoords)).AppendLine();
 			sb.Append(" - End Coords Dist      ").Append(Vector3D.Distance(EndCoords, Grid.GetPosition())).AppendLine();
 			var endStartDir = Vector3D.Normalize(StartCoords - EndCoords);
 			var endPosDir = Vector3D.Normalize(Grid.GetPosition() - EndCoords);
@@ -1147,10 +1178,13 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - OriginalName:        ").Append(FriendlyName).AppendLine();
 			sb.Append(" - Score (WIP):         ").Append(Score).AppendLine();
 			sb.Append(" - EventInstanceId:     ").Append(EventInstanceId).AppendLine();
-			sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
+            sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
+
+            foreach (var item in CustomStrings) sb.Append(" - CustomString: " + item.Key + " (").Append(item.Value + ")").AppendLine();
+            foreach (var item in CustomCountersVariables) sb.Append(" - CustomCountersVariable: " + item.Key + " (").Append(item.Value + ")").AppendLine();
 
 			return sb.ToString();
-			
+
 		}
 
 	}

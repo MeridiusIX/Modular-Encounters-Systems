@@ -26,7 +26,6 @@ namespace ModularEncountersSystems.Watchers {
 		}
 
 		public static void ProcessCargoShips() {
-
 			for (int i = CargoShips.Count - 1; i >= 0; i--) {
 
 				var cargoShip = CargoShips[i];
@@ -37,7 +36,6 @@ namespace ModularEncountersSystems.Watchers {
 
 					if (cargoShip.ActiveEntity())
 						cargoShip.AppendDebug("Drifting Cargo Ship Entity Not Valid, No Longer NPC, or is Missing Cargo Ship Attribute. Removed From Watcher");
-
 					CargoShips.RemoveAt(i);
 					LegacyAutopilot.Remove(cargoShip);
 					continue;
@@ -55,7 +53,7 @@ namespace ModularEncountersSystems.Watchers {
 						continue;
 
 					}
-				
+
 				}
 
 				var distFromStart = Vector3D.Distance(cargoShip.Npc.StartCoords, cargoShip.Npc.EndCoords);
@@ -92,13 +90,13 @@ namespace ModularEncountersSystems.Watchers {
 				if (shipDistFromStart < distFromStart && shipDistToEnd > Settings.SpaceCargoShips.DespawnDistanceFromEndPath) {
 
 					continue;
-				
+
 				}
 
 				if (player == null || player.Distance(cargoShip.GetPosition()) < Settings.SpaceCargoShips.DespawnDistanceFromPlayer) {
 
 					continue;
-				
+
 				}
 
 				if (Cleaning.BasicCleanupChecks(cargoShip)) {
@@ -126,9 +124,9 @@ namespace ModularEncountersSystems.Watchers {
 					LegacyAutopilot.Remove(cargoShip);
 
 				}
-			
+
 			}
-		
+
 		}
 
 		private static void CargoShipAutopilotManager(GridEntity grid, PlayerEntity player) {
@@ -142,7 +140,7 @@ namespace ModularEncountersSystems.Watchers {
 				return;
 
 			}
-				
+
 			if (grid.Npc.PrimaryRemoteControlId == 0 || grid.Npc.PrimaryRemoteControl == null) {
 
 				IMyRemoteControl mainRemote = null;
@@ -178,11 +176,10 @@ namespace ModularEncountersSystems.Watchers {
 				} else {
 
 					mainRemote = mainRemoteEntity as IMyRemoteControl;
-				
+
 				}
 
 				if (mainRemote == null) {
-
 					DeactivateKeenAutopilot(grid, "Remote Control Could Not Be Found For Cargo Ship Movement");
 					return;
 
@@ -193,7 +190,7 @@ namespace ModularEncountersSystems.Watchers {
 					LegacyAutopilot.Add(grid);
 
 				}
-			
+
 			}
 
 			if (grid.Npc.PrimaryRemoteControl != null) {
@@ -219,7 +216,7 @@ namespace ModularEncountersSystems.Watchers {
 						return;
 
 					}
-				
+
 				} else {
 
 					if (!grid.Npc.PrimaryRemoteControl.IsAutoPilotEnabled) {
@@ -228,7 +225,7 @@ namespace ModularEncountersSystems.Watchers {
 						return;
 
 					}
-				
+
 				}
 
 				if (grid.Npc.PrimaryRemoteControl.IsAutoPilotEnabled && grid.CubeGrid.Physics.LinearVelocity.Length() < 0.1) {
@@ -236,9 +233,9 @@ namespace ModularEncountersSystems.Watchers {
 					grid.Npc.PrimaryRemoteControl.SetAutoPilotEnabled(false);
 
 				}
-			
+
 			}
-		
+
 		}
 
 		private static void AutopilotToCoords(GridEntity grid) {
@@ -284,7 +281,7 @@ namespace ModularEncountersSystems.Watchers {
 						return false;
 
 					}
-						
+
 
 				}
 
@@ -307,7 +304,7 @@ namespace ModularEncountersSystems.Watchers {
 					SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Previous Speed Was 0. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
 					cargoShip.AppendDebug("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Previous Speed Was 0. Removed From Watcher");
 					return false;
-				
+
 				}
 
 			} else {
@@ -315,8 +312,7 @@ namespace ModularEncountersSystems.Watchers {
 				Vector3 previousSpeed = cargoShip.Npc.CargoShipDriftVelocity;
 				var diff = previousSpeed.Length() / currentVelocity.Length();
 
-				if (diff <= 0.8f || diff >= 1.2f) {
-
+				if ((diff <= 0.8f || diff >= 1.2f) && !cargoShip.Npc.Attributes.NoRC) {
 					SpawnLogger.Write("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Slowed Down From External Influence. Removed From Watcher", SpawnerDebugEnum.PostSpawn);
 					cargoShip.AppendDebug("Drifting Cargo Ship " + cargoShip.CubeGrid.CustomName + " Slowed Down From External Influence. Removed From Watcher");
 					return false;

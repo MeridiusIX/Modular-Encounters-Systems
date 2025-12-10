@@ -105,7 +105,7 @@ namespace ModularEncountersSystems.Spawning {
 			SpawnStartTime = MyAPIGateway.Session.GameDateTime;
 
 			foreach (var grid in GridList) {
-
+                //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>> grid: " + grid.DisplayName);
 				OriginalMass += GeneralManipulations.GetGridMass(grid);
 
 				if (grid.CubeBlocks != null)
@@ -116,7 +116,7 @@ namespace ModularEncountersSystems.Spawning {
 			CurrentMass = OriginalMass;
 
 			return true;
-		
+
 		}
 
 	}

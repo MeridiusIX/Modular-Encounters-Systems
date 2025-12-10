@@ -38,6 +38,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckCustomCounters;
 		public List<string> CustomCounters;
 		public List<int> CustomCountersTargets;
+		public List<string> CustomCountersVariables;
 		public bool CustomCountersTargetOverrideSelfScore;
 		public bool CustomCountersTargetOverrideCommandScore;
 
@@ -46,6 +47,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool CheckGridSize;
 		public bool GridSizeLarge;
+		public bool CheckGridStatic;
+		public bool GridStatic;
 
 		public bool CheckGridSpeed;
 		public float MinGridSpeed;
@@ -203,7 +206,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public float CompareCommandGridValueSelfMultiplier;
 
 		public bool CommandGravityCheck;
-		public bool CommandGravityMatches;
+        public bool CommandGravityMatches;
+
+        public bool CommandCheckRelationSenderReceiver;
+		public RelationTypeEnum CommandRelation;
+        public bool CommandCheckFromParent;
+        public bool CommandFromParent;
 
 		public bool UseFailCondition;
 
@@ -288,6 +296,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckCustomCounters = false;
 			CustomCounters = new List<string>();
 			CustomCountersTargets = new List<int>();
+			CustomCountersVariables = new List<string>();
 			AllowAnyValidCounter = false;
 
 			CustomCountersTargetOverrideCommandScore = false;
@@ -309,6 +318,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
             CheckGridSize = false;
             GridSizeLarge = true;
+
+            CheckGridStatic = false;
+			GridStatic = false;
 
 			CheckGridSpeed = false;
 			MinGridSpeed = -1;
@@ -457,7 +469,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 
 			CommandGravityCheck = false;
-			CommandGravityMatches = false;
+            CommandGravityMatches = false;
+
+            CommandCheckRelationSenderReceiver = false;
+            CommandRelation = RelationTypeEnum.None;
+
+            CommandCheckFromParent = false;
+            CommandFromParent = false;
 
 			UseFailCondition = false;
 
@@ -532,11 +550,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckCustomCounters", (s, o) => TagParse.TagBoolCheck(s, ref CheckCustomCounters) },
 				{"CustomCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomCounters) },
 				{"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, true ,ref CustomCountersTargets) },
+				{"CustomCountersVariables", (s, o) => TagParse.TagStringListCheck(s, ref CustomCountersVariables) },
 				{"CustomCountersTargetOverrideCommandScore", (s, o) => TagParse.TagBoolCheck(s, ref CustomCountersTargetOverrideCommandScore) },
 				{"CustomCountersTargetOverrideSelfScore", (s, o) => TagParse.TagBoolCheck(s, ref CustomCountersTargetOverrideSelfScore) },
 				{"AllowAnyValidCounter", (s, o) => TagParse.TagBoolCheck(s, ref AllowAnyValidCounter) },
 				{"CheckGridSize", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSize) },
 				{"GridSizeLarge", (s, o) => TagParse.TagBoolCheck(s, ref GridSizeLarge) },
+				{"CheckGridStatic", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridStatic) },
+				{"GridStatic", (s, o) => TagParse.TagBoolCheck(s, ref GridStatic) },
 				{"CheckGridSpeed", (s, o) => TagParse.TagBoolCheck(s, ref CheckGridSpeed) },
 				{"MinGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MinGridSpeed) },
 				{"MaxGridSpeed", (s, o) => TagParse.TagFloatCheck(s, ref MaxGridSpeed) },
@@ -662,6 +683,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				{"CommandGravityCheck", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityCheck) },
 				{"CommandGravityMatches", (s, o) => TagParse.TagBoolCheck(s, ref CommandGravityMatches) },
+				{"CommandCheckRelationSenderReceiver", (s, o) => TagParse.TagBoolCheck(s, ref CommandCheckRelationSenderReceiver) },
+				{"CommandRelation", (s, o) => TagParse.TagTargetRelationEnumCheck(s, ref CommandRelation) },
+				{"CommandCheckFromParent", (s, o) => TagParse.TagBoolCheck(s, ref CommandCheckFromParent) },
+				{"CommandFromParent", (s, o) => TagParse.TagBoolCheck(s, ref CommandFromParent) },
 				{"UseFailCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseFailCondition) },
 				{"CheckForBlocksOfType", (s, o) => TagParse.TagBoolCheck(s, ref CheckForBlocksOfType) },
 				{"BlocksOfType", (s, o) => TagParse.TagStringListCheck(s, ref BlocksOfType) },

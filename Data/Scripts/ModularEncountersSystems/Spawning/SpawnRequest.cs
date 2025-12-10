@@ -15,7 +15,7 @@ namespace ModularEncountersSystems.Spawning {
 
 	[Flags]
 	public enum SpawningType {
-	
+
 		None = 0,
 		SpaceCargoShip = 1,
 		LunarCargoShip = 1 << 1,
@@ -103,7 +103,7 @@ namespace ModularEncountersSystems.Spawning {
 				return false;
 
 			}
-				
+
 
 			player.ResetTimer(spawnType);
 
@@ -134,18 +134,18 @@ namespace ModularEncountersSystems.Spawning {
 					return false;
 
 				}
-			
+
 			}
 
 			if (!PlayerDistanceToNextEncounter(spawnType, player)) {
 
 				//SpawnLogger.Write(player.Player.Player.DisplayName + " Hasn't Travelled Far Enough To Trigger Spawn Type: " + spawnType, SpawnerDebugEnum.Dev);
 				return false;
-			
+
 			}
 
 			return true;
-		
+
 		}
 
 		public static bool PlayerDistanceToNextEncounter(SpawningType spawnType, WatchedPlayer player) {
@@ -193,7 +193,7 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
 			return true;
-		
+
 		}
 
 		public static bool LocationSpawnEligibility(SpawningType spawnType, Vector3D coords) {
@@ -215,7 +215,7 @@ namespace ModularEncountersSystems.Spawning {
 			if (spawnType == SpawningType.SpaceCargoShip) {
 
 				return true;
-			
+
 			}
 
 			if (spawnType == SpawningType.RandomEncounter) {
@@ -255,14 +255,14 @@ namespace ModularEncountersSystems.Spawning {
 			if (spawnType == SpawningType.DroneEncounter) {
 
 				return true;
-			
+
 			}
 
 			return false;
-		
+
 		}
 
-		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false, long ownerOverride = -1, long eventInstance = -1, string context = null) {
+		public static bool CalculateSpawn(Vector3D coords, string source, SpawningType type = SpawningType.None, bool forceSpawn = false, bool adminSpawn = false, List<string> eligibleNames = null, string factionOverride = null, MatrixD spawnMatrix = new MatrixD(), Vector3D customVelocity = new Vector3D(), bool ignoreSafetyChecks = false, long ownerOverride = -1, long eventInstance = -1, string context = null, long parentId = 0, Dictionary<string, int> customCountersVariables = null) {
 
 			SpawnLogger.Write("Spawn Request Received From: " + source, SpawnerDebugEnum.Spawning);
 
@@ -281,7 +281,7 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write("No Spawning Type Provided", SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write(string.Format("[{0}] No Spawning Type Provided", string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
 				return false;
-			
+
 			}
 
 			//Max NPCs
@@ -290,7 +290,7 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write("Max Global NPCs Reached/Exceeded", SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write(string.Format("[{0}] Max Global NPCs Reached/Exceeded", string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
 				return false;
-			
+
 			}
 
 			//Max NPCs Of Type in Area
@@ -301,10 +301,10 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write("Max SpawnType NPCs Reached/Exceeded for: " + type.ToString(), SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write(string.Format("[{0}] Max SpawnType NPCs Reached/Exceeded for: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
 				return false;
-			
+
 			}
 
-			
+
 
 			KnownPlayerLocationManager.CleanExpiredLocations();
 
@@ -318,7 +318,7 @@ namespace ModularEncountersSystems.Spawning {
 					return false;
 
 				}
-			
+
 			}
 
 			//Generate Environment Object
@@ -343,14 +343,22 @@ namespace ModularEncountersSystems.Spawning {
 					DroneEncounterPlayerTracker.Add(source, dronePlayerTracker);
 
 				}
-			
+
 			}
 
-			//Get SpawnGroups and Valid Factions
-			var spawnGroupCollection = new SpawnGroupCollection();
+            //Get SpawnGroups and Valid Factions
+            var spawnGroupCollection = new SpawnGroupCollection();
 			spawnGroupCollection.IgnoreAllSafetyChecks = ignoreSafetyChecks;
 			spawnGroupCollection.OwnerOverride = ownerOverride;
-			spawnGroupCollection.EventInstanceId = eventInstance;
+            spawnGroupCollection.EventInstanceId = eventInstance;
+            spawnGroupCollection.ParentId = parentId;
+
+            if  (customCountersVariables != null) {
+                foreach (var counterVar in customCountersVariables)
+                {
+                    spawnGroupCollection.CustomCountersVariables[counterVar.Key] = counterVar.Value;
+                }
+            }
 
 			SpawnLogger.SpawnGroup.Clear();
 			SpawnGroupManager.GetSpawnGroups(type, source, environment, factionOverride, spawnGroupCollection, forceSpawn, adminSpawn, eligibleNames, dronePlayerTracker);
@@ -380,7 +388,7 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write("Failed To Select Random SpawnGroup", SpawnerDebugEnum.Spawning);
 				SpawnLogger.Write(string.Format("[{0}] Failed To Select Random SpawnGroup For Type: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
 				return false;
-			
+
 			}
 
 			SpawnLogger.Write("Spawn Conditions Selected: " + spawnGroupCollection.Conditions.ProfileSubtypeId, SpawnerDebugEnum.Spawning);
@@ -398,7 +406,7 @@ namespace ModularEncountersSystems.Spawning {
 				SpawnLogger.Write(path.PathDebugging.ToString(), SpawnerDebugEnum.Pathing);
 				SpawnLogger.Write(string.Format("[{0}] Could Not Generate Path / Coords For Type: " + type.ToString(), string.IsNullOrWhiteSpace(source) ? "null" : source), SpawnerDebugEnum.SpawnRecord);
 				return false;
-			
+
 			}
 
 			SpawnLogger.Write("Pathing Successful", SpawnerDebugEnum.Spawning);
@@ -419,7 +427,7 @@ namespace ModularEncountersSystems.Spawning {
 				NpcManager.StaticEncounters.Add(bossEncounter);
 				NpcManager.UpdateStaticEncounters();
 				return true;
-			
+
 			}
 
 			path.CustomVelocity = customVelocity;
@@ -432,7 +440,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write("SpawnGroup Sent To Bot Spawner", SpawnerDebugEnum.Spawning);
 				result = BotSpawner.SpawnBots(spawnGroupCollection, path, environment);
-			
+
 			} else {
 
 				SpawnLogger.Write("SpawnGroup Sent To Prefab Spawner", SpawnerDebugEnum.Spawning);
@@ -450,7 +458,7 @@ namespace ModularEncountersSystems.Spawning {
 			PostSpawn(type, path, spawnGroupCollection, environment, dronePlayerTracker);
 
 			return true;
-		
+
 		}
 
 		public static bool CalculateStaticSpawn(StaticEncounter encounter, PlayerEntity player, SpawningType type, SpawningType spawnTypes) {
@@ -554,7 +562,7 @@ namespace ModularEncountersSystems.Spawning {
 			//Post Spawn Checks
 			if (GetPrimarySpawningType(path.SpawnType) == SpawningType.PlanetaryInstallation)
 				PrefabSpawner.ApplyInstallationIncrement(spawnGroupCollection, environment);
-			
+
 			PrefabSpawner.ApplySpawningCosts(spawnGroupCollection.Conditions, spawnGroupCollection.SelectRandomFaction());
 
 			//Apply Timeout Increases
@@ -565,7 +573,7 @@ namespace ModularEncountersSystems.Spawning {
 
 				NpcManager.UniqueGroupsSpawned.Add(spawnGroupCollection.SpawnGroup.SpawnGroupName);
 				SerializationHelper.SaveDataToSandbox<List<string>>("MES-UniqueEncountersSpawned", NpcManager.UniqueGroupsSpawned);
-			
+
 			}
 
 			//KPL and Zone Increases
@@ -575,7 +583,7 @@ namespace ModularEncountersSystems.Spawning {
 			if (spawnGroupCollection.Conditions != null && spawnGroupCollection.Conditions.PlaySoundAtSpawnTriggerPosition && spawnGroupCollection.Conditions.SpawnTriggerPositionSoundId != null) {
 
 				MyVisualScriptLogicProvider.PlaySingleSoundAtPosition(spawnGroupCollection.Conditions.SpawnTriggerPositionSoundId, environment.Position);
-			
+
 			}
 
 			//Player Timers

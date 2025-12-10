@@ -136,7 +136,10 @@ namespace ModularEncountersSystems.Sync {
 			if (Mode == ShipyardModes.RepairAndConstruction)
 				ProcessRepairAndConstruct(player, grid, projector, shipyardProfile, rep, sender);
 
-			if (Mode == ShipyardModes.GridTakeover)
+            if (Mode == ShipyardModes.CustomReplacement)
+                ProcessCustomReplacement(player, grid, projector, shipyardProfile, rep, sender);
+
+            if (Mode == ShipyardModes.GridTakeover)
 				ProcessGridTakeover(player, grid, projector, shipyardProfile, rep, sender);
 
 		}
@@ -402,7 +405,131 @@ namespace ModularEncountersSystems.Sync {
 
 		}
 
-		internal void ProcessGridTakeover(PlayerEntity player, GridEntity grid, IMyProjector projector, ShipyardProfile profile, int reputation, ulong sender) {
+
+        internal void ProcessCustomReplacement(PlayerEntity player, GridEntity grid, IMyProjector projector, ShipyardProfile profile, int reputation, ulong sender)
+        {
+
+            //Calculate Work Eligiblity
+            long replaceCost = 0;
+
+            //Calculate Work Eligiblity
+            if (!ShipyardControls.GridSelectionRules(projector, grid, ShipyardModes.CustomReplacement, profile))
+            {
+
+                ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ShipyardRulesNotSatisfied, Mode, sender, ProjectorId);
+                return;
+
+            }
+
+
+
+            var serverRawCost = grid.CreditValueReplacement(profile.ReplaceBlockReference);
+
+
+
+            if (serverRawCost <= 0)
+            {
+
+                ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerRawCostZero, Mode, sender, ProjectorId);
+                return;
+
+            }
+
+            var serverFinalCost = profile.GetReplacementPrice(serverRawCost, reputation);
+
+            if (serverFinalCost <= 0)
+            {
+
+                ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerRawCostZero, Mode, sender, ProjectorId);
+                return;
+
+            }
+
+            //Compare To ClientPrice
+            if (serverFinalCost != ClientPrice && !UseServerPrice)
+            {
+
+                ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.ServerClientPriceMismatch, Mode, sender, ProjectorId, serverFinalCost);
+                return;
+
+            }
+
+            //Check Player Credits
+            long playerBalance = 0;
+            player.Player.TryGetBalanceInfo(out playerBalance);
+
+            if (playerBalance < serverFinalCost)
+            {
+
+                ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.PlayerInsufficientCredits, Mode, sender, ProjectorId);
+                return;
+
+            }
+
+            //Remove Credits From Player
+            player.Player.RequestChangeBalance(-serverFinalCost);
+
+            //Credit Merchant
+            if (profile.TransactionsUseNpcFactionBalance)
+            {
+
+                var faction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(projector.OwnerId);
+
+                if (faction != null)
+                {
+
+                    faction.RequestChangeBalance(serverFinalCost);
+
+                }
+
+            }
+
+            //Disable Safezones
+            var safezones = new List<SafeZoneEntity>();
+
+            foreach (var safezone in SafeZoneManager.SafeZones)
+            {
+
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("Active Entity:" + safezone.ActiveEntity(), 10000);
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("Null:" + (safezone.SafeZone == null), 10000);
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("Enabled:" + safezone.SafeZone.Enabled, 10000);
+                //MyVisualScriptLogicProvider.ShowNotificationToAll("In Zone:" + safezone.InZone(projector.GetPosition()), 10000);
+
+                if (!safezone.ActiveEntity() || safezone.SafeZone == null || !safezone.SafeZone.Enabled || !safezone.InZone(projector.GetPosition()))
+                    continue;
+
+                safezone.SafeZone.Enabled = false;
+                safezones.Add(safezone);
+
+            }
+
+
+            int replaceResult = 0;
+
+
+            replaceResult = grid.AutoReplaceBocks(profile.ReplaceBlockReference,false);
+
+
+
+            //Enable Safezones
+            foreach (var safezone in safezones)
+            {
+
+                if (!safezone.ActiveEntity() || safezone.SafeZone == null || safezone.SafeZone.Enabled)
+                    continue;
+
+                safezone.SafeZone.Enabled = true;
+
+            }
+
+            ShipyardTransactionResult.SendResult(ShipyardTransactionResultEnum.TransactionSuccessful, Mode, sender, ProjectorId, serverFinalCost);
+
+        }
+
+
+
+
+        internal void ProcessGridTakeover(PlayerEntity player, GridEntity grid, IMyProjector projector, ShipyardProfile profile, int reputation, ulong sender) {
 
 			//Calculate Work Eligiblity
 			if (!ShipyardControls.GridSelectionRules(projector, grid, ShipyardModes.GridTakeover, profile)) {

@@ -73,6 +73,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, StoreItemsContainer> StoreItemContainers = new Dictionary<string, StoreItemsContainer>();
 		public static Dictionary<string, TextTemplate> TextTemplates = new Dictionary<string, TextTemplate>();
 		public static Dictionary<string, DialogueBank> DialogueBanks = new Dictionary<string, DialogueBank>();
+		public static Dictionary<string, Route> Routes = new Dictionary<string, Route>();
 
 		public static List<string> ErrorProfiles = new List<string>();
 
@@ -99,6 +100,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static Dictionary<string, MissionProfile> MissionProfiles = new Dictionary<string, MissionProfile>();
 
 		private static readonly object _dialogueBankLock = new object();
+		private static readonly object _routeLock = new object();
 
 
 		public static void Setup() {
@@ -147,16 +149,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (!ShipyardProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Shipyard]")) {
 
-					var profile = new ShipyardProfile();
-					profile.InitTags(component.DescriptionText);
-					profile.ProfileSubtypeId = component.Id.SubtypeName;
-					ShipyardProfiles.Add(component.Id.SubtypeName, profile);
-					AllMesProfileIds.Add(component.Id);
-					continue;
-
-				}
 
 				if (!StoreProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Store]")) {
 
@@ -288,7 +281,19 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if (!ReplenishmentProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Replenishment]")) {
+                if (!ShipyardProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Shipyard]"))
+                {
+
+                    var profile = new ShipyardProfile();
+                    profile.InitTags(component.DescriptionText);
+                    profile.ProfileSubtypeId = component.Id.SubtypeName;
+                    ShipyardProfiles.Add(component.Id.SubtypeName, profile);
+                    AllMesProfileIds.Add(component.Id);
+                    continue;
+
+                }
+
+                if (!ReplenishmentProfiles.ContainsKey(component.Id.SubtypeName) && component.DescriptionText.Contains("[MES Replenishment]")) {
 
 					ReplenishmentProfiles.Add(component.Id.SubtypeName, new ReplenishmentProfile(component.DescriptionText));
 					AllMesProfileIds.Add(component.Id);
@@ -942,6 +947,72 @@ namespace ModularEncountersSystems.Helpers {
 
 
 			return dialogueBank;
+
+		}
+
+
+		public static Route GetRoute(string name)
+		{
+
+            Route route = null;
+
+
+
+			if (Routes.TryGetValue(name, out route))
+				return route;
+
+			string path = $"Data\\Routes\\{name}";
+
+			foreach (var mod in MyAPIGateway.Session.Mods)
+			{
+				if (!MyAPIGateway.Utilities.FileExistsInModLocation(path, mod))
+					continue;
+
+                try
+				{
+					var reader = MyAPIGateway.Utilities.ReadFileInModLocation(path, mod);
+					string configContents = reader.ReadToEnd();
+					route = MyAPIGateway.Utilities.SerializeFromXML<Route>(configContents);
+				}
+				catch (Exception exc)
+				{
+					SpawnLogger.Write($"Could not deserialize XML for Route: {name}", SpawnerDebugEnum.Error);
+					SpawnLogger.Write(exc.ToString(), SpawnerDebugEnum.Error);
+                    MyAPIGateway.Utilities.ShowMessage("AaW", $"Could not deserialize XML for Route: {name}");
+                    continue;
+				}
+
+				if (route != null)
+					break;
+			}
+
+			if (route == null)
+				return null;
+
+
+
+			if (route.Nodes == null)
+				route.Nodes = new List<NodeData>();
+
+			route.Init();
+			route.name = name;
+
+
+			// I had issues when two seperate behaviors were trying to add the same dialoguebank at the same time.
+			//Try add is not possible. So I do this instead?? -CptArthur
+
+			// Safely add to the dictionary using a lock
+			lock (_routeLock)
+			{
+				if (!Routes.ContainsKey(name))
+				{
+                    Routes.Add(name, route);
+				}
+			}
+
+
+
+            return route;
 
 		}
 

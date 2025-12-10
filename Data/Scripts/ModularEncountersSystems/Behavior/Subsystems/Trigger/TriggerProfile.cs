@@ -214,7 +214,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		[ProtoMember(62)]
 		public bool AllowUniqueCommandCodeSenderOnly;
 
-		[ProtoIgnore]
+        //Position
+        [ProtoMember(63)]
+        public Vector3D GlobalPosition;
+
+        [ProtoIgnore]
 		public IBehavior Behavior;
 
 		[ProtoIgnore]
@@ -329,7 +333,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			Tags = new List<string>();
 
 			AllowUniqueCommandCodeSenderOnly = false;
-			ProfileSubtypeId = "";
+            GlobalPosition = Vector3D.Zero; 
+
+            ProfileSubtypeId = "";
 
 
 			Rnd = new Random();
@@ -978,7 +984,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
-				}
+                    //PlayerNearPositionOffset
+                    if (tag.Contains("[GlobalPosition:") == true)
+                    {
+
+                        TagParse.TagVector3DCheck(tag, ref GlobalPosition);
+
+                    }
+
+
+                }
 
 			}
 

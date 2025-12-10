@@ -2,9 +2,11 @@
 using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Game.ModAPI.Ingame;
 
 namespace ModularEncountersSystems.Tasks {
     public class NewGrid : TaskItem, ITaskItem {
@@ -44,12 +46,36 @@ namespace ModularEncountersSystems.Tasks {
                     _grid.Npc = new NpcData();
                     _grid.Npc.Grid = _grid;
                     _grid.Npc.SpawnType = SpawningType.OtherNPC;
-                    
+
+                    //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> registered NPC: " + _grid.GridName + " MES Spawn: " + _grid.Npc.SpawnedByMES);
                 }
 
             }
 
             _grid.Npc.ProcessTertiaryAttributes();
+
+            IMyRemoteControl mainRemote = null;
+            foreach (var block in _grid.Controllers) {
+
+                if (!block.ActiveEntity())
+                    continue;
+
+                var remote = block.Block as IMyRemoteControl;
+                if (remote == null)
+                    continue;
+
+                if (mainRemote == null)
+                    mainRemote = remote as IMyRemoteControl;
+
+                if (remote.IsMainCockpit || _grid.Behavior?.RemoteControl == remote) {
+                    mainRemote = remote as IMyRemoteControl;
+                    break;
+                }
+            }
+            if (mainRemote == null)
+            {
+                _grid.Npc.Attributes.NoRC = true;
+            }
 
             //Add Grid To Active NPCs
             if (!NpcManager.ActiveNpcs.Contains(_grid)) {
@@ -58,7 +84,9 @@ namespace ModularEncountersSystems.Tasks {
                 _grid.OwnershipMajorityChange += NpcManager.OwnershipMajorityChange;
 
                 if (_grid.Npc.Attributes.IsCargoShip)
+                {
                     CargoShipWatcher.CargoShips.Add(_grid);
+                }
 
             }
 

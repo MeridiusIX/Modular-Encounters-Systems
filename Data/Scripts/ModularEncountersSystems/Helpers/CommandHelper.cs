@@ -5,6 +5,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Tasks;
 using Sandbox.ModAPI;
 using System;
+using System.Collections.Generic;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
@@ -91,6 +92,7 @@ namespace ModularEncountersSystems.Helpers {
         public int DelayTicks;
 
         public bool FromEvent;
+        public Dictionary<string, int> CustomCountersVariables;
 
         public Command() {
 
@@ -137,8 +139,10 @@ namespace ModularEncountersSystems.Helpers {
             CheckRelationSenderReceiver = false;
             Relation = RelationTypeEnum.None;
 
+            CustomCountersVariables = new Dictionary<string, int>();
+
         }
-        public void PrepareEventCommand(CommandProfile profile, Vector3D position, string OverrideCommandCode = "")
+        public void PrepareEventCommand(CommandProfile profile, Vector3D position, string overrideCommandCode = "",double overrideRadius = -1, long commandOwnerId =0)
         {
 
             this.FromEvent = true;
@@ -151,20 +155,23 @@ namespace ModularEncountersSystems.Helpers {
             this.MatchSenderReceiverOwners = false;
             this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
 
+            this.CommandOwnerId = commandOwnerId;
+            this.CheckRelationSenderReceiver = profile.CheckRelationSenderReceiver;
+            this.Relation = profile.Relation;
 
-            if(string.IsNullOrWhiteSpace(OverrideCommandCode))
+
+            if(string.IsNullOrWhiteSpace(overrideCommandCode))
                 this.CommandCode = profile.CommandCode;
             else
-                this.CommandCode = OverrideCommandCode;
+                this.CommandCode = overrideCommandCode;
 
+
+            if(overrideRadius < 0)
+                this.Radius = profile.Radius;
+            else
+                this.Radius = overrideRadius;
 
             this.Position = position;
-
-
-            this.Radius = profile.Radius;
-
-            this.CheckRelationSenderReceiver = false;
-
 
 
         }
@@ -184,7 +191,6 @@ namespace ModularEncountersSystems.Helpers {
 
 
 
-
             RemoteControl = behavior.RemoteControl;
             CommandOwnerId = behavior.RemoteControl.OwnerId;
             this.RequestEscortSlot = profile.RequestEscortSlot;
@@ -197,7 +203,7 @@ namespace ModularEncountersSystems.Helpers {
             {
                 this.CommandCode = profile.CommandCode;
             }
-            
+
 
 
 
@@ -252,9 +258,11 @@ namespace ModularEncountersSystems.Helpers {
 
             TransmissionType = profile.TransmissionType;
 
-            if (receivedCommand != null) {
+            if (receivedCommand != null)
+            {
 
-                if (profile.ReturnToSender) {
+                if (profile.ReturnToSender)
+                {
 
                     this.SingleRecipient = true;
                     this.Recipient = receivedCommand.RemoteControl.EntityId;
@@ -262,12 +270,24 @@ namespace ModularEncountersSystems.Helpers {
                 }
 
             }
+            if (profile.CustomCountersVariables != null)
+                this.CustomCountersVariables = profile.CustomCountersVariables;
+
+            if (profile.CustomCountersVariablesReferences != null)
+            {
+                foreach (var customVarRef in profile.CustomCountersVariablesReferences) {
+                    if (behavior?.CurrentGrid?.Npc != null && behavior.CurrentGrid.Npc.CustomCountersVariables.ContainsKey(customVarRef.Value))
+                    {
+                        this.CustomCountersVariables[customVarRef.Key] = behavior.CurrentGrid.Npc.CustomCountersVariables[customVarRef.Value];
+                    }
+                }
+            }
 
             if (profile.SendWaypoint) {
 
                 WaypointProfile waypointProfile = null;
 
-                if (ProfileManager.WaypointProfiles.TryGetValue(profile.Waypoint, out waypointProfile)) {
+                if (ProfileManager.WaypointProfiles.TryGetValue(IdsReplacer.ReplaceId(behavior?.CurrentGrid?.Npc ?? null, profile.Waypoint), out waypointProfile)) {
 
                     if ((int)waypointProfile.Waypoint > 2) {
 
@@ -357,7 +377,7 @@ namespace ModularEncountersSystems.Helpers {
                 CommandTrigger?.Invoke(command);
             else
                 TaskProcessor.Tasks.Add(new DelayedCommand(command));
-        
+
         }
 
     }

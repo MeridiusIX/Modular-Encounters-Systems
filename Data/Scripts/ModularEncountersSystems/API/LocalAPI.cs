@@ -17,6 +17,9 @@ using VRage.Game.ModAPI;
 using VRage.ModAPI;
 using VRageMath;
 using ModularEncountersSystems.World;
+using ModularEncountersSystems.Behavior.Subsystems.Trigger;
+using ModularEncountersSystems.Logging;
+using System.ComponentModel.Design;
 
 namespace ModularEncountersSystems.API {
 	public static class LocalApi {
@@ -30,7 +33,7 @@ namespace ModularEncountersSystems.API {
 		public static Dictionary<string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>> MissionCustomMappings = new Dictionary<string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>();
 
 
-		
+
 
 		public static Dictionary<string, Action<object[]>> CustomActions = new Dictionary<string, Action<object[]>>();
 
@@ -46,7 +49,7 @@ namespace ModularEncountersSystems.API {
 		public static Dictionary<string, Delegate> GetApiDictionary() {
 
 			var dict = new Dictionary<string, Delegate>();
-			
+
 			dict.Add("AddKnownPlayerLocation", new Action<Vector3D, string, double, int, int, int>(KnownPlayerLocationManager.AddKnownPlayerLocation));
 			dict.Add("ApiSpawnRequest", new Func<Vector3D, string, string, bool, bool, List<string>, string, MatrixD, Vector3D, bool, long, bool>(ApiSpawnRequest));
 			dict.Add("BehaviorTriggerActivationWatcher", new Action<bool, Action<IMyRemoteControl, string, string, IMyEntity, Vector3D>>(ChangeBehaviorTriggerWatcher));
@@ -81,12 +84,12 @@ namespace ModularEncountersSystems.API {
 			dict.Add("ProcessStaticEncountersAtLocation", new Action<Vector3D>(ProcessStaticEncountersAtLocation));
 			dict.Add("ToggleSpawnGroupEnabled", new Action<string, bool>(ToggleSpawnGroupEnabled));
 			dict.Add("RegisterCustomMissionMapping", new Action<bool, string, Func<string, string, List<string>, Vector3D, Dictionary<string, string>>>(RegisterCustomMissionMapping));
-
-			dict.Add("RegisterCustomAction", new Action<bool, string, Action<object[]>>(RegisterCustomAction));
+            dict.Add("SendBehaviorCommand", new Action<List<string>,Vector3D, string,double,long>(SendBehaviorCommand));
+            dict.Add("RegisterCustomAction", new Action<bool, string, Action<object[]>>(RegisterCustomAction));
 			dict.Add("InsertInstanceEventGroup", new Action<string, List<string>, List<string>>(InsertInstanceEventGroup));
 
 
-			
+
 			return dict;
 
 		}
@@ -110,7 +113,7 @@ namespace ModularEncountersSystems.API {
 
 		}
 
-		
+
 		public static void RegisterCustomSpawnCondition(bool register, string methodIdentifier, Func<string, string, string, Vector3D, bool> action) {
 
 			//SpawnGroup
@@ -166,9 +169,9 @@ namespace ModularEncountersSystems.API {
 					SuccessfulSpawnEvent += action;
 				else
 					SuccessfulSpawnEvent -= action;
-						
+
 			}
-		
+
 		}
 
 		//CustomSpawnRequest
@@ -257,13 +260,13 @@ namespace ModularEncountersSystems.API {
 
 						output.Add(spawnGroup.SpawnGroupName);
 						break;
-					
+
 					}
-				
+
 				}
-			
+
 			}
-		
+
 		}
 
 		public static List<string> GetNpcNameBlackList() {
@@ -293,6 +296,30 @@ namespace ModularEncountersSystems.API {
 			return npcGrid.Npc.EndCoords;
 
 		}
+
+		public static void SendBehaviorCommand(List<string> commandProfileIds, Vector3D originCoords, string overrideCommandCode ="", double overrideRadius = -1, long commandOwnerId = 0)
+		{
+            foreach (var commandId in commandProfileIds)
+            {
+
+                CommandProfile commandProfile = null;
+
+                if (!ProfileManager.CommandProfiles.TryGetValue(commandId, out commandProfile))
+                {
+
+                    BehaviorLogger.Write(commandId + ": Command Profile Not Found", BehaviorDebugEnum.Action);
+                    continue;
+
+                }
+
+                var newCommand = new Command();
+                newCommand.PrepareEventCommand(commandProfile, originCoords, overrideCommandCode, overrideRadius, commandOwnerId);
+                BehaviorLogger.Write("MESAPI" + ": Sending Command: " + newCommand.CommandCode, BehaviorDebugEnum.Action);
+
+                CommandHelper.SendCommand(newCommand);
+
+            }
+        }
 
 		public static bool IsPositionInKnownPlayerLocation(Vector3D coords, bool mustMatchFaction, string faction) {
 
@@ -435,7 +462,7 @@ namespace ModularEncountersSystems.API {
 				}
 
 			}
-								
+
 		}
 
 
@@ -448,8 +475,9 @@ namespace ModularEncountersSystems.API {
 			{
 				return;
 			}
-			
-			tja.AddEventsAsInsertible(replacekeys, replacevalues);
+
+
+            tja.AddEventsAsInsertible(replacekeys, replacevalues);
 		}
 
 	}

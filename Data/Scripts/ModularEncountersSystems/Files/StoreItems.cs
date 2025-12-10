@@ -1,5 +1,7 @@
 ﻿using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using Sandbox.Common.ObjectBuilders;
+using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -10,22 +12,27 @@ using VRage.Game.ObjectBuilders.Definitions;
 
 namespace ModularEncountersSystems.Files {
 
-	public enum StoreProfileItemTypes {
-	
-		None,
-		Ore,
-		Ingot,
-		Component,
-		Ammo,
-		Tool,
-		Consumable,
-		RandomCraftable,
-		RandomItem,
-		Oxygen,
-		Hydrogen,
-		Prefab,
-	
-	}
+    public enum StoreProfileItemTypes
+    {
+
+        None,
+        Ore,
+        Ingot,
+        Component,
+        Ammo,
+        Tool,
+        Consumable,
+        RandomCraftable,
+        RandomItem,
+        Oxygen,
+        Hydrogen,
+        Prefab,
+        Seed,
+        Item,
+        Datapad,
+        OxygenContainer,
+        GasContainer,
+    }
 
 	public class StoreItemsContainer {
 
@@ -59,6 +66,9 @@ namespace ModularEncountersSystems.Files {
 		public int MaxAmmoAmount = -1;
 		public int MaxAmmoValue = -1;
 
+		public int MaxSeedAmount = -1;
+		public int MaxSeedValue = -1;
+
 		public StoreLimits() {
 
 			MaxOreAmount = -1;
@@ -81,6 +91,9 @@ namespace ModularEncountersSystems.Files {
 
 			MaxAmmoAmount = -1;
 			MaxAmmoValue = -1;
+
+			MaxSeedAmount = -1;
+			MaxSeedValue = -1;
 
 		}
 
@@ -229,6 +242,21 @@ namespace ModularEncountersSystems.Files {
 
 			if (ItemType == StoreProfileItemTypes.Consumable)
 				type = typeof(MyObjectBuilder_ConsumableItem);
+
+			if (ItemType == StoreProfileItemTypes.Seed)
+				type = typeof(MyObjectBuilder_SeedItem);
+
+			if (ItemType == StoreProfileItemTypes.Item)
+				type = typeof(MyObjectBuilder_PhysicalObject);
+
+			if (ItemType == StoreProfileItemTypes.Datapad)
+				type = typeof(MyObjectBuilder_Datapad);
+
+			if (ItemType == StoreProfileItemTypes.OxygenContainer)
+				type = typeof(MyObjectBuilder_OxygenContainerObject);
+
+			if (ItemType == StoreProfileItemTypes.GasContainer)
+				type = typeof(MyObjectBuilder_GasContainerObject);
 
 			return new MyDefinitionId(type, subtypeId);
 

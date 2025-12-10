@@ -46,8 +46,7 @@ namespace ModularEncountersSystems.Sync {
 		[ProtoMember(3)] public long ServerPrice;
 		[ProtoMember(4)] public ShipyardModes Mode;
 		[ProtoMember(5)] public long ProjectorId;
-
-		public ShipyardTransactionResult() {
+        public ShipyardTransactionResult() {
 
 			Result = ShipyardTransactionResultEnum.None;
 			CustomMessage = "";
@@ -87,7 +86,10 @@ namespace ModularEncountersSystems.Sync {
 			if (Mode == ShipyardModes.RepairAndConstruction)
 				objective = "Repair and Construction";
 
-			var sb = new StringBuilder();
+            if (Mode == ShipyardModes.CustomReplacement)
+                objective = "Custom Replacement";
+
+            var sb = new StringBuilder();
 
 			if (Result == ShipyardTransactionResultEnum.TransactionSuccessful) {
 
@@ -103,7 +105,12 @@ namespace ModularEncountersSystems.Sync {
 
 				}
 
-				if (Mode == ShipyardModes.GridTakeover) {
+                if (Mode == ShipyardModes.CustomReplacement)
+                {
+                    sb.Append("Amount Paid To Merchant: ").Append(ServerPrice);
+                }
+
+                if (Mode == ShipyardModes.GridTakeover) {
 
 					sb.Append("Amount Paid To Merchant: ").Append(ServerPrice);
 

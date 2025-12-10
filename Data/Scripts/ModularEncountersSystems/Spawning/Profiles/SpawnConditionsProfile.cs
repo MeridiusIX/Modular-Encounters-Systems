@@ -53,9 +53,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool BossEncounterAtmo;
 		public bool BossEncounterAny;
 
-		public bool RivalAiSpawn; 
-		public bool RivalAiSpaceSpawn; 
-        public bool RivalAiAtmosphericSpawn; 
+		public bool RivalAiSpawn;
+		public bool RivalAiSpaceSpawn;
+        public bool RivalAiAtmosphericSpawn;
         public bool RivalAiAnySpawn;
 
 
@@ -90,7 +90,11 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool MustSpawnUnderwater;
 		public double MinWaterDepth;
 
-		public bool StaticEncounter;
+		public float MinWaterCoverage; //[0-1]
+		public float MaxWaterCoverage;//[0-1]
+
+
+        public bool StaticEncounter;
 		public bool UniqueEncounter;
 
 		public Vector3D TriggerCoords;
@@ -118,6 +122,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseRandomMinerFaction;
 		public bool UseRandomBuilderFaction;
 		public bool UseRandomTraderFaction;
+		public bool UseRandomMilitaryFaction;
+		public bool UseRandomPirateFaction;
 
 		public int RandomNumberRoll;
 		public int ChanceCeiling;
@@ -430,7 +436,10 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			MustSpawnUnderwater = false;
 			MinWaterDepth = 0;
 
-			StaticEncounter = false;
+			MinWaterCoverage = -1;
+			MaxWaterCoverage = -1;
+
+            StaticEncounter = false;
 			UniqueEncounter = false;
 
 			TriggerCoords = Vector3D.Zero;
@@ -458,6 +467,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseRandomMinerFaction = false;
 			UseRandomBuilderFaction = false;
 			UseRandomTraderFaction = false;
+			UseRandomMilitaryFaction = false;
+			UseRandomPirateFaction = false;
 
 			RandomNumberRoll = 1;
 			ChanceCeiling = 100;
@@ -749,7 +760,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"CanSpawnUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref CanSpawnUnderwater) },
 				{"MustSpawnUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref MustSpawnUnderwater) },
 				{"MinWaterDepth", (s, o) => TagParse.TagDoubleCheck(s, ref MinWaterDepth) },
-				{"StaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref StaticEncounter) },
+                {"MinWaterCoverage", (s, o) => TagParse.TagFloatCheck(s, ref MinWaterCoverage) },
+                {"MaxWaterCoverage", (s, o) => TagParse.TagFloatCheck(s, ref MaxWaterCoverage) },
+                {"StaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref StaticEncounter) },
 				{"UniqueEncounter", (s, o) => TagParse.TagBoolCheck(s, ref UniqueEncounter) },
 				{"TriggerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TriggerCoords) },
 				{"TriggerRadius", (s, o) => TagParse.TagDoubleCheck(s, ref TriggerRadius) },
@@ -772,6 +785,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"UseRandomMinerFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomMinerFaction) },
 				{"UseRandomBuilderFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomBuilderFaction) },
 				{"UseRandomTraderFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomTraderFaction) },
+				{"UseRandomMilitaryFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomMilitaryFaction) },
+				{"UseRandomPirateFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomPirateFaction) },
 				{"RandomNumberRoll", (s, o) => TagParse.TagIntCheck(s, ref RandomNumberRoll) },
 				{"ChanceCeiling", (s, o) => TagParse.TagIntCheck(s, ref ChanceCeiling) },
 				{"SpaceCargoShipChance", (s, o) => TagParse.TagIntCheck(s, ref SpaceCargoShipChance) },

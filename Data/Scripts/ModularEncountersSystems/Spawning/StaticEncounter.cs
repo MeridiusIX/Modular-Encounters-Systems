@@ -361,7 +361,8 @@ namespace ModularEncountersSystems.Spawning {
 
 				var timeSpan = MyAPIGateway.Session.GameDateTime - LastSpawnAttempt;
 
-				if (timeSpan.TotalSeconds < TimeBetweenSpawnAttempts)
+
+                if (Math.Abs(timeSpan.TotalSeconds) < TimeBetweenSpawnAttempts)
 					return;
 
 			}

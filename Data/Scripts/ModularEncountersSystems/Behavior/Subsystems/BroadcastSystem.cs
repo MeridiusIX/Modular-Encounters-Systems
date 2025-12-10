@@ -177,8 +177,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if (authorName.Contains("{OriginalName}"))
 				authorName = authorName.Replace("{OriginalName}", this._behavior.CurrentGrid?.Npc.FriendlyName ?? this.HighestAntennaRangeName);
 
+            authorName = Utilities.ClearAntennaThoughtBubble(authorName);
 
-			bool sentToAll = false;
+
+            bool sentToAll = false;
 
 			SpecificPlayerIds.Clear();
 

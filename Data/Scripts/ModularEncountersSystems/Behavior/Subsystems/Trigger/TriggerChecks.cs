@@ -306,12 +306,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName);
 
+        }
+
+        //InsideActiveZone
+        public bool InsideActiveZone(TriggerProfile trigger) {
+
+			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName, true);
+
 		}
 
 		//OutsideZone
 		public bool OutsideZone(TriggerProfile trigger) {
 
 			return !ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName);
+
+		}
+
+		//OutsideZone
+		public bool OutsideActiveZone(TriggerProfile trigger) {
+
+			return !ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName, true);
 
 		}
 

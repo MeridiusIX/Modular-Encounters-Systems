@@ -426,7 +426,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
-                //InsideZone
+                //Position
                 if (trigger.Type == "Position")
                 {
 
@@ -443,10 +443,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 				}
 
+                //InsideActiveZone
+                if (trigger.Type == "InsideActiveZone") {
+
+					trigger.ActivateTrigger(InsideActiveZone);
+					continue;
+
+				}
+
 				//OutsideZone
 				if (trigger.Type == "OutsideZone") {
 
 					trigger.ActivateTrigger(OutsideZone);
+					continue;
+
+				}
+
+				//OutsideActiveZone
+				if (trigger.Type == "OutsideActiveZone") {
+
+					trigger.ActivateTrigger(OutsideActiveZone);
 					continue;
 
 				}

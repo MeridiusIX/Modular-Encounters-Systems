@@ -13,13 +13,13 @@ using VRageMath;
 namespace ModularEncountersSystems.Zones {
 
 	public enum ZoneEvaluation {
-	
+
 		None,
 		ZoneName,
 		Strict,
 		AllowedSpawnGroup,
 		FactionRestricted,
-	
+
 	}
 
 	public static class ZoneManager {
@@ -56,9 +56,9 @@ namespace ModularEncountersSystems.Zones {
 						SpawnLogger.Write("Zones Loaded At Startup: " + ActiveZones.Count, SpawnerDebugEnum.Startup, true);
 
 					}
-						
+
 				}
-			
+
 			}
 
 			//Validate Existing Persistent Zones Against Profiles
@@ -94,9 +94,9 @@ namespace ModularEncountersSystems.Zones {
 
 							planetExists = true;
 							break;
-						
+
 						}
-					
+
 					}
 
 					if (!planetExists) {
@@ -106,9 +106,9 @@ namespace ModularEncountersSystems.Zones {
 						continue;
 
 					}
-				
+
 				}
-			
+
 			}
 
 			MES_SessionCore.SaveActions += UpdateZoneStorage;
@@ -117,7 +117,7 @@ namespace ModularEncountersSystems.Zones {
 			TaskProcessor.Tick60.Tasks += AnnounceDepartMessages;
 			TaskProcessor.Tick60.Tasks += TimerChecks;
 			MES_SessionCore.UnloadActions += Unload;
-		
+
 		}
 
 		public static void AddNewZones() {
@@ -248,7 +248,7 @@ namespace ModularEncountersSystems.Zones {
 		public static void FlagUpdateZoneStorage() {
 
 			_updateZones = true;
-		
+
 		}
 
 		public static void UpdateZoneStorage() {
@@ -292,7 +292,7 @@ namespace ModularEncountersSystems.Zones {
 							collection.AllowedZoneSpawns.Add(spawn);
 
 					}
-				
+
 				}
 
 				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseLimitedFactions && zone.Factions.Count > 0) {
@@ -349,11 +349,11 @@ namespace ModularEncountersSystems.Zones {
 
 				if (zone.Persistent && zone.Strict)
 					return true;
-			
+
 			}
 
 			return false;
-		
+
 		}
 
 		public static void AnnounceDepartMessages() {
@@ -393,7 +393,7 @@ namespace ModularEncountersSystems.Zones {
 					}
 
 				}
-			
+
 			}
 
 			if (updateZones)
@@ -524,7 +524,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static bool InsideZoneWithName(Vector3D coords, string zoneName) {
+		public static bool InsideZoneWithName(Vector3D coords, string zoneName, bool onlyActive = false) {
 
 			bool result = false;
 
@@ -533,6 +533,9 @@ namespace ModularEncountersSystems.Zones {
 				var zone = ActiveZones[i];
 
 				if (zone.PublicName != zoneName)
+					continue;
+
+				if (onlyActive && !zone.Active)
 					continue;
 
 				if (!zone.PositionInsideZone(coords))
@@ -544,7 +547,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			return result;
-		
+
 		}
 
 		public static void RemoveAllZones() {
@@ -559,7 +562,7 @@ namespace ModularEncountersSystems.Zones {
 			MyAPIGateway.Utilities.RemoveVariable("MES-ZoneData");
 			ActiveZones.Clear();
 			Setup();
-		
+
 		}
 
 		public static void TimerChecks() {

@@ -57,6 +57,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
         public bool CheckPlayerInZone;
+        public bool CheckPlayerInActiveZone;
         public List<string> ZoneName;
 
         //Todo:
@@ -88,6 +89,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             MaxPlayerCreditBalance = -1;
 
             CheckPlayerInZone = false;
+            CheckPlayerInActiveZone = false;
             ZoneName = new List<string>();
 
             CheckLastRespawnShipName = false;
@@ -119,6 +121,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 			{"MinPlayerCreditBalance", (s, o) => TagParse.TagIntCheck(s, ref MinPlayerCreditBalance) },//MinPlayerCreditBalance
 			{"MaxPlayerCreditBalance", (s, o) => TagParse.TagIntCheck(s, ref MaxPlayerCreditBalance) },//MaxPlayerCreditBalance
             {"CheckPlayerInZone", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerInZone) },
+            {"CheckPlayerInActiveZone", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerInActiveZone) },
             {"ZoneName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneName) },
 
 
@@ -200,7 +203,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             int satisfieddProfileConditions = 0;
 
 
-            //Holdings check 
+            //Holdings check
             for (int i = 0; i < Profiles.Count; i++)
             {
                 usedProfileConditions++;
@@ -226,7 +229,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             int satisfieddProfileConditions = 0;
 
 
-            //Holdings check 
+            //Holdings check
             for (int i = 0; i < Profiles.Count; i++)
             {
                 usedProfileConditions++;
@@ -277,7 +280,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                         if (customfaction != null)
                             FactionId = customfaction.FactionId;
 
-                       
+
                         if (FactionId != 0)
                         {
                             var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(PlayerId, FactionId);
@@ -285,7 +288,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             {
                                 satisfiedFaction++;
                             }
-                               
+
                         }
 
 
@@ -339,7 +342,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             failedCheck = false;
                             break;
                         }
-                            
+
                     }
                 }
 
@@ -402,6 +405,22 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
             }
 
+            if (profile.CheckPlayerInActiveZone)
+            {
+                usedConditions++;
+
+                foreach (var item in profile.ZoneName)
+                {
+                    if (ZoneManager.InsideZoneWithName(player.GetPosition(), item, true))
+                    {
+                        satisfiedConditions++;
+                        break;
+                    }
+
+                }
+
+            }
+
             if (profile.CheckLastRespawnShipName)
             {
                 usedConditions++;
@@ -452,6 +471,3 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
     }
 }
-
-
-

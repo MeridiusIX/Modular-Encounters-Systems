@@ -27,6 +27,8 @@ namespace ModularEncountersSystems.Missions {
 
         public List<string> ReplaceKeys;
         public List<string> ReplaceValues;
+        public Dictionary<string,string> ReplacePairs;
+
 
         public MissionType MissionType;
 
@@ -69,6 +71,7 @@ namespace ModularEncountersSystems.Missions {
             StoreProfileId = "MES-StoreProfile-Example";
             ReplaceKeys = new List<string>();
             ReplaceValues = new List<string>();
+            ReplacePairs = new Dictionary<string, string>();
 
             SoloMission = false;
 
@@ -100,6 +103,7 @@ namespace ModularEncountersSystems.Missions {
 
                 {"ReplaceKeys", (s, o) => TagParse.TagStringListCheck(s,false, ref ReplaceKeys) },
                 {"ReplaceValues", (s, o) => TagParse.TagStringListCheck(s, false,ref ReplaceValues) },
+                {"ReplacePairs", (s, o) => TagParse.TagStringDictCheck(s,ref ReplacePairs) },
          
                 {"PersistantEventConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PersistantEventConditionIds) },
                 {"UseAnyPassingEventCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseAnyPassingEventCondition) },

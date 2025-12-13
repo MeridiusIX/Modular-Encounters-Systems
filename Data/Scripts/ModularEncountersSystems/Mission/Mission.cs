@@ -198,11 +198,21 @@ namespace ModularEncountersSystems.Missions
             ReplaceKeys.Add("{Faction}");
             ReplaceValues.Add($"{Faction.Tag}");
 
+
+            ReplaceKeys.AddList(new List<string>(Profile.ReplacePairs.Keys));
+            ReplaceValues.AddList(new List<string>(Profile.ReplacePairs.Values));
+
+
+
+
             if (ReplaceKeys.Count != ReplaceValues.Count)
             {
                 MyAPIGateway.Utilities.ShowMessage("MES", $"{Profile.ProfileSubtypeId}: Before API: Replacekeys ({ReplaceKeys.Count}) and replacevalues ({ReplaceValues.Count}) do not match");
                 return false;
             }
+
+
+
 
 
             if (Profile.CustomApiMapping.Count > 0)
@@ -464,6 +474,8 @@ namespace ModularEncountersSystems.Missions
                         ReplaceKeys.Add("{InstanceId}");
                         ReplaceValues.Add($"{InstanceId}");
 
+                        ReplaceKeys.Add("{ContractId}");
+                        ReplaceValues.Add($"{InstanceId}");
 
                         //playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, -Reward); Keen already does this?
                         return true;

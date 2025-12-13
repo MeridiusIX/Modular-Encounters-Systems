@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using VRage.Game;
+using VRage.Game.ModAPI;
 using VRageMath;
 
 namespace ModularEncountersSystems.Events.Action {
@@ -561,6 +562,12 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 			}
+
+			if (actions.EditFaction)
+			{
+                // IMyFactionCollection get Faction
+				// faction.Edit()
+            }
 
 
             if (actions.AddInstanceEventGroup)

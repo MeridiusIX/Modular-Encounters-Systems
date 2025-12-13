@@ -1819,7 +1819,7 @@ namespace ModularEncountersSystems.Logging {
 			if (planet != null) {
 
 				var up = planet.UpAtPosition(thisGrid.CubeGrid.WorldMatrix.Translation);
-				var dist = planet.AltitudeAtPosition(thisGrid.CubeGrid.WorldMatrix.Translation, false);
+				var dist = planet.AltitudeAtPosition(thisGrid.CubeGrid.WorldMatrix.Translation, true);
 
 				sb.Append("Optional Tags For Dynamic Planet Spawning:").AppendLine();
 				sb.Append("[StaticEncounterUsePlanetDirectionAndAltitude:").Append("true").Append("]").AppendLine();

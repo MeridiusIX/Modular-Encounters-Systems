@@ -41,6 +41,18 @@ namespace ModularEncountersSystems.Events.Condition
         public List<int> CustomCountersTargets;
         public List<CounterCompareEnum> CounterCompareTypes;
 
+
+
+        //Player Stuff
+
+        public bool OverridePlayerConditionPosition;
+        public Vector3D OverridePosition;
+
+        public bool AddPlayerConditionPlayerTags;
+        public List<string> AddIncludedPlayerTags;
+        public List<string> AddExcludedPlayerTag;
+
+
         public bool CheckPlayerNear;
         public Vector3D PlayerNearVector3;
         public int PlayerNearDistanceFromVector3;
@@ -84,6 +96,15 @@ namespace ModularEncountersSystems.Events.Condition
             CustomCountersTargets = new List<int>();
             CounterCompareTypes = new List<CounterCompareEnum>();
 
+
+            OverridePlayerConditionPosition = false;
+            OverridePosition = new Vector3D(0, 0, 0);
+
+            AddPlayerConditionPlayerTags = false;
+            AddIncludedPlayerTags = new List<string>();
+            AddExcludedPlayerTag = new List<string>();
+
+
             CheckPlayerNear = false;
             PlayerNearDistanceFromVector3 = 1000;
             PlayerNearMinDistanceFromVector3 = 0;
@@ -118,6 +139,11 @@ namespace ModularEncountersSystems.Events.Condition
                 {"CustomCounters", (s, o) => TagParse.TagStringListCheck(s, ref CustomCounters) },
                 {"CustomCountersTargets", (s, o) => TagParse.TagIntListCheck(s, ref CustomCountersTargets) },
                 {"CounterCompareTypes", (s, o) => TagParse.TagCounterCompareEnumCheck(s, ref CounterCompareTypes) },
+                {"OverridePlayerConditionPosition", (s, o) => TagParse.TagBoolCheck(s, ref OverridePlayerConditionPosition) },
+                {"OverridePosition", (s, o) => TagParse.TagVector3DCheck(s, ref OverridePosition) },
+                {"AddPlayerConditionPlayerTags", (s, o) => TagParse.TagBoolCheck(s, ref AddPlayerConditionPlayerTags) },
+                {"AddIncludedPlayerTags", (s, o) => TagParse.TagStringListCheck(s, ref AddIncludedPlayerTags) },
+                {"AddExcludedPlayerTag", (s, o) => TagParse.TagStringListCheck(s, ref AddExcludedPlayerTag) },
                 {"CheckPlayerNear", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerNear) },
                 {"PlayerNearCoords", (s, o) => TagParse.TagVector3DCheck(s, ref PlayerNearVector3) },
                 {"PlayerNearDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref PlayerNearDistanceFromVector3) },
@@ -456,7 +482,7 @@ namespace ModularEncountersSystems.Events.Condition
 
                 foreach (var player in PlayerManager.Players)
                 {
-                    if (PlayerCondition.ArePlayerConditionsMet(Profile.PlayerConditionIds, player.Player.IdentityId))
+                    if (PlayerCondition.ArePlayerConditionsMet(Profile.PlayerConditionIds, player.Player.IdentityId, Profile.OverridePlayerConditionPosition, Profile.OverridePosition, Profile.AddPlayerConditionPlayerTags, Profile.AddIncludedPlayerTags, Profile.AddExcludedPlayerTag))
                     {
                         satisfiedConditions++;
                         break;

@@ -2866,7 +2866,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 if (actions.SetSandboxCounters.Count != 0 && actions.SetSandboxCounters.Count == actions.SetSandboxCountersValues.Count)
                 {
 
-                    for (int i = 0; i < actions.SetCounters.Count; i++)
+                    for (int i = 0; i < actions.SetSandboxCounters.Count; i++)
                         SetSandboxCounter(actions.SetSandboxCounters[i], actions.SetSandboxCountersValues[i], true);
 
                 }

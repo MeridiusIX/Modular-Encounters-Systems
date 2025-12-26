@@ -290,7 +290,7 @@ namespace ModularEncountersSystems.Watchers {
 
 			grid.ForceRemove = true;
 			SpawnLogger.Write(grid.CubeGrid.CustomName + " Force Remove Request. Marking For Removal. Reason: " + reason ?? "null", SpawnerDebugEnum.CleanUp, true);
-			RemoveGrid(grid, true);
+			RemoveGrid(grid, true, true);
 			GridCleanupData.RemoveData(grid);
 
 			if (grid.Npc != null)
@@ -396,7 +396,7 @@ namespace ModularEncountersSystems.Watchers {
 
 		}
 
-		public static void RemoveGrid(GridEntity grid, bool singleGrid = false) {
+		public static void RemoveGrid(GridEntity grid, bool singleGrid = false, bool force = false) {
 
 			bool isGridCleanupNeeded = TryFlagForRemoval(grid);
 
@@ -414,7 +414,7 @@ namespace ModularEncountersSystems.Watchers {
 
 			}
 
-			if (isGridCleanupNeeded && !PendingGridsForRemoval) {
+			if ((force || isGridCleanupNeeded) && !PendingGridsForRemoval) {
 
 				PendingGridsForRemoval = true;
 				TaskProcessor.Tasks.Add(new GridCleanup());

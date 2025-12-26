@@ -289,7 +289,7 @@ namespace ModularEncountersSystems.Watchers {
 		public static void ForceRemoveGrid(GridEntity grid, string reason = null) {
 
 			grid.ForceRemove = true;
-			SpawnLogger.Write(grid.CubeGrid.CustomName + " Force Remove Request. Marking For Removal. Reason: " + reason ?? "null", SpawnerDebugEnum.CleanUp, true);
+			SpawnLogger.Write(grid.CubeGrid.CustomName + ": Force Remove Request. Marking For Removal. Reason: " + reason ?? "null", SpawnerDebugEnum.CleanUp, true);
 			RemoveGrid(grid, true, true);
 			GridCleanupData.RemoveData(grid);
 
@@ -398,13 +398,13 @@ namespace ModularEncountersSystems.Watchers {
 
 		public static void RemoveGrid(GridEntity grid, bool singleGrid = false, bool force = false) {
 
-			bool isGridCleanupNeeded = TryFlagForRemoval(grid);
+			bool isGridCleanupNeeded = TryFlagForRemoval(grid, force);
 
 			if (!singleGrid) {
 
 				foreach (var linkedGrid in grid.LinkedGrids) {
 
-					if (TryFlagForRemoval(linkedGrid)) {
+					if (TryFlagForRemoval(linkedGrid, force)) {
 
 						isGridCleanupNeeded = true;
 
@@ -423,9 +423,9 @@ namespace ModularEncountersSystems.Watchers {
 
 		}
 
-        private static bool TryFlagForRemoval(GridEntity grid) {
+        private static bool TryFlagForRemoval(GridEntity grid, bool force = false) {
 
-            if (grid.Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || grid.Ownership.HasFlag(GridOwnershipEnum.PlayerMinority)) {
+            if (!force && (grid.Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || grid.Ownership.HasFlag(GridOwnershipEnum.PlayerMinority))) {
 
                 return false;
 

@@ -69,7 +69,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
-		public bool UpdateRotation(double pitch_speed, double yaw_speed, double roll_speed, double multiplier, MatrixD matrix) {
+		public bool UpdateRotation(double pitch_speed, double yaw_speed, double roll_speed, double multiplier, double multiplierPitch, double multiplierYaw, double multiplierRoll, MatrixD matrix) {
 
 			if (!Valid || !Working) {
 
@@ -79,7 +79,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			RawValues = new Vector3D(pitch_speed, yaw_speed, roll_speed);
 			RefMatrix = matrix;
-			var rotationVec = new Vector3D(-pitch_speed, yaw_speed, roll_speed); //because keen does some weird stuff with signs 
+			var rotationVec = new Vector3D(-pitch_speed * multiplierPitch, yaw_speed * multiplierYaw, roll_speed * multiplierRoll); //because keen does some weird stuff with signs
 			rotationVec *= multiplier;
 			var relativeRotationVec = Vector3D.TransformNormal(rotationVec, matrix);
 
@@ -117,14 +117,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				this.Pitch = this.PendingRotation.X;
 				Block.Pitch = this.Pitch;
 
-			}	
+			}
 
 			if (this.PendingRotation.Y != this.Yaw) {
 
 				this.Yaw = this.PendingRotation.Y;
 				Block.Yaw = this.Yaw;
 
-			}	
+			}
 
 			if (this.PendingRotation.Z != this.Roll) {
 
@@ -146,11 +146,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				AdjYawMagnitude = MagnitudeReduction(YawMagnitude, Behavior.AutoPilot.YawAngleDifference, Behavior.AutoPilot.YawTargetAngleResult, Behavior.AutoPilot.CurrentMode.HasFlag(NewAutoPilotMode.HeavyYaw));
 				AdjRollMagnitude = MagnitudeReduction(RollMagnitude, Behavior.AutoPilot.RollAngleDifference, Behavior.AutoPilot.RollTargetAngleResult, Behavior.AutoPilot.CurrentMode.HasFlag(NewAutoPilotMode.BarrelRoll));
 
-				
+
 				//AdjPitchMagnitude = PitchMagnitude;
 				//AdjYawMagnitude = YawMagnitude;
 				//AdjRollMagnitude = RollMagnitude;
-				
+
 
 				var newAngularVelocity = (RefMatrix.Right * AdjPitchMagnitude) + (RefMatrix.Up * AdjYawMagnitude) + (RefMatrix.Forward * AdjRollMagnitude);
 
@@ -200,7 +200,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				Block.Yaw = 0;
 				Block.Roll = 0;
 				Active = false;
-			
+
 			}
 
 		}

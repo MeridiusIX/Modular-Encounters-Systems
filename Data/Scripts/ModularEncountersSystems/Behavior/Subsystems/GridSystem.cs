@@ -797,6 +797,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public void RazeBlocksWithTypes(List<MyDefinitionId> types) {
 
+			BehaviorLogger.Write("Razing Blocks With Types Count: " + types.Count.ToString(), BehaviorDebugEnum.Action);
+			BehaviorLogger.Write("Razing Blocks Total Terminal Blocks: " + AllTerminalBlocks.Count.ToString(), BehaviorDebugEnum.Action);
+
 			for (int i = AllBlocks.Count - 1; i >= 0; i--) {
 
 				var block = AllBlocks[i];

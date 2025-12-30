@@ -93,6 +93,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double RotationSlowdownAngle;
 		public bool UseForcedRotationDampening;
 		public float ForcedRotationDampeningAmount;
+		public bool UseIndividualForcedRotationDampening;
+		public float ForcedRotationDampeningAmountPitch;
+		public float ForcedRotationDampeningAmountYaw;
+		public float ForcedRotationDampeningAmountRoll;
 		public bool LimitRotationSpeed;
 		public double MaxRotationMagnitude;
 		public bool UseRotationBoostUp;
@@ -182,11 +186,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			IdealMaxSpeed = 100;
 			IdealMinSpeed = 10;
 			SlowDownOnWaypointApproach = false;
-			ExtraSlowDownDistance = 25; 
+			ExtraSlowDownDistance = 25;
 			MaxSpeedTolerance = 15;
 
-			FlyLevelWithGravity = false; 
-			LevelWithGravityWhenIdle = false; 
+			FlyLevelWithGravity = false;
+			LevelWithGravityWhenIdle = false;
 			MaxPlanetPathCheckDistance = 1000;
 			IdealPlanetAltitude = 200;
 			MinimumPlanetAltitude = 110;
@@ -244,6 +248,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			RotationSlowdownAngle = 70;
 			UseForcedRotationDampening = false;
 			ForcedRotationDampeningAmount = 0.15f;
+			UseIndividualForcedRotationDampening = false;
+			ForcedRotationDampeningAmountPitch = 0.15f;
+			ForcedRotationDampeningAmountYaw = 0.15f;
+			ForcedRotationDampeningAmountRoll = 0.15f;
 			UseRotationBoostUp = false;
 			RotationBoostUpAmount = 3.14f;
 
@@ -356,7 +364,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				}
 
 			}
-		
+
 		}
 
 		public void InitTag(string tag) {
@@ -659,6 +667,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
+			//ForcedRotationDampeningAmountPitch
+			if (tag.Contains("[ForcedRotationDampeningAmountPitch:") == true) {
+
+				TagParse.TagFloatCheck(tag, ref this.ForcedRotationDampeningAmountPitch);
+
+			}
+
+			//UseIndividualForcedRotationDampening
+			if (tag.Contains("[UseIndividualForcedRotationDampening:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.UseIndividualForcedRotationDampening);
+
+			}
+
+			//ForcedRotationDampeningAmountYaw
+			if (tag.Contains("[ForcedRotationDampeningAmountYaw:") == true) {
+
+				TagParse.TagFloatCheck(tag, ref this.ForcedRotationDampeningAmountYaw);
+
+			}
+
+			//ForcedRotationDampeningAmountRoll
+			if (tag.Contains("[ForcedRotationDampeningAmountRoll:") == true) {
+
+				TagParse.TagFloatCheck(tag, ref this.ForcedRotationDampeningAmountRoll);
+
+			}
+
 			//UseRotationBoostUp
 			if (tag.Contains("[UseRotationBoostUp:") == true) {
 
@@ -767,7 +803,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				TagParse.TagBoolCheck(tag, ref this.TryToLevelWithTarget);
 
 			}
-			
+
 
 
 			//BarrelRollMinDurationMs
@@ -911,7 +947,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
                 TagParse.TagDoubleCheck(tag, ref this.OffsetMaxAngleFromTarget);
 
             }
-            
+
 
             //RotateTowardsTargetWhileAtPosition
             if (tag.Contains("[RotateTowardsTargetWhileAtPosition:") == true) {

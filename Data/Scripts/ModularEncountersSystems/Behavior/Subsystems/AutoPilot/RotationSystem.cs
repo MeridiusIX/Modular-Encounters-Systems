@@ -50,26 +50,37 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				double yaw = ExistingYawMagnitude;
 				double roll = ExistingRollMagnitude;
 
-				//Pitch
-				if (Math.Sign(RotationToApply.X) != Math.Sign(ExistingPitchMagnitude) || (RotationToApply.X / ExistingPitchMagnitude) > Data.ForcedRotationDampeningAmount) {
+                float rotationDampeningPitch = Data.ForcedRotationDampeningAmount;
+                float rotationDampeningYaw = Data.ForcedRotationDampeningAmount;
+                float rotationDampeningRoll = Data.ForcedRotationDampeningAmount;
 
-					pitch = ExistingPitchMagnitude - (ExistingPitchMagnitude * Data.ForcedRotationDampeningAmount);
+                if (Data.UseIndividualForcedRotationDampening)
+                {
+                    rotationDampeningPitch = Data.ForcedRotationDampeningAmountPitch;
+                    rotationDampeningYaw = Data.ForcedRotationDampeningAmountYaw;
+                    rotationDampeningRoll = Data.ForcedRotationDampeningAmountRoll;
+                }
+
+				//Pitch
+				if (Math.Sign(RotationToApply.X) != Math.Sign(ExistingPitchMagnitude) || (RotationToApply.X / ExistingPitchMagnitude) > rotationDampeningPitch) {
+
+					pitch = ExistingPitchMagnitude - (ExistingPitchMagnitude * rotationDampeningPitch);
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Damp Pitch", 250);
 
 				}
 
 				//Yaw
-				if (Math.Sign(RotationToApply.Y) != Math.Sign(ExistingYawMagnitude) || (RotationToApply.Y / ExistingYawMagnitude) > Data.ForcedRotationDampeningAmount) {
+				if (Math.Sign(RotationToApply.Y) != Math.Sign(ExistingYawMagnitude) || (RotationToApply.Y / ExistingYawMagnitude) > rotationDampeningYaw) {
 
-					yaw = ExistingYawMagnitude - (ExistingYawMagnitude * Data.ForcedRotationDampeningAmount);
+					yaw = ExistingYawMagnitude - (ExistingYawMagnitude * rotationDampeningYaw);
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Damp Yaw", 250);
 
 				}
 
 				//Roll
-				if (Math.Sign(RotationToApply.Z) != Math.Sign(ExistingRollMagnitude) || (RotationToApply.Z / ExistingRollMagnitude) > Data.ForcedRotationDampeningAmount) {
+				if (Math.Sign(RotationToApply.Z) != Math.Sign(ExistingRollMagnitude) || (RotationToApply.Z / ExistingRollMagnitude) > rotationDampeningRoll) {
 
-					roll = ExistingRollMagnitude - (ExistingRollMagnitude * Data.ForcedRotationDampeningAmount);
+					roll = ExistingRollMagnitude - (ExistingRollMagnitude * rotationDampeningRoll);
 					//MyVisualScriptLogicProvider.ShowNotificationToAll("Damp Roll", 250);
 
 				}
@@ -104,7 +115,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				var angleAddition = 180 - angleDifference;
 				angleDifference += angleAddition;
-			
+
 			}
 
 			angleDifference /= 2;
@@ -256,7 +267,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				previousSpeed = absCurrent;
 				return;
-			
+
 			}
 
 			if (absCurrent > previousSpeed) {
@@ -284,7 +295,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				return 0;
 
 			return proposedSpeed;
-		
+
 		}
 
 		public void GetNextEligibleGyro() {
@@ -308,7 +319,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				break;
 
 			}
-		
+
 		}
 
 		public MatrixD GetReferenceMatrix(MatrixD originalMatrix) {
@@ -356,7 +367,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			} else {
 
 				this.RotationToApply = Vector3.Zero;
-			
+
 			}
 
 			if (CurrentMode.HasFlag(NewAutoPilotMode.BarrelRoll)) {

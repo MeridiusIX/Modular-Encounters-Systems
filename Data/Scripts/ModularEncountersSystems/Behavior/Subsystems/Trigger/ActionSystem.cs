@@ -274,7 +274,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 if (actions.ChangeFlyLevelWithGravity)
                 {
                     BehaviorLogger.Write(actions.ProfileSubtypeId + ": Changing FlyLevelWithGravity To: " + actions.NewFlyLevelWithGravity.ToString(), BehaviorDebugEnum.Action);
-                    _autopilot.State.UseFlyLevelWithGravity = actions.NewFlyLevelWithGravity;
+                    _behavior.AutoPilot.ActivateAutoPilot(_autopilot.State.InitialWaypoint, _autopilot.State.NormalAutopilotFlags, CheckEnum.Yes);
                 }
 
                 //SpawnReinforcements

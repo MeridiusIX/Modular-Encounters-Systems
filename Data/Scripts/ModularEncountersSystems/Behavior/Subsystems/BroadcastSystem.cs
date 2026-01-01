@@ -106,8 +106,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					return;
 
 				}
-					
-			
+
+
 			}
 
 			if(chat.ProcessChat(ref message, ref sound, ref broadcastType, ref avatar, ref volume) == false) {
@@ -161,9 +161,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			if (chat.UseRandomNameGeneratorFromMES)
 				message = RandomNameGenerator.CreateRandomNameFromPattern(message);
-			
+
 			var authorName = chat.Author;
-				
+
 			if (authorName.Contains("{AntennaName}"))
 				authorName = authorName.Replace("{AntennaName}", this.HighestAntennaRangeName);
 
@@ -187,14 +187,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if (command != null && chat.SendToCommandPlayer) {
 
 				SpecificPlayerIds.Add(command.PlayerIdentity);
-			
+
 			}
 
 			if (specificPlayerIds != null) {
 
 				foreach (var id in specificPlayerIds)
 					SpecificPlayerIds.Add(id);
-			
+
 			}
 
 			foreach (var player in playerList) {
@@ -256,12 +256,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				}
 
 				if (modifiedMsg.Contains("{GPS}") == true) {
-					
+
 					var modifiedLabel = chat.GPSLabel;
-					
-					if (modifiedLabel.Contains("{AntennaName}")) 
+
+					if (modifiedLabel.Contains("{AntennaName}"))
 						modifiedLabel = modifiedLabel.Replace("{AntennaName}", this.HighestAntennaRangeName);
-					
+
 					if(this.RemoteControl?.SlimBlock?.CubeGrid?.CustomName != null && modifiedLabel.Contains("{GridName}"))
 						modifiedLabel = modifiedLabel.Replace("{GridName}", this.RemoteControl.SlimBlock.CubeGrid.CustomName);
 
@@ -270,14 +270,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 					var GPSOffsetVector = Vector3D.Transform(chat.GPSOffset, RemoteControl.SlimBlock.CubeGrid.PositionComp.GetOrientation());
 
-		
+
 					SendGPSToPlayer(modifiedLabel, RemoteControl.SlimBlock.CubeGrid.WorldAABB.Center + GPSOffsetVector, player.IdentityId);
 
 				}
 
+                modifiedMsg = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, modifiedMsg);
+
 				var authorColor = chat.Color;
 
-				
+
 				if (authorColor == "{PlayerRelation}")
 				{
 
@@ -300,7 +302,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					}
 
 				}
-				
+
 
 				if (authorColor != "White" && authorColor != "Red" && authorColor != "Green" && authorColor != "Blue" && authorColor != "{PlayerRelation}") {
 
@@ -401,13 +403,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						this.HighestAntennaRangeName = antenna.CustomName;
 
 					}
-					
+
 
 				}
 
 			}
 
-			
+
 
 		}
 		/*
@@ -433,7 +435,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				broadcastType = broadcastTypes[index];
 
 			}
-			
+
 			if(avatars.Count >= messages.Count) {
 
 				avatar = avatars[index];
@@ -487,7 +489,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			var gps = MyAPIGateway.Session.GPS.Create(gpsName, "", gpsCoords, false);
 			MyAPIGateway.Session.GPS.AddGps(playerId, gps);
-		
+
 		}
 
 	}

@@ -1835,18 +1835,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     //ZoneToggleActiveAtPosition
                     lastAction = "ZoneToggleActiveAtPosition";
                     if (actions.ZoneToggleActiveAtPosition)
-                        ZoneManager.ToggleZonesAtPosition(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneToggleActiveAtPositionMode);
+                        ZoneManager.ToggleZonesAtPosition(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneToggleActiveAtPositionMode);
 
                     //ZoneRadiusChangeType
                     lastAction = "ZoneRadiusChangeType";
                     if (actions.ZoneRadiusChangeType != ModifierEnum.None)
-                        ZoneManager.ChangeZoneRadius(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneRadiusChangeAmount, actions.ZoneRadiusChangeType);
+                        ZoneManager.ChangeZoneRadius(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneRadiusChangeAmount, actions.ZoneRadiusChangeType);
 
                     //ZoneCustomBoolChange
                     lastAction = "ZoneCustomBoolChange";
                     if (actions.ZoneCustomBoolChange)
                         if (actions.ZoneCustomBoolChangeUseKPL)
-                            ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+                            ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
                         else
                             ZoneManager.ChangeKPLBools(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
 
@@ -1854,7 +1854,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     lastAction = "ZoneCustomCounterChange";
                     if (actions.ZoneCustomCounterChange)
                         if (actions.ZoneCustomCounterChangeUseKPL)
-                            ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), actions.ZoneName, actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+                            ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
                         else
                             ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
 
@@ -1863,7 +1863,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 //Toggle Zone
                 lastAction = "ZoneToggleActive";
                 if (actions.ZoneToggleActive)
-                    ZoneManager.ToggleZones(actions.ZoneName, actions.ZoneToggleActiveMode);
+                    ZoneManager.ToggleZones(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneToggleActiveMode);
 
                 //SetCustomStrings
                 lastAction = "SetCustomStrings";

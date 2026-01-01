@@ -304,28 +304,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
         //InsideZone
         public bool InsideZone(TriggerProfile trigger) {
 
-			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName);
+			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, trigger.ZoneName));
 
         }
 
         //InsideActiveZone
         public bool InsideActiveZone(TriggerProfile trigger) {
 
-			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName, true);
+			return ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, trigger.ZoneName), true);
 
 		}
 
 		//OutsideZone
 		public bool OutsideZone(TriggerProfile trigger) {
 
-			return !ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName);
+			return !ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, trigger.ZoneName));
 
 		}
 
 		//OutsideZone
 		public bool OutsideActiveZone(TriggerProfile trigger) {
 
-			return !ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), trigger.ZoneName, true);
+			return !ZoneManager.InsideZoneWithName(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, trigger.ZoneName), true);
 
 		}
 

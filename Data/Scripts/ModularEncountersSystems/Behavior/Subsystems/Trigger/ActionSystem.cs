@@ -80,43 +80,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             var lastAction = "";
             try
             {
-                //Debug Message
-                lastAction = "DebugMessage";
-                if (!string.IsNullOrWhiteSpace(actions.DebugMessage))
-                {
-
-                    var message = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.DebugMessage);
-
-                    foreach (var customVar in _behavior?.CurrentGrid?.Npc?.CustomCountersVariables)
-                    {
-                        if (message.Contains("{" + customVar.Key + "}"))
-                        {
-                            message = message.Replace("{" + customVar.Key + "}", customVar.Value.ToString());
-                        }
-                    }
-
-                    MyVisualScriptLogicProvider.SendChatMessage(message, RemoteControl.SlimBlock.CubeGrid.CustomName);
-
-
-                    //MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);
-
-                }
-
-                //ChatBroadcast
-                lastAction = "ChatBroadcast";
-                if (actions.UseChatBroadcast == true)
-                {
-
-                    foreach (var chatData in actionsBase.ChatData)
-                    {
-
-                        BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
-                        _broadcast.BroadcastRequest(chatData, command);
-
-                    }
-
-                }
-
                 //Playsound cue
                 lastAction = "PlayDialogueCue";
                 if (actions.PlayDialogueCue)
@@ -2928,6 +2891,45 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastAction = "BehaviorSpecificEventH";
                 if (actions.BehaviorSpecificEventH)
                     _behavior.BehaviorActionH = true;
+
+
+                //Debug Message
+                lastAction = "DebugMessage";
+                if (!string.IsNullOrWhiteSpace(actions.DebugMessage))
+                {
+
+                    var message = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.DebugMessage);
+
+                    foreach (var customVar in _behavior?.CurrentGrid?.Npc?.CustomCountersVariables)
+                    {
+                        if (message.Contains("{" + customVar.Key + "}"))
+                        {
+                            message = message.Replace("{" + customVar.Key + "}", customVar.Value.ToString());
+                        }
+                    }
+
+                    MyVisualScriptLogicProvider.SendChatMessage(message, RemoteControl.SlimBlock.CubeGrid.CustomName);
+
+
+                    //MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);
+
+                }
+
+                //ChatBroadcast
+                lastAction = "ChatBroadcast";
+                if (actions.UseChatBroadcast == true)
+                {
+
+                    foreach (var chatData in actionsBase.ChatData)
+                    {
+
+                        BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Chat Broadcast", BehaviorDebugEnum.Action);
+                        _broadcast.BroadcastRequest(chatData, command);
+
+                    }
+
+                }
+
             }
             catch (Exception e)
             {

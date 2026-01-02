@@ -173,9 +173,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if (factionTagcheck == false && authorName.Contains("{Faction}"))
 				authorName = authorName.Replace("{Faction}", factionTag);
 
-
 			if (authorName.Contains("{OriginalName}"))
 				authorName = authorName.Replace("{OriginalName}", this._behavior.CurrentGrid?.Npc.FriendlyName ?? this.HighestAntennaRangeName);
+
+            authorName = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, authorName);
 
             authorName = Utilities.ClearAntennaThoughtBubble(authorName);
 

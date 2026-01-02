@@ -232,14 +232,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
-                //ChangeFlyLevelWithGravity
-                lastAction = "ChangeFlyLevelWithGravity";
-                if (actions.ChangeFlyLevelWithGravity)
-                {
-                    BehaviorLogger.Write(actions.ProfileSubtypeId + ": Changing FlyLevelWithGravity To: " + actions.NewFlyLevelWithGravity.ToString(), BehaviorDebugEnum.Action);
-                    _behavior.AutoPilot.ActivateAutoPilot(_autopilot.State.InitialWaypoint, _autopilot.State.NormalAutopilotFlags, CheckEnum.Yes);
-                }
-
                 //SpawnReinforcements
                 lastAction = "SpawnReinforcements";
                 if (actions.SpawnEncounter == true)

@@ -969,6 +969,9 @@ namespace ModularEncountersSystems.World {
 
 					foreach (var grid in gridList) {
 
+                        if (grid == null)
+                            continue;
+
 						grid.ChangeGridOwnership(OriginalOwnerId, VRage.Game.MyOwnershipShareModeEnum.Faction);
 
 					}

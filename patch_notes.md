@@ -1,7 +1,5 @@
-# Update 2.72.00
+# Update 2.72.01
 
-* Added AutoPilot Profile tags RotationMultiplierPitch:float, RotationMultiplierYaw:float and RotationMultiplierRoll:float . The existing "RotationMultiplier"-tag continues to multiply all axi and stacks with these new ones, if used.
-* Added CustomStringsVariables & common variable support to ZoneName references in actions and triggers as well as ChatMessages and their authors.
-* Added additional logging to RazeBlocksWithTypes.
+* Added an additional safeguard to spawning ships - potentially resolves the NullReferenceException crash bug when MES spawns certain encounters in specific circumstances.
 
 enenra & CptArthur

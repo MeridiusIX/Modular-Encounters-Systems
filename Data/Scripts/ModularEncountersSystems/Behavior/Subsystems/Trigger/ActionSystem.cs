@@ -1347,89 +1347,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
-                //ResetCooldownTimeOfTriggers
-                lastAction = "ResetCooldownTimeOfTriggers";
-                if (actions.ResetCooldownTimeOfTriggers)
-                {
-
-                    ToggleTriggers(actions.ResetTriggerCooldownNames, CheckEnum.Ignore, CheckEnum.Yes);
-                    ToggleTagTriggers(actions.ResetTriggerCooldownTags, CheckEnum.Ignore, CheckEnum.Yes);
-                }
-
-                //EnableTriggers
-                lastAction = "EnableTriggers";
-                if (actions.EnableTriggers)
-                {
-
-                    BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Enable " + actions.EnableTriggerNames.Count + " Triggers.", BehaviorDebugEnum.Action);
-                    ToggleTriggers(actions.EnableTriggerNames, CheckEnum.Yes, CheckEnum.Ignore);
-                    ToggleTagTriggers(actions.EnableTriggerTags, CheckEnum.Yes, CheckEnum.Ignore);
-                }
-
-                //DisableTriggers
-                lastAction = "DisableTriggers";
-                if (actions.DisableTriggers)
-                {
-
-                    BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Disable Triggers.", BehaviorDebugEnum.Action);
-                    ToggleTriggers(actions.DisableTriggerNames, CheckEnum.No, CheckEnum.Ignore);
-                    ToggleTagTriggers(actions.DisableTriggerTags, CheckEnum.No, CheckEnum.Ignore);
-                }
-
-                //ManuallyActivateTrigger
-                lastAction = "ManuallyActivateTrigger";
-                if (actions.ManuallyActivateTrigger)
-                {
-
-                    BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Manually Activate Triggers.", BehaviorDebugEnum.Action);
-
-                    List<string> manuallyActivatedTriggerNames = new List<string>();
-                    foreach (var manuallyActivatedTriggerName in actions.ManuallyActivatedTriggerNames)
-                    {
-                        manuallyActivatedTriggerNames.Add(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, manuallyActivatedTriggerName));
-                    }
-
-                    List<string> manuallyActivatedTriggerTags = new List<string>();
-                    foreach (var manuallyActivatedTriggerTag in actions.ManuallyActivatedTriggerTags)
-                    {
-                        manuallyActivatedTriggerTags.Add(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, manuallyActivatedTriggerTag));
-                    }
-
-                    foreach (var manualTrigger in Triggers)
-                    {
-
-                        if (manuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
-                            ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
-
-                        foreach (var tag in manualTrigger.Tags)
-                        {
-                            if (manuallyActivatedTriggerTags.Contains(tag))
-                                ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
-
-                        }
-
-                    }
-
-
-                    foreach (var manualTrigger in CompromisedTriggers)
-                    {
-
-                        if (manuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
-                            ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
-
-                        foreach (var tag in manualTrigger.Tags)
-                        {
-                            if (manuallyActivatedTriggerTags.Contains(tag))
-                                ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
-
-                        }
-
-                    }
-
-
-
-                }
-
                 //ChangeInertiaDampeners
                 lastAction = "ChangeInertiaDampeners";
                 if (actions.ChangeInertiaDampeners)
@@ -2884,6 +2801,88 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 if (actions.BehaviorSpecificEventH)
                     _behavior.BehaviorActionH = true;
 
+                //ResetCooldownTimeOfTriggers
+                lastAction = "ResetCooldownTimeOfTriggers";
+                if (actions.ResetCooldownTimeOfTriggers)
+                {
+
+                    ToggleTriggers(actions.ResetTriggerCooldownNames, CheckEnum.Ignore, CheckEnum.Yes);
+                    ToggleTagTriggers(actions.ResetTriggerCooldownTags, CheckEnum.Ignore, CheckEnum.Yes);
+                }
+
+                //EnableTriggers
+                lastAction = "EnableTriggers";
+                if (actions.EnableTriggers)
+                {
+
+                    BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Enable " + actions.EnableTriggerNames.Count + " Triggers.", BehaviorDebugEnum.Action);
+                    ToggleTriggers(actions.EnableTriggerNames, CheckEnum.Yes, CheckEnum.Ignore);
+                    ToggleTagTriggers(actions.EnableTriggerTags, CheckEnum.Yes, CheckEnum.Ignore);
+                }
+
+                //DisableTriggers
+                lastAction = "DisableTriggers";
+                if (actions.DisableTriggers)
+                {
+
+                    BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Disable Triggers.", BehaviorDebugEnum.Action);
+                    ToggleTriggers(actions.DisableTriggerNames, CheckEnum.No, CheckEnum.Ignore);
+                    ToggleTagTriggers(actions.DisableTriggerTags, CheckEnum.No, CheckEnum.Ignore);
+                }
+
+                //ManuallyActivateTrigger
+                lastAction = "ManuallyActivateTrigger";
+                if (actions.ManuallyActivateTrigger)
+                {
+
+                    BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Manually Activate Triggers.", BehaviorDebugEnum.Action);
+
+                    List<string> manuallyActivatedTriggerNames = new List<string>();
+                    foreach (var manuallyActivatedTriggerName in actions.ManuallyActivatedTriggerNames)
+                    {
+                        manuallyActivatedTriggerNames.Add(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, manuallyActivatedTriggerName));
+                    }
+
+                    List<string> manuallyActivatedTriggerTags = new List<string>();
+                    foreach (var manuallyActivatedTriggerTag in actions.ManuallyActivatedTriggerTags)
+                    {
+                        manuallyActivatedTriggerTags.Add(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, manuallyActivatedTriggerTag));
+                    }
+
+                    foreach (var manualTrigger in Triggers)
+                    {
+
+                        if (manuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
+                            ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
+
+                        foreach (var tag in manualTrigger.Tags)
+                        {
+                            if (manuallyActivatedTriggerTags.Contains(tag))
+                                ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
+
+                        }
+
+                    }
+
+
+                    foreach (var manualTrigger in CompromisedTriggers)
+                    {
+
+                        if (manuallyActivatedTriggerNames.Contains(manualTrigger.ProfileSubtypeId))
+                            ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
+
+                        foreach (var tag in manualTrigger.Tags)
+                        {
+                            if (manuallyActivatedTriggerTags.Contains(tag))
+                                ProcessManualTrigger(manualTrigger, actions.ForceManualTriggerActivation);
+
+                        }
+
+                    }
+
+
+
+                }
 
                 //Debug Message
                 lastAction = "DebugMessage";

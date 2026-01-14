@@ -1,5 +1,5 @@
-# Update 2.72.01
+# Update 2.72.02
 
-* Added an additional safeguard to spawning ships - potentially resolves the NullReferenceException crash bug when MES spawns certain encounters in specific circumstances.
+* Altered action execution order so that ManuallyActivatedTriggers / ManuallyActivatedTriggerTags and similar only execute after other actions have already taken effect.
 
 enenra & CptArthur

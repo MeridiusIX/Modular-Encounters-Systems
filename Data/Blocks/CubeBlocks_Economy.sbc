@@ -24,7 +24,12 @@
         <Component Subtype="Construction" Count="20" />
         <Component Subtype="Computer" Count="8" />
         <Component Subtype="Display" Count="10" />
-        <Component Subtype="ProprietaryTech" Count="1" />
+        <Component Subtype="ProprietaryTech" Count="1">
+          <DeconstructId>
+            <TypeId>Ore</TypeId>
+            <SubtypeId>Scrap</SubtypeId>
+          </DeconstructId>
+        </Component>
         <Component Subtype="Construction" Count="10" />
       </Components>
       <CriticalComponent Subtype="ProprietaryTech" Index="0" />
@@ -40,7 +45,7 @@
         <ScreenArea Name="CockpitScreen_01" DisplayName="DisplayName_Screen_ProjectionArea" TextureResolution="512" ScreenWidth="1" ScreenHeight="1" />
         <ScreenArea Name="CockpitScreen_02" DisplayName="DisplayName_Screen_Large" TextureResolution="256" ScreenWidth="16" ScreenHeight="11" />
         <ScreenArea Name="CockpitScreen_03" DisplayName="DisplayName_Screen_Numpad" TextureResolution="128" ScreenWidth="4" ScreenHeight="6" />
-        <ScreenArea Name="CockpitScreen_04" DisplayName="DisplayName_Screen_Keyboard"  TextureResolution="128" ScreenWidth="2" ScreenHeight="1"/>
+        <ScreenArea Name="CockpitScreen_04" DisplayName="DisplayName_Screen_Keyboard" TextureResolution="128" ScreenWidth="2" ScreenHeight="1"/>
       </ScreenAreas>
       <BlockPairName>ShipyardTerminal</BlockPairName>
       <MirroringZ>Y</MirroringZ>
@@ -61,7 +66,7 @@
       <IgnoreSize>true</IgnoreSize>
       <RotationAngleStepDeg>1</RotationAngleStepDeg>
     </Definition>
-    
+
     <Definition xsi:type="MyObjectBuilder_ButtonPanelDefinition">
       <Id>
         <TypeId>ButtonPanel</TypeId>
@@ -84,7 +89,12 @@
         <Component Subtype="InteriorPlate" Count="10" />
         <Component Subtype="Construction" Count="10" />
         <Component Subtype="Computer" Count="20" />
-        <Component Subtype="ProprietaryTech" Count="1" />
+        <Component Subtype="ProprietaryTech" Count="1">
+          <DeconstructId>
+            <TypeId>Ore</TypeId>
+            <SubtypeId>Scrap</SubtypeId>
+          </DeconstructId>
+        </Component>
         <Component Subtype="Construction" Count="10" />
       </Components>
       <CriticalComponent Subtype="ProprietaryTech" Index="0" />
@@ -172,7 +182,12 @@
         <Component Subtype="InteriorPlate" Count="5" />
         <Component Subtype="Construction" Count="5" />
         <Component Subtype="Computer" Count="4" />
-        <Component Subtype="ProprietaryTech" Count="1" />
+        <Component Subtype="ProprietaryTech" Count="1">
+          <DeconstructId>
+            <TypeId>Ore</TypeId>
+            <SubtypeId>Scrap</SubtypeId>
+          </DeconstructId>
+        </Component>
         <Component Subtype="Display" Count="4" />
         <Component Subtype="Construction" Count="5" />
       </Components>
@@ -238,8 +253,8 @@
       <IsAirTight>false</IsAirTight>
       <DLC>SparksOfTheFuture</DLC>
     </Definition>
-    
-    
+
+
   </CubeBlocks>
 
   <BlockPositions></BlockPositions>

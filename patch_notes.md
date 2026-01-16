@@ -1,5 +1,5 @@
-# Update 2.72.02
+# Update 2.72.03
 
-* Altered action execution order so that ManuallyActivatedTriggers / ManuallyActivatedTriggerTags and similar only execute after other actions have already taken effect.
+* Fixed Suit Upgrade Station, Shipyard Terminal and Research Terminal all yielding Proprietary Tech components when ground down when they shouldn't have.
 
 enenra & CptArthur

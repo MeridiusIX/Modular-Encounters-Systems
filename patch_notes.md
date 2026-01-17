@@ -1,5 +1,5 @@
-# Update 2.72.03
+# Update 2.72.04
 
-* Fixed Suit Upgrade Station, Shipyard Terminal and Research Terminal all yielding Proprietary Tech components when ground down when they shouldn't have.
+* Added error logging to condition checks to allow bugs to be tracked down more efficiently.
 
 enenra & CptArthur

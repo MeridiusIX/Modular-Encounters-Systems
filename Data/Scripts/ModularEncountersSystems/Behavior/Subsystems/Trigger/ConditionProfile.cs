@@ -16,2107 +16,2369 @@ using ModularEncountersSystems.Spawning;
 using ModularEncountersSystems.Missions;
 using ModularEncountersSystems.World;
 
-namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
+namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
+{
 
-	[ProtoContract]
-	public class ConditionProfile {
+    [ProtoContract]
+    public class ConditionProfile
+    {
 
-		[ProtoMember(18)]
-		public string ProfileSubtypeId;
+        [ProtoMember(18)]
+        public string ProfileSubtypeId;
 
-		[ProtoIgnore]
-		public ConditionReferenceProfile ConditionReference {
+        [ProtoIgnore]
+        public ConditionReferenceProfile ConditionReference
+        {
 
-			get {
-
-				if (_conditionReference == null) {
-
-					ProfileManager.ConditionReferenceProfiles.TryGetValue(ProfileSubtypeId, out _conditionReference);
-
-				}
-
-				return _conditionReference;
-
-			}
-
-		}
-
-		[ProtoIgnore]
-		private ConditionReferenceProfile _conditionReference;
-
-		[ProtoIgnore]
-		private IMyRemoteControl _remoteControl;
-
-		[ProtoIgnore]
-		private IBehavior _behavior;
-
-		[ProtoIgnore]
-		private StoredSettings _settings;
-
-		[ProtoIgnore]
-		private bool _gotWatchedBlocks;
-
-		[ProtoIgnore]
-		private List<IMyCubeBlock> _watchedAllBlocks;
-
-		[ProtoIgnore]
-		private List<IMyCubeBlock> _watchedAnyBlocks;
-
-		[ProtoIgnore]
-		private List<IMyCubeBlock> _watchedNoneBlocks;
-
-		[ProtoIgnore]
-		private bool _watchingAllBlocks;
-
-		[ProtoIgnore]
-		private bool _watchingAnyBlocks;
-
-		[ProtoIgnore]
-		private bool _watchingNoneBlocks;
-
-		[ProtoIgnore]
-		private bool _watchedAllBlocksResult;
-
-		[ProtoIgnore]
-		private bool _watchedAnyBlocksResult;
-
-		[ProtoIgnore]
-		private bool _watchedNoneBlocksResult;
-
-		public ConditionProfile() {
-
-			ProfileSubtypeId = "";
-
-			_remoteControl = null;
-			_settings = new StoredSettings();
-
-			_gotWatchedBlocks = false;
-			_watchedAllBlocks = new List<IMyCubeBlock>();
-			_watchedAnyBlocks = new List<IMyCubeBlock>();
-			_watchedNoneBlocks = new List<IMyCubeBlock>();
-			_watchedAllBlocksResult = false;
-			_watchedAnyBlocksResult = false;
-			_watchedNoneBlocksResult = false;
-
-		}
-
-		public void SetReferences(IMyRemoteControl remoteControl, IBehavior behavior) {
-
-			_remoteControl = remoteControl;
-			_behavior = behavior;
-			_settings = _behavior?.BehaviorSettings;
-
-		}
-
-		public bool AreConditionsMets(Command command = null) {
-
-			if (ConditionReference == null) {
-
-				BehaviorLogger.Write(ProfileSubtypeId + ": Condition Reference Null", BehaviorDebugEnum.Condition);
-				return false;
-
-			}
-
-			if (ConditionReference.UseConditions == false) {
-
-				BehaviorLogger.Write(ProfileSubtypeId + ": Condition Not In Use", BehaviorDebugEnum.Condition);
-				return true;
-
-			}
-
-			if (_behavior == null) {
-
-				_behavior = BehaviorManager.GetBehavior(_remoteControl);
-
-				if (_behavior == null) {
-
-					BehaviorLogger.Write(ProfileSubtypeId + ": Behavior Is Null, Cannot Continue With Conditions", BehaviorDebugEnum.Condition);
-					return false;
-
-				}
-
-			}
-
-			if (!_gotWatchedBlocks)
-				SetupWatchedBlocks();
-
-			int usedConditions = 0;
-			int satisfiedConditions = 0;
-
-			if (ConditionReference.CheckAllLoadedModIDs == true) {
-
-				usedConditions++;
-				bool missingMod = false;
-
-				foreach (var mod in ConditionReference.AllModIDsToCheck) {
-
-					if (AddonManager.ModIdList.Contains((ulong)mod) == false) {
-
-						BehaviorLogger.Write(ProfileSubtypeId + ": Mod ID Not Present", BehaviorDebugEnum.Condition);
-						missingMod = true;
-						break;
-
-					}
-
-				}
-
-				if (!missingMod)
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.CheckAnyLoadedModIDs == true) {
-
-				usedConditions++;
-
-				foreach (var mod in ConditionReference.AllModIDsToCheck) {
-
-					if (AddonManager.ModIdList.Contains((ulong)mod)) {
-
-						BehaviorLogger.Write(ProfileSubtypeId + ": A Mod ID was Found: " + mod.ToString(), BehaviorDebugEnum.Condition);
-						satisfiedConditions++;
-						break;
-
-					}
-
-				}
-
-			}
-
-			if (ConditionReference.CheckTrueBooleans == true) {
-
-				usedConditions++;
-				bool failedCheck = false;
-
-				foreach (var boolName in ConditionReference.TrueBooleans) {
-
-					if (!_settings.GetCustomBoolResult(boolName)) {
-
-						BehaviorLogger.Write(ProfileSubtypeId + ": Boolean Not True: " + boolName, BehaviorDebugEnum.Condition);
-						failedCheck = true;
-
-						if (!ConditionReference.AllowAnyTrueBoolean) {
-
-							failedCheck = true;
-							break;
-
-						}
-
-					} else if (ConditionReference.AllowAnyTrueBoolean) {
-
-						failedCheck = false;
-						break;
-
-					}
-
-				}
-
-				if (!failedCheck)
-					satisfiedConditions++;
-
-			}
-
-
-			//Bool False
-			if (ConditionReference.CheckFalseBooleans == true)
-			{
-				usedConditions++;
-				bool failedCheck = false;
-
-				for (int i = 0; i < ConditionReference.FalseBooleans.Count; i++)
-				{
-
-					var boolName = ConditionReference.FalseBooleans[i];
-
-					try
-					{
-
-						//bool output = false;
-						var output = _settings.GetCustomBoolResult(boolName);
-
-						if (output)
-						{
-							//BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
-							failedCheck = true;
-							continue;
-
-						}
-						else if (ConditionReference.AllowAnyFalseBoolean)
-						{
-							failedCheck = false;
-							break;
-
-						}
-
-					}
-					catch (Exception e)
-					{
-
-						//BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
-						//BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
-
-					}
-
-				}
-
-				if (!failedCheck)
-					satisfiedConditions++;
-			}
-
-
-
-			if (ConditionReference.CheckCustomCounters == true) {
-
-				usedConditions++;
-				bool failedCheck = false;
-
-				if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count || ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersVariables.Count) {
-
-
-
-					var selfScore = _behavior?.CurrentGrid?.Npc?.Score ?? 0;
-                    var commandScore = command?.NPCScoreValue ?? 0;
-
-					var customCountersVariables = _behavior?.CurrentGrid?.Npc.CustomCountersVariables;
-
-
-					for (int i = 0; i < ConditionReference.CustomCounters.Count; i++) {
-
-						try {
-
-							var compareType = CounterCompareEnum.GreaterOrEqual;
-
-							if (i <= ConditionReference.CounterCompareTypes.Count - 1)
-								compareType = ConditionReference.CounterCompareTypes[i];
-
-
-                            var counter = ConditionReference.CustomCounters[i];
-
-                            var target = 0;
-                            if (ConditionReference.CustomCountersTargets.Count > 0)
-                            {
-                                target = ConditionReference.CustomCountersTargets[i];
-                            }
-                            else
-                            {
-                                foreach (var targetVar in customCountersVariables)
-                                {
-                                    if (ConditionReference.CustomCountersVariables[i] == "{" + targetVar.Key + "}")
-                                    {
-                                        target = targetVar.Value;
-                                        break;
-                                    }
-                                }
-                            }
-
-							if (ConditionReference.CustomCountersTargetOverrideSelfScore)
-								target = selfScore;
-
-							if (ConditionReference.CustomCountersTargetOverrideCommandScore)
-								target = commandScore;
-
-
-							int? overrideScore = null;
-
-
-							if (counter.Contains("{CommandScore}"))
-							{
-								overrideScore = commandScore;
-							}
-							else if (counter.Contains("{SelfScore}"))
-							{
-								overrideScore = selfScore;
-							}
-
-
-							if (_settings.GetCustomCounterResult(counter, target, compareType, overrideScore) == false) {
-
-								BehaviorLogger.Write(ProfileSubtypeId + ": Counter Amount Condition Not Satisfied: " + ConditionReference.CustomCounters[i], BehaviorDebugEnum.Condition);
-								failedCheck = true;
-								break;
-
-							} else if (ConditionReference.AllowAnyValidCounter) {
-
-								break;
-
-							}
-
-
-
-
-
-						} catch (Exception e) {
-
-							BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
-							BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
-
-						}
-
-					}
-
-				} else {
-
-					BehaviorLogger.Write(ProfileSubtypeId + $": Counter Names ({ConditionReference.CustomCounters.Count}) and Targets List ({ConditionReference.CustomCountersTargets.Count + ConditionReference.CustomCountersVariables.Count}) Counts Don't Match. Check Your Condition Profile. Note: CustomCountersVariables cannot be used at the same time as CustomCountersTargets", BehaviorDebugEnum.Condition);
-					failedCheck = true;
-
-				}
-
-				if (!failedCheck)
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.CheckTrueSandboxBooleans == true) {
-
-				usedConditions++;
-				bool failedCheck = false;
-
-				for (int i = 0; i < ConditionReference.TrueSandboxBooleans.Count; i++) {
-
-					var boolName = ConditionReference.TrueSandboxBooleans[i];
-					if (boolName.Contains("{SpawnGroupName}") && _behavior.CurrentGrid?.Npc.SpawnGroupName != null)
-					{
-						boolName = boolName.Replace("{SpawnGroupName}", _behavior.CurrentGrid?.Npc.SpawnGroupName);
-					}
-
-					if (boolName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
-					{
-						boolName = boolName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
-					}
-
-					try {
-
-						bool output = false;
-						var result = MyAPIGateway.Utilities.GetVariable(boolName, out output);
-
-						if (!result || !output) {
-
-							BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Boolean False: " + boolName, BehaviorDebugEnum.Condition);
-							failedCheck = true;
-
-							if (!ConditionReference.AllowAnyTrueSandboxBoolean)
-								break;
-							else
-								continue;
-
-						} else if (ConditionReference.AllowAnyTrueSandboxBoolean && output) {
-
-							failedCheck = false;
-							break;
-
-						}
-
-					} catch (Exception e) {
-
-						BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
-						BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
-
-					}
-
-				}
-
-				if (!failedCheck)
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.CheckCustomSandboxCounters == true) {
-
-				usedConditions++;
-				bool failedCheck = false;
-
-				if (ConditionReference.CustomSandboxCounters.Count == ConditionReference.CustomSandboxCountersTargets.Count) {
-
-					for (int i = 0; i < ConditionReference.CustomSandboxCounters.Count; i++) {
-
-						try {
-
-							int counter = 0;
-							var result = MyAPIGateway.Utilities.GetVariable(ConditionReference.CustomSandboxCounters[i], out counter);
-
-							var compareType = CounterCompareEnum.GreaterOrEqual;
-
-							if (i <= ConditionReference.SandboxCounterCompareTypes.Count - 1)
-								compareType = ConditionReference.SandboxCounterCompareTypes[i];
-
-							bool counterResult = false;
-
-							if (compareType == CounterCompareEnum.GreaterOrEqual)
-								counterResult = (counter >= ConditionReference.CustomSandboxCountersTargets[i]);
-
-							if (compareType == CounterCompareEnum.Greater)
-								counterResult = (counter > ConditionReference.CustomSandboxCountersTargets[i]);
-
-							if (compareType == CounterCompareEnum.Equal)
-								counterResult = (counter == ConditionReference.CustomSandboxCountersTargets[i]);
-
-							if (compareType == CounterCompareEnum.NotEqual)
-								counterResult = (counter != ConditionReference.CustomSandboxCountersTargets[i]);
-
-							if (compareType == CounterCompareEnum.Less)
-								counterResult = (counter < ConditionReference.CustomSandboxCountersTargets[i]);
-
-							if (compareType == CounterCompareEnum.LessOrEqual)
-								counterResult = (counter <= ConditionReference.CustomSandboxCountersTargets[i]);
-
-							if (!result || !counterResult) {
-
-								BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Amount Condition Not Satisfied: " + ConditionReference.CustomSandboxCounters[i], BehaviorDebugEnum.Condition);
-								failedCheck = true;
-
-								if (!ConditionReference.AllowAnyValidSandboxCounter)
-									break;
-								else
-									continue;
-
-							} else if (ConditionReference.AllowAnyValidSandboxCounter && counterResult) {
-
-								failedCheck = false;
-								break;
-
-							}
-
-						} catch (Exception e) {
-
-							BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
-							BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
-
-						}
-
-					}
-
-				} else {
-
-					BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Names and Targets List Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
-					failedCheck = true;
-
-				}
-
-				if (!failedCheck)
-					satisfiedConditions++;
-
-			}
-
-
-			//Bool False
-			if (ConditionReference.CheckFalseSandboxBooleans == true)
-			{
-				usedConditions++;
-				bool failedCheck = false;
-
-				for (int i = 0; i < ConditionReference.FalseSandboxBooleans.Count; i++)
-				{
-
-					var boolName = ConditionReference.FalseSandboxBooleans[i];
-
-					try
-					{
-
-						bool output = false;
-						var result = MyAPIGateway.Utilities.GetVariable(boolName, out output);
-
-						if (output)
-						{
-							//BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
-							failedCheck = true;
-							continue;
-
-						}
-						else if (ConditionReference.AllowAnyFalseSandboxBoolean)
-						{
-							failedCheck = false;
-							break;
-
-						}
-
-					}
-					catch (Exception e)
-					{
-
-						//BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
-						//BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
-
-					}
-
-				}
-
-				if (!failedCheck)
-					satisfiedConditions++;
-			}
-
-
-			if (ConditionReference.CheckGridSize == true) {
-
-				usedConditions++;
-
-                if (ConditionReference.GridSizeLarge == true && _remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Large) {
-                    //MyAPIGateway.Utilities.ShowNotification("This is a large grid.");
-					satisfiedConditions++;
-                }
-                else if (ConditionReference.GridSizeLarge == false && _remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Small) {
-                    //MyAPIGateway.Utilities.ShowNotification("This is a small grid.");
-					satisfiedConditions++;
-                }
-			}
-
-
-			if (ConditionReference.CheckGridStatic == true) {
-
-				usedConditions++;
-
-                if (ConditionReference.GridStatic == true && _remoteControl.CubeGrid.IsStatic == true) {
-                    //MyAPIGateway.Utilities.ShowNotification("This is a static grid.");
-					satisfiedConditions++;
-                }
-                else if (ConditionReference.GridStatic == false && _remoteControl.CubeGrid.IsStatic == false) {
-                    //MyAPIGateway.Utilities.ShowNotification("This is a dynamic grid.");
-					satisfiedConditions++;
-                }
-			}
-
-
-			if (ConditionReference.CheckGridSpeed == true) {
-
-				usedConditions++;
-				float speed = (float)_remoteControl.GetShipSpeed();
-
-				if ((ConditionReference.MinGridSpeed == -1 || speed >= ConditionReference.MinGridSpeed) && (ConditionReference.MaxGridSpeed == -1 || speed <= ConditionReference.MaxGridSpeed)) {
-
-					BehaviorLogger.Write(ProfileSubtypeId + ": Grid Speed High Enough", BehaviorDebugEnum.Condition);
-					satisfiedConditions++;
-
-				} else {
-
-					BehaviorLogger.Write(ProfileSubtypeId + ": Grid Speed Not High Enough", BehaviorDebugEnum.Condition);
-
-				}
-
-			}
-
-			if (ConditionReference.CheckGridVerticalSpeed == true)
-			{
-
-				usedConditions++;
-
-
-				if(_behavior.AutoPilot.CurrentPlanet == null)
-                {
-					BehaviorLogger.Write(ProfileSubtypeId + ": Vertical Speed satisfied", BehaviorDebugEnum.Condition);
-					satisfiedConditions++;
-				}
-                else
-                {
-					var velocity = _remoteControl.SlimBlock.CubeGrid.Physics.LinearVelocity;
-					var upDirection = _behavior.AutoPilot.CurrentPlanet.UpAtPosition(_remoteControl.GetPosition());
-
-
-					// Compute the dot product
-					double velocityProjectionMagnitude = Vector3D.Dot(velocity, upDirection);
-
-					// Compute the projected vector (optional, if you need the vector itself)
-					Vector3D velocityProjection = velocityProjectionMagnitude * upDirection;
-
-
-					float speed = (float)velocityProjection.Length();
-
-
-					if ((ConditionReference.MinGridVerticalSpeed == -1 || speed >= ConditionReference.MinGridVerticalSpeed) && (ConditionReference.MaxGridVerticalSpeed == -1 || speed <= ConditionReference.MaxGridVerticalSpeed))
-					{
-
-						BehaviorLogger.Write(ProfileSubtypeId + ": Grid Vertical Speed in range", BehaviorDebugEnum.Condition);
-						satisfiedConditions++;
-
-					}
-					else
-					{
-
-						BehaviorLogger.Write(ProfileSubtypeId + ": Grid Vertical Speed Not in range", BehaviorDebugEnum.Condition);
-
-					}
-				}
-
-
-
-
-			}
-
-
-
-			if (ConditionReference.CheckMESBlacklistedSpawnGroups) {
-
-				if (ConditionReference.SpawnGroupBlacklistContainsAll.Count > 0) {
-
-					usedConditions++;
-					bool failedCheck = false;
-
-					foreach (var group in ConditionReference.SpawnGroupBlacklistContainsAll) {
-
-						if (Settings.General.NpcSpawnGroupBlacklist.Contains<string>(group) == false) {
-
-							BehaviorLogger.Write(ProfileSubtypeId + ": A Spawngroup was not on MES BlackList: " + group, BehaviorDebugEnum.Condition);
-							failedCheck = true;
-							break;
-
-						}
-
-					}
-
-					if (!failedCheck)
-						satisfiedConditions++;
-
-				}
-
-				if (ConditionReference.SpawnGroupBlacklistContainsAny.Count > 0) {
-
-					usedConditions++;
-					foreach (var group in ConditionReference.SpawnGroupBlacklistContainsAll) {
-
-						if (Settings.General.NpcSpawnGroupBlacklist.Contains<string>(group)) {
-
-							BehaviorLogger.Write(ProfileSubtypeId + ": A Spawngroup was on MES BlackList: " + group, BehaviorDebugEnum.Condition);
-							satisfiedConditions++;
-							break;
-
-						}
-
-					}
-
-				}
-
-			}
-
-			if (ConditionReference.UseAccumulatedDamageWatcher) {
-
-				usedConditions++;
-				bool failedCheck = false;
-				BehaviorLogger.Write("Damage Accumulated: " + _settings.TotalDamageAccumulated, BehaviorDebugEnum.Condition);
-
-				if (ConditionReference.MinAccumulatedDamage >= 0 && _settings.TotalDamageAccumulated < ConditionReference.MinAccumulatedDamage)
-					failedCheck = true;
-
-				if (ConditionReference.MaxAccumulatedDamage >= 0 && _settings.TotalDamageAccumulated > ConditionReference.MaxAccumulatedDamage)
-					failedCheck = true;
-
-				if (!failedCheck)
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.UseRequiredFunctionalBlocks) {
-
-				if (_watchingAllBlocks) {
-
-					usedConditions++;
-
-					if (_watchedAllBlocksResult)
-						satisfiedConditions++;
-
-				}
-
-				if (_watchingAnyBlocks) {
-
-					usedConditions++;
-
-					if (_watchedAnyBlocksResult)
-						satisfiedConditions++;
-
-				}
-
-				if (_watchingNoneBlocks) {
-
-					usedConditions++;
-
-					if (_watchedNoneBlocksResult)
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckTargetAltitudeDifference) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.InGravity()) {
-
-					var planetPos = _behavior.AutoPilot.CurrentPlanet.Center();
-					var targetCoreDist = _behavior.AutoPilot.Targeting.Target.Distance(planetPos);
-					var myCoreDist = Vector3D.Distance(planetPos, _remoteControl.GetPosition());
-					var difference = targetCoreDist - myCoreDist;
-
-					if (difference >= ConditionReference.MinTargetAltitudeDifference && difference <= ConditionReference.MaxTargetAltitudeDifference)
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckTargetDistance) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget()) {
-
-					var dist = _behavior.AutoPilot.Targeting.Target.Distance(_remoteControl.GetPosition());
-
-					if ((ConditionReference.MinTargetDistance == -1 || dist >= ConditionReference.MinTargetDistance) && (ConditionReference.MaxTargetDistance == -1 || dist <= ConditionReference.MaxTargetDistance))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckTargetSpeed)
-			{
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget())
-				{
-
-					var speed = _behavior.AutoPilot.Targeting.Target.CurrentSpeed();
-
-					if ((ConditionReference.MinTargetSpeed == -1 || speed >= ConditionReference.MinTargetSpeed) && (ConditionReference.MaxTargetSpeed == -1 || speed <= ConditionReference.MaxTargetSpeed))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-
-			if (ConditionReference.CheckTargetAngleFromForward) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget()) {
-
-					var dirToTarget = Vector3D.Normalize(_behavior.AutoPilot.Targeting.GetTargetCoords() - _remoteControl.GetPosition());
-					var myForward = _behavior.AutoPilot.RefBlockMatrixRotation.Forward;
-					var angle = VectorHelper.GetAngleBetweenDirections(dirToTarget, myForward);
-
-					if ((ConditionReference.MinTargetAngle == -1 || angle >= ConditionReference.MinTargetAngle) && (ConditionReference.MaxTargetAngle == -1 || angle <= ConditionReference.MaxTargetAngle))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckWaypointAngleFromForward)
-			{
-
-				usedConditions++;
-
-
-				var dirToWaypoint = Vector3D.Normalize(_behavior.AutoPilot.GetCurrentWaypoint() - _remoteControl.GetPosition());
-				var myForward = _behavior.AutoPilot.RefBlockMatrixRotation.Forward;
-				var angle = VectorHelper.GetAngleBetweenDirections(dirToWaypoint, myForward);
-
-				if ((ConditionReference.MinWaypointAngle == -1 || angle >= ConditionReference.MinWaypointAngle) && (ConditionReference.MaxWaypointAngle == -1 || angle <= ConditionReference.MaxWaypointAngle))
-					satisfiedConditions++;
-
-			}
-
-
-
-			if (ConditionReference.CheckIfTargetIsChasing) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget()) {
-
-					var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
-					var targetVelocity = Vector3D.Normalize(_behavior.AutoPilot.Targeting.Target.CurrentVelocity());
-
-					if (targetVelocity.IsValid() && targetVelocity.Length() > 0) {
-
-						var angle = VectorHelper.GetAngleBetweenDirections(dirFromTarget, targetVelocity);
-
-						if ((ConditionReference.MinTargetChaseAngle == -1 || angle >= ConditionReference.MinTargetChaseAngle) && (ConditionReference.MaxTargetChaseAngle == -1 || angle <= ConditionReference.MaxTargetChaseAngle))
-							satisfiedConditions++;
-
-					}
-
-				}
-
-			}
-
-			if (ConditionReference.CheckIfTargetIsChasing)
-			{
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget())
-				{
-
-					var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
-					var targetVelocity = Vector3D.Normalize(_behavior.AutoPilot.Targeting.Target.CurrentVelocity());
-
-					if (targetVelocity.IsValid() && targetVelocity.Length() > 0)
-					{
-
-						var angle = VectorHelper.GetAngleBetweenDirections(dirFromTarget, targetVelocity);
-
-						if ((ConditionReference.MinTargetChaseAngle == -1 || angle >= ConditionReference.MinTargetChaseAngle) && (ConditionReference.MaxTargetChaseAngle == -1 || angle <= ConditionReference.MaxTargetChaseAngle))
-							satisfiedConditions++;
-
-					}
-
-				}
-
-			}
-
-			if (ConditionReference.CheckTargetChaseSpeed)
-			{
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget())
-				{
-
-					var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
-					var targetVelocity = _behavior.AutoPilot.Targeting.Target.CurrentVelocity();
-
-					if (targetVelocity.IsValid() && targetVelocity.Length() > 0)
-					{
-
-						// Project target velocity onto the direction from the NPC to the target
-						var projectedSpeed = Vector3D.Dot(targetVelocity, dirFromTarget);
-						//MyAPIGateway.Utilities.ShowMessage("MES", projectedSpeed.ToString());
-
-						// Check if the projected speed is within the specified range
-						if ((ConditionReference.MinTargetChaseSpeed == -1 || projectedSpeed >= ConditionReference.MinTargetChaseSpeed) &&
-							(ConditionReference.MaxTargetChaseSpeed == -1 || projectedSpeed <= ConditionReference.MaxTargetChaseSpeed))
-						{
-							satisfiedConditions++;
-						}
-					}
-
-				}
-
-			}
-
-
-			if (ConditionReference.CheckIfGridNameMatches) {
-
-				usedConditions++;
-
-				if(!string.IsNullOrWhiteSpace(_remoteControl.SlimBlock.CubeGrid.CustomName)){
-
-					bool pass = false;
-
-					foreach (var name in ConditionReference.GridNamesToCheck) {
-
-						if (ConditionReference.AllowPartialGridNameMatches) {
-
-							if (_remoteControl.SlimBlock.CubeGrid.CustomName.Contains(name))
-								pass = true;
-
-						} else {
-
-							if (_remoteControl.SlimBlock.CubeGrid.CustomName == name)
-								pass = true;
-
-						}
-
-					}
-
-					if(pass)
-						satisfiedConditions++;
-
-				}
-
-			}
-
-
-            if (ConditionReference.HasAntennaForBroadcast)
+            get
             {
-				usedConditions++;
 
-				var blockList = BlockCollectionHelper.GetGridAntennas(this._remoteControl.SlimBlock.CubeGrid);
-
-				foreach (var antenna in blockList)
-				{
-					if (antenna != null)
-					{
-						continue;
-					}
-
-					if (antenna?.SlimBlock == null)
-					{
-
-						continue;
-
-					}
-
-					if (antenna.IsWorking == false || antenna.IsFunctional == false || antenna.IsBroadcasting == false)
-					{
-
-						continue;
-
-					}
-
-					//if(antenna.Radius < this.HighestRadius)
-
-					satisfiedConditions++;
-					break;
-
-				}
-			}
-
-
-
-			if (ConditionReference.UnderwaterCheck) {
-
-				usedConditions++;
-
-				if(_behavior.AutoPilot.CurrentPlanet != null)
-					if (_behavior.AutoPilot.CurrentPlanet.UnderwaterAndDepthCheck(_remoteControl.GetPosition(), ConditionReference.IsUnderwater, ConditionReference.MinDistanceUnderwater, ConditionReference.MaxDistanceUnderwater))
-						satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.TargetUnderwaterCheck) {
-
-				usedConditions++;
-
-				if(_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.CurrentPlanet != null)
-					if (_behavior.AutoPilot.CurrentPlanet.UnderwaterAndDepthCheck(_behavior.AutoPilot.Targeting.TargetLastKnownCoords, ConditionReference.TargetIsUnderwater, ConditionReference.MinTargetDistanceUnderwater, ConditionReference.MaxTargetDistanceUnderwater))
-						satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.BehaviorSubclassCheck) {
-
-				usedConditions++;
-
-				if (ConditionReference.BehaviorSubclass.Contains(_behavior.ActiveBehavior.SubClass))
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.BehaviorModeCheck) {
-
-				usedConditions++;
-
-				if(ConditionReference.CurrentBehaviorMode.Contains(_behavior.Mode))
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.GravityCheck) {
-
-				usedConditions++;
-				var grav = PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
-
-				if ((ConditionReference.MinGravity == -1000 || grav > ConditionReference.MinGravity) && (ConditionReference.MaxGravity == -1000 || grav < ConditionReference.MaxGravity)) {
-
-					satisfiedConditions++;
-
-				} else {
-
-					BehaviorLogger.Write("Gravity Check Failed. Current Gravity: " + grav, BehaviorDebugEnum.Condition);
-
-				}
-
-			}
-
-
-            if (ConditionReference.IsOnDarkSide)
-            {
-				usedConditions++;
-
-				if(_behavior.AutoPilot.CurrentPlanet != null)
+                if (_conditionReference == null)
                 {
-					if (MyVisualScriptLogicProvider.IsOnDarkSide(_behavior.AutoPilot.CurrentPlanet.Planet, _behavior.RemoteControl.GetPosition()))
-						satisfiedConditions++;
+
+                    ProfileManager.ConditionReferenceProfiles.TryGetValue(ProfileSubtypeId, out _conditionReference);
 
                 }
 
-			}
+                return _conditionReference;
 
+            }
 
-            if (ConditionReference.MatchTerrainType)
+        }
+
+        [ProtoIgnore]
+        private ConditionReferenceProfile _conditionReference;
+
+        [ProtoIgnore]
+        private IMyRemoteControl _remoteControl;
+
+        [ProtoIgnore]
+        private IBehavior _behavior;
+
+        [ProtoIgnore]
+        private StoredSettings _settings;
+
+        [ProtoIgnore]
+        private bool _gotWatchedBlocks;
+
+        [ProtoIgnore]
+        private List<IMyCubeBlock> _watchedAllBlocks;
+
+        [ProtoIgnore]
+        private List<IMyCubeBlock> _watchedAnyBlocks;
+
+        [ProtoIgnore]
+        private List<IMyCubeBlock> _watchedNoneBlocks;
+
+        [ProtoIgnore]
+        private bool _watchingAllBlocks;
+
+        [ProtoIgnore]
+        private bool _watchingAnyBlocks;
+
+        [ProtoIgnore]
+        private bool _watchingNoneBlocks;
+
+        [ProtoIgnore]
+        private bool _watchedAllBlocksResult;
+
+        [ProtoIgnore]
+        private bool _watchedAnyBlocksResult;
+
+        [ProtoIgnore]
+        private bool _watchedNoneBlocksResult;
+
+        public ConditionProfile()
+        {
+
+            ProfileSubtypeId = "";
+
+            _remoteControl = null;
+            _settings = new StoredSettings();
+
+            _gotWatchedBlocks = false;
+            _watchedAllBlocks = new List<IMyCubeBlock>();
+            _watchedAnyBlocks = new List<IMyCubeBlock>();
+            _watchedNoneBlocks = new List<IMyCubeBlock>();
+            _watchedAllBlocksResult = false;
+            _watchedAnyBlocksResult = false;
+            _watchedNoneBlocksResult = false;
+
+        }
+
+        public void SetReferences(IMyRemoteControl remoteControl, IBehavior behavior)
+        {
+
+            _remoteControl = remoteControl;
+            _behavior = behavior;
+            _settings = _behavior?.BehaviorSettings;
+
+        }
+
+        public bool AreConditionsMets(Command command = null)
+        {
+
+            if (ConditionReference == null)
             {
-				if (_behavior.AutoPilot.CurrentPlanet == null)
-				{
-					satisfiedConditions++;
-				}
 
-				//var coords = _behavior.RemoteControl.GetPosition();
-				//var checkSurfaceCoords = _behavior.AutoPilot.CurrentPlanet.SurfaceCoordsAtPosition(coords);
-				//var checkMaterial = _behavior.AutoPilot.CurrentPlanet.Planet.GetMaterialAt(ref checkSurfaceCoords);
+                BehaviorLogger.Write(ProfileSubtypeId + ": Condition Reference Null", BehaviorDebugEnum.Condition);
+                return false;
 
-				bool fail = false;
+            }
 
-				if (ConditionReference.TerrainTypeWhitelistNames.Count > 0 && !ConditionReference.TerrainTypeWhitelistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
-				{
-					BehaviorLogger.Write("TerrainTypeWhitelist failed", BehaviorDebugEnum.Condition);
-					fail = true;
-				}
+            if (ConditionReference.UseConditions == false)
+            {
 
-				if (ConditionReference.TerrainTypeBlacklistNames.Count > 0 && ConditionReference.TerrainTypeBlacklistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
-				{
-					BehaviorLogger.Write("TerrainTypeBlacklist failed", BehaviorDebugEnum.Condition);
-					fail = true;
-				}
+                BehaviorLogger.Write(ProfileSubtypeId + ": Condition Not In Use", BehaviorDebugEnum.Condition);
+                return true;
 
+            }
 
-				if (!fail)
+            if (_behavior == null)
+            {
+
+                _behavior = BehaviorManager.GetBehavior(_remoteControl);
+
+                if (_behavior == null)
                 {
-					satisfiedConditions++;
-				}
 
+                    BehaviorLogger.Write(ProfileSubtypeId + ": Behavior Is Null, Cannot Continue With Conditions", BehaviorDebugEnum.Condition);
+                    return false;
 
+                }
 
+            }
 
-			}
+            if (!_gotWatchedBlocks)
+                SetupWatchedBlocks();
 
+            int usedConditions = 0;
+            int satisfiedConditions = 0;
 
-
-			if (ConditionReference.AltitudeCheck) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.CurrentPlanet != null) {
-
-					var MyAltitude = _behavior.AutoPilot.CurrentPlanet.AltitudeAtPosition(_behavior.RemoteControl.GetPosition(), ConditionReference.AltitudeCheckIgnoreWater);
-
-					if ((ConditionReference.MinAltitude == -1 || MyAltitude > ConditionReference.MinAltitude) && (ConditionReference.MaxAltitude == -1 || MyAltitude < ConditionReference.MaxAltitude)) {
-
-						satisfiedConditions++;
-
-					} else {
-
-						BehaviorLogger.Write("Altitude Check Failed. Current Altitude: " + MyAltitude, BehaviorDebugEnum.Condition);
-
-					}
-
-				} else {
-
-					BehaviorLogger.Write("Altitude Check Failed, Not On Planet", BehaviorDebugEnum.Condition);
-
-				}
-
-			}
-
-			if (ConditionReference.TargetAltitudeCheck)
-			{
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.CurrentPlanet != null)
-				{
-					var altitude = _behavior.AutoPilot.CurrentPlanet.AltitudeAtPosition(_behavior.AutoPilot.Targeting.TargetLastKnownCoords);
-
-
-					if ((ConditionReference.MinTargetAltitude == -1 || altitude > ConditionReference.MinTargetAltitude) && (ConditionReference.MaxTargetAltitude == -1 || altitude < ConditionReference.MaxTargetAltitude))
-					{
-
-						satisfiedConditions++;
-
-					}
-					else
-					{
-
-						BehaviorLogger.Write("Altitude Check Failed. Current Altitude: " + _behavior.AutoPilot.MyAltitude, BehaviorDebugEnum.Condition);
-
-					}
-
-				}
-				else
-				{
-
-					BehaviorLogger.Write("Altitude Check Failed, Not On Planet", BehaviorDebugEnum.Condition);
-
-				}
-
-			}
-
-
-			if (ConditionReference.CheckHorizonAngle) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.InGravity() && _behavior.RemoteControl != null) {
-
-					var result = Math.Abs(VectorHelper.GetAngleBetweenDirections(_behavior.AutoPilot.UpDirectionFromPlanet, _behavior.RemoteControl.WorldMatrix.Forward) - 90);
-
-					if ((ConditionReference.MinHorizonAngle == -1 || result > ConditionReference.MinHorizonAngle) && (ConditionReference.MaxHorizonAngle == -1 || result < ConditionReference.MaxHorizonAngle))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckIfDamagerIsPlayer) {
-
-				usedConditions++;
-
-				if (_behavior.BehaviorSettings.LastDamagerEntity != 0) {
-
-					if(FactionHelper.IsIdentityPlayer(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity)))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckIfDamagerIsNpc) {
-
-				usedConditions++;
-
-				if (_behavior.BehaviorSettings.LastDamagerEntity != 0) {
-
-					if (FactionHelper.IsIdentityNPC(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity)))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckIfTargetIsPlayerOwned) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget()) {
-
-					if(_behavior.AutoPilot.Targeting.Target.GetOwnerType().HasFlag(GridOwnershipEnum.PlayerMajority))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckIfTargetIsNpcOwned) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget()) {
-
-					if (_behavior.AutoPilot.Targeting.Target.GetOwnerType().HasFlag(GridOwnershipEnum.NpcMajority))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckPlayerReputation) {
-
-				usedConditions++;
-
-				List<IMyPlayer> ListOfPlayersinRange = null;
-				List<long> ListOfPlayerIds = new List<long>();
-
-				int amountofplayersmatch = 0;
-
-				if(command != null) {
-
-					//If trigger is buttonpress for example, then use only that player to check wether the condition is satisfied
-					if (command.PlayerIdentity != 0) {
-
-						ListOfPlayerIds.Add(command.PlayerIdentity);
-
-					}
-
-
-					//If trigger is buttonpress for example, then use only that player to check wether the condition is satisfied
-					if (command != null && command.PlayerIdentity != 0) {
-
-
-
-					} else {
-
-						var gridcoords = _behavior.RemoteControl.GetPosition();
-						ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(gridcoords, ConditionReference.MaxPlayerReputationDistanceCheck);
-						foreach (IMyPlayer Player in ListOfPlayersinRange) {
-
-							ListOfPlayerIds.Add(Player.IdentityId);
-
-						}
-
-					}
-
-				} else {
-
-					//If not, then check for all the players in range
-					var gridcoords = _behavior.RemoteControl.GetPosition();
-					ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(gridcoords, ConditionReference.MaxPlayerReputationDistanceCheck);
-					foreach (IMyPlayer Player in ListOfPlayersinRange){
-
-						ListOfPlayerIds.Add(Player.IdentityId);
-
-					}
-
-				}
-
-				int amountofplayers = ListOfPlayerIds.Count;
-
-				if (ConditionReference.CheckReputationwithFaction.Count == ConditionReference.MaxPlayerReputation.Count && ConditionReference.MaxPlayerReputation.Count == ConditionReference.MinPlayerReputation.Count){
-
-						foreach (long PlayerId in ListOfPlayerIds) {
-
-						int TotalFactions = ConditionReference.CheckReputationwithFaction.Count;
-						int SatisfiedFactions = 0;
-
-						for (int i = 0; i < ConditionReference.CheckReputationwithFaction.Count; i++) {
-
-							long FactionId;
-
-							if (ConditionReference.CheckReputationwithFaction[i] == "{self}") {
-
-								FactionId = _behavior.Owner.FactionId;
-
-							} else {
-
-								var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(ConditionReference.CheckReputationwithFaction[i]);
-								FactionId = customfaction.FactionId;
-
-							}
-
-
-							if (FactionId != 0)	{
-
-								var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(PlayerId, FactionId);
-
-								if (rep >= ConditionReference.MinPlayerReputation[i] && rep <= ConditionReference.MaxPlayerReputation[i])
-									SatisfiedFactions++;
-
-							}
-
-						}
-
-						if (SatisfiedFactions == TotalFactions)
-							amountofplayersmatch++;
-
-
-					}
-
-					if (ConditionReference.AllPlayersReputationMustMatch == true && amountofplayers == amountofplayersmatch){
-
-						satisfiedConditions++;
-
-					}
-
-					if (ConditionReference.AllPlayersReputationMustMatch == false && amountofplayersmatch > 0){
-
-						satisfiedConditions++;
-
-					}
-
-				}else{
-
-					BehaviorLogger.Write("CheckReputationwithFaction, MaxPlayerReputation, and MinPlayerReputation do not match in count. Condition Failed", BehaviorDebugEnum.Condition);
-
-				}
-
-			}
-
-			if (ConditionReference.IsTargetPlayer) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Player) {
-
-					satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.IsTargetGrid) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.GetEntityType() != EntityType.Player) {
-
-					satisfiedConditions++;
-
-				}
-
-			}
-
-
-
-			if (ConditionReference.IsTargetStatic)
-			{
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.IsStatic())
-				{
-
-					satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.HasTarget)
-			{
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.Targeting.HasTarget())
-				{
-
-					satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.NoTarget)
-			{
-
-				usedConditions++;
-
-				if (!_behavior.AutoPilot.Targeting.HasTarget())
-				{
-
-					satisfiedConditions++;
-
-				}
-
-			}
-
-
-
-
-			if (ConditionReference.IsAttackerHostile) {
-
-				usedConditions++;
-
-				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
-
-				if(rep <= -501)
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.IsAttackerNeutral) {
-
-				usedConditions++;
-
-				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
-
-				if (rep >= -500 && rep <= 500)
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.IsAttackerFriendly) {
-
-				usedConditions++;//
-
-				var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
-
-				if (rep >= 501)
-					satisfiedConditions++;
-
-			}
-
-			if (ConditionReference.CheckCommandGridValue) {
-
-				usedConditions++;
-
-				if (command != null) {
-
-					if(MathTools.CompareValues(command.GridValueScore, ConditionReference.CommandGridValue, ConditionReference.CheckCommandGridValueCompare))
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CompareCommandGridValue) {
-
-				usedConditions++;
-
-				if (command != null) {
-
-					var myScore = (_behavior.CurrentGrid?.TargetValue() ?? 0) * ConditionReference.CompareCommandGridValueSelfMultiplier;
-					BehaviorLogger.Write(string.Format("Command Grid Value Compare: Self={0} // Other={1}", myScore, command.GridValueScore), BehaviorDebugEnum.Condition);
-
-					if (MathTools.CompareValues(command.GridValueScore, myScore, ConditionReference.CompareCommandGridValueMode))
-						satisfiedConditions++;
-
-				} else {
-
-					BehaviorLogger.Write("Command Was Null For CompareCommandGridValue", BehaviorDebugEnum.Condition);
-
-				}
-
-			}
-
-
-			//Check
-			if (ConditionReference.CheckThreatScore){
-
-				usedConditions++;
-
-				Vector3D Position = _behavior.CurrentGrid.GetPosition();
-
-				if (ConditionReference.CheckThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
-				{
-					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
-				}
-
-                if (ConditionReference.CheckThreatScoreFromClosestPlayerPosition)
+            var lastCondition = "";
+            try
+            {
+                lastCondition = "CheckAllLoadedModIDs";
+                if (ConditionReference.CheckAllLoadedModIDs == true)
                 {
-					var closestplayer = PlayerManager.GetNearestPlayer(Position);
-					if(closestplayer != null)
+
+                    usedConditions++;
+                    bool missingMod = false;
+
+                    foreach (var mod in ConditionReference.AllModIDsToCheck)
                     {
-						Position = closestplayer.GetPosition();
-						//MyVisualScriptLogicProvider.ShowNotificationToAll(Position.ToString(), 5000);
+
+                        if (AddonManager.ModIdList.Contains((ulong)mod) == false)
+                        {
+
+                            BehaviorLogger.Write(ProfileSubtypeId + ": Mod ID Not Present", BehaviorDebugEnum.Condition);
+                            missingMod = true;
+                            break;
+
+                        }
+
+                    }
+
+                    if (!missingMod)
+                        satisfiedConditions++;
+                }
+
+                lastCondition = "CheckAnyLoadedModIDs";
+                if (ConditionReference.CheckAnyLoadedModIDs == true)
+                {
+
+                    usedConditions++;
+
+                    foreach (var mod in ConditionReference.AllModIDsToCheck)
+                    {
+
+                        if (AddonManager.ModIdList.Contains((ulong)mod))
+                        {
+
+                            BehaviorLogger.Write(ProfileSubtypeId + ": A Mod ID was Found: " + mod.ToString(), BehaviorDebugEnum.Condition);
+                            satisfiedConditions++;
+                            break;
+
+                        }
                     }
                 }
 
-				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, ConditionReference.CheckThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CheckThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
-
-				if (ThreatScore > (float)ConditionReference.CheckThreatScoreMinimum && (float)ConditionReference.CheckThreatScoreMinimum > 0 && ThreatScore < (float)ConditionReference.CheckThreatScoreMaximum && (float)ConditionReference.CheckThreatScoreMaximum > 0)
-					satisfiedConditions++;
-			}
-
-			//CompareThreatScore
-			if (ConditionReference.CompareThreatScore){
-
-				usedConditions++;
-
-				float ThreatScoreCompare = ConditionReference.CompareThreatScoreValue;
-				Vector3D Position = _behavior.CurrentGrid.GetPosition();
-
-				if (ConditionReference.CompareThreatScoreUseSelfValue)
-				{
-					ThreatScoreCompare = _behavior.CurrentGrid.ThreatScore * ConditionReference.CompareThreatScoreSelfValueMultiplier;
-				}
-
-				if (ConditionReference.CompareThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
-				{
-					Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
-				}
-
-				var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CompareThreatScoreRadius, ConditionReference.CompareThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CompareThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
-
-
-				if (MathTools.CompareValues(ThreatScore, ThreatScoreCompare, ConditionReference.CompareThreatScoreMode))
-					satisfiedConditions++;
-			}
-
-
-
-
-
-            if (ConditionReference.CommandGravityCheck)
-            {
-
-                usedConditions++;
-
-                if (command != null)
+                lastCondition = "CheckTrueBooleans";
+                if (ConditionReference.CheckTrueBooleans == true)
                 {
 
-                    var match = PlanetManager.InGravity(command.Position) == PlanetManager.InGravity(_behavior.RemoteControl.GetPosition());
+                    usedConditions++;
+                    bool failedCheck = false;
 
-                    if (match == ConditionReference.CommandGravityMatches)
+                    foreach (var boolName in ConditionReference.TrueBooleans)
+                    {
+
+                        if (!_settings.GetCustomBoolResult(boolName))
+                        {
+
+                            BehaviorLogger.Write(ProfileSubtypeId + ": Boolean Not True: " + boolName, BehaviorDebugEnum.Condition);
+                            failedCheck = true;
+
+                            if (!ConditionReference.AllowAnyTrueBoolean)
+                            {
+
+                                failedCheck = true;
+                                break;
+
+                            }
+
+                        }
+                        else if (ConditionReference.AllowAnyTrueBoolean)
+                        {
+
+                            failedCheck = false;
+                            break;
+
+                        }
+
+                    }
+
+                    if (!failedCheck)
                         satisfiedConditions++;
 
                 }
 
-            }
+
+                //Bool False
+                lastCondition = "CheckFalseBooleans";
+                if (ConditionReference.CheckFalseBooleans == true)
+                {
+                    usedConditions++;
+                    bool failedCheck = false;
+
+                    for (int i = 0; i < ConditionReference.FalseBooleans.Count; i++)
+                    {
+
+                        var boolName = ConditionReference.FalseBooleans[i];
+
+                        try
+                        {
+
+                            //bool output = false;
+                            var output = _settings.GetCustomBoolResult(boolName);
+
+                            if (output)
+                            {
+                                //BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
+                                failedCheck = true;
+                                continue;
+
+                            }
+                            else if (ConditionReference.AllowAnyFalseBoolean)
+                            {
+                                failedCheck = false;
+                                break;
+
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+
+                            //BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+                            //BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+
+                        }
+
+                    }
+
+                    if (!failedCheck)
+                        satisfiedConditions++;
+                }
 
 
-            if (ConditionReference.CommandCheckRelationSenderReceiver)
-            {
-
-                usedConditions++;
-
-                if (command != null)
+                lastCondition = "CheckCustomCounters";
+                if (ConditionReference.CheckCustomCounters == true)
                 {
 
-                    var relation = EntityEvaluator.GetRelationBetweenIdentities(command.CommandOwnerId, _behavior.RemoteControl.OwnerId);
+                    usedConditions++;
+                    bool failedCheck = false;
 
-                    if (relation == ConditionReference.CommandRelation)
+                    if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count || ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersVariables.Count)
+                    {
+
+
+
+                        var selfScore = _behavior?.CurrentGrid?.Npc?.Score ?? 0;
+                        var commandScore = command?.NPCScoreValue ?? 0;
+
+                        var customCountersVariables = _behavior?.CurrentGrid?.Npc.CustomCountersVariables;
+
+
+                        for (int i = 0; i < ConditionReference.CustomCounters.Count; i++)
+                        {
+
+                            try
+                            {
+
+                                var compareType = CounterCompareEnum.GreaterOrEqual;
+
+                                if (i <= ConditionReference.CounterCompareTypes.Count - 1)
+                                    compareType = ConditionReference.CounterCompareTypes[i];
+
+
+                                var counter = ConditionReference.CustomCounters[i];
+
+                                var target = 0;
+                                if (ConditionReference.CustomCountersTargets.Count > 0)
+                                {
+                                    target = ConditionReference.CustomCountersTargets[i];
+                                }
+                                else
+                                {
+                                    foreach (var targetVar in customCountersVariables)
+                                    {
+                                        if (ConditionReference.CustomCountersVariables[i] == "{" + targetVar.Key + "}")
+                                        {
+                                            target = targetVar.Value;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (ConditionReference.CustomCountersTargetOverrideSelfScore)
+                                    target = selfScore;
+
+                                if (ConditionReference.CustomCountersTargetOverrideCommandScore)
+                                    target = commandScore;
+
+
+                                int? overrideScore = null;
+
+
+                                if (counter.Contains("{CommandScore}"))
+                                {
+                                    overrideScore = commandScore;
+                                }
+                                else if (counter.Contains("{SelfScore}"))
+                                {
+                                    overrideScore = selfScore;
+                                }
+
+
+                                if (_settings.GetCustomCounterResult(counter, target, compareType, overrideScore) == false)
+                                {
+
+                                    BehaviorLogger.Write(ProfileSubtypeId + ": Counter Amount Condition Not Satisfied: " + ConditionReference.CustomCounters[i], BehaviorDebugEnum.Condition);
+                                    failedCheck = true;
+                                    break;
+
+                                }
+                                else if (ConditionReference.AllowAnyValidCounter)
+                                {
+
+                                    break;
+
+                                }
+
+
+
+
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+                                BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+
+                            }
+
+                        }
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write(ProfileSubtypeId + $": Counter Names ({ConditionReference.CustomCounters.Count}) and Targets List ({ConditionReference.CustomCountersTargets.Count + ConditionReference.CustomCountersVariables.Count}) Counts Don't Match. Check Your Condition Profile. Note: CustomCountersVariables cannot be used at the same time as CustomCountersTargets", BehaviorDebugEnum.Condition);
+                        failedCheck = true;
+
+                    }
+
+                    if (!failedCheck)
                         satisfiedConditions++;
 
                 }
 
-            }
-
-
-            if (ConditionReference.CommandCheckFromParent)
-            {
-
-                usedConditions++;
-
-                if (command != null)
+                lastCondition = "CheckTrueSandboxBooleans";
+                if (ConditionReference.CheckTrueSandboxBooleans == true)
                 {
 
-                    var parent = Equals(command.CommandOwnerId, _behavior?.CurrentGrid?.Npc.ParentId);
+                    usedConditions++;
+                    bool failedCheck = false;
 
-                    if (parent == ConditionReference.CommandFromParent)
+                    for (int i = 0; i < ConditionReference.TrueSandboxBooleans.Count; i++)
+                    {
+
+                        var boolName = ConditionReference.TrueSandboxBooleans[i];
+                        if (boolName.Contains("{SpawnGroupName}") && _behavior.CurrentGrid?.Npc.SpawnGroupName != null)
+                        {
+                            boolName = boolName.Replace("{SpawnGroupName}", _behavior.CurrentGrid?.Npc.SpawnGroupName);
+                        }
+
+                        if (boolName.Contains("{Faction}") && _behavior.Owner?.Faction.Tag != null)
+                        {
+                            boolName = boolName.Replace("{Faction}", _behavior.Owner?.Faction.Tag);
+                        }
+
+                        try
+                        {
+
+                            bool output = false;
+                            var result = MyAPIGateway.Utilities.GetVariable(boolName, out output);
+
+                            if (!result || !output)
+                            {
+
+                                BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Boolean False: " + boolName, BehaviorDebugEnum.Condition);
+                                failedCheck = true;
+
+                                if (!ConditionReference.AllowAnyTrueSandboxBoolean)
+                                    break;
+                                else
+                                    continue;
+
+                            }
+                            else if (ConditionReference.AllowAnyTrueSandboxBoolean && output)
+                            {
+
+                                failedCheck = false;
+                                break;
+
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+
+                            BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+                            BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+
+                        }
+
+                    }
+
+                    if (!failedCheck)
                         satisfiedConditions++;
 
                 }
 
-            }
-
-
-			if (ConditionReference.PlayerIdentityMatches) {
-
-				usedConditions++;
-
-				if (command != null) {
-
-					if (command.PlayerIdentity == _behavior.BehaviorSettings.SavedPlayerIdentityId)
-						satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckPlayerIdentitySandboxList)
-			{
-
-				usedConditions++;
-
-				if (command != null)
-				{
-					var playerId = command.PlayerIdentity;
-					List<long> PlayerIdentitySandboxList = new List<long>();
-
-					//Get variable
-					MyAPIGateway.Utilities.GetVariable<List<long>>(ConditionReference.PlayerIdentitySandboxListId, out PlayerIdentitySandboxList);
-
-					if (!(ConditionReference.PlayerIdentityMatches ^ PlayerIdentitySandboxList.Contains(playerId)))
-					{
-						satisfiedConditions++;
-					}
-				}
-
-			}
-
-			if (ConditionReference.CheckForBlocksOfType && _behavior?.CurrentGrid?.AllTerminalBlocks != null) {
-
-				usedConditions++;
-
-				foreach (var block in _behavior.CurrentGrid.AllTerminalBlocks) {
-
-					if (block.Working && ConditionReference.BlocksOfType.Contains(block.BlockType)) {
-
-						satisfiedConditions++;
-						break;
-
-					}
-
-				}
-
-			}
-
-            if (ConditionReference.NoActiveContracts)
-            {
-				usedConditions++;
-				bool fail = false;
-				foreach (var block in _behavior.CurrentGrid.Contracts)
-				{
-					if (InGameContractManager.HasContractBlockActiveContract(block.Entity.EntityId))
-					{
-						fail = true;
-						break;
-
-					}
-
-				}
-
-                if (!fail)
+                lastCondition = "CheckCustomSandboxCounters";
+                if (ConditionReference.CheckCustomSandboxCounters == true)
                 {
-					satisfiedConditions++;
-				}
-			}
+
+                    usedConditions++;
+                    bool failedCheck = false;
+
+                    if (ConditionReference.CustomSandboxCounters.Count == ConditionReference.CustomSandboxCountersTargets.Count)
+                    {
+
+                        for (int i = 0; i < ConditionReference.CustomSandboxCounters.Count; i++)
+                        {
+
+                            try
+                            {
+
+                                int counter = 0;
+                                var result = MyAPIGateway.Utilities.GetVariable(ConditionReference.CustomSandboxCounters[i], out counter);
+
+                                var compareType = CounterCompareEnum.GreaterOrEqual;
+
+                                if (i <= ConditionReference.SandboxCounterCompareTypes.Count - 1)
+                                    compareType = ConditionReference.SandboxCounterCompareTypes[i];
+
+                                bool counterResult = false;
+
+                                if (compareType == CounterCompareEnum.GreaterOrEqual)
+                                    counterResult = (counter >= ConditionReference.CustomSandboxCountersTargets[i]);
+
+                                if (compareType == CounterCompareEnum.Greater)
+                                    counterResult = (counter > ConditionReference.CustomSandboxCountersTargets[i]);
+
+                                if (compareType == CounterCompareEnum.Equal)
+                                    counterResult = (counter == ConditionReference.CustomSandboxCountersTargets[i]);
+
+                                if (compareType == CounterCompareEnum.NotEqual)
+                                    counterResult = (counter != ConditionReference.CustomSandboxCountersTargets[i]);
+
+                                if (compareType == CounterCompareEnum.Less)
+                                    counterResult = (counter < ConditionReference.CustomSandboxCountersTargets[i]);
+
+                                if (compareType == CounterCompareEnum.LessOrEqual)
+                                    counterResult = (counter <= ConditionReference.CustomSandboxCountersTargets[i]);
+
+                                if (!result || !counterResult)
+                                {
+
+                                    BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Amount Condition Not Satisfied: " + ConditionReference.CustomSandboxCounters[i], BehaviorDebugEnum.Condition);
+                                    failedCheck = true;
+
+                                    if (!ConditionReference.AllowAnyValidSandboxCounter)
+                                        break;
+                                    else
+                                        continue;
+
+                                }
+                                else if (ConditionReference.AllowAnyValidSandboxCounter && counterResult)
+                                {
+
+                                    failedCheck = false;
+                                    break;
+
+                                }
+
+                            }
+                            catch (Exception e)
+                            {
+
+                                BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+                                BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+
+                            }
+
+                        }
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write(ProfileSubtypeId + ": Sandbox Counter Names and Targets List Counts Don't Match. Check Your Condition Profile", BehaviorDebugEnum.Condition);
+                        failedCheck = true;
+
+                    }
+
+                    if (!failedCheck)
+                        satisfiedConditions++;
+
+                }
 
 
-			if (ConditionReference.CheckForSpawnConditions) {
-
-				usedConditions++;
-				var thisCondition = _behavior?.CurrentGrid?.Npc?.Conditions?.ProfileSubtypeId;
-
-				if (thisCondition != null) {
-
-					foreach (var spawnCondition in ConditionReference.RequiredSpawnConditions) {
-
-						if (spawnCondition == thisCondition) {
-
-							satisfiedConditions++;
-							break;
-
-						}
-
-					}
-
-				}
-
-			}
-
-            if (ConditionReference.CheckIfSpawnGroupExist)
-            {
-				usedConditions++;
-				var spawngroupname = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, ConditionReference.ExistingSpawnGroupName);
-
-				if (SpawnGroupManager.SpawnGroupNames.Contains(spawngroupname))
+                //Bool False
+                lastCondition = "CheckFalseSandboxBooleans";
+                if (ConditionReference.CheckFalseSandboxBooleans == true)
                 {
-					//MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Green");
-					satisfiedConditions++;
-				}
+                    usedConditions++;
+                    bool failedCheck = false;
+
+                    for (int i = 0; i < ConditionReference.FalseSandboxBooleans.Count; i++)
+                    {
+
+                        var boolName = ConditionReference.FalseSandboxBooleans[i];
+
+                        try
+                        {
+
+                            bool output = false;
+                            var result = MyAPIGateway.Utilities.GetVariable(boolName, out output);
+
+                            if (output)
+                            {
+                                //BehaviorLogger.Write(ProfileSubtypeId + ":  Boolean False: " + boolName, BehaviorDebugEnum.Condition);
+                                failedCheck = true;
+                                continue;
+
+                            }
+                            else if (ConditionReference.AllowAnyFalseSandboxBoolean)
+                            {
+                                failedCheck = false;
+                                break;
+
+                            }
+
+                        }
+                        catch (Exception e)
+                        {
+
+                            //BehaviorLogger.Write("Exception: ", BehaviorDebugEnum.Condition);
+                            //BehaviorLogger.Write(e.ToString(), BehaviorDebugEnum.Condition);
+
+                        }
+
+                    }
+
+                    if (!failedCheck)
+                        satisfiedConditions++;
+                }
+
+
+                lastCondition = "CheckGridSize";
+                if (ConditionReference.CheckGridSize == true)
+                {
+
+                    usedConditions++;
+
+                    if (ConditionReference.GridSizeLarge == true && _remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Large)
+                    {
+                        //MyAPIGateway.Utilities.ShowNotification("This is a large grid.");
+                        satisfiedConditions++;
+                    }
+                    else if (ConditionReference.GridSizeLarge == false && _remoteControl.CubeGrid.GridSizeEnum == VRage.Game.MyCubeSize.Small)
+                    {
+                        //MyAPIGateway.Utilities.ShowNotification("This is a small grid.");
+                        satisfiedConditions++;
+                    }
+                }
+
+
+                lastCondition = "CheckGridStatic";
+                if (ConditionReference.CheckGridStatic == true)
+                {
+
+                    usedConditions++;
+
+                    if (ConditionReference.GridStatic == true && _remoteControl.CubeGrid.IsStatic == true)
+                    {
+                        //MyAPIGateway.Utilities.ShowNotification("This is a static grid.");
+                        satisfiedConditions++;
+                    }
+                    else if (ConditionReference.GridStatic == false && _remoteControl.CubeGrid.IsStatic == false)
+                    {
+                        //MyAPIGateway.Utilities.ShowNotification("This is a dynamic grid.");
+                        satisfiedConditions++;
+                    }
+                }
+
+
+                lastCondition = "CheckGridSpeed";
+                if (ConditionReference.CheckGridSpeed == true)
+                {
+
+                    usedConditions++;
+                    float speed = (float)_remoteControl.GetShipSpeed();
+
+                    if ((ConditionReference.MinGridSpeed == -1 || speed >= ConditionReference.MinGridSpeed) && (ConditionReference.MaxGridSpeed == -1 || speed <= ConditionReference.MaxGridSpeed))
+                    {
+
+                        BehaviorLogger.Write(ProfileSubtypeId + ": Grid Speed High Enough", BehaviorDebugEnum.Condition);
+                        satisfiedConditions++;
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write(ProfileSubtypeId + ": Grid Speed Not High Enough", BehaviorDebugEnum.Condition);
+
+                    }
+
+                }
+
+                lastCondition = "CheckGridVerticalSpeed";
+                if (ConditionReference.CheckGridVerticalSpeed == true)
+                {
+
+                    usedConditions++;
+
+
+                    if (_behavior.AutoPilot.CurrentPlanet == null)
+                    {
+                        BehaviorLogger.Write(ProfileSubtypeId + ": Vertical Speed satisfied", BehaviorDebugEnum.Condition);
+                        satisfiedConditions++;
+                    }
+                    else
+                    {
+                        var velocity = _remoteControl.SlimBlock.CubeGrid.Physics.LinearVelocity;
+                        var upDirection = _behavior.AutoPilot.CurrentPlanet.UpAtPosition(_remoteControl.GetPosition());
+
+
+                        // Compute the dot product
+                        double velocityProjectionMagnitude = Vector3D.Dot(velocity, upDirection);
+
+                        // Compute the projected vector (optional, if you need the vector itself)
+                        Vector3D velocityProjection = velocityProjectionMagnitude * upDirection;
+
+
+                        float speed = (float)velocityProjection.Length();
+
+
+                        if ((ConditionReference.MinGridVerticalSpeed == -1 || speed >= ConditionReference.MinGridVerticalSpeed) && (ConditionReference.MaxGridVerticalSpeed == -1 || speed <= ConditionReference.MaxGridVerticalSpeed))
+                        {
+
+                            BehaviorLogger.Write(ProfileSubtypeId + ": Grid Vertical Speed in range", BehaviorDebugEnum.Condition);
+                            satisfiedConditions++;
+
+                        }
+                        else
+                        {
+
+                            BehaviorLogger.Write(ProfileSubtypeId + ": Grid Vertical Speed Not in range", BehaviorDebugEnum.Condition);
+
+                        }
+                    }
+
+
+
+
+                }
+
+
+
+                lastCondition = "CheckMESBlacklistedSpawnGroups";
+                if (ConditionReference.CheckMESBlacklistedSpawnGroups)
+                {
+
+                    if (ConditionReference.SpawnGroupBlacklistContainsAll.Count > 0)
+                    {
+
+                        usedConditions++;
+                        bool failedCheck = false;
+
+                        foreach (var group in ConditionReference.SpawnGroupBlacklistContainsAll)
+                        {
+
+                            if (Settings.General.NpcSpawnGroupBlacklist.Contains<string>(group) == false)
+                            {
+
+                                BehaviorLogger.Write(ProfileSubtypeId + ": A Spawngroup was not on MES BlackList: " + group, BehaviorDebugEnum.Condition);
+                                failedCheck = true;
+                                break;
+
+                            }
+
+                        }
+
+                        if (!failedCheck)
+                            satisfiedConditions++;
+
+                    }
+
+                    if (ConditionReference.SpawnGroupBlacklistContainsAny.Count > 0)
+                    {
+
+                        usedConditions++;
+                        foreach (var group in ConditionReference.SpawnGroupBlacklistContainsAll)
+                        {
+
+                            if (Settings.General.NpcSpawnGroupBlacklist.Contains<string>(group))
+                            {
+
+                                BehaviorLogger.Write(ProfileSubtypeId + ": A Spawngroup was on MES BlackList: " + group, BehaviorDebugEnum.Condition);
+                                satisfiedConditions++;
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                lastCondition = "UseAccumulatedDamageWatcher";
+                if (ConditionReference.UseAccumulatedDamageWatcher)
+                {
+
+                    usedConditions++;
+                    bool failedCheck = false;
+                    BehaviorLogger.Write("Damage Accumulated: " + _settings.TotalDamageAccumulated, BehaviorDebugEnum.Condition);
+
+                    if (ConditionReference.MinAccumulatedDamage >= 0 && _settings.TotalDamageAccumulated < ConditionReference.MinAccumulatedDamage)
+                        failedCheck = true;
+
+                    if (ConditionReference.MaxAccumulatedDamage >= 0 && _settings.TotalDamageAccumulated > ConditionReference.MaxAccumulatedDamage)
+                        failedCheck = true;
+
+                    if (!failedCheck)
+                        satisfiedConditions++;
+
+                }
+
+                lastCondition = "UseRequiredFunctionalBlocks";
+                if (ConditionReference.UseRequiredFunctionalBlocks)
+                {
+
+                    if (_watchingAllBlocks)
+                    {
+
+                        usedConditions++;
+
+                        if (_watchedAllBlocksResult)
+                            satisfiedConditions++;
+
+                    }
+
+                    if (_watchingAnyBlocks)
+                    {
+
+                        usedConditions++;
+
+                        if (_watchedAnyBlocksResult)
+                            satisfiedConditions++;
+
+                    }
+
+                    if (_watchingNoneBlocks)
+                    {
+
+                        usedConditions++;
+
+                        if (_watchedNoneBlocksResult)
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckTargetAltitudeDifference";
+                if (ConditionReference.CheckTargetAltitudeDifference)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.InGravity())
+                    {
+
+                        var planetPos = _behavior.AutoPilot.CurrentPlanet.Center();
+                        var targetCoreDist = _behavior.AutoPilot.Targeting.Target.Distance(planetPos);
+                        var myCoreDist = Vector3D.Distance(planetPos, _remoteControl.GetPosition());
+                        var difference = targetCoreDist - myCoreDist;
+
+                        if (difference >= ConditionReference.MinTargetAltitudeDifference && difference <= ConditionReference.MaxTargetAltitudeDifference)
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckTargetDistance";
+                if (ConditionReference.CheckTargetDistance)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        var dist = _behavior.AutoPilot.Targeting.Target.Distance(_remoteControl.GetPosition());
+
+                        if ((ConditionReference.MinTargetDistance == -1 || dist >= ConditionReference.MinTargetDistance) && (ConditionReference.MaxTargetDistance == -1 || dist <= ConditionReference.MaxTargetDistance))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckTargetSpeed";
+                if (ConditionReference.CheckTargetSpeed)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        var speed = _behavior.AutoPilot.Targeting.Target.CurrentSpeed();
+
+                        if ((ConditionReference.MinTargetSpeed == -1 || speed >= ConditionReference.MinTargetSpeed) && (ConditionReference.MaxTargetSpeed == -1 || speed <= ConditionReference.MaxTargetSpeed))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "CheckTargetAngleFromForward";
+                if (ConditionReference.CheckTargetAngleFromForward)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        var dirToTarget = Vector3D.Normalize(_behavior.AutoPilot.Targeting.GetTargetCoords() - _remoteControl.GetPosition());
+                        var myForward = _behavior.AutoPilot.RefBlockMatrixRotation.Forward;
+                        var angle = VectorHelper.GetAngleBetweenDirections(dirToTarget, myForward);
+
+                        if ((ConditionReference.MinTargetAngle == -1 || angle >= ConditionReference.MinTargetAngle) && (ConditionReference.MaxTargetAngle == -1 || angle <= ConditionReference.MaxTargetAngle))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckWaypointAngleFromForward";
+                if (ConditionReference.CheckWaypointAngleFromForward)
+                {
+
+                    usedConditions++;
+
+
+                    var dirToWaypoint = Vector3D.Normalize(_behavior.AutoPilot.GetCurrentWaypoint() - _remoteControl.GetPosition());
+                    var myForward = _behavior.AutoPilot.RefBlockMatrixRotation.Forward;
+                    var angle = VectorHelper.GetAngleBetweenDirections(dirToWaypoint, myForward);
+
+                    if ((ConditionReference.MinWaypointAngle == -1 || angle >= ConditionReference.MinWaypointAngle) && (ConditionReference.MaxWaypointAngle == -1 || angle <= ConditionReference.MaxWaypointAngle))
+                        satisfiedConditions++;
+
+                }
+
+
+                lastCondition = "CheckIfTargetIsChasing";
+                if (ConditionReference.CheckIfTargetIsChasing)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
+                        var targetVelocity = Vector3D.Normalize(_behavior.AutoPilot.Targeting.Target.CurrentVelocity());
+
+                        if (targetVelocity.IsValid() && targetVelocity.Length() > 0)
+                        {
+
+                            var angle = VectorHelper.GetAngleBetweenDirections(dirFromTarget, targetVelocity);
+
+                            if ((ConditionReference.MinTargetChaseAngle == -1 || angle >= ConditionReference.MinTargetChaseAngle) && (ConditionReference.MaxTargetChaseAngle == -1 || angle <= ConditionReference.MaxTargetChaseAngle))
+                                satisfiedConditions++;
+
+                        }
+
+                    }
+
+                }
+
+                lastCondition = "CheckIfTargetIsChasing";
+                if (ConditionReference.CheckIfTargetIsChasing)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
+                        var targetVelocity = Vector3D.Normalize(_behavior.AutoPilot.Targeting.Target.CurrentVelocity());
+
+                        if (targetVelocity.IsValid() && targetVelocity.Length() > 0)
+                        {
+
+                            var angle = VectorHelper.GetAngleBetweenDirections(dirFromTarget, targetVelocity);
+
+                            if ((ConditionReference.MinTargetChaseAngle == -1 || angle >= ConditionReference.MinTargetChaseAngle) && (ConditionReference.MaxTargetChaseAngle == -1 || angle <= ConditionReference.MaxTargetChaseAngle))
+                                satisfiedConditions++;
+
+                        }
+
+                    }
+
+                }
+
+                lastCondition = "CheckTargetChaseSpeed";
+                if (ConditionReference.CheckTargetChaseSpeed)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        var dirFromTarget = Vector3D.Normalize(_remoteControl.GetPosition() - _behavior.AutoPilot.Targeting.GetTargetCoords());
+                        var targetVelocity = _behavior.AutoPilot.Targeting.Target.CurrentVelocity();
+
+                        if (targetVelocity.IsValid() && targetVelocity.Length() > 0)
+                        {
+
+                            // Project target velocity onto the direction from the NPC to the target
+                            var projectedSpeed = Vector3D.Dot(targetVelocity, dirFromTarget);
+                            //MyAPIGateway.Utilities.ShowMessage("MES", projectedSpeed.ToString());
+
+                            // Check if the projected speed is within the specified range
+                            if ((ConditionReference.MinTargetChaseSpeed == -1 || projectedSpeed >= ConditionReference.MinTargetChaseSpeed) &&
+                                (ConditionReference.MaxTargetChaseSpeed == -1 || projectedSpeed <= ConditionReference.MaxTargetChaseSpeed))
+                            {
+                                satisfiedConditions++;
+                            }
+                        }
+
+                    }
+
+                }
+
+
+                lastCondition = "CheckIfGridNameMatches";
+                if (ConditionReference.CheckIfGridNameMatches)
+                {
+
+                    usedConditions++;
+
+                    if (!string.IsNullOrWhiteSpace(_remoteControl.SlimBlock.CubeGrid.CustomName))
+                    {
+
+                        bool pass = false;
+
+                        foreach (var name in ConditionReference.GridNamesToCheck)
+                        {
+
+                            if (ConditionReference.AllowPartialGridNameMatches)
+                            {
+
+                                if (_remoteControl.SlimBlock.CubeGrid.CustomName.Contains(name))
+                                    pass = true;
+
+                            }
+                            else
+                            {
+
+                                if (_remoteControl.SlimBlock.CubeGrid.CustomName == name)
+                                    pass = true;
+
+                            }
+
+                        }
+
+                        if (pass)
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "HasAntennaForBroadcast";
+                if (ConditionReference.HasAntennaForBroadcast)
+                {
+                    usedConditions++;
+
+                    var blockList = BlockCollectionHelper.GetGridAntennas(this._remoteControl.SlimBlock.CubeGrid);
+
+                    foreach (var antenna in blockList)
+                    {
+                        if (antenna != null)
+                        {
+                            continue;
+                        }
+
+                        if (antenna?.SlimBlock == null)
+                        {
+
+                            continue;
+
+                        }
+
+                        if (antenna.IsWorking == false || antenna.IsFunctional == false || antenna.IsBroadcasting == false)
+                        {
+
+                            continue;
+
+                        }
+
+                        //if(antenna.Radius < this.HighestRadius)
+
+                        satisfiedConditions++;
+                        break;
+
+                    }
+                }
+
+
+
+                lastCondition = "UnderwaterCheck";
+                if (ConditionReference.UnderwaterCheck)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.CurrentPlanet != null)
+                        if (_behavior.AutoPilot.CurrentPlanet.UnderwaterAndDepthCheck(_remoteControl.GetPosition(), ConditionReference.IsUnderwater, ConditionReference.MinDistanceUnderwater, ConditionReference.MaxDistanceUnderwater))
+                            satisfiedConditions++;
+
+                }
+
+                lastCondition = "TargetUnderwaterCheck";
+                if (ConditionReference.TargetUnderwaterCheck)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.CurrentPlanet != null)
+                        if (_behavior.AutoPilot.CurrentPlanet.UnderwaterAndDepthCheck(_behavior.AutoPilot.Targeting.TargetLastKnownCoords, ConditionReference.TargetIsUnderwater, ConditionReference.MinTargetDistanceUnderwater, ConditionReference.MaxTargetDistanceUnderwater))
+                            satisfiedConditions++;
+
+                }
+
+                lastCondition = "BehaviorSubclassCheck";
+                if (ConditionReference.BehaviorSubclassCheck)
+                {
+
+                    usedConditions++;
+
+                    if (ConditionReference.BehaviorSubclass.Contains(_behavior.ActiveBehavior.SubClass))
+                        satisfiedConditions++;
+
+                }
+
+                lastCondition = "BehaviorModeCheck";
+                if (ConditionReference.BehaviorModeCheck)
+                {
+
+                    usedConditions++;
+
+                    if (ConditionReference.CurrentBehaviorMode.Contains(_behavior.Mode))
+                        satisfiedConditions++;
+
+                }
+
+                lastCondition = "GravityCheck";
+                if (ConditionReference.GravityCheck)
+                {
+
+                    usedConditions++;
+                    var grav = PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
+
+                    if ((ConditionReference.MinGravity == -1000 || grav > ConditionReference.MinGravity) && (ConditionReference.MaxGravity == -1000 || grav < ConditionReference.MaxGravity))
+                    {
+
+                        satisfiedConditions++;
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write("Gravity Check Failed. Current Gravity: " + grav, BehaviorDebugEnum.Condition);
+
+                    }
+
+                }
+
+
+                lastCondition = "IsOnDarkSide";
+                if (ConditionReference.IsOnDarkSide)
+                {
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.CurrentPlanet != null)
+                    {
+                        if (MyVisualScriptLogicProvider.IsOnDarkSide(_behavior.AutoPilot.CurrentPlanet.Planet, _behavior.RemoteControl.GetPosition()))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "MatchTerrainType";
+                if (ConditionReference.MatchTerrainType)
+                {
+                    if (_behavior.AutoPilot.CurrentPlanet == null)
+                    {
+                        satisfiedConditions++;
+                    }
+
+                    //var coords = _behavior.RemoteControl.GetPosition();
+                    //var checkSurfaceCoords = _behavior.AutoPilot.CurrentPlanet.SurfaceCoordsAtPosition(coords);
+                    //var checkMaterial = _behavior.AutoPilot.CurrentPlanet.Planet.GetMaterialAt(ref checkSurfaceCoords);
+
+                    bool fail = false;
+
+                    if (ConditionReference.TerrainTypeWhitelistNames.Count > 0 && !ConditionReference.TerrainTypeWhitelistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+                    {
+                        BehaviorLogger.Write("TerrainTypeWhitelist failed", BehaviorDebugEnum.Condition);
+                        fail = true;
+                    }
+
+                    if (ConditionReference.TerrainTypeBlacklistNames.Count > 0 && ConditionReference.TerrainTypeBlacklistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+                    {
+                        BehaviorLogger.Write("TerrainTypeBlacklist failed", BehaviorDebugEnum.Condition);
+                        fail = true;
+                    }
+
+
+                    if (!fail)
+                    {
+                        satisfiedConditions++;
+                    }
+
+
+
+
+                }
+
+
+
+                lastCondition = "AltitudeCheck";
+                if (ConditionReference.AltitudeCheck)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.CurrentPlanet != null)
+                    {
+
+                        var MyAltitude = _behavior.AutoPilot.CurrentPlanet.AltitudeAtPosition(_behavior.RemoteControl.GetPosition(), ConditionReference.AltitudeCheckIgnoreWater);
+
+                        if ((ConditionReference.MinAltitude == -1 || MyAltitude > ConditionReference.MinAltitude) && (ConditionReference.MaxAltitude == -1 || MyAltitude < ConditionReference.MaxAltitude))
+                        {
+
+                            satisfiedConditions++;
+
+                        }
+                        else
+                        {
+
+                            BehaviorLogger.Write("Altitude Check Failed. Current Altitude: " + MyAltitude, BehaviorDebugEnum.Condition);
+
+                        }
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write("Altitude Check Failed, Not On Planet", BehaviorDebugEnum.Condition);
+
+                    }
+
+                }
+
+                lastCondition = "TargetAltitudeCheck";
+                if (ConditionReference.TargetAltitudeCheck)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.CurrentPlanet != null)
+                    {
+                        var altitude = _behavior.AutoPilot.CurrentPlanet.AltitudeAtPosition(_behavior.AutoPilot.Targeting.TargetLastKnownCoords);
+
+
+                        if ((ConditionReference.MinTargetAltitude == -1 || altitude > ConditionReference.MinTargetAltitude) && (ConditionReference.MaxTargetAltitude == -1 || altitude < ConditionReference.MaxTargetAltitude))
+                        {
+
+                            satisfiedConditions++;
+
+                        }
+                        else
+                        {
+
+                            BehaviorLogger.Write("Altitude Check Failed. Current Altitude: " + _behavior.AutoPilot.MyAltitude, BehaviorDebugEnum.Condition);
+
+                        }
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write("Altitude Check Failed, Not On Planet", BehaviorDebugEnum.Condition);
+
+                    }
+
+                }
+
+
+                lastCondition = "CheckHorizonAngle";
+                if (ConditionReference.CheckHorizonAngle)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.InGravity() && _behavior.RemoteControl != null)
+                    {
+
+                        var result = Math.Abs(VectorHelper.GetAngleBetweenDirections(_behavior.AutoPilot.UpDirectionFromPlanet, _behavior.RemoteControl.WorldMatrix.Forward) - 90);
+
+                        if ((ConditionReference.MinHorizonAngle == -1 || result > ConditionReference.MinHorizonAngle) && (ConditionReference.MaxHorizonAngle == -1 || result < ConditionReference.MaxHorizonAngle))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckIfDamagerIsPlayer";
+                if (ConditionReference.CheckIfDamagerIsPlayer)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.BehaviorSettings.LastDamagerEntity != 0)
+                    {
+
+                        if (FactionHelper.IsIdentityPlayer(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity)))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckIfDamagerIsNpc";
+                if (ConditionReference.CheckIfDamagerIsNpc)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.BehaviorSettings.LastDamagerEntity != 0)
+                    {
+
+                        if (FactionHelper.IsIdentityNPC(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity)))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckIfTargetIsPlayerOwned";
+                if (ConditionReference.CheckIfTargetIsPlayerOwned)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        if (_behavior.AutoPilot.Targeting.Target.GetOwnerType().HasFlag(GridOwnershipEnum.PlayerMajority))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckIfTargetIsNpcOwned";
+                if (ConditionReference.CheckIfTargetIsNpcOwned)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        if (_behavior.AutoPilot.Targeting.Target.GetOwnerType().HasFlag(GridOwnershipEnum.NpcMajority))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckPlayerReputation";
+                if (ConditionReference.CheckPlayerReputation)
+                {
+
+                    usedConditions++;
+
+                    List<IMyPlayer> ListOfPlayersinRange = null;
+                    List<long> ListOfPlayerIds = new List<long>();
+
+                    int amountofplayersmatch = 0;
+
+                    if (command != null)
+                    {
+
+                        //If trigger is buttonpress for example, then use only that player to check wether the condition is satisfied
+                        if (command.PlayerIdentity != 0)
+                        {
+
+                            ListOfPlayerIds.Add(command.PlayerIdentity);
+
+                        }
+
+
+                        //If trigger is buttonpress for example, then use only that player to check wether the condition is satisfied
+                        if (command != null && command.PlayerIdentity != 0)
+                        {
+
+
+
+                        }
+                        else
+                        {
+
+                            var gridcoords = _behavior.RemoteControl.GetPosition();
+                            ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(gridcoords, ConditionReference.MaxPlayerReputationDistanceCheck);
+                            foreach (IMyPlayer Player in ListOfPlayersinRange)
+                            {
+
+                                ListOfPlayerIds.Add(Player.IdentityId);
+
+                            }
+
+                        }
+
+                    }
+                    else
+                    {
+
+                        //If not, then check for all the players in range
+                        var gridcoords = _behavior.RemoteControl.GetPosition();
+                        ListOfPlayersinRange = TargetHelper.GetPlayersWithinDistance(gridcoords, ConditionReference.MaxPlayerReputationDistanceCheck);
+                        foreach (IMyPlayer Player in ListOfPlayersinRange)
+                        {
+
+                            ListOfPlayerIds.Add(Player.IdentityId);
+
+                        }
+
+                    }
+
+                    int amountofplayers = ListOfPlayerIds.Count;
+
+                    if (ConditionReference.CheckReputationwithFaction.Count == ConditionReference.MaxPlayerReputation.Count && ConditionReference.MaxPlayerReputation.Count == ConditionReference.MinPlayerReputation.Count)
+                    {
+
+                        foreach (long PlayerId in ListOfPlayerIds)
+                        {
+
+                            int TotalFactions = ConditionReference.CheckReputationwithFaction.Count;
+                            int SatisfiedFactions = 0;
+
+                            for (int i = 0; i < ConditionReference.CheckReputationwithFaction.Count; i++)
+                            {
+
+                                long FactionId;
+
+                                if (ConditionReference.CheckReputationwithFaction[i] == "{self}")
+                                {
+
+                                    FactionId = _behavior.Owner.FactionId;
+
+                                }
+                                else
+                                {
+
+                                    var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(ConditionReference.CheckReputationwithFaction[i]);
+                                    FactionId = customfaction.FactionId;
+
+                                }
+
+
+                                if (FactionId != 0)
+                                {
+
+                                    var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(PlayerId, FactionId);
+
+                                    if (rep >= ConditionReference.MinPlayerReputation[i] && rep <= ConditionReference.MaxPlayerReputation[i])
+                                        SatisfiedFactions++;
+
+                                }
+
+                            }
+
+                            if (SatisfiedFactions == TotalFactions)
+                                amountofplayersmatch++;
+
+
+                        }
+
+                        if (ConditionReference.AllPlayersReputationMustMatch == true && amountofplayers == amountofplayersmatch)
+                        {
+
+                            satisfiedConditions++;
+
+                        }
+
+                        if (ConditionReference.AllPlayersReputationMustMatch == false && amountofplayersmatch > 0)
+                        {
+
+                            satisfiedConditions++;
+
+                        }
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write("CheckReputationwithFaction, MaxPlayerReputation, and MinPlayerReputation do not match in count. Condition Failed", BehaviorDebugEnum.Condition);
+
+                    }
+
+                }
+
+                lastCondition = "IsTargetPlayer";
+                if (ConditionReference.IsTargetPlayer)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Player)
+                    {
+
+                        satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "IsTargetGrid";
+                if (ConditionReference.IsTargetGrid)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.GetEntityType() != EntityType.Player)
+                    {
+
+                        satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "IsTargetStatic";
+                if (ConditionReference.IsTargetStatic)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.IsStatic())
+                    {
+
+                        satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "HasTarget";
+                if (ConditionReference.HasTarget)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "NoTarget";
+                if (ConditionReference.NoTarget)
+                {
+
+                    usedConditions++;
+
+                    if (!_behavior.AutoPilot.Targeting.HasTarget())
+                    {
+
+                        satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "IsAttackerHostile";
+                if (ConditionReference.IsAttackerHostile)
+                {
+
+                    usedConditions++;
+
+                    var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+                    if (rep <= -501)
+                        satisfiedConditions++;
+
+                }
+
+                lastCondition = "IsAttackerNeutral";
+                if (ConditionReference.IsAttackerNeutral)
+                {
+
+                    usedConditions++;
+
+                    var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+                    if (rep >= -500 && rep <= 500)
+                        satisfiedConditions++;
+
+                }
+
+                lastCondition = "IsAttackerFriendly";
+                if (ConditionReference.IsAttackerFriendly)
+                {
+
+                    usedConditions++;//
+
+                    var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
+
+                    if (rep >= 501)
+                        satisfiedConditions++;
+
+                }
+
+                lastCondition = "CheckCommandGridValue";
+                if (ConditionReference.CheckCommandGridValue)
+                {
+
+                    usedConditions++;
+
+                    if (command != null)
+                    {
+
+                        if (MathTools.CompareValues(command.GridValueScore, ConditionReference.CommandGridValue, ConditionReference.CheckCommandGridValueCompare))
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CompareCommandGridValue";
+                if (ConditionReference.CompareCommandGridValue)
+                {
+
+                    usedConditions++;
+
+                    if (command != null)
+                    {
+
+                        var myScore = (_behavior.CurrentGrid?.TargetValue() ?? 0) * ConditionReference.CompareCommandGridValueSelfMultiplier;
+                        BehaviorLogger.Write(string.Format("Command Grid Value Compare: Self={0} // Other={1}", myScore, command.GridValueScore), BehaviorDebugEnum.Condition);
+
+                        if (MathTools.CompareValues(command.GridValueScore, myScore, ConditionReference.CompareCommandGridValueMode))
+                            satisfiedConditions++;
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write("Command Was Null For CompareCommandGridValue", BehaviorDebugEnum.Condition);
+
+                    }
+
+                }
+
+
+                //Check
+                lastCondition = "CheckThreatScore";
+                if (ConditionReference.CheckThreatScore)
+                {
+
+                    usedConditions++;
+
+                    Vector3D Position = _behavior.CurrentGrid.GetPosition();
+
+                    if (ConditionReference.CheckThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
+                    {
+                        Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
+                    }
+
+                    if (ConditionReference.CheckThreatScoreFromClosestPlayerPosition)
+                    {
+                        var closestplayer = PlayerManager.GetNearestPlayer(Position);
+                        if (closestplayer != null)
+                        {
+                            Position = closestplayer.GetPosition();
+                            //MyVisualScriptLogicProvider.ShowNotificationToAll(Position.ToString(), 5000);
+                        }
+                    }
+
+                    var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CheckThreatScoreRadius, ConditionReference.CheckThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CheckThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
+
+                    if (ThreatScore > (float)ConditionReference.CheckThreatScoreMinimum && (float)ConditionReference.CheckThreatScoreMinimum > 0 && ThreatScore < (float)ConditionReference.CheckThreatScoreMaximum && (float)ConditionReference.CheckThreatScoreMaximum > 0)
+                        satisfiedConditions++;
+                }
+
+                //CompareThreatScore
+                lastCondition = "CompareThreatScore";
+                if (ConditionReference.CompareThreatScore)
+                {
+
+                    usedConditions++;
+
+                    float ThreatScoreCompare = ConditionReference.CompareThreatScoreValue;
+                    Vector3D Position = _behavior.CurrentGrid.GetPosition();
+
+                    if (ConditionReference.CompareThreatScoreUseSelfValue)
+                    {
+                        ThreatScoreCompare = _behavior.CurrentGrid.ThreatScore * ConditionReference.CompareThreatScoreSelfValueMultiplier;
+                    }
+
+                    if (ConditionReference.CompareThreatScoreFromTargetPosition && _behavior.AutoPilot.Targeting.HasTarget())
+                    {
+                        Position = _behavior.AutoPilot.Targeting.Target.GetPosition();
+                    }
+
+                    var ThreatScore = SpawnConditions.GetThreatLevel(ConditionReference.CompareThreatScoreRadius, ConditionReference.CompareThreatScoreIncludeOtherNpcOwners, Position, ConditionReference.CompareThreatScoreGridConfiguration, _behavior.RemoteControl.GetOwnerFactionTag());
+
+
+                    if (MathTools.CompareValues(ThreatScore, ThreatScoreCompare, ConditionReference.CompareThreatScoreMode))
+                        satisfiedConditions++;
+                }
+
+
+                lastCondition = "CommandGravityCheck";
+                if (ConditionReference.CommandGravityCheck)
+                {
+
+                    usedConditions++;
+
+                    if (command != null)
+                    {
+
+                        var match = PlanetManager.InGravity(command.Position) == PlanetManager.InGravity(_behavior.RemoteControl.GetPosition());
+
+                        if (match == ConditionReference.CommandGravityMatches)
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "CommandCheckRelationSenderReceiver";
+                if (ConditionReference.CommandCheckRelationSenderReceiver)
+                {
+
+                    usedConditions++;
+
+                    if (command != null)
+                    {
+
+                        var relation = EntityEvaluator.GetRelationBetweenIdentities(command.CommandOwnerId, _behavior.RemoteControl.OwnerId);
+
+                        if (relation == ConditionReference.CommandRelation)
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "CommandCheckFromParent";
+                if (ConditionReference.CommandCheckFromParent)
+                {
+
+                    usedConditions++;
+
+                    if (command != null)
+                    {
+
+                        var parent = Equals(command.CommandOwnerId, _behavior?.CurrentGrid?.Npc.ParentId);
+
+                        if (parent == ConditionReference.CommandFromParent)
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "PlayerIdentityMatches";
+                if (ConditionReference.PlayerIdentityMatches)
+                {
+
+                    usedConditions++;
+
+                    if (command != null)
+                    {
+
+                        if (command.PlayerIdentity == _behavior.BehaviorSettings.SavedPlayerIdentityId)
+                            satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckPlayerIdentitySandboxList";
+                if (ConditionReference.CheckPlayerIdentitySandboxList)
+                {
+
+                    usedConditions++;
+
+                    if (command != null)
+                    {
+                        var playerId = command.PlayerIdentity;
+                        List<long> PlayerIdentitySandboxList = new List<long>();
+
+                        //Get variable
+                        MyAPIGateway.Utilities.GetVariable<List<long>>(ConditionReference.PlayerIdentitySandboxListId, out PlayerIdentitySandboxList);
+
+                        if (!(ConditionReference.PlayerIdentityMatches ^ PlayerIdentitySandboxList.Contains(playerId)))
+                        {
+                            satisfiedConditions++;
+                        }
+                    }
+
+                }
+
+                lastCondition = "CheckForBlocksOfType";
+                if (ConditionReference.CheckForBlocksOfType && _behavior?.CurrentGrid?.AllTerminalBlocks != null)
+                {
+
+                    usedConditions++;
+
+                    foreach (var block in _behavior.CurrentGrid.AllTerminalBlocks)
+                    {
+
+                        if (block.Working && ConditionReference.BlocksOfType.Contains(block.BlockType))
+                        {
+
+                            satisfiedConditions++;
+                            break;
+
+                        }
+
+                    }
+
+                }
+
+                lastCondition = "NoActiveContracts";
+                if (ConditionReference.NoActiveContracts)
+                {
+                    usedConditions++;
+                    bool fail = false;
+                    foreach (var block in _behavior.CurrentGrid.Contracts)
+                    {
+                        if (InGameContractManager.HasContractBlockActiveContract(block.Entity.EntityId))
+                        {
+                            fail = true;
+                            break;
+
+                        }
+
+                    }
+
+                    if (!fail)
+                    {
+                        satisfiedConditions++;
+                    }
+                }
+
+
+                lastCondition = "CheckForSpawnConditions";
+                if (ConditionReference.CheckForSpawnConditions)
+                {
+
+                    usedConditions++;
+                    var thisCondition = _behavior?.CurrentGrid?.Npc?.Conditions?.ProfileSubtypeId;
+
+                    if (thisCondition != null)
+                    {
+
+                        foreach (var spawnCondition in ConditionReference.RequiredSpawnConditions)
+                        {
+
+                            if (spawnCondition == thisCondition)
+                            {
+
+                                satisfiedConditions++;
+                                break;
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                lastCondition = "CheckIfSpawnGroupExist";
+                if (ConditionReference.CheckIfSpawnGroupExist)
+                {
+                    usedConditions++;
+                    var spawngroupname = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, ConditionReference.ExistingSpawnGroupName);
+
+                    if (SpawnGroupManager.SpawnGroupNames.Contains(spawngroupname))
+                    {
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Green");
+                        satisfiedConditions++;
+                    }
+                    else
+                    {
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Red");
+                    }
+
+
+
+
+                }
+
+                lastCondition = "CheckForPlanetaryLane";
+                if (ConditionReference.CheckForPlanetaryLane)
+                {
+
+                    usedConditions++;
+                    var laneResult = PlanetManager.IsPositionInsideLane(_behavior.RemoteControl.GetPosition()) == ConditionReference.PlanetaryLanePassValue;
+
+                    if (laneResult)
+                        satisfiedConditions++;
+
+                }
+
+                lastCondition = "CheckSufficientUpwardThrust";
+                if (ConditionReference.CheckSufficientUpwardThrust)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.InGravity())
+                    {
+
+
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000, "Green");
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection).ToString(), 6000, "Red");
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll("Grav on planet: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
+
+                        var difference = _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.SufficientUpwardThrustDirection) - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
+
+
+                        if (difference > 0 + ConditionReference.SufficientUpwardThrustTolerance)
+                            satisfiedConditions++;
+
+                    }
+                    else
+                    {
+
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll("Not In Grav??: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+                        satisfiedConditions++;
+
+                    }
+
+                }
+
+                lastCondition = "CheckInSufficientUpwardThrust";
+                if (ConditionReference.CheckInSufficientUpwardThrust)
+                {
+
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.InGravity())
+                    {
+
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000, "Green");
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection).ToString(), 6000, "Red");
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll("Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
+
+                        var difference = _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection) - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
+
+
+                        if (difference < 0 + ConditionReference.InSufficientUpwardThrustTolerance)
+                            satisfiedConditions++;
+
+                    }
+                    else
+                    {
+
+                        //MyVisualScriptLogicProvider.ShowNotificationToAll("Not In Grav??: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
+                        //satisfiedConditions++;
+
+                    }
+
+                }
+
+
+                lastCondition = "CheckPlayerCondition";
+                if (ConditionReference.CheckPlayerCondition)
+                {
+                    usedConditions++;
+
+                    bool fail = false;
+                    if (command == null || command.PlayerIdentity == 0)
+                        fail = true;
+
+                    var player = PlayerManager.GetPlayerWithIdentityId(command.PlayerIdentity);
+
+                    if (player == null)
+                    {
+                        fail = true;
+                    }
+
+                    if (!fail)
+                    {
+                        if (PlayerCondition.ArePlayerConditionsMet(ConditionReference.PlayerConditionIds, player.Player.IdentityId))
+                        {
+                            satisfiedConditions++;
+                        }
+                    }
+
+
+
+                }
+
+
+                lastCondition = "CheckHealthPercentage";
+                if (ConditionReference.CheckHealthPercentage)
+                {
+                    usedConditions++;
+
+                    bool fail = false;
+                    if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+                        fail = true;
+
+                    var health = _behavior.CurrentGrid.GetCurrentHealth();
+
+                    if (health == 0)
+                        fail = true;
+
+                    if (!fail)
+                    {
+                        int percentage = (int)((health / _behavior.BehaviorSettings.InitialGridIntegrity) * 100);
+
+
+                        if ((ConditionReference.MinPercentageOfHealthRemaining == -1 || percentage > ConditionReference.MinPercentageOfHealthRemaining) && (ConditionReference.MaxPercentageOfHealthRemaining == -1 || percentage < ConditionReference.MaxPercentageOfHealthRemaining))
+                        {
+                            satisfiedConditions++;
+                        }
+                    }
+
+                }
+
+
+                lastCondition = "CheckWeaponsPercentage";
+                if (ConditionReference.CheckWeaponsPercentage)
+                {
+                    usedConditions++;
+
+                    bool fail = false;
+
+
+                    if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+                        fail = true;
+
+                    float weaponcount = _behavior.AutoPilot.Weapons.GetActiveWeaponCount();
+
+
+                    if (!fail)
+                    {
+
+                        int percentage = 0;
+
+                        if (weaponcount != 0 && _behavior.BehaviorSettings.InitialWeaponCount != 0)
+                        {
+                            percentage = (int)((weaponcount / _behavior.BehaviorSettings.InitialWeaponCount) * 100);
+
+                        }
+
+                        if ((ConditionReference.MinPercentageOfWeaponsRemaining == -1 || percentage > ConditionReference.MinPercentageOfWeaponsRemaining) && (ConditionReference.MaxPercentageOfWeaponsRemaining == -1 || percentage < ConditionReference.MaxPercentageOfWeaponsRemaining))
+                        {
+                            satisfiedConditions++;
+                        }
+                    }
+
+                }
+
+
+                lastCondition = "HasNoWeapons";
+                if (ConditionReference.HasNoWeapons)
+                {
+                    usedConditions++;
+
+                    bool fail = false;
+
+
+                    if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+                        fail = true;
+
+
+                    if (!fail || !_behavior.AutoPilot.Weapons.HasWorkingWeapons())
+                    {
+                        satisfiedConditions++;
+                    }
+
+
+                }
+
+
+                lastCondition = "HasWeapons";
+                if (ConditionReference.HasWeapons)
+                {
+                    usedConditions++;
+
+                    bool fail = false;
+
+
+                    if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
+                        fail = true;
+
+
+                    if (!fail || _behavior.AutoPilot.Weapons.HasWorkingWeapons())
+                    {
+                        satisfiedConditions++;
+                    }
+
+
+                }
+
+                lastCondition = "MatchAnyCondition";
+                if (ConditionReference.MatchAnyCondition == false)
+                {
+
+                    bool result = satisfiedConditions >= usedConditions;
+                    BehaviorLogger.Write(ProfileSubtypeId + ": All Condition Satisfied: " + result.ToString(), BehaviorDebugEnum.Condition);
+                    BehaviorLogger.Write(string.Format("Used Conditions: {0} // Satisfied Conditions: {1}", usedConditions, satisfiedConditions), BehaviorDebugEnum.Condition);
+                    return !ConditionReference.UseFailCondition ? result : !result;
+
+                }
                 else
                 {
-					//MyVisualScriptLogicProvider.ShowNotificationToAll(spawngroupname, 5000, "Red");
-				}
+
+                    bool result = satisfiedConditions > 0;
+                    BehaviorLogger.Write(ProfileSubtypeId + ": Any Condition(s) Satisfied: " + result.ToString(), BehaviorDebugEnum.Condition);
+                    BehaviorLogger.Write(string.Format("Used Conditions: {0} // Satisfied Conditions: {1}", usedConditions, satisfiedConditions), BehaviorDebugEnum.Condition);
+                    return !ConditionReference.UseFailCondition ? result : !result;
+
+                }
+            }
+
+            catch (Exception e)
+            {
+                BehaviorLogger.Write($"{ConditionReference.ProfileSubtypeId}: Error while processing condition: '{lastCondition}'", BehaviorDebugEnum.Error, true);
+                throw (e);
+            }
 
 
+        }
 
+        private void SetupWatchedBlocks()
+        {
+
+            BehaviorLogger.Write("Setting Up Required Block Watcher", BehaviorDebugEnum.Condition);
+            _gotWatchedBlocks = true;
+            _watchedAnyBlocks.Clear();
+            _watchedAllBlocks.Clear();
+            _watchedNoneBlocks.Clear();
+
+            if (!ConditionReference.UseRequiredFunctionalBlocks)
+            {
+
+                BehaviorLogger.Write("Condition Not Using Required Functional Blocks", BehaviorDebugEnum.Condition);
+                return;
 
             }
 
-			if (ConditionReference.CheckForPlanetaryLane) {
+            _remoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplitHandler;
 
-				usedConditions++;
-				var laneResult = PlanetManager.IsPositionInsideLane(_behavior.RemoteControl.GetPosition()) == ConditionReference.PlanetaryLanePassValue;
+            var allBlocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(_behavior.CurrentGrid); ;
 
-				if (laneResult)
-					satisfiedConditions++;
+            BehaviorLogger.Write("Monitoring Blocks Pre-Filtered Count: " + allBlocks.Count, BehaviorDebugEnum.Condition);
 
-			}
-
-			if (ConditionReference.CheckSufficientUpwardThrust) {
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.InGravity()) {
-
-
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000, "Green");
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection).ToString(), 6000, "Red");
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Grav on planet: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
-
-					var difference = _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.SufficientUpwardThrustDirection) - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
-
-
-					if (difference > 0 + ConditionReference.SufficientUpwardThrustTolerance)
-						satisfiedConditions++;
-
-				} else {
-
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Not In Grav??: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
-					satisfiedConditions++;
-
-				}
-
-			}
-
-			if (ConditionReference.CheckInSufficientUpwardThrust)
-			{
-
-				usedConditions++;
-
-				if (_behavior.AutoPilot.InGravity())
-				{
-
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000, "Green");
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Grav For Thrust: " + _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection).ToString(), 6000, "Red");
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Grav For Thrust: " + PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition()).ToString(), 6000);
-
-					var difference = _behavior.AutoPilot.CalculateMaxGravity(false, ConditionReference.InSufficientUpwardThrustDirection) - PlanetManager.GetTotalGravity(_behavior.RemoteControl.GetPosition());
-
-
-					if (difference < 0 + ConditionReference.InSufficientUpwardThrustTolerance)
-						satisfiedConditions++;
-
-				}
-				else
-				{
-
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Not In Grav??: " + _behavior.AutoPilot.CalculateMaxGravity().ToString(), 6000);
-					//satisfiedConditions++;
-
-				}
-
-			}
-
-
-			if (ConditionReference.CheckPlayerCondition)
-			{
-				usedConditions++;
-
-				bool fail = false;
-				if (command == null || command.PlayerIdentity == 0)
-					fail = true;
-
-				var player = PlayerManager.GetPlayerWithIdentityId(command.PlayerIdentity);
-
-				if (player == null)
-				{
-					fail = true;
-				}
-
-				if (!fail)
-				{
-					if (PlayerCondition.ArePlayerConditionsMet(ConditionReference.PlayerConditionIds, player.Player.IdentityId))
-					{
-						satisfiedConditions++;
-					}
-				}
-
-
-
-			}
-
-
-			if (ConditionReference.CheckHealthPercentage)
+            foreach (var block in allBlocks)
             {
-				usedConditions++;
 
-				bool fail = false;
-				if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
-					fail = true;
+                if (block == null)
+                    continue;
 
-				var health = _behavior.CurrentGrid.GetCurrentHealth();
-
-				if (health == 0)
-					fail = true;
-
-				if (!fail)
-				{
-					int percentage = (int)((health / _behavior.BehaviorSettings.InitialGridIntegrity) * 100);
-
-
-					if ((ConditionReference.MinPercentageOfHealthRemaining == -1 || percentage > ConditionReference.MinPercentageOfHealthRemaining) && (ConditionReference.MaxPercentageOfHealthRemaining == -1 || percentage < ConditionReference.MaxPercentageOfHealthRemaining))
-                    {
-						satisfiedConditions++;
-					}
-				}
-
-			}
-
-
-			if (ConditionReference.CheckWeaponsPercentage)
-			{
-				usedConditions++;
-
-				bool fail = false;
-
-
-				if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
-					fail = true;
-
-				float weaponcount = _behavior.AutoPilot.Weapons.GetActiveWeaponCount();
-
-
-				if (!fail)
-				{
-
-					int percentage = 0;
-
-					if(weaponcount != 0 && _behavior.BehaviorSettings.InitialWeaponCount != 0)
-                    {
-						percentage = (int)((weaponcount / _behavior.BehaviorSettings.InitialWeaponCount) * 100);
-
-					}
-
-					if ((ConditionReference.MinPercentageOfWeaponsRemaining == -1 || percentage > ConditionReference.MinPercentageOfWeaponsRemaining) && (ConditionReference.MaxPercentageOfWeaponsRemaining == -1 || percentage < ConditionReference.MaxPercentageOfWeaponsRemaining))
-					{
-						satisfiedConditions++;
-					}
-				}
-
-			}
-
-
-
-            if (ConditionReference.HasNoWeapons)
-            {
-				usedConditions++;
-
-				bool fail = false;
-
-
-				if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
-					fail = true;
-
-
-				if(!fail || !_behavior.AutoPilot.Weapons.HasWorkingWeapons())
+                if (ConditionReference.RequiredAllFunctionalBlockNames.Contains(block.CustomName.Trim()))
                 {
-					satisfiedConditions++;
-				}
 
+                    BehaviorLogger.Write("Monitoring Required-All Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+                    _watchedAllBlocks.Add(block);
+                    block.IsWorkingChanged += CheckAllBlocks;
+                    _watchingAllBlocks = true;
 
-			}
+                }
 
+                if (ConditionReference.RequiredAnyFunctionalBlockNames.Contains(block.CustomName.Trim()))
+                {
 
-			if (ConditionReference.HasWeapons)
-			{
-				usedConditions++;
+                    BehaviorLogger.Write("Monitoring Required-Any Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+                    _watchedAnyBlocks.Add(block);
+                    block.IsWorkingChanged += CheckAnyBlocks;
+                    _watchingAnyBlocks = true;
 
-				bool fail = false;
+                }
 
+                if (ConditionReference.RequiredNoneFunctionalBlockNames.Contains(block.CustomName.Trim()))
+                {
 
-				if (_behavior.CurrentGrid == null || !_behavior.CurrentGrid.ActiveEntity())
-					fail = true;
+                    BehaviorLogger.Write("Monitoring Required-None Block: " + block.CustomName, BehaviorDebugEnum.Condition);
+                    _watchedNoneBlocks.Add(block);
+                    block.IsWorkingChanged += CheckNoneBlocks;
+                    _watchingNoneBlocks = true;
 
+                }
 
-				if (!fail || _behavior.AutoPilot.Weapons.HasWorkingWeapons())
-				{
-					satisfiedConditions++;
-				}
+            }
 
+            BehaviorLogger.Write("Watch All Blocks Count:  " + _watchedAllBlocks.Count, BehaviorDebugEnum.Condition);
+            BehaviorLogger.Write("Watch Any Blocks Count:  " + _watchedAnyBlocks.Count, BehaviorDebugEnum.Condition);
+            BehaviorLogger.Write("Watch None Blocks Count: " + _watchedNoneBlocks.Count, BehaviorDebugEnum.Condition);
 
-			}
+            CheckAllBlocks();
+            CheckAnyBlocks();
+            CheckNoneBlocks();
 
+        }
 
+        private void CheckAllBlocks(IMyCubeBlock cubeBlock = null)
+        {
 
+            for (int i = _watchedAllBlocks.Count - 1; i >= 0; i--)
+            {
 
+                var block = _watchedAllBlocks[i];
 
+                if (block == null || block?.SlimBlock?.CubeGrid == null || block.SlimBlock.CubeGrid.MarkedForClose)
+                {
 
-			if (ConditionReference.MatchAnyCondition == false) {
+                    _watchedAllBlocks.RemoveAt(i);
+                    continue;
 
-				bool result = satisfiedConditions >= usedConditions;
-				BehaviorLogger.Write(ProfileSubtypeId + ": All Condition Satisfied: " + result.ToString(), BehaviorDebugEnum.Condition);
-				BehaviorLogger.Write(string.Format("Used Conditions: {0} // Satisfied Conditions: {1}", usedConditions, satisfiedConditions), BehaviorDebugEnum.Condition);
-				return !ConditionReference.UseFailCondition ? result : !result;
+                }
 
-			} else {
+                if (!block.IsWorking || !block.IsFunctional)
+                {
 
-				bool result = satisfiedConditions > 0;
-				BehaviorLogger.Write(ProfileSubtypeId + ": Any Condition(s) Satisfied: " + result.ToString(), BehaviorDebugEnum.Condition);
-				BehaviorLogger.Write(string.Format("Used Conditions: {0} // Satisfied Conditions: {1}", usedConditions, satisfiedConditions), BehaviorDebugEnum.Condition);
-				return !ConditionReference.UseFailCondition ? result : !result;
+                    _watchedAllBlocksResult = false;
+                    return;
 
-			}
+                }
 
-		}
+            }
 
-		private void SetupWatchedBlocks() {
+            _watchedAllBlocksResult = true;
 
-			BehaviorLogger.Write("Setting Up Required Block Watcher", BehaviorDebugEnum.Condition);
-			_gotWatchedBlocks = true;
-			_watchedAnyBlocks.Clear();
-			_watchedAllBlocks.Clear();
-			_watchedNoneBlocks.Clear();
+        }
 
-			if (!ConditionReference.UseRequiredFunctionalBlocks) {
+        private void CheckAnyBlocks(IMyCubeBlock cubeBlock = null)
+        {
 
-				BehaviorLogger.Write("Condition Not Using Required Functional Blocks", BehaviorDebugEnum.Condition);
-				return;
+            for (int i = _watchedAnyBlocks.Count - 1; i >= 0; i--)
+            {
 
-			}
+                var block = _watchedAnyBlocks[i];
 
-			_remoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplitHandler;
+                if (block == null || block?.SlimBlock?.CubeGrid == null || block.SlimBlock.CubeGrid.MarkedForClose)
+                {
 
-			var allBlocks = BlockCollectionHelper.GetBlocksOfType<IMyTerminalBlock>(_behavior.CurrentGrid); ;
+                    _watchedAnyBlocks.RemoveAt(i);
+                    continue;
 
-			BehaviorLogger.Write("Monitoring Blocks Pre-Filtered Count: " + allBlocks.Count, BehaviorDebugEnum.Condition);
+                }
 
-			foreach (var block in allBlocks) {
+                if (block.IsWorking && block.IsFunctional)
+                {
 
-				if (block == null)
-					continue;
+                    _watchedAnyBlocksResult = true;
+                    return;
 
-				if (ConditionReference.RequiredAllFunctionalBlockNames.Contains(block.CustomName.Trim())) {
+                }
 
-					BehaviorLogger.Write("Monitoring Required-All Block: " + block.CustomName, BehaviorDebugEnum.Condition);
-					_watchedAllBlocks.Add(block);
-					block.IsWorkingChanged += CheckAllBlocks;
-					_watchingAllBlocks = true;
+            }
 
-				}
+            _watchedAnyBlocksResult = false;
 
-				if (ConditionReference.RequiredAnyFunctionalBlockNames.Contains(block.CustomName.Trim())) {
+        }
 
-					BehaviorLogger.Write("Monitoring Required-Any Block: " + block.CustomName, BehaviorDebugEnum.Condition);
-					_watchedAnyBlocks.Add(block);
-					block.IsWorkingChanged += CheckAnyBlocks;
-					_watchingAnyBlocks = true;
+        private void CheckNoneBlocks(IMyCubeBlock cubeBlock = null)
+        {
 
-				}
+            for (int i = _watchedNoneBlocks.Count - 1; i >= 0; i--)
+            {
 
-				if (ConditionReference.RequiredNoneFunctionalBlockNames.Contains(block.CustomName.Trim())) {
+                var block = _watchedNoneBlocks[i];
 
-					BehaviorLogger.Write("Monitoring Required-None Block: " + block.CustomName, BehaviorDebugEnum.Condition);
-					_watchedNoneBlocks.Add(block);
-					block.IsWorkingChanged += CheckNoneBlocks;
-					_watchingNoneBlocks = true;
+                if (block == null || block?.SlimBlock?.CubeGrid == null || block.SlimBlock.CubeGrid.MarkedForClose)
+                {
 
-				}
+                    _watchedNoneBlocks.RemoveAt(i);
+                    continue;
 
-			}
+                }
 
-			BehaviorLogger.Write("Watch All Blocks Count:  " + _watchedAllBlocks.Count, BehaviorDebugEnum.Condition);
-			BehaviorLogger.Write("Watch Any Blocks Count:  " + _watchedAnyBlocks.Count, BehaviorDebugEnum.Condition);
-			BehaviorLogger.Write("Watch None Blocks Count: " + _watchedNoneBlocks.Count, BehaviorDebugEnum.Condition);
+                if (block.IsWorking && block.IsFunctional)
+                {
 
-			CheckAllBlocks();
-			CheckAnyBlocks();
-			CheckNoneBlocks();
+                    _watchedNoneBlocksResult = false;
+                    return;
 
-		}
+                }
 
-		private void CheckAllBlocks(IMyCubeBlock cubeBlock = null) {
+            }
 
-			for (int i = _watchedAllBlocks.Count - 1; i >= 0; i--) {
+            _watchedNoneBlocksResult = true;
 
-				var block = _watchedAllBlocks[i];
+        }
 
-				if (block == null || block?.SlimBlock?.CubeGrid == null || block.SlimBlock.CubeGrid.MarkedForClose) {
+        private void GridSplitHandler(IMyCubeGrid gridA, IMyCubeGrid gridB)
+        {
 
-					_watchedAllBlocks.RemoveAt(i);
-					continue;
+            gridA.OnGridSplit -= GridSplitHandler;
+            gridB.OnGridSplit -= GridSplitHandler;
 
-				}
+            if (_remoteControl == null || _remoteControl?.SlimBlock?.CubeGrid == null || _remoteControl.SlimBlock.CubeGrid.MarkedForClose)
+                return;
 
-				if (!block.IsWorking || !block.IsFunctional) {
+            _remoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplitHandler;
 
-					_watchedAllBlocksResult = false;
-					return;
+            for (int i = _watchedAllBlocks.Count - 1; i >= 0; i--)
+            {
 
-				}
+                var block = _watchedAllBlocks[i];
 
-			}
+                if (block == null || !MyAPIGateway.Entities.Exist(block?.SlimBlock?.CubeGrid))
+                {
 
-			_watchedAllBlocksResult = true;
+                    _watchedAllBlocks.RemoveAt(i);
+                    continue;
 
-		}
+                }
 
-		private void CheckAnyBlocks(IMyCubeBlock cubeBlock = null) {
+                if (!_remoteControl.SlimBlock.CubeGrid.IsSameConstructAs(block.SlimBlock.CubeGrid))
+                {
 
-			for (int i = _watchedAnyBlocks.Count - 1; i >= 0; i--) {
+                    _watchedAllBlocks.RemoveAt(i);
+                    continue;
 
-				var block = _watchedAnyBlocks[i];
+                }
 
-				if (block == null || block?.SlimBlock?.CubeGrid == null || block.SlimBlock.CubeGrid.MarkedForClose) {
+            }
 
-					_watchedAnyBlocks.RemoveAt(i);
-					continue;
+            for (int i = _watchedAnyBlocks.Count - 1; i >= 0; i--)
+            {
 
-				}
+                var block = _watchedAnyBlocks[i];
 
-				if (block.IsWorking && block.IsFunctional) {
+                if (block == null || !MyAPIGateway.Entities.Exist(block?.SlimBlock?.CubeGrid))
+                {
 
-					_watchedAnyBlocksResult = true;
-					return;
+                    _watchedAnyBlocks.RemoveAt(i);
+                    continue;
 
-				}
+                }
 
-			}
+                if (!_remoteControl.SlimBlock.CubeGrid.IsSameConstructAs(block.SlimBlock.CubeGrid))
+                {
 
-			_watchedAnyBlocksResult = false;
+                    _watchedAnyBlocks.RemoveAt(i);
+                    continue;
 
-		}
+                }
 
-		private void CheckNoneBlocks(IMyCubeBlock cubeBlock = null) {
+            }
 
-			for (int i = _watchedNoneBlocks.Count - 1; i >= 0; i--) {
+            for (int i = _watchedNoneBlocks.Count - 1; i >= 0; i--)
+            {
 
-				var block = _watchedNoneBlocks[i];
+                var block = _watchedNoneBlocks[i];
 
-				if (block == null || block?.SlimBlock?.CubeGrid == null || block.SlimBlock.CubeGrid.MarkedForClose) {
+                if (block == null || !MyAPIGateway.Entities.Exist(block?.SlimBlock?.CubeGrid))
+                {
 
-					_watchedNoneBlocks.RemoveAt(i);
-					continue;
+                    _watchedNoneBlocks.RemoveAt(i);
+                    continue;
 
-				}
+                }
 
-				if (block.IsWorking && block.IsFunctional) {
+                if (!_remoteControl.SlimBlock.CubeGrid.IsSameConstructAs(block.SlimBlock.CubeGrid))
+                {
 
-					_watchedNoneBlocksResult = false;
-					return;
+                    _watchedNoneBlocks.RemoveAt(i);
+                    continue;
 
-				}
+                }
 
-			}
+            }
 
-			_watchedNoneBlocksResult = true;
+            CheckAllBlocks();
+            CheckAnyBlocks();
+            CheckNoneBlocks();
 
-		}
+        }
 
-		private void GridSplitHandler(IMyCubeGrid gridA, IMyCubeGrid gridB) {
+        public void InitTags(string customData)
+        {
 
-			gridA.OnGridSplit -= GridSplitHandler;
-			gridB.OnGridSplit -= GridSplitHandler;
 
-			if (_remoteControl == null || _remoteControl?.SlimBlock?.CubeGrid == null || _remoteControl.SlimBlock.CubeGrid.MarkedForClose)
-				return;
 
-			_remoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplitHandler;
+        }
 
-			for (int i = _watchedAllBlocks.Count - 1; i >= 0; i--) {
-
-				var block = _watchedAllBlocks[i];
-
-				if (block == null || !MyAPIGateway.Entities.Exist(block?.SlimBlock?.CubeGrid)) {
-
-					_watchedAllBlocks.RemoveAt(i);
-					continue;
-
-				}
-
-				if (!_remoteControl.SlimBlock.CubeGrid.IsSameConstructAs(block.SlimBlock.CubeGrid)) {
-
-					_watchedAllBlocks.RemoveAt(i);
-					continue;
-
-				}
-
-			}
-
-			for (int i = _watchedAnyBlocks.Count - 1; i >= 0; i--) {
-
-				var block = _watchedAnyBlocks[i];
-
-				if (block == null || !MyAPIGateway.Entities.Exist(block?.SlimBlock?.CubeGrid)) {
-
-					_watchedAnyBlocks.RemoveAt(i);
-					continue;
-
-				}
-
-				if (!_remoteControl.SlimBlock.CubeGrid.IsSameConstructAs(block.SlimBlock.CubeGrid)) {
-
-					_watchedAnyBlocks.RemoveAt(i);
-					continue;
-
-				}
-
-			}
-
-			for (int i = _watchedNoneBlocks.Count - 1; i >= 0; i--) {
-
-				var block = _watchedNoneBlocks[i];
-
-				if (block == null || !MyAPIGateway.Entities.Exist(block?.SlimBlock?.CubeGrid)) {
-
-					_watchedNoneBlocks.RemoveAt(i);
-					continue;
-
-				}
-
-				if (!_remoteControl.SlimBlock.CubeGrid.IsSameConstructAs(block.SlimBlock.CubeGrid)) {
-
-					_watchedNoneBlocks.RemoveAt(i);
-					continue;
-
-				}
-
-			}
-
-			CheckAllBlocks();
-			CheckAnyBlocks();
-			CheckNoneBlocks();
-
-		}
-
-		public void InitTags(string customData) {
-
-
-
-		}
-
-	}
+    }
 
 }

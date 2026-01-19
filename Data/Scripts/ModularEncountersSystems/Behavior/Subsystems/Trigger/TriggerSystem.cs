@@ -1164,7 +1164,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			foreach (var name in names) {
 
-				ToggleTriggers(name, toggle, reset);
+				ToggleTriggers(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, name), toggle, reset);
 
 			}
 
@@ -1205,7 +1205,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			foreach (var tag in tags)
 			{
 
-				ToggleTagTriggers(tag, toggle, reset);
+				ToggleTagTriggers(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, tag), toggle, reset);
 
 			}
 

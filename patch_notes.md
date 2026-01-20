@@ -1,5 +1,5 @@
-# Update 2.72.04
+# Update 2.72.05
 
-* Added error logging to condition checks to allow bugs to be tracked down more efficiently.
+* Added variable substitution support for EnableTriggers, DisableTriggers and ResetCooldownTimeOfTriggers actions.
 
 enenra & CptArthur

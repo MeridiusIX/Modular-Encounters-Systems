@@ -41,13 +41,13 @@ nav:
               - Prefab Data: Prefab-Data
               - Replenishment: Replenishment
       - Behaviors (Getting Started):
-          - Core Behavior: 
+          - Core Behavior:
              - Behavior: Core-Behavior
              - Autopilot: Autopilot
              - Command: Command
              - Datapad: Datapad
              - Target: Target
-          - Triggers: 
+          - Triggers:
              - Trigger: Trigger
              - Condition: Condition
              - Actions:
@@ -81,11 +81,14 @@ nav:
     - Threat Score Guide: https://gist.github.com/MeridiusIX/52fbf5679e67107a8cf37706205b5812
     - Tutorials: Tutorials
 
-  
+
 
 theme:
-  name: kpn
+  name: readthedocs
 
 extra:
-  extra.article_nav_top: false
+  extra.article_nav_top: true
   repo_icon: 'github'
+
+extra_css:
+  - style.css

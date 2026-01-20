@@ -1,0 +1,63 @@
+.wy-body-for-nav {
+    background: #343131;
+}
+
+.wy-nav-content {
+    background: #343131;
+}
+
+.wy-side-nav-search {
+    background: #125a89;
+}
+
+.wy-nav-side {
+    background: #201e1e;
+}
+
+body {
+    color: #d9d9d9;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Saira';
+}
+
+.rst-content code,
+.rst-content pre code,
+code {
+    background: #312e2e;
+    border: 1px solid #4d4848;
+    color: #55a5d9;
+    font-size: inherit;
+}
+
+.rst-content table.docutils thead {
+    color: white;
+}
+
+th {
+    border: 1px solid #4d4848 !important;
+}
+
+.rst-content table.docutils:not(.field-list) tr:nth-child(2n-1) td,
+td {
+    border: 1px solid #4d4848 !important;
+    background-color: #343131;
+}
+
+.rst-content table.docutils th {
+    word-wrap: normal;
+}
+
+.wy-table-responsive table td, .wy-table-responsive table th {
+    white-space: normal !important;
+}
+
+.wy-table-responsive {
+    overflow : visible !important;
+}

@@ -86,6 +86,7 @@ def md_to_steam_bbcode(md: str) -> str:
                 new_l = "[/quote]\n" + new_l
                 open_quote = False
 
+        # Bold
         if "**" in new_l:
             while "**" in new_l:
                 if open_b:
@@ -95,6 +96,7 @@ def md_to_steam_bbcode(md: str) -> str:
                     new_l = new_l.replace("**", "[b]", 1)
                     open_b = True
 
+        # Cursive
         if "*" in new_l:
             while "*" in new_l and not (new_l.startswith("[*]") and new_l.count("*") <= 1):
                 if open_i:
@@ -137,8 +139,8 @@ def path_adjustments() -> str:
 
     return new_path
 
-def main():
 
+def main():
     mod_dir = path_adjustments()
     os.chdir(mod_dir)
 
@@ -156,7 +158,6 @@ def main():
         args.append("--exclude-path")
         for i in EXCLUDE_DIRS:
             args.append(i)
-
 
     if UPLOAD_DESC:
         desc_src_path = os.path.join(mod_dir, "description.md")

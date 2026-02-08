@@ -1496,6 +1496,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		}
 
+		public void UpdateBehaviorSettings(StoredSettings settings) {
+
+			if (settings == null)
+				return;
+
+			_settings = settings;
+
+		}
+
 		public void RegisterCommandListener() {
 
 			if (CommandListenerRegistered)

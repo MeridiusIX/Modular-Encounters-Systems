@@ -1325,6 +1325,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
+			Trigger.UpdateBehaviorSettings(BehaviorSettings);
 			BehaviorSettings.Behavior = this;
 
 

@@ -299,15 +299,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     usedConditions++;
                     bool failedCheck = false;
 
-                    if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count || ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersVariables.Count)
+                    if (ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersTargets.Count || ConditionReference.CustomCountersVariables != null && ConditionReference.CustomCounters.Count == ConditionReference.CustomCountersVariables.Count)
                     {
-
-
 
                         var selfScore = _behavior?.CurrentGrid?.Npc?.Score ?? 0;
                         var commandScore = command?.NPCScoreValue ?? 0;
 
-                        var customCountersVariables = _behavior?.CurrentGrid?.Npc.CustomCountersVariables;
+                        var customCountersVariables = _behavior?.CurrentGrid?.Npc?.CustomCountersVariables ?? new Dictionary<string, int>();
 
 
                         for (int i = 0; i < ConditionReference.CustomCounters.Count; i++)
@@ -375,10 +373,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                     break;
 
                                 }
-
-
-
-
 
                             }
                             catch (Exception e)

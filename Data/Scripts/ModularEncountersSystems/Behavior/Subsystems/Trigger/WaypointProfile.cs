@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Logging;
 using Sandbox.Game.Entities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using VRageMath;
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 	public enum WaypointType {
-	
+
 		None = 0,
 		Static = 1,
 		StaticRandom = 2,
@@ -18,11 +19,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		RelativeRandom = 4,
 		EntityOffset = 5,
 		EntityRandom = 6
-	
+
 	}
 
 	public enum RelativeEntityType {
-	
+
 		None,
 		Self,
 		Target,
@@ -106,6 +107,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+            BehaviorLogger.Write($"{ProfileSubtypeId}: Error during waypoint creation. Does the specified entity exist?", BehaviorDebugEnum.Error, true);
 			return null;
 
 		}
@@ -138,7 +140,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			var dir = Vector3D.Normalize(MyUtils.GetRandomVector3D());
 			var dist = MathTools.RandomBetween(this.MinDistance, this.MaxDistance);
 			return dir * dist + coords;
-		
+
 		}
 
 		public void InitTags(string tagData) {

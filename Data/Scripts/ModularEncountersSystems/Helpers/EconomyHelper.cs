@@ -342,7 +342,7 @@ namespace ModularEncountersSystems.Helpers {
 							continue;
 
 						}
-							
+
 						foreach (var outputItem in blueprint.Results) {
 
 							if (!AssemblerCraftableItems.Contains(outputItem.Id) && !ItemsWithBadValue.Contains(outputItem.Id)) {
@@ -373,13 +373,13 @@ namespace ModularEncountersSystems.Helpers {
 									CraftableConsumables.Add(outputItem.Id);
 
 							}
-								
+
 						}
-					
+
 					}
-				
+
 				}
-			
+
 			}
 
 			for (int i = 1; i < 31; i++) {
@@ -549,7 +549,7 @@ namespace ModularEncountersSystems.Helpers {
 					price += thisPrice;
 
 				}
-			
+
 			}
 
 			if (price > 0) {
@@ -559,7 +559,7 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			return price;
-		
+
 		}
 
 		public static void InitNpcStoreBlock(IMyCubeGrid cubeGrid, ImprovedSpawnGroup spawnGroup) {
@@ -795,7 +795,7 @@ namespace ModularEncountersSystems.Helpers {
 
 						double markup = 1.2; //TODO: Figure out how reputation affects this
 						int itemValue = (int)Math.Floor(MinimumValuesMaster[item] * markup);
-						MyStoreItemData orderData = new MyStoreItemData(item, itemsAvailable[item], itemValue, OnSaleComplete, null);
+						MyStoreItemData orderData = new MyStoreItemData(item, itemsAvailable[item], itemValue, null, OnSaleComplete, null);
 						long orderResult = 0;
 						var storeAddResult = store.InsertOffer(orderData, out orderResult);
 						errorLog.Append("     - Added Item To Store With Result: " + storeAddResult.ToString()).AppendLine();
@@ -825,7 +825,7 @@ namespace ModularEncountersSystems.Helpers {
 									double markup = 1.2;
 									int itemCount = MathTools.RandomBetween((int)item.AmountMin, (int)item.AmountMax);
 									int itemValue = (int)Math.Floor(MinimumValuesMaster[item.DefinitionId] * markup);
-									MyStoreItemData orderData = new MyStoreItemData(item.DefinitionId, itemCount, itemValue, null, null);
+									MyStoreItemData orderData = new MyStoreItemData(item.DefinitionId, itemCount, itemValue, null, null, null);
 									long orderResult = 0;
 									var storeAddResult = store.InsertOrder(orderData, out orderResult);
 
@@ -903,7 +903,7 @@ namespace ModularEncountersSystems.Helpers {
 				}
 
 			}
-			
+
 			return result;
 
 		}
@@ -928,7 +928,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		
+
 
 		public static void OnSaleComplete(int amtSold, int amtRemain, long cost, long storeOwner, long customer) {
 

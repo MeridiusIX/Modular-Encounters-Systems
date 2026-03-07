@@ -109,12 +109,12 @@ namespace ModularEncountersSystems.Missions
 
 
 
-        
+
         public Mission(string profileSubtypeId,string spawnGroupName)
         {
             ProfileSubtypeId = profileSubtypeId;
 
-            
+
             SpawnGroupName = spawnGroupName;
         }
 
@@ -172,7 +172,7 @@ namespace ModularEncountersSystems.Missions
                     MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", "Override faction tag not found");
                     return false;
                 }
-                    
+
             }
             else
             {
@@ -184,7 +184,7 @@ namespace ModularEncountersSystems.Missions
                 MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", "Faction not found??");
                 return false;
             }
- 
+
 
 
             var coords = sourceContractBlock.GetPosition();
@@ -236,7 +236,7 @@ namespace ModularEncountersSystems.Missions
                             MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", $"{methodName} - Api returned null as dict!");
                             return false;
                         }
-         
+
 
                         ReplaceKeys.AddList(new List<string>(dict.Keys));
                         ReplaceValues.AddList(new List<string>(dict.Values));
@@ -274,23 +274,23 @@ namespace ModularEncountersSystems.Missions
             // Convert strings to integers
             if (!int.TryParse(RewardString, out Reward))
             {
-                Reward = 0; 
+                Reward = 0;
             }
 
             if (!int.TryParse(CollateralString, out Collateral))
             {
-                Collateral = 0; 
+                Collateral = 0;
             }
 
             if (!int.TryParse(ReputationRewardString, out ReputationReward))
             {
 
-                ReputationReward = 0; 
+                ReputationReward = 0;
             }
 
             if (!int.TryParse(FailReputationPriceString, out FailReputationPrice))
             {
-                FailReputationPrice = 0; 
+                FailReputationPrice = 0;
             }
 
             if (!int.TryParse(DurationString, out Duration))
@@ -443,7 +443,7 @@ namespace ModularEncountersSystems.Missions
                     playerCollection = MyAPIGateway.Players;
                     playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, Reward);
 
-                    MyContractCustom newContract = new MyContractCustom(definitionId: definitionId,
+                    MyContractCustom newContract = new MyContractCustom(contractTypeDefinitionId: definitionId,
                         startBlockId: SourceContractBlock.Entity.EntityId,
                         moneyReward: Reward,
                         collateral: Collateral,
@@ -549,7 +549,7 @@ namespace ModularEncountersSystems.Missions
 
                     break;
             }
-            
+
 
             return false;
 
@@ -579,7 +579,3 @@ namespace ModularEncountersSystems.Missions
 }
 
 }
-
-
-
-             

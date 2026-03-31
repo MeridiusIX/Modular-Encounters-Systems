@@ -857,233 +857,255 @@ namespace ModularEncountersSystems.World {
 
 			SpawnLogger.Write("Processing Tertiary Attributes For Grid: " + Grid.CubeGrid.CustomName, SpawnerDebugEnum.PostSpawn);
 
-			//DigAirTightVoxels
-			if (AttributeCheck(Attributes.DigAirTightVoxels, AppliedAttributes.DigAirTightVoxels)) {
+            var lastTask = "";
 
-				TaskProcessor.Tasks.Add(new CutVoxels(Grid, SpawnGroup?.SpawnConditionsProfiles[ConditionIndex].CutVoxelSize ?? 2.7));
-				AppliedAttributes.DigAirTightVoxels = true;
+            try
+            {
+                //DigAirTightVoxels
+                lastTask = "DigAirTightVoxels";
+                if (AttributeCheck(Attributes.DigAirTightVoxels, AppliedAttributes.DigAirTightVoxels)) {
 
-			}
+                    TaskProcessor.Tasks.Add(new CutVoxels(Grid, SpawnGroup?.SpawnConditionsProfiles[ConditionIndex].CutVoxelSize ?? 2.7));
+                    AppliedAttributes.DigAirTightVoxels = true;
 
-			//NonPhysicalAmmo
-			if (AttributeCheck(Attributes.NonPhysicalAmmo, AppliedAttributes.NonPhysicalAmmo)) {
+                }
 
-				AppliedAttributes.NonPhysicalAmmo = true;
-				InventoryHelper.NonPhysicalAmmoProcessing(Grid.CubeGrid);
+                //NonPhysicalAmmo
+                lastTask = "NoPhysicalAmmo";
+                if (AttributeCheck(Attributes.NonPhysicalAmmo, AppliedAttributes.NonPhysicalAmmo)) {
 
-			}
+                    AppliedAttributes.NonPhysicalAmmo = true;
+                    InventoryHelper.NonPhysicalAmmoProcessing(Grid.CubeGrid);
 
-			//ShieldActivation
-			if (AttributeCheck(Attributes.ShieldActivation, AppliedAttributes.ShieldActivation)) {
+                }
 
-				NPCShieldManager.ActivateShieldsForNPC(Grid.CubeGrid, true);
-				//AppliedAttributes |= NpcAttributes.ShieldActivation;
+                //ShieldActivation
+                lastTask = "ShieldActivation";
+                if (AttributeCheck(Attributes.ShieldActivation, AppliedAttributes.ShieldActivation)) {
 
-			}
+                    NPCShieldManager.ActivateShieldsForNPC(Grid.CubeGrid, true);
+                    //AppliedAttributes |= NpcAttributes.ShieldActivation;
 
-			//ApplyContainerTypes
-			if (AttributeCheck(Attributes.ApplyContainerTypes, AppliedAttributes.ApplyContainerTypes)) {
+                }
 
-				AppliedAttributes.ApplyContainerTypes = true;
-				InventoryHelper.ApplyContainerTypes(Grid);
+                //ApplyContainerTypes
+                lastTask = "ApplyContainerTypes";
+                if (AttributeCheck(Attributes.ApplyContainerTypes, AppliedAttributes.ApplyContainerTypes)) {
 
-			}
+                    AppliedAttributes.ApplyContainerTypes = true;
+                    InventoryHelper.ApplyContainerTypes(Grid);
 
-			//ConfigureTurretControllers
-			if (AttributeCheck(Attributes.ConfigureTurretControllers, AppliedAttributes.ConfigureTurretControllers)) {
+                }
 
-				AppliedAttributes.ConfigureTurretControllers = true;
-				SpawnLogger.Write("Starting Turret Controller Config For Vanilla Weapons", SpawnerDebugEnum.PostSpawn);
-				var turretControllers = new List<BlockEntity>();
-				var tools = new List<BlockEntity>();
-				Grid.GetBlocksOfType<IMyTurretControlBlock>(turretControllers, false);
-				Grid.GetBlocksOfType<IMyUserControllableGun>(tools, false);
-				Grid.GetBlocksOfType<IMyShipToolBase>(tools, false);
-				SpawnLogger.Write(string.Format("[Controllers : {0}] [Weapons/Tools : {1}]", turretControllers.Count, tools.Count), SpawnerDebugEnum.PostSpawn);
+                //ConfigureTurretControllers
+                lastTask = "ConfigureTurretControllers";
+                if (AttributeCheck(Attributes.ConfigureTurretControllers, AppliedAttributes.ConfigureTurretControllers)) {
 
-				foreach (var controller in turretControllers) {
+                    AppliedAttributes.ConfigureTurretControllers = true;
+                    SpawnLogger.Write("Starting Turret Controller Config For Vanilla Weapons", SpawnerDebugEnum.PostSpawn);
+                    var turretControllers = new List<BlockEntity>();
+                    var tools = new List<BlockEntity>();
+                    Grid.GetBlocksOfType<IMyTurretControlBlock>(turretControllers, false);
+                    Grid.GetBlocksOfType<IMyUserControllableGun>(tools, false);
+                    Grid.GetBlocksOfType<IMyShipToolBase>(tools, false);
+                    SpawnLogger.Write(string.Format("[Controllers : {0}] [Weapons/Tools : {1}]", turretControllers.Count, tools.Count), SpawnerDebugEnum.PostSpawn);
 
-					string key = "";
+                    foreach (var controller in turretControllers) {
 
-					if (controller?.Block?.Storage == null || !controller.Block.Storage.TryGetValue(StorageTools.MesTurretControllerKey, out key)) {
+                        string key = "";
 
-						//SpawnLogger.Write("Controller Key Not Found", SpawnerDebugEnum.PostSpawn);
-						continue;
+                        if (controller?.Block?.Storage == null || !controller.Block.Storage.TryGetValue(StorageTools.MesTurretControllerKey, out key)) {
 
-					}
-
-					var controllerBlock = controller.Block as IMyTurretControlBlock;
-
-					if (controllerBlock == null) {
-
-						//SpawnLogger.Write("Controller Block Null", SpawnerDebugEnum.PostSpawn);
-						continue;
-
-					}
-
-					for (int i = tools.Count - 1; i >= 0; i--) {
-
-						string blockKey = "";
-
-						if (tools[i]?.Block?.Storage == null || !tools[i].Block.Storage.TryGetValue(StorageTools.MesTurretControllerKey, out blockKey)) {
-
-							//SpawnLogger.Write("Block Key Not Found", SpawnerDebugEnum.PostSpawn);
-							continue;
-
-						}
-
-						if (blockKey == key) {
-
-							SpawnLogger.Write(string.Format("[Controller : {0}] [Linked Tool : {1}]", controllerBlock.CustomName, tools[i].Block.CustomName), SpawnerDebugEnum.PostSpawn);
-							controllerBlock.AddTool(tools[i].FunctionalBlock);
-							tools.RemoveAt(i);
-
-						} else {
-
-							//SpawnLogger.Write(string.Format("Keys Not Matched: [{0}] [{1}]", controllerBlock.CustomName, tools[i].Block.CustomName), SpawnerDebugEnum.PostSpawn);
-
-						}
-
-					}
-
-				}
-
-			}
-
-			Grid.RefreshSubGrids();
-
-			//OwnershipValidation
-			if (Attributes.OwnershipValidation && !AppliedAttributes.OwnershipValidation && SpawnGroup.MesSpawnGroup) {
-
-				AppliedAttributes.OwnershipValidation = true;
-
-				if (Grid.CubeGrid.BigOwners.Count == 0 && OriginalOwnerId != 0) {
-
-					var originalFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction(OriginalOwnerId)?.Tag ?? "Nobody";
-					var currentFactionTag = "Nobody";
-
-					SpawnLogger.Write(string.Format("Ship From " + SpawnGroupName + " Spawned With Wrong Ownership. Expected [{0}] ; Got [{1}]. Attempting Correction.", originalFactionTag, currentFactionTag), SpawnerDebugEnum.Error, true);
-
-					var gridList = new List<IMyCubeGrid>();
-					MyAPIGateway.GridGroups.GetGroup(Grid.CubeGrid, GridLinkTypeEnum.Physical, gridList);
-
-					foreach (var grid in gridList) {
-
-                        if (grid == null)
+                            //SpawnLogger.Write("Controller Key Not Found", SpawnerDebugEnum.PostSpawn);
                             continue;
 
-						grid.ChangeGridOwnership(OriginalOwnerId, VRage.Game.MyOwnershipShareModeEnum.Faction);
+                        }
 
-					}
+                        var controllerBlock = controller.Block as IMyTurretControlBlock;
 
-				} else if (Grid.CubeGrid.BigOwners.Count > 0 && Grid.CubeGrid.BigOwners[0] != OriginalOwnerId) {
+                        if (controllerBlock == null) {
 
-					var originalFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction(OriginalOwnerId)?.Tag ?? "Nobody";
-					var currentFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction((Grid.CubeGrid.BigOwners.Count > 0) ? Grid.CubeGrid.BigOwners[0] : 0)?.Tag ?? "Nobody";
-					SpawnLogger.Write(string.Format("Ship From " + SpawnGroupName + " Spawned With Wrong Ownership. Expected [{0}] ; Got [{1}].", originalFactionTag, currentFactionTag), SpawnerDebugEnum.Error, true);
+                            //SpawnLogger.Write("Controller Block Null", SpawnerDebugEnum.PostSpawn);
+                            continue;
 
-				}
+                        }
+
+                        for (int i = tools.Count - 1; i >= 0; i--) {
+
+                            string blockKey = "";
+
+                            if (tools[i]?.Block?.Storage == null || !tools[i].Block.Storage.TryGetValue(StorageTools.MesTurretControllerKey, out blockKey)) {
+
+                                //SpawnLogger.Write("Block Key Not Found", SpawnerDebugEnum.PostSpawn);
+                                continue;
+
+                            }
+
+                            if (blockKey == key) {
+
+                                SpawnLogger.Write(string.Format("[Controller : {0}] [Linked Tool : {1}]", controllerBlock.CustomName, tools[i].Block.CustomName), SpawnerDebugEnum.PostSpawn);
+                                controllerBlock.AddTool(tools[i].FunctionalBlock);
+                                tools.RemoveAt(i);
+
+                            } else {
+
+                                //SpawnLogger.Write(string.Format("Keys Not Matched: [{0}] [{1}]", controllerBlock.CustomName, tools[i].Block.CustomName), SpawnerDebugEnum.PostSpawn);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                Grid.RefreshSubGrids();
+
+                //OwnershipValidation
+                lastTask = "OwnershipValidation";
+                if (Attributes.OwnershipValidation && !AppliedAttributes.OwnershipValidation && SpawnGroup.MesSpawnGroup) {
+
+                    AppliedAttributes.OwnershipValidation = true;
+
+                    if (Grid.CubeGrid.BigOwners.Count == 0 && OriginalOwnerId != 0) {
+
+                        var originalFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction(OriginalOwnerId)?.Tag ?? "Nobody";
+                        var currentFactionTag = "Nobody";
+
+                        SpawnLogger.Write(string.Format("Ship From " + SpawnGroupName + " Spawned With Wrong Ownership. Expected [{0}] ; Got [{1}]. Attempting Correction.", originalFactionTag, currentFactionTag), SpawnerDebugEnum.Error, true);
+
+                        var gridList = new List<IMyCubeGrid>();
+                        MyAPIGateway.GridGroups.GetGroup(Grid.CubeGrid, GridLinkTypeEnum.Physical, gridList);
+
+                        foreach (var grid in gridList) {
+
+                            if (grid == null)
+                                continue;
+
+                            grid.ChangeGridOwnership(OriginalOwnerId, VRage.Game.MyOwnershipShareModeEnum.Faction);
+
+                        }
+
+                    } else if (Grid.CubeGrid.BigOwners.Count > 0 && Grid.CubeGrid.BigOwners[0] != OriginalOwnerId) {
+
+                        var originalFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction(OriginalOwnerId)?.Tag ?? "Nobody";
+                        var currentFactionTag = MyAPIGateway.Session.Factions.TryGetPlayerFaction((Grid.CubeGrid.BigOwners.Count > 0) ? Grid.CubeGrid.BigOwners[0] : 0)?.Tag ?? "Nobody";
+                        SpawnLogger.Write(string.Format("Ship From " + SpawnGroupName + " Spawned With Wrong Ownership. Expected [{0}] ; Got [{1}].", originalFactionTag, currentFactionTag), SpawnerDebugEnum.Error, true);
+
+                    }
 
 
-			}
+                }
 
-			//InitEconomyBlocks
-			if (AttributeCheck(Attributes.InitEconomyBlocks, AppliedAttributes.InitEconomyBlocks)) {
+                //InitEconomyBlocks
+                lastTask = "InitEconomyBlocks";
+                if (AttributeCheck(Attributes.InitEconomyBlocks, AppliedAttributes.InitEconomyBlocks)) {
 
-				AppliedAttributes.InitEconomyBlocks = true;
-				EconomyHelper.InitNpcStoreBlock(Grid.CubeGrid, SpawnGroup);
+                    AppliedAttributes.InitEconomyBlocks = true;
+                    EconomyHelper.InitNpcStoreBlock(Grid.CubeGrid, SpawnGroup);
 
-			}
+                }
 
-			//InhibitorActivation
-			if (Attributes.UseJetpackDisable && !AppliedAttributes.UseJetpackDisable && !HasInhibitor("Jetpack")) {
+                //InhibitorActivation
+                lastTask = "UseJetpackDisable";
+                if (Attributes.UseJetpackDisable && !AppliedAttributes.UseJetpackDisable && !HasInhibitor("Jetpack")) {
 
-				var randBlock = Grid.RandomTerminalBlock();
+                    var randBlock = Grid.RandomTerminalBlock();
 
-				if (randBlock.ActiveEntity()) {
+                    if (randBlock.ActiveEntity()) {
 
-					var inhibitorLogic = new JetpackInhibitor(randBlock);
-					Grid.Inhibitors.Add(randBlock);
+                        var inhibitorLogic = new JetpackInhibitor(randBlock);
+                        Grid.Inhibitors.Add(randBlock);
 
-				}
+                    }
 
-			} else {
+                } else {
 
-				AppliedAttributes.UseJetpackDisable = true;
+                    AppliedAttributes.UseJetpackDisable = true;
 
-			}
+                }
 
-			if (Attributes.UseDrillDisable && !AppliedAttributes.UseDrillDisable && !HasInhibitor("Drill")) {
+                lastTask = "UseDrillDisable";
+                if (Attributes.UseDrillDisable && !AppliedAttributes.UseDrillDisable && !HasInhibitor("Drill")) {
 
-				var randBlock = Grid.RandomTerminalBlock();
+                    var randBlock = Grid.RandomTerminalBlock();
 
-				if (randBlock.ActiveEntity()) {
+                    if (randBlock.ActiveEntity()) {
 
-					var inhibitorLogic = new DrillInhibitor(randBlock);
-					Grid.Inhibitors.Add(randBlock);
+                        var inhibitorLogic = new DrillInhibitor(randBlock);
+                        Grid.Inhibitors.Add(randBlock);
 
-				}
+                    }
 
-			} else {
+                } else {
 
-				AppliedAttributes.UseDrillDisable = true;
+                    AppliedAttributes.UseDrillDisable = true;
 
-			}
+                }
 
-			if (Attributes.UseJumpDisable && !AppliedAttributes.UseJumpDisable && !HasInhibitor("JumpDrive")) {
+                lastTask = "UseJumpDisable";
+                if (Attributes.UseJumpDisable && !AppliedAttributes.UseJumpDisable && !HasInhibitor("JumpDrive")) {
 
-				var randBlock = Grid.RandomTerminalBlock();
+                    var randBlock = Grid.RandomTerminalBlock();
 
-				if (randBlock.ActiveEntity()) {
+                    if (randBlock.ActiveEntity()) {
 
-					var inhibitorLogic = new JumpDriveInhibitor(randBlock);
-					Grid.Inhibitors.Add(randBlock);
+                        var inhibitorLogic = new JumpDriveInhibitor(randBlock);
+                        Grid.Inhibitors.Add(randBlock);
 
-				}
+                    }
 
-			} else {
+                } else {
 
-				AppliedAttributes.UseJumpDisable = true;
+                    AppliedAttributes.UseJumpDisable = true;
 
-			}
+                }
 
-			if (Attributes.UseNanobotDisable && !AppliedAttributes.UseNanobotDisable && !HasInhibitor("Nanobot")) {
+                lastTask = "UseNanobotDisable";
+                if (Attributes.UseNanobotDisable && !AppliedAttributes.UseNanobotDisable && !HasInhibitor("Nanobot")) {
 
-				var randBlock = Grid.RandomTerminalBlock();
+                    var randBlock = Grid.RandomTerminalBlock();
 
-				if (randBlock.ActiveEntity()) {
+                    if (randBlock.ActiveEntity()) {
 
-					var inhibitorLogic = new NanobotInhibitor(randBlock);
-					Grid.Inhibitors.Add(randBlock);
+                        var inhibitorLogic = new NanobotInhibitor(randBlock);
+                        Grid.Inhibitors.Add(randBlock);
 
-				}
+                    }
 
-			} else {
+                } else {
 
-				AppliedAttributes.UseNanobotDisable = true;
+                    AppliedAttributes.UseNanobotDisable = true;
 
-			}
+                }
 
-			if (Attributes.UsePlayerDisable && !AppliedAttributes.UsePlayerDisable && !HasInhibitor("Player")) {
+                lastTask = "UsePlayerDisable";
+                if (Attributes.UsePlayerDisable && !AppliedAttributes.UsePlayerDisable && !HasInhibitor("Player")) {
 
-				var randBlock = Grid.RandomTerminalBlock();
+                    var randBlock = Grid.RandomTerminalBlock();
 
-				if (randBlock.ActiveEntity()) {
+                    if (randBlock.ActiveEntity()) {
 
-					var inhibitorLogic = new PlayerInhibitor(randBlock);
-					Grid.Inhibitors.Add(randBlock);
+                        var inhibitorLogic = new PlayerInhibitor(randBlock);
+                        Grid.Inhibitors.Add(randBlock);
 
-				}
+                    }
 
-			} else {
+                } else {
 
-				AppliedAttributes.UsePlayerDisable = true;
+                    AppliedAttributes.UsePlayerDisable = true;
 
-			}
+                }
 
-			if (updateSettings)
-				Update();
+                if (updateSettings)
+                    Update();
 
+            }
+            catch (Exception e)
+            {
+			    SpawnLogger.Write($"{Grid.CubeGrid.CustomName}: Error while processing tertiary attributes on task: '{lastTask}'", SpawnerDebugEnum.Error, true);
+                throw (e);
+            }
 		}
 
 		public bool HasInhibitor(string type) {

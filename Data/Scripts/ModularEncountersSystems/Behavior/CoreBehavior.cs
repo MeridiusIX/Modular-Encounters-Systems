@@ -82,6 +82,8 @@ namespace ModularEncountersSystems.Behavior {
 		private Hunter _hunter;
 		private Nautical _nautical;
 		private NauticalRoutes _nauticalRoutes;
+        private HorseNautical _horsenautical;
+
         private Passive _passive;
 		private Patrol _patrol;
 		private Scout _scout;
@@ -942,6 +944,36 @@ namespace ModularEncountersSystems.Behavior {
                 return;
 
             }
+
+            if (subclass == BehaviorSubclass.HorseNautical)
+            {
+
+                if (_horsenautical == null)
+                    _horsenautical = new HorseNautical(this);
+
+                ActiveBehavior = _horsenautical;
+
+                if (BehaviorSettings.ActiveBehaviorType != subclass)
+                {
+
+                    Mode = BehaviorMode.Init;
+
+                    if (!BehaviorSettings.SubclassBehaviorDefaultsSet)
+                    {
+
+                        BehaviorSettings.SubclassBehaviorDefaultsSet = true;
+                        ActiveBehavior.SetDefaultTags();
+
+                    }
+
+                }
+
+                BehaviorSettings.ActiveBehaviorType = subclass;
+                return;
+
+            }
+
+            
 
 
             if (subclass == BehaviorSubclass.Passive) {

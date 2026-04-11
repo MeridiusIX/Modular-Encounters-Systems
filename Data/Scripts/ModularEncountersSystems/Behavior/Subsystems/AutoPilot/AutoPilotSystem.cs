@@ -1553,6 +1553,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
                         angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
                     }
 
+					//MyAPIGateway.Utilities.ShowMessage("MES", $"{angle} > {Data.OffsetMaxAngleFromTarget}");
+
+
                     if (angle > Data.OffsetMaxAngleFromTarget)
                     {
                         _offsetDirection = VectorHelper.LimitedDirection(_offsetDirection, vectorTargetToWaypoint, Data.OffsetMaxAngleFromTarget);

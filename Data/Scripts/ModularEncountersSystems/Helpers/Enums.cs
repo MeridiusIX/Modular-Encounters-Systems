@@ -58,6 +58,7 @@ namespace ModularEncountersSystems.Helpers {
         Vulture,
         FighterPlane,
         NauticalRoutes,
+        HorseNautical,
 
     }
 

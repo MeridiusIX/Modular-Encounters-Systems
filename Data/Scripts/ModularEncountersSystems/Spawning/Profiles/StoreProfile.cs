@@ -9,6 +9,7 @@ using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
 using VRage.Game.ObjectBuilders.Definitions;
+using VRage.ObjectBuilders;
 
 namespace ModularEncountersSystems.Spawning.Profiles {
 
@@ -147,7 +148,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				SpawnLogger.Write(item.StoreItemId, SpawnerDebugEnum.Dev);
 
 				if (item.ItemType != StoreProfileItemTypes.RandomCraftable && item.ItemType != StoreProfileItemTypes.RandomItem && !EconomyHelper.AllItemIds.Contains(item.GetItemId()))
-					if(item.ItemType != StoreProfileItemTypes.Hydrogen && item.ItemType != StoreProfileItemTypes.Oxygen && item.ItemType != StoreProfileItemTypes.Prefab)
+					if(item.ItemType != StoreProfileItemTypes.Hydrogen && item.ItemType != StoreProfileItemTypes.Oxygen && item.ItemType != StoreProfileItemTypes.Prefab && item.ItemType != StoreProfileItemTypes.Gas)
 						continue;
 
 				if (Offers.Contains(item.StoreItemId))
@@ -413,10 +414,36 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			}
 
 			if (item.ItemType == StoreProfileItemTypes.Hydrogen) {
-
-				return block.CreateStoreItem(item.GetAmount(types == StoreItemTypes.Offer) + extra, (int)item.GetPrice(offer: offer), StoreItemTypes.Offer, ItemTypes.Hydrogen);
+                return block.CreateStoreItem(item.GetAmount(types == StoreItemTypes.Offer) + extra, (int)item.GetPrice(offer: offer), StoreItemTypes.Offer, ItemTypes.Hydrogen);
 
 			}
+
+			if(item.ItemType == StoreProfileItemTypes.Gas)
+			{
+				//MyAPIGateway.Utilities.ShowMessage("MES","GAS!");
+				//MyAPIGateway.Utilities.ShowMessage("ItemSubtypeId", item.ItemSubtypeId);
+
+
+
+				//            var storeItem = new MyObjectBuilder_StoreItem();
+
+				//            storeItem.Item = new SerializableDefinitionId(typeof(MyObjectBuilder_GasProperties), item.ItemSubtypeId);
+				//            storeItem.ItemType = ItemTypes.Gas;
+				//            storeItem.Amount = item.GetAmount(types == StoreItemTypes.Offer) + extra;
+				//            storeItem.PricePerUnit = (int)item.GetPrice(offer: offer);
+				//            storeItem.PricePerUnitDiscount = 1000;
+				//            storeItem.PreviousPricePerUnit = 100000000;
+				//            storeItem.StoreItemType = StoreItemTypes.Offer;
+				//            storeItem.IsCustomStoreItem = true;
+				//storeItem.SelectedGasTanks = null;
+				//storeItem.RemovedAmount = 100;
+				//            return block.CreateStoreItem(storeItem);
+				return null;
+
+
+
+            }
+
 
 			if (item.ItemType == StoreProfileItemTypes.RandomCraftable) {
 

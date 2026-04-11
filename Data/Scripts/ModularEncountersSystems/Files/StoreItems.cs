@@ -32,8 +32,9 @@ namespace ModularEncountersSystems.Files {
         Datapad,
         OxygenContainer,
         GasContainer,
+		Gas,
     }
-
+	 
 	public class StoreItemsContainer {
 
 		[XmlArrayItem("StoreItem")]	public StoreItem[] StoreItems;
@@ -258,7 +259,10 @@ namespace ModularEncountersSystems.Files {
 			if (ItemType == StoreProfileItemTypes.GasContainer)
 				type = typeof(MyObjectBuilder_GasContainerObject);
 
-			return new MyDefinitionId(type, subtypeId);
+            if (ItemType == StoreProfileItemTypes.Gas)
+                type = typeof(MyObjectBuilder_GasProperties);
+
+            return new MyDefinitionId(type, subtypeId);
 
 		}
 

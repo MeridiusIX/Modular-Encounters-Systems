@@ -2899,7 +2899,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                         }
                     }
 
-                    MyVisualScriptLogicProvider.SendChatMessage(message, RemoteControl.SlimBlock.CubeGrid.CustomName);
+                    MyVisualScriptLogicProvider.SendChatMessage(message, RemoteControl?.SlimBlock?.CubeGrid?.CustomName ?? "UnknownGrid");
 
 
                     //MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugMessage, 4000);

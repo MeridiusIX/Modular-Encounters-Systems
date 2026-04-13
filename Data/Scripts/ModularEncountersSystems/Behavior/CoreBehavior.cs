@@ -1620,7 +1620,7 @@ namespace ModularEncountersSystems.Behavior {
 
 			}
 
-			if(this.RemoteControl != null && this.RemoteControl.IsWorking && this.RemoteControl.IsFunctional) {
+			if(this.RemoteControl.IsWorking && this.RemoteControl.IsFunctional) {
 
 				this.HasBeenWorking = true;
 				this.IsWorking = true;

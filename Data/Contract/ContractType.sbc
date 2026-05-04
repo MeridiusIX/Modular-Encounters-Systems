@@ -6,8 +6,8 @@
         <TypeId>ContractTypeDefinition</TypeId>
         <SubtypeId>MESContract</SubtypeId>
       </Id>
-      <Icon>Textures\GUI\Icons\Contracts\BountyContract.dds</Icon>
-      <Icon>Textures\GUI\Icons\Contracts\HaulingContractHeader.dds</Icon>
+      <Icon>Textures\GUI\Icons\Contracts\BountyContract_PvE.dds</Icon>
+      <Icon>Textures\GUI\Icons\Contracts\HaulingContract_Header.dds</Icon>
     </ContractType>
   </ContractTypes>
 </Definitions>

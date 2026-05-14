@@ -324,6 +324,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool AddWaypointFromCommand;
 		public bool AddCustomCountersVariablesFromCommand;
+		public bool AddCustomStringsFromCommand;
 		public bool RecalculateDespawnCoords;
 
 		public bool CancelWaitingAtWaypoint;
@@ -835,6 +836,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
             AddWaypointFromCommand = false;
             AddCustomCountersVariablesFromCommand = false;
+            AddCustomStringsFromCommand = false;
 			RecalculateDespawnCoords = false;
 
 			CancelWaitingAtWaypoint = false;
@@ -1252,6 +1254,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
                 {"AddWaypointFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AddWaypointFromCommand) },
                 {"AddCustomCountersVariablesFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AddCustomCountersVariablesFromCommand) },
+                {"AddCustomStringsFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AddCustomStringsFromCommand) },
                 {"RecalculateDespawnCoords", (s, o) => TagParse.TagBoolCheck(s, ref RecalculateDespawnCoords) },
                 {"AddDatapadsToSeats", (s, o) => TagParse.TagBoolCheck(s, ref AddDatapadsToSeats) },
                 {"DatapadNamesToAdd", (s, o) => TagParse.TagStringListCheck(s, ref DatapadNamesToAdd) },

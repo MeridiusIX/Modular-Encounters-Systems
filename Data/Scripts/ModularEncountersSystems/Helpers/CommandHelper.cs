@@ -93,6 +93,7 @@ namespace ModularEncountersSystems.Helpers {
 
         public bool FromEvent;
         public Dictionary<string, int> CustomCountersVariables;
+        public Dictionary<string, string> CustomStrings;
 
         public Command() {
 
@@ -140,6 +141,7 @@ namespace ModularEncountersSystems.Helpers {
             Relation = RelationTypeEnum.None;
 
             CustomCountersVariables = new Dictionary<string, int>();
+            CustomStrings = new Dictionary<string, string>();
 
         }
         public void PrepareEventCommand(CommandProfile profile, Vector3D position, string overrideCommandCode = "",double overrideRadius = -1, long commandOwnerId =0)
@@ -279,6 +281,19 @@ namespace ModularEncountersSystems.Helpers {
                     if (behavior?.CurrentGrid?.Npc != null && behavior.CurrentGrid.Npc.CustomCountersVariables.ContainsKey(customVarRef.Value))
                     {
                         this.CustomCountersVariables[customVarRef.Key] = behavior.CurrentGrid.Npc.CustomCountersVariables[customVarRef.Value];
+                    }
+                }
+            }
+
+            if (profile.CustomStrings != null)
+                this.CustomStrings = profile.CustomStrings;
+
+            if (profile.CustomStringsReferences != null)
+            {
+                foreach (var customVarRef in profile.CustomStringsReferences) {
+                    if (behavior?.CurrentGrid?.Npc != null && behavior.CurrentGrid.Npc.CustomStrings.ContainsKey(customVarRef.Value))
+                    {
+                        this.CustomStrings[customVarRef.Key] = behavior.CurrentGrid.Npc.CustomStrings[customVarRef.Value];
                     }
                 }
             }

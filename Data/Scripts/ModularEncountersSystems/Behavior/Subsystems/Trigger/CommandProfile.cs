@@ -39,6 +39,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
         public string Waypoint;
         public Dictionary<string, int> CustomCountersVariables;
         public Dictionary<string, string> CustomCountersVariablesReferences;
+        public Dictionary<string, string> CustomStrings;
+        public Dictionary<string, string> CustomStringsReferences;
 
 		public CommandProfile() {
 
@@ -75,6 +77,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
             CustomCountersVariables = new Dictionary<string, int>();
             CustomCountersVariablesReferences = new Dictionary<string,string>();
+            CustomStrings = new Dictionary<string,string>();
+            CustomStringsReferences = new Dictionary<string,string>();
 
 		}
 
@@ -247,6 +251,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[CustomCountersVariablesReferences:") == true) {
 
 						TagParse.TagStringStringDictCheck(tag, ref CustomCountersVariablesReferences);
+
+					}
+
+					//CustomStrings
+					if (tag.Contains("[CustomStrings:") == true) {
+
+						TagParse.TagStringStringDictCheck(tag, ref CustomStrings);
+
+					}
+
+					//CustomStringsReferences
+					if (tag.Contains("[CustomStringsReferences:") == true) {
+
+						TagParse.TagStringStringDictCheck(tag, ref CustomStringsReferences);
 
 					}
 

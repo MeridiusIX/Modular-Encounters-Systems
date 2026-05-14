@@ -701,6 +701,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
+                //AddCustomStringsFromCommand
+                lastAction = "AddCustomStringsFromCommand";
+                if (actions.AddCustomStringsFromCommand && command?.CustomStrings != null)
+                {
+
+                    BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding Custom Counters Variables From Command", BehaviorDebugEnum.Action);
+                    var npcdata = _behavior?.CurrentGrid?.Npc;
+                    foreach (var customVars in command.CustomStrings)
+                    {
+                        npcdata.CustomStrings[customVars.Key] = customVars.Value;
+                    }
+
+                }
+
                 //CancelWaitingAtWaypoint
                 lastAction = "CancelWaitingAtWaypoint";
                 if (actions.CancelWaitingAtWaypoint)

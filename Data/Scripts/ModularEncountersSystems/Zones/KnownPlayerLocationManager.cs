@@ -78,7 +78,7 @@ namespace ModularEncountersSystems.Zones {
                 if (!playerEnt.ActiveEntity())
                     continue;
 
-                if (playerEnt.Player.IsBot == true) {
+                if (playerEnt.Player.IsBot || playerEnt.Player.SteamUserId <= 0) {
 
                     continue;
 
@@ -276,7 +276,7 @@ namespace ModularEncountersSystems.Zones {
                 if (!playerEnt.ActiveEntity())
                     continue;
 
-                if (playerEnt.Player.IsBot == true) {
+                if (playerEnt.Player.IsBot || playerEnt.Player.SteamUserId <= 0) {
 
                     continue;
 

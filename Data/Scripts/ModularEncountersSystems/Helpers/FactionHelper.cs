@@ -247,7 +247,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			foreach (var player in playerList) {
 
-				if (player.IsBot == true)
+				if (player.IsBot || player.SteamUserId <= 0)
 					continue;
 
 				if (Vector3D.Distance(player.GetPosition(), remoteControl.GetPosition()) > radius)

@@ -21,7 +21,7 @@ namespace ModularEncountersSystems.Entities {
 		public static Action<PlayerEntity> NewPlayerDetected;
 		public static Action UnloadEntities;
 
-		
+
 
 		public static PlayerEntity GetNearestPlayer(Vector3D coords) {
 
@@ -40,11 +40,11 @@ namespace ModularEncountersSystems.Entities {
 
 				distance = dist;
 				result = player;
-			
+
 			}
 
 			return result;
-		
+
 		}
 
 		public static PlayerEntity GetPlayerUsingTool(IMyEntity entity) {
@@ -121,9 +121,9 @@ namespace ModularEncountersSystems.Entities {
 			foreach (var player in Players) {
 
 				player.ItemConsumedEvent(character, id);
-			
+
 			}
-		
+
 		}
 
 		public static void PlayerConnectEvent(long playerId) {
@@ -159,12 +159,11 @@ namespace ModularEncountersSystems.Entities {
 						if (playerEnt.Player == null)
 							continue;
 
-						if (playerEnt.Player.SteamUserId == player.SteamUserId) {
+						if (playerEnt.Player.SteamUserId == player.SteamUserId && !player.IsBot) {
 
 							foundExisting = true;
 
 							if (playerEnt.Player.IdentityId != player.IdentityId) {
-
 								playerEnt.Player = player;
 
 							}
@@ -177,7 +176,6 @@ namespace ModularEncountersSystems.Entities {
 						continue;
 
 					if (!player.IsBot && player.SteamUserId > 0) {
-
 						var playerEntity = new PlayerEntity(player);
 						var progression = playerEntity.Progression;
 						playerEntity.InitSolarModule();
@@ -211,7 +209,7 @@ namespace ModularEncountersSystems.Entities {
 					}
 
 				}
-			
+
 			}
 
 			return null;

@@ -107,7 +107,7 @@ namespace ModularEncountersSystems.Spawning {
                     foreach (var player in playerList)
                     {
 
-                        if (player.IsBot || player.Controller?.ControlledEntity?.Entity == null)
+                        if (player.IsBot || player.SteamUserId <= 0 || player.Controller?.ControlledEntity?.Entity == null)
                         {
 
                             continue;

@@ -156,9 +156,9 @@ namespace ModularEncountersSystems.Helpers {
 		}
 
 		public static void SetReputation(long playerId, string factionTag) {
-		
-			
-		
+
+
+
 		}
 
 		public static void ScheduledRun() {
@@ -173,7 +173,7 @@ namespace ModularEncountersSystems.Helpers {
 				PlayerConnected = false;
 				InitialReputationFixer();
 				RunCount = 0;
-			
+
 			}
 
 		}
@@ -206,8 +206,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					var player = PlayerManager.Players[i].Player;
 
-					if (player.IsBot == true || player.Character == null) {
-
+					if (player.IsBot || player.SteamUserId <= 0 || player.Character == null) {
 						continue;
 
 					}
@@ -293,7 +292,7 @@ namespace ModularEncountersSystems.Helpers {
 					InitialReputationFixer();
 
 				});
-				
+
 			}
 
 		}
@@ -309,7 +308,7 @@ namespace ModularEncountersSystems.Helpers {
 				var data = MyAPIGateway.Utilities.SerializeToBinary<ReputationChange>(repChange);
 				var syncContainer = new SyncContainer(SyncMode.ReputationChangeClient, data);
 				SyncManager.SendSyncMesage(syncContainer, MyAPIGateway.Players.TryGetSteamId(player));
-			
+
 			}
 
 

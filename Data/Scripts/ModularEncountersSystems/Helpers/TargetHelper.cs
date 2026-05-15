@@ -59,55 +59,55 @@ namespace ModularEncountersSystems.Helpers {
 	public static class TargetHelper{
 
 		public static List<MyDefinitionId> ShieldBlockIDs = new List<MyDefinitionId>();
-		
+
 		public static Random Rnd = new Random();
 
-		
+
 
 		//EvaluateTargetWeaponsRange
 		public static float EvaluateTargetTurretRange(IMyCubeGrid cubeGrid){
-			
+
 			float furthestWeaponDistance = 0;
-			
+
 			try{
-				
+
 				var gts = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(cubeGrid);
 				var blockList = new List<IMyLargeTurretBase>();
 				gts.GetBlocksOfType<IMyLargeTurretBase>(blockList);
 
 				foreach(var turret in blockList){
-					
+
 					if(turret.IsFunctional == false){
-						
+
 						continue;
-						
+
 					}
-					
+
 					if(turret.GetInventory().Empty() == true){
-						
+
 						continue;
-						
+
 					}
-					
+
 					float range = turret.Range;
-					
+
 					if(range > furthestWeaponDistance){
-						
+
 						furthestWeaponDistance = range;
-						
+
 					}
-					
+
 				}
-				
+
 			}catch(Exception exc){
-				
+
 				BehaviorLogger.Write("Caught Error in EvaluateTargetWeaponsRange Method.", BehaviorDebugEnum.Error, true);
 				return 0;
-				
+
 			}
-			
+
 			return furthestWeaponDistance;
-			
+
 		}
 
 		public static List<IMyEntity> FilterBlocksByFamily(List<IMyEntity> entityList, BlockTargetTypes family, bool replaceResultWithDecoys = false) {
@@ -295,7 +295,7 @@ namespace ModularEncountersSystems.Helpers {
 				return decoyList;
 
 			} else {
-				
+
 				return blockList;
 
 			}
@@ -303,7 +303,7 @@ namespace ModularEncountersSystems.Helpers {
 		}
 
 		//GetAllBlocks
-		
+
 
 		public static PlayerEntity GetClosestPlayerWithReputation(Vector3D coords, long factionId, TriggerProfile control) {
 
@@ -320,8 +320,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				var player = playerEnt.Player;
 
-				if(player?.Controller?.ControlledEntity?.Entity == null || player.IsBot == true) {
-
+				if(player?.Controller?.ControlledEntity?.Entity == null || player.IsBot || player.SteamUserId <= 0) {
 					continue;
 
 				}
@@ -336,9 +335,9 @@ namespace ModularEncountersSystems.Helpers {
 						if (distance <= control.CustomReputationRangeCheck) {
 
 							return null;
-						
+
 						}
-					
+
 					}
 
 					continue;
@@ -416,27 +415,27 @@ namespace ModularEncountersSystems.Helpers {
 		}
 
 		public static List<MySafeZone> GetSafeZones(){
-			
+
 			var entities = new HashSet<IMyEntity>();
 			MyAPIGateway.Entities.GetEntities(entities);
 			var safezoneList = new List<MySafeZone>();
-			
+
 			foreach(var zoneEntity in entities){
-				
+
 				var safezone = zoneEntity as MySafeZone;
-				
+
 				if(safezone == null){
-					
+
 					continue;
-					
+
 				}
-				
+
 				safezoneList.Add(safezone);
-				
+
 			}
-			
+
 			return safezoneList;
-			
+
 		}
 
 		public static IMyEntity GetTargetFromId(long entityId, out TargetTypeEnum targetType) {
@@ -513,246 +512,246 @@ namespace ModularEncountersSystems.Helpers {
 			}
 
 			return null;
-		
+
 		}
-		
+
 		public static Vector2 GetTargetGridPower(IMyCubeGrid cubeGrid){
-			
+
 			Vector2 result = Vector2.Zero;
 			float currentPower = 0;
 			float maxPower = 0;
-			
+
 			try{
-				
+
 				var gts = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(cubeGrid);
 				List<IMyPowerProducer> blockList = new List<IMyPowerProducer>();
 				gts.GetBlocksOfType<IMyPowerProducer>(blockList);
-				
+
 				foreach(var block in blockList){
-					
+
 					if(block.IsFunctional == true || block.IsWorking){
-						
+
 						currentPower += block.CurrentOutput;
 						maxPower += block.MaxOutput;
-						
+
 					}
-				
+
 				}
-				
+
 			}catch(Exception exc){
-				
+
 				result.X = -1;
 				result.Y = -1;
 				return result;
-				
+
 			}
-			
+
 			result.X = currentPower;
 			result.Y = maxPower;
 			return result;
-			
+
 		}
 
 		//GetTargetShipSystem
 		public static void GetFilteredBlockLists(IMyCubeGrid targetGrid, BlockTargetTypes systemTarget, out List<IMyTerminalBlock> targetBlocksList, out List<IMyTerminalBlock> decoyList){
-			
+
 			decoyList = new List<IMyTerminalBlock>();
 			targetBlocksList = new List<IMyTerminalBlock>();
-			
+
 			try{
-				
+
 				var gts = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(targetGrid);
 				List<IMyTerminalBlock> blockList = new List<IMyTerminalBlock>();
 				gts.GetBlocksOfType<IMyTerminalBlock>(blockList);
 
 				foreach(var block in blockList){
-					
+
 					if(block.IsFunctional == false){
-						
+
 						continue;
-						
+
 					}
-					
+
 					if(block as IMyDecoy != null){
-						
+
 						decoyList.Add(block);
-						
+
 						if(systemTarget == BlockTargetTypes.Decoys){
-							
+
 							targetBlocksList.Add(block);
-							
+
 						}
 
 						continue;
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.All)){
-						
+
 						targetBlocksList.Add(block);
 						continue;
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Communications)){
-						
+
 						if(block as IMyLaserAntenna != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 						if(block as IMyBeacon != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
 
 						if(block as IMyRadioAntenna != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Containers)){
-						
+
 						if(block as IMyCargoContainer != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.GravityBlocks)){
-						
+
 						if(block as IMyGravityGeneratorBase != null || block as IMyArtificialMassBlock != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Guns)){
-						
+
 						if(block as IMyUserControllableGun != null && block as IMyLargeTurretBase == null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.JumpDrive)){
-						
+
 						if(block as IMyJumpDrive != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Power)){
-						
+
 						if(block as IMyPowerProducer != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Production)){
-						
+
 						if(block as IMyProductionBlock != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 						if(block as IMyGasGenerator != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Propulsion)){
-						
+
 						if(block as IMyThrust != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Shields)){
-						
+
 						if(ShieldBlockIDs.Contains(block.SlimBlock.BlockDefinition.Id) == true){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.ShipControllers)){
-						
+
 						if(block as IMyShipController != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Tools)){
-						
+
 						if(block as IMyShipToolBase != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 					if(systemTarget.HasFlag(BlockTargetTypes.Turrets)){
-						
+
 						if(block as IMyLargeTurretBase != null){
-							
+
 							targetBlocksList.Add(block);
 							continue;
-							
+
 						}
-						
+
 					}
-					
+
 				}
 
 			}catch(Exception exc){
-				
-				
-				
+
+
+
 			}
 
 		}
@@ -760,9 +759,9 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMyPlayer> GetPlayersWithinDistance(Vector3D coords, double radius) {
 
 			var playerList = new List<IMyPlayer>();
-			MyAPIGateway.Players.GetPlayers(playerList, x => x.IsBot == false && Vector3D.Distance(coords, x.GetPosition()) < radius);
+			MyAPIGateway.Players.GetPlayers(playerList, x => !x.IsBot && x.SteamUserId > 0 && Vector3D.Distance(coords, x.GetPosition()) < radius);
 			return playerList;
-			
+
 		}
 		//Overload didn't work for me somehow -cpt
 		public static List<IMyPlayer> GetPlayersWithinRange(Vector3D coords, double minDistance, double maxDistance)
@@ -770,7 +769,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			var playerList = new List<IMyPlayer>();
 
-			MyAPIGateway.Players.GetPlayers(playerList, x => x.IsBot == false && Vector3D.Distance(coords, x.GetPosition()) < maxDistance && Vector3D.Distance(coords, x.GetPosition()) > minDistance);
+			MyAPIGateway.Players.GetPlayers(playerList, x => !x.IsBot && x.SteamUserId > 0 && Vector3D.Distance(coords, x.GetPosition()) < maxDistance && Vector3D.Distance(coords, x.GetPosition()) > minDistance);
 			return playerList;
 
 		}
@@ -819,19 +818,19 @@ namespace ModularEncountersSystems.Helpers {
 			var gts = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(cubeGrid);
 			List<IMyShipController> blockList = new List<IMyShipController>();
 			gts.GetBlocksOfType<IMyShipController>(blockList);
-			
+
 			foreach(var cockpit in blockList){
-				
+
 				if(cockpit.Pilot != null && cockpit.CanControlShip == true){
-					
+
 					return true;
-					
+
 				}
-				
+
 			}
-			
+
 			return false;
-			
+
 		}
 
 		public static bool IsPositionInGravity(Vector3D position, MyPlanet planet) {
@@ -859,15 +858,15 @@ namespace ModularEncountersSystems.Helpers {
 		public static bool IsPositionInSafeZone(Vector3D position){
 
 			var zones = GetSafeZones();
-			
+
 			foreach(var safezone in zones){
-				
+
 				var zoneEntity = safezone as IMyEntity;
-				
+
 				if(zoneEntity == null){
-					
+
 					continue;
-					
+
 				}
 
 				if(safezone.Enabled == false) {
@@ -878,7 +877,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				var checkPosition = position;
 				bool inZone = false;
-				
+
 				if (safezone.Shape == MySafeZoneShape.Sphere){
 
 					if(Vector3D.Distance(zoneEntity.PositionComp.WorldVolume.Center, position) < safezone.Radius) {
@@ -888,77 +887,77 @@ namespace ModularEncountersSystems.Helpers {
 					}
 
 				}else{
-					
+
 					MyOrientedBoundingBoxD myOrientedBoundingBoxD = new MyOrientedBoundingBoxD(zoneEntity.PositionComp.LocalAABB, zoneEntity.PositionComp.WorldMatrix);
 					inZone = myOrientedBoundingBoxD.Contains(ref checkPosition);
-				
+
 				}
-				
+
 				if(inZone == true){
-					
+
 					return true;
-					
+
 				}
-				
+
 			}
-			
+
 			return false;
-			
+
 		}
 
 		//IsTargetBroadcasting
 		public static bool IsTargetBroadcasting(IMyCubeGrid cubeGrid, IMyRemoteControl sourceBlock, bool checkAntennas, bool checkBeacons){
-			
+
 			var gts = MyAPIGateway.TerminalActionsHelper.GetTerminalSystemForGrid(cubeGrid);
-			
+
 			if(checkAntennas == true){
-				
+
 				List<IMyRadioAntenna> antennaList = new List<IMyRadioAntenna>();
 				gts.GetBlocksOfType<IMyRadioAntenna>(antennaList);
-				
+
 				foreach(var antenna in antennaList){
-					
+
 					if(antenna.IsWorking == true && antenna.IsFunctional == true && antenna.IsBroadcasting == true){
-						
+
 						var distToNPC = (float)Vector3D.Distance(sourceBlock.GetPosition(), antenna.GetPosition());
-						
+
 						if(antenna.Radius >= distToNPC){
-							
+
 							return true;
-							
+
 						}
-						
+
 					}
-					
+
 				}
-				
+
 			}
-			
+
 			if(checkBeacons == true){
-				
+
 				List<IMyBeacon> beaconList = new List<IMyBeacon>();
 				gts.GetBlocksOfType<IMyBeacon>(beaconList);
-				
+
 				foreach(var beacon in beaconList){
-					
+
 					if(beacon.IsWorking == true && beacon.IsFunctional == true){
-						
+
 						var distToNPC = (float)Vector3D.Distance(sourceBlock.GetPosition(), beacon.GetPosition());
-						
+
 						if(beacon.Radius >= distToNPC){
-							
+
 							return true;
-							
+
 						}
-						
+
 					}
-					
+
 				}
-				
+
 			}
-			
+
 			return false;
-			
+
 		}
 
 		//IsTargetFaction
@@ -1224,17 +1223,17 @@ namespace ModularEncountersSystems.Helpers {
 			if(APIs.ShieldsApiLoaded){
 
 				var api = APIs.Shields;
-				
+
 				if(api.GridHasShield(targetGrid) == true && api.GridShieldOnline(targetGrid) == true){
-					
+
 					return true;
-					
+
 				}
-				
+
 			}
-			
+
 			return false;
-			
+
 		}
 
 		public static IMyPlayer MatchPlayerToEntity(IMyEntity entity) {
@@ -1245,64 +1244,64 @@ namespace ModularEncountersSystems.Helpers {
 			return MyAPIGateway.Players.GetPlayerControllingEntity(entity);
 
 		}
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
 		public static Vector3D VoxelIntersectionCheck(Vector3D startScan, Vector3D scanDirection, double distance, out IMyEntity voxelEntity){
 
 			voxelEntity = null;
 			var voxelFrom = startScan;
 			var voxelTo = scanDirection * distance + voxelFrom;
 			var line = new LineD(voxelFrom, voxelTo);
-			
+
 			List<IMyVoxelBase> nearbyVoxels = new List<IMyVoxelBase>();
 			MyAPIGateway.Session.VoxelMaps.GetInstances(nearbyVoxels);
 			Vector3D closestDistance = Vector3D.Zero;
-			
+
 			foreach(var voxel in nearbyVoxels){
-				
+
 				if(Vector3D.Distance(voxel.GetPosition(), voxelFrom) > 120000){
-					
+
 					continue;
-					
+
 				}
-				
+
 				var voxelBase = voxel as MyVoxelBase;
 				Vector3D? nearestHit = null;
-				
+
 				if(voxelBase.GetIntersectionWithLine(ref line, out nearestHit) == true){
-					
+
 					if(nearestHit.HasValue == true){
-						
+
 						if(closestDistance == Vector3D.Zero){
 
 							voxelEntity = voxelBase;
 							closestDistance = (Vector3D)nearestHit;
 							continue;
-							
+
 						}
-						
+
 						if(Vector3D.Distance(voxelFrom, (Vector3D)nearestHit) < Vector3D.Distance(voxelFrom, closestDistance)){
 
 							voxelEntity = voxelBase;
 							closestDistance = (Vector3D)nearestHit;
-							
+
 						}
-						
+
 					}
-					
+
 				}
 
 			}
-			
+
 			return closestDistance;
-			
+
 		}
 
 	}
-	
+
 }

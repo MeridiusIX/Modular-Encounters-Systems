@@ -2340,7 +2340,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                 continue;
 
                             BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Contract Profile With Name: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);
-                            profile.ApplyProfileToBlock(contractblock, _behavior?.CurrentGrid?.Npc.SpawnGroupName ?? "", actions.ClearContractContentsFirst);
+                            profile.ApplyProfileToBlock(contractblock, _behavior?.CurrentGrid?.Npc ?? null, actions.ClearContractContentsFirst);
 
 
 

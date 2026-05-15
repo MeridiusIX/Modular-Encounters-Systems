@@ -3,6 +3,7 @@ using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Missions;
+using ModularEncountersSystems.World;
 using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
@@ -89,7 +90,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		}
 
-		public void ApplyProfileToBlock(BlockEntity block,string spawnGroupName, bool clearExisting = true) {
+		public void ApplyProfileToBlock(BlockEntity block, NpcData npcData, bool clearExisting = true) {
 
 			if (block == null) {
 
@@ -119,7 +120,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				}
 
 
-				var mission = new Mission(MissionIds[i], spawnGroupName);
+				var mission = new Mission(MissionIds[i], npcData);
 				if (!mission.Init(block))
                 {
 					//MyVisualScriptLogicProvider.ShowNotificationToAll($"Failed  {MissionIds[i]}", 5000);

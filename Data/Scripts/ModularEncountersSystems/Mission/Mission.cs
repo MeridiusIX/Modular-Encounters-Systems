@@ -6,6 +6,7 @@ using ModularEncountersSystems.Events.Condition;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Spawning.Profiles;
+using ModularEncountersSystems.World;
 using ProtoBuf;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -26,6 +27,7 @@ namespace ModularEncountersSystems.Missions
     public class Mission
     {
         public string ProfileSubtypeId;
+        public NpcData BlockParentNpcData;
         public string SpawnGroupName;
         public IMyFaction Faction;
 
@@ -55,7 +57,7 @@ namespace ModularEncountersSystems.Missions
         {
             get
             {
-                if(_StoreProfile == null)
+                if (_StoreProfile == null)
                 {
                     StoreProfile _profile = null;
                     if (ProfileManager.StoreProfiles.TryGetValue(Profile.StoreProfileId, out _profile))
@@ -64,14 +66,12 @@ namespace ModularEncountersSystems.Missions
                         return _StoreProfile;
                     }
 
-
                     return null;
                 }
                 else
                 {
                     return _StoreProfile;
                 }
-
             }
         }
 
@@ -79,51 +79,36 @@ namespace ModularEncountersSystems.Missions
 
         public MissionProfile Profile
         {
-
             get
             {
-
                 if (_profile == null)
                 {
 
                     if (!ProfileManager.MissionProfiles.TryGetValue(ProfileSubtypeId, out _profile))
                     {
-
                         //ErrorOnSetup = true;
                         //ErrorSetupMsg = "Could Not Find EventProfile With Name [" + ProfileSubtypeId ?? null + "]";
                         return null;
-
                     }
-
                 }
-
                 return _profile;
-
             }
-
         }
-
 
 
         private MissionProfile _profile;
 
 
-
-
-        public Mission(string profileSubtypeId,string spawnGroupName)
+        public Mission(string profileSubtypeId, NpcData npcData)
         {
             ProfileSubtypeId = profileSubtypeId;
-
-
-            SpawnGroupName = spawnGroupName;
+            BlockParentNpcData = npcData;
+            SpawnGroupName = npcData.SpawnGroupName ?? "";
         }
-
 
 
         public bool Init(BlockEntity sourceContractBlock)
         {
-
-
 
             // Remove mission from all contract blocks
             if (this.Profile.Exclusive && InGameContractManager.IsAContractWithMissionSubtypeIdActive(this.ProfileSubtypeId))
@@ -131,17 +116,12 @@ namespace ModularEncountersSystems.Missions
                 return false;
             }
 
-
             SetupEventCondition();
             if (!RunEventConditions())
                 return false;
 
-
-
-
             ReplaceKeys = new List<string>();
             ReplaceValues = new List<string>();
-
 
             if (Profile.ReplaceKeys.Count != Profile.ReplaceValues.Count)
             {
@@ -151,16 +131,15 @@ namespace ModularEncountersSystems.Missions
                 return false;
             }
 
-
-
             ReplaceKeys.AddList(Profile.ReplaceKeys);
             ReplaceValues.AddList(Profile.ReplaceValues);
 
-
+            for (int i = ReplaceValues.Count - 1; i >= 0; i--)
+            {
+                ReplaceValues[i] = IdsReplacer.ReplaceId(BlockParentNpcData ?? null, ReplaceValues[i]);
+            }
 
             SourceContractBlock = sourceContractBlock;
-
-
 
             if (!string.IsNullOrEmpty(Profile.OverrideFaction))
             {
@@ -185,8 +164,6 @@ namespace ModularEncountersSystems.Missions
                 return false;
             }
 
-
-
             var coords = sourceContractBlock.GetPosition();
 
             ReplaceKeys.Add("{ContractBlockLocation}");
@@ -198,22 +175,14 @@ namespace ModularEncountersSystems.Missions
             ReplaceKeys.Add("{Faction}");
             ReplaceValues.Add($"{Faction.Tag}");
 
-
             ReplaceKeys.AddList(new List<string>(Profile.ReplacePairs.Keys));
             ReplaceValues.AddList(new List<string>(Profile.ReplacePairs.Values));
-
-
-
 
             if (ReplaceKeys.Count != ReplaceValues.Count)
             {
                 MyAPIGateway.Utilities.ShowMessage("MES", $"{Profile.ProfileSubtypeId}: Before API: Replacekeys ({ReplaceKeys.Count}) and replacevalues ({ReplaceValues.Count}) do not match");
                 return false;
             }
-
-
-
-
 
             if (Profile.CustomApiMapping.Count > 0)
             {
@@ -249,9 +218,6 @@ namespace ModularEncountersSystems.Missions
                 MyAPIGateway.Utilities.ShowMessage("MES", $"{Profile.ProfileSubtypeId}: After API: Replacekeys ({ReplaceKeys.Count}) and replacevalues ({ReplaceValues.Count}) do not match");
                 return false;
             }
-
-
-
 
             InstanceEventGroupId = IdsReplacer.ReplaceText(Profile.InstanceEventGroupId, ReplaceKeys, ReplaceValues);
 
@@ -298,9 +264,6 @@ namespace ModularEncountersSystems.Missions
                 Duration = 0;
             }
 
-
-
-
             return AddMissionToBlock();
         }
 
@@ -312,8 +275,6 @@ namespace ModularEncountersSystems.Missions
 
             PersistantConditions = new List<EventCondition>();
             Conditions = new List<EventCondition>();
-
-
 
             //Get the profiles:
             foreach (var id in Profile.LeadPlayerConditionIds)
@@ -356,9 +317,8 @@ namespace ModularEncountersSystems.Missions
                     Conditions.Add(conditionProfile);
                 }
             }
-
-
         }
+
 
         public bool RunEventConditions()
         {
@@ -369,8 +329,6 @@ namespace ModularEncountersSystems.Missions
                 return false;
             }
 
-
-
             if (!EventCondition.AreConditionsMet(Profile.UseAnyPassingEventCondition, this.Conditions))
             {
                 //MyVisualScriptLogicProvider.ShowNotificationToAll("Conditions not Met", 20000, "Red");
@@ -378,8 +336,8 @@ namespace ModularEncountersSystems.Missions
             }
 
             return true;
-
         }
+
 
         public bool RunPlayerCondition(long PlayerId, bool IsLeadPlayer = true)
         {
@@ -400,10 +358,6 @@ namespace ModularEncountersSystems.Missions
         }
 
 
-
-
-
-
         public void Start()
         {
             if (string.IsNullOrEmpty(InstanceEventGroupId))
@@ -420,14 +374,12 @@ namespace ModularEncountersSystems.Missions
 
         }
 
+
         public bool AddMissionToBlock()
         {
 
             if (SourceContractBlock == null)
                 return false;
-
-
-
 
             MyAddContractResultWrapper result;
             IMyPlayerCollection playerCollection;
@@ -459,7 +411,6 @@ namespace ModularEncountersSystems.Missions
                     contractObject.MissionReference = this;
                     contractObject.SourceBlock = SourceContractBlock;
 
-
                     result = MyAPIGateway.ContractSystem.AddContract(newContract);
 
                     if (result.Success)
@@ -488,9 +439,7 @@ namespace ModularEncountersSystems.Missions
                     if (StoreProfile == null)
                         return false;
 
-
-                    int index = MathTools.RandomBetween(0, StoreProfile.Orders.Count); ;
-
+                    int index = MathTools.RandomBetween(0, StoreProfile.Orders.Count);
 
                     if (index >= StoreProfile.OrderItems.Count)
                     {
@@ -505,11 +454,8 @@ namespace ModularEncountersSystems.Missions
                     int amount = storeItem.GetAmount(false);
                     int reward = (int)((int)storeItem.GetPrice(105, false) * amount);
 
-
                     playerCollection = MyAPIGateway.Players;
                     playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, reward);
-
-
 
                     MyContractAcquisition newAcquisition = new MyContractAcquisition(startBlockId: SourceContractBlock.Entity.EntityId,
                         moneyReward: reward, //(int)storeItem.GetPrice(200,false)
@@ -534,7 +480,6 @@ namespace ModularEncountersSystems.Missions
 
                         InstanceId = result.ContractId;
 
-
                         //playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, -reward); Not needed because keen already does this?
                         return true;
                     }
@@ -546,20 +491,15 @@ namespace ModularEncountersSystems.Missions
                     break;
 
                 default:
-
                     break;
             }
-
-
             return false;
-
         }
 
         public bool ReAddContractToBlock(long previousId)
         {
-            if(InstanceId == previousId)
+            if (InstanceId == previousId)
             {
-
                 ReplaceKeys.Remove("{InstanceId}");
                 ReplaceValues.Remove($"{InstanceId}");
                 InstanceId = 0;
@@ -573,9 +513,6 @@ namespace ModularEncountersSystems.Missions
 
         }
 
-
-
-
-}
+    }
 
 }

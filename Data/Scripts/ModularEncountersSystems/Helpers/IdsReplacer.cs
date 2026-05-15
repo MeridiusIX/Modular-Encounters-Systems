@@ -60,7 +60,6 @@ namespace ModularEncountersSystems.Helpers
                 }
             }
 
-
             return tag;
         }
 

@@ -88,7 +88,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     ChatProfile chat = null;
 
-
                     List<long> tempPlayerIdList = new List<long>();
 
                     if (actions.PlayDialogueToSpecificPlayers && actions.PlayDialoguePlayerConditionIds.Count > 0 && _behavior.RemoteControl != null)
@@ -103,11 +102,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             }
                         }
                     }
-
-
-
-
-
 
                     if (_dialogueBank.GetChatProfile(actions.DialogueCueId, ref chat, actions.PlayDialogueToSpecificPlayers))
                     {
@@ -1761,7 +1755,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     var npcdata = _behavior?.CurrentGrid?.Npc;
                     foreach (var customvar in actions.CustomStrings)
                     {
-                        npcdata.CustomStrings[customvar.Key] = customvar.Value;
+                        var value_adjusted = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, customvar.Value);
+
+                        if (actions.UseRandomNameGenerator)
+                            npcdata.CustomStrings[customvar.Key] = RandomNameGenerator.CreateRandomNameFromPattern(value_adjusted);
+                        else
+                            npcdata.CustomStrings[customvar.Key] = value_adjusted;
                     }
 
                 }

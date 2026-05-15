@@ -1,12 +1,13 @@
 import os
 import re
+import shutil
 import subprocess
 
 
 SEWT = "C:\\Program Files (x86)\\Steam\\steamapps\\common\\SpaceEngineers\\Bin64\\SEWorkshopTool.exe"
 MODS_DIR = "SpaceEngineers\\Mods"
 
-EXCLUDE_FILES = [".bat", ".psd", ".md", ".py", ".gitattributes", ".gitignore", ".sln", ".csproj", ".mod", ".sbmi"]
+EXCLUDE_FILES = [".bat", ".psd", ".md", ".py", ".gitattributes", ".gitignore", ".sln", ".csproj", ".mod", ".sbmi", ".zip"]
 EXCLUDE_DIRS = ["bin", "obj", "WebWiki", ".git"]
 
 UPLOAD_DESC = False
@@ -140,9 +141,58 @@ def path_adjustments() -> str:
     return new_path
 
 
+def copy_files_recursive(source: str, destination: str):
+
+    for root, dirs, files in os.walk(source):
+
+        root = root[0].capitalize() + root[1:]
+
+        skip = False
+        for x_dir in EXCLUDE_DIRS:
+            if x_dir in root:
+                skip = True
+        if skip:
+            continue
+
+        dst_root = destination + root[len(source):]
+
+        for item in files:
+            src_file = os.path.join(root, item)
+
+            for x_dir in EXCLUDE_DIRS:
+                if f"\\{x_dir}\\" in src_file or f"\\{x_dir}" in src_file:
+                    skip = True
+            if skip:
+                continue
+
+            if os.path.splitext(item)[1] in EXCLUDE_FILES:
+                continue
+
+            dst_file = os.path.join(dst_root, item)
+            if not os.path.exists(os.path.dirname(dst_file)):
+                os.makedirs(os.path.dirname(dst_file), exist_ok=True)
+            shutil.copy2(src_file, dst_file)
+
+
 def main():
     mod_dir = path_adjustments()
     os.chdir(mod_dir)
+
+    temp_folder = os.path.join(mod_dir, 'temp')
+    copy_files_recursive(mod_dir, temp_folder)
+
+    with open(os.path.join(mod_dir, "Data", "Scripts", "ModularEncountersSystems", "Core", 'MES_SessionCore.cs')) as f:
+        lines = f.readlines()
+
+    key = "\t\tpublic static string ModVersion = \""
+    version = "UNKNOWN"
+    for l in lines:
+        if l.startswith(key):
+            version = l.split(key)[1].split('"')[0].replace(".","-")
+
+    target = os.path.join(mod_dir, f"modular-encounters-systems_{version}")
+    zipfile = shutil.make_archive(target, 'zip', temp_folder)
+    shutil.rmtree(temp_folder)
 
     if DRY_RUN:
         args = [SEWT, "push", "--dry-run", "--compile", "--mods", mod_dir]

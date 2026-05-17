@@ -1,4 +1,6 @@
-﻿using Sandbox.Common.ObjectBuilders.Definitions;
+﻿using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.World;
+using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -41,7 +43,7 @@ namespace ModularEncountersSystems.Files {
 
 		}
 
-		
+
 
 	}
 
@@ -69,7 +71,7 @@ namespace ModularEncountersSystems.Files {
 
 		}
 
-		public void ApplyLcdContents(IMyTextSurfaceProvider provider) {
+		public void ApplyLcdContents(IMyTextSurfaceProvider provider, NpcData npcData) {
 
 			if (provider == null)
 				return;
@@ -83,10 +85,10 @@ namespace ModularEncountersSystems.Files {
 					if (panel == null)
 						return;
 
-					ApplyLcdContents(panel, i);
+					ApplyLcdContents(panel, i, npcData);
 
 				}
-			
+
 			} else {
 
 				var panel = provider.GetSurface(TextSurfaceIndex) as IMyTextSurface;
@@ -94,18 +96,18 @@ namespace ModularEncountersSystems.Files {
 				if (panel == null)
 					return;
 
-				ApplyLcdContents(panel, TextSurfaceIndex);
+				ApplyLcdContents(panel, TextSurfaceIndex, npcData);
 
 			}
-			
+
 		}
 
-		public void ApplyLcdContents(IMyTextSurface panel, int surfaceIndex) {
+		public void ApplyLcdContents(IMyTextSurface panel, int surfaceIndex, NpcData npcData) {
 
 			if (ApplyLcdText) {
 
 				panel.ContentType = VRage.Game.GUI.TextPanel.ContentType.TEXT_AND_IMAGE;
-				panel.WriteText(TextTemplate.CleanString(LcdText));
+				panel.WriteText(IdsReplacer.ReplaceId(npcData, TextTemplate.CleanString(LcdText)));
 
 			} else {
 
@@ -125,7 +127,7 @@ namespace ModularEncountersSystems.Files {
 			}
 
 		}
-	
+
 	}
 
 	public class TextTemplate {

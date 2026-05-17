@@ -2261,7 +2261,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 {
 
                     BehaviorLogger.Write(actions.ProfileSubtypeId + ": Adding LCD Content To Blocks.", BehaviorDebugEnum.Action);
-                    _behavior.Grid.ApplyLcdContents(actions.LcdTextTemplateFile, actions.LcdBlockNames, actions.LcdTemplateIndexes);
+                    _behavior.Grid.ApplyLcdContents(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.LcdTextTemplateFile), actions.LcdBlockNames, actions.LcdTemplateIndexes, _behavior?.CurrentGrid?.Npc ?? null);
 
                 }
 

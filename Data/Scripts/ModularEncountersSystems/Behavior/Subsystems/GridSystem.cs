@@ -3,6 +3,7 @@ using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Files;
 using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
+using ModularEncountersSystems.World;
 using Sandbox.Common.ObjectBuilders.Definitions;
 using Sandbox.Definitions;
 using Sandbox.Game;
@@ -203,7 +204,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
-		public void ApplyLcdContents(string textTemplate, List<string> blockNames, List<int> indexes) {
+		public void ApplyLcdContents(string textTemplate, List<string> blockNames, List<int> indexes, NpcData npcData) {
 
 			TextTemplate template = ProfileManager.GetTextTemplate(textTemplate);
 
@@ -216,9 +217,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				for (int j = 0; j < blockNames.Count && j < indexes.Count; j++) {
 
 					var indexAllowed = template.LcdEntries.Length <= indexes[j] + 1;
-					if (block.CustomName == blockNames[j] && indexAllowed) {
+					if (block.CustomName == IdsReplacer.ReplaceId(npcData, blockNames[j]) && indexAllowed) {
 
-						template.LcdEntries[indexes[j]].ApplyLcdContents(block as IMyTextSurfaceProvider);
+						template.LcdEntries[indexes[j]].ApplyLcdContents(block as IMyTextSurfaceProvider, npcData);
 
 					}
 

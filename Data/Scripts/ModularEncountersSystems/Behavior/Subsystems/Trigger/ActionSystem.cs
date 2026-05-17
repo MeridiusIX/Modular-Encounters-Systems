@@ -80,6 +80,128 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             var lastAction = "";
             try
             {
+
+                //SetBooleansTrue
+                lastAction = "SetBooleansTrue";
+                foreach (var variable in actions.SetBooleansTrue)
+                    _settings.SetCustomBool(variable, true);
+
+                //SetBooleansFalse
+                lastAction = "SetBooleansFalse";
+                foreach (var variable in actions.SetBooleansFalse)
+                    _settings.SetCustomBool(variable, false);
+
+                // IncreaseCounters
+                lastAction = "IncreaseCounters";
+                var customCountersVariables = _behavior?.CurrentGrid?.Npc?.CustomCountersVariables;
+                int increaseAmount = 0;
+                if (actions.IncreaseCountersUseAmountVariable && customCountersVariables != null)
+                {
+                    foreach (var counterVar in customCountersVariables)
+                    {
+                        if (actions.IncreaseCountersAmountVariable == "{" + counterVar.Key + "}")
+                        {
+                            increaseAmount = actions.IncreaseCountersUseCommandScore && command != null ? command.NPCScoreValue : Math.Abs(counterVar.Value);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    increaseAmount = actions.IncreaseCountersUseCommandScore && command != null ? command.NPCScoreValue : Math.Abs(actions.IncreaseCountersAmount);
+                }
+
+                foreach (var variable in actions.IncreaseCounters)
+                {
+                    _settings.SetCustomCounter(variable, increaseAmount);
+                }
+
+                // DecreaseCounters
+                lastAction = "DecreaseCounters";
+                int decreaseAmount = 0;
+                if (actions.DecreaseCountersUseAmountVariable && customCountersVariables != null)
+                {
+                    foreach (var counterVar in customCountersVariables)
+                    {
+                        if (actions.DecreaseCountersAmountVariable == "{" + counterVar.Key + "}")
+                        {
+                            decreaseAmount = actions.DecreaseCountersUseCommandScore && command != null ? -command.NPCScoreValue : -Math.Abs(counterVar.Value);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    decreaseAmount = actions.DecreaseCountersUseCommandScore && command != null ? -command.NPCScoreValue : -Math.Abs(actions.DecreaseCountersAmount);
+                }
+
+                foreach (var variable in actions.DecreaseCounters)
+                {
+                    _settings.SetCustomCounter(variable, decreaseAmount);
+                }
+
+                //ResetCounters
+                lastAction = "ResetCounters";
+                foreach (var variable in actions.ResetCounters)
+                    _settings.SetCustomCounter(variable, 0, true);
+
+                //SetCounters
+                lastAction = "SetCounters";
+                if (actions.SetCounters.Count == actions.SetCountersValues.Count)
+                {
+
+                    for (int i = 0; i < actions.SetCounters.Count; i++)
+                        _settings.SetCustomCounter(actions.SetCounters[i], actions.SetCountersValues[i], false, true);
+
+                }
+                else if (actions.SetCounters.Count > 0 && actions.SetCountersUseAmountVariable && customCountersVariables != null)
+                {
+                    foreach (var counterVar in customCountersVariables)
+                    {
+                        if (actions.SetCountersAmountVariable == "{" + counterVar.Key + "}")
+                        {
+                            for (int i = 0; i < actions.SetCounters.Count; i++)
+                                _settings.SetCustomCounter(actions.SetCounters[i], counterVar.Value, false, true);
+                            break;
+                        }
+                    }
+                }
+
+                //SetSandboxBooleansTrue
+                lastAction = "SetSandboxBooleansTrue";
+                foreach (var variable in actions.SetSandboxBooleansTrue)
+                    SetSandboxBool(variable, true);
+
+                //SetSandboxBooleansFalse
+                lastAction = "SetSandboxBooleansFalse";
+                foreach (var variable in actions.SetSandboxBooleansFalse)
+                    SetSandboxBool(variable, false);
+
+                //IncreaseSandboxCounters
+                lastAction = "IncreaseSandboxCounters";
+                foreach (var variable in actions.IncreaseSandboxCounters)
+                    SetSandboxCounter(variable, Math.Abs(actions.IncreaseSandboxCountersAmount));
+
+                //DecreaseSandboxCounters
+                lastAction = "DecreaseSandboxCounters";
+                foreach (var variable in actions.DecreaseSandboxCounters)
+                    SetSandboxCounter(variable, -Math.Abs(actions.DecreaseSandboxCountersAmount));
+
+                //ResetSandboxCounters
+                lastAction = "ResetSandboxCounters";
+                foreach (var variable in actions.ResetSandboxCounters)
+                    SetSandboxCounter(variable, 0);
+
+                //SetSandboxCounters
+                lastAction = "SetSandboxCounters";
+                if (actions.SetSandboxCounters.Count != 0 && actions.SetSandboxCounters.Count == actions.SetSandboxCountersValues.Count)
+                {
+
+                    for (int i = 0; i < actions.SetSandboxCounters.Count; i++)
+                        SetSandboxCounter(actions.SetSandboxCounters[i], actions.SetSandboxCountersValues[i], true);
+
+                }
+
                 //Playsound cue
                 lastAction = "PlayDialogueCue";
                 if (actions.PlayDialogueCue)
@@ -2634,134 +2756,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 if (actions.SaveLocationToSandboxVariable)
                 {
                     MyAPIGateway.Utilities.SetVariable(IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.LocationSandboxVariableName), RemoteControl.GetPosition());
-                }
-
-
-
-
-                //SetBooleansTrue
-                lastAction = "SetBooleansTrue";
-                foreach (var variable in actions.SetBooleansTrue)
-                    _settings.SetCustomBool(variable, true);
-
-                //SetBooleansFalse
-                lastAction = "SetBooleansFalse";
-                foreach (var variable in actions.SetBooleansFalse)
-                    _settings.SetCustomBool(variable, false);
-
-
-
-                // IncreaseCounters
-                lastAction = "IncreaseCounters";
-                var customCountersVariables = _behavior?.CurrentGrid?.Npc?.CustomCountersVariables;
-                int increaseAmount = 0;
-                if (actions.IncreaseCountersUseAmountVariable && customCountersVariables != null)
-                {
-                    foreach (var counterVar in customCountersVariables)
-                    {
-                        if (actions.IncreaseCountersAmountVariable == "{" + counterVar.Key + "}")
-                        {
-                            increaseAmount = actions.IncreaseCountersUseCommandScore && command != null ? command.NPCScoreValue : Math.Abs(counterVar.Value);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    increaseAmount = actions.IncreaseCountersUseCommandScore && command != null ? command.NPCScoreValue : Math.Abs(actions.IncreaseCountersAmount);
-                }
-
-                foreach (var variable in actions.IncreaseCounters)
-                {
-                    _settings.SetCustomCounter(variable, increaseAmount);
-                }
-
-                // DecreaseCounters
-                lastAction = "DecreaseCounters";
-                int decreaseAmount = 0;
-                if (actions.DecreaseCountersUseAmountVariable && customCountersVariables != null)
-                {
-                    foreach (var counterVar in customCountersVariables)
-                    {
-                        if (actions.DecreaseCountersAmountVariable == "{" + counterVar.Key + "}")
-                        {
-                            decreaseAmount = actions.DecreaseCountersUseCommandScore && command != null ? -command.NPCScoreValue : -Math.Abs(counterVar.Value);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    decreaseAmount = actions.DecreaseCountersUseCommandScore && command != null ? -command.NPCScoreValue : -Math.Abs(actions.DecreaseCountersAmount);
-                }
-
-                foreach (var variable in actions.DecreaseCounters)
-                {
-                    _settings.SetCustomCounter(variable, decreaseAmount);
-                }
-
-
-
-                //ResetCounters
-                lastAction = "ResetCounters";
-                foreach (var variable in actions.ResetCounters)
-                    _settings.SetCustomCounter(variable, 0, true);
-
-                //SetCounters
-                lastAction = "SetCounters";
-                if (actions.SetCounters.Count == actions.SetCountersValues.Count)
-                {
-
-                    for (int i = 0; i < actions.SetCounters.Count; i++)
-                        _settings.SetCustomCounter(actions.SetCounters[i], actions.SetCountersValues[i], false, true);
-
-                }
-                else if (actions.SetCounters.Count > 0 && actions.SetCountersUseAmountVariable && customCountersVariables != null)
-                {
-                    foreach (var counterVar in customCountersVariables)
-                    {
-                        if (actions.SetCountersAmountVariable == "{" + counterVar.Key + "}")
-                        {
-                            for (int i = 0; i < actions.SetCounters.Count; i++)
-                                _settings.SetCustomCounter(actions.SetCounters[i], counterVar.Value, false, true);
-                            break;
-                        }
-                    }
-                }
-
-                //SetSandboxBooleansTrue
-                lastAction = "SetSandboxBooleansTrue";
-                foreach (var variable in actions.SetSandboxBooleansTrue)
-                    SetSandboxBool(variable, true);
-
-                //SetSandboxBooleansFalse
-                lastAction = "SetSandboxBooleansFalse";
-                foreach (var variable in actions.SetSandboxBooleansFalse)
-                    SetSandboxBool(variable, false);
-
-                //IncreaseSandboxCounters
-                lastAction = "IncreaseSandboxCounters";
-                foreach (var variable in actions.IncreaseSandboxCounters)
-                    SetSandboxCounter(variable, Math.Abs(actions.IncreaseSandboxCountersAmount));
-
-                //DecreaseSandboxCounters
-                lastAction = "DecreaseSandboxCounters";
-                foreach (var variable in actions.DecreaseSandboxCounters)
-                    SetSandboxCounter(variable, -Math.Abs(actions.DecreaseSandboxCountersAmount));
-
-                //ResetSandboxCounters
-                lastAction = "ResetSandboxCounters";
-                foreach (var variable in actions.ResetSandboxCounters)
-                    SetSandboxCounter(variable, 0);
-
-                //SetSandboxCounters
-                lastAction = "SetSandboxCounters";
-                if (actions.SetSandboxCounters.Count != 0 && actions.SetSandboxCounters.Count == actions.SetSandboxCountersValues.Count)
-                {
-
-                    for (int i = 0; i < actions.SetSandboxCounters.Count; i++)
-                        SetSandboxCounter(actions.SetSandboxCounters[i], actions.SetSandboxCountersValues[i], true);
-
                 }
 
                 //SaveSavePlayerIdentity

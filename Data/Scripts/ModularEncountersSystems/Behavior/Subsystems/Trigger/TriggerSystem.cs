@@ -945,10 +945,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
-					if (index != trigger.ButtonPanelIndex)
+					if (panel.CustomName == null || panel.CustomName != trigger.ButtonPanelName)
 						continue;
 
-					if (panel.CustomName == null || panel.CustomName != trigger.ButtonPanelName)
+					if (index != trigger.ButtonPanelIndex && trigger.ButtonPanelIndex != -1)
 						continue;
 
 					if (panel.SlimBlock.CubeGrid != _behavior.RemoteControl.SlimBlock.CubeGrid && panel.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(_behavior.RemoteControl.SlimBlock.CubeGrid))

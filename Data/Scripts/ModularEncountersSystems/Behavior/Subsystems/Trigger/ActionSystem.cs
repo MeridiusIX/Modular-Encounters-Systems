@@ -1065,6 +1065,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
+                //ChangeReputationBetweenFactions
+                lastAction = "ChangeReputationBetweenFactions";
+                if (actions.ChangeReputationBetweenFactions)
+                {
+                    BehaviorLogger.Write(actions.ProfileSubtypeId + ": Attempting Reputation Change Between Factions", BehaviorDebugEnum.Action);
+
+                    var targets = new List<int>();
+                    if (actions.ChangeReputationFactionsTargets.Count < 1) targets.Add(0);
+                    else targets = actions.ChangeReputationFactionsTargets;
+
+                    var amounts = new List<int>();
+                    if (actions.ChangeReputationFactionsAmounts.Count < 1) amounts.Add(0);
+                    else amounts = actions.ChangeReputationFactionsAmounts;
+
+                    for (int i = actions.ChangeReputationFactionsFrom.Count - 1; i >= 0; i--)
+                    {
+                        for (int j = actions.ChangeReputationFactionsTo.Count - 1; j >= 0; j--)
+                        {
+                            FactionHelper.ChangeReputationBetweenFactions(RemoteControl, targets[i], amounts[i], actions.ChangeReputationFactionsFrom[i], actions.ChangeReputationFactionsTo[j], actions.ReputationMinCap, actions.ReputationMaxCap, _settings.LastDamagerEntity, actions.ReputationChangeRadius, actions.ReputationPlayerConditionIds, actions.ChangeReputationPropagatesToPlayers);
+                        }
+                    }
+                }
+
+
                 //ChangeAttackersFactionAccount
                 lastAction = "ChangeAttackersFactionAccount";
                 if (actions.ChangeAttackersFactionAccount == true)

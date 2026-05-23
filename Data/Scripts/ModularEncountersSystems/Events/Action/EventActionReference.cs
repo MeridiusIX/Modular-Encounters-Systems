@@ -113,6 +113,13 @@ namespace ModularEncountersSystems.Events.Action {
 		public int ReputationMinCap;
 		public int ReputationMaxCap;
 
+        public bool ChangeReputationBetweenFactions;
+        public bool ChangeReputationPropagatesToPlayers;
+        public List<string> ChangeReputationFactionsFrom;
+        public List<string> ChangeReputationFactionsTo;
+        public List<int> ChangeReputationFactionsAmounts;
+        public List<int> ChangeReputationFactionsTargets;
+
 
 
 		public bool ChangePlayerCredits;
@@ -310,8 +317,12 @@ namespace ModularEncountersSystems.Events.Action {
 			ReputationMinCap = -1500;
 			ReputationMaxCap = 1500;
 
-
-
+			ChangeReputationBetweenFactions = false;
+            ChangeReputationPropagatesToPlayers = false;
+			ChangeReputationFactionsFrom = new List<string>();
+			ChangeReputationFactionsTo = new List<string>();
+			ChangeReputationFactionsAmounts = new List<int>();
+			ChangeReputationFactionsTargets = new List<int>();
 
 			SpawnEncounter = false;
 			//SpawnData = new List<SpawnProfile>();
@@ -326,8 +337,8 @@ namespace ModularEncountersSystems.Events.Action {
 			ChatBroadcastPlayerConditionIds = new List<string>();
 
 			UseChatOverrideType = false;
-			ChatOverrideType = "Chat";	
-			
+			ChatOverrideType = "Chat";
+
 			UseChatOverrideColor = false;
 			ChatOverrideColor = "Blue";
 
@@ -335,7 +346,7 @@ namespace ModularEncountersSystems.Events.Action {
 			ChatOverrideAuthor = "Author";
 
 			UseChatOverrideMessage = false;
-			ChatOverrideMessage = new List<string>(); 
+			ChatOverrideMessage = new List<string>();
 
 			UseChatOverrideAudio = false;
 			ChatOverrideAudio = new List<string>();
@@ -348,7 +359,7 @@ namespace ModularEncountersSystems.Events.Action {
 			CustomActionName = "";
 
 			CustomActionArgumentsString = new List<string>();
-			CustomActionArgumentsBool = new List<bool>();	
+			CustomActionArgumentsBool = new List<bool>();
 			CustomActionArgumentsInt = new List<int>();
 			CustomActionArgumentsFloat = new List<float>();
 			CustomActionArgumentsLong = new List<long>();
@@ -415,7 +426,7 @@ namespace ModularEncountersSystems.Events.Action {
 				{"CommandProfileIds", (s, o) => TagParse.TagStringListCheck(s, ref CommandProfileIds) },
 				{"CommandProfileOriginCoords", (s, o) => TagParse.TagVector3DCheck(s, ref CommandProfileOriginCoords) },
 				{"OverrideCommandCode", (s, o) => TagParse.TagStringCheck(s, ref OverrideCommandCode) },
-				
+
 				{"ToggleEvents", (s, o) => TagParse.TagBoolCheck(s, ref ToggleEvents) },
 				{"ToggleEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ToggleEventIds) },
 				{"ToggleEventIdModes", (s, o) => TagParse.TagBoolListCheck(s, ref ToggleEventIdModes) },
@@ -475,14 +486,18 @@ namespace ModularEncountersSystems.Events.Action {
 				{"ReputationMinCap", (s, o) => TagParse.TagIntCheck(s, ref ReputationMinCap) },
 				{"ReputationMaxCap", (s, o) => TagParse.TagIntCheck(s, ref ReputationMaxCap) },
 
+                {"ChangeReputationBetweenFactions", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationBetweenFactions) },
+                {"ChangeReputationPropagatesToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationPropagatesToPlayers) },
+                {"ChangeReputationFactionsFrom", (s, o) => TagParse.TagStringListCheck(s, ref ChangeReputationFactionsFrom) },
+                {"ChangeReputationFactionsTo", (s, o) => TagParse.TagStringListCheck(s, ref ChangeReputationFactionsTo) },
+                {"ChangeReputationFactionsAmounts", (s, o) => TagParse.TagIntListCheck(s, ref ChangeReputationFactionsAmounts) },
+                {"ChangeReputationFactionsTargets", (s, o) => TagParse.TagIntListCheck(s, ref ChangeReputationFactionsTargets) },
+
 				{"ChangePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCredits) },
 				{"ChangePlayerCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangePlayerCreditsAmount) },
 				{"ChangePlayerCreditsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ChangePlayerCreditsPlayerConditionIds) },
 
-
-
-
-				{ "ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
+				{"ActivateCustomAction", (s, o) => TagParse.TagBoolCheck(s, ref ActivateCustomAction) },
 				{"CustomActionName", (s, o) => TagParse.TagStringCheck(s, ref CustomActionName) },
 				{"CustomActionArgumentsString", (s, o) => TagParse.TagStringListCheck(s,false ,ref CustomActionArgumentsString) },
 				{"CustomActionArgumentsBool", (s, o) => TagParse.TagBoolListCheck(s, ref CustomActionArgumentsBool) },
@@ -568,6 +583,3 @@ namespace ModularEncountersSystems.Events.Action {
 
 	}
 }
-
-
-

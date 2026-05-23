@@ -58,6 +58,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public List<int> ReputationChangeAmount;
 		public List<string> ReputationPlayerConditionIds;
 
+        public bool ChangeReputationBetweenFactions;
+        public bool ChangeReputationPropagatesToPlayers;
+        public List<string> ChangeReputationFactionsFrom;
+        public List<string> ChangeReputationFactionsTo;
+        public List<int> ChangeReputationFactionsAmounts;
+        public List<int> ChangeReputationFactionsTargets;
+
 		public bool UseRandomNameGenerator;
 
 		public bool ActivateAssertiveAntennas;
@@ -599,6 +606,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ReputationChangesForAllRadiusPlayerFactionMembers = false;
 			ReputationPlayerConditionIds = new List<string>();
 
+			ChangeReputationBetweenFactions = false;
+            ChangeReputationPropagatesToPlayers = false;
+			ChangeReputationFactionsFrom = new List<string>();
+			ChangeReputationFactionsTo = new List<string>();
+			ChangeReputationFactionsAmounts = new List<int>();
+			ChangeReputationFactionsTargets = new List<int>();
+
 			ChangeAttackerReputation = false;
 			ChangeAttackerReputationFaction = new List<string>();
 			ChangeAttackerReputationAmount = new List<int>();
@@ -1078,6 +1092,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"ReputationChangeFactions", (s, o) => TagParse.TagStringListCheck(s, ref ReputationChangeFactions) },
                 {"ReputationPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ReputationPlayerConditionIds) },
                 {"ReputationChangeAmount", (s, o) => TagParse.TagIntListCheck(s, ref ReputationChangeAmount) },
+                {"ChangeReputationBetweenFactions", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationBetweenFactions) },
+                {"ChangeReputationPropagatesToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref ChangeReputationPropagatesToPlayers) },
+                {"ChangeReputationFactionsFrom", (s, o) => TagParse.TagStringListCheck(s, ref ChangeReputationFactionsFrom) },
+                {"ChangeReputationFactionsTo", (s, o) => TagParse.TagStringListCheck(s, ref ChangeReputationFactionsTo) },
+                {"ChangeReputationFactionsAmounts", (s, o) => TagParse.TagIntListCheck(s, ref ChangeReputationFactionsAmounts) },
+                {"ChangeReputationFactionsTargets", (s, o) => TagParse.TagIntListCheck(s, ref ChangeReputationFactionsTargets) },
                 {"ChangeAttackersFactionAccount", (s, o) => TagParse.TagBoolCheck(s, ref ChangeAttackersFactionAccount) },
                 {"ChangeAttackersFactionAccountByAmount", (s, o) => TagParse.TagIntCheck(s, ref ChangeAttackersFactionAccountByAmount) },
                 {"UseRandomNameGenerator", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomNameGenerator) },

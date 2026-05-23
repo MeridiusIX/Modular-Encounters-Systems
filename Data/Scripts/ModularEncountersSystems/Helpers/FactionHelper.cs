@@ -271,8 +271,6 @@ namespace ModularEncountersSystems.Helpers {
 		}
 
 
-
-
 		public static void ChangePlayerReputationWithFactions(IMyRemoteControl remoteControl, int amount, List<long> players, string factionTag, bool applyReputationChangeToFactionMembers, int minRep, int maxRep)
 		{
 
@@ -286,6 +284,206 @@ namespace ModularEncountersSystems.Helpers {
 			ChangePlayerReputationWithFactions(remoteControl, amounts, players, factionTags, applyReputationChangeToFactionMembers, minRep, maxRep);
 		}
 
+
+		public static List<long> GetPlayersInFaction(IMyRemoteControl remoteControl, IMyFaction faction, double radius, List<string> ReputationPlayerConditionIds = null)
+        {
+			var playerList = new List<IMyPlayer>();
+			var playerIds = new List<long>();
+			MyAPIGateway.Players.GetPlayers(playerList);
+
+			foreach (var player in playerList) {
+
+				if (player.IsBot || player.SteamUserId <= 0)
+					continue;
+
+                if (faction != MyAPIGateway.Session.Factions.TryGetPlayerFaction(player.IdentityId))
+                    continue;
+
+				if (remoteControl != null && radius != -1 && Vector3D.Distance(player.GetPosition(), remoteControl.GetPosition()) > radius)
+					continue;
+
+				if (ReputationPlayerConditionIds != null && ReputationPlayerConditionIds.Count>0)
+					if(!PlayerCondition.ArePlayerConditionsMet(ReputationPlayerConditionIds, player.IdentityId))
+						continue;
+
+				if (player.IdentityId != 0 && !playerIds.Contains(player.IdentityId))
+					playerIds.Add(player.IdentityId);
+			}
+            return playerIds;
+		}
+
+
+        public static List<IMyFaction> GetFactionsParsed(IMyRemoteControl remoteControl, string factionTag, long attackingEntity)
+        {
+            var returnList = new List<IMyFaction>();
+
+            if (factionTag == "{Self}")
+            {
+                if (remoteControl == null)
+                {
+                    BehaviorLogger.Write("Cannot resolve {Self}-variable: No remote control.", BehaviorDebugEnum.Action);
+                    return returnList;
+                }
+                returnList.Add(MyAPIGateway.Session.Factions.TryGetFactionByTag(remoteControl.GetOwnerFactionTag()));
+            }
+
+            else if (factionTag == "{Attacker}")
+            {
+                if (attackingEntity == 0) {
+                    BehaviorLogger.Write("Cannot resolve {Attacker}-variable: No attacking entity.", BehaviorDebugEnum.Action);
+                    return returnList;
+                }
+
+                var owner = DamageHelper.GetAttackOwnerId(attackingEntity);
+                if (owner == 0) {
+                    BehaviorLogger.Write("Cannot resolve {Attacker}-variable: No attacking entity.", BehaviorDebugEnum.Action);
+                    return returnList;
+                }
+
+                var ownerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(owner);
+                if (ownerFaction == null)
+                {
+                    var player = MyAPIGateway.Players.TryGetIdentityId(owner);
+                    if (player != null)
+                    {
+                        returnList.Add(null);
+                    }
+                }
+                else
+                {
+                    returnList.Add(ownerFaction);
+                }
+            }
+
+            else if (factionTag == "{Friendlies}")
+            {
+                if (remoteControl == null)
+                {
+                    BehaviorLogger.Write("Cannot resolve {Friendlies}-variable: No remote control.", BehaviorDebugEnum.Action);
+                    return returnList;
+                }
+
+                var refFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(remoteControl.GetOwnerFactionTag());
+                foreach (var f in NpcFactions)
+                {
+                    if (MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) >= 500)
+                    {
+                        returnList.Add(f);
+                    }
+                }
+            }
+
+            else if (factionTag == "{Neutrals}")
+            {
+                if (remoteControl == null)
+                {
+                    BehaviorLogger.Write("Cannot resolve {Neutrals}-variable: No remote control.", BehaviorDebugEnum.Action);
+                    return returnList;
+                }
+
+                var refFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(remoteControl.GetOwnerFactionTag());
+                foreach (var f in NpcFactions)
+                {
+                    if (MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) < 500 && MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) > -500)
+                    {
+                        returnList.Add(f);
+                    }
+                }
+            }
+
+            else if (factionTag == "{Enemies}")
+            {
+                if (remoteControl == null)
+                {
+                    BehaviorLogger.Write("Cannot resolve {Enemies}-variable: No remote control.", BehaviorDebugEnum.Action);
+                    return returnList;
+                }
+
+                var refFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(remoteControl.GetOwnerFactionTag());
+                foreach (var f in NpcFactions)
+                {
+                    if (MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) <= -500)
+                    {
+                        returnList.Add(f);
+                    }
+                }
+            }
+
+            return returnList;
+        }
+
+
+        public static void ChangePlayerReputationWithFaction(List<long> players, IMyFaction faction, int amount, int target, int minRep, int maxRep)
+        {
+            foreach (var p in players)
+            {
+                var player = MyAPIGateway.Players.TryGetIdentityId(p);
+
+                var oldRep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.IdentityId, faction.FactionId);
+                var finalRep = oldRep;
+
+                if (target != 0) finalRep = MathHelper.Clamp(target, -1500, 1500);
+                else if (amount != 0) finalRep = MathHelper.Clamp(oldRep + amount, minRep, maxRep);
+
+                //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>> " + "SetRep: " + player.DisplayName + " / " + faction.Name + " oldRep: " + oldRep + " finalRep: " + finalRep);
+                RelationManager.SetReputationWithFaction(player.IdentityId, faction.FactionId, finalRep);
+
+                var steamId = MyAPIGateway.Players.TryGetSteamId(player.IdentityId);
+                if (steamId > 0 && !player.IsBot) {
+                    var message = new ReputationMessage(amount, faction.Tag, steamId);
+                    var syncContainer = new SyncContainer(message);
+                    SyncManager.SendSyncMesage(syncContainer, steamId);
+                }
+            }
+        }
+
+
+		public static void ChangeReputationBetweenFactions(IMyRemoteControl remoteControl, int target, int amount, string factionFromTag, string factionToTag, int minRep, int maxRep, long attackingEntity, double radius, List<string> ReputationPlayerConditionIds = null, bool applyReputationChangeToFactionMembers = false)
+		{
+            var player = MyAPIGateway.Players.TryGetIdentityId(DamageHelper.GetAttackOwnerId(attackingEntity));
+
+            var factionFromList = GetFactionsParsed(remoteControl, factionFromTag, attackingEntity);
+            var factionToList = GetFactionsParsed(remoteControl, factionToTag, attackingEntity);
+
+            if (factionFromList.Count == 0 || factionToList.Count == 0)
+                return;
+
+            foreach (var factionFrom in factionFromList)
+            {
+                foreach (var factionTo in factionToList)
+                {
+                    // If the attacking player is not in a faction.
+                    if (factionFrom == null || factionTo == null)
+                    {
+                        var faction = factionFrom == null ? factionTo : factionFrom;
+                        var players = new List<long>();
+                        players.Add(player.IdentityId);
+                        ChangePlayerReputationWithFaction(players, faction, amount, target, minRep, maxRep);
+                    }
+
+                    // Normal case - attacker is in a faction.
+                    else
+                    {
+                        var oldRep = MyAPIGateway.Session.Factions.GetReputationBetweenFactions(factionFrom.FactionId, factionTo.FactionId);
+                        var finalRep = oldRep;
+                        if (target != 0) finalRep = MathHelper.Clamp(target, -1500, 1500);
+                        else if (amount != 0) finalRep = MathHelper.Clamp(oldRep + amount, minRep, maxRep);
+
+                        //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>> " + "SetRep: " + factionFrom.Name + " / " + factionTo.Name + " oldRep: " + oldRep + " finalRep: " + finalRep);
+                        MyAPIGateway.Session.Factions.SetReputation(factionFrom.FactionId, factionTo.FactionId, finalRep);
+
+                        if (applyReputationChangeToFactionMembers)
+                        {
+                            var factionFromPlayers = GetPlayersInFaction(remoteControl, factionTo, radius, ReputationPlayerConditionIds);
+                            ChangePlayerReputationWithFaction(factionFromPlayers, factionFrom, amount, target, minRep, maxRep);
+
+                            var factionToPlayers = GetPlayersInFaction(remoteControl, factionFrom, radius, ReputationPlayerConditionIds);
+                            ChangePlayerReputationWithFaction(factionToPlayers, factionFrom, amount, target, minRep, maxRep);
+                        }
+                    }
+                }
+            }
+		}
 
 
 		public static void ChangePlayerReputationWithFactions(IMyRemoteControl remoteControl, List<int> amounts, List<long> players, List<string> factionTags, bool applyReputationChangeToFactionMembers, int minRep, int maxRep) {

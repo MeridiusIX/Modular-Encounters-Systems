@@ -290,6 +290,27 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
+				if (item.Id.TypeId == typeof(MyObjectBuilder_PhysicalObject)) {
+
+					int itemPrice = 0;
+
+					if (MinimumValuesMaster.ContainsKey(item.Id) == false) {
+
+						itemPrice = CalculateItemMinimalPrice(item.Id, 1f, usedBlueprints);
+
+						if (item.CanSpawnFromScreen && item.CanPlayerOrder && !ItemsWithBadValue.Contains(item.Id)) {
+
+							PublicItems.Add(item.Id);
+							PublicOtherItems.Add(item.Id);
+
+						}
+
+						AddToMasterReference(item.Id, itemPrice);
+
+					}
+
+				}
+
 			}
 
 			//Build List of Block Values

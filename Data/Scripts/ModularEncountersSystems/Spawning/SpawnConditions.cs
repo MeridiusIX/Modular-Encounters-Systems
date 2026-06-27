@@ -838,14 +838,15 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (conditions.UniqueEncounter == true && NpcManager.UniqueGroupsSpawned.Contains(spawnGroup.SpawnGroup.Id.SubtypeName) == true) {
+            if (conditions.UniqueEncounter == true && (NpcManager.UniqueGroupsSpawned.Contains(spawnGroup.SpawnGroup.Id.SubtypeName) ||
+				(spawnGroup.SpawnGroupAliases?.Any(alias => NpcManager.UniqueGroupsSpawned.Contains(alias)) ?? false)))
 
-				failReason = "   - SpawnGroup Is Unique Encounter That Already Spawned In This World";
-				return false;
+            {
+                failReason = "   - SpawnGroup Is Unique Encounter That Already Spawned In This World";
+                return false;
+            }
 
-			}
-
-			if (conditions.UseSettingsCheck && !CheckSessionConditions(conditions)) {
+            if (conditions.UseSettingsCheck && !CheckSessionConditions(conditions)) {
 
 				failReason = "   - World Settings Check Failed.";
 				return false;

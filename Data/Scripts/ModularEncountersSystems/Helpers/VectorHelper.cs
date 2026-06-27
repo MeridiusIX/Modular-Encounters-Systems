@@ -99,6 +99,40 @@ namespace ModularEncountersSystems.Helpers {
             return result;
         }
 
+        public static Vector3D RandomDirectionInCone(Vector3D forward, double maxAngleDeg)
+        {
+            forward = Vector3D.Normalize(forward);
+
+            double maxAngleRad = MathHelper.ToRadians(maxAngleDeg);
+
+            // Create orthonormal basis (forward, right, up)
+            Vector3D right;
+            if (Math.Abs(forward.Y) < 0.999)
+                right = Vector3D.Normalize(Vector3D.Cross(forward, Vector3D.Up));
+            else
+                right = Vector3D.Normalize(Vector3D.Cross(forward, Vector3D.Right));
+
+            Vector3D up = Vector3D.Cross(right, forward);
+
+            // Random angles
+            double u = MyUtils.GetRandomDouble(0,1); // [0,1]
+            double v = MyUtils.GetRandomDouble(0,1); // [0,1]
+
+            double theta = 2 * Math.PI * u; // around axis
+
+            // IMPORTANT: this distributes uniformly in the cone
+            double cosAngle = MathHelper.Lerp(Math.Cos(maxAngleRad), 1.0, v);
+            double sinAngle = Math.Sqrt(1 - cosAngle * cosAngle);
+
+            // Build direction
+            Vector3D direction =
+                (Math.Cos(theta) * sinAngle) * right +
+                (Math.Sin(theta) * sinAngle) * up +
+                cosAngle * forward;
+
+            return Vector3D.Normalize(direction);
+        }
+
 
 
 

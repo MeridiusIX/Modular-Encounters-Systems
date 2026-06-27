@@ -563,7 +563,7 @@ namespace ModularEncountersSystems.Sync {
 			{
 				if (array.Length >= 4 && !string.IsNullOrWhiteSpace(array[3]))
 				{
-					NpcManager.ResetThisResetThisStaticEncounter(array[3], true);
+					NpcManager.ResetThisStaticEncounter(array[3], true);
 					return true;
 				}
 			}

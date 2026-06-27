@@ -889,7 +889,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (State.UseFlyLevelWithGravityIdle && Data.LevelWithGravityWhenIdle)
 				CurrentMode |= NewAutoPilotMode.LevelWithGravity;
 
-			State.CurrentAutoPilot = AutoPilotType.RivalAI;
+
+            State.CurrentAutoPilot = AutoPilotType.RivalAI;
 			_initialWaypoint = initialWaypoint;
 
 		}
@@ -1537,29 +1538,36 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
                     //angle like 10 means that it should really try to keep a distance
 					//
 
-                    double angle = 0;
-                    var vectorTargetToWaypoint = new Vector3D(0, 0, 0);
+                    //double angle = 0;
+
+
+                    var vectorTargetToNPC = new Vector3D(0, 0, 0);
 
                     if (InGravity())
                     {
-                        vectorTargetToWaypoint = Vector3D.Normalize(CurrentPlanet.SurfaceCoordsAtPosition(_initialWaypoint) - CurrentPlanet.SurfaceCoordsAtPosition(_offsetMatrix.Translation));
+                        vectorTargetToNPC = Vector3D.Normalize(CurrentPlanet.SurfaceCoordsAtPosition(_myPosition) - CurrentPlanet.SurfaceCoordsAtPosition(_offsetMatrix.Translation));
 
-                        angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
+                        //angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
 
                     }
                     else
                     {
-                        vectorTargetToWaypoint = Vector3D.Normalize(_initialWaypoint - _offsetMatrix.Translation);
-                        angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
+                        vectorTargetToNPC = Vector3D.Normalize(_myPosition - _offsetMatrix.Translation);
+                        //angle = VectorHelper.GetAngleBetweenDirections(_offsetDirection, vectorTargetToWaypoint);
                     }
 
-					//MyAPIGateway.Utilities.ShowMessage("MES", $"{angle} > {Data.OffsetMaxAngleFromTarget}");
+                    //MyAPIGateway.Utilities.ShowMessage("MES", $"{angle} > {Data.OffsetMaxAngleFromTarget}");
+
+                    //double angle = 180 - Data.OffsetMaxAngleFromTarget;
+
+                    _offsetDirection = VectorHelper.RandomDirectionInCone(vectorTargetToNPC, Data.OffsetMaxAngleFromTarget);
 
 
-                    if (angle > Data.OffsetMaxAngleFromTarget)
-                    {
-                        _offsetDirection = VectorHelper.LimitedDirection(_offsetDirection, vectorTargetToWaypoint, Data.OffsetMaxAngleFromTarget);
-                    }
+
+                    //if (angle > Data.OffsetMaxAngleFromTarget)
+                    //{
+                    //    _offsetDirection = VectorHelper.LimitedDirection(_offsetDirection, vectorTargetToNPC, Data.OffsetMaxAngleFromTarget);
+                    //}
                 }
 
 

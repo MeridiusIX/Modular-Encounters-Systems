@@ -45,10 +45,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 		public string CustomVariablesName;
 		public bool ApplyFactionColor;
+        public List<string> SpawnGroupAliases;
+
         public bool IsBaseGame;
 
 
-		public ImprovedSpawnGroup() {
+
+
+        public ImprovedSpawnGroup() {
 
 			SpawnGroupEnabled = true;
 			MesSpawnGroup = false;
@@ -91,8 +95,14 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			CustomVariablesName = "";
 
             ApplyFactionColor = false;
+            SpawnGroupAliases = new List<string>();
+
+
             IsBaseGame = false;
-		}
+
+
+
+        }
 
 		public void InitTags(MySpawnGroupDefinition spawnGroup) {
 
@@ -269,7 +279,15 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-			}
+                //ApplyFactionColor
+                if (tag.StartsWith("[SpawnGroupAliases:") == true)
+                {
+
+                    TagParse.TagStringListCheck(tag, ref improveSpawnGroup.SpawnGroupAliases);
+
+                }
+
+            }
 
 			//Spawn Condition Groups
 			foreach (var conditionName in SpawnConditionGroups) {

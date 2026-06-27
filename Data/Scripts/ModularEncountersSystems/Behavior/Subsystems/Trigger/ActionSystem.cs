@@ -2771,7 +2771,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     var spawngroupname = _behavior?.CurrentGrid?.Npc.SpawnGroupName;
 
                     if (spawngroupname != null)
-                        NpcManager.ResetThisResetThisStaticEncounter(spawngroupname);
+                        NpcManager.ResetThisStaticEncounter(spawngroupname);
 
                 }
 

@@ -279,7 +279,7 @@ namespace ModularEncountersSystems.World {
 
 
 
-        public static void ResetThisResetThisStaticEncounter(string spawnGroupName, bool ShowHudMessage = false)
+        public static void ResetThisStaticEncounter(string spawnGroupName, bool ShowHudMessage = false)
 		{
 			if (NpcManager.UniqueGroupsSpawned.Contains(spawnGroupName))
 			{

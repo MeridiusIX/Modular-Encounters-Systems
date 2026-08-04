@@ -161,7 +161,8 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write("Spawn Request Inside of No Spawn Zone Has Been Cancelled.", SpawnerDebugEnum.SpawnGroup);
 
-			}
+				return;  // is inside a NoSpawnZone, so no spawns allowed
+            }
 
 			SpawnLogger.Write("Checking SpawnGroups For Spawn Request: " + type, SpawnerDebugEnum.SpawnGroup);
 
@@ -183,10 +184,16 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				if (collection.RestrictedZoneSpawnGroups.Contains(spawnGroup.SpawnGroupName)) {
+                // In a restricted spawning zone, only allow spawn groups that are in the restricted zone spawn group list
 
-					SpawnLogger.Queue(" - Zone(s) SpawnGroup Blacklist Contains SpawnGroup", SpawnerDebugEnum.SpawnGroup, addToReason: true);
-					continue;
+                if (ZoneManager.InsideRestrictedZone(environment.Position))
+                {
+					if (collection.RestrictedZoneSpawnGroups.Contains(spawnGroup.SpawnGroupName))
+					{
+
+						SpawnLogger.Queue(" - Restricted zone(s) SpawnGroup Blacklist Contains SpawnGroup", SpawnerDebugEnum.SpawnGroup, addToReason: true);
+						continue;
+					}
 
 				}
 

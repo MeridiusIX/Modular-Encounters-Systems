@@ -422,6 +422,9 @@ namespace ModularEncountersSystems.Zones {
 
 					TagParse.TagStringListCheck(tag, ref this.Factions);
 
+					for (int i = 0; i < this.Factions.Count; i++)
+						this.Factions[i] = this.Factions[i].Trim();
+
 				}
 
 				//Coordinates

@@ -340,7 +340,34 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static bool PositionInsideStrictZone(Vector3D coords) {
+        /// <summary>
+        /// Are we inside a zone that restricts spawns to certain spawn groups? If so, return true. Otherwise, return false.
+        /// </summary>
+        /// <param name="coords"></param>
+        /// <returns></returns>
+        public static bool InsideRestrictedZone(Vector3D coords)
+        {
+
+            foreach (var zone in ActiveZones)
+            {
+
+                if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+                    continue;
+
+                if (zone.UseRestrictedSpawnGroups)
+                {
+
+                    return true;
+
+                }
+
+            }
+
+            return false;
+
+        }
+
+        public static bool PositionInsideStrictZone(Vector3D coords) {
 
 			foreach (var zone in ActiveZones) {
 

@@ -1,7 +1,5 @@
-# Update 2.73.03
+# Update 2.73.04
 
-* Added SpawnGroupAliases to mark variations of unique spawngroups.
-* Improved code around unique spawngroups.
-* Fixed the ability to list items of type SeedItem and PhysicalObject in stores.
+* Potential fix for NullReferenceException crash in ProcessTertiaryAttributes().
 
 enenra & CptArthur

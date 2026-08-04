@@ -1012,7 +1012,7 @@ namespace ModularEncountersSystems.World {
 
                     var randBlock = Grid.RandomTerminalBlock();
 
-                    if (randBlock.ActiveEntity()) {
+                    if (randBlock != null && randBlock.ActiveEntity()) {
 
                         var inhibitorLogic = new JetpackInhibitor(randBlock);
                         Grid.Inhibitors.Add(randBlock);
@@ -1030,7 +1030,7 @@ namespace ModularEncountersSystems.World {
 
                     var randBlock = Grid.RandomTerminalBlock();
 
-                    if (randBlock.ActiveEntity()) {
+                    if (randBlock != null && randBlock.ActiveEntity()) {
 
                         var inhibitorLogic = new DrillInhibitor(randBlock);
                         Grid.Inhibitors.Add(randBlock);
@@ -1048,7 +1048,7 @@ namespace ModularEncountersSystems.World {
 
                     var randBlock = Grid.RandomTerminalBlock();
 
-                    if (randBlock.ActiveEntity()) {
+                    if (randBlock != null && randBlock.ActiveEntity()) {
 
                         var inhibitorLogic = new JumpDriveInhibitor(randBlock);
                         Grid.Inhibitors.Add(randBlock);
@@ -1066,7 +1066,7 @@ namespace ModularEncountersSystems.World {
 
                     var randBlock = Grid.RandomTerminalBlock();
 
-                    if (randBlock.ActiveEntity()) {
+                    if (randBlock != null && randBlock.ActiveEntity()) {
 
                         var inhibitorLogic = new NanobotInhibitor(randBlock);
                         Grid.Inhibitors.Add(randBlock);
@@ -1084,7 +1084,7 @@ namespace ModularEncountersSystems.World {
 
                     var randBlock = Grid.RandomTerminalBlock();
 
-                    if (randBlock.ActiveEntity()) {
+                    if (randBlock != null && randBlock.ActiveEntity()) {
 
                         var inhibitorLogic = new PlayerInhibitor(randBlock);
                         Grid.Inhibitors.Add(randBlock);

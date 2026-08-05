@@ -2922,11 +2922,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     var message = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.DebugMessage);
 
-                    foreach (var customVar in _behavior?.CurrentGrid?.Npc?.CustomCountersVariables)
-                    {
-                        if (message.Contains("{" + customVar.Key + "}"))
+                    if (_behavior?.CurrentGrid?.Npc?.CustomCountersVariables != null) {
+                        foreach (var customVar in _behavior?.CurrentGrid?.Npc?.CustomCountersVariables)
                         {
-                            message = message.Replace("{" + customVar.Key + "}", customVar.Value.ToString());
+                            if (message.Contains("{" + customVar.Key + "}"))
+                            {
+                                message = message.Replace("{" + customVar.Key + "}", customVar.Value.ToString());
+                            }
                         }
                     }
 

@@ -1939,7 +1939,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 // AddBotsToGrid
                 lastAction = "AddBotsToGrid";
-                if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && APIs.AiEnabled.Valid && actions.BotSpawnProfileNames.Count > 0)
+                if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && APIs.AiEnabledApiLoaded && actions.BotSpawnProfileNames.Count > 0)
                 {
 
                     //MyVisualScriptLogicProvider.ShowNotificationToAll("Attempting To Add Bots", 3000);

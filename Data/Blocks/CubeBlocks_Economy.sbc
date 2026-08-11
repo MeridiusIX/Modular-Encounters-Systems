@@ -65,6 +65,7 @@
       <AllowScaling>true</AllowScaling>
       <IgnoreSize>true</IgnoreSize>
       <RotationAngleStepDeg>1</RotationAngleStepDeg>
+      <Repairable>false</Repairable>
     </Definition>
 
     <Definition xsi:type="MyObjectBuilder_ButtonPanelDefinition">
@@ -160,6 +161,7 @@
       <DestroyEffect>BlockDestroyedExplosion_Small</DestroyEffect>
       <DestroySound>WepSmallWarheadExpl</DestroySound>
       <PCU>5</PCU>
+      <Repairable>false</Repairable>
       <!--IsAirTight>false</IsAirTight-->
     </Definition>
 
@@ -252,6 +254,7 @@
       <PCU>50</PCU>
       <IsAirTight>false</IsAirTight>
       <DLC>SparksOfTheFuture</DLC>
+      <Repairable>false</Repairable>
     </Definition>
 
 

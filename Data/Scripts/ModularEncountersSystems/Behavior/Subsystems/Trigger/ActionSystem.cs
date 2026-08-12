@@ -1439,7 +1439,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastAction = "AddInstanceEventGroup";
                 if (actions.AddInstanceEventGroup)
                 {
-                    var instanceEventGroupReplaceValues = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.InstanceEventGroupReplaceValues);
+
+                    
+                    var instanceEventGroupReplaceValues = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.InstanceEventGroupReplaceValues, RemoteControl.GetPosition());
                     LocalApi.InsertInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, instanceEventGroupReplaceValues);
                 }
 

@@ -35,11 +35,13 @@ namespace ModularEncountersSystems.Helpers {
 		}
 
 		public static bool IsIdentityPlayer(long id) {
+
             if (MyAPIGateway.Players.TryGetIdentityId(id) != null)
             {
                 return !MyAPIGateway.Players.TryGetIdentityId(id).IsBot && MyAPIGateway.Players.TryGetSteamId(id) > 0;
             }
             return false;
+
 		}
 
 		public static long GetFactionOwner(IMyFaction faction) {

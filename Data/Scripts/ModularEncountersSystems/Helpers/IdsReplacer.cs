@@ -28,14 +28,7 @@ namespace ModularEncountersSystems.Helpers
             var CustomVariablesName = npcData.CustomVariablesName;
             var CustomStrings = npcData.CustomStrings;
 
-            string stringVector = "{X:26 Y:26 Z:26}";
-
-
-            stringVector = "{" + "X:"+ remotecontrolposition.X.ToString() + " Y:" + remotecontrolposition.Y.ToString()+ " Z:" + remotecontrolposition.Z.ToString() + "}";
-
-            
-
-
+            string stringVector = "{" + "X:"+ remotecontrolposition.X.ToString() + " Y:" + remotecontrolposition.Y.ToString()+ " Z:" + remotecontrolposition.Z.ToString() + "}";
 
 
             if (tag.Contains("{SpawnGroupName}") && SpawnGroupName != null)
@@ -63,15 +56,10 @@ namespace ModularEncountersSystems.Helpers
                 tag = tag.Replace("{CustomVariablesName}", CustomVariablesName);
             }
 
-
             if (tag.Contains("{Position}") && !string.IsNullOrWhiteSpace(stringVector))
             {
                 tag = tag.Replace("{Position}", stringVector);
             }
-
-
-
-
 
             foreach (var customString in CustomStrings)
             {

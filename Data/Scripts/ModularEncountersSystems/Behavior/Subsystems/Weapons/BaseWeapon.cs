@@ -17,7 +17,7 @@ using VRageMath;
 namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 	public enum WeaponStatusEnum{
-	
+
 		Unknown,
 		ReadyToFire,
 		StaticWeaponNotAligned,
@@ -55,6 +55,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		internal IBehavior _behavior;
 		internal WeaponSystem _weaponSystem;
 
+        internal bool _isNPCOwned;
 		internal bool _isStatic;
 		internal bool _isTurret;
 		internal bool _isWeaponCore;
@@ -111,6 +112,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			_behavior = behavior;
 			_weaponSystem = behavior.AutoPilot.Weapons;
 
+            _isNPCOwned = true;
 			_isStatic = false;
 			_isTurret = false;
 			_isWeaponCore = false;
@@ -258,16 +260,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 					//BehaviorLogger.Write(" - No Current Collision Detected At Trajectory and Direction:   " + maxTargetTrajectory + " / " + _direction.ToString(), BehaviorDebugEnum.Weapon);
 
 				}
-			
+
 			}
 
-			
+
 			//BehaviorLogger.Write("WeaponCore Static Can Shoot Waypoint:   " + canShootWaypoint, BehaviorDebugEnum.Weapon);
 			//BehaviorLogger.Write("WeaponCore Static Can Shoot Target:     " + canShootTarget, BehaviorDebugEnum.Weapon);
 			//BehaviorLogger.Write("WeaponCore Static Has Collision:        " + hasCollision, BehaviorDebugEnum.Weapon);
 			//BehaviorLogger.Write("WeaponCore Static Hostile:              " + hostile, BehaviorDebugEnum.Weapon);
 			//BehaviorLogger.Write("WeaponCore Static Must Contact Hostile: " + mustContactHostile, BehaviorDebugEnum.Weapon);
-			
+
 
 			Status = WeaponStatusEnum.StaticWeaponNotAligned;
 			if (!canShootWaypoint && !canShootTarget)
@@ -281,7 +283,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			Status = WeaponStatusEnum.ReadyToFire;
 			return true;
-		
+
 		}
 
 		public bool StaticDistanceAndAngleCheck(Vector3D coords, double trajectory) {
@@ -309,7 +311,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		public double AmmoAcceleration() {
 
 			return _ammoAcceleration;
-		
+
 		}
 
 		public double AmmoInitialVelocity() {
@@ -327,13 +329,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		public IMyFunctionalBlock Block() {
 
 			return _block;
-		
+
 		}
 
 		public Direction GetDirection() {
 
 			return _direction;
-		
+
 		}
 
 		public virtual bool IsActive() {
@@ -363,7 +365,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		public bool IsTurret() {
 
 			return _isTurret;
-		
+
 		}
 
 		public virtual bool IsValid() {
@@ -377,20 +379,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				return false;
 
 			}
-				
+
 
 			if (_remoteControl?.SlimBlock?.CubeGrid != null) {
 
 				if (_block.CubeGrid == _remoteControl.CubeGrid) {
 
 					return true;
-				
+
 				}
 
 				if (_block.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(_remoteControl.SlimBlock.CubeGrid)) {
 
 					return true;
-				
+
 				}
 
 			}
@@ -403,13 +405,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		public virtual float MaxAmmoTrajectory() {
 
 			return _ammoMaxTrajectory;
-		
+
 		}
 
 		public virtual void ReplenishAmmo() {
 
 			if (!_pendingAmmoRefill)
 				return;
+
+            var blockOwner = MyAPIGateway.Players.TryGetIdentityId(_block.OwnerId);
+            if (!blockOwner.IsBot || blockOwner.SteamUserId > 0)
+            {
+                _isNPCOwned = false;
+                _pendingAmmoRefill = false;
+                return;
+            }
 
 			_pendingAmmoRefill = false;
 
@@ -466,11 +476,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			} catch (Exception e) {
 
 				return false;
-			
+
 			}
 
 			return true;
-		
+
 		}
 
 	}

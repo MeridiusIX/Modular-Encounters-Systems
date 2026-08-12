@@ -65,12 +65,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				BehaviorLogger.Write(_block.CustomName + " Is Neither Gun Or Turret?", BehaviorDebugEnum.BehaviorSetup);
 				_isValid = false;
 				return;
-			
+
 			}
 
 			//Get Rate of Fire
 			//Determine If Barrage Capable
-		
+
 		}
 
 		public virtual void GetWeaponDefinition(IMyTerminalBlock weapon) {
@@ -116,7 +116,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (_inventory.Empty() && _gunBase.GunBase.CurrentAmmo == 0) {
 
-				if (_weaponSystem.Data.UseAmmoReplenish && _ammoRefills < _weaponSystem.Data.MaxAmmoReplenishments) {
+				if (_weaponSystem.Data.UseAmmoReplenish && _ammoRefills < _weaponSystem.Data.MaxAmmoReplenishments && _isNPCOwned) {
 
 					_pendingAmmoRefill = true;
 
@@ -125,7 +125,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 					return false;
 
 				}
-	
+
 			}
 
 			_ammoAmount = _gunBase.GunBase.CurrentAmmo;
@@ -210,11 +210,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (_isTurret) {
 
 				return _turret.HasTarget ? _turret.Target : null;
-			
+
 			}
 
 			return null;
-		
+
 		}
 
 		public void DetermineWeaponReadiness(bool usingTurretController = false) {
@@ -237,7 +237,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				//BehaviorLogger.Write(" - Bad Ammo Result", BehaviorDebugEnum.Weapon);
 				_readyToFire = false;
 				return;
-			
+
 			}
 
 			if (_isStatic && !_usesTurretController) {

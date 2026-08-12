@@ -24,7 +24,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 		internal Dictionary<string, AmmoDef> _ammoToDefinition = new Dictionary<string, AmmoDef>();
 		internal bool _requiresPhysicalAmmo;
 		internal bool _beamAmmo;
-		
+
 		internal bool _flareAmmo;
 
 		internal WeaponDefinition _weaponDefinition;
@@ -71,7 +71,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				//BehaviorLogger.Write(_block.CustomName + " Has No WC Ammo Definitions", BehaviorDebugEnum.Weapon);
 				_isValid = false;
-			
+
 			}
 
 		}
@@ -85,9 +85,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (_homingAmmo) {
 
 				if (_weaponSystem.Data.AllowHomingWeaponMultiTargeting) {
-				
+
 					//TODO: Later Date
-				
+
 				} else {
 
 					if (_behavior.AutoPilot.Targeting.HasTarget()) {
@@ -143,7 +143,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 						return;
 
 					}
-				
+
 				}
 
 				Status = WeaponStatusEnum.ReadyToFire;
@@ -167,7 +167,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				Status = WeaponStatusEnum.ReadyToFire;
 				//BehaviorLogger.Write(" - Homing Threats Detected For Firing Flares", BehaviorDebugEnum.Weapon);
 				return;
-			
+
 			}
 
 			//---------------------
@@ -187,7 +187,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 				return false;
 
 			}
-				
+
 
 			if (target == null || _block == null) {
 
@@ -240,7 +240,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 			if (_inventory.GetItemAmount(_currentAmmoMagazine) == 0) {
 
-				if (_weaponSystem.Data.UseAmmoReplenish && _ammoRefills < _weaponSystem.Data.MaxAmmoReplenishments) {
+				if (_weaponSystem.Data.UseAmmoReplenish && _ammoRefills < _weaponSystem.Data.MaxAmmoReplenishments && _isNPCOwned) {
 
 					_pendingAmmoRefill = true;
 
@@ -257,7 +257,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 
 			return gotAmmoResult;
-		
+
 		}
 
 		private bool GetAmmoDetails() {
@@ -357,16 +357,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (_isValid && IsActive() && _readyToFire) {
 
 				if (IsHoming) {
-				
 
-				
+
+
 				}
 
 				//BehaviorLogger.Write(_block.CustomName + " Fire Once", BehaviorDebugEnum.Weapon);
 				APIs.WeaponCore.FireWeaponOnce(_block as MyEntity, false, _weaponId);
 
 			}
-	
+
 		}
 
 		public override bool IsBarrageWeapon() {
@@ -430,7 +430,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				APIs.WeaponCore.SetAiFocus(blockEntity, targetEntity);
 				APIs.WeaponCore.SetWeaponTarget(blockEntity, targetEntity, _weaponId);
-			
+
 			}
 			*/
 

@@ -39,7 +39,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 					result = true;
 					break;
-				
+
 				}
 
 			}
@@ -104,7 +104,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 						result = true;
 
-						if (_subWeapons[i].PendingAmmoRefill)
+						if (_subWeapons[i].PendingAmmoRefill && _isNPCOwned)
 							_pendingAmmoRefill = true;
 
 					} else {
@@ -112,7 +112,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 						_subWeapons[i].ReadyToFire = false;
 
 					}
-					
+
 				}
 
 			}
@@ -193,7 +193,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 				if (thisRange > maxRange)
 					maxRange = thisRange;
-			
+
 			}
 
 			_ammoMaxTrajectory = _ammoMaxTrajectory;

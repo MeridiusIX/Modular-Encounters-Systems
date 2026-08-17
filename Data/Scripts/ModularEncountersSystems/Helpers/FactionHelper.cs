@@ -30,7 +30,11 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static bool IsIdentityNPC(long id) {
 
-			return !IsIdentityPlayer(id);
+            if (MyAPIGateway.Players.TryGetIdentityId(id) != null)
+            {
+                return MyAPIGateway.Players.TryGetIdentityId(id).IsBot || MyAPIGateway.Players.TryGetSteamId(id) == 0;
+            }
+            return false;
 
 		}
 

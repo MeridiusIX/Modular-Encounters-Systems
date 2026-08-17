@@ -1,5 +1,5 @@
-# Update 2.73.06
+# Update 2.73.07
 
-* Potential fix for various issues caused by the last MES patch marking player factions as NPC factions.
+* Fix for MES cleaning up non-NPC-owned grids in specific cases.
 
 enenra & CptArthur

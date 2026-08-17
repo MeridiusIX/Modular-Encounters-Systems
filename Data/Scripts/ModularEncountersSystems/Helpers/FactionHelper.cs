@@ -82,6 +82,9 @@ namespace ModularEncountersSystems.Helpers {
 
 				var factionMember = faction.Members[member];
 
+                if (MyAPIGateway.Players.TryGetIdentityId(factionMember.PlayerId) == null)
+                    continue;
+
 				if (IsIdentityNPC(factionMember.PlayerId)) {
 
 					result = factionMember.PlayerId;

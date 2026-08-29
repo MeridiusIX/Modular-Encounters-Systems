@@ -2077,7 +2077,8 @@ namespace ModularEncountersSystems.Spawning {
 					conditions.UseRandomMinerFaction ||
 					conditions.UseRandomTraderFaction ||
 					conditions.UseRandomMilitaryFaction ||
-					conditions.UseRandomPirateFaction;
+					conditions.UseRandomPirateFaction ||
+					conditions.UseRandomCustomFaction;
 
 				// Fixed-faction groups must match the zone list.
 				// Random-faction groups are filtered later in ValidNpcFactions.

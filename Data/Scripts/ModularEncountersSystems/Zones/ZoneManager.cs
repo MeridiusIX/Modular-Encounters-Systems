@@ -317,6 +317,30 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
+				// Allowed mod IDs: only while inside this zone (no global lock outside the zone)
+				if (zone.Persistent && zone.UseAllowedModIDs && zone.AllowedModIDs != null && zone.AllowedModIDs.Count > 0) {
+
+					foreach (var modId in zone.AllowedModIDs) {
+
+						if (modId != 0 && !collection.AllowedZoneModIDs.Contains(modId))
+							collection.AllowedZoneModIDs.Add(modId);
+
+					}
+
+				}
+
+				// Restricted mod IDs: only while inside this zone
+				if (zone.Persistent && zone.UseRestrictedModIDs && zone.RestrictedModIDs != null && zone.RestrictedModIDs.Count > 0) {
+
+					foreach (var modId in zone.RestrictedModIDs) {
+
+						if (modId != 0 && !collection.RestrictedZoneModIDs.Contains(modId))
+							collection.RestrictedZoneModIDs.Add(modId);
+
+					}
+
+				}
+
 			}
 
 		}

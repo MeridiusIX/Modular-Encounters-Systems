@@ -163,7 +163,7 @@ Below are the types of tags you can include in your Zone Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseAllowedSpawnGroups|
 |:----|:----|
 |Tag Format:|`[UseAllowedSpawnGroups:Value]`|
-|Description:|This tag determines if only a list of specific SpawnGroups should be allowed to spawn in this Zone.|
+|Description:|This tag determines if only a list of specific SpawnGroups should only be allowed to spawn in this Zone.|
 |Allowed Values:|`true`<br>`false`|
 |Default Value(s):|`false`|
 |Multiple Tag Allowed:|No|
@@ -199,7 +199,7 @@ Below are the types of tags you can include in your Zone Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseAllowedModIDs|
 |:----|:----|
 |Tag Format:|`[UseAllowedModIDs:Value]`|
-|Description:|This tag determines if only SpawnGroups belonging to certain Mod IDs are allowed to spawn in this Zone.|
+|Description:|When `true`, only SpawnGroups from mods listed in `AllowedModIDs` may spawn **while the spawn position is inside this zone**. This does not prevent those mods from spawning outside the zone.|
 |Allowed Values:|`true`<br>`false`|
 |Default Value(s):|`false`|
 |Multiple Tag Allowed:|No|
@@ -208,8 +208,8 @@ Below are the types of tags you can include in your Zone Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AllowedModIDs|
 |:----|:----|
 |Tag Format:|`[AllowedModIDs:Value]`|
-|Description:|This tag determines which SpawnGroup Mod IDs are allowed to spawn inside this Zone.|
-|Allowed Values:|Any SpawnGroup SubtypeID|
+|Description:|Workshop mod published file IDs allowed to spawn inside this zone when `UseAllowedModIDs` is `true`. Multiple tags or comma-separated values are supported.|
+|Allowed Values:|Any workshop mod published file ID (`ulong`)|
 |Default Value(s):|`N/A`|
 |Multiple Tag Allowed:|Yes|
 
@@ -217,7 +217,7 @@ Below are the types of tags you can include in your Zone Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseRestrictedModIDs|
 |:----|:----|
 |Tag Format:|`[UseRestrictedModIDs:Value]`|
-|Description:|This tag determines if SpawnGroups belonging to certain Mod IDs should not be allowed to spawn in this Zone.|
+|Description:|When `true`, SpawnGroups from mods listed in `RestrictedModIDs` are blocked **while the spawn position is inside this zone**. This does not block those mods outside the zone. If a mod is both allowed and restricted at the same position, restriction wins.|
 |Allowed Values:|`true`<br>`false`|
 |Default Value(s):|`false`|
 |Multiple Tag Allowed:|No|
@@ -226,8 +226,8 @@ Below are the types of tags you can include in your Zone Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RestrictedModIDs|
 |:----|:----|
 |Tag Format:|`[RestrictedModIDs:Value]`|
-|Description:|This tag determines which SpawnGroup Mod IDs are not allowed to spawn inside this Zone.|
-|Allowed Values:|Any SpawnGroup SubtypeID|
+|Description:|Workshop mod published file IDs blocked from spawning inside this zone when `UseRestrictedModIDs` is `true`. Multiple tags or comma-separated values are supported.|
+|Allowed Values:|Any workshop mod published file ID (`ulong`)|
 |Default Value(s):|`N/A`|
 |Multiple Tag Allowed:|Yes|
 

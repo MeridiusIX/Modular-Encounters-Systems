@@ -1,7 +1,5 @@
-# Update 2.73.03
+# Update 2.73.07
 
-* Added SpawnGroupAliases to mark variations of unique spawngroups.
-* Improved code around unique spawngroups.
-* Fixed the ability to list items of type SeedItem and PhysicalObject in stores.
+* Fix for MES cleaning up non-NPC-owned grids in specific cases.
 
 enenra & CptArthur

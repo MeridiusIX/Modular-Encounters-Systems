@@ -516,43 +516,67 @@ namespace ModularEncountersSystems.Events.Action
 
                     //Yes I tried args.Add(), and args.AddRange() both didn't work
 
-                    foreach (var item in actions.CustomActionArgumentsString)
+                    if (actions.CustomActionArgumentsString != null)
                     {
-                        args.Add((object)item);
+                        foreach (var item in actions.CustomActionArgumentsString)
+                            args.Add((object)item);
                     }
+                    else
+                        MyAPIGateway.Utilities.ShowMessage("AaW", "CustomActionArgumentsString is NULL");
 
-                    foreach (var item in actions.CustomActionArgumentsBool)
+                    if (actions.CustomActionArgumentsBool != null)
                     {
-                        args.Add((object)item);
+                        foreach (var item in actions.CustomActionArgumentsBool)
+                            args.Add((object)item);
                     }
+                    else
+                        MyAPIGateway.Utilities.ShowMessage("AaW", "CustomActionArgumentsBool is NULL");
 
-                    foreach (var item in actions.CustomActionArgumentsInt)
+                    if (actions.CustomActionArgumentsInt != null)
                     {
-                        args.Add((object)item);
+                        foreach (var item in actions.CustomActionArgumentsInt)
+                            args.Add((object)item);
                     }
+                    else
+                        MyAPIGateway.Utilities.ShowMessage("AaW", "CustomActionArgumentsInt is NULL");
 
-                    foreach (var item in actions.CustomActionArgumentsFloat)
+                    if (actions.CustomActionArgumentsFloat != null)
                     {
-                        args.Add((object)item);
+                        foreach (var item in actions.CustomActionArgumentsFloat)
+                            args.Add((object)item);
                     }
+                    else
+                        MyAPIGateway.Utilities.ShowMessage("AaW", "CustomActionArgumentsFloat is NULL");
 
-                    foreach (var item in actions.CustomActionArgumentsLong)
+                    if (actions.CustomActionArgumentsLong != null)
                     {
-                        args.Add((object)item);
+                        foreach (var item in actions.CustomActionArgumentsLong)
+                            args.Add((object)item);
                     }
+                    else
+                        MyAPIGateway.Utilities.ShowMessage("AaW", "CustomActionArgumentsLong is NULL");
 
-                    foreach (var item in actions.CustomActionArgumentsDouble)
+                    if (actions.CustomActionArgumentsDouble != null)
                     {
-                        args.Add((object)item);
+                        foreach (var item in actions.CustomActionArgumentsDouble)
+                            args.Add((object)item);
                     }
+                    else
+                        MyAPIGateway.Utilities.ShowMessage("AaW", "CustomActionArgumentsDouble is NULL");
 
-                    foreach (var item in actions.CustomActionArgumentsVector3D)
+                    if (actions.CustomActionArgumentsVector3D != null)
                     {
-                        args.Add((object)item);
+                        foreach (var item in actions.CustomActionArgumentsVector3D)
+                            args.Add((object)item);
                     }
+                    else
+                        MyAPIGateway.Utilities.ShowMessage("AaW", "CustomActionArgumentsVector3D is NULL");
+
+
 
                     if (LocalApi.CustomActions.TryGetValue(actions.CustomActionName, out action))
                     {
+
                         action?.Invoke(args.ToArray());
                     }
                 }

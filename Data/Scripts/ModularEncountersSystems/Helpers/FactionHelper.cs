@@ -21,6 +21,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMyFaction> NpcTraderFactions = new List<IMyFaction>();
 		public static List<IMyFaction> NpcMilitaryFactions = new List<IMyFaction>();
 		public static List<IMyFaction> NpcPirateFactions = new List<IMyFaction>();
+		public static List<IMyFaction> NpcCustomFactions = new List<IMyFaction>();
 
 		public static List<string> NpcFactionTags = new List<string>();
 		public static List<string> EconomyFactionTags = new List<string>();
@@ -30,13 +31,21 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static bool IsIdentityNPC(long id) {
 
-			return !IsIdentityPlayer(id);
+            if (MyAPIGateway.Players.TryGetIdentityId(id) != null)
+            {
+                return MyAPIGateway.Players.TryGetIdentityId(id).IsBot || MyAPIGateway.Players.TryGetSteamId(id) == 0;
+            }
+            return false;
 
 		}
 
 		public static bool IsIdentityPlayer(long id) {
 
-			return MyAPIGateway.Players.TryGetSteamId(id) > 0;
+            if (MyAPIGateway.Players.TryGetIdentityId(id) != null)
+            {
+                return !MyAPIGateway.Players.TryGetIdentityId(id).IsBot && MyAPIGateway.Players.TryGetSteamId(id) > 0;
+            }
+            return false;
 
 		}
 
@@ -77,6 +86,9 @@ namespace ModularEncountersSystems.Helpers {
 			foreach (var member in faction.Members.Keys) {
 
 				var factionMember = faction.Members[member];
+
+                if (MyAPIGateway.Players.TryGetIdentityId(factionMember.PlayerId) == null)
+                    continue;
 
 				if (IsIdentityNPC(factionMember.PlayerId)) {
 
@@ -199,6 +211,13 @@ namespace ModularEncountersSystems.Helpers {
 
 						EconomyFactionTags.Add(faction.Tag);
 						NpcPirateFactions.Add(faction);
+
+					}
+
+					if (factionOB.FactionType == MyFactionTypes.Custom) {
+
+						EconomyFactionTags.Add(faction.Tag);
+						NpcCustomFactions.Add(faction);
 
 					}
 

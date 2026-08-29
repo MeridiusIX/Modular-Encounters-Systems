@@ -58,7 +58,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
         public bool RivalAiAtmosphericSpawn;
         public bool RivalAiAnySpawn;
 
-
+        public bool GlobalEncounter;
 
         public bool DroneEncounter;
 		public int MinimumPlayerTime;
@@ -124,6 +124,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseRandomTraderFaction;
 		public bool UseRandomMilitaryFaction;
 		public bool UseRandomPirateFaction;
+		public bool UseRandomCustomFaction;
 
 		public int RandomNumberRoll;
 		public int ChanceCeiling;
@@ -404,7 +405,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RivalAiAtmosphericSpawn = false;
 			RivalAiAnySpawn = false;
 
-
+            GlobalEncounter = false;
 
             DroneEncounter = false;
 			MinimumPlayerTime = -1;
@@ -469,6 +470,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseRandomTraderFaction = false;
 			UseRandomMilitaryFaction = false;
 			UseRandomPirateFaction = false;
+			UseRandomCustomFaction = false;
 
 			RandomNumberRoll = 1;
 			ChanceCeiling = 100;
@@ -787,6 +789,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"UseRandomTraderFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomTraderFaction) },
 				{"UseRandomMilitaryFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomMilitaryFaction) },
 				{"UseRandomPirateFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomPirateFaction) },
+				{"UseRandomCustomFaction", (s, o) => TagParse.TagBoolCheck(s, ref UseRandomCustomFaction) },
 				{"RandomNumberRoll", (s, o) => TagParse.TagIntCheck(s, ref RandomNumberRoll) },
 				{"ChanceCeiling", (s, o) => TagParse.TagIntCheck(s, ref ChanceCeiling) },
 				{"SpaceCargoShipChance", (s, o) => TagParse.TagIntCheck(s, ref SpaceCargoShipChance) },

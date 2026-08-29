@@ -8,6 +8,8 @@ using System.Linq;
 using System.Text;
 using VRage.Game;
 using VRage.Game.ModAPI;
+using VRage.Utils;
+using VRageMath;
 
 namespace ModularEncountersSystems.Helpers
 {
@@ -15,7 +17,7 @@ namespace ModularEncountersSystems.Helpers
     public class IdsReplacer
     {
 
-        public static string ReplaceId(NpcData npcData, string tag)
+        public static string ReplaceId(NpcData npcData, string tag,Vector3D remotecontrolposition = new Vector3D())
         {
             if (npcData == null)
                 return tag;
@@ -25,6 +27,8 @@ namespace ModularEncountersSystems.Helpers
             var EventInstanceId = npcData.EventInstanceId.ToString();
             var CustomVariablesName = npcData.CustomVariablesName;
             var CustomStrings = npcData.CustomStrings;
+
+            string stringVector = "{" + "X:"+ remotecontrolposition.X.ToString() + " Y:" + remotecontrolposition.Y.ToString()+ " Z:" + remotecontrolposition.Z.ToString() + "}";
 
 
             if (tag.Contains("{SpawnGroupName}") && SpawnGroupName != null)
@@ -52,6 +56,11 @@ namespace ModularEncountersSystems.Helpers
                 tag = tag.Replace("{CustomVariablesName}", CustomVariablesName);
             }
 
+            if (tag.Contains("{Position}") && !string.IsNullOrWhiteSpace(stringVector))
+            {
+                tag = tag.Replace("{Position}", stringVector);
+            }
+
             foreach (var customString in CustomStrings)
             {
                 if (tag.Contains("{" + customString.Key + "}"))
@@ -63,7 +72,7 @@ namespace ModularEncountersSystems.Helpers
             return tag;
         }
 
-        public static List<string> ReplaceIds(NpcData npcData, List<string> tags)
+        public static List<string> ReplaceIds(NpcData npcData, List<string> tags, Vector3D remotecontrolposition = new Vector3D())
         {
             if (npcData == null)
                 return tags;
@@ -76,7 +85,7 @@ namespace ModularEncountersSystems.Helpers
 
             foreach (var tag in tags)
             {
-                var tagnew = ReplaceId(npcData, tag);
+                var tagnew = ReplaceId(npcData, tag, remotecontrolposition);
                 new_tags.Add(tagnew);
             }
 

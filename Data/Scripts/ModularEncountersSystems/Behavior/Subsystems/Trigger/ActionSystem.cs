@@ -1439,7 +1439,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastAction = "AddInstanceEventGroup";
                 if (actions.AddInstanceEventGroup)
                 {
-                    var instanceEventGroupReplaceValues = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.InstanceEventGroupReplaceValues);
+
+                    
+                    var instanceEventGroupReplaceValues = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.InstanceEventGroupReplaceValues, RemoteControl.GetPosition());
                     LocalApi.InsertInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, instanceEventGroupReplaceValues);
                 }
 
@@ -1939,7 +1941,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 // AddBotsToGrid
                 lastAction = "AddBotsToGrid";
-                if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && APIs.AiEnabled.Valid && actions.BotSpawnProfileNames.Count > 0)
+                if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && APIs.AiEnabledApiLoaded && actions.BotSpawnProfileNames.Count > 0)
                 {
 
                     //MyVisualScriptLogicProvider.ShowNotificationToAll("Attempting To Add Bots", 3000);
@@ -2922,11 +2924,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     var message = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.DebugMessage);
 
-                    foreach (var customVar in _behavior?.CurrentGrid?.Npc?.CustomCountersVariables)
-                    {
-                        if (message.Contains("{" + customVar.Key + "}"))
+                    if (_behavior?.CurrentGrid?.Npc?.CustomCountersVariables != null) {
+                        foreach (var customVar in _behavior?.CurrentGrid?.Npc?.CustomCountersVariables)
                         {
-                            message = message.Replace("{" + customVar.Key + "}", customVar.Value.ToString());
+                            if (message.Contains("{" + customVar.Key + "}"))
+                            {
+                                message = message.Replace("{" + customVar.Key + "}", customVar.Value.ToString());
+                            }
                         }
                     }
 

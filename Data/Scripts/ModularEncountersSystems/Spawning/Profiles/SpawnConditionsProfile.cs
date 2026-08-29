@@ -58,7 +58,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
         public bool RivalAiAtmosphericSpawn;
         public bool RivalAiAnySpawn;
 
-
+        public bool GlobalEncounter;
 
         public bool DroneEncounter;
 		public int MinimumPlayerTime;
@@ -404,7 +404,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RivalAiAtmosphericSpawn = false;
 			RivalAiAnySpawn = false;
 
-
+            GlobalEncounter = false;
 
             DroneEncounter = false;
 			MinimumPlayerTime = -1;

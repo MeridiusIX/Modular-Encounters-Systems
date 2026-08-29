@@ -21,6 +21,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public List<string> SpawnConditionGroups;
 
 		public string FactionOverride;
+        public List<string> BaseGameFactionTags;
 
 		public int Frequency;
 		public bool IgnoreCleanupRules;
@@ -68,6 +69,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			SpawnConditionGroups = new List<string>();
 
 			FactionOverride = "";
+            BaseGameFactionTags = new List<string>();
 
 			Frequency = 0;
 

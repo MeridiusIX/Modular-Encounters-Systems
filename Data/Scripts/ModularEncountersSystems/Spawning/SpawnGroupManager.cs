@@ -665,6 +665,9 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
+        /// <summary>
+        /// Processes non-MES SpawnGroups for use within MES.
+        /// </summary>
 		public static ImprovedSpawnGroup GetOldSpawnGroupDetails(MySpawnGroupDefinition spawnGroup) {
 
 			var thisSpawnGroup = new ImprovedSpawnGroup();
@@ -676,24 +679,20 @@ namespace ModularEncountersSystems.Spawning {
             thisSpawnGroup.IsBaseGame = spawnGroup.Context.IsBaseGame;
 
 			foreach (var faction in factionList.Keys) {
-
 				if (factionList[faction].IsEveryoneNpc() == true && factionList[faction].AcceptHumans == false) {
-
 					factionTags.Add(factionList[faction].Tag);
-
 				}
-
 			}
 
 			thisSpawnGroup.SpawnGroup = spawnGroup;
 
-			//SpawnGroup Type
-			if (spawnGroup.Id.SubtypeName.Contains("(Atmo)") == true) {
 
+            // Encounter Types
+			// For compatibility with old MES mods
+			if (spawnGroup.Id.SubtypeName.Contains("(Atmo)") == true) {
 				thisSpawnGroup.SpawnConditionsProfiles[0].AtmosphericCargoShip = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = false;
 				thisSpawnGroup.SpawnConditionsProfiles[0].PlanetRequiresAtmo = true;
-
 			}
 
 			if (spawnGroup.Id.SubtypeName.Contains("(Inst-") == true) {
@@ -701,79 +700,106 @@ namespace ModularEncountersSystems.Spawning {
 				thisSpawnGroup.SpawnConditionsProfiles[0].ForceStaticGrid = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].PlanetaryInstallation = true;
 
-				if (spawnGroup.Id.SubtypeName.Contains("(Inst-1)") == true) {
-
+				if (spawnGroup.Id.SubtypeName.Contains("(Inst-1)") == true)
 					thisSpawnGroup.SpawnConditionsProfiles[0].PlanetaryInstallationType = "Small";
 
-				}
-
-				if (spawnGroup.Id.SubtypeName.Contains("(Inst-2)") == true) {
-
+				if (spawnGroup.Id.SubtypeName.Contains("(Inst-2)") == true)
 					thisSpawnGroup.SpawnConditionsProfiles[0].PlanetaryInstallationType = "Medium";
 
-				}
-
-				if (spawnGroup.Id.SubtypeName.Contains("(Inst-3)") == true) {
-
+				if (spawnGroup.Id.SubtypeName.Contains("(Inst-3)") == true)
 					thisSpawnGroup.SpawnConditionsProfiles[0].PlanetaryInstallationType = "Large";
 
-				}
-
 			}
 
-			if (spawnGroup.IsPirate == false && spawnGroup.IsEncounter == false && spawnGroup.IsPlanetaryEncounter == false && spawnGroup.IsGlobalEncounter == false && Settings.General.EnableLegacySpaceCargoShipDetection == true && !SubEncounterSpawnGroups.Contains(spawnGroup.Id.SubtypeName)) {
-
+            // Space Cargo Ship
+			if (spawnGroup.IsEncounter == false && spawnGroup.IsPlanetaryEncounter == false && spawnGroup.IsGlobalEncounter == false && Settings.General.EnableLegacySpaceCargoShipDetection == true && !SubEncounterSpawnGroups.Contains(spawnGroup.Id.SubtypeName)) {
 				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;
-
-
-			} else if (spawnGroup.IsCargoShip == true) {
-
+			}
+            else if (spawnGroup.IsCargoShip) {
 				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;
-
 			}
 
-			if (spawnGroup.Context.IsBaseGame == true && thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip == true) {
+            // Space Random Encounter
+			if (spawnGroup.IsEncounter) {
+				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceRandomEncounter = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].UseGridOrigin = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].RotateFirstCockpitToForward = false;
+				thisSpawnGroup.SpawnConditionsProfiles[0].ReactorsOn = spawnGroup.ReactorsOn;
+			}
 
-				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomMinerFaction = true;
+            // Planetary Installation
+            if (spawnGroup.IsPlanetaryEncounter)
+            {
+                thisSpawnGroup.SpawnConditionsProfiles[0].PlanetaryInstallation = true;
+            }
+
+            // Global Encounter
+            if (spawnGroup.IsGlobalEncounter)
+            {
+                thisSpawnGroup.SpawnConditionsProfiles[0].GlobalEncounter = true;
+            }
+
+
+            // Factions
+            // If the SpawnGroup has defined <Factions> - SpawnGroups made for MES should use the MES system instead.
+            if (spawnGroup.Context.IsBaseGame && spawnGroup.FactionSubtypeIds.Count > 0)
+            {
+                thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = "UseBaseGameFactionTags";
+
+                foreach (var factionSubtype in spawnGroup.FactionSubtypeIds)
+                {
+                    if (factionSubtype == "Unknown")
+                        thisSpawnGroup.BaseGameFactionTags.Add("UNKN");
+                    else if (factionSubtype == "SpacePirates")
+                        thisSpawnGroup.BaseGameFactionTags.Add("SPRT");
+                    else if (factionSubtype == "Factorum")
+                        thisSpawnGroup.BaseGameFactionTags.Add("FCTM");
+                }
+            }
+            // Backwards compatibility - FactionOwner from SpawnGroup SubtypeId
+            else
+            {
+                foreach (var tag in factionTags) {
+                    if (spawnGroup.Id.SubtypeName.Contains("(" + tag + ")") == true) {
+                        thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = tag;
+                        break;
+                    }
+                }
+            }
+
+            // If the SpawnGroup has defined <FactionTypes> (only if no <Factions> are used, since when undefined FactionTypes defaults to Pirate) - SpawnGroups made for MES should use the MES system instead.
+            if (spawnGroup.Context.IsBaseGame && spawnGroup.FactionSubtypeIds.Count == 0 && spawnGroup.FactionTypesSubtypeIds.Count > 0)
+            {
+                foreach (var factionType in spawnGroup.FactionTypesSubtypeIds)
+                {
+                    if (factionType == "Miner")
+                        thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomMinerFaction = true;
+
+                    else if (factionType == "Builder")
+                        thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomBuilderFaction = true;
+
+                    else if (factionType == "Trader")
+                        thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomTraderFaction = true;
+
+                    else if (factionType == "Military")
+                        thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomMilitaryFaction = true;
+
+                    else if (factionType == "Pirate")
+                        thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomPirateFaction = true;
+                }
+            }
+            // Backwards compatibility - this was the old code.
+            else if (spawnGroup.Context.IsBaseGame == true && thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip == true)
+            {
+                thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomMinerFaction = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomBuilderFaction = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomTraderFaction = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomMilitaryFaction = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].UseRandomPirateFaction = true;
+            }
 
-			}
-
-			if (spawnGroup.IsPirate == false && spawnGroup.IsEncounter == true) {
-
-				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceRandomEncounter = true;
-				thisSpawnGroup.SpawnConditionsProfiles[0].UseGridOrigin = true;
-				thisSpawnGroup.SpawnConditionsProfiles[0].RotateFirstCockpitToForward = false;
-				thisSpawnGroup.SpawnConditionsProfiles[0].ReactorsOn = false;
-				thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = "Nobody";
-
-			}
-
-			if (spawnGroup.IsPirate == true && spawnGroup.IsEncounter == true) {
-
-				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceRandomEncounter = true;
-				thisSpawnGroup.SpawnConditionsProfiles[0].UseGridOrigin = true;
-				thisSpawnGroup.SpawnConditionsProfiles[0].RotateFirstCockpitToForward = false;
-				thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = "SPRT";
-
-			}
-
-			//Factions
-			foreach (var tag in factionTags) {
-
-				if (spawnGroup.Id.SubtypeName.Contains("(" + tag + ")") == true) {
-
-					thisSpawnGroup.SpawnConditionsProfiles[0].FactionOwner = tag;
-					break;
-
-				}
-
-			}
 
 			//Planet Whitelist & Blacklist
 			foreach (var planet in PlanetNames) {

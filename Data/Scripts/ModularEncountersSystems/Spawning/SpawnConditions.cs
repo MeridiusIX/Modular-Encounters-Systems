@@ -2104,6 +2104,14 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
+					else if (initialFactionTag == "UseBaseGameFactionTags") {
+
+						foreach (var baseGameTags in spawnGroup.BaseGameFactionTags)
+                        {
+                            resultList.Add(baseGameTags);
+                        }
+					}
+
 					return resultList;
 
 				}

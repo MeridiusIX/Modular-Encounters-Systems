@@ -712,17 +712,13 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
             // Space Cargo Ship
-			if (spawnGroup.IsEncounter == false && spawnGroup.IsPlanetaryEncounter == false && spawnGroup.IsGlobalEncounter == false && Settings.General.EnableLegacySpaceCargoShipDetection == true && !SubEncounterSpawnGroups.Contains(spawnGroup.Id.SubtypeName)) {
-				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
-				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;
-			}
-            else if (spawnGroup.IsCargoShip) {
+            if (spawnGroup.IsCargoShip) {
 				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;
 			}
 
             // Space Random Encounter
-			if (spawnGroup.IsEncounter) {
+			else if (spawnGroup.IsEncounter) {
 				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceRandomEncounter = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].UseGridOrigin = true;
 				thisSpawnGroup.SpawnConditionsProfiles[0].RotateFirstCockpitToForward = false;
@@ -730,16 +726,22 @@ namespace ModularEncountersSystems.Spawning {
 			}
 
             // Planetary Installation
-            if (spawnGroup.IsPlanetaryEncounter)
+            else if (spawnGroup.IsPlanetaryEncounter)
             {
                 thisSpawnGroup.SpawnConditionsProfiles[0].PlanetaryInstallation = true;
             }
 
             // Global Encounter
-            if (spawnGroup.IsGlobalEncounter)
+            else if (spawnGroup.IsGlobalEncounter)
             {
                 thisSpawnGroup.SpawnConditionsProfiles[0].GlobalEncounter = true;
             }
+
+            // Fallback
+			else if (spawnGroup.IsEncounter == false && spawnGroup.IsPlanetaryEncounter == false && spawnGroup.IsGlobalEncounter == false && Settings.General.EnableLegacySpaceCargoShipDetection == true && !SubEncounterSpawnGroups.Contains(spawnGroup.Id.SubtypeName)) {
+				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
+				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;
+			}
 
 
             // Factions
@@ -750,6 +752,7 @@ namespace ModularEncountersSystems.Spawning {
 
                 foreach (var factionSubtype in spawnGroup.FactionSubtypeIds)
                 {
+                    // Due to missing access, it's difficult to go from Faction SubtypeId to faction or faction tag, so it's hardcoded instead
                     if (factionSubtype == "Unknown")
                         thisSpawnGroup.BaseGameFactionTags.Add("UNKN");
                     else if (factionSubtype == "SpacePirates")

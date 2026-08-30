@@ -2195,111 +2195,23 @@ namespace ModularEncountersSystems.Spawning {
 
 			//Start remove if Lucas fucked up
 
-			foreach (var faction in factionList.ToList())
+			if (!forceSpawn)
 			{
 
-				if (Settings.General.NpcSpawnGroupBlacklist.Contains(faction.Tag))
-					continue;
-
-				bool validFaction = false;
-				bool specificFactionCheck = false;
-
-				IMyFaction checkFaction = faction;
-
-
-				if (faction?.Tag != null && collection != null && collection.AllowedZoneFactions.Count > 0 && !collection.AllowedZoneFactions.Contains(faction.Tag))
+				foreach (var faction in factionList.ToList())
 				{
 
-					factionList.Remove(faction);
 
-					if (specificFactionCheck == true)
-					{
+					if (Settings.General.NpcSpawnGroupBlacklist.Contains(faction.Tag))
+						continue;
 
-						factionList.Clear();
-						break;
+					bool validFaction = false;
+					bool specificFactionCheck = false;
 
-					}
-
-					continue;
-
-				}
+					IMyFaction checkFaction = faction;
 
 
-				if (condition.UsePlayerFactionReputation == true)
-				{
-					if (string.IsNullOrWhiteSpace(condition.CheckReputationAgainstOtherNPCFaction) == false)
-					{
-
-						var factionOvr = MyAPIGateway.Session.Factions.TryGetFactionByTag(condition.CheckReputationAgainstOtherNPCFaction);
-
-						if (factionOvr != null)
-						{
-
-							if (FactionHelper.NpcFactionTags.Contains(factionOvr.Tag) == false)
-							{
-
-								//MyVisualScriptLogicProvider.ShowNotificationToAll("Npc Faction Tags Don't Include " + factionOvr.Tag, 4000);
-								continue;
-
-							}
-
-							checkFaction = factionOvr;
-							specificFactionCheck = true;
-
-						}
-
-					}
-
-
-					//MyVisualScriptLogicProvider.ShowNotificationToAll("Player Count " + PlayerManager.Players.Count, 4000);
-
-					foreach (var player in PlayerManager.Players)
-					{
-
-						if (!player.Online)
-							continue;
-
-						if (player.Player.IsBot || player.Player.SteamUserId <= 0 || player.Player.Character == null)
-						{
-
-							//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot or Chara Null ", 4000);
-							continue;
-
-						}
-
-						if (player.Distance(coords) > condition.PlayerReputationCheckRadius)
-						{
-
-							//MyVisualScriptLogicProvider.ShowNotificationToAll("Radius Fail ", 4000);
-							continue;
-
-						}
-
-						int rep = 0;
-						rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.Player.IdentityId, checkFaction.FactionId);
-
-						if (rep < condition.MinimumReputation && condition.MinimumReputation > -1501)
-						{
-
-							//MyVisualScriptLogicProvider.ShowNotificationToAll("Min Rep Fail " + rep, 4000);
-							continue;
-
-						}
-
-						if (rep > condition.MaximumReputation && condition.MaximumReputation < 1501)
-						{
-
-							//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Rep Fail " + rep, 4000);
-							continue;
-
-						}
-
-						validFaction = true;
-						break;
-
-					}
-
-					if (validFaction == false)
+					if (faction?.Tag != null && collection != null && collection.AllowedZoneFactions.Count > 0 && !collection.AllowedZoneFactions.Contains(faction.Tag))
 					{
 
 						factionList.Remove(faction);
@@ -2317,12 +2229,103 @@ namespace ModularEncountersSystems.Spawning {
 					}
 
 
+					if (condition.UsePlayerFactionReputation == true)
+					{
+						if (string.IsNullOrWhiteSpace(condition.CheckReputationAgainstOtherNPCFaction) == false)
+						{
+
+							var factionOvr = MyAPIGateway.Session.Factions.TryGetFactionByTag(condition.CheckReputationAgainstOtherNPCFaction);
+
+							if (factionOvr != null)
+							{
+
+								if (FactionHelper.NpcFactionTags.Contains(factionOvr.Tag) == false)
+								{
+
+									//MyVisualScriptLogicProvider.ShowNotificationToAll("Npc Faction Tags Don't Include " + factionOvr.Tag, 4000);
+									continue;
+
+								}
+
+								checkFaction = factionOvr;
+								specificFactionCheck = true;
+
+							}
+
+						}
+
+
+						//MyVisualScriptLogicProvider.ShowNotificationToAll("Player Count " + PlayerManager.Players.Count, 4000);
+
+						foreach (var player in PlayerManager.Players)
+						{
+
+							if (!player.Online)
+								continue;
+
+							if (player.Player.IsBot || player.Player.SteamUserId <= 0 || player.Player.Character == null)
+							{
+
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot or Chara Null ", 4000);
+								continue;
+
+							}
+
+							if (player.Distance(coords) > condition.PlayerReputationCheckRadius)
+							{
+
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Radius Fail ", 4000);
+								continue;
+
+							}
+
+							int rep = 0;
+							rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(player.Player.IdentityId, checkFaction.FactionId);
+
+							if (rep < condition.MinimumReputation && condition.MinimumReputation > -1501)
+							{
+
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Min Rep Fail " + rep, 4000);
+								continue;
+
+							}
+
+							if (rep > condition.MaximumReputation && condition.MaximumReputation < 1501)
+							{
+
+								//MyVisualScriptLogicProvider.ShowNotificationToAll("Max Rep Fail " + rep, 4000);
+								continue;
+
+							}
+
+							validFaction = true;
+							break;
+
+						}
+
+						if (validFaction == false)
+						{
+
+							factionList.Remove(faction);
+
+							if (specificFactionCheck == true)
+							{
+
+								factionList.Clear();
+								break;
+
+							}
+
+							continue;
+
+						}
+
+
+					}
+
 				}
 
-
-
 			}
-
 
 			//End remove if Lucas fucked up
 

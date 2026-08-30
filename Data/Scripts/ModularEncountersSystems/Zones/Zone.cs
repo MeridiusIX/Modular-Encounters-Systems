@@ -498,7 +498,15 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				if (tag.StartsWith("[UseAllowedSpawnGroups:") == true) {
+                //MaxSpawnedEncounters
+                if (tag.StartsWith("[MaxSpawnedEncounters:") == true)
+                {
+
+                    TagParse.TagIntCheck(tag, ref this.MaxSpawnedEncounters);
+
+                }
+
+                if (tag.StartsWith("[UseAllowedSpawnGroups:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.UseAllowedSpawnGroups);
 

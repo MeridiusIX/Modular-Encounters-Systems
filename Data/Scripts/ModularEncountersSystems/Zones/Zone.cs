@@ -49,32 +49,29 @@ namespace ModularEncountersSystems.Zones {
 		[ProtoMember(27)] public bool UseAllowedSpawnGroups; //Determines if the Zone can only spawn certain SpawnGroups (Warning: If Used, SpawnGroups Listed Can ONLY spawn in zones they're allowed in)
 		[ProtoMember(28)] public List<string> AllowedSpawnGroups; //SpawnGroup IDs for Allowed Spawning
 
-        [ProtoMember(29)] public bool UseNonExclusiveSpawnGroups; //Determines if the Zone can only spawn certain SpawnGroups (Warning: If Used, SpawnGroups Listed Can ONLY spawn in zones they're allowed in)
-        [ProtoMember(30)] public List<string> NonExclusiveSpawnGroups; //SpawnGroup IDs for Allowed Spawning
+		[ProtoMember(29)] public bool UseRestrictedSpawnGroups; //Determines if the Zone will prevent certain SpawnGroups from spawning
+		[ProtoMember(30)] public List<string> RestrictedSpawnGroups; //SpawnGroup IDs for Restricted Spawning
 
-        [ProtoMember(31)] public bool UseRestrictedSpawnGroups; //Determines if the Zone will prevent certain SpawnGroups from spawning
-		[ProtoMember(32)] public List<string> RestrictedSpawnGroups; //SpawnGroup IDs for Restricted Spawning
+		[ProtoMember(31)] public bool UseAllowedModIDs; //Determines if the Zone can only spawn SpawnGroups from certain Mods
+		[ProtoMember(32)] public List<ulong> AllowedModIDs; //Mod IDs for Allowed Spawning
 
-		[ProtoMember(33)] public bool UseAllowedModIDs; //Determines if the Zone can only spawn SpawnGroups from certain Mods (Warning: If Used, Mod IDs Listed Can ONLY spawn in zones they're allowed in)
-		[ProtoMember(34)] public List<ulong> AllowedModIDs; //Mod IDs for Allowed Spawning
+		[ProtoMember(33)] public bool UseRestrictedModIDs; //Determines if the Zone will prevent certain SpawnGroup from specified ModIDs from spawning
+		[ProtoMember(34)] public List<ulong> RestrictedModIDs; //Mod IDs for Restricted Spawning
 
-		[ProtoMember(35)] public bool UseRestrictedModIDs; //Determines if the Zone will prevent certain SpawnGroup from specified ModIDs from spawning
-		[ProtoMember(36)] public List<ulong> RestrictedModIDs; //Mod IDs for Restricted Spawning
+		[ProtoMember(35)] public bool UseZoneAnnounce; //Determines if Zone Should Announce To Players A Message When They Enter or Leave the Zone
+		[ProtoMember(36)] public string ZoneEnterAnnounce; //Message Displayed To Players Entering The Zone
+		[ProtoMember(37)] public string ZoneLeaveAnnounce; //Message Displayed To Players Leaving The Zone
+		[ProtoMember(38)] public bool FlashZoneRadius; //Determines if the Radius of the Zone should briefly flash on screen when a player enters or leaves zone.
 
-		[ProtoMember(37)] public bool UseZoneAnnounce; //Determines if Zone Should Announce To Players A Message When They Enter or Leave the Zone
-		[ProtoMember(38)] public string ZoneEnterAnnounce; //Message Displayed To Players Entering The Zone
-		[ProtoMember(39)] public string ZoneLeaveAnnounce; //Message Displayed To Players Leaving The Zone
-		[ProtoMember(40)] public bool FlashZoneRadius; //Determines if the Radius of the Zone should briefly flash on screen when a player enters or leaves zone.
+		[ProtoMember(39)] public Dictionary<string, long> CustomCounters; //Custom Counters Associated To The Zone (Assigned Via RivalAI behavior)
+		[ProtoMember(40)] public Dictionary<string, bool> CustomBools; //Custom Bools Associated To The Zone (Assigned Via RivalAI behavior)
 
-		[ProtoMember(41)] public Dictionary<string, long> CustomCounters; //Custom Counters Associated To The Zone (Assigned Via RivalAI behavior)
-		[ProtoMember(42)] public Dictionary<string, bool> CustomBools; //Custom Bools Associated To The Zone (Assigned Via RivalAI behavior)
+		[ProtoMember(41)] public List<long> PlayersInZone;
 
-		[ProtoMember(43)] public List<long> PlayersInZone;
+		[ProtoMember(42)] public long PlanetId; //Planet Entity Id (used internally)
 
-		[ProtoMember(44)] public long PlanetId; //Planet Entity Id (used internally)
-
-		[ProtoMember(45)] public string RequiredSandboxBool; //Sandbox Bool Name That Must Be True To Use Zone. Not Used if Null
-		[ProtoMember(46)] public string RequiredFalseSandboxBool; //Sandbox Bool Name That Must Be False To Use Zone. Not Used if Null
+		[ProtoMember(43)] public string RequiredSandboxBool; //Sandbox Bool Name That Must Be True To Use Zone. Not Used if Null
+		[ProtoMember(44)] public string RequiredFalseSandboxBool; //Sandbox Bool Name That Must Be False To Use Zone. Not Used if Null
 
 		[ProtoIgnore]
 		public BoundingSphereD Sphere { 
@@ -287,8 +284,7 @@ namespace ModularEncountersSystems.Zones {
 			sb.Append(" - Use Zone Timer:              ").Append(UseZoneTimer).AppendLine();
 			sb.Append(" - Use Max Spawned Encounters:  ").Append(UseMaxSpawnedEncounters).AppendLine();
 			sb.Append(" - Use Allowed Spawn Groups:    ").Append(UseAllowedSpawnGroups).AppendLine();
-            //sb.Append(" - Use Non-Exclusive Spawn Groups:").Append(UseNonExclusiveSpawnGroups).AppendLine();
-            sb.Append(" - Use Restricted Spawn Groups: ").Append(UseRestrictedSpawnGroups).AppendLine();
+             sb.Append(" - Use Restricted Spawn Groups: ").Append(UseRestrictedSpawnGroups).AppendLine();
 
 			sb.Append(" - UseLimitedFactions:          ").Append(UseLimitedFactions).AppendLine();
 			sb.Append(" - Factions:                    ").Append(string.Join(", ", Factions)).AppendLine();
@@ -502,14 +498,6 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				//MaxSpawnedEncounters
-				if (tag.StartsWith("[MaxSpawnedEncounters:") == true) {
-
-					TagParse.TagIntCheck(tag, ref this.MaxSpawnedEncounters);
-
-				}
-
-				//UseAllowedSpawnGroups
 				if (tag.StartsWith("[UseAllowedSpawnGroups:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.UseAllowedSpawnGroups);
@@ -522,22 +510,6 @@ namespace ModularEncountersSystems.Zones {
 					TagParse.TagStringListCheck(tag, ref this.AllowedSpawnGroups);
 
 				}
-
-                //UseNonExclusiveSpawnGroups
-                if (tag.StartsWith("[UseNonExclusiveSpawnGroups:") == true)
-                {
-
-                    TagParse.TagBoolCheck(tag, ref this.UseNonExclusiveSpawnGroups);
-
-                }
-
-                ////NonExclusiveSpawnGroups
-                //if (tag.StartsWith("[NonExclusiveSpawnGroups:") == true)
-                //{
-
-                //    TagParse.TagStringListCheck(tag, ref this.NonExclusiveSpawnGroups);
-
-                //}
 
                 //UseRestrictedSpawnGroups
                 if (tag.StartsWith("[UseRestrictedSpawnGroups:") == true) {

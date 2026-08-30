@@ -2085,7 +2085,7 @@ namespace ModularEncountersSystems.Spawning {
 				if (!usesRandomFaction && !collection.AllowedZoneFactions.Contains(resolvedFaction)) {
 
 					failReason = _zoneDebug.ToString();
-					failReason += "   - Zone Check Failed: Allowed Zone Factions Not Satisfied (" + resolvedFaction + ")";
+					failReason += "   - Zone Check Failed: Faction '" + resolvedFaction + "' is not among Allowed Zone Factions.";
 					return false;
 
 				}

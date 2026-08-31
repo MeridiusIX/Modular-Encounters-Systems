@@ -52,7 +52,7 @@ namespace ModularEncountersSystems.Zones {
 		[ProtoMember(29)] public bool UseRestrictedSpawnGroups; //Determines if the Zone will prevent certain SpawnGroups from spawning
 		[ProtoMember(30)] public List<string> RestrictedSpawnGroups; //SpawnGroup IDs for Restricted Spawning
 
-		[ProtoMember(31)] public bool UseAllowedModIDs; //Determines if the Zone can only spawn SpawnGroups from certain Mods (Warning: If Used, Mod IDs Listed Can ONLY spawn in zones they're allowed in)
+		[ProtoMember(31)] public bool UseAllowedModIDs; //Determines if the Zone can only spawn SpawnGroups from certain Mods
 		[ProtoMember(32)] public List<ulong> AllowedModIDs; //Mod IDs for Allowed Spawning
 
 		[ProtoMember(33)] public bool UseRestrictedModIDs; //Determines if the Zone will prevent certain SpawnGroup from specified ModIDs from spawning
@@ -284,14 +284,15 @@ namespace ModularEncountersSystems.Zones {
 			sb.Append(" - Use Zone Timer:              ").Append(UseZoneTimer).AppendLine();
 			sb.Append(" - Use Max Spawned Encounters:  ").Append(UseMaxSpawnedEncounters).AppendLine();
 			sb.Append(" - Use Allowed Spawn Groups:    ").Append(UseAllowedSpawnGroups).AppendLine();
-			sb.Append(" - Use Restricted Spawn Groups: ").Append(UseRestrictedSpawnGroups).AppendLine();
+             sb.Append(" - Use Restricted Spawn Groups: ").Append(UseRestrictedSpawnGroups).AppendLine();
 
 			sb.Append(" - UseLimitedFactions:          ").Append(UseLimitedFactions).AppendLine();
 			sb.Append(" - Factions:                    ").Append(string.Join(", ", Factions)).AppendLine();
 
-			sb.Append(" - Below is not implemented!!!  ").AppendLine();
-			sb.Append(" - Use Allowed Mod IDs:		   ").Append(UseAllowedModIDs).AppendLine();
-			sb.Append(" - Use Restricted Mod IDs:	   ").Append(UseRestrictedModIDs).AppendLine();
+			sb.Append(" - Use Allowed Mod IDs:         ").Append(UseAllowedModIDs).AppendLine();
+			sb.Append(" - Allowed Mod IDs:             ").Append(AllowedModIDs != null && AllowedModIDs.Count > 0 ? string.Join(", ", AllowedModIDs) : "(none)").AppendLine();
+			sb.Append(" - Use Restricted Mod IDs:      ").Append(UseRestrictedModIDs).AppendLine();
+			sb.Append(" - Restricted Mod IDs:          ").Append(RestrictedModIDs != null && RestrictedModIDs.Count > 0 ? string.Join(", ", RestrictedModIDs) : "(none)").AppendLine();
 
 			if (CustomBools.Count > 0) {
 
@@ -422,6 +423,9 @@ namespace ModularEncountersSystems.Zones {
 
 					TagParse.TagStringListCheck(tag, ref this.Factions);
 
+					for (int i = 0; i < this.Factions.Count; i++)
+						this.Factions[i] = this.Factions[i].Trim();
+
 				}
 
 				//Coordinates
@@ -494,15 +498,15 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				//MaxSpawnedEncounters
-				if (tag.StartsWith("[MaxSpawnedEncounters:") == true) {
+                //MaxSpawnedEncounters
+                if (tag.StartsWith("[MaxSpawnedEncounters:") == true)
+                {
 
-					TagParse.TagIntCheck(tag, ref this.MaxSpawnedEncounters);
+                    TagParse.TagIntCheck(tag, ref this.MaxSpawnedEncounters);
 
-				}
+                }
 
-				//UseAllowedSpawnGroups
-				if (tag.StartsWith("[UseAllowedSpawnGroups:") == true) {
+                if (tag.StartsWith("[UseAllowedSpawnGroups:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.UseAllowedSpawnGroups);
 
@@ -515,8 +519,8 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				//UseRestrictedSpawnGroups
-				if (tag.StartsWith("[UseRestrictedSpawnGroups:") == true) {
+                //UseRestrictedSpawnGroups
+                if (tag.StartsWith("[UseRestrictedSpawnGroups:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref this.UseRestrictedSpawnGroups);
 

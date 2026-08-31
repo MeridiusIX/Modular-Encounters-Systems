@@ -58,6 +58,8 @@ namespace ModularEncountersSystems.Spawning {
 		public List<string> OnlyAllowedZoneSpawns;
 		public List<string> AllowedZoneFactions;
 		public List<string> RestrictedZoneSpawnGroups;
+		public List<ulong> AllowedZoneModIDs;
+		public List<ulong> RestrictedZoneModIDs;
 
 		public bool IgnoreAllSafetyChecks = false;
 		public bool SkipGridSpawnChecks { get {
@@ -131,10 +133,12 @@ namespace ModularEncountersSystems.Spawning {
 			AllowedZoneSpawns = new List<string>();
 			OnlyAllowedZoneSpawns = new List<string>();
 			AllowedZoneFactions = new List<string>();
-            RestrictedZoneSpawnGroups = new List<string>();
+			RestrictedZoneSpawnGroups = new List<string>();
+			AllowedZoneModIDs = new List<ulong>();
+			RestrictedZoneModIDs = new List<ulong>();
 
-            ParentId = 0;
-            CustomCountersVariables = new Dictionary<string, int>();
+			ParentId = 0;
+			CustomCountersVariables = new Dictionary<string, int>();
 
 		}
 

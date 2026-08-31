@@ -317,6 +317,30 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
+				// Allowed mod IDs: only while inside this zone (no global lock outside the zone)
+				if (zone.Persistent && zone.UseAllowedModIDs && zone.AllowedModIDs != null && zone.AllowedModIDs.Count > 0) {
+
+					foreach (var modId in zone.AllowedModIDs) {
+
+						if (modId != 0 && !collection.AllowedZoneModIDs.Contains(modId))
+							collection.AllowedZoneModIDs.Add(modId);
+
+					}
+
+				}
+
+				// Restricted mod IDs: only while inside this zone
+				if (zone.Persistent && zone.UseRestrictedModIDs && zone.RestrictedModIDs != null && zone.RestrictedModIDs.Count > 0) {
+
+					foreach (var modId in zone.RestrictedModIDs) {
+
+						if (modId != 0 && !collection.RestrictedZoneModIDs.Contains(modId))
+							collection.RestrictedZoneModIDs.Add(modId);
+
+					}
+
+				}
+
 			}
 
 		}
@@ -340,7 +364,34 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static bool PositionInsideStrictZone(Vector3D coords) {
+        /// <summary>
+        /// Are we inside a zone that restricts spawns to certain spawn groups? If so, return true. Otherwise, return false.
+        /// </summary>
+        /// <param name="coords"></param>
+        /// <returns></returns>
+        public static bool InsideRestrictedZone(Vector3D coords)
+        {
+
+            foreach (var zone in ActiveZones)
+            {
+
+                if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+                    continue;
+
+                if (zone.UseRestrictedSpawnGroups)
+                {
+
+                    return true;
+
+                }
+
+            }
+
+            return false;
+
+        }
+
+        public static bool PositionInsideStrictZone(Vector3D coords) {
 
 			foreach (var zone in ActiveZones) {
 

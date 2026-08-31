@@ -161,7 +161,8 @@ namespace ModularEncountersSystems.Spawning {
 
 				SpawnLogger.Write("Spawn Request Inside of No Spawn Zone Has Been Cancelled.", SpawnerDebugEnum.SpawnGroup);
 
-			}
+				return;  // is inside a NoSpawnZone, so no spawns allowed
+            }
 
 			SpawnLogger.Write("Checking SpawnGroups For Spawn Request: " + type, SpawnerDebugEnum.SpawnGroup);
 
@@ -183,9 +184,33 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
-				if (collection.RestrictedZoneSpawnGroups.Contains(spawnGroup.SpawnGroupName)) {
+                // In a restricted spawning zone, only allow spawn groups that are in the restricted zone spawn group list
 
-					SpawnLogger.Queue(" - Zone(s) SpawnGroup Blacklist Contains SpawnGroup", SpawnerDebugEnum.SpawnGroup, addToReason: true);
+                if (ZoneManager.InsideRestrictedZone(environment.Position))
+                {
+					if (collection.RestrictedZoneSpawnGroups.Contains(spawnGroup.SpawnGroupName))
+					{
+
+						SpawnLogger.Queue(" - Restricted zone(s) SpawnGroup Blacklist Contains SpawnGroup", SpawnerDebugEnum.SpawnGroup, addToReason: true);
+						continue;
+					}
+
+				}
+
+				ulong spawnGroupModId = GetSpawnGroupModPublishedId(spawnGroup);
+
+				// Inside zone(s) with UseAllowedModIDs: only listed workshop mod IDs
+				if (collection.AllowedZoneModIDs.Count > 0 && !collection.AllowedZoneModIDs.Contains(spawnGroupModId)) {
+
+					SpawnLogger.Queue(" - Zone(s) Allowed Mod ID list doesn't contain SpawnGroup mod while inside zone", SpawnerDebugEnum.SpawnGroup, addToReason: true);
+					continue;
+
+				}
+
+				// Inside zone(s) with UseRestrictedModIDs: block listed workshop mod IDs (wins over allow)
+				if (collection.RestrictedZoneModIDs.Count > 0 && collection.RestrictedZoneModIDs.Contains(spawnGroupModId)) {
+
+					SpawnLogger.Queue(" - Restricted zone(s) Mod ID blacklist contains SpawnGroup mod", SpawnerDebugEnum.SpawnGroup, addToReason: true);
 					continue;
 
 				}
@@ -650,6 +675,19 @@ namespace ModularEncountersSystems.Spawning {
 				return;
 
 			}
+
+		}
+
+		/// <summary>
+		/// Workshop published file ID for zone AllowedModIDs / RestrictedModIDs checks.
+		/// Local or non-workshop content returns 0.
+		/// </summary>
+		public static ulong GetSpawnGroupModPublishedId(ImprovedSpawnGroup spawnGroup) {
+
+			if (spawnGroup?.SpawnGroup?.Context == null)
+				return 0;
+
+			return spawnGroup.SpawnGroup.Context.ModItem.PublishedFileId;
 
 		}
 

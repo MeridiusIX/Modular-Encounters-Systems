@@ -1268,7 +1268,7 @@ namespace ModularEncountersSystems.Sync {
 			}
 
 
-			//GetZones
+			//GetEvents
 			if (array[2] == "GetEvents")
 			{
 

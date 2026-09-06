@@ -19,6 +19,7 @@
 * Added support for variables to Trigger Type ButtonPress' [ButtonPanelName:string].
 * Added support for variable {SpawnGroupName} to SpawnConditions [SandboxVariables:string] and [FalseSandboxVariables:string]
 * Added EventAction [DebugChatMessage:string].
+* Added EventCondition [CheckOnSession:bool] - runs only once on game load.
 * Improved parsing of information defined in base game SpawnGroups. This explicitly will only affect vanilla SpawnGroups.
 * Fix for space random encounter SpawnGroups that used the base game Factions-syntax to define the faction always spawning as SPRT.
 

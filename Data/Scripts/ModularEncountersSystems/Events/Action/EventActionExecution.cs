@@ -46,15 +46,6 @@ namespace ModularEncountersSystems.Events.Action
                 }
 
 
-                //DebugHudMessage
-                lastAction = "DebugHudMessage";
-                if (!string.IsNullOrWhiteSpace(actions.DebugHudMessage))
-                {
-                    MyAPIGateway.Utilities.ShowMessage("MES-EVENT", actions.DebugHudMessage);
-                    MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);
-                }
-
-
                 //Booleans
                 lastAction = "ChangeBooleans";
                 if (actions.ChangeBooleans == true)
@@ -649,6 +640,25 @@ namespace ModularEncountersSystems.Events.Action
                         }
                     }
                 }
+
+
+                //DebugHudMessage
+                lastAction = "DebugHudMessage";
+                if (!string.IsNullOrWhiteSpace(actions.DebugHudMessage))
+                {
+                    MyAPIGateway.Utilities.ShowMessage("MES-EVENT", actions.DebugHudMessage);
+                    MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);
+                }
+
+
+                //DebugChatMessage
+                lastAction = "DebugChatMessage";
+                if (!string.IsNullOrWhiteSpace(actions.DebugChatMessage))
+                {
+                    var message = IdsReplacer.ReplaceId(null, actions.DebugChatMessage);
+                    MyVisualScriptLogicProvider.SendChatMessage(message, actions.ProfileSubtypeId);
+                }
+
             }
             catch (Exception e)
             {

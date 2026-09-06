@@ -200,6 +200,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 		public string DebugHudMessage;
+		public string DebugChatMessage;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -367,6 +368,7 @@ namespace ModularEncountersSystems.Events.Action {
 			CustomActionArgumentsVector3D = new List<Vector3D>();
 
 			DebugHudMessage = "";
+			DebugChatMessage = "";
 
 			SetEventControllers = false;
 			EventControllerNames = new List<string>();
@@ -529,6 +531,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 				{ "DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },
+				{ "DebugChatMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugChatMessage) },
 				{"SetEventControllers", (s, o) => TagParse.TagBoolCheck(s, ref SetEventControllers) },
 				{"EventControllerNames", (s, o) => TagParse.TagStringListCheck(s, ref EventControllerNames) },
 				{"EventControllersActive", (s, o) => TagParse.TagBoolListCheck(s, ref EventControllersActive) },

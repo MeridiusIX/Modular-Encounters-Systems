@@ -35,6 +35,12 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<string> SetCounters;
 		public List<int> SetCountersAmount;
 
+        public bool SetSandboxVector3Ds;
+        public Dictionary<string, Vector3D> SandboxVector3Ds;
+
+        public bool SetSandboxStrings;
+        public Dictionary<string, string> SandboxStrings;
+
 
 		public bool ResetCooldownTimeOfEvents;
 		public List<string> ResetEventCooldownIds;
@@ -221,6 +227,12 @@ namespace ModularEncountersSystems.Events.Action {
 			SetCounters = new List<string>();
 			SetCountersAmount = new List<int>();
 
+            SetSandboxVector3Ds = false;
+            SandboxVector3Ds = new Dictionary<string, Vector3D>();
+
+            SetSandboxStrings = false;
+            SandboxStrings = new Dictionary<string, string>();
+
 
 			ChangeZoneAtPosition = false;
 			ZoneNames = new List<string>();
@@ -393,6 +405,12 @@ namespace ModularEncountersSystems.Events.Action {
 				{"DecreaseCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref DecreaseCountersAmount) },
 				{"SetCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetCounters) },
 				{"SetCountersAmount", (s, o) => TagParse.TagIntListCheck(s,true, ref SetCountersAmount) },
+
+				{"SetSandboxVector3Ds", (s, o) => TagParse.TagBoolCheck(s, ref SetSandboxVector3Ds) },
+                {"SandboxVector3Ds", (s, o) => TagParse.TagStringDictVector3DCheck(s, ref SandboxVector3Ds) },
+
+				{"SetSandboxStrings", (s, o) => TagParse.TagBoolCheck(s, ref SetSandboxStrings) },
+                {"SandboxStrings", (s, o) => TagParse.TagStringDictCheck(s, ref SandboxStrings) },
 
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
 				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },

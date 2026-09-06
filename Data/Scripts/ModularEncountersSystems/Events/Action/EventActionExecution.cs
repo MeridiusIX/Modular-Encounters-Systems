@@ -97,6 +97,36 @@ namespace ModularEncountersSystems.Events.Action
                 }
 
 
+                // SetSandboxVector3Ds
+                lastAction = "SetSandboxVector3Ds";
+                if (actions.SetSandboxVector3Ds)
+                {
+                    foreach (var sandboxVariable in actions.SandboxVector3Ds) {
+
+                        MyAPIGateway.Utilities.SetVariable(sandboxVariable.Key, sandboxVariable.Value);
+
+                    }
+                }
+
+
+                // SetSandboxStrings
+                lastAction = "SetSandboxStrings";
+                if (actions.SetSandboxStrings)
+                {
+                    foreach (var sandboxVariable in actions.SandboxStrings) {
+
+                        if (string.IsNullOrWhiteSpace(sandboxVariable.Key) || string.IsNullOrWhiteSpace(sandboxVariable.Value))
+                            return;
+
+                        var variableName = IdsReplacer.ReplaceId(null, sandboxVariable.Key);
+                        var variableValue = IdsReplacer.ReplaceId(null, sandboxVariable.Value);
+
+                        MyAPIGateway.Utilities.SetVariable(variableName, variableValue);
+
+                    }
+                }
+
+
                 lastAction = "ResetCooldownTimeOfEvents";
                 if (actions.ResetCooldownTimeOfEvents)
                 {

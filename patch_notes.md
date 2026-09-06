@@ -20,6 +20,8 @@
 * Added support for variable {SpawnGroupName} to SpawnConditions [SandboxVariables:string] and [FalseSandboxVariables:string]
 * Added EventAction [DebugChatMessage:string].
 * Added EventCondition [CheckOnSession:bool] - runs only once on game load.
+* Added EventActions [SetSandboxStrings:bool] & [SandboxStrings:variablename,value].
+* Added EventActions [SetSandboxVector3Ds:bool] & [SandboxVector3Ds:variablename,{X:0 Y:0 Z:0}].
 * Improved parsing of information defined in base game SpawnGroups. This explicitly will only affect vanilla SpawnGroups.
 * Fix for space random encounter SpawnGroups that used the base game Factions-syntax to define the faction always spawning as SPRT.
 

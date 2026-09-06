@@ -29,7 +29,7 @@ namespace ModularEncountersSystems.Entities {
 
 	[Flags]
 	public enum GridOwnershipEnum {
-	
+
 		None = 0,
 		NpcMajority = 1,
 		NpcMinority = 1 << 1,
@@ -208,7 +208,7 @@ namespace ModularEncountersSystems.Entities {
 				DebugData.Append(" - Grid Has Physics On Entity Load.").AppendLine();
 				EntityEvaluator.GetAttachedGrids(this);
 				HasPhysics = true;
-			
+
 			}
 
 			if (string.IsNullOrWhiteSpace(MyVisualScriptLogicProvider.GetEntityName(CubeGrid.EntityId)))
@@ -267,7 +267,7 @@ namespace ModularEncountersSystems.Entities {
 				return;
 
 			}
-				
+
 			string stringData = null;
 			NpcData data = SerializationHelper.GetDataFromEntity<NpcData>(CubeGrid, StorageTools.NpcDataKey);
 
@@ -294,6 +294,7 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
+            data.Deserialized();
 			DebugData.Append(" - Checking if NPC Data Conditions Resolve as Null.").AppendLine();
 			Npc = data.Conditions != null ? data : null;
 			DebugData.Append(" - NPC Data Conditions: ").Append(Npc == null ? "Null" : "OK").AppendLine();
@@ -313,7 +314,7 @@ namespace ModularEncountersSystems.Entities {
 							gotData = true;
 							Npc = spawnedData;
 							break;
-						
+
 						}
 
 					}
@@ -322,7 +323,7 @@ namespace ModularEncountersSystems.Entities {
 
 				if (!gotData)
 					Npc = null;
-			
+
 			}
 
 		}
@@ -331,7 +332,7 @@ namespace ModularEncountersSystems.Entities {
 
 			if ((hit as IMySlimBlock)?.CubeGrid == CubeGrid)
 				HealthUpdated = true;
-		
+
 		}
 
 		//Disconnects Subgrids Bi-Directionally
@@ -350,7 +351,7 @@ namespace ModularEncountersSystems.Entities {
 			IMyPistonBase piston = null;
 
 			lock (AllTerminalBlocks) {
-				
+
 				for(int i = AllTerminalBlocks.Count - 1; i >= 0; i--) {
 
 					if (i >= AllTerminalBlocks.Count)
@@ -380,13 +381,13 @@ namespace ModularEncountersSystems.Entities {
 							gear.Unlock();
 
 						}
-						
+
 					}
 
 					if (rotor != null && rotor.TopGrid != null && rotor as IMyMotorSuspension == null) {
 
 						rotor.Detach();
-					
+
 					}
 
 					if (piston != null && piston.TopGrid != null) {
@@ -396,7 +397,7 @@ namespace ModularEncountersSystems.Entities {
 					}
 
 				}
-			
+
 			}
 
 			foreach (var physGrid in gridList) {
@@ -444,11 +445,11 @@ namespace ModularEncountersSystems.Entities {
 					}
 
 				}
-			
+
 			}
 
 			RefreshSubGrids();
-		
+
 		}
 
 		private void NewBlockAdded(IMySlimBlock block) {
@@ -459,7 +460,7 @@ namespace ModularEncountersSystems.Entities {
 					AllBlocks.Add(block);
 
 			}
-			
+
 			HealthUpdated = true;
 
 			if (!GridManager.ProcessBlock(block))
@@ -680,9 +681,9 @@ namespace ModularEncountersSystems.Entities {
 
 			//Other
 			if (!assignedBlock) {
-			
+
 				//TODO: Add To 'Other'
-			
+
 			}
 
 		}
@@ -856,7 +857,7 @@ namespace ModularEncountersSystems.Entities {
 
 
 
-						
+
 					if (!block.IsFullIntegrity || block.CurrentDamage > 0)
                     {
 						var oldint = block.IsFullIntegrity;
@@ -898,7 +899,7 @@ namespace ModularEncountersSystems.Entities {
 					if (maxBlocks == 0 && affectedBlocks >= maxBlocks) {
 
 						break;
-					
+
 					}
 
 				}
@@ -1078,7 +1079,7 @@ namespace ModularEncountersSystems.Entities {
 			BlockLogicManager.RegisterBlockWithLogic(blockEntity);
 
 			return true;
-		
+
 		}
 
 		private void CleanBlockList(List<BlockEntity> collection) {
@@ -1099,8 +1100,8 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
-			
-		
+
+
 		}
 
 		public override void CloseEntity(IMyEntity entity) {
@@ -1181,11 +1182,11 @@ namespace ModularEncountersSystems.Entities {
 				if (!allowNonActiveEntity || Closed) {
 
 					return result;
-				
+
 				}
-			
+
 			}
-				
+
 
 			lock (AllBlocks) {
 
@@ -1256,11 +1257,11 @@ namespace ModularEncountersSystems.Entities {
 							result += EconomyHelper.GetBlockRegularValue(proBlock, null, false);
 
 						}
-					
+
 					}
 
 				}
-			
+
 			}
 
 			return result;
@@ -1433,9 +1434,9 @@ namespace ModularEncountersSystems.Entities {
 					targetList.Add(block);
 
 				}
-			
+
 			}
-		
+
 		}
 
 		public void GetBlocksOfType<T>(List<BlockEntity> blocks, bool clearList = true) where T : class {
@@ -1456,11 +1457,11 @@ namespace ModularEncountersSystems.Entities {
 						blocks.Add(blockList[j]);
 
 					}
-					
+
 				}
-			
+
 			}
-		
+
 		}
 
 		public SpawningType GetSpawningTypeFromLinkedGrids() {
@@ -1530,7 +1531,7 @@ namespace ModularEncountersSystems.Entities {
 					AllBlocks.Remove(block);
 
 				}
-				
+
 			}
 
 			HealthUpdated = true;
@@ -1612,7 +1613,7 @@ namespace ModularEncountersSystems.Entities {
 
 			//MyVisualScriptLogicProvider.ShowNotificationToAll("Subgrid Change", 4000);
 			RefreshLinkedGrids = true;
-		
+
 		}
 
 		public void OwnershipChange(IMyCubeGrid cubeGrid) {
@@ -1643,13 +1644,13 @@ namespace ModularEncountersSystems.Entities {
 						break;
 
 					}
-		
+
 				}
-			
+
 			}
 
 			return result;
-		
+
 		}
 
 		public void PhysicsCheck(IMyEntity entity) {
@@ -1678,7 +1679,7 @@ namespace ModularEncountersSystems.Entities {
 
 				SpawnLogger.Write("Warning: LinkedGrids collection null", SpawnerDebugEnum.Error, true);
 				return;
-			
+
 			}
 
 			for (int i = LinkedGrids.Count - 1; i >= 0; i--) {
@@ -1703,7 +1704,7 @@ namespace ModularEncountersSystems.Entities {
 				}
 
 			}
-			
+
 		}
 
 		public void SetAutomatedWeaponRanges(bool useMax = false) {
@@ -1750,7 +1751,7 @@ namespace ModularEncountersSystems.Entities {
 			if (this?.Behavior?.BehaviorSettings != null) {
 
 				this.Behavior.BehaviorSettings.HomingWeaponRangeOverride = useMax ? -1 : 800;
-			
+
 			}
 
 		}
@@ -1769,7 +1770,7 @@ namespace ModularEncountersSystems.Entities {
 				GridGroupData.OnGridRemoved -= OnSubgridChange;
 
 			}
-			
+
 			UnloadEntities?.Invoke();
 
 		}
@@ -1809,15 +1810,15 @@ namespace ModularEncountersSystems.Entities {
 					if (faction != null) {
 
 						return faction.Tag;
-					
+
 					}
-				
+
 				}
-			
+
 			}
 
 			return result;
-		
+
 		}
 
 		public double GetCurrentHealth() {
@@ -1868,7 +1869,7 @@ namespace ModularEncountersSystems.Entities {
 							result.Add(owner);
 
 					}
-				
+
 				}
 
 				if (!includeMinorityOwners)
@@ -1888,7 +1889,7 @@ namespace ModularEncountersSystems.Entities {
 			}
 
 			return result;
-		
+
 		}
 
 		public GridOwnershipEnum GetOwnerType() {
@@ -1921,7 +1922,7 @@ namespace ModularEncountersSystems.Entities {
 
 				if (grid.CubeGrid.EntityId == entity.EntityId)
 					return true;
-			
+
 			}
 
 			return false;
@@ -1934,7 +1935,7 @@ namespace ModularEncountersSystems.Entities {
 				return false;
 
 			return CubeGrid.IsStatic;
-		
+
 		}
 
 		public int MovementScore() {
@@ -1960,7 +1961,7 @@ namespace ModularEncountersSystems.Entities {
 			var owners = GetOwners(onlyGetCurrentEntity, includeMinorityOwners);
 			//BehaviorLogger.Write("Grid Owner Count: " + owners.Count, BehaviorDebugEnum.Dev);
 			return EntityEvaluator.GetOwnersFromList(owners);
-		
+
 		}
 
 		public bool PlayerControlled() {

@@ -17,60 +17,85 @@ namespace ModularEncountersSystems.Helpers
     public class IdsReplacer
     {
 
-        public static string ReplaceId(NpcData npcData, string tag,Vector3D remotecontrolposition = new Vector3D())
+        public static string ReplaceId(NpcData npcData, string tag, Vector3D remotecontrolposition = new Vector3D())
         {
-            if (npcData == null)
+            if (npcData != null) {
+
+                var SpawnGroupName = npcData.SpawnGroupName;
+                var Faction = npcData.InitialFaction;
+                var EventInstanceId = npcData.EventInstanceId.ToString();
+                var CustomVariablesName = npcData.CustomVariablesName;
+                var CustomStrings = npcData.CustomStrings;
+
+                string stringVector = "{" + "X:"+ remotecontrolposition.X.ToString() + " Y:" + remotecontrolposition.Y.ToString()+ " Z:" + remotecontrolposition.Z.ToString() + "}";
+
+
+                if (tag.Contains("{SpawnGroupName}") && SpawnGroupName != null)
+                {
+                    tag = tag.Replace("{SpawnGroupName}", SpawnGroupName);
+                }
+
+                if (tag.Contains("{SpawnGroupNameTruncated}") && SpawnGroupName != null)
+                {
+                    tag = tag.Replace("{SpawnGroupNameTruncated}", SpawnGroupName.Replace("_SpawnGroup", ""));
+                }
+
+                if (tag.Contains("{Faction}") && Faction != null)
+                {
+                    tag = tag.Replace("{Faction}", Faction);
+                }
+
+                if (tag.Contains("{EventInstance}") && EventInstanceId != null)
+                {
+                    tag = tag.Replace("{EventInstance}", EventInstanceId);
+                }
+
+                if (tag.Contains("{CustomVariablesName}") && CustomVariablesName != null)
+                {
+                    tag = tag.Replace("{CustomVariablesName}", CustomVariablesName);
+                }
+
+                if (tag.Contains("{Position}") && !string.IsNullOrWhiteSpace(stringVector))
+                {
+                    tag = tag.Replace("{Position}", stringVector);
+                }
+
+                foreach (var customString in CustomStrings)
+                {
+                    if (tag.Contains("{" + customString.Key + "}"))
+                    {
+                        tag = tag.Replace("{" + customString.Key + "}", customString.Value);
+                    }
+                }
+
+                foreach (var sandboxVar in MyAPIUtilities.Static.Variables)
+                {
+                    if (tag.Contains("{" + sandboxVar.Key + "}"))
+                    {
+                        tag = tag.Replace("{" + sandboxVar.Key + "}", sandboxVar.Value.ToString());
+                    }
+                }
+
                 return tag;
 
-            var SpawnGroupName = npcData.SpawnGroupName;
-            var Faction = npcData.InitialFaction;
-            var EventInstanceId = npcData.EventInstanceId.ToString();
-            var CustomVariablesName = npcData.CustomVariablesName;
-            var CustomStrings = npcData.CustomStrings;
-
-            string stringVector = "{" + "X:"+ remotecontrolposition.X.ToString() + " Y:" + remotecontrolposition.Y.ToString()+ " Z:" + remotecontrolposition.Z.ToString() + "}";
-
-
-            if (tag.Contains("{SpawnGroupName}") && SpawnGroupName != null)
-            {
-                tag = tag.Replace("{SpawnGroupName}", SpawnGroupName);
             }
 
-            if (tag.Contains("{SpawnGroupNameTruncated}") && SpawnGroupName != null)
+            else
             {
-                tag = tag.Replace("{SpawnGroupNameTruncated}", SpawnGroupName.Replace("_SpawnGroup", ""));
-            }
 
-            if (tag.Contains("{Faction}") && Faction != null)
-            {
-                tag = tag.Replace("{Faction}", Faction);
-            }
-
-            if (tag.Contains("{EventInstance}") && EventInstanceId != null)
-            {
-                tag = tag.Replace("{EventInstance}", EventInstanceId);
-            }
-
-            if (tag.Contains("{CustomVariablesName}") && CustomVariablesName != null)
-            {
-                tag = tag.Replace("{CustomVariablesName}", CustomVariablesName);
-            }
-
-            if (tag.Contains("{Position}") && !string.IsNullOrWhiteSpace(stringVector))
-            {
-                tag = tag.Replace("{Position}", stringVector);
-            }
-
-            foreach (var customString in CustomStrings)
-            {
-                if (tag.Contains("{" + customString.Key + "}"))
+                foreach (var sandboxVar in MyAPIUtilities.Static.Variables)
                 {
-                    tag = tag.Replace("{" + customString.Key + "}", customString.Value);
+                    if (tag.Contains("{" + sandboxVar.Key + "}"))
+                    {
+                        tag = tag.Replace("{" + sandboxVar.Key + "}", sandboxVar.Value.ToString());
+                    }
                 }
-            }
 
-            return tag;
+                return tag;
+
+            }
         }
+
 
         public static List<string> ReplaceIds(NpcData npcData, List<string> tags, Vector3D remotecontrolposition = new Vector3D())
         {

@@ -1268,6 +1268,24 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagStringDictVector3DCheck(string tag, ref Dictionary<string, Vector3D> result) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+                var array = tagSplit[1].Split(',');
+                Vector3D parsedVector = Vector3D.Zero;
+
+				if (!string.IsNullOrWhiteSpace(array[0]) && Vector3D.TryParse(FixVectorString(array[1]), out parsedVector)) {
+
+                    result.Add(array[0], parsedVector);
+
+				}
+
+			}
+
+		}
+
 		public static void TagStringStringDictCheck(string tag, ref Dictionary<string, string> result) {
 
             var tagSplit = ProcessTag(tag);

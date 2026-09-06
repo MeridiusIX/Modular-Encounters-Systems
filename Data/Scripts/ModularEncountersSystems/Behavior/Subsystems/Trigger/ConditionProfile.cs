@@ -1975,7 +1975,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     if (!fail)
                     {
-                        if (PlayerCondition.ArePlayerConditionsMet(ConditionReference.PlayerConditionIds, player.Player.IdentityId))
+                        if (PlayerCondition.ArePlayerConditionsMet(ConditionReference.PlayerConditionIds, player.Player.IdentityId, npcData: _behavior?.CurrentGrid?.Npc ?? null))
                         {
                             satisfiedConditions++;
                         }

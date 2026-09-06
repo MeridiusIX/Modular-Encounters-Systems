@@ -886,7 +886,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (CheckSandboxVariables(conditions.SandboxVariables, conditions.FalseSandboxVariables) == false) {
+			if (CheckSandboxVariables(conditions.SandboxVariables, conditions.FalseSandboxVariables, spawnGroup) == false) {
 
 				failReason = "   - Sandbox Variable Check Failed";
 				return false;
@@ -1501,30 +1501,38 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool CheckSandboxVariables(List<string> variableNames, List<string> falseVariableNames) {
+		public static bool CheckSandboxVariables(List<string> variableNames, List<string> falseVariableNames, ImprovedSpawnGroup spawnGroup = null) {
 
+            var varName = "";
 			foreach (var name in variableNames) {
 
+                varName = name;
+                if (spawnGroup != null && name.Contains("{SpawnGroupName}")) {
+                    varName = name.Replace("{SpawnGroupName}", spawnGroup.SpawnGroupName);
+                }
+
 				bool varValue = false;
-				bool foundVariable = MyAPIGateway.Utilities.GetVariable<bool>(name, out varValue);
+				bool foundVariable = MyAPIGateway.Utilities.GetVariable<bool>(varName, out varValue);
 
 				if (varValue == false) {
-
 					return false;
-
 				}
 
 			}
 
+            varName = "";
 			foreach (var name in falseVariableNames) {
 
+                varName = name;
+                if (spawnGroup != null && name.Contains("{SpawnGroupName}")) {
+                    varName = name.Replace("{SpawnGroupName}", spawnGroup.SpawnGroupName);
+                }
+
 				bool varValue = false;
-				bool foundVariable = MyAPIGateway.Utilities.GetVariable<bool>(name, out varValue);
+				bool foundVariable = MyAPIGateway.Utilities.GetVariable<bool>(varName, out varValue);
 
 				if (varValue == true) {
-
 					return false;
-
 				}
 
 			}

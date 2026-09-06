@@ -14,6 +14,7 @@ using VRageMath;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Zones;
+using ModularEncountersSystems.World;
 
 namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 {
@@ -48,6 +49,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
         public bool CheckPlayerCreditBalance;
         public int MinPlayerCreditBalance;
         public int MaxPlayerCreditBalance;
+        public string MinPlayerCreditBalanceCounter;
+        public string MaxPlayerCreditBalanceCounter;
 
 
         public bool CheckPlayerNear;
@@ -87,6 +90,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             CheckPlayerCreditBalance = false;
             MinPlayerCreditBalance = -1;
             MaxPlayerCreditBalance = -1;
+            MinPlayerCreditBalanceCounter = "";
+            MaxPlayerCreditBalanceCounter = "";
 
             CheckPlayerInZone = false;
             CheckPlayerInActiveZone = false;
@@ -120,6 +125,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             {"CheckPlayerCreditBalance", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerCreditBalance) },//CheckPlayerCreditBalance
 			{"MinPlayerCreditBalance", (s, o) => TagParse.TagIntCheck(s, ref MinPlayerCreditBalance) },//MinPlayerCreditBalance
 			{"MaxPlayerCreditBalance", (s, o) => TagParse.TagIntCheck(s, ref MaxPlayerCreditBalance) },//MaxPlayerCreditBalance
+			{"MinPlayerCreditBalanceCounter", (s, o) => TagParse.TagStringCheck(s, ref MinPlayerCreditBalanceCounter) },
+			{"MaxPlayerCreditBalanceCounter", (s, o) => TagParse.TagStringCheck(s, ref MaxPlayerCreditBalanceCounter) },
             {"CheckPlayerInZone", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerInZone) },
             {"CheckPlayerInActiveZone", (s, o) => TagParse.TagBoolCheck(s, ref CheckPlayerInActiveZone) },
             {"ZoneName", (s, o) => TagParse.TagStringListCheck(s, ref ZoneName) },
@@ -175,7 +182,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
 
-        public static bool ArePlayerConditionsMet(List<string> ProfilesIds,  long PlayerId, bool UsePositionOverride = false,Vector3D PositionOverride = new Vector3D(), bool AddPlayerConditionPlayerTags = false, List<string> IncludedPlayerTags = null, List<string> AddExcludedPlayerTag = null)
+        public static bool ArePlayerConditionsMet(List<string> ProfilesIds,  long PlayerId, bool UsePositionOverride = false,Vector3D PositionOverride = new Vector3D(), bool AddPlayerConditionPlayerTags = false, List<string> IncludedPlayerTags = null, List<string> AddExcludedPlayerTag = null, NpcData npcData = null)
         {
             List<PlayerCondition> Profiles = new List<PlayerCondition>();
 
@@ -207,7 +214,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
             for (int i = 0; i < Profiles.Count; i++)
             {
                 usedProfileConditions++;
-                if (IsPlayerConditionsMet(Profiles[i], PlayerId,UsePositionOverride,PositionOverride, AddPlayerConditionPlayerTags,IncludedPlayerTags,AddExcludedPlayerTag))
+                if (IsPlayerConditionsMet(Profiles[i], PlayerId,UsePositionOverride,PositionOverride, AddPlayerConditionPlayerTags,IncludedPlayerTags,AddExcludedPlayerTag, npcData: npcData))
                     satisfieddProfileConditions++;
             }
 
@@ -248,7 +255,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
 
-        public static bool IsPlayerConditionsMet(PlayerCondition profile, long PlayerId, bool UsepositionOverride = false, Vector3D positionoverride = new Vector3D(), bool AddPlayerConditionPlayerTags = false, List<string> IncludedPlayerTags = null, List<string> AddExcludedPlayerTag = null)
+        public static bool IsPlayerConditionsMet(PlayerCondition profile, long PlayerId, bool UsepositionOverride = false, Vector3D positionoverride = new Vector3D(), bool AddPlayerConditionPlayerTags = false, List<string> IncludedPlayerTags = null, List<string> AddExcludedPlayerTag = null, NpcData npcData = null)
         {
             int usedConditions = 0;
             int satisfiedConditions = 0;
@@ -276,7 +283,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     {
                         long FactionId = 0;
 
-                        var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(profile.CheckReputationwithFaction[i]);
+                        var customfaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(IdsReplacer.ReplaceId(npcData, profile.CheckReputationwithFaction[i]));
                         if (customfaction != null)
                             FactionId = customfaction.FactionId;
 
@@ -448,7 +455,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 if (!fail)
                 {
 
-                    if ((profile.MinPlayerCreditBalance == -1 || credits > profile.MinPlayerCreditBalance) && (profile.MaxPlayerCreditBalance == -1 || credits < profile.MaxPlayerCreditBalance))
+                    var minPlayerCreditBalance = profile.MinPlayerCreditBalance;
+                    var maxPlayerCreditBalance = profile.MaxPlayerCreditBalance;
+
+                    if (npcData != null)
+                    {
+                        foreach (var counter in npcData.CustomCountersVariables)
+                        {
+                            if (profile.MinPlayerCreditBalanceCounter == "{" + counter.Key + "}")
+                            {
+                                minPlayerCreditBalance = counter.Value;
+                                break;
+                            }
+                        }
+                        foreach (var counter in npcData.CustomCountersVariables)
+                        {
+                            if (profile.MaxPlayerCreditBalanceCounter == "{" + counter.Key + "}")
+                            {
+                                maxPlayerCreditBalance = counter.Value;
+                                break;
+                            }
+                        }
+                    }
+
+                    if ((minPlayerCreditBalance == -1 || credits > minPlayerCreditBalance) && (maxPlayerCreditBalance == -1 || credits < maxPlayerCreditBalance))
                     {
                         satisfiedConditions++;
                     }

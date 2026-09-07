@@ -1948,8 +1948,10 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
+                    double distance = 0;
+
 					//In Zone Radius
-					if (!zone.DistanceToClosestZoneCenterPosition(position, out var distance)) {
+					if (!zone.DistanceToClosestZoneCenterPosition(position, out distance)) {
 
 						_zoneDebug.Append("       - Zone Radius Check Failed").AppendLine();
 						continue;

@@ -22,8 +22,8 @@ namespace ModularEncountersSystems.Zones {
 		[ProtoMember(7)] public string PublicName; //Name of Zone That Player Will See
 		[ProtoMember(8)] public string ProfileSubtypeId; //SubtypeId of the Zone Profile used to create this zone
 
-		[ProtoMember(9)] public bool UseLimitedFactions; //Determines Whether a SpawnGroup's Current Faction Should be Considered When Spawning
-		[ProtoMember(10)] public List<string> Factions; //Factions Associated To Zone, if any.
+		[ProtoMember(9)] public bool UseAllowedFactions; //Determines Whether a SpawnGroup's Current Faction Should be Considered When Spawning
+		[ProtoMember(10)] public List<string> AllowedFactions; //Factions Associated To Zone, if any.
 
 		[ProtoMember(11)] public Vector3D Coordinates; //Zone Center (Can Be Provided Manually Or Calculated From Planet)
 		[ProtoMember(12)] public double Radius; //Zone Radius
@@ -31,7 +31,7 @@ namespace ModularEncountersSystems.Zones {
 
 		[ProtoMember(14)] public bool PlanetaryZone; //Determines if this zone should be dynamically placed on a planet
 		[ProtoMember(15)] public string PlanetName; //Planet name that receives the zone
-		
+
 		[ProtoMember(16)] public Vector3D Direction; //Zone Direction From Planet Center To Surface (If Not Provided, planet center is used as zone center)
 		[ProtoMember(17)] public double HeightOffset; //Height Offset From Surface for Zone
 		[ProtoMember(18)] public bool ScaleZoneRadiusWithPlanet;
@@ -72,9 +72,11 @@ namespace ModularEncountersSystems.Zones {
 
 		[ProtoMember(43)] public string RequiredSandboxBool; //Sandbox Bool Name That Must Be True To Use Zone. Not Used if Null
 		[ProtoMember(44)] public string RequiredFalseSandboxBool; //Sandbox Bool Name That Must Be False To Use Zone. Not Used if Null
+		[ProtoMember(45)] public bool UseRestrictedFactions; //Determines Whether a SpawnGroup's Current Faction Must not be Considered When Spawning
+		[ProtoMember(46)] public List<string> RestrictedFactions; //Factions Prevented from Spawning in a Zone.
 
 		[ProtoIgnore]
-		public BoundingSphereD Sphere { 
+		public BoundingSphereD Sphere {
 			get {
 				if (_sphere.Radius < 1)
 					_sphere = new BoundingSphereD(Coordinates, Radius);
@@ -93,8 +95,10 @@ namespace ModularEncountersSystems.Zones {
 			PublicName = "";
 			ProfileSubtypeId = "";
 
-			UseLimitedFactions = false;
-			Factions = new List<string>();
+			UseAllowedFactions = false;
+			AllowedFactions = new List<string>();
+			UseRestrictedFactions = false;
+			RestrictedFactions = new List<string>();
 
 			Coordinates = Vector3D.Zero;
 			Radius = 0;
@@ -148,11 +152,11 @@ namespace ModularEncountersSystems.Zones {
 
 			if (!string.IsNullOrWhiteSpace(faction)) {
 
-				UseLimitedFactions = true;
-				Factions.Add(faction);
+				UseAllowedFactions = true;
+				AllowedFactions.Add(faction);
 
 			}
-				
+
 			Coordinates = coords;
 			Radius = radius;
 
@@ -206,13 +210,13 @@ namespace ModularEncountersSystems.Zones {
 
 				Coordinates = planet.SurfaceCoordsAtPosition(planet.Center() + this.Direction);
 				Coordinates += this.Direction * this.HeightOffset;
-			
+
 			} else {
 
 				Coordinates = planet.Center();
 
 			}
-		
+
 		}
 
 		public void MergeVariablesFromOldLocation(Zone oldZone) {
@@ -257,13 +261,13 @@ namespace ModularEncountersSystems.Zones {
 				}
 
 			}
-		
+
 		}
 
 		public bool PositionInsideZone(Vector3D coords) {
 
 			return Vector3D.Distance(coords, Coordinates) < Radius;
-		
+
 		}
 
 		public string GetInfo(Vector3D coords) {
@@ -284,11 +288,12 @@ namespace ModularEncountersSystems.Zones {
 			sb.Append(" - Use Zone Timer:              ").Append(UseZoneTimer).AppendLine();
 			sb.Append(" - Use Max Spawned Encounters:  ").Append(UseMaxSpawnedEncounters).AppendLine();
 			sb.Append(" - Use Allowed Spawn Groups:    ").Append(UseAllowedSpawnGroups).AppendLine();
-             sb.Append(" - Use Restricted Spawn Groups: ").Append(UseRestrictedSpawnGroups).AppendLine();
+            sb.Append(" - Use Restricted Spawn Groups: ").Append(UseRestrictedSpawnGroups).AppendLine();
 
-			sb.Append(" - UseLimitedFactions:          ").Append(UseLimitedFactions).AppendLine();
-			sb.Append(" - Factions:                    ").Append(string.Join(", ", Factions)).AppendLine();
-
+			sb.Append(" - Use Allowed Factions:        ").Append(UseAllowedFactions).AppendLine();
+			sb.Append(" - Allowed Factions:            ").Append(string.Join(", ", AllowedFactions)).AppendLine();
+			sb.Append(" - Use Restricted Factions:     ").Append(UseRestrictedFactions).AppendLine();
+			sb.Append(" - Restricted Factions:         ").Append(string.Join(", ", RestrictedFactions)).AppendLine();
 			sb.Append(" - Use Allowed Mod IDs:         ").Append(UseAllowedModIDs).AppendLine();
 			sb.Append(" - Allowed Mod IDs:             ").Append(AllowedModIDs != null && AllowedModIDs.Count > 0 ? string.Join(", ", AllowedModIDs) : "(none)").AppendLine();
 			sb.Append(" - Use Restricted Mod IDs:      ").Append(UseRestrictedModIDs).AppendLine();
@@ -348,7 +353,7 @@ namespace ModularEncountersSystems.Zones {
 			}
 
 			return trueResult && falseResult;
-		
+
 		}
 
 		public void InitTags(string data = null) {
@@ -411,20 +416,37 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				//UseLimitedFactions
-				if (tag.StartsWith("[UseLimitedFactions:") == true) {
+				//UseAllowedFactions
+				if (tag.StartsWith("[UseAllowedFactions:") == true) {
 
-					TagParse.TagBoolCheck(tag, ref this.UseLimitedFactions);
+					TagParse.TagBoolCheck(tag, ref this.UseAllowedFactions);
 
 				}
 
-				//Factions
-				if (tag.StartsWith("[Factions:") == true) {
+				//AllowedFactions
+				if (tag.StartsWith("[AllowedFactions:") == true) {
 
-					TagParse.TagStringListCheck(tag, ref this.Factions);
+					TagParse.TagStringListCheck(tag, ref this.AllowedFactions);
 
-					for (int i = 0; i < this.Factions.Count; i++)
-						this.Factions[i] = this.Factions[i].Trim();
+					for (int i = 0; i < this.AllowedFactions.Count; i++)
+						this.AllowedFactions[i] = this.AllowedFactions[i].Trim();
+
+				}
+
+				//UseRestrictedFactions
+				if (tag.StartsWith("[UseRestrictedFactions:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref this.UseRestrictedFactions);
+
+				}
+
+				//RestrictedFactions
+				if (tag.StartsWith("[RestrictedFactions:") == true) {
+
+					TagParse.TagStringListCheck(tag, ref this.RestrictedFactions);
+
+					for (int i = 0; i < this.RestrictedFactions.Count; i++)
+						this.RestrictedFactions[i] = this.RestrictedFactions[i].Trim();
 
 				}
 
@@ -627,7 +649,7 @@ namespace ModularEncountersSystems.Zones {
 					if (result == "Planetary") {
 
 						this.PlanetaryZone = true;
-					
+
 					}
 
 				}
@@ -731,7 +753,7 @@ namespace ModularEncountersSystems.Zones {
 
 			var data = MyAPIGateway.Utilities.SerializeToBinary<Zone>(this);
 			return MyAPIGateway.Utilities.SerializeFromBinary<Zone>(data);
-		
+
 		}
 
 	}

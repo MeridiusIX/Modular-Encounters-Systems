@@ -2100,6 +2100,30 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			if (!persistentConditionCheck && collection != null && collection.RestrictedZoneFactions.Count > 0) {
+
+				var resolvedFaction = !string.IsNullOrWhiteSpace(spawnGroup.FactionOverride)
+					? spawnGroup.FactionOverride
+					: conditions.FactionOwner;
+
+				bool usesRandomFaction =
+					conditions.UseRandomBuilderFaction ||
+					conditions.UseRandomMinerFaction ||
+					conditions.UseRandomTraderFaction ||
+					conditions.UseRandomMilitaryFaction ||
+					conditions.UseRandomPirateFaction ||
+					conditions.UseRandomCustomFaction;
+
+				if (!usesRandomFaction && collection.RestrictedZoneFactions.Contains(resolvedFaction)) {
+
+					failReason = _zoneDebug.ToString();
+					failReason += "   - Zone Check Failed: Faction '" + resolvedFaction + "' is among Restricted Zone Factions.";
+					return false;
+
+				}
+
+            }
+
 			failReason = "";
 			return true;
 
@@ -2218,8 +2242,24 @@ namespace ModularEncountersSystems.Spawning {
 
 					IMyFaction checkFaction = faction;
 
-
 					if (faction?.Tag != null && collection != null && collection.AllowedZoneFactions.Count > 0 && !collection.AllowedZoneFactions.Contains(faction.Tag))
+					{
+
+						factionList.Remove(faction);
+
+						if (specificFactionCheck == true)
+						{
+
+							factionList.Clear();
+							break;
+
+						}
+
+						continue;
+
+					}
+
+					if (faction?.Tag != null && collection != null && collection.RestrictedZoneFactions.Count > 0 && collection.RestrictedZoneFactions.Contains(faction.Tag))
 					{
 
 						factionList.Remove(faction);

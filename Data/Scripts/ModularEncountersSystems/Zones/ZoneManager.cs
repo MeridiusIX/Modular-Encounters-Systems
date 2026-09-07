@@ -295,12 +295,23 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseLimitedFactions && zone.Factions.Count > 0) {
+				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseAllowedFactions && zone.AllowedFactions.Count > 0) {
 
-					foreach (var faction in zone.Factions) {
+					foreach (var faction in zone.AllowedFactions) {
 
 						if (!string.IsNullOrWhiteSpace(faction) && !collection.AllowedZoneFactions.Contains(faction))
 							collection.AllowedZoneFactions.Add(faction);
+
+					}
+
+				}
+
+				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseRestrictedFactions && zone.RestrictedFactions.Count > 0) {
+
+					foreach (var faction in zone.RestrictedFactions) {
+
+						if (!string.IsNullOrWhiteSpace(faction) && !collection.RestrictedZoneFactions.Contains(faction))
+							collection.RestrictedZoneFactions.Add(faction);
 
 					}
 
@@ -461,7 +472,7 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.PlayerKnownLocation || !zone.Factions.Contains(faction))
+				if (!zone.PlayerKnownLocation || !zone.AllowedFactions.Contains(faction))
 					continue;
 
 				if (zone.PositionInsideZone(coords))
@@ -486,7 +497,7 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.PlayerKnownLocation || !zone.Factions.Contains(faction))
+				if (!zone.PlayerKnownLocation || !zone.AllowedFactions.Contains(faction))
 					continue;
 
 				if (zone.PositionInsideZone(coords))

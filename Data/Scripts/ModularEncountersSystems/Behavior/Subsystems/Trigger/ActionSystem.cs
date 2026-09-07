@@ -1974,12 +1974,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 if (actions.SetCustomVector3Ds)
                 {
                     BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Set Custom Vector3Ds.", BehaviorDebugEnum.Action);
-
                     var npcdata = _behavior?.CurrentGrid?.Npc;
 
                     foreach (var customVector in actions.CustomVector3Ds)
                     {
                         npcdata.CustomVector3Ds[customVector.Key] = customVector.Value;
+                    }
+
+                    foreach (var customVectorVariable in actions.CustomVector3DsFromVariable)
+                    {
+                        foreach (var customVector in npcdata.CustomVector3Ds)
+                        {
+                            if (customVector.Key == "{" + customVectorVariable.Value + "}")
+                            {
+                                npcdata.CustomVector3Ds[customVectorVariable.Key] = customVector.Value;
+                                break;
+                            }
+                        }
+
+                        var sandboxVector3D = Vector3D.Zero;
+                        var tempVar = customVectorVariable.Value.Replace("{", "").Replace("}", "");
+                        if (MyAPIGateway.Utilities.GetVariable(tempVar, out sandboxVector3D))
+                        {
+                            npcdata.CustomVector3Ds[customVectorVariable.Key] = sandboxVector3D;
+                        }
+                        else
+                        {
+                            BehaviorLogger.Write(actions.ProfileSubtypeId + " Could not set " + customVectorVariable.Key + " from " + customVectorVariable.Value + " - variable not found.", BehaviorDebugEnum.Action);
+                        }
                     }
 
                 }

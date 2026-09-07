@@ -290,6 +290,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool SetCustomVector3Ds;
 		public Dictionary<string, Vector3D> CustomVector3Ds;
+        public Dictionary<string, string> CustomVector3DsFromVariable;
 
 		public bool InheritLastAttackerFromCommand;
 
@@ -696,6 +697,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
             SetCustomVector3Ds = false;
             CustomVector3Ds = new Dictionary<string, Vector3D>();
+			CustomVector3DsFromVariable = new Dictionary<string, string>();
 
 			SetCustomCountersVariables = false;
 			CustomCountersVariables = new Dictionary<string, int>();
@@ -1271,6 +1273,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"SandboxStrings", (s, o) => TagParse.TagStringDictCheck(s, ref SandboxStrings) },
                 {"SetCustomVector3Ds", (s, o) => TagParse.TagBoolCheck(s, ref SetCustomVector3Ds) },
                 {"CustomVector3Ds", (s, o) => TagParse.TagStringDictVector3DCheck(s, ref CustomVector3Ds) },
+                {"CustomVector3DsFromVariable", (s, o) => TagParse.TagStringDictCheck(s, ref CustomVector3DsFromVariable) },
                 {"SetCustomCountersVariables", (s, o) => TagParse.TagBoolCheck(s, ref SetCustomCountersVariables) },
                 {"CustomCountersVariables", (s, o) => TagParse.TagStringIntDictCheck(s, ref CustomCountersVariables) },
                 {"InheritLastAttackerFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref InheritLastAttackerFromCommand) },

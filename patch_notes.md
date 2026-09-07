@@ -2,6 +2,7 @@
 
 * New MES companion mod: [Suppress Vanilla Planetary Installations](https://steamcommunity.com/sharedfiles/filedetails/?id=3796756949).
 * Added big improvements & fixes to zone handling - thanks to Jasper for the PR! MES previously did not implement several of the options listed on its wiki and zones were generally very buggy. This PR means MES now supports:
+
   * UseLimitedFactions & Factions to restrict spawns in zones to include only SpawnGroups associated with the specified factions.
   * UseAllowedModIDs & AllowedModIDs to restrict spawns in zones to include all SpawnGroups in specific Steam workshop mods. (supersedes restrictions based on faction)
   * UseRestrictedModIDs & RestrictedModIDs to restrict spawns in zones to exclude all SpawnGroups specific Steam workshop mods. (supersedes restrictions based on faction)
@@ -14,6 +15,7 @@
 * Added Action [ChangePlayerCreditsAmountCounter:countername].
 * Added Action [ProcessStaticEncountersLocationVariable:customVector3Dvariablename].
 * Added Action [TeleportPlayerCoordsVariabl:customVector3Dvariablename].
+* Added Action [CustomVector3DsFromVariable:variablename,Vector3Dvariablename].
 * Added PlayerConditions [MinPlayerCreditBalanceCounter:countername] & [MaxPlayerCreditBalanceCounter:countername].
 * Added support for variables to PlayerCondition [CheckReputationwithFaction:string].
 * Added support for variables to Trigger Type ButtonPress' [ButtonPanelName:string].
@@ -22,6 +24,7 @@
 * Added EventCondition [CheckOnSession:bool] - runs only once on game load.
 * Added EventActions [SetSandboxStrings:bool] & [SandboxStrings:variablename,value].
 * Added EventActions [SetSandboxVector3Ds:bool] & [SandboxVector3Ds:variablename,{X:0 Y:0 Z:0}].
+* Added support for counter-type variables to DebugMessage.
 * Improved parsing of information defined in base game SpawnGroups. This explicitly will only affect vanilla SpawnGroups.
 * Fix for space random encounter SpawnGroups that used the base game Factions-syntax to define the faction always spawning as SPRT.
 

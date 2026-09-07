@@ -26,6 +26,7 @@ namespace ModularEncountersSystems.Helpers
                 var EventInstanceId = npcData.EventInstanceId.ToString();
                 var CustomVariablesName = npcData.CustomVariablesName;
                 var CustomStrings = npcData.CustomStrings;
+                var CustomCounters = npcData.CustomCountersVariables;
 
                 string stringVector = "{" + "X:"+ remotecontrolposition.X.ToString() + " Y:" + remotecontrolposition.Y.ToString()+ " Z:" + remotecontrolposition.Z.ToString() + "}";
 
@@ -65,6 +66,14 @@ namespace ModularEncountersSystems.Helpers
                     if (tag.Contains("{" + customString.Key + "}"))
                     {
                         tag = tag.Replace("{" + customString.Key + "}", customString.Value);
+                    }
+                }
+
+                foreach (var customCounter in CustomCounters)
+                {
+                    if (tag.Contains("{" + customCounter.Key + "}"))
+                    {
+                        tag = tag.Replace("{" + customCounter.Key + "}", customCounter.Value.ToString());
                     }
                 }
 

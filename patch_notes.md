@@ -1,7 +1,7 @@
 # Update 2.74.00
 
+* New MES companion mod: [Suppress Vanilla Planetary Installations](https://steamcommunity.com/sharedfiles/filedetails/?id=3796756949).
 * Added big improvements & fixes to zone handling - thanks to Jasper for the PR! MES previously did not implement several of the options listed on its wiki and zones were generally very buggy. This PR means MES now supports:
-
   * UseLimitedFactions & Factions to restrict spawns in zones to include only SpawnGroups associated with the specified factions.
   * UseAllowedModIDs & AllowedModIDs to restrict spawns in zones to include all SpawnGroups in specific Steam workshop mods. (supersedes restrictions based on faction)
   * UseRestrictedModIDs & RestrictedModIDs to restrict spawns in zones to exclude all SpawnGroups specific Steam workshop mods. (supersedes restrictions based on faction)

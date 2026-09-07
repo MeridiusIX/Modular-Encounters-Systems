@@ -74,6 +74,7 @@ namespace ModularEncountersSystems.Zones {
 		[ProtoMember(44)] public string RequiredFalseSandboxBool; //Sandbox Bool Name That Must Be False To Use Zone. Not Used if Null
 		[ProtoMember(45)] public bool UseRestrictedFactions; //Determines Whether a SpawnGroup's Current Faction Must not be Considered When Spawning
 		[ProtoMember(46)] public List<string> RestrictedFactions; //Factions Prevented from Spawning in a Zone.
+		[ProtoMember(47)] public List<KeyValuePair<Vector3D, double>> CoordinateRadiusPairs; //Additional pairs of coordinates and radii to extend the size of a zone.
 
 		[ProtoIgnore]
 		public BoundingSphereD Sphere {
@@ -103,6 +104,7 @@ namespace ModularEncountersSystems.Zones {
 			Coordinates = Vector3D.Zero;
 			Radius = 0;
 			RadiusSquared = 0;
+            CoordinateRadiusPairs = new List<KeyValuePair<Vector3D, double>>();
 
 			PlanetaryZone = false;
 			PlanetName = "";
@@ -266,9 +268,57 @@ namespace ModularEncountersSystems.Zones {
 
 		public bool PositionInsideZone(Vector3D coords) {
 
-			return Vector3D.Distance(coords, Coordinates) < Radius;
+            bool result = false;
+
+            result = Vector3D.Distance(coords, Coordinates) < Radius;
+            if (result)
+                return result;
+
+            if (CoordinateRadiusPairs.Count <= 0)
+                return false;
+
+            foreach (var pair in CoordinateRadiusPairs)
+            {
+                result = Vector3D.Distance(coords, pair.Key) < pair.Value;
+                if (result)
+                    return result;
+            }
+
+			return false;
 
 		}
+
+        /// <summary>
+        /// Checks what distance the current position has to the closest zone center position - if it is in a zone.
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <param name="result"></param>
+        /// <returns>True if inside zone, false if not</returns>
+        public bool DistanceToClosestZoneCenterPosition(Vector3D coords, out double distance)
+        {
+
+            distance = Vector3D.Distance(coords, Coordinates);
+            bool inside = distance < Radius;
+
+            if (CoordinateRadiusPairs.Count <= 0)
+                return inside;
+
+            foreach (var pair in CoordinateRadiusPairs)
+            {
+                double tempDistance = Vector3D.Distance(coords, pair.Key);
+                if (tempDistance < pair.Value && tempDistance < distance)
+                {
+                    distance = tempDistance;
+                    inside = true;
+                }
+            }
+
+            if (inside)
+                return true;
+
+            return false;
+
+        }
 
 		public string GetInfo(Vector3D coords) {
 
@@ -282,6 +332,12 @@ namespace ModularEncountersSystems.Zones {
 			sb.Append(" - No Spawn Zone:               ").Append(NoSpawnZone).AppendLine();
 			sb.Append(" - Coordinates:                 ").Append(Coordinates).AppendLine();
 			sb.Append(" - Radius:                      ").Append(Radius).AppendLine();
+
+            foreach (var pair in CoordinateRadiusPairs)
+            {
+                sb.Append(" - CoordinateRadiusPairs:       ").Append(pair.Key + " : " + pair.Value).AppendLine();
+            }
+
 			sb.Append(" - Planetary Zone:              ").Append(PlanetaryZone).AppendLine();
 			sb.Append(" - Planet Name:                 ").Append(PlanetName).AppendLine();
 			sb.Append(" - Planet Id:                   ").Append(PlanetId).AppendLine();
@@ -461,6 +517,13 @@ namespace ModularEncountersSystems.Zones {
 				if (tag.StartsWith("[Radius:") == true) {
 
 					TagParse.TagDoubleCheck(tag, ref this.Radius);
+
+				}
+
+				//CoordinateRadiusPairs
+				if (tag.StartsWith("[CoordinateRadiusPairs:") == true) {
+
+					TagParse.TagVector3DDoublePairListCheck(tag, ref this.CoordinateRadiusPairs);
 
 				}
 

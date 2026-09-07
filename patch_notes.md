@@ -10,6 +10,7 @@
   * UseAllowedSpawnGroups & AllowedSpawnGroups to set spawns in zones to include specified SpawnGroups. (supersedes restrictions based on mod id and faction)
   * UseRestrictedSpawnGroups & RestrictedSpawnGroups to set spawns in zones to exclude specified SpawnGroups. (supersedes restrictions based on mod id and faction)
   * NoSpawnZone:true to prevent any spawns in a zone. (supersedes all other restrictions)
+  * Ability to define more than a single Zone Coordinates and Radius via [CoordinateRadiusPairs:{X:0 Y:0 Z:0},double].
 * Added SpawnCondition [UseRandomCustomFaction:bool] to complete the set.
 * Added Actions [SetSandboxStrings:bool] & [SandboxStrings:variablename,value].
 * Added Actions [SetCustomVector3Ds:bool] & [CustomVector3Ds:variablename,{X:0 Y:0 Z:0}].

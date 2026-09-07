@@ -1948,10 +1948,8 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					var distance = Vector3D.Distance(position, zone.Coordinates);
-
 					//In Zone Radius
-					if (distance > zone.Radius) {
+					if (!zone.DistanceToClosestZoneCenterPosition(position, out var distance)) {
 
 						_zoneDebug.Append("       - Zone Radius Check Failed").AppendLine();
 						continue;

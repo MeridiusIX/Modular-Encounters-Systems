@@ -1286,6 +1286,26 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagVector3DDoublePairListCheck(string tag, ref List<KeyValuePair<Vector3D, double>> result) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+                var array = tagSplit[1].Split(',');
+                Vector3D parsedVector = Vector3D.Zero;
+                double parsedRadius = 0;
+
+				if (Vector3D.TryParse(FixVectorString(array[0]), out parsedVector) && double.TryParse(array[1], out parsedRadius)) {
+
+                    result.Add(new KeyValuePair<Vector3D, double>(parsedVector, parsedRadius));
+
+				}
+
+			}
+
+		}
+
 		public static void TagStringStringDictCheck(string tag, ref Dictionary<string, string> result) {
 
             var tagSplit = ProcessTag(tag);

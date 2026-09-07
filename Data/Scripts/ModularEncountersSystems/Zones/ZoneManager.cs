@@ -281,7 +281,7 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				if (Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+				if (!zone.PositionInsideZone(coords))
 					continue;
 
 				if (zone.Persistent && zone.AllowedSpawnGroups.Count > 0) {
@@ -360,7 +360,7 @@ namespace ModularEncountersSystems.Zones {
 
 			foreach (var zone in ActiveZones) {
 
-				if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+				if (!zone.Active || !zone.PositionInsideZone(coords))
 					continue;
 
 				if (zone.NoSpawnZone) {
@@ -386,7 +386,7 @@ namespace ModularEncountersSystems.Zones {
             foreach (var zone in ActiveZones)
             {
 
-                if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+                if (!zone.Active || !zone.PositionInsideZone(coords))
                     continue;
 
                 if (zone.UseRestrictedSpawnGroups)
@@ -406,7 +406,7 @@ namespace ModularEncountersSystems.Zones {
 
 			foreach (var zone in ActiveZones) {
 
-				if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+				if (!zone.Active || !zone.PositionInsideZone(coords))
 					continue;
 
 				if (zone.Persistent && zone.Strict)
@@ -436,16 +436,14 @@ namespace ModularEncountersSystems.Zones {
 					if (!player.ActiveEntity())
 						continue;
 
-					var distFromCenter = player.Distance(zone.Coordinates);
-
-					if (zone.PlayersInZone.Contains(player.Player.IdentityId) && distFromCenter > zone.Radius && !string.IsNullOrWhiteSpace(zone.ZoneLeaveAnnounce)) {
+					if (zone.PlayersInZone.Contains(player.Player.IdentityId) && !zone.PositionInsideZone(player.GetPosition()) && !string.IsNullOrWhiteSpace(zone.ZoneLeaveAnnounce)) {
 
 						//Leave Zone
 						updateZones = true;
 						zone.PlayersInZone.Remove(player.Player.IdentityId);
 						MyVisualScriptLogicProvider.ShowNotification(zone.ZoneLeaveAnnounce, 5000, "White", player.Player.IdentityId);
 
-					} else if (!zone.PlayersInZone.Contains(player.Player.IdentityId) && distFromCenter < zone.Radius && !string.IsNullOrWhiteSpace(zone.ZoneEnterAnnounce)) {
+					} else if (!zone.PlayersInZone.Contains(player.Player.IdentityId) && zone.PositionInsideZone(player.GetPosition()) && !string.IsNullOrWhiteSpace(zone.ZoneEnterAnnounce)) {
 
 						//Enter Zone
 						updateZones = true;
@@ -663,9 +661,7 @@ namespace ModularEncountersSystems.Zones {
 					if (!player.ActiveEntity())
 						continue;
 
-					var distFromCenter = player.Distance(zone.Coordinates);
-
-					if (distFromCenter < zone.Radius) {
+					if (zone.PositionInsideZone(player.GetPosition())) {
 
 						//Reset Timer
 						zone.TimeCreated = MyAPIGateway.Session.GameDateTime;

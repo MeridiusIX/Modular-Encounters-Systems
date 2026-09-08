@@ -68,7 +68,7 @@ namespace ModularEncountersSystems.Zones {
 
 				if (string.IsNullOrWhiteSpace(zone?.ProfileSubtypeId)) {
 
-					SpawnLogger.Write("Removing Zone With No ProfileSubtypeId: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("Removing Zone With No ProfileSubtypeId: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
 					ActiveZones.RemoveAt(i);
 					continue;
 
@@ -76,7 +76,7 @@ namespace ModularEncountersSystems.Zones {
 
 				if (!ProfileManager.ZoneProfiles.ContainsKey(zone.ProfileSubtypeId)) {
 
-					SpawnLogger.Write("Removing Zone That Wasn't Registered In Profile Manager: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("Removing Zone That Wasn't Registered In Profile Manager: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
 					ActiveZones.RemoveAt(i);
 					continue;
 
@@ -101,7 +101,7 @@ namespace ModularEncountersSystems.Zones {
 
 					if (!planetExists) {
 
-						SpawnLogger.Write("Removing Zone That No Longer Has Associated Planet: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
+						SpawnLogger.Write("Removing Zone That No Longer Has Associated Planet: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
 						ActiveZones.RemoveAt(i);
 						continue;
 
@@ -520,10 +520,10 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.Persistent || zone.Name != name)
+				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (!zone.PositionInsideZone(coords))
 					continue;
 
 				MathTools.ApplyModifier(radiusChange, modifier, ref zone.Radius);

@@ -355,6 +355,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string ParentGridNameRequirement;
 
 		public bool ChangeZoneAtPosition;
+		public bool ChangeZoneOnlyByName;
 		public string ZoneName;
 
 		public bool ZoneToggleActive;
@@ -883,6 +884,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ParentGridNameRequirement = "";
 
 			ChangeZoneAtPosition = false;
+			ChangeZoneOnlyByName = false;
 			ZoneName = "";
 
 			ZoneToggleActive = false;
@@ -1319,6 +1321,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"RandomThrustDirection", (s, o) => TagParse.TagBoolCheck(s, ref RandomThrustDirection) },
                 {"ParentGridNameRequirement", (s, o) => TagParse.TagStringCheck(s, ref ParentGridNameRequirement) },
                 {"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+                {"ChangeZoneOnlyByName", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneOnlyByName) },
                 {"ZoneName", (s, o) => TagParse.TagStringCheck(s, ref ZoneName) },
                 {"ZoneToggleActive", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActive) },
                 {"ZoneToggleActiveMode", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveMode) },

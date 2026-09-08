@@ -1913,34 +1913,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 //ChangeZoneAtPosition (While Inside Zone)
                 lastAction = "ChangeZoneAtPosition";
-                if (actions.ChangeZoneAtPosition)
+                if (actions.ChangeZoneAtPosition || actions.ChangeZoneOnlyByName)
                 {
 
                     //ZoneToggleActiveAtPosition
                     lastAction = "ZoneToggleActiveAtPosition";
                     if (actions.ZoneToggleActiveAtPosition)
-                        ZoneManager.ToggleZonesAtPosition(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneToggleActiveAtPositionMode);
+                        ZoneManager.ToggleZonesAtPosition(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneToggleActiveAtPositionMode, actions.ChangeZoneOnlyByName);
 
                     //ZoneRadiusChangeType
                     lastAction = "ZoneRadiusChangeType";
                     if (actions.ZoneRadiusChangeType != ModifierEnum.None)
-                        ZoneManager.ChangeZoneRadius(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneRadiusChangeAmount, actions.ZoneRadiusChangeType);
+                        ZoneManager.ChangeZoneRadius(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneRadiusChangeAmount, actions.ZoneRadiusChangeType, actions.ChangeZoneOnlyByName);
 
                     //ZoneCustomBoolChange
                     lastAction = "ZoneCustomBoolChange";
                     if (actions.ZoneCustomBoolChange)
                         if (actions.ZoneCustomBoolChangeUseKPL)
-                            ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+                            ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue, actions.ChangeZoneOnlyByName);
                         else
-                            ZoneManager.ChangeKPLBools(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+                            ZoneManager.ChangeKPLBools(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue, actions.ChangeZoneOnlyByName);
 
                     //ZoneCustomCounterChange
                     lastAction = "ZoneCustomCounterChange";
                     if (actions.ZoneCustomCounterChange)
                         if (actions.ZoneCustomCounterChangeUseKPL)
-                            ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+                            ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType, actions.ChangeZoneOnlyByName);
                         else
-                            ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+                            ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType, actions.ChangeZoneOnlyByName);
 
                 }
 

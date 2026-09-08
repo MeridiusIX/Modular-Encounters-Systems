@@ -462,7 +462,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ChangeKPLBools(Vector3D coords, string faction, List<string> counterNames, List<bool> counterValues) {
+		public static void ChangeKPLBools(Vector3D coords, string faction, List<string> counterNames, List<bool> counterValues, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -473,7 +473,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.PlayerKnownLocation || !zone.AllowedFactions.Contains(faction))
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
@@ -487,7 +487,7 @@ namespace ModularEncountersSystems.Zones {
 		}
 
 
-		public static void ChangeKPLCounters(Vector3D coords, string faction, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers) {
+		public static void ChangeKPLCounters(Vector3D coords, string faction, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -498,7 +498,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.PlayerKnownLocation || !zone.AllowedFactions.Contains(faction))
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
@@ -512,7 +512,7 @@ namespace ModularEncountersSystems.Zones {
 		}
 
 
-		public static void ChangeZoneRadius(Vector3D coords, string name, double radiusChange, ModifierEnum modifier) {
+		public static void ChangeZoneRadius(Vector3D coords, string name, double radiusChange, ModifierEnum modifier, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -523,7 +523,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (!zone.PositionInsideZone(coords))
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				MathTools.ApplyModifier(radiusChange, modifier, ref zone.Radius);
@@ -536,7 +536,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ChangeZoneCounters(Vector3D coords, string name, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers) {
+		public static void ChangeZoneCounters(Vector3D coords, string name, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -547,7 +547,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
@@ -560,7 +560,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ChangeZoneBools(Vector3D coords, string name, List<string> counterNames, List<bool> counterValues) {
+		public static void ChangeZoneBools(Vector3D coords, string name, List<string> counterNames, List<bool> counterValues, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -571,7 +571,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
@@ -679,7 +679,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ToggleZonesAtPosition(Vector3D coords, string zoneName = null, bool mode = false) {
+		public static void ToggleZonesAtPosition(Vector3D coords, string zoneName = null, bool mode = false, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -690,7 +690,7 @@ namespace ModularEncountersSystems.Zones {
 				if (zoneName != null && zone.PublicName != zoneName)
 					continue;
 
-				if (!zone.PositionInsideZone(coords))
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				zone.Active = mode;

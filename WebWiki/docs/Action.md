@@ -1,4 +1,4 @@
-#Action.md
+#Actions
 
 Action Profiles in Rival AI are used in conjunction with **Trigger Profiles**. These profile are what execute specified actions when the conditions in a Trigger Profile are satisfied. It is important that you use a unique SubtypeId for each Action Profile you create, otherwise they may not work correctly.
 
@@ -15,18 +15,15 @@ Here is an example of how an Action Profile definition is setup:
           <SubtypeId>RAI-ExampleActionProfile</SubtypeId>
       </Id>
       <Description>
-
-      [RivalAI Action]
-      
-      [UseChatBroadcast:true]
-      [ChatData:RAI-ExampleChatProfile]
-	
-      [CreateKnownPlayerArea:true]
-      [KnownPlayerAreaRadius:15000]
-      [KnownPlayerAreaTimer:30]
-
-      </Description>
-      
+        [RivalAI Action]
+        
+        [UseChatBroadcast:true]
+        [ChatData:RAI-ExampleChatProfile]
+    
+        [CreateKnownPlayerArea:true]
+        [KnownPlayerAreaRadius:15000]
+        [KnownPlayerAreaTimer:30]
+      </Description>      
     </EntityComponent>
 
   </EntityComponents>

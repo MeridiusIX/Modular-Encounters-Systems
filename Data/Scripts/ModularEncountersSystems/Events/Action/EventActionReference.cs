@@ -60,9 +60,12 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<int> IncreaseRunCountEventTagAmount;
 
 		public bool ChangeZoneAtPosition;
+        public bool ChangeZoneByName;
 		public List<string> ZoneNames;
 		public List<Vector3D> ZoneCoords;
 		public List<bool> ZoneToggleActiveModes;
+        public List<ModifierEnum> ZoneRadiusChangeTypes;
+        public List<double> ZoneRadiusChangeAmounts;
 
 
 		//Player Start
@@ -235,9 +238,12 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 			ChangeZoneAtPosition = false;
+            ChangeZoneByName = false;
 			ZoneNames = new List<string>();
 			ZoneCoords = new List<Vector3D>();
 			ZoneToggleActiveModes = new List<bool>();
+			ZoneRadiusChangeTypes = new List<ModifierEnum>();
+            ZoneRadiusChangeAmounts = new List<double>();
 
 			AddGPSToPlayers = false;
 			AddGPSToAll = false;
@@ -488,10 +494,13 @@ namespace ModularEncountersSystems.Events.Action {
 				{"SpawnReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref SpawnReplaceKeys) },
 				{"SpawnReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref SpawnReplaceValues) },
 
-				{ "ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+				{"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+				{"ChangeZoneByName", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneByName) },
 				{"ZoneNames", (s, o) => TagParse.TagStringListCheck(s, ref ZoneNames) },
 				{"ZoneCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref ZoneCoords) },
 				{"ZoneToggleActiveModes", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneToggleActiveModes) },
+                {"ZoneRadiusChangeTypes", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneRadiusChangeTypes) },
+                {"ZoneRadiusChangeAmounts", (s, o) => TagParse.TagDoubleListCheck(s, ref ZoneRadiusChangeAmounts) },
 
 				{"TeleportPlayers", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayers) },
 				{"TeleportPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref TeleportPlayerConditionIds) },

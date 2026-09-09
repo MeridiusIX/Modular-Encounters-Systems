@@ -563,6 +563,31 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagDoubleListCheck(string tag, ref List<double> result) {
+
+			double temp = 0;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				var array = tagSplit[1].Split(',');
+
+				foreach (var item in array) {
+
+					if (double.TryParse(item, out temp) == false) {
+
+						continue;
+
+					}
+
+					result.Add(temp);
+
+				}
+
+			}
+
+		}
+
 		public static void TagDoubleCheck(string tag, ref List<double> original)
 		{
 

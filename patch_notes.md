@@ -12,6 +12,7 @@
   * NoSpawnZone:true to prevent any spawns in a zone. (supersedes all other restrictions)
   * Added ability to define more than a single Zone Coordinates and Radius via [CoordinateRadiusPairs:{X:0 Y:0 Z:0},double].
   * Added Action [ChangeZoneOnlyByName:bool] - allows for the changing of a zone's characteristics without the encounter physically being located within the zone.
+  * Added Event Actions [ChangeZoneByName:bool], [ZoneRadiusChangeTypes:validvariable,validvariable,validvariable,etc.] and [ZoneRadiusChangeAmounts:double,double,double,etc.]
   * Fixed multiple issues with the ChangeZoneRadius Actions.
 * Added SpawnCondition [UseRandomCustomFaction:bool] to complete the set.
 * Added Actions [SetSandboxStrings:bool] & [SandboxStrings:variablename,value].

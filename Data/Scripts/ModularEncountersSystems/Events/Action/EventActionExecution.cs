@@ -516,15 +516,41 @@ namespace ModularEncountersSystems.Events.Action
                 lastAction = "ChangeZoneAtPosition";
                 if (actions.ChangeZoneAtPosition)
                 {
-                    if (actions.ZoneNames.Count != actions.ZoneCoords.Count)
-                        return;
-
-                    if (actions.ZoneNames.Count != actions.ZoneToggleActiveModes.Count)
-                        return;
-
-                    for (int i = 0; i < actions.ZoneNames.Count; i++)
+                    if (actions.ZoneCoords.Count > 0)
                     {
-                        ZoneManager.ToggleZonesAtPosition(actions.ZoneCoords[i], actions.ZoneNames[i], actions.ZoneToggleActiveModes[i]);
+                        for (int i = 0; i < actions.ZoneCoords.Count; i++)
+                        {
+                            if (actions.ZoneRadiusChangeTypes.Count > i && actions.ZoneRadiusChangeAmounts.Count > i && actions.ZoneNames.Count > i)
+                            {
+                                ZoneManager.ChangeZoneRadius(actions.ZoneCoords[i], IdsReplacer.ReplaceId(null, actions.ZoneNames[i]), actions.ZoneRadiusChangeAmounts[i], actions.ZoneRadiusChangeTypes[i], false);
+                            }
+
+                            if (actions.ZoneToggleActiveModes.Count > i && actions.ZoneToggleActiveModes.Count > i && actions.ZoneNames.Count > i)
+                            {
+                                ZoneManager.ToggleZonesAtPosition(actions.ZoneCoords[i], actions.ZoneNames[i], actions.ZoneToggleActiveModes[i]);
+                            }
+                        }
+                    }
+                }
+
+
+                lastAction = "ChangeZoneByName";
+                if (actions.ChangeZoneByName)
+                {
+                    if (actions.ZoneNames.Count > 0)
+                    {
+                        for (int i = 0; i < actions.ZoneNames.Count; i++)
+                        {
+                            if (actions.ZoneRadiusChangeTypes.Count > i && actions.ZoneRadiusChangeAmounts.Count > i)
+                            {
+                                ZoneManager.ChangeZoneRadius(Vector3D.Zero, IdsReplacer.ReplaceId(null, actions.ZoneNames[i]), actions.ZoneRadiusChangeAmounts[i], actions.ZoneRadiusChangeTypes[i], true);
+                            }
+
+                            if (actions.ZoneToggleActiveModes.Count > i)
+                            {
+                                ZoneManager.ToggleZones(IdsReplacer.ReplaceId(null, actions.ZoneNames[i]), actions.ZoneToggleActiveModes[i]);
+                            }
+                        }
                     }
                 }
 

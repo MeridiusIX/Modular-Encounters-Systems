@@ -68,7 +68,7 @@ namespace ModularEncountersSystems.Zones {
 
 				if (string.IsNullOrWhiteSpace(zone?.ProfileSubtypeId)) {
 
-					SpawnLogger.Write("Removing Zone With No ProfileSubtypeId: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("Removing Zone With No ProfileSubtypeId: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
 					ActiveZones.RemoveAt(i);
 					continue;
 
@@ -76,7 +76,7 @@ namespace ModularEncountersSystems.Zones {
 
 				if (!ProfileManager.ZoneProfiles.ContainsKey(zone.ProfileSubtypeId)) {
 
-					SpawnLogger.Write("Removing Zone That Wasn't Registered In Profile Manager: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
+					SpawnLogger.Write("Removing Zone That Wasn't Registered In Profile Manager: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
 					ActiveZones.RemoveAt(i);
 					continue;
 
@@ -101,7 +101,7 @@ namespace ModularEncountersSystems.Zones {
 
 					if (!planetExists) {
 
-						SpawnLogger.Write("Removing Zone That No Longer Has Associated Planet: " + zone.Name ?? "null", SpawnerDebugEnum.Startup);
+						SpawnLogger.Write("Removing Zone That No Longer Has Associated Planet: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
 						ActiveZones.RemoveAt(i);
 						continue;
 
@@ -281,7 +281,7 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				if (Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+				if (!zone.PositionInsideZone(coords))
 					continue;
 
 				if (zone.Persistent && zone.AllowedSpawnGroups.Count > 0) {
@@ -295,12 +295,23 @@ namespace ModularEncountersSystems.Zones {
 
 				}
 
-				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseLimitedFactions && zone.Factions.Count > 0) {
+				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseAllowedFactions && zone.AllowedFactions.Count > 0) {
 
-					foreach (var faction in zone.Factions) {
+					foreach (var faction in zone.AllowedFactions) {
 
 						if (!string.IsNullOrWhiteSpace(faction) && !collection.AllowedZoneFactions.Contains(faction))
 							collection.AllowedZoneFactions.Add(faction);
+
+					}
+
+				}
+
+				if ((zone.Persistent || zone.PlayerKnownLocation) && zone.UseRestrictedFactions && zone.RestrictedFactions.Count > 0) {
+
+					foreach (var faction in zone.RestrictedFactions) {
+
+						if (!string.IsNullOrWhiteSpace(faction) && !collection.RestrictedZoneFactions.Contains(faction))
+							collection.RestrictedZoneFactions.Add(faction);
 
 					}
 
@@ -349,7 +360,7 @@ namespace ModularEncountersSystems.Zones {
 
 			foreach (var zone in ActiveZones) {
 
-				if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+				if (!zone.Active || !zone.PositionInsideZone(coords))
 					continue;
 
 				if (zone.NoSpawnZone) {
@@ -375,7 +386,7 @@ namespace ModularEncountersSystems.Zones {
             foreach (var zone in ActiveZones)
             {
 
-                if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+                if (!zone.Active || !zone.PositionInsideZone(coords))
                     continue;
 
                 if (zone.UseRestrictedSpawnGroups)
@@ -395,7 +406,7 @@ namespace ModularEncountersSystems.Zones {
 
 			foreach (var zone in ActiveZones) {
 
-				if (!zone.Active || Vector3D.Distance(zone.Coordinates, coords) > zone.Radius)
+				if (!zone.Active || !zone.PositionInsideZone(coords))
 					continue;
 
 				if (zone.Persistent && zone.Strict)
@@ -425,16 +436,14 @@ namespace ModularEncountersSystems.Zones {
 					if (!player.ActiveEntity())
 						continue;
 
-					var distFromCenter = player.Distance(zone.Coordinates);
-
-					if (zone.PlayersInZone.Contains(player.Player.IdentityId) && distFromCenter > zone.Radius && !string.IsNullOrWhiteSpace(zone.ZoneLeaveAnnounce)) {
+					if (zone.PlayersInZone.Contains(player.Player.IdentityId) && !zone.PositionInsideZone(player.GetPosition()) && !string.IsNullOrWhiteSpace(zone.ZoneLeaveAnnounce)) {
 
 						//Leave Zone
 						updateZones = true;
 						zone.PlayersInZone.Remove(player.Player.IdentityId);
 						MyVisualScriptLogicProvider.ShowNotification(zone.ZoneLeaveAnnounce, 5000, "White", player.Player.IdentityId);
 
-					} else if (!zone.PlayersInZone.Contains(player.Player.IdentityId) && distFromCenter < zone.Radius && !string.IsNullOrWhiteSpace(zone.ZoneEnterAnnounce)) {
+					} else if (!zone.PlayersInZone.Contains(player.Player.IdentityId) && zone.PositionInsideZone(player.GetPosition()) && !string.IsNullOrWhiteSpace(zone.ZoneEnterAnnounce)) {
 
 						//Enter Zone
 						updateZones = true;
@@ -453,7 +462,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ChangeKPLBools(Vector3D coords, string faction, List<string> counterNames, List<bool> counterValues) {
+		public static void ChangeKPLBools(Vector3D coords, string faction, List<string> counterNames, List<bool> counterValues, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -461,10 +470,10 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.PlayerKnownLocation || !zone.Factions.Contains(faction))
+				if (!zone.PlayerKnownLocation || !zone.AllowedFactions.Contains(faction))
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
@@ -478,7 +487,7 @@ namespace ModularEncountersSystems.Zones {
 		}
 
 
-		public static void ChangeKPLCounters(Vector3D coords, string faction, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers) {
+		public static void ChangeKPLCounters(Vector3D coords, string faction, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -486,10 +495,10 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.PlayerKnownLocation || !zone.Factions.Contains(faction))
+				if (!zone.PlayerKnownLocation || !zone.AllowedFactions.Contains(faction))
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
@@ -503,7 +512,7 @@ namespace ModularEncountersSystems.Zones {
 		}
 
 
-		public static void ChangeZoneRadius(Vector3D coords, string name, double radiusChange, ModifierEnum modifier) {
+		public static void ChangeZoneRadius(Vector3D coords, string name, double radiusChange, ModifierEnum modifier, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -511,10 +520,10 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
-				if (!zone.Persistent || zone.Name != name)
+				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				MathTools.ApplyModifier(radiusChange, modifier, ref zone.Radius);
@@ -527,7 +536,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ChangeZoneCounters(Vector3D coords, string name, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers) {
+		public static void ChangeZoneCounters(Vector3D coords, string name, List<string> counterNames, List<long> counterValues, List<ModifierEnum> counterModifiers, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -538,7 +547,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
@@ -551,7 +560,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ChangeZoneBools(Vector3D coords, string name, List<string> counterNames, List<bool> counterValues) {
+		public static void ChangeZoneBools(Vector3D coords, string name, List<string> counterNames, List<bool> counterValues, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -562,7 +571,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords))
+				if (zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
@@ -652,9 +661,7 @@ namespace ModularEncountersSystems.Zones {
 					if (!player.ActiveEntity())
 						continue;
 
-					var distFromCenter = player.Distance(zone.Coordinates);
-
-					if (distFromCenter < zone.Radius) {
+					if (zone.PositionInsideZone(player.GetPosition())) {
 
 						//Reset Timer
 						zone.TimeCreated = MyAPIGateway.Session.GameDateTime;
@@ -672,7 +679,7 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void ToggleZonesAtPosition(Vector3D coords, string zoneName = null, bool mode = false) {
+		public static void ToggleZonesAtPosition(Vector3D coords, string zoneName = null, bool mode = false, bool onlyByName = false) {
 
 			bool updateZones = false;
 
@@ -683,7 +690,7 @@ namespace ModularEncountersSystems.Zones {
 				if (zoneName != null && zone.PublicName != zoneName)
 					continue;
 
-				if (!zone.PositionInsideZone(coords))
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				zone.Active = mode;

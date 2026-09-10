@@ -563,6 +563,31 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+		public static void TagDoubleListCheck(string tag, ref List<double> result) {
+
+			double temp = 0;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				var array = tagSplit[1].Split(',');
+
+				foreach (var item in array) {
+
+					if (double.TryParse(item, out temp) == false) {
+
+						continue;
+
+					}
+
+					result.Add(temp);
+
+				}
+
+			}
+
+		}
+
 		public static void TagDoubleCheck(string tag, ref List<double> original)
 		{
 
@@ -1263,6 +1288,44 @@ namespace ModularEncountersSystems.Helpers {
 
                     result.Add(array[0], value);
                 }
+
+			}
+
+		}
+
+		public static void TagStringDictVector3DCheck(string tag, ref Dictionary<string, Vector3D> result) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+                var array = tagSplit[1].Split(',');
+                Vector3D parsedVector = Vector3D.Zero;
+
+				if (!string.IsNullOrWhiteSpace(array[0]) && Vector3D.TryParse(FixVectorString(array[1]), out parsedVector)) {
+
+                    result.Add(array[0], parsedVector);
+
+				}
+
+			}
+
+		}
+
+		public static void TagVector3DDoublePairListCheck(string tag, ref List<KeyValuePair<Vector3D, double>> result) {
+
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+                var array = tagSplit[1].Split(',');
+                Vector3D parsedVector = Vector3D.Zero;
+                double parsedRadius = 0;
+
+				if (Vector3D.TryParse(FixVectorString(array[0]), out parsedVector) && double.TryParse(array[1], out parsedRadius)) {
+
+                    result.Add(new KeyValuePair<Vector3D, double>(parsedVector, parsedRadius));
+
+				}
 
 			}
 

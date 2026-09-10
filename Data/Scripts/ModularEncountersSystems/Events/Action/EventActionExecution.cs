@@ -46,15 +46,6 @@ namespace ModularEncountersSystems.Events.Action
                 }
 
 
-                //DebugHudMessage
-                lastAction = "DebugHudMessage";
-                if (!string.IsNullOrWhiteSpace(actions.DebugHudMessage))
-                {
-                    MyAPIGateway.Utilities.ShowMessage("MES-EVENT", actions.DebugHudMessage);
-                    MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);
-                }
-
-
                 //Booleans
                 lastAction = "ChangeBooleans";
                 if (actions.ChangeBooleans == true)
@@ -102,6 +93,36 @@ namespace ModularEncountersSystems.Events.Action
 
                             SetCounter(actions.DecreaseCounters[i], -Math.Abs(actions.DecreaseCountersAmount[i]), false);
                         }
+                    }
+                }
+
+
+                // SetSandboxVector3Ds
+                lastAction = "SetSandboxVector3Ds";
+                if (actions.SetSandboxVector3Ds)
+                {
+                    foreach (var sandboxVariable in actions.SandboxVector3Ds) {
+
+                        MyAPIGateway.Utilities.SetVariable(sandboxVariable.Key, sandboxVariable.Value);
+
+                    }
+                }
+
+
+                // SetSandboxStrings
+                lastAction = "SetSandboxStrings";
+                if (actions.SetSandboxStrings)
+                {
+                    foreach (var sandboxVariable in actions.SandboxStrings) {
+
+                        if (string.IsNullOrWhiteSpace(sandboxVariable.Key) || string.IsNullOrWhiteSpace(sandboxVariable.Value))
+                            return;
+
+                        var variableName = IdsReplacer.ReplaceId(null, sandboxVariable.Key);
+                        var variableValue = IdsReplacer.ReplaceId(null, sandboxVariable.Value);
+
+                        MyAPIGateway.Utilities.SetVariable(variableName, variableValue);
+
                     }
                 }
 
@@ -495,15 +516,41 @@ namespace ModularEncountersSystems.Events.Action
                 lastAction = "ChangeZoneAtPosition";
                 if (actions.ChangeZoneAtPosition)
                 {
-                    if (actions.ZoneNames.Count != actions.ZoneCoords.Count)
-                        return;
-
-                    if (actions.ZoneNames.Count != actions.ZoneToggleActiveModes.Count)
-                        return;
-
-                    for (int i = 0; i < actions.ZoneNames.Count; i++)
+                    if (actions.ZoneCoords.Count > 0)
                     {
-                        ZoneManager.ToggleZonesAtPosition(actions.ZoneCoords[i], actions.ZoneNames[i], actions.ZoneToggleActiveModes[i]);
+                        for (int i = 0; i < actions.ZoneCoords.Count; i++)
+                        {
+                            if (actions.ZoneRadiusChangeTypes.Count > i && actions.ZoneRadiusChangeAmounts.Count > i && actions.ZoneNames.Count > i)
+                            {
+                                ZoneManager.ChangeZoneRadius(actions.ZoneCoords[i], IdsReplacer.ReplaceId(null, actions.ZoneNames[i]), actions.ZoneRadiusChangeAmounts[i], actions.ZoneRadiusChangeTypes[i], false);
+                            }
+
+                            if (actions.ZoneToggleActiveModes.Count > i && actions.ZoneToggleActiveModes.Count > i && actions.ZoneNames.Count > i)
+                            {
+                                ZoneManager.ToggleZonesAtPosition(actions.ZoneCoords[i], actions.ZoneNames[i], actions.ZoneToggleActiveModes[i]);
+                            }
+                        }
+                    }
+                }
+
+
+                lastAction = "ChangeZoneByName";
+                if (actions.ChangeZoneByName)
+                {
+                    if (actions.ZoneNames.Count > 0)
+                    {
+                        for (int i = 0; i < actions.ZoneNames.Count; i++)
+                        {
+                            if (actions.ZoneRadiusChangeTypes.Count > i && actions.ZoneRadiusChangeAmounts.Count > i)
+                            {
+                                ZoneManager.ChangeZoneRadius(Vector3D.Zero, IdsReplacer.ReplaceId(null, actions.ZoneNames[i]), actions.ZoneRadiusChangeAmounts[i], actions.ZoneRadiusChangeTypes[i], true);
+                            }
+
+                            if (actions.ZoneToggleActiveModes.Count > i)
+                            {
+                                ZoneManager.ToggleZones(IdsReplacer.ReplaceId(null, actions.ZoneNames[i]), actions.ZoneToggleActiveModes[i]);
+                            }
+                        }
                     }
                 }
 
@@ -649,6 +696,25 @@ namespace ModularEncountersSystems.Events.Action
                         }
                     }
                 }
+
+
+                //DebugHudMessage
+                lastAction = "DebugHudMessage";
+                if (!string.IsNullOrWhiteSpace(actions.DebugHudMessage))
+                {
+                    MyAPIGateway.Utilities.ShowMessage("MES-EVENT", actions.DebugHudMessage);
+                    MyVisualScriptLogicProvider.ShowNotificationToAll(actions.DebugHudMessage, 3000);
+                }
+
+
+                //DebugChatMessage
+                lastAction = "DebugChatMessage";
+                if (!string.IsNullOrWhiteSpace(actions.DebugChatMessage))
+                {
+                    var message = IdsReplacer.ReplaceId(null, actions.DebugChatMessage);
+                    MyVisualScriptLogicProvider.SendChatMessage(message, actions.ProfileSubtypeId);
+                }
+
             }
             catch (Exception e)
             {

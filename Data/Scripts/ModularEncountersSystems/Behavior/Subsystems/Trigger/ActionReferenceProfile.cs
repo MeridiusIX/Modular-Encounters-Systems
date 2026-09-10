@@ -282,13 +282,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool SetCustomStrings;
 		public Dictionary<string, string> CustomStrings;
 
+		public bool SetSandboxStrings;
+        public Dictionary<string, string> SandboxStrings;
+
 		public bool SetCustomCountersVariables;
 		public Dictionary<string, int> CustomCountersVariables;
+
+		public bool SetCustomVector3Ds;
+		public Dictionary<string, Vector3D> CustomVector3Ds;
+        public Dictionary<string, string> CustomVector3DsFromVariable;
 
 		public bool InheritLastAttackerFromCommand;
 
 		public bool ChangePlayerCredits;
 		public long ChangePlayerCreditsAmount;
+		public string ChangePlayerCreditsAmountCounter;
 		public bool ChangePlayerCreditsIncludeSavedPlayerIdentity;
 		public List<string> ChangePlayerCreditsPlayerConditionIds;
 		public bool ChangePlayerCreditsOverridePositionInPlayerCondition;
@@ -347,6 +355,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public string ParentGridNameRequirement;
 
 		public bool ChangeZoneAtPosition;
+		public bool ChangeZoneOnlyByName;
 		public string ZoneName;
 
 		public bool ZoneToggleActive;
@@ -484,6 +493,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool TeleportPlayersIncludeSavedPlayerIdentity;
         public List<string> TeleportPlayerConditionIds;
         public Vector3D TeleportPlayerCoords;
+        public string TeleportPlayerCoordsVariable;
 		public bool TeleportPlayerOverridePositionInPlayerCondition;
 
         public bool AddGPSToPlayers;
@@ -498,6 +508,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
         public bool ProcessStaticEncountersAtLocation;
 		public Vector3D ProcessStaticEncountersLocation;
+		public string ProcessStaticEncountersLocationVariable;
 
         public bool PlayDialogueCue;
 		public bool PlayDialogueToSpecificPlayers;
@@ -664,7 +675,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			SetSandboxCounters = new List<string>();
 			SetSandboxCountersValues = new List<int>();
 
-
 			IncreaseSandboxCountersAmount = 1;
 
 			DecreaseSandboxCountersAmount = -1;
@@ -682,6 +692,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			SetCustomStrings = false;
 			CustomStrings = new Dictionary<string, string>();
+
+            SetSandboxStrings = false;
+            SandboxStrings = new Dictionary<string, string>();
+
+            SetCustomVector3Ds = false;
+            CustomVector3Ds = new Dictionary<string, Vector3D>();
+			CustomVector3DsFromVariable = new Dictionary<string, string>();
 
 			SetCustomCountersVariables = false;
 			CustomCountersVariables = new Dictionary<string, int>();
@@ -815,6 +832,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			ChangePlayerCredits = false;
 			ChangePlayerCreditsAmount = 0;
+			ChangePlayerCreditsAmountCounter = "";
 			ChangePlayerCreditsIncludeSavedPlayerIdentity =true;
 			ChangePlayerCreditsPlayerConditionIds = new List<string>();
 			ChangePlayerCreditsOverridePositionInPlayerCondition =true;
@@ -866,6 +884,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ParentGridNameRequirement = "";
 
 			ChangeZoneAtPosition = false;
+			ChangeZoneOnlyByName = false;
 			ZoneName = "";
 
 			ZoneToggleActive = false;
@@ -1008,6 +1027,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			TeleportPlayersIncludeSavedPlayerIdentity = false;
             TeleportPlayerConditionIds = new List<string>();
             TeleportPlayerCoords = new Vector3D();
+            TeleportPlayerCoordsVariable = "";
 			TeleportPlayerOverridePositionInPlayerCondition = false;
 
             AddGPSToPlayers = false;
@@ -1022,6 +1042,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
             ProcessStaticEncountersAtLocation = false;
 			ProcessStaticEncountersLocation = new Vector3D(0, 0, 0);
+            ProcessStaticEncountersLocationVariable = "";
 
             PlayDialogueCue = false;
 			DialogueCueId = "";
@@ -1250,11 +1271,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"SetSandboxCountersValues", (s, o) => TagParse.TagIntListCheck(s, ref SetSandboxCountersValues) },
                 {"SetCustomStrings", (s, o) => TagParse.TagBoolCheck(s, ref SetCustomStrings) },
                 {"CustomStrings", (s, o) => TagParse.TagStringDictCheck(s, ref CustomStrings) },
+                {"SetSandboxStrings", (s, o) => TagParse.TagBoolCheck(s, ref SetSandboxStrings) },
+                {"SandboxStrings", (s, o) => TagParse.TagStringDictCheck(s, ref SandboxStrings) },
+                {"SetCustomVector3Ds", (s, o) => TagParse.TagBoolCheck(s, ref SetCustomVector3Ds) },
+                {"CustomVector3Ds", (s, o) => TagParse.TagStringDictVector3DCheck(s, ref CustomVector3Ds) },
+                {"CustomVector3DsFromVariable", (s, o) => TagParse.TagStringDictCheck(s, ref CustomVector3DsFromVariable) },
                 {"SetCustomCountersVariables", (s, o) => TagParse.TagBoolCheck(s, ref SetCustomCountersVariables) },
                 {"CustomCountersVariables", (s, o) => TagParse.TagStringIntDictCheck(s, ref CustomCountersVariables) },
                 {"InheritLastAttackerFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref InheritLastAttackerFromCommand) },
                 {"ChangePlayerCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCredits) },
                 {"ChangePlayerCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangePlayerCreditsAmount) },
+                {"ChangePlayerCreditsAmountCounter", (s, o) => TagParse.TagStringCheck(s, ref ChangePlayerCreditsAmountCounter) },
                 {"ChangePlayerCreditsIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCreditsIncludeSavedPlayerIdentity) },
                 {"ChangePlayerCreditsPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref ChangePlayerCreditsPlayerConditionIds) },
                 {"ChangePlayerCreditsOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref ChangePlayerCreditsOverridePositionInPlayerCondition) },
@@ -1294,6 +1321,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"RandomThrustDirection", (s, o) => TagParse.TagBoolCheck(s, ref RandomThrustDirection) },
                 {"ParentGridNameRequirement", (s, o) => TagParse.TagStringCheck(s, ref ParentGridNameRequirement) },
                 {"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+                {"ChangeZoneOnlyByName", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneOnlyByName) },
                 {"ZoneName", (s, o) => TagParse.TagStringCheck(s, ref ZoneName) },
                 {"ZoneToggleActive", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActive) },
                 {"ZoneToggleActiveMode", (s, o) => TagParse.TagBoolCheck(s, ref ZoneToggleActiveMode) },
@@ -1409,6 +1437,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"TeleportPlayersIncludeSavedPlayerIdentity", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayersIncludeSavedPlayerIdentity) },
                 {"TeleportPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref TeleportPlayerConditionIds) },
                 {"TeleportPlayerCoords", (s, o) => TagParse.TagVector3DCheck(s, ref TeleportPlayerCoords) },
+                {"TeleportPlayerCoordsVariable", (s, o) => TagParse.TagStringCheck(s, ref TeleportPlayerCoordsVariable) },
                 {"TeleportPlayerOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayerOverridePositionInPlayerCondition) },
 
                 {"AddGPSToPlayers", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSToPlayers) },
@@ -1426,6 +1455,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
                 {"ProcessStaticEncountersAtLocation", (s, o) => TagParse.TagBoolCheck(s, ref ProcessStaticEncountersAtLocation) },
                 {"ProcessStaticEncountersLocation", (s, o) => TagParse.TagVector3DCheck(s, ref ProcessStaticEncountersLocation) },
+                {"ProcessStaticEncountersLocationVariable", (s, o) => TagParse.TagStringCheck(s, ref ProcessStaticEncountersLocationVariable) },
 
 
                 {"PlayDialogueCue", (s, o) => TagParse.TagBoolCheck(s, ref PlayDialogueCue) },

@@ -57,6 +57,7 @@ namespace ModularEncountersSystems.Spawning {
 		public List<string> AllowedZoneSpawns;
 		public List<string> OnlyAllowedZoneSpawns;
 		public List<string> AllowedZoneFactions;
+		public List<string> RestrictedZoneFactions;
 		public List<string> RestrictedZoneSpawnGroups;
 		public List<ulong> AllowedZoneModIDs;
 		public List<ulong> RestrictedZoneModIDs;
@@ -133,6 +134,7 @@ namespace ModularEncountersSystems.Spawning {
 			AllowedZoneSpawns = new List<string>();
 			OnlyAllowedZoneSpawns = new List<string>();
 			AllowedZoneFactions = new List<string>();
+			RestrictedZoneFactions = new List<string>();
 			RestrictedZoneSpawnGroups = new List<string>();
 			AllowedZoneModIDs = new List<ulong>();
 			RestrictedZoneModIDs = new List<ulong>();

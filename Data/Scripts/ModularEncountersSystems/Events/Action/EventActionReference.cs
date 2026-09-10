@@ -35,6 +35,12 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<string> SetCounters;
 		public List<int> SetCountersAmount;
 
+        public bool SetSandboxVector3Ds;
+        public Dictionary<string, Vector3D> SandboxVector3Ds;
+
+        public bool SetSandboxStrings;
+        public Dictionary<string, string> SandboxStrings;
+
 
 		public bool ResetCooldownTimeOfEvents;
 		public List<string> ResetEventCooldownIds;
@@ -54,9 +60,12 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<int> IncreaseRunCountEventTagAmount;
 
 		public bool ChangeZoneAtPosition;
+        public bool ChangeZoneByName;
 		public List<string> ZoneNames;
 		public List<Vector3D> ZoneCoords;
 		public List<bool> ZoneToggleActiveModes;
+        public List<ModifierEnum> ZoneRadiusChangeTypes;
+        public List<double> ZoneRadiusChangeAmounts;
 
 
 		//Player Start
@@ -200,6 +209,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 		public string DebugHudMessage;
+		public string DebugChatMessage;
 
 		public Dictionary<string, Action<string, object>> EditorReference;
 
@@ -220,11 +230,20 @@ namespace ModularEncountersSystems.Events.Action {
 			SetCounters = new List<string>();
 			SetCountersAmount = new List<int>();
 
+            SetSandboxVector3Ds = false;
+            SandboxVector3Ds = new Dictionary<string, Vector3D>();
+
+            SetSandboxStrings = false;
+            SandboxStrings = new Dictionary<string, string>();
+
 
 			ChangeZoneAtPosition = false;
+            ChangeZoneByName = false;
 			ZoneNames = new List<string>();
 			ZoneCoords = new List<Vector3D>();
 			ZoneToggleActiveModes = new List<bool>();
+			ZoneRadiusChangeTypes = new List<ModifierEnum>();
+            ZoneRadiusChangeAmounts = new List<double>();
 
 			AddGPSToPlayers = false;
 			AddGPSToAll = false;
@@ -367,6 +386,7 @@ namespace ModularEncountersSystems.Events.Action {
 			CustomActionArgumentsVector3D = new List<Vector3D>();
 
 			DebugHudMessage = "";
+			DebugChatMessage = "";
 
 			SetEventControllers = false;
 			EventControllerNames = new List<string>();
@@ -391,6 +411,12 @@ namespace ModularEncountersSystems.Events.Action {
 				{"DecreaseCountersAmount", (s, o) => TagParse.TagIntListCheck(s, ref DecreaseCountersAmount) },
 				{"SetCounters", (s, o) => TagParse.TagStringListCheck(s, ref SetCounters) },
 				{"SetCountersAmount", (s, o) => TagParse.TagIntListCheck(s,true, ref SetCountersAmount) },
+
+				{"SetSandboxVector3Ds", (s, o) => TagParse.TagBoolCheck(s, ref SetSandboxVector3Ds) },
+                {"SandboxVector3Ds", (s, o) => TagParse.TagStringDictVector3DCheck(s, ref SandboxVector3Ds) },
+
+				{"SetSandboxStrings", (s, o) => TagParse.TagBoolCheck(s, ref SetSandboxStrings) },
+                {"SandboxStrings", (s, o) => TagParse.TagStringDictCheck(s, ref SandboxStrings) },
 
 				{"ResetCooldownTimeOfEvents", (s, o) => TagParse.TagBoolCheck(s, ref ResetCooldownTimeOfEvents) },
 				{"ResetEventCooldownIds", (s, o) => TagParse.TagStringListCheck(s, ref ResetEventCooldownIds) },
@@ -468,10 +494,13 @@ namespace ModularEncountersSystems.Events.Action {
 				{"SpawnReplaceKeys", (s, o) => TagParse.TagStringListCheck(s, ref SpawnReplaceKeys) },
 				{"SpawnReplaceValues", (s, o) => TagParse.TagStringListCheck(s, ref SpawnReplaceValues) },
 
-				{ "ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+				{"ChangeZoneAtPosition", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneAtPosition) },
+				{"ChangeZoneByName", (s, o) => TagParse.TagBoolCheck(s, ref ChangeZoneByName) },
 				{"ZoneNames", (s, o) => TagParse.TagStringListCheck(s, ref ZoneNames) },
 				{"ZoneCoords", (s, o) => TagParse.TagVector3DListCheck(s, ref ZoneCoords) },
 				{"ZoneToggleActiveModes", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneToggleActiveModes) },
+                {"ZoneRadiusChangeTypes", (s, o) => TagParse.TagModifierEnumCheck(s, ref ZoneRadiusChangeTypes) },
+                {"ZoneRadiusChangeAmounts", (s, o) => TagParse.TagDoubleListCheck(s, ref ZoneRadiusChangeAmounts) },
 
 				{"TeleportPlayers", (s, o) => TagParse.TagBoolCheck(s, ref TeleportPlayers) },
 				{"TeleportPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref TeleportPlayerConditionIds) },
@@ -529,6 +558,7 @@ namespace ModularEncountersSystems.Events.Action {
 
 
 				{ "DebugHudMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugHudMessage) },
+				{ "DebugChatMessage", (s, o) => TagParse.TagStringCheck(s, ref DebugChatMessage) },
 				{"SetEventControllers", (s, o) => TagParse.TagBoolCheck(s, ref SetEventControllers) },
 				{"EventControllerNames", (s, o) => TagParse.TagStringListCheck(s, ref EventControllerNames) },
 				{"EventControllersActive", (s, o) => TagParse.TagBoolListCheck(s, ref EventControllersActive) },

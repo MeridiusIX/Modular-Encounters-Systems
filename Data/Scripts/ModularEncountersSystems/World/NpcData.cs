@@ -16,6 +16,7 @@ using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using VRage.Game.Entity;
 using VRage.Game.ModAPI;
@@ -426,6 +427,10 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(47)]
 		public Dictionary<string, int> CustomCountersVariables;
 
+		[ProtoMember(48)]
+        private List<KeyValuePair<string, Vector3D>> CustomVector3DsSerializeable;
+		public Dictionary<string, Vector3D> CustomVector3Ds;
+
         //Non-Serialized Data
 
         [ProtoIgnore]
@@ -606,6 +611,8 @@ namespace ModularEncountersSystems.World {
 			CustomVariablesName = "";
 			CustomStrings = new Dictionary<string, string>();
 			CustomCountersVariables = new Dictionary<string, int>();
+			CustomVector3Ds = new Dictionary<string, Vector3D>();
+			CustomVector3DsSerializeable = new List<KeyValuePair<string, Vector3D>>();
 
 			FriendlyName = "";
 			TerrainTypeName = "";
@@ -1150,12 +1157,23 @@ namespace ModularEncountersSystems.World {
 
 			if (Grid != null && MyAPIGateway.Session != null && Grid.ActiveEntity() && Grid.Npc == this) {
 
+                CustomVector3DsSerializeable = CustomVector3Ds.ToList();
+
 				LastChangeToData = MyAPIGateway.Session.GameDateTime;
 				SerializationHelper.SaveDataToEntity<NpcData>(Grid?.CubeGrid, this, StorageTools.NpcDataKey);
 
 			}
 
 		}
+
+        public void Deserialized()
+        {
+            CustomVector3Ds.Clear();
+            foreach (var entry in CustomVector3DsSerializeable)
+            {
+                CustomVector3Ds[entry.Key] = entry.Value;
+            }
+        }
 
         public string GetGPS(string name, Vector3D vector)
         {
@@ -1207,6 +1225,7 @@ namespace ModularEncountersSystems.World {
 
             foreach (var item in CustomStrings) sb.Append(" - CustomString: " + item.Key + " (").Append(item.Value + ")").AppendLine();
             foreach (var item in CustomCountersVariables) sb.Append(" - CustomCountersVariable: " + item.Key + " (").Append(item.Value + ")").AppendLine();
+            foreach (var item in CustomVector3Ds) sb.Append(" - CustomVector3Ds: " + item.Key + " (").Append(item.Value + ")").AppendLine();
 
 			return sb.ToString();
 

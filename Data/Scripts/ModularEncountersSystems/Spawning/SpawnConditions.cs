@@ -886,7 +886,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (CheckSandboxVariables(conditions.SandboxVariables, conditions.FalseSandboxVariables) == false) {
+			if (CheckSandboxVariables(conditions.SandboxVariables, conditions.FalseSandboxVariables, spawnGroup) == false) {
 
 				failReason = "   - Sandbox Variable Check Failed";
 				return false;
@@ -1501,30 +1501,38 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static bool CheckSandboxVariables(List<string> variableNames, List<string> falseVariableNames) {
+		public static bool CheckSandboxVariables(List<string> variableNames, List<string> falseVariableNames, ImprovedSpawnGroup spawnGroup = null) {
 
+            var varName = "";
 			foreach (var name in variableNames) {
 
+                varName = name;
+                if (spawnGroup != null && name.Contains("{SpawnGroupName}")) {
+                    varName = name.Replace("{SpawnGroupName}", spawnGroup.SpawnGroupName);
+                }
+
 				bool varValue = false;
-				bool foundVariable = MyAPIGateway.Utilities.GetVariable<bool>(name, out varValue);
+				bool foundVariable = MyAPIGateway.Utilities.GetVariable<bool>(varName, out varValue);
 
 				if (varValue == false) {
-
 					return false;
-
 				}
 
 			}
 
+            varName = "";
 			foreach (var name in falseVariableNames) {
 
+                varName = name;
+                if (spawnGroup != null && name.Contains("{SpawnGroupName}")) {
+                    varName = name.Replace("{SpawnGroupName}", spawnGroup.SpawnGroupName);
+                }
+
 				bool varValue = false;
-				bool foundVariable = MyAPIGateway.Utilities.GetVariable<bool>(name, out varValue);
+				bool foundVariable = MyAPIGateway.Utilities.GetVariable<bool>(varName, out varValue);
 
 				if (varValue == true) {
-
 					return false;
-
 				}
 
 			}
@@ -1940,10 +1948,10 @@ namespace ModularEncountersSystems.Spawning {
 
 					}
 
-					var distance = Vector3D.Distance(position, zone.Coordinates);
+                    double distance = 0;
 
 					//In Zone Radius
-					if (distance > zone.Radius) {
+					if (!zone.DistanceToClosestZoneCenterPosition(position, out distance)) {
 
 						_zoneDebug.Append("       - Zone Radius Check Failed").AppendLine();
 						continue;
@@ -2092,6 +2100,30 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+			if (!persistentConditionCheck && collection != null && collection.RestrictedZoneFactions.Count > 0) {
+
+				var resolvedFaction = !string.IsNullOrWhiteSpace(spawnGroup.FactionOverride)
+					? spawnGroup.FactionOverride
+					: conditions.FactionOwner;
+
+				bool usesRandomFaction =
+					conditions.UseRandomBuilderFaction ||
+					conditions.UseRandomMinerFaction ||
+					conditions.UseRandomTraderFaction ||
+					conditions.UseRandomMilitaryFaction ||
+					conditions.UseRandomPirateFaction ||
+					conditions.UseRandomCustomFaction;
+
+				if (!usesRandomFaction && collection.RestrictedZoneFactions.Contains(resolvedFaction)) {
+
+					failReason = _zoneDebug.ToString();
+					failReason += "   - Zone Check Failed: Faction '" + resolvedFaction + "' is among Restricted Zone Factions.";
+					return false;
+
+				}
+
+            }
+
 			failReason = "";
 			return true;
 
@@ -2210,8 +2242,24 @@ namespace ModularEncountersSystems.Spawning {
 
 					IMyFaction checkFaction = faction;
 
-
 					if (faction?.Tag != null && collection != null && collection.AllowedZoneFactions.Count > 0 && !collection.AllowedZoneFactions.Contains(faction.Tag))
+					{
+
+						factionList.Remove(faction);
+
+						if (specificFactionCheck == true)
+						{
+
+							factionList.Clear();
+							break;
+
+						}
+
+						continue;
+
+					}
+
+					if (faction?.Tag != null && collection != null && collection.RestrictedZoneFactions.Count > 0 && collection.RestrictedZoneFactions.Contains(faction.Tag))
 					{
 
 						factionList.Remove(faction);

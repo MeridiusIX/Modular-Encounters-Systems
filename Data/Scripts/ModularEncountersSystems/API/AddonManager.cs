@@ -35,11 +35,17 @@ namespace ModularEncountersSystems.API {
 		private static ulong _suppressVanillaCargoShipsSteamId = 888457124;
 		private static ulong _suppressVanillaCargoShipsModIoId = 42;
 
-		//Suppress Vanilla Encounters
+		//Suppress Vanilla Space Random Encounters
 		public static bool SuppressVanillaEncounters { get { return _suppressVanillaEncounters; } } //TODO: Point To Settings
 		private static bool _suppressVanillaEncounters = false;
 		private static ulong _suppressVanillaEncountersSteamId = 888457381;
 		private static ulong _suppressVanillaEncountersModIoId = 42;
+
+		//Suppress Vanilla Planetary Installations
+		public static bool SuppressVanillaPlanetaryInstallations { get { return _suppressVanillaPlanetaryInstallations; } } //TODO: Point To Settings
+		private static bool _suppressVanillaPlanetaryInstallations = false;
+		private static ulong _suppressVanillaPlanetaryInstallationsSteamId = 3796756949;
+		private static ulong _suppressVanillaPlanetaryInstallationsModIoId = 42;
 
 		//Space Wave Spawner
 		public static bool SpaceWaveSpawner { get { return _spaceWaveSpawner || Settings.SpaceCargoShips.EnableWaveSpawner; } }
@@ -129,7 +135,7 @@ namespace ModularEncountersSystems.API {
 
 				}
 
-				
+
 
 				//NPC Weapons Upgrade
 				if (id == _npcWeaponsUpgradeSteamId || id == _npcWeaponsUpgradeModIoId) {
@@ -158,11 +164,20 @@ namespace ModularEncountersSystems.API {
 
 				}
 
-				//Suppress Vanilla Encounters
+				//Suppress Vanilla Space Random Encounters
 				if (id == _suppressVanillaEncountersSteamId || id == _suppressVanillaEncountersModIoId) {
 
 					SpawnLogger.Write("Suppress Vanilla Encounters Mod Detected", SpawnerDebugEnum.Startup);
 					_suppressVanillaEncounters = true;
+					continue;
+
+				}
+
+				//Suppress Vanilla Planetary Installations
+				if (id == _suppressVanillaPlanetaryInstallationsSteamId || id == _suppressVanillaPlanetaryInstallationsModIoId) {
+
+					SpawnLogger.Write("Suppress Vanilla Planetary Installations Mod Detected", SpawnerDebugEnum.Startup);
+					_suppressVanillaPlanetaryInstallations = true;
 					continue;
 
 				}
@@ -227,7 +242,7 @@ namespace ModularEncountersSystems.API {
 					SpawnLogger.Write("AiEnabled Mod Detected", SpawnerDebugEnum.Startup);
 					AiEnabled = true;
 					continue;
-				
+
 				}
 
 				//EnergyShields
@@ -284,7 +299,7 @@ namespace ModularEncountersSystems.API {
 
 			}
 
-			
+
 
 		}
 
@@ -336,11 +351,11 @@ namespace ModularEncountersSystems.API {
 								break;
 
 							}
-						
+
 						}
 
 					}
-				
+
 				}
 
 			}

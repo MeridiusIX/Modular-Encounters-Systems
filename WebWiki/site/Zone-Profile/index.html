@@ -697,7 +697,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines if only a list of specific SpawnGroups should be allowed to spawn in this Zone.</td>
+<td style="text-align: left;">This tag determines if only a list of specific SpawnGroups should only be allowed to spawn in this Zone.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -821,7 +821,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines if only SpawnGroups belonging to certain Mod IDs are allowed to spawn in this Zone.</td>
+<td style="text-align: left;">When <code>true</code>, only SpawnGroups from mods listed in <code>AllowedModIDs</code> may spawn <strong>while the spawn position is inside this zone</strong>. This does not prevent those mods from spawning outside the zone. Note: this feature is only available for Steam workshop mods.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -852,11 +852,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines which SpawnGroup Mod IDs are allowed to spawn inside this Zone.</td>
+<td style="text-align: left;">Workshop mod published file IDs allowed to spawn inside this zone when <code>UseAllowedModIDs</code> is <code>true</code>. Multiple tags or comma-separated values are supported. Note: this feature is only available for Steam workshop mods.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;">Any SpawnGroup SubtypeID</td>
+<td style="text-align: left;">Any workshop mod published file ID (<code>ulong</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -883,7 +883,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines if SpawnGroups belonging to certain Mod IDs should not be allowed to spawn in this Zone.</td>
+<td style="text-align: left;">When <code>true</code>, SpawnGroups from mods listed in <code>RestrictedModIDs</code> are blocked <strong>while the spawn position is inside this zone</strong>. This does not block those mods outside the zone. If a mod is both allowed and restricted at the same position, restriction wins. Note: this feature is only available for Steam workshop mods.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -914,11 +914,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines which SpawnGroup Mod IDs are not allowed to spawn inside this Zone.</td>
+<td style="text-align: left;">Workshop mod published file IDs blocked from spawning inside this zone when <code>UseRestrictedModIDs</code> is <code>true</code>. Multiple tags or comma-separated values are supported. Note: this feature is only available for Steam workshop mods.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;">Any SpawnGroup SubtypeID</td>
+<td style="text-align: left;">Any workshop mod published file ID (<code>ulong</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>

@@ -22,7 +22,7 @@ namespace ModularEncountersSystems.Zones {
                 if (!zone.PlayerKnownLocation)
                     continue;
 
-                if (!zone.Factions.Contains(faction)) {
+                if (!zone.AllowedFactions.Contains(faction)) {
 
                     continue;
 
@@ -192,7 +192,7 @@ namespace ModularEncountersSystems.Zones {
             if (!zone.PlayerKnownLocation)
                 return false;
 
-            if (matchFaction == true && !zone.Factions.Contains(faction)) {
+            if (matchFaction == true && !zone.AllowedFactions.Contains(faction)) {
 
                 return false;
 
@@ -217,7 +217,7 @@ namespace ModularEncountersSystems.Zones {
                 if (!zone.PlayerKnownLocation)
                     continue;
 
-                if (zone.Factions.Count > 0 && !zone.Factions.Contains(faction))
+                if (zone.AllowedFactions.Count > 0 && !zone.AllowedFactions.Contains(faction))
                     continue;
 
                 if (IsPositionInKnownPlayerLocation(zone, coords, false)) {
@@ -250,7 +250,7 @@ namespace ModularEncountersSystems.Zones {
                 if (zone.Sphere.Contains(coords) != ContainmentType.Disjoint)
                 {
 
-                    if (removeAllZones || zone.Factions.Contains(faction) || zone.Factions.Count == 0)
+                    if (removeAllZones || zone.AllowedFactions.Contains(faction) || zone.AllowedFactions.Count == 0)
                     {
 
                         SpawnLogger.Write(string.Format("Player Known Location At [{0}] Has Been Removed", zone.Coordinates), SpawnerDebugEnum.Zone);

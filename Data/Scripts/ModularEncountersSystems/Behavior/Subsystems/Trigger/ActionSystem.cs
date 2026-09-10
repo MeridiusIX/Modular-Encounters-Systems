@@ -202,6 +202,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
+                //SetSandboxStrings
+                lastAction = "SetSandboxStrings";
+                if (actions.SetSandboxStrings)
+                {
+                    foreach (var sandboxString in actions.SandboxStrings) {
+                        SetSandboxString(sandboxString.Key, sandboxString.Value);
+                    }
+                }
+
                 //Playsound cue
                 lastAction = "PlayDialogueCue";
                 if (actions.PlayDialogueCue)
@@ -244,7 +253,21 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     {
 
                         var encounter = NpcManager.StaticEncounters[i];
-                        encounter.ProcessEncounter(ref updateStatics, true, actions.ProcessStaticEncountersLocation);
+                        var processStaticEncountersLocation = actions.ProcessStaticEncountersLocation;
+
+                        var npcdata = _behavior?.CurrentGrid?.Npc;
+                        if (actions.ProcessStaticEncountersLocationVariable != "")
+                        {
+                            foreach (var vector in npcdata.CustomVector3Ds)
+                            {
+                                if (actions.ProcessStaticEncountersLocationVariable == "{" + vector.Key + "}")
+                                {
+                                    processStaticEncountersLocation = vector.Value;
+                                }
+                            }
+                        }
+
+                        encounter.ProcessEncounter(ref updateStatics, true, processStaticEncountersLocation);
 
                     }
 
@@ -891,17 +914,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                             long credits = 0;
                             player.Player.TryGetBalanceInfo(out credits);
+                            long changePlayerCreditsAmount = actions.ChangePlayerCreditsAmount;
+                            var npcdata = _behavior?.CurrentGrid?.Npc;
 
-                            if (actions.ChangePlayerCreditsAmount > 0)
+                            foreach (var counter in npcdata.CustomCountersVariables)
                             {
-                                player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+                                if (actions.ChangePlayerCreditsAmountCounter == "{" + counter.Key + "}")
+                                {
+                                    changePlayerCreditsAmount = counter.Value;
+                                    break;
+                                }
+                            }
+
+                            if (changePlayerCreditsAmount > 0)
+                            {
+                                player.Player.RequestChangeBalance(changePlayerCreditsAmount);
                                 PaymentSuccessTriggered = true;
 
                             }
                             else
                             {
 
-                                if (actions.ChangePlayerCreditsAmount > credits)
+                                if (changePlayerCreditsAmount > credits)
                                 {
 
                                     PaymentFailureTriggered = true;
@@ -910,7 +944,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                 else
                                 {
 
-                                    player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+                                    player.Player.RequestChangeBalance(changePlayerCreditsAmount);
                                     PaymentSuccessTriggered = true;
 
                                 }
@@ -934,18 +968,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                                 long credits = 0;
                                 player.Player.TryGetBalanceInfo(out credits);
+                                long changePlayerCreditsAmount = actions.ChangePlayerCreditsAmount;
+                                var npcdata = _behavior?.CurrentGrid?.Npc;
 
-                                if (actions.ChangePlayerCreditsAmount > 0)
+                                foreach (var counter in npcdata.CustomCountersVariables)
+                                {
+                                    if (actions.ChangePlayerCreditsAmountCounter == "{" + counter.Key + "}")
+                                    {
+                                        changePlayerCreditsAmount = counter.Value;
+                                        break;
+                                    }
+                                }
+
+                                if (changePlayerCreditsAmount > 0)
                                 {
 
-                                    player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+                                    player.Player.RequestChangeBalance(changePlayerCreditsAmount);
                                     PaymentSuccessTriggered = true;
 
                                 }
                                 else
                                 {
 
-                                    if (actions.ChangePlayerCreditsAmount > credits)
+                                    if (changePlayerCreditsAmount > credits)
                                     {
 
                                         PaymentFailureTriggered = true;
@@ -954,7 +999,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                     else
                                     {
 
-                                        player.Player.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+                                        player.Player.RequestChangeBalance(changePlayerCreditsAmount);
                                         PaymentSuccessTriggered = true;
 
                                     }
@@ -993,18 +1038,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                         long credits = 0;
                         faction.TryGetBalanceInfo(out credits);
+                        long changePlayerCreditsAmount = actions.ChangePlayerCreditsAmount;
+                        var npcdata = _behavior?.CurrentGrid?.Npc;
 
-                        if (actions.ChangePlayerCreditsAmount > 0)
+                        foreach (var counter in npcdata.CustomCountersVariables)
+                        {
+                            if (actions.ChangePlayerCreditsAmountCounter == "{" + counter.Key + "}")
+                            {
+                                changePlayerCreditsAmount = counter.Value;
+                                break;
+                            }
+                        }
+
+                        if (changePlayerCreditsAmount > 0)
                         {
 
-                            faction.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+                            faction.RequestChangeBalance(changePlayerCreditsAmount);
                             PaymentSuccessTriggered = true;
 
                         }
                         else
                         {
 
-                            if (actions.ChangePlayerCreditsAmount > credits)
+                            if (changePlayerCreditsAmount > credits)
                             {
 
                                 PaymentFailureTriggered = true;
@@ -1013,7 +1069,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             else
                             {
 
-                                faction.RequestChangeBalance(actions.ChangePlayerCreditsAmount);
+                                faction.RequestChangeBalance(changePlayerCreditsAmount);
                                 PaymentSuccessTriggered = true;
 
                             }
@@ -1440,7 +1496,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 if (actions.AddInstanceEventGroup)
                 {
 
-                    
+
                     var instanceEventGroupReplaceValues = IdsReplacer.ReplaceIds(_behavior?.CurrentGrid?.Npc ?? null, actions.InstanceEventGroupReplaceValues, RemoteControl.GetPosition());
                     LocalApi.InsertInstanceEventGroup(actions.InstanceEventGroupId, actions.InstanceEventGroupReplaceKeys, instanceEventGroupReplaceValues);
                 }
@@ -1857,34 +1913,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 //ChangeZoneAtPosition (While Inside Zone)
                 lastAction = "ChangeZoneAtPosition";
-                if (actions.ChangeZoneAtPosition)
+                if (actions.ChangeZoneAtPosition || actions.ChangeZoneOnlyByName)
                 {
 
                     //ZoneToggleActiveAtPosition
                     lastAction = "ZoneToggleActiveAtPosition";
                     if (actions.ZoneToggleActiveAtPosition)
-                        ZoneManager.ToggleZonesAtPosition(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneToggleActiveAtPositionMode);
+                        ZoneManager.ToggleZonesAtPosition(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneToggleActiveAtPositionMode, actions.ChangeZoneOnlyByName);
 
                     //ZoneRadiusChangeType
                     lastAction = "ZoneRadiusChangeType";
                     if (actions.ZoneRadiusChangeType != ModifierEnum.None)
-                        ZoneManager.ChangeZoneRadius(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneRadiusChangeAmount, actions.ZoneRadiusChangeType);
+                        ZoneManager.ChangeZoneRadius(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneRadiusChangeAmount, actions.ZoneRadiusChangeType, actions.ChangeZoneOnlyByName);
 
                     //ZoneCustomBoolChange
                     lastAction = "ZoneCustomBoolChange";
                     if (actions.ZoneCustomBoolChange)
                         if (actions.ZoneCustomBoolChangeUseKPL)
-                            ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+                            ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue, actions.ChangeZoneOnlyByName);
                         else
-                            ZoneManager.ChangeKPLBools(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue);
+                            ZoneManager.ChangeKPLBools(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue, actions.ChangeZoneOnlyByName);
 
                     //ZoneCustomCounterChange
                     lastAction = "ZoneCustomCounterChange";
                     if (actions.ZoneCustomCounterChange)
                         if (actions.ZoneCustomCounterChangeUseKPL)
-                            ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+                            ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType, actions.ChangeZoneOnlyByName);
                         else
-                            ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType);
+                            ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType, actions.ChangeZoneOnlyByName);
 
                 }
 
@@ -1909,6 +1965,43 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             npcdata.CustomStrings[customvar.Key] = RandomNameGenerator.CreateRandomNameFromPattern(value_adjusted);
                         else
                             npcdata.CustomStrings[customvar.Key] = value_adjusted;
+                    }
+
+                }
+
+                //SetCustomVector3Ds
+                lastAction = "SetCustomVector3Ds";
+                if (actions.SetCustomVector3Ds)
+                {
+                    BehaviorLogger.Write(actions.ProfileSubtypeId + " Attempting To Set Custom Vector3Ds.", BehaviorDebugEnum.Action);
+                    var npcdata = _behavior?.CurrentGrid?.Npc;
+
+                    foreach (var customVector in actions.CustomVector3Ds)
+                    {
+                        npcdata.CustomVector3Ds[customVector.Key] = customVector.Value;
+                    }
+
+                    foreach (var customVectorVariable in actions.CustomVector3DsFromVariable)
+                    {
+                        foreach (var customVector in npcdata.CustomVector3Ds)
+                        {
+                            if (customVector.Key == "{" + customVectorVariable.Value + "}")
+                            {
+                                npcdata.CustomVector3Ds[customVectorVariable.Key] = customVector.Value;
+                                break;
+                            }
+                        }
+
+                        var sandboxVector3D = Vector3D.Zero;
+                        var tempVar = customVectorVariable.Value.Replace("{", "").Replace("}", "");
+                        if (MyAPIGateway.Utilities.GetVariable(tempVar, out sandboxVector3D))
+                        {
+                            npcdata.CustomVector3Ds[customVectorVariable.Key] = sandboxVector3D;
+                        }
+                        else
+                        {
+                            BehaviorLogger.Write(actions.ProfileSubtypeId + " Could not set " + customVectorVariable.Key + " from " + customVectorVariable.Value + " - variable not found.", BehaviorDebugEnum.Action);
+                        }
                     }
 
                 }
@@ -2680,6 +2773,23 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastAction = "TeleportPlayers";
                 if (actions.TeleportPlayers && _behavior.RemoteControl != null)
                 {
+                    var teleportPlayerCoords = actions.TeleportPlayerCoords;
+
+                    var npcdata = _behavior?.CurrentGrid?.Npc;
+                    if (actions.TeleportPlayerCoordsVariable != "")
+                    {
+                        foreach (var vector in npcdata.CustomVector3Ds)
+                        {
+                            if (actions.TeleportPlayerCoordsVariable == "{" + vector.Key + "}")
+                            {
+                                teleportPlayerCoords = vector.Value;
+                            }
+                        }
+                    }
+
+                    if (teleportPlayerCoords == Vector3D.Zero)
+                        BehaviorLogger.Write(actions.ProfileSubtypeId + " Teleporting player(s), but destination was (0,0,0)", BehaviorDebugEnum.Action);
+
                     bool SavedPlayerIdentityAlreadyIncluded = false;
                     foreach (var player in PlayerManager.Players)
                     {
@@ -2690,7 +2800,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             if ((command?.PlayerIdentity ?? 0) != 0 && (command?.PlayerIdentity ?? 0) == player.Player.IdentityId)
                                 SavedPlayerIdentityAlreadyIncluded = true;
 
-                            player.Player.Character.Teleport(MatrixD.CreateWorld(actions.TeleportPlayerCoords));
+                            player.Player.Character.Teleport(MatrixD.CreateWorld(teleportPlayerCoords));
                         }
 
                     }
@@ -2702,7 +2812,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                         if (player != null)
                         {
-                            player.Player.Character.Teleport(MatrixD.CreateWorld(actions.TeleportPlayerCoords));
+                            player.Player.Character.Teleport(MatrixD.CreateWorld(teleportPlayerCoords));
                         }
                     }
                 }

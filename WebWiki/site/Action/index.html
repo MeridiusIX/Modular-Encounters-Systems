@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Action.md - Modular Encounters System</title>
+    <title>Actions - Modular Encounters System</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Action.md";
+        var mkdocs_page_name = "Actions";
         var mkdocs_page_input_path = "Action.md";
         var mkdocs_page_url = null;
       </script>
@@ -233,7 +233,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Action.md</li>
+      <li class="breadcrumb-item active">Actions</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -242,7 +242,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="actionmd">Action.md</h1>
+                <h1 id="actions">Actions</h1>
 <p>Action Profiles in Rival AI are used in conjunction with <strong>Trigger Profiles</strong>. These profile are what execute specified actions when the conditions in a Trigger Profile are satisfied. It is important that you use a unique SubtypeId for each Action Profile you create, otherwise they may not work correctly.</p>
 <p>Here is an example of how an Action Profile definition is setup:</p>
 <pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
@@ -255,18 +255,15 @@
           &lt;SubtypeId&gt;RAI-ExampleActionProfile&lt;/SubtypeId&gt;
       &lt;/Id&gt;
       &lt;Description&gt;
+        [RivalAI Action]
 
-      [RivalAI Action]
+        [UseChatBroadcast:true]
+        [ChatData:RAI-ExampleChatProfile]
 
-      [UseChatBroadcast:true]
-      [ChatData:RAI-ExampleChatProfile]
-
-      [CreateKnownPlayerArea:true]
-      [KnownPlayerAreaRadius:15000]
-      [KnownPlayerAreaTimer:30]
-
-      &lt;/Description&gt;
-
+        [CreateKnownPlayerArea:true]
+        [KnownPlayerAreaRadius:15000]
+        [KnownPlayerAreaTimer:30]
+      &lt;/Description&gt;      
     &lt;/EntityComponent&gt;
 
   &lt;/EntityComponents&gt;

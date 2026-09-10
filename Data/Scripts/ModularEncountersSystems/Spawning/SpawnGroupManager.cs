@@ -660,7 +660,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			ApplySuppression(AddonManager.SuppressVanillaCargoShips, AddonManager.SuppressVanillaEncounters);
+			ApplySuppression(AddonManager.SuppressVanillaCargoShips, AddonManager.SuppressVanillaEncounters, AddonManager.SuppressVanillaPlanetaryInstallations);
 
 			//Count all the conditions
 			foreach (var spawnGroup in SpawnGroups) {
@@ -906,7 +906,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-		public static void ApplySuppression(bool cargo, bool encounter) {
+		public static void ApplySuppression(bool cargo, bool encounter, bool planetaryInstallation) {
 
 			foreach (var spawn in SpawnGroupManager.SpawnGroups) {
 
@@ -927,6 +927,17 @@ namespace ModularEncountersSystems.Spawning {
 
 						if (spawn.SpawnGroup.Context.IsBaseGame)
 							spawn.SpawnConditionsProfiles[0].SpaceRandomEncounter = false;
+
+					}
+
+				}
+
+				if (planetaryInstallation && spawn.SpawnConditionsProfiles[0].PlanetaryInstallation) {
+
+					if (spawn.SpawnGroup?.Context != null) {
+
+						if (spawn.SpawnGroup.Context.IsBaseGame)
+							spawn.SpawnConditionsProfiles[0].PlanetaryInstallation = false;
 
 					}
 

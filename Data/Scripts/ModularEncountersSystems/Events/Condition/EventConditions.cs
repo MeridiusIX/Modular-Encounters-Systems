@@ -75,6 +75,9 @@ namespace ModularEncountersSystems.Events.Condition
 
         public bool UseAnyPassingCondition;
 
+        public bool CheckOnSession;
+        public bool OnSessionActivated;
+
         public Dictionary<string, Action<string, object>> EditorReference;
 
         public EventCondition()
@@ -122,6 +125,9 @@ namespace ModularEncountersSystems.Events.Condition
             ThreatScoreType = ThreatScoreTypeEnum.Player;
             ThreatScoreGridConfiguration = GridConfigurationEnum.All;
 
+            CheckOnSession = false;
+            OnSessionActivated = false;
+
 
             EditorReference = new Dictionary<string, Action<string, object>>
             {
@@ -157,8 +163,9 @@ namespace ModularEncountersSystems.Events.Condition
                 {"ThreatScoreDistanceFromCoords", (s, o) => TagParse.TagIntCheck(s, ref ThreatScoreDistanceFromVector3) },
                 {"ThreatScoreType", (s, o) => TagParse.TagThreatScoreTypeEnumCheck(s, ref ThreatScoreType) },
                 {"ThreatScoreGridConfiguration", (s, o) => TagParse.TagGridConfigurationCheck(s, ref ThreatScoreGridConfiguration) },
+                {"CheckOnSession", (s, o) => TagParse.TagBoolCheck(s, ref CheckOnSession) },
 
-                
+
             };
 
         }
@@ -206,7 +213,7 @@ namespace ModularEncountersSystems.Events.Condition
             int usedProfileConditions = 0;
             int satisfieddProfileConditions = 0;
             index = -1;
-            //Holdings check 
+            //Holdings check
             for (int i = 0; i < profiles.Count; i++)
             {
                 usedProfileConditions++;
@@ -231,7 +238,7 @@ namespace ModularEncountersSystems.Events.Condition
 
             int usedProfileConditions = 0;
             int satisfieddProfileConditions = 0;
-            //Holdings check 
+            //Holdings check
             for (int i = 0; i < profiles.Count; i++)
             {
                 usedProfileConditions++;
@@ -259,7 +266,7 @@ namespace ModularEncountersSystems.Events.Condition
 
             //EventControllerActive
 
-            
+
             //Bool
             if(Profile.CheckTrueBooleans == true)
             {
@@ -531,6 +538,17 @@ namespace ModularEncountersSystems.Events.Condition
                 }
             }
 
+            if (Profile.CheckOnSession)
+            {
+                usedConditions++;
+
+                if (!Profile.OnSessionActivated)
+                {
+                    Profile.OnSessionActivated = true;
+                    satisfiedConditions++;
+                }
+            }
+
 
 
 
@@ -577,6 +595,3 @@ namespace ModularEncountersSystems.Events.Condition
     }
 
 }
-
-
-

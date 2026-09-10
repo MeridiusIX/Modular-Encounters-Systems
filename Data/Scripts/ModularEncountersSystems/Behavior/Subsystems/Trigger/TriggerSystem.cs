@@ -945,7 +945,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
-					if (panel.CustomName == null || panel.CustomName != trigger.ButtonPanelName)
+					if (panel.CustomName == null || panel.CustomName != IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, trigger.ButtonPanelName))
 						continue;
 
 					if (index != trigger.ButtonPanelIndex && trigger.ButtonPanelIndex != -1)
@@ -1295,6 +1295,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				return;
 
 			}
+
+		}
+
+		public void SetSandboxString(string variableName, string variableValue) {
+
+			if (string.IsNullOrWhiteSpace(variableName) || string.IsNullOrWhiteSpace(variableValue))
+				return;
+
+            variableName = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, variableName);
+            variableValue = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, variableValue);
+
+			MyAPIGateway.Utilities.SetVariable(variableName, variableValue);
 
 		}
 

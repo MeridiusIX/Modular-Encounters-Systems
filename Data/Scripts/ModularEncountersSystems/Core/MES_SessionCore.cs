@@ -100,7 +100,7 @@ namespace ModularEncountersSystems.Core {
 				return;
 
 			APIs.TextHud = new HudAPIv2();
-
+			
 		}
 
 		public override void BeforeStart() {
@@ -181,7 +181,8 @@ namespace ModularEncountersSystems.Core {
 
 			TaskProcessor.Process();
 
-		}
+            ZoneDebugVisualizer.UpdateDraw(); // BUGBUG
+        }
 
 		public override MyObjectBuilder_SessionComponent GetObjectBuilder() {
 

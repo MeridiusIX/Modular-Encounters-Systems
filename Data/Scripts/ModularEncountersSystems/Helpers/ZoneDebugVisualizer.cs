@@ -185,12 +185,12 @@ namespace ModularEncountersSystems.Helpers {
 
             if (!zone.Active)
             {
-                return Color.DarkGray;  // Inactive zone
+                return Color.DarkGray;  // Inactive zone BUGBUG this doesn't work as inactive zones don't seem to be managed.
             }
 
             if (hasAllowFilter && hasRestrictFilter) {
 
-                return Color.Blue;  // Both allow and restrict active
+                return Color.Yellow;  // Both allow and restrict active
 
             }
 
@@ -206,7 +206,7 @@ namespace ModularEncountersSystems.Helpers {
 
             }
 
-            return Color.Yellow;  // No filtering flags
+            return Color.Blue;  // No filtering flags
 
         }
 

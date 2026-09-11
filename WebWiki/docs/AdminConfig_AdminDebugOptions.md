@@ -107,6 +107,18 @@ Here is a list of command categories:
 |Chat Command 1:|`/MES.Debug.ForcePeacePhase`|
 |Description:|This chat command allows you to immediately enable Peace Phase in the current world (stops the current Combat Phase).|
 
+|Setting:|Hide All Zones|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command 1:|`/MES.Debug.HideAllZones`|
+|Description:|This chat command hides all visible zones.|
+
+|Setting:|Hide Zone|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command 1:|`/MES.Debug.HideZone Value`|
+|Description:|This chat command hides the specified zone. The zone can be specified by either the SubtypeID or the PublicName. If the name contains spaces it must be enclosed with double quotes, i.e. "Some Name"|
+
 |Setting:|Process Prefabs|
 |:----|:----|
 |XML:|`N/A`|
@@ -132,6 +144,18 @@ Here is a list of command categories:
 |XML:|`N/A`|
 |Chat Command:|`/MES.Debug.ResetZones`|
 |Description:|This chat command allows you to reset all zones currently loaded in the game world and reload them using the profiles currently present in the mod loadout.|
+
+|Setting:|Show All Zones|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.ShowAllZones`|
+|Description:|This chat command makes all active zones visible. Zone visiblity is colored thus: Allowed Zone = Green, Restricted Zone = Red, Mixed (Allowed and Restricted) = Yellow, Neither = Blue.|
+
+|Setting:|Show Zone|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command 1:|`/MES.Debug.ShowZone Value`|
+|Description:|This chat command shows the specified zone. The zone can be specified by either the SubtypeID or the PublicName. If the name contains spaces it must be enclosed with double quotes, i.e. "Some Name". Zone visiblity is colored thus: Allowed Zone = Green, Restricted Zone = Red, Mixed (Allowed and Restricted) = Yellow, Neither = Blue.|
 
 |Setting:|Unlock Admin Blocks|
 |:----|:----|

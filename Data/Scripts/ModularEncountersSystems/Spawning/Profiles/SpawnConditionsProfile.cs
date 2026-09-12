@@ -40,6 +40,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public string PlanetaryInstallationType;
 		public bool SkipTerrainCheck;
 		public List<Vector3D> RotateInstallations;
+		public List<Vector3D> RotateInstallationsMin;
+		public List<Vector3D> RotateInstallationsMax;
 		public List<bool> ReverseForwardDirections;
 		public bool InstallationTerrainValidation;
 		public bool InstallationSpawnsOnDryLand;
@@ -387,6 +389,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			PlanetaryInstallationType = "Small";
 			SkipTerrainCheck = false;
 			RotateInstallations = new List<Vector3D>();
+            RotateInstallationsMin = new List<Vector3D>();
+            RotateInstallationsMax = new List<Vector3D>();
 			ReverseForwardDirections = new List<bool>();
 			InstallationTerrainValidation = false;
 			InstallationSpawnsOnDryLand = true;
@@ -721,6 +725,8 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"PlanetaryInstallationType", (s, o) => TagParse.TagStringCheck(s, ref PlanetaryInstallationType) },
 				{"SkipTerrainCheck", (s, o) => TagParse.TagBoolCheck(s, ref SkipTerrainCheck) },
 				{"RotateInstallations", (s, o) => TagParse.TagVector3DListCheck(s, ref RotateInstallations) },
+				{"RotateInstallationsMin", (s, o) => TagParse.TagVector3DListCheck(s, ref RotateInstallationsMin) },
+				{"RotateInstallationsMax", (s, o) => TagParse.TagVector3DListCheck(s, ref RotateInstallationsMax) },
 				{"ReverseForwardDirections", (s, o) => TagParse.TagBoolListCheck(s, ref ReverseForwardDirections) },
 				{"InstallationTerrainValidation", (s, o) => TagParse.TagBoolCheck(s, ref InstallationTerrainValidation) },
 				{"InstallationSpawnsOnDryLand", (s, o) => TagParse.TagBoolCheck(s, ref InstallationSpawnsOnDryLand) },

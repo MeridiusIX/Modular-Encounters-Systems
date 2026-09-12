@@ -775,10 +775,10 @@ namespace ModularEncountersSystems.Spawning {
                 thisSpawnGroup.SpawnConditionsProfiles[0].GlobalEncounter = true;
             }
 
-            // Fallback
+            // Fallback - This caused all spawngroups to be recognized and made them spawn as space cargo ships - not ideal.
 			else if (spawnGroup.IsEncounter == false && spawnGroup.IsPlanetaryEncounter == false && spawnGroup.IsGlobalEncounter == false && Settings.General.EnableLegacySpaceCargoShipDetection == true && !SubEncounterSpawnGroups.Contains(spawnGroup.Id.SubtypeName)) {
-				thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
-				thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;
+				//thisSpawnGroup.SpawnConditionsProfiles[0].DisableDampeners = true;
+				//thisSpawnGroup.SpawnConditionsProfiles[0].SpaceCargoShip = true;
 			}
 
 
@@ -858,6 +858,58 @@ namespace ModularEncountersSystems.Spawning {
 				}
 
 			}
+
+            // Additional parsing for vanilla planetary encounters
+            if (spawnGroup.IsPlanetaryEncounter)
+            {
+
+                if (spawnGroup.PlanetaryInstallationSettings.Planets.Count > 0)
+                {
+                    foreach (var planet in spawnGroup.PlanetaryInstallationSettings.Planets)
+                    {
+                        thisSpawnGroup.SpawnConditionsProfiles[0].PlanetWhitelist.Add(planet);
+                    }
+                }
+
+                if (spawnGroup.PlanetaryInstallationSettings.VoxelMaterials.Count > 0)
+                {
+                    thisSpawnGroup.SpawnConditionsProfiles[0].UseTerrainTypeValidation = true;
+
+                    foreach (var materialType in spawnGroup.PlanetaryInstallationSettings.VoxelMaterials)
+                    {
+                        thisSpawnGroup.SpawnConditionsProfiles[0].AllowedTerrainTypes.Add(materialType);
+                    }
+                }
+
+                if (spawnGroup.PlanetaryInstallationSettings.RandomizeOrientation)
+                {
+
+                    Vector3D rotationMin = new Vector3D(
+                        spawnGroup.PlanetaryInstallationSettings.PitchLimitMin,
+                        spawnGroup.PlanetaryInstallationSettings.YawLimitMin,
+                        spawnGroup.PlanetaryInstallationSettings.RollLimitMin
+                        );
+                    Vector3D rotationMax = new Vector3D(
+                        spawnGroup.PlanetaryInstallationSettings.PitchLimitMax,
+                        spawnGroup.PlanetaryInstallationSettings.YawLimitMax,
+                        spawnGroup.PlanetaryInstallationSettings.RollLimitMax
+                        );
+
+                    thisSpawnGroup.SpawnConditionsProfiles[0].RotateInstallationsMin.Add(rotationMin);
+                    thisSpawnGroup.SpawnConditionsProfiles[0].RotateInstallationsMax.Add(rotationMax);
+
+                }
+
+                // Fix the Offset
+                thisSpawnGroup.SpawnConditionsProfiles[0].UseGridOrigin = true;
+
+                // Fix the alignment
+                if (spawnGroup.PlanetaryInstallationSettings.AlignToSurface)
+                {
+
+                }
+
+            }
 
 			//Unique
 			if (spawnGroup.Id.SubtypeName.Contains("(Unique)") == true) {

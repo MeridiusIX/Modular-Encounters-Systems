@@ -10,12 +10,74 @@ using VRageMath;
 namespace ModularEncountersSystems.Helpers {
 
     /// <summary>
-    /// Provides debug visualization for zones via translucent spheres.
+    /// Provides debug visualization for zones via translucent spheres and GPS markers.
     /// Allows admins to view zone boundaries, centers, and filter status.
     /// </summary>
     public static class ZoneDebugVisualizer {
 
-        private static Dictionary<string, Zone> VisibleZones = new Dictionary<string, Zone>();
+        private class VisibleZoneEntry {
+
+            public Zone Zone;
+            public long PlayerId;
+            public string GpsName;
+
+        }
+
+        private static Dictionary<string, VisibleZoneEntry> VisibleZones = new Dictionary<string, VisibleZoneEntry>();
+
+        private static string GetZoneKey(Zone zone) {
+
+            return !string.IsNullOrWhiteSpace(zone.PublicName) ? zone.PublicName : zone.Name;
+
+        }
+
+        private static string BuildGpsName(Zone zone) {
+
+            return $"[MES Zone] {zone.PublicName}";
+
+        }
+
+        private static void AddZoneGps(VisibleZoneEntry entry) {
+
+            var color = GetZoneColor(entry.Zone);
+            var description = $"Debug marker for zone '{entry.Zone.PublicName}' (r={entry.Zone.Radius:F0}m)";
+            MyVisualScriptLogicProvider.AddGPS(entry.GpsName, description, entry.Zone.Coordinates, color, 0, entry.PlayerId);
+
+        }
+
+        private static void RemoveZoneGps(VisibleZoneEntry entry) {
+
+            if (entry == null || string.IsNullOrWhiteSpace(entry.GpsName))
+                return;
+
+            MyVisualScriptLogicProvider.RemoveGPS(entry.GpsName, entry.PlayerId);
+
+        }
+
+        private static void AddVisibleZone(Zone zone, long playerId) {
+
+            var entry = new VisibleZoneEntry {
+                Zone = zone,
+                PlayerId = playerId,
+                GpsName = BuildGpsName(zone)
+            };
+
+            VisibleZones[GetZoneKey(zone)] = entry;
+            AddZoneGps(entry);
+
+        }
+
+        private static void RemoveVisibleZone(string key) {
+
+            VisibleZoneEntry entry;
+
+            if (!VisibleZones.TryGetValue(key, out entry))
+                return;
+
+            RemoveZoneGps(entry);
+            VisibleZones.Remove(key);
+
+        }
 
         /// <summary>
         /// Show a debug sphere for a zone by name or ProfileSubtypeId.
@@ -39,14 +101,16 @@ namespace ModularEncountersSystems.Helpers {
 
             }
 
-            if (VisibleZones.ContainsKey(zone.Name)) {
+            var key = GetZoneKey(zone);
+
+            if (VisibleZones.ContainsKey(key)) {
 
                 chatMsg.ReturnMessage = $"Zone '{zone.PublicName}' sphere already shown.";
                 return;
 
             }
 
-            VisibleZones.Add(zone.PublicName, zone);
+            AddVisibleZone(zone, chatMsg.PlayerId);
             chatMsg.ReturnMessage = $"Zone '{zone.PublicName}' sphere now visible at {zone.Coordinates}.";
 
         }
@@ -73,14 +137,16 @@ namespace ModularEncountersSystems.Helpers {
 
             }
 
-            if (!VisibleZones.ContainsKey(zone.PublicName)) {
+            var key = GetZoneKey(zone);
+
+            if (!VisibleZones.ContainsKey(key)) {
 
                 chatMsg.ReturnMessage = $"Zone '{zone.PublicName}' sphere not currently shown.";
                 return;
 
             }
 
-            VisibleZones.Remove(zone.PublicName);
+            RemoveVisibleZone(key);
             chatMsg.ReturnMessage = $"Zone '{zone.PublicName}' sphere hidden.";
 
         }
@@ -95,9 +161,11 @@ namespace ModularEncountersSystems.Helpers {
 
             foreach (var zone in ZoneManager.ActiveZones) {
 
-                if (!VisibleZones.ContainsKey(zone.PublicName)) {
+                var key = GetZoneKey(zone);
 
-                    VisibleZones.Add(zone.PublicName, zone);
+                if (!VisibleZones.ContainsKey(key)) {
+
+                    AddVisibleZone(zone, chatMsg.PlayerId);
                     countAdded++;
 
                 }
@@ -116,47 +184,30 @@ namespace ModularEncountersSystems.Helpers {
         public static void HideAllZones(Sync.ChatMessage chatMsg) {
 
             int countRemoved = VisibleZones.Count;
-            VisibleZones.Clear();
+            var keys = new List<string>(VisibleZones.Keys);
+
+            foreach (var key in keys) {
+
+                RemoveVisibleZone(key);
+
+            }
+
             chatMsg.ReturnMessage = $"Hidden {countRemoved} zone sphere(s).";
 
         }
 
         /// <summary>
         /// Update and draw all visible zone spheres. Call once per frame from SessionCore.Update().
-        /// Only draws spheres for active zones. Colors indicate zone filter status.
+        /// Draws both active and inactive zones. Colors indicate filter status / inactive state.
         /// </summary>
         public static void UpdateDraw() {
 
-            // Clean up zones that are no longer active
-            var keysToRemove = new List<string>();
-
             foreach (var kvp in VisibleZones) {
 
-                if (!kvp.Value.Active) {
-
-                    keysToRemove.Add(kvp.Key);
-
-                }
-
-            }
-
-            foreach (var key in keysToRemove) {
-
-                VisibleZones.Remove(key);
-
-            }
-
-            // Draw remaining visible zone spheres
-            foreach (var kvp in VisibleZones) {
-
-                var zone = kvp.Value;
+                var zone = kvp.Value.Zone;
 
                 Color sphereColor = GetZoneColor(zone);
-                //Color sphereColor = new Color(0, 255, 0, 255);
                 MatrixD sphereMatrix = MatrixD.CreateTranslation(zone.Coordinates);
-
-                Vector3D cameraPos = MyTransparentGeometry.Camera.Translation;
-                double cameraToSphereDistance = Vector3D.Distance(cameraPos, zone.Coordinates);
 
                 MySimpleObjectDraw.DrawTransparentSphere(
                     ref sphereMatrix,
@@ -167,7 +218,6 @@ namespace ModularEncountersSystems.Helpers {
                     faceMaterial: null,
                     lineMaterial: MyStringId.GetOrCompute("Square"),
                     lineThickness: 15f
-                    //lineThickness: 0.01f + (0.01f * (float)(zone.Radius / cameraToSphereDistance))
                 );
 
             }
@@ -175,38 +225,39 @@ namespace ModularEncountersSystems.Helpers {
         }
 
         /// <summary>
-        /// Determine sphere color based on zone filtering flags.
-        /// Green = allowlist, Red = blocklist, Yellow = both, White = none.
+        /// Determine sphere/GPS color based on zone filtering flags.
+        /// Green = allowlist, Red = blocklist, Yellow = both, Blue = none, DarkGray = inactive.
         /// </summary>
         private static Color GetZoneColor(Zone zone) {
 
             bool hasAllowFilter = zone.UseAllowedSpawnGroups || zone.UseAllowedModIDs;
             bool hasRestrictFilter = zone.UseRestrictedSpawnGroups || zone.UseRestrictedModIDs;
 
-            if (!zone.Active)
-            {
-                return Color.DarkGray;  // Inactive zone BUGBUG this doesn't work as inactive zones don't seem to be managed.
+            if (!zone.Active) {
+
+                return Color.DarkGray;
+
             }
 
             if (hasAllowFilter && hasRestrictFilter) {
 
-                return Color.Yellow;  // Both allow and restrict active
+                return Color.Yellow;
 
             }
 
             if (hasAllowFilter) {
 
-                return Color.Green;  // Allowlist only
+                return Color.Green;
 
             }
 
             if (hasRestrictFilter) {
 
-                return Color.Red;  // Restrict only
+                return Color.Red;
 
             }
 
-            return Color.Blue;  // No filtering flags
+            return Color.Blue;
 
         }
 

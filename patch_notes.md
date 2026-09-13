@@ -5,5 +5,6 @@
 * Fixed vanilla planetary installations not respecting voxel material restrictions.
 * Fixed vanilla planetary installations not respecting randomized rotation settings.
 * Fixed vanilla planetary installations not spawning at the right offset from the surface of the planet.
+* Fixed vanilla planetary installations spawning at incorrect orientations in relation to the direction of gravity.
 
 enenra & CptArthur

@@ -273,10 +273,17 @@ namespace ModularEncountersSystems.Spawning {
 
 				var spawnMatrix = path.SpawnMatrix;
 
+                // Base game Planetary Installations use the grid pivot as a centerpoint for alignment with the placement coordinates
                 if (spawnCollection.SpawnGroup.IsBaseGame && spawnCollection.SpawnGroup.SpawnGroup.IsPlanetaryEncounter)
                 {
                     options |= SpawningOptions.UseGridOrigin;
                     options |= SpawningOptions.UseOnlyWorldMatrix;
+                }
+
+                // Aligning to surface instead of gravity (as is default)
+                if (spawnCollection.Conditions.AlignToSurface)
+                {
+                    PathPlacements.TryGetPlacementMatrix(environment.NearestPlanet.Planet, npcData.StartCoords, out spawnMatrix);
                 }
 
 				if (spawnCollection.PrefabIndexes[i] < spawnCollection.Conditions.RotateInstallations.Count) {

@@ -900,10 +900,9 @@ namespace ModularEncountersSystems.Spawning {
 
                 }
 
-                // TODO: Implement align to surface (not align to gravity)
                 if (spawnGroup.PlanetaryInstallationSettings.AlignToSurface)
                 {
-
+                    thisSpawnGroup.SpawnConditionsProfiles[0].AlignToSurface = true;
                 }
 
             }

@@ -1646,6 +1646,37 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
+        // This code was provided by Digi, it mirrors the base game implementation.
+        public static bool TryGetPlacementMatrix(MyPlanet planet, Vector3D surfPoint, out MatrixD worldMatrix)
+        {
+            worldMatrix = planet.GetSurfacePlacementMatrix(surfPoint);
+            worldMatrix.Translation = surfPoint;
+
+            Vector3D planeNormal;
+            CheckEdgeSlopes(planet, surfPoint, worldMatrix.Up, out planeNormal);
+
+            worldMatrix = MatrixD.CreateFromDir(Vector3D.CalculatePerpendicularVector(planeNormal), planeNormal);
+            worldMatrix.Translation = surfPoint;
+
+            return true;
+        }
+
+        static bool CheckEdgeSlopes(MyPlanet planet, Vector3D surfPoint, Vector3D up, out Vector3D planeNormal)
+        {
+            float num = 15f;
+            Vector3D vector3D = Vector3D.CalculatePerpendicularVector(up);
+            Vector3D value = Vector3D.Cross(vector3D, up);
+            Vector3D globalPos = surfPoint + vector3D * num;
+            Vector3D globalPos2 = surfPoint - vector3D * num * 0.5 + value * num * 0.86599999666213989;
+            Vector3D globalPos3 = surfPoint - vector3D * num * 0.5 - value * num * 0.86599999666213989;
+            globalPos = planet.GetClosestSurfacePointGlobal(globalPos);
+            globalPos2 = planet.GetClosestSurfacePointGlobal(globalPos2);
+            globalPos3 = planet.GetClosestSurfacePointGlobal(globalPos3);
+            planeNormal = Vector3D.Cross(globalPos3 - globalPos, globalPos2 - globalPos).Normalized();
+
+            return true;
+        }
+
 	}
 
 }

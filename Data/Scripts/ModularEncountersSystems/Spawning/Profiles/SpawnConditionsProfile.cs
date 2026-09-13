@@ -339,6 +339,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool UseBoundingBoxCheck;
 		public bool RemoveVoxelsIfGridRemoved;
 		public bool UseGridOrigin;
+		public bool AlignToSurface;
 
 		public PrefabSpawnMode PrefabSpawningMode;
 		public bool AllowPrefabIndexReuse;
@@ -685,6 +686,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			UseBoundingBoxCheck = false;
 			RemoveVoxelsIfGridRemoved = true;
 			UseGridOrigin = false;
+			AlignToSurface = false;
 
 			PrefabSpawningMode = PrefabSpawnMode.All;
 			AllowPrefabIndexReuse = false;
@@ -961,6 +963,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"UseBoundingBoxCheck", (s, o) => TagParse.TagBoolCheck(s, ref UseBoundingBoxCheck) },
 				{"RemoveVoxelsIfGridRemoved", (s, o) => TagParse.TagBoolCheck(s, ref RemoveVoxelsIfGridRemoved) },
 				{"UseGridOrigin", (s, o) => TagParse.TagBoolCheck(s, ref UseGridOrigin) },
+				{"AlignToSurface", (s, o) => TagParse.TagBoolCheck(s, ref AlignToSurface) },
 				{"PrefabSpawningMode", (s, o) => TagParse.TagPrefabSpawnModeEnumCheck(s, ref PrefabSpawningMode) },
 				{"AllowPrefabIndexReuse", (s, o) => TagParse.TagBoolCheck(s, ref AllowPrefabIndexReuse) },
 				{"PrefabIndexes", (s, o) => TagParse.TagIntListCheck(s, true, ref PrefabIndexes) },

@@ -273,6 +273,12 @@ namespace ModularEncountersSystems.Spawning {
 
 				var spawnMatrix = path.SpawnMatrix;
 
+                if (spawnCollection.SpawnGroup.IsBaseGame && spawnCollection.SpawnGroup.SpawnGroup.IsPlanetaryEncounter)
+                {
+                    options |= SpawningOptions.UseGridOrigin;
+                    options |= SpawningOptions.UseOnlyWorldMatrix;
+                }
+
 				if (spawnCollection.PrefabIndexes[i] < spawnCollection.Conditions.RotateInstallations.Count) {
 
 					spawnMatrix.Translation = npcData.StartCoords;

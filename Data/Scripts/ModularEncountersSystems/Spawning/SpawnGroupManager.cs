@@ -900,10 +900,7 @@ namespace ModularEncountersSystems.Spawning {
 
                 }
 
-                // Fix the Offset
-                thisSpawnGroup.SpawnConditionsProfiles[0].UseGridOrigin = true;
-
-                // Fix the alignment
+                // TODO: Implement align to surface (not align to gravity)
                 if (spawnGroup.PlanetaryInstallationSettings.AlignToSurface)
                 {
 

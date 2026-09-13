@@ -91,6 +91,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool CanSpawnUnderwater;
 		public bool MustSpawnUnderwater;
 		public double MinWaterDepth;
+		public double MaxWaterDepth;
 
 		public float MinWaterCoverage; //[0-1]
 		public float MaxWaterCoverage;//[0-1]
@@ -441,6 +442,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			CanSpawnUnderwater = false;
 			MustSpawnUnderwater = false;
 			MinWaterDepth = 0;
+			MaxWaterDepth = 0;
 
 			MinWaterCoverage = -1;
 			MaxWaterCoverage = -1;
@@ -770,6 +772,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"CanSpawnUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref CanSpawnUnderwater) },
 				{"MustSpawnUnderwater", (s, o) => TagParse.TagBoolCheck(s, ref MustSpawnUnderwater) },
 				{"MinWaterDepth", (s, o) => TagParse.TagDoubleCheck(s, ref MinWaterDepth) },
+				{"MaxWaterDepth", (s, o) => TagParse.TagDoubleCheck(s, ref MaxWaterDepth) },
                 {"MinWaterCoverage", (s, o) => TagParse.TagFloatCheck(s, ref MinWaterCoverage) },
                 {"MaxWaterCoverage", (s, o) => TagParse.TagFloatCheck(s, ref MaxWaterCoverage) },
                 {"StaticEncounter", (s, o) => TagParse.TagBoolCheck(s, ref StaticEncounter) },

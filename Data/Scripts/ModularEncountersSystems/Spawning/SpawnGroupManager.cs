@@ -863,7 +863,7 @@ namespace ModularEncountersSystems.Spawning {
             if (spawnGroup.IsPlanetaryEncounter)
             {
 
-                if (spawnGroup.PlanetaryInstallationSettings.Planets.Count > 0)
+                if (spawnGroup.PlanetaryInstallationSettings.Planets != null && spawnGroup.PlanetaryInstallationSettings.Planets.Count > 0)
                 {
                     foreach (var planet in spawnGroup.PlanetaryInstallationSettings.Planets)
                     {
@@ -871,7 +871,7 @@ namespace ModularEncountersSystems.Spawning {
                     }
                 }
 
-                if (spawnGroup.PlanetaryInstallationSettings.VoxelMaterials.Count > 0)
+                if (spawnGroup.PlanetaryInstallationSettings.VoxelMaterials != null && spawnGroup.PlanetaryInstallationSettings.VoxelMaterials.Count > 0)
                 {
                     thisSpawnGroup.SpawnConditionsProfiles[0].UseTerrainTypeValidation = true;
 

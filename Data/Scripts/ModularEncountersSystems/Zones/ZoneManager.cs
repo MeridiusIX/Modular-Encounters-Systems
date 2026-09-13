@@ -111,12 +111,65 @@ namespace ModularEncountersSystems.Zones {
 
 			}
 
+			// Re-apply profile definition fields to stored zones (preserves runtime state)
+			RefreshZonesFromProfiles();
+
 			MES_SessionCore.SaveActions += UpdateZoneStorage;
 			AddNewZones();
 
 			TaskProcessor.Tick60.Tasks += AnnounceDepartMessages;
 			TaskProcessor.Tick60.Tasks += TimerChecks;
 			MES_SessionCore.UnloadActions += Unload;
+
+		}
+
+		/// <summary>
+		/// Updates stored zone instances from their current profile definitions without wiping runtime state
+		/// (Active, timers, encounter counts, custom counters/bools, players in zone, planet id).
+		/// </summary>
+		public static void RefreshZonesFromProfiles() {
+
+			bool updateZones = false;
+
+			for (int i = 0; i < ActiveZones.Count; i++) {
+
+				var zone = ActiveZones[i];
+
+				if (zone == null || string.IsNullOrWhiteSpace(zone.ProfileSubtypeId))
+					continue;
+
+				Zone profile = null;
+
+				if (!ProfileManager.ZoneProfiles.TryGetValue(zone.ProfileSubtypeId, out profile) || profile == null)
+					continue;
+
+				PlanetEntity planet = null;
+
+				if (profile.PlanetaryZone || zone.PlanetaryZone) {
+
+					foreach (var p in PlanetManager.Planets) {
+
+						var id = p?.Planet?.EntityId ?? -1;
+
+						if (zone.PlanetId == id) {
+
+							planet = p;
+							break;
+
+						}
+
+					}
+
+				}
+
+				zone.ApplyDefinitionFromProfile(profile, planet);
+				updateZones = true;
+				SpawnLogger.Write("Refreshed zone definition from profile: " + zone.PublicName + " (" + zone.ProfileSubtypeId + ")", SpawnerDebugEnum.Startup);
+
+			}
+
+			if (updateZones)
+				FlagUpdateZoneStorage();
 
 		}
 
@@ -575,7 +628,7 @@ namespace ModularEncountersSystems.Zones {
 					continue;
 
 				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
-				updateZones = true;
+			 updateZones = true;
 
 			}
 

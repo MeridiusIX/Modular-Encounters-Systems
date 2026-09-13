@@ -143,7 +143,7 @@ Here is a list of command categories:
 |:----|:----|
 |XML:|`N/A`|
 |Chat Command:|`/MES.Debug.ResetZones`|
-|Description:|This chat command allows you to reset all zones currently loaded in the game world and reload them using the profiles currently present in the mod loadout.|
+|Description:|This chat command allows you to reset all zones currently loaded in the game world and reload them using the profiles currently present in the mod loadout. Note this is no longer required when changing zone profile. Changes to profile are automaticly merged with existing zones during startup. The exception to this is if the SubtypeID has changed. Then the ResetZones command is required to remove the old zone and load the new one.|
 
 |Setting:|Show All Zones|
 |:----|:----|

@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Configuration;
+﻿using BulletXNA;
+using ModularEncountersSystems.Configuration;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Helpers;
@@ -272,10 +273,36 @@ namespace ModularEncountersSystems.Spawning {
 
 				var spawnMatrix = path.SpawnMatrix;
 
+                // Base game Planetary Installations use the grid pivot as a centerpoint for alignment with the placement coordinates
+                if (spawnCollection.SpawnGroup.IsBaseGame && spawnCollection.SpawnGroup.SpawnGroup.IsPlanetaryEncounter)
+                {
+                    options |= SpawningOptions.UseGridOrigin;
+                    options |= SpawningOptions.UseOnlyWorldMatrix;
+                }
+
+                // Aligning to surface instead of gravity (as is default)
+                if (spawnCollection.Conditions.AlignToSurface)
+                {
+                    PathPlacements.TryGetPlacementMatrix(environment.NearestPlanet.Planet, npcData.StartCoords, out spawnMatrix);
+                }
+
 				if (spawnCollection.PrefabIndexes[i] < spawnCollection.Conditions.RotateInstallations.Count) {
 
 					spawnMatrix.Translation = npcData.StartCoords;
 					spawnMatrix = PathPlacements.CalculateDerelictSpawnMatrix(spawnMatrix, spawnCollection.Conditions.RotateInstallations[spawnCollection.PrefabIndexes[i]]);
+
+				}
+
+				else if (spawnCollection.PrefabIndexes[i] < spawnCollection.Conditions.RotateInstallationsMin.Count && spawnCollection.PrefabIndexes[i] < spawnCollection.Conditions.RotateInstallationsMax.Count) {
+
+					spawnMatrix.Translation = npcData.StartCoords;
+
+                    double pitch = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[i].X, spawnCollection.Conditions.RotateInstallationsMax[i].X);
+                    double yaw = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[i].Y, spawnCollection.Conditions.RotateInstallationsMax[i].Y);
+                    double roll = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[i].Z, spawnCollection.Conditions.RotateInstallationsMax[i].Z);
+
+                    Vector3D rotation = new Vector3D(pitch, yaw, roll);
+					spawnMatrix = PathPlacements.CalculateDerelictSpawnMatrix(spawnMatrix, rotation);
 
 				}
 

@@ -205,11 +205,42 @@ namespace ModularEncountersSystems.Sync {
 
 		public string[] GetArray(int length, int combineLength) {
 
-			var array = Message.Trim().Split('.');
+			var message = Message.Trim();
+			string commandPath = message;
+			string[] spaceParams = Array.Empty<string>();
+
+			// Periods separate command subparts; space separates command from parameters.
+			// Multi-word parameters use surrounding double quotes.
+			int firstSpace = message.IndexOf(' ');
+
+			if (firstSpace >= 0) {
+
+				commandPath = message.Substring(0, firstSpace);
+				spaceParams = ParseSpaceSeparatedParameters(message.Substring(firstSpace + 1));
+
+			}
+
+			var dotted = commandPath.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+
+			// Append space-separated parameters after dotted command parts
+			string[] array;
+
+			if (spaceParams.Length == 0) {
+
+				array = dotted;
+
+			} else {
+
+				array = new string[dotted.Length + spaceParams.Length];
+				Array.Copy(dotted, 0, array, 0, dotted.Length);
+				Array.Copy(spaceParams, 0, array, dotted.Length, spaceParams.Length);
+
+			}
 
 			if (array.Length < length)
 				return null;
 
+			// Legacy dotted-parameter combine (e.g. /MES.Debug.CreatePlanet.Name.Size)
 			if (array.Length > combineLength) {
 
 				string lastElement = "";
@@ -225,7 +256,55 @@ namespace ModularEncountersSystems.Sync {
 			}
 
 			return array;
-		
+
+		}
+
+		/// <summary>
+		/// Splits parameter text on spaces, treating double-quoted segments as single parameters.
+		/// Example: <c>Alpha "Beta Gamma" Delta</c> → ["Alpha", "Beta Gamma", "Delta"]
+		/// </summary>
+		private static string[] ParseSpaceSeparatedParameters(string parametersText) {
+
+			if (string.IsNullOrWhiteSpace(parametersText))
+				return Array.Empty<string>();
+
+			var results = new List<string>();
+			var current = new StringBuilder();
+			bool inQuotes = false;
+
+			for (int i = 0; i < parametersText.Length; i++) {
+
+				char c = parametersText[i];
+
+				if (c == '"') {
+
+					inQuotes = !inQuotes;
+					continue;
+
+				}
+
+				if (char.IsWhiteSpace(c) && !inQuotes) {
+
+					if (current.Length > 0) {
+
+						results.Add(current.ToString());
+						current.Clear();
+
+					}
+
+					continue;
+
+				}
+
+				current.Append(c);
+
+			}
+
+			if (current.Length > 0)
+				results.Add(current.ToString());
+
+			return results.ToArray();
+
 		}
 
 		private bool ProcessSpawn() {
@@ -1033,8 +1112,54 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-			return false;
+			//MES.Debug.HideAllZones
+			if (array[2] == "HideAllZones") {
 
+				ZoneDebugVisualizer.HideAllZones(this);
+				return true;
+
+			}
+
+			//MES.Debug.HideZone
+			if (array[2] == "HideZone") {
+
+				if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+					ReturnMessage = "Usage: /MES.Debug.HideZone ZoneName | ZoneSubtypeID";
+					return true;
+
+				}
+
+				ZoneDebugVisualizer.HideZone(array[3], this);
+				return true;
+
+			}
+
+			//MES.Debug.ShowAllZones
+			if (array[2] == "ShowAllZones") {
+
+				ZoneDebugVisualizer.ShowAllZones(this);
+				return true;
+
+			}
+
+			//MES.Debug.ShowZone
+			if (array[2] == "ShowZone") {
+
+				if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+					ReturnMessage = "Usage: /MES.Debug.ShowZone ZoneName | ZoneSubtypeID";
+					return true;
+
+				}
+
+				ZoneDebugVisualizer.ShowZone(array[3], this);
+				return true;
+
+			}
+
+			ReturnMessage = "Unrecognized Debug Command.";
+			return true;
 		}
 
 		private bool ProcessInfo() {
@@ -1128,7 +1253,6 @@ namespace ModularEncountersSystems.Sync {
 				MyVisualScriptLogicProvider.ShowNotification("Offset Position To Reference Block Saved To Clipboard", 5000, "White", chatData.PlayerId);
 				VRage.Utils.MyClipboardHelper.SetClipboard(offsetString);
 			
-
 			}
 			*/
 
@@ -1268,7 +1392,7 @@ namespace ModularEncountersSystems.Sync {
 			}
 
 
-			//GetZones
+			//GetEvents
 			if (array[2] == "GetEvents")
 			{
 

@@ -737,6 +737,26 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
+		/// <summary>
+		/// Find a zone by name or ProfileSubtypeId.
+		/// Returns the first match or null if not found.
+		/// </summary>
+		public static Zone FindZoneByNameOrSubtype(string identifier) {
+
+			if (string.IsNullOrWhiteSpace(identifier))
+				return null;
+
+			foreach (var zone in ActiveZones) {
+
+				if (zone.PublicName == identifier || zone.ProfileSubtypeId == identifier)
+					return zone;
+
+			}
+
+			return null;
+
+		}
+
 	}
 
 }

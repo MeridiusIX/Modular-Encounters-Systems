@@ -107,6 +107,18 @@ Here is a list of command categories:
 |Chat Command 1:|`/MES.Debug.ForcePeacePhase`|
 |Description:|This chat command allows you to immediately enable Peace Phase in the current world (stops the current Combat Phase).|
 
+|Setting:|Hide All Zones|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command 1:|`/MES.Debug.HideAllZones`|
+|Description:|This chat command hides all visible zones.|
+
+|Setting:|Hide Zone|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command 1:|`/MES.Debug.HideZone Value`|
+|Description:|This chat command hides the specified zone. The zone can be specified by either the SubtypeID or the PublicName. If the name contains spaces it must be enclosed with double quotes, i.e. "Some Name"|
+
 |Setting:|Process Prefabs|
 |:----|:----|
 |XML:|`N/A`|
@@ -132,6 +144,18 @@ Here is a list of command categories:
 |XML:|`N/A`|
 |Chat Command:|`/MES.Debug.ResetZones`|
 |Description:|This chat command allows you to reset all zones currently loaded in the game world and reload them using the profiles currently present in the mod loadout.|
+
+|Setting:|Show All Zones|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.ShowAllZones`|
+|Description:|This chat command makes all active zones visible. Zone visiblity is colored thus: Allowed Zone = Green, Restricted Zone = Red, Mixed (Allowed and Restricted) = Yellow, Neither = Blue.|
+
+|Setting:|Show Zone|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command 1:|`/MES.Debug.ShowZone Value`|
+|Description:|This chat command shows the specified zone. The zone can be specified by either the SubtypeID or the PublicName. If the name contains spaces it must be enclosed with double quotes, i.e. "Some Name". Zone visiblity is colored thus: Allowed Zone = Green, Restricted Zone = Red, Mixed (Allowed and Restricted) = Yellow, Neither = Blue.|
 
 |Setting:|Unlock Admin Blocks|
 |:----|:----|
@@ -183,6 +207,12 @@ Here is a list of command categories:
 |Chat Command:|`/MES.Info.GetEligibleSpawnsAtPosition`<br />`/MES.GESAP`|
 |Description:|This chat command will gather a list of all Spawn Groups that are eligible to spawn at your position and saves it to your clipboard.|
 
+|Setting:|Get Events|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Info.GetEvents`|
+|Description:|This chat command will get a list of events and save it to your clipboard.|
+
 |Setting:|Get Grid Behavior|
 |:----|:----|
 |XML:|`N/A`|
@@ -227,6 +257,12 @@ Here is a list of command categories:
 |Chat Command 1:|`/MES.Info.GetThreatScore`<br />`/MES.GTS`|
 |Chat Command 2:|`/MES.Info.GetThreatScore.Value`<br />`/MES.GTS.Value`|
 |Description:|This chat command will get the current Threat Score near your position and save it to your clipboard. By default, a range of `5000` meters is checked. You can provide a custom distance by replacing the `Value` text in Chat Command 2|
+
+|Setting:|Get Zones|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Info.GetZones`|
+|Description:|This chat command will get a list of the current zones and save it to your clipboard.|
 
 # Spawn
 

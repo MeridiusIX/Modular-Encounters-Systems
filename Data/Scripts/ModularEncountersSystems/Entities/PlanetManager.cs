@@ -31,11 +31,10 @@ namespace ModularEncountersSystems.Entities {
             return 0;
         
         }
-
+		
         public static PlanetEntity GetNearestPlanet(Vector3D coords) {
 
             PlanetEntity planet = null;
-            bool inGravity = false;
             double distance = -1;
 
             foreach (var planetEnt in Planets) {
@@ -44,29 +43,15 @@ namespace ModularEncountersSystems.Entities {
                     continue;
 
                 if (planetEnt.IsPositionInGravity(coords)) {
+					var thisDist = Math.Abs(Vector3D.Distance(planetEnt.Center(), coords)-planetEnt.Planet.AverageRadius);
 
-                    planet = planetEnt;
-                    inGravity = true;
-
-                } else if (inGravity) {
-
-                    continue;
-                
-                }
-
-                var thisDist = Vector3D.Distance(planetEnt.Center(), coords);
-
-                if (distance == -1 || thisDist < distance) {
-
-                    planet = planetEnt;
-                    distance = thisDist;
-
-                }
-            
+					if (distance == -1 || thisDist < distance) {
+						planet = planetEnt;
+						distance = thisDist;
+					}
+                }             
             }
-
             return planet;
-
         }
 
         public static PlanetEntity GetPlanetWithName(string generatorName) {

@@ -28,6 +28,7 @@ using VRageMath;
 using ModularEncountersSystems.Spawning.Procedural.Hull;
 using System.IO;
 using ModularEncountersSystems.Spawning.Procedural.Builder;
+using VRage.ModAPI;
 
 namespace ModularEncountersSystems.Logging {
 
@@ -42,7 +43,7 @@ namespace ModularEncountersSystems.Logging {
 			message = msg;
 			type = spawntype;
 			forceSpawn = force;
-		
+
 		}
 
 	}
@@ -137,15 +138,15 @@ namespace ModularEncountersSystems.Logging {
 
 			MyAPIGateway.Utilities.SetVariable(msgSplit[3], existingAmount + newAmount);
 			return;
-		
+
 		}
 
 		public static void ClearAllLogging(string type) {
 
 			if (type == "SpawnDebug") {
-			
-				
-			
+
+
+
 			}
 
 			if (type == "BehaviorDebug") {
@@ -250,7 +251,7 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			return sb.ToString();
-		
+
 		}
 
 		public static void CreateKPL(ChatMessage msg, string[] msgSplit) {
@@ -621,7 +622,7 @@ namespace ModularEncountersSystems.Logging {
 			ob.BlockOrientation = orientation;
 			ob.EntityId = 0;
 			grid.AddBlock(ob, true);
-		
+
 		}
 
 		public static void DebugRotateBlockPitch(ChatMessage msg) {
@@ -696,7 +697,7 @@ namespace ModularEncountersSystems.Logging {
 		public static void DebugSpawnAllSingleBlocks(ChatMessage msg) {
 
 			TaskProcessor.Tasks.Add(new DebugSpawnSingleBlocks(MatrixD.CreateWorld(msg.PlayerPosition, Vector3D.Forward, Vector3D.Up)));
-		
+
 		}
 
 		public static void DebugSpawnConstruct(ChatMessage msg) {
@@ -705,13 +706,13 @@ namespace ModularEncountersSystems.Logging {
 
 				msg.ReturnMessage = "Feature Not Available";
 				return;
-			
+
 			}
 
 			var matrix = MatrixD.CreateWorld((msg.CameraDirection * 400 + msg.CameraPosition), msg.CameraDirection, VectorHelper.RandomPerpendicular(msg.CameraDirection));
 			var hull = new HullTypeSomerset(new ShipRules());
 
-			
+
 
 			for (int i = 0; i < 4; i++) {
 
@@ -740,7 +741,7 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			var ob = grid.CubeGrid.GetObjectBuilder() as MyObjectBuilder_CubeGrid;
-			
+
 			try {
 
 				using (var writer = MyAPIGateway.Utilities.WriteFileInWorldStorage("CubeGrid.mes", typeof(MyObjectBuilder_CubeGrid))) {
@@ -764,7 +765,7 @@ namespace ModularEncountersSystems.Logging {
 
 			var grid = new MyObjectBuilder_CubeGrid();
 
-		
+
 		}
 
 		public static void DeleteGrid(ChatMessage message) {
@@ -809,7 +810,7 @@ namespace ModularEncountersSystems.Logging {
 				return;
 
 			}
-				
+
 
 			var player = PlayerSpawnWatcher.GetWatchedPlayer(msg.PlayerId);
 
@@ -826,10 +827,10 @@ namespace ModularEncountersSystems.Logging {
 
 			if (array[3] == "SpaceCargoShip") {
 
-				
+
 				player.SpaceCargoShipTimer = 0;
 				return;
-			
+
 			}
 
 			if (array[3] == "PlanetaryCargoShip") {
@@ -867,7 +868,7 @@ namespace ModularEncountersSystems.Logging {
 					player.InstallationDistanceCoordCheck = VectorHelper.RandomPerpendicular(up) * (Settings.PlanetaryInstallations.PlayerDistanceSpawnTrigger * 1.5) + msg.PlayerPosition;
 
 				}
-				
+
 				return;
 
 			}
@@ -928,7 +929,7 @@ namespace ModularEncountersSystems.Logging {
 
 				sb.Append("Detected Profiles: Store Item Containers").AppendLine();
 
-				
+
 
 				foreach (var file in ProfileManager.StoreItemContainers.Keys) {
 
@@ -951,7 +952,7 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			return sb.ToString();
-		
+
 		}
 
 		public static string GetZoneData()
@@ -1071,7 +1072,7 @@ namespace ModularEncountersSystems.Logging {
 				SpawnLogger.Write("Server Session using -path parameter incorrectly when starting server. Provided directory contain trailing \\ or / character which can interfere with mods ability to read certain files.", SpawnerDebugEnum.Error, true);
 
 			}
-				
+
 
 			sb.AppendLine();
 
@@ -1216,7 +1217,7 @@ namespace ModularEncountersSystems.Logging {
 
 						sb.AppendLine();
 						continue;
-					
+
 					}
 
 					sb.Append("     - Name:          ").Append(string.IsNullOrWhiteSpace(identity.DisplayName) ? "(Empty)" : identity.DisplayName).AppendLine();
@@ -1224,7 +1225,7 @@ namespace ModularEncountersSystems.Logging {
 					sb.AppendLine();
 
 				}
-				
+
 
 			}
 
@@ -1280,7 +1281,7 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			return sb.ToString();
-		
+
 		}
 
 		public static string GetItemPrices(ChatMessage msg) {
@@ -1304,7 +1305,7 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			return sb.ToString();
-		
+
 		}
 
 		public static string GetEligibleSpawnsAtPosition(ChatMessage msg) {
@@ -1574,7 +1575,7 @@ namespace ModularEncountersSystems.Logging {
 
 					if (zone.PositionInsideZone(environment.Position))
 						sb.Append(zone.GetInfo(environment.Position)).AppendLine();
-				
+
 				}
 
 			}
@@ -1592,7 +1593,7 @@ namespace ModularEncountersSystems.Logging {
 
 						timeout.Remove = true;
 						continue;
-					
+
 					}
 
 					sb.Append(timeout.GetInfo(environment.Position)).AppendLine();
@@ -1692,7 +1693,7 @@ namespace ModularEncountersSystems.Logging {
 							break;
 
 						}
-					
+
 					}
 
 					if(grid.Behavior == null) {
@@ -1719,7 +1720,7 @@ namespace ModularEncountersSystems.Logging {
 
 					}
 
-					
+
 					//message.ReturnMessage = string.Format("[{0}] Does Not Have an Active Behavior.", thisGrid.CubeGrid.CustomName);
 					//return "";
 
@@ -1833,6 +1834,42 @@ namespace ModularEncountersSystems.Logging {
 			return sb.ToString();
 
 		}
+
+		public static string GetLocationMatrixInfo(ChatMessage message, long playerEntity)
+        {
+
+			IMyEntity player = null;
+
+            if (!MyAPIGateway.Entities.TryGetEntityById(playerEntity, out player))
+                return "";
+
+			var sb = new StringBuilder();
+
+			sb.Append("Player Name:          ").Append(player.DisplayName).AppendLine().AppendLine();
+
+			sb.Append("Tags Zone Profile (World):").AppendLine();
+			sb.Append("[Coordinates:{").Append(player.WorldMatrix.Translation).Append("}]").AppendLine().AppendLine();
+
+			var planet = PlanetManager.GetNearestPlanet(player.WorldMatrix.Translation);
+
+			if (planet != null) {
+
+				var up = planet.UpAtPosition(player.WorldMatrix.Translation);
+				var dist = planet.AltitudeAtPosition(player.WorldMatrix.Translation, true);
+
+				sb.Append("Tags For Zone Profile (Planet-Relative):").AppendLine();
+				sb.Append("[PlanetaryZone:").Append("true").Append("]").AppendLine();
+				sb.Append("[PlanetName:").Append(planet.Planet.Generator.Id.SubtypeName).Append("]").AppendLine();
+				sb.Append("[Direction:{").Append(up).Append("}]").AppendLine();
+				sb.Append("[HeightOffset:").Append(dist).Append("]").AppendLine();
+
+			}
+
+			message.ReturnMessage = "Location Information Sent To Clipboard.";
+			return sb.ToString();
+
+		}
+
 
 		public static string GetItemMassData(ChatMessage message) {
 
@@ -1989,7 +2026,7 @@ namespace ModularEncountersSystems.Logging {
 
 				if (!double.TryParse(array[3], out defaultDist))
 					defaultDist = 5000;
-			
+
 			}
 
 			var threatLevel = SpawnConditions.GetThreatLevel(5000, false, msg.PlayerPosition);
@@ -2016,7 +2053,7 @@ namespace ModularEncountersSystems.Logging {
 			msg.ClipboardPayload = sb.ToString();
 			msg.Mode = ChatMsgMode.ReturnMessage;
 			msg.ReturnMessage = "Zone Data Copied To Clipboard";
-		
+
 		}
 
 		public static void GetEvents(ChatMessage msg)
@@ -2082,7 +2119,7 @@ namespace ModularEncountersSystems.Logging {
 
 			var prefabProcess = new PrefabDiagnosticsTask(array[3]);
 			TaskProcessor.Tasks.Add(prefabProcess);
-		
+
 		}
 
 		public static void RemoveAllNpcs(ChatMessage msg) {
@@ -2217,7 +2254,7 @@ namespace ModularEncountersSystems.Logging {
 					continue;
 
 				linkedGrid.CubeGrid.ChangeGridOwnership(owner, MyOwnershipShareModeEnum.Faction);
-			
+
 			}
 
 			message.ReturnMessage = "Grid [" + thisGrid.CubeGrid.CustomName + "] Ownership Changed To [" + msgSplit[3] + "]";
@@ -2315,7 +2352,7 @@ namespace ModularEncountersSystems.Logging {
 			var item = store.CreateStoreItem("(NPC-MES) WcHeliosTest", 1, 1000, 1000);
 			item.IsCustomStoreItem = true;
 			store.InsertStoreItem(item);
-			
+
 			msg.Mode = ChatMsgMode.ReturnMessage;
 			msg.ReturnMessage = "Item Added: " + prefab.Icons[0];
 			return;
@@ -2332,7 +2369,7 @@ namespace ModularEncountersSystems.Logging {
 				msg.Mode = ChatMsgMode.ReturnMessage;
 				msg.ReturnMessage = "No Grid In Camera Direction";
 				return;
-			
+
 			}
 
 			var linear = msg.CameraDirection * 100;

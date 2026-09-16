@@ -134,7 +134,7 @@ namespace ModularEncountersSystems.Sync {
 			if (Message.StartsWith("/MES.Create."))
 				return ProcessCreate();
 
-			
+
 
 			//Debug
 			if (Message.StartsWith("/MES.Debug."))
@@ -173,7 +173,7 @@ namespace ModularEncountersSystems.Sync {
 
 			if (Message.StartsWith("/MES.SSE"))
 				Message = Message.Replace("/MES.SSE", "/MES.Spawn.StaticEncounter");
-			
+
 			if (Message.StartsWith("/MES.SP"))
 				Message = Message.Replace("/MES.SP", "/MES.Spawn.Prefab");
 
@@ -225,7 +225,7 @@ namespace ModularEncountersSystems.Sync {
 			}
 
 			return array;
-		
+
 		}
 
 		private bool ProcessSpawn() {
@@ -355,12 +355,12 @@ namespace ModularEncountersSystems.Sync {
 			} catch (Exception e) {
 
 				SpawnLogger.Write(e.ToString(), SpawnerDebugEnum.Error, true);
-			
+
 			}
 
-			
+
 			return true;
-		
+
 		}
 
 		private bool ProcessSettings() {
@@ -525,7 +525,7 @@ namespace ModularEncountersSystems.Sync {
 				foreach (var enc in NpcManager.StaticEncounters) {
 
 					enc.IsValid = false;
-				
+
 				}
 				NpcManager.UpdateStaticEncounters();
 				ReturnMessage = "ClearStaticEncounters";
@@ -740,7 +740,7 @@ namespace ModularEncountersSystems.Sync {
 						this.Mode = ChatMsgMode.ReturnMessage;
 
 					}
-				
+
 				}
 
 				return true;
@@ -961,7 +961,7 @@ namespace ModularEncountersSystems.Sync {
 				ReturnMessage = "Test Spawn: " + result + " / " + APIs.MES.MESApiReady;
 				Mode = ChatMsgMode.ReturnMessage;
 				return true;
-			
+
 			}
 
 			//MES.Debug.TextTest
@@ -974,7 +974,7 @@ namespace ModularEncountersSystems.Sync {
 					ReturnMessage = "Could Not Find TextTemplate";
 					Mode = ChatMsgMode.ReturnMessage;
 					return true;
-				
+
 				}
 
 				if (textText.DataPadEntries.Length == 0) {
@@ -1004,7 +1004,7 @@ namespace ModularEncountersSystems.Sync {
 
 					MyVisualScriptLogicProvider.ShowNotification("No Character or Equipped Tool", 4000);
 					return true;
-				
+
 				}
 
 				if (character.EquippedTool.GetTopMostParent() as IMyCharacter == null) {
@@ -1127,7 +1127,7 @@ namespace ModularEncountersSystems.Sync {
 
 				MyVisualScriptLogicProvider.ShowNotification("Offset Position To Reference Block Saved To Clipboard", 5000, "White", chatData.PlayerId);
 				VRage.Utils.MyClipboardHelper.SetClipboard(offsetString);
-			
+
 
 			}
 			*/
@@ -1186,6 +1186,15 @@ namespace ModularEncountersSystems.Sync {
 			if (array[2] == "GetGridMatrix") {
 
 				ClipboardPayload = LoggerTools.GetGridMatrixInfo(this);
+				Mode = ChatMsgMode.ReturnMessage;
+				return true;
+
+			}
+
+			//GetLocationMatrix
+			if (array[2] == "GetLocationMatrix") {
+
+				ClipboardPayload = LoggerTools.GetLocationMatrixInfo(this, PlayerEntity);
 				Mode = ChatMsgMode.ReturnMessage;
 				return true;
 
@@ -1277,7 +1286,7 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-			
+
 
 			return false;
 
@@ -1329,7 +1338,7 @@ namespace ModularEncountersSystems.Sync {
 			*/
 
 			return false;
-		
+
 		}
 
 
@@ -1395,7 +1404,7 @@ namespace ModularEncountersSystems.Sync {
 			// /RAI.Debug.Mode.true
 			/*
 			var msg = GetArray(Message, 4, 4);
-			
+
 			if(msg == null) {
 
 				this.ReturnMessage = "Command Received Could Not Be Read Properly.";
@@ -1431,11 +1440,11 @@ namespace ModularEncountersSystems.Sync {
 				this.ReturnMessage = "Debug Type: " + msg[2] + " Set: " + result.ToString();
 				Logger.DisableAllOptions();
 				Logger.SaveDebugToSandbox();
-				
+
 				return true;
 
 			}
-			
+
 			this.ReturnMessage = "Debug Command Not Recognized: " + msg[2];
 			*/
 

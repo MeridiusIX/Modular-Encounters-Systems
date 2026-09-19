@@ -932,18 +932,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public void ProcessButtonTriggers(IMyButtonPanel panel, int index, long playerId) {
 
+			// Not-ready AI (despawned/terminated behavior) detaches this handler - sole cleanup path for this subscription (CoreBehavior.cs:1414)
+			if (_behavior?.RemoteControl == null || !_behavior.IsAIReady()) {
+
+				EventWatcher.ButtonPressed -= ProcessButtonTriggers;
+				return;
+
+			}
+
 			for (int i = 0; i < Triggers.Count; i++) {
 
 				var trigger = Triggers[i];
 
 				if (trigger.UseTrigger == true && trigger.Type == "ButtonPress") {
-
-					if (_behavior?.RemoteControl == null || !_behavior.IsAIReady()) {
-
-						EventWatcher.ButtonPressed -= ProcessButtonTriggers;
-						continue;
-
-					}
 
 					if (panel.CustomName == null || panel.CustomName != IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, trigger.ButtonPanelName))
 						continue;
@@ -951,7 +952,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (index != trigger.ButtonPanelIndex && trigger.ButtonPanelIndex != -1)
 						continue;
 
-					if (panel.SlimBlock.CubeGrid != _behavior.RemoteControl.SlimBlock.CubeGrid && panel.SlimBlock.CubeGrid.IsInSameLogicalGroupAs(_behavior.RemoteControl.SlimBlock.CubeGrid))
+					var panelGrid = panel.SlimBlock?.CubeGrid;
+					// Panel must be part of the behavior's own construct: RC grid, merge-fused grid, or mechanical subgrid. Connector-docked foreign grids are rejected.
+					if (panelGrid == null || (panelGrid != _behavior.RemoteControl.SlimBlock.CubeGrid && !panelGrid.IsSameConstructAs(_behavior.RemoteControl.SlimBlock.CubeGrid)))
 						continue;
 
 					if (trigger.MinPlayerReputation >= -1500 || trigger.MaxPlayerReputation <= 1500) {

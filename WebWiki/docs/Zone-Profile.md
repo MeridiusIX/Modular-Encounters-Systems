@@ -82,24 +82,6 @@ Below are the types of tags you can include in your Zone Profile:
 |Default Value(s):|`N/A`|
 |Multiple Tag Allowed:|No|
 
-<!--UseLimitedFactions-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseLimitedFactions|
-|:----|:----|
-|Tag Format:|`[UseLimitedFactions:Value]`|
-|Description:|This tag determines if the Zone should only allow encounters from certain factions to spawn within it.|
-|Allowed Values:|`true`<br>`false`|
-|Default Value(s):|`false`|
-|Multiple Tag Allowed:|No|
-
-<!--Factions-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Factions|
-|:----|:----|
-|Tag Format:|`[Factions:Value]`|
-|Description:|This tag determines the Factions that are allowed to spawn within the Zone if using the `UseLimitedFactions` tag.|
-|Allowed Values:|Any Faction Tag|
-|Default Value(s):|`N/A`|
-|Multiple Tag Allowed:|Yes|
-
 <!--Coordinates-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Coordinates|
 |:----|:----|
@@ -108,6 +90,15 @@ Below are the types of tags you can include in your Zone Profile:
 |Allowed Values:|Vector3D Coordinates<br />eg: `{X:0 Y:0 Z:0}`|
 |Default Value(s):|`{X:0 Y:0 Z:0}`|
 |Multiple Tag Allowed:|No|
+
+<!--CoordinateRadiusPairs-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|CoordinateRadiusPairs|
+|:----|:----|
+|Tag Format:|`[CoordinateRadiusPairs:Coordinates, Radius]`|
+|Description:|This tag allows for defining more zone centers, with their associated radii. This only supports world coordinates - not planet-relative setups.|
+|Allowed Values:|Vector3D Coordinates<br />eg: `{X:0 Y:0 Z:0}`<br />Double Radius<br />eg: `1000`|
+|Default Value(s):|`N/A`|
+|Multiple Tag Allowed:|Yes|
 
 <!--Radius-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Radius|
@@ -140,7 +131,8 @@ Below are the types of tags you can include in your Zone Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|Direction|
 |:----|:----|
 |Tag Format:|`[Direction:Value]`|
-|Description:|This tag determines the direction from the center of the planet that the Zone is created at. If a direction is provided, then the Zone center will be at the surface location nearest to the direction provided. If no direction is provided, then the center of the planet is instead used for the Zone center.|
+|Description:|This tag determines the direction from the center of the planet that the Zone is created at. If a direction is provided, then the Zone center will be at the surface location nearest to the direction provided. If no direction is provided, then the center of the planet is instead used for the Zone center.
+Use the `/MES.Info.GetLocationMatrix` chat command to get the direction vector at your current player position.|
 |Allowed Values:|Vector3D Coordinates<br />eg: `{X:0 Y:0 Z:0}`|
 |Default Value(s):|`{X:0 Y:0 Z:0}`|
 |Multiple Tag Allowed:|No|
@@ -149,7 +141,8 @@ Below are the types of tags you can include in your Zone Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|HeightOffset|
 |:----|:----|
 |Tag Format:|`[HeightOffset:Value]`|
-|Description:|This tag determines the height offset from the planet surface if a `Direction` tag is provided.|
+|Description:|This tag determines the height offset from the planet surface if a `Direction` tag is provided.
+Use the `/MES.Info.GetLocationMatrix` chat command to get the height offset at your current player position.|
 |Allowed Values:|Any Number|
 |Default Value(s):|`0`|
 |Multiple Tag Allowed:|No|
@@ -158,6 +151,42 @@ Below are the types of tags you can include in your Zone Profile:
 
 
 <!--IntendedPlanetSize NOT YET-->
+
+<!--UseAllowedFactions-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseAllowedFactions|
+|:----|:----|
+|Tag Format:|`[UseAllowedFactions:Value]`|
+|Description:|This tag determines if the Zone should only allow encounters from certain factions to spawn within it.|
+|Allowed Values:|`true`<br>`false`|
+|Default Value(s):|`false`|
+|Multiple Tag Allowed:|No|
+
+<!--AllowedFactions-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AllowedFactions|
+|:----|:----|
+|Tag Format:|`[AllowedFactions:Value]`|
+|Description:|This tag determines the Factions that are allowed to spawn within the Zone if using the `UseAllowedFactions` tag.|
+|Allowed Values:|Any Faction Tag|
+|Default Value(s):|`N/A`|
+|Multiple Tag Allowed:|Yes|
+
+<!--UseRestrictedFactions-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseRestrictedFactions|
+|:----|:----|
+|Tag Format:|`[UseRestrictedFactions:Value]`|
+|Description:|This tag determines if the Zone should not allow encounters from certain factions to spawn within it.|
+|Allowed Values:|`true`<br>`false`|
+|Default Value(s):|`false`|
+|Multiple Tag Allowed:|No|
+
+<!--RestrictedFactions-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RestrictedFactions|
+|:----|:----|
+|Tag Format:|`[RestrictedFactions:Value]`|
+|Description:|This tag determines the Factions that are not allowed to spawn within the Zone if using the `UseRestrictedFactions` tag.|
+|Allowed Values:|Any Faction Tag|
+|Default Value(s):|`N/A`|
+|Multiple Tag Allowed:|Yes|
 
 <!--UseAllowedSpawnGroups-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseAllowedSpawnGroups|

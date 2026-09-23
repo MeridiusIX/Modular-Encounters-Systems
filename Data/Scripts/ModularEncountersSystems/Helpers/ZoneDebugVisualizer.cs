@@ -19,7 +19,7 @@ namespace ModularEncountersSystems.Helpers {
 
             public Zone Zone;
             public long PlayerId;
-            public string GpsName;
+            public List<string> GpsNames = new List<string>();
 
         }
 
@@ -39,18 +39,57 @@ namespace ModularEncountersSystems.Helpers {
 
         private static void AddZoneGps(VisibleZoneEntry entry) {
 
-            var color = GetZoneColor(entry.Zone);
-            var description = $"Debug marker for zone '{entry.Zone.PublicName}' (r={entry.Zone.Radius:F0}m)";
-            MyVisualScriptLogicProvider.AddGPS(entry.GpsName, description, entry.Zone.Coordinates, color, 0, entry.PlayerId);
+            var zone = entry.Zone;
+            var color = GetZoneColor(zone);
+            entry.GpsNames = new List<string>();
+
+            if (zone.Radius > 0) {
+
+                var name = $"[MES Zone] {zone.PublicName}";
+                entry.GpsNames.Add(name);
+                MyVisualScriptLogicProvider.AddGPS(
+                    name,
+                    $"Debug marker for zone '{zone.PublicName}' (r={zone.Radius:F0}m)",
+                    zone.Coordinates,
+                    color,
+                    0,
+                    entry.PlayerId);
+
+            }
+
+            if (zone.CoordinateRadiusPairs == null)
+                return;
+
+            for (int i = 0; i < zone.CoordinateRadiusPairs.Count; i++) {
+
+                var pair = zone.CoordinateRadiusPairs[i];
+                var name = $"[MES Zone] {zone.PublicName} #{i + 1}";
+                entry.GpsNames.Add(name);
+                MyVisualScriptLogicProvider.AddGPS(
+                    name,
+                    $"Debug marker for zone '{zone.PublicName}' pair {i + 1} (r={pair.Value:F0}m)",
+                    pair.Key,
+                    color,
+                    0,
+                    entry.PlayerId);
+
+            }
 
         }
 
         private static void RemoveZoneGps(VisibleZoneEntry entry) {
 
-            if (entry == null || string.IsNullOrWhiteSpace(entry.GpsName))
+            if (entry?.GpsNames == null)
                 return;
 
-            MyVisualScriptLogicProvider.RemoveGPS(entry.GpsName, entry.PlayerId);
+            foreach (var name in entry.GpsNames) {
+
+                if (!string.IsNullOrWhiteSpace(name))
+                    MyVisualScriptLogicProvider.RemoveGPS(name, entry.PlayerId);
+
+            }
+
+            entry.GpsNames.Clear();
 
         }
 
@@ -58,8 +97,7 @@ namespace ModularEncountersSystems.Helpers {
 
             var entry = new VisibleZoneEntry {
                 Zone = zone,
-                PlayerId = playerId,
-                GpsName = BuildGpsName(zone)
+                PlayerId = playerId
             };
 
             VisibleZones[GetZoneKey(zone)] = entry;
@@ -205,22 +243,49 @@ namespace ModularEncountersSystems.Helpers {
             foreach (var kvp in VisibleZones) {
 
                 var zone = kvp.Value.Zone;
-
                 Color sphereColor = GetZoneColor(zone);
-                MatrixD sphereMatrix = MatrixD.CreateTranslation(zone.Coordinates);
 
-                MySimpleObjectDraw.DrawTransparentSphere(
-                    ref sphereMatrix,
-                    (float)zone.Radius,
-                    ref sphereColor,
-                    MySimpleObjectRasterizer.Wireframe,
-                    32,
-                    faceMaterial: null,
-                    lineMaterial: MyStringId.GetOrCompute("Square"),
-                    lineThickness: 15f
-                );
+                DrawZoneSphere(zone.Coordinates, zone.Radius, ref sphereColor);
+
+                if (zone.CoordinateRadiusPairs == null)
+                    continue;
+
+                foreach (var pair in zone.CoordinateRadiusPairs) {
+
+                    DrawZoneSphere(pair.Key, pair.Value, ref sphereColor);
+
+                }
 
             }
+
+        }
+
+        private static void DrawZoneSphere(Vector3D center, double radius, ref Color color) {
+
+            if (radius <= 0)
+                return;
+
+            MatrixD sphereMatrix = MatrixD.CreateTranslation(center);
+
+            Vector3D cameraPos = MyTransparentGeometry.Camera.Translation;
+            double distanceToCenter = Vector3D.Distance(cameraPos, center);
+            // Nearest point on the sphere surface (0 when camera is on the surface)
+            double distanceToSurface = Math.Abs(distanceToCenter - radius);
+
+            // World-space thickness scales with distance to the surface so wireframe
+            // width stays roughly consistent on-screen; clamp so it never disappears up close.
+            float lineThickness = Math.Max(1f, (float)(distanceToSurface * 0.002));
+
+            MySimpleObjectDraw.DrawTransparentSphere(
+                ref sphereMatrix,
+                (float)radius,
+                ref color,
+                MySimpleObjectRasterizer.Wireframe,
+                32,
+                faceMaterial: null,
+                lineMaterial: MyStringId.GetOrCompute("Square"),
+                lineThickness: lineThickness
+            );
 
         }
 

@@ -119,6 +119,11 @@ namespace ModularEncountersSystems.Entities {
 		internal Dictionary<string, int> _missingComponents;
 		internal List<IMySlimBlock> _projectedBlocks;
 
+		//True while the constructor is seeding AllBlocks from GetBlocks(). During that pass every
+		//block is already in AllBlocks, so the Contains/Add dedup check is skipped to avoid an
+		//O(n^2) scan. It only matters again once the OnBlockAdded event handler is live.
+		private bool _loadingInitialBlocks;
+
 		public object NpcWatcher { get; private set; }
 
 		public GridEntity(IMyEntity entity) : base(entity) {
@@ -216,11 +221,17 @@ namespace ModularEncountersSystems.Entities {
 
 			CubeGrid.GetBlocks(AllBlocks);
 
+			//Seeding pass: every block below is already in AllBlocks (populated by GetBlocks), so
+			//suppress the per-block dedup scan for the duration of this loop.
+			_loadingInitialBlocks = true;
+
 			foreach (var block in AllBlocks) {
 
 				NewBlockAdded(block);
 
 			}
+
+			_loadingInitialBlocks = false;
 
 			HealthUpdated = true;
 			CubeGrid.OnBlockAdded += NewBlockAdded;
@@ -454,10 +465,14 @@ namespace ModularEncountersSystems.Entities {
 
 		private void NewBlockAdded(IMySlimBlock block) {
 
-			lock (AllBlocks) {
+			if (!_loadingInitialBlocks) {
 
-				if (!AllBlocks.Contains(block))
-					AllBlocks.Add(block);
+				lock (AllBlocks) {
+
+					if (!AllBlocks.Contains(block))
+						AllBlocks.Add(block);
+
+				}
 
 			}
 

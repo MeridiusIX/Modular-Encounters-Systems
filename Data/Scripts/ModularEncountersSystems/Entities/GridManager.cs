@@ -15,8 +15,12 @@ namespace ModularEncountersSystems.Entities {
 		public static List<GridEntity> Grids = new List<GridEntity>();
 		public static Action UnloadEntities;
 
-		public static List<MyDefinitionId> AllowedBlocks = new List<MyDefinitionId>();
-		public static List<MyDefinitionId> RestrictedBlocks = new List<MyDefinitionId>();
+		//These are membership checks (Contains) called once per block on every grid load. As Lists
+		//they turned into O(n) scans on a list that grows ~1 entry per block, making grid load O(n^2).
+		//HashSet gives O(1) membership. MyDefinitionId is used as a Dictionary key elsewhere in this
+		//mod, so its value-based equality is already relied upon and safe to hash on.
+		public static HashSet<MyDefinitionId> AllowedBlocks = new HashSet<MyDefinitionId>();
+		public static HashSet<MyDefinitionId> RestrictedBlocks = new HashSet<MyDefinitionId>();
 
 		public static void LoadData() {
 

@@ -935,7 +935,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             else
                             {
 
-                                if (changePlayerCreditsAmount > credits)
+                                if (credits + changePlayerCreditsAmount < 0)
                                 {
 
                                     PaymentFailureTriggered = true;
@@ -990,7 +990,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                 else
                                 {
 
-                                    if (changePlayerCreditsAmount > credits)
+                                    if (credits + changePlayerCreditsAmount < 0)
                                     {
 
                                         PaymentFailureTriggered = true;
@@ -1038,29 +1038,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                         long credits = 0;
                         faction.TryGetBalanceInfo(out credits);
-                        long changePlayerCreditsAmount = actions.ChangePlayerCreditsAmount;
+                        long changeFactionCreditsAmount = actions.ChangeNpcFactionCreditsAmount;
                         var npcdata = _behavior?.CurrentGrid?.Npc;
 
                         foreach (var counter in npcdata.CustomCountersVariables)
                         {
-                            if (actions.ChangePlayerCreditsAmountCounter == "{" + counter.Key + "}")
+                            if (actions.ChangeNpcFactionCreditsAmountCounter == "{" + counter.Key + "}")
                             {
-                                changePlayerCreditsAmount = counter.Value;
+                                changeFactionCreditsAmount = counter.Value;
                                 break;
                             }
                         }
 
-                        if (changePlayerCreditsAmount > 0)
+                        if (changeFactionCreditsAmount > 0)
                         {
 
-                            faction.RequestChangeBalance(changePlayerCreditsAmount);
+                            faction.RequestChangeBalance(changeFactionCreditsAmount);
                             PaymentSuccessTriggered = true;
 
                         }
                         else
                         {
 
-                            if (changePlayerCreditsAmount > credits)
+                            if (credits + changeFactionCreditsAmount < 0)
                             {
 
                                 PaymentFailureTriggered = true;
@@ -1069,7 +1069,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             else
                             {
 
-                                faction.RequestChangeBalance(changePlayerCreditsAmount);
+                                faction.RequestChangeBalance(changeFactionCreditsAmount);
                                 PaymentSuccessTriggered = true;
 
                             }

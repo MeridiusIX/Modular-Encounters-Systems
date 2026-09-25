@@ -362,7 +362,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public double RequiredBlockCheckRange;
 		public bool RequiredBlockIncludeNPCGrids;
 
-
+        public bool EnableItemTriggeredContracts;
 
 
 		public Dictionary<string, Action<string, object>> EditorReference;
@@ -708,7 +708,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			RequiredBlockCheckRange = 5000;
 			RequiredBlockIncludeNPCGrids = false;
 
-
+            EnableItemTriggeredContracts = false;
 
 			EditorReference = new Dictionary<string, Action<string, object>> {
 
@@ -986,6 +986,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				{"RequiredBlockAnySubtypeId", (s, o) => TagParse.TagBoolCheck(s, ref RequiredBlockAnySubtypeId) },
 				{"RequiredBlockCheckRange", (s, o) => TagParse.TagDoubleCheck(s, ref RequiredBlockCheckRange) },
 				{"RequiredBlockIncludeNPCGrids", (s, o) => TagParse.TagBoolCheck(s, ref RequiredBlockIncludeNPCGrids) },
+				{"EnableItemTriggeredContracts", (s, o) => TagParse.TagBoolCheck(s, ref EnableItemTriggeredContracts) },
 
 				};
 

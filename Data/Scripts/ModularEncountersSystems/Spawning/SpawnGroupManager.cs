@@ -859,6 +859,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
+
             // Additional parsing for vanilla planetary encounters
             if (spawnGroup.IsPlanetaryEncounter)
             {
@@ -907,16 +908,17 @@ namespace ModularEncountersSystems.Spawning {
 
             }
 
+
 			//Unique
-			if (spawnGroup.Id.SubtypeName.Contains("(Unique)") == true) {
-
+			if (spawnGroup.Id.SubtypeName.Contains("(Unique)") == true)
+            {
 				thisSpawnGroup.SpawnConditionsProfiles[0].UniqueEncounter = true;
-
 			}
 
-			//Derelict
-			if (spawnGroup.Id.SubtypeName.Contains("(Wreck)") == true) {
 
+			//Derelict
+			if (spawnGroup.Id.SubtypeName.Contains("(Wreck)") == true)
+            {
 				var randRotation = new Vector3D(100, 100, 100);
 				thisSpawnGroup.SpawnConditionsProfiles[0].RotateInstallations.Add(randRotation);
 				thisSpawnGroup.SpawnConditionsProfiles[0].RotateInstallations.Add(randRotation);
@@ -928,11 +930,19 @@ namespace ModularEncountersSystems.Spawning {
 				thisSpawnGroup.SpawnConditionsProfiles[0].RotateInstallations.Add(randRotation);
 				thisSpawnGroup.SpawnConditionsProfiles[0].RotateInstallations.Add(randRotation);
 				thisSpawnGroup.SpawnConditionsProfiles[0].RotateInstallations.Add(randRotation);
-
 			}
+
 
 			//Frequency
 			thisSpawnGroup.Frequency = (int)Math.Round((double)spawnGroup.Frequency * 10);
+
+
+            // Contracts
+            if (spawnGroup.Context.IsBaseGame)
+            {
+                thisSpawnGroup.SpawnConditionsProfiles[0].EnableItemTriggeredContracts = true;
+            }
+
 
 			return thisSpawnGroup;
 

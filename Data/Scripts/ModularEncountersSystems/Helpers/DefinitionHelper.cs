@@ -9,6 +9,9 @@ using System.Collections.Generic;
 using System.Text;
 using VRage.Collections;
 using VRage.Game;
+using VRage.Game.Components;
+using VRage.Game.ObjectBuilders.Definitions;
+using VRage.Utils;
 
 namespace ModularEncountersSystems.Helpers {
 	public static class DefinitionHelper {
@@ -57,7 +60,7 @@ namespace ModularEncountersSystems.Helpers {
 			AllDefinitions = MyDefinitionManager.Static.GetAllDefinitions();
 
 			SetupItems();
-			
+
 			SetupBlocks();
 
 			SetupBlueprints();
@@ -67,7 +70,7 @@ namespace ModularEncountersSystems.Helpers {
 			SetupDropPods();
 
 			ArmorModuleReplacement.Setup();
-            /* 
+            /*
             Custom RCs need to be registered in 3 places:
                 - BlockLogicManager.cs
                 - BlockManager.cs
@@ -371,7 +374,7 @@ namespace ModularEncountersSystems.Helpers {
 				throw;
 
 			}
-		
+
 		}
 
 		internal static void SetupEntityComponents() {
@@ -480,7 +483,7 @@ namespace ModularEncountersSystems.Helpers {
 					}
 
 				}
-				
+
 				sb.Append("Is Public:            ").Append(def.Public.ToString()).AppendLine();
 				sb.Append("Size:                 ").Append(def.CubeSize.ToString()).AppendLine();
 
@@ -513,20 +516,107 @@ namespace ModularEncountersSystems.Helpers {
 					if (block.Context.ModId.Contains("1521905890") || block.Context.ModId.Contains("Modular Encounters Systems") || (block.Context?.ModId ?? "") == (MES_SessionCore.Instance.ModContext?.ModId ?? "N/A")) {
 
 						block.Public = true;
-					
+
 					}
-				
+
 				}
-			
+
 			}
-		
+
 		}
 
 		public static void Unload() {
-		
-			
-		
+
+
+
 		}
 
 	}
+
+
+    // This is needed to be able to control whether mission-giving items spawn in MES encounters. It populates a whitelist.
+    [MySessionComponentDescriptor(MyUpdateOrder.NoUpdate)]
+    public class ItemContractsWhitelist : MySessionComponentBase
+    {
+        public static ItemContractsWhitelist Instance;
+        MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition ob = new MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition()
+        {
+            SpawnChance = 0.35f,
+            AllowEnemyFactions = true,
+            ContractEntries = new List<MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition.ContractEntryData>()
+            {
+                new MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition.ContractEntryData()
+                {
+                    Weight = 1f,
+                    ContractSubtypeId = "Deliver_EncryptedDataStorage",
+                    ItemSubtypeId = "EncryptedDataStorage"
+                },
+                new MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition.ContractEntryData()
+                {
+                    Weight = 1f,
+                    ContractSubtypeId = "Deliver_InterceptedTransmissions",
+                    ItemSubtypeId = "InterceptedTransmissions"
+                },
+                new MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition.ContractEntryData()
+                {
+                    Weight = 1f,
+                    ContractSubtypeId = "Deliver_ResearchMaterials",
+                    ItemSubtypeId = "ResearchMaterials"
+                },
+                new MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition.ContractEntryData()
+                {
+                    Weight = 1f,
+                    ContractSubtypeId = "Deliver_SmuggledGoods",
+                    ItemSubtypeId = "SmuggledGoods"
+                },
+            new MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition.ContractEntryData()
+                {
+                    Weight = 1f,
+                    ContractSubtypeId = "Deliver_TechnicalBlueprints",
+                    ItemSubtypeId = "TechnicalBlueprints"
+                },
+            },
+            SpawnGroups = new List<string>(),
+        };
+
+        public void AddToWhitelist(string spawnGroupName)
+        {
+            ob.SpawnGroups.Add(spawnGroupName);
+        }
+
+        public override void LoadData()
+        {
+            Instance = this;
+            OverrideDefinitions(ob);
+        }
+
+        void OverrideDefinitions(MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition ob)
+        {
+            Dictionary<MyStringHash, MyDefinitionBase> defs;
+            if(!MyDefinitionManager.Static.Definitions.Definitions.TryGetValue(typeof(MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition), out defs))
+            {
+                SpawnLogger.Write("Failed to find definitions by MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition!", SpawnerDebugEnum.Error);
+                return;
+            }
+
+            foreach(var def in defs.Values)
+            {
+                if(def?.GetType()?.Name == "MySessionComponentItemTriggeredContractsDefinition")
+                {
+                    SpawnLogger.Write($"Overriding: {def.Id}", SpawnerDebugEnum.Spawning);
+
+                    // override all definitions
+                    ob.Id = def.Id;
+                    def.Init(ob, (MyModContext)ModContext);
+                }
+            }
+        }
+
+        protected override void UnloadData()
+        {
+            Instance = null;
+        }
+
+    }
+
 }

@@ -385,7 +385,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 					//IsStatic
 					if (tag.Contains("[IsStatic:") == true) {
 
-						TagParse.TagCheckEnumCheck(tag, ref IsStatic);
+						TagParse.TagCheckEnumCheck(tag, ref IsStatic, ProfileSubtypeId);
 
 					}
 

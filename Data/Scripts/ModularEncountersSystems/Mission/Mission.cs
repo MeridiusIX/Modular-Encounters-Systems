@@ -308,7 +308,7 @@ namespace ModularEncountersSystems.Missions
                 }
             }
 
-            foreach (var id in Profile.PlayerConditionIds)
+            foreach (var id in Profile.EventConditionIds)
             {
                 EventCondition conditionProfile = null;
 

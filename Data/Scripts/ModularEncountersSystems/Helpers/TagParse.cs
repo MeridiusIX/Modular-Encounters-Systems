@@ -340,7 +340,7 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
-		public static void TagCheckEnumCheck(string tag, ref CheckEnum original) {
+		public static void TagCheckEnumCheck(string tag, ref CheckEnum original, string profileSubtypeId = "") {
 
 			CheckEnum result = CheckEnum.Ignore;
 			var tagSplit = ProcessTag(tag);
@@ -349,6 +349,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				if (CheckEnum.TryParse(tagSplit[1], out result) == false) {
 
+					BehaviorLogger.Write($"{profileSubtypeId}: Could not parse tag '{tag.Trim()}' (expected Yes, No or Ignore)", BehaviorDebugEnum.Error, true);
 					return;
 
 				}

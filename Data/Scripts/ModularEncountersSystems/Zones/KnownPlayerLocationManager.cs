@@ -146,7 +146,7 @@ namespace ModularEncountersSystems.Zones {
 
                 }
 
-                if (zone.MinutesToExpiration >= 0 && duration.TotalSeconds / 60 >= zone.MinutesToExpiration) {
+                if (zone.UseZoneTimer && zone.MinutesToExpiration >= 0 && duration.TotalSeconds / 60 >= zone.MinutesToExpiration) {
 
                     SpawnLogger.Write(string.Format("Player Known Location At [{0}] Has Been Removed Because its Timer Expired", zone.Coordinates), SpawnerDebugEnum.Zone);
                     ZoneManager.ActiveZones.RemoveAt(i);

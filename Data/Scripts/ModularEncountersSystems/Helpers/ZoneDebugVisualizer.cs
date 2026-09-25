@@ -43,19 +43,16 @@ namespace ModularEncountersSystems.Helpers {
             var color = GetZoneColor(zone);
             entry.GpsNames = new List<string>();
 
-            if (zone.Radius > 0) {
+            var name = $"[MES Zone] {zone.PublicName}";
+            entry.GpsNames.Add(name);
+            MyVisualScriptLogicProvider.AddGPS(
+                name,
+                $"Debug marker for zone '{zone.PublicName}' (r={zone.Radius:F0}m)",
+                zone.Coordinates,
+                color,
+                0,
+                entry.PlayerId);
 
-                var name = $"[MES Zone] {zone.PublicName}";
-                entry.GpsNames.Add(name);
-                MyVisualScriptLogicProvider.AddGPS(
-                    name,
-                    $"Debug marker for zone '{zone.PublicName}' (r={zone.Radius:F0}m)",
-                    zone.Coordinates,
-                    color,
-                    0,
-                    entry.PlayerId);
-
-            }
 
             if (zone.CoordinateRadiusPairs == null)
                 return;
@@ -63,10 +60,10 @@ namespace ModularEncountersSystems.Helpers {
             for (int i = 0; i < zone.CoordinateRadiusPairs.Count; i++) {
 
                 var pair = zone.CoordinateRadiusPairs[i];
-                var name = $"[MES Zone] {zone.PublicName} #{i + 1}";
-                entry.GpsNames.Add(name);
+                var gpsname = $"[MES Zone] {zone.PublicName} #{i + 1}";
+                entry.GpsNames.Add(gpsname);
                 MyVisualScriptLogicProvider.AddGPS(
-                    name,
+                    gpsname,
                     $"Debug marker for zone '{zone.PublicName}' pair {i + 1} (r={pair.Value:F0}m)",
                     pair.Key,
                     color,

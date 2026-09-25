@@ -729,31 +729,33 @@ namespace ModularEncountersSystems.Zones {
 
 		}
 
-		public static void Unload() {
+        /// <summary>
+        /// Find a zone by name or ProfileSubtypeId.
+        /// Returns the first match or null if not found.
+        /// </summary>
+        public static Zone FindZoneByNameOrSubtype(string identifier)
+        {
+
+            if (string.IsNullOrWhiteSpace(identifier))
+                return null;
+
+            foreach (var zone in ActiveZones)
+            {
+
+                if (zone.PublicName == identifier || zone.ProfileSubtypeId == identifier)
+                    return zone;
+
+            }
+
+            return null;
+
+        }
+
+        public static void Unload() {
 
 			MES_SessionCore.SaveActions -= UpdateZoneStorage;
 			TaskProcessor.Tick60.Tasks -= AnnounceDepartMessages;
 			TaskProcessor.Tick60.Tasks -= TimerChecks;
-
-		}
-
-		/// <summary>
-		/// Find a zone by name or ProfileSubtypeId.
-		/// Returns the first match or null if not found.
-		/// </summary>
-		public static Zone FindZoneByNameOrSubtype(string identifier) {
-
-			if (string.IsNullOrWhiteSpace(identifier))
-				return null;
-
-			foreach (var zone in ActiveZones) {
-
-				if (zone.PublicName == identifier || zone.ProfileSubtypeId == identifier)
-					return zone;
-
-			}
-
-			return null;
 
 		}
 

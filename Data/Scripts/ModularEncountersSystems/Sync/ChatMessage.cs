@@ -205,65 +205,36 @@ namespace ModularEncountersSystems.Sync {
 
 		public string[] GetArray(int length, int combineLength) {
 
-			var message = Message.Trim();
-			string commandPath = message;
-			string[] spaceParams = Array.Empty<string>();
+            var array = Message.Trim().Split('.');
 
-			// Periods separate command subparts; space separates command from parameters.
-			// Multi-word parameters use surrounding double quotes.
-			int firstSpace = message.IndexOf(' ');
+            if (array.Length < length)
+                return null;
 
-			if (firstSpace >= 0) {
+            if (array.Length > combineLength)
+            {
 
-				commandPath = message.Substring(0, firstSpace);
-				spaceParams = ParseSpaceSeparatedParameters(message.Substring(firstSpace + 1));
+                string lastElement = "";
 
-			}
+                for (int i = length - 1; i < array.Length; i++)
+                {
 
-			var dotted = commandPath.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    lastElement += array[i];
 
-			// Append space-separated parameters after dotted command parts
-			string[] array;
+                }
 
-			if (spaceParams.Length == 0) {
+                array[length - 1] = lastElement;
 
-				array = dotted;
+            }
 
-			} else {
+            return array;
 
-				array = new string[dotted.Length + spaceParams.Length];
-				Array.Copy(dotted, 0, array, 0, dotted.Length);
-				Array.Copy(spaceParams, 0, array, dotted.Length, spaceParams.Length);
+        }
 
-			}
-
-			if (array.Length < length)
-				return null;
-
-			// Legacy dotted-parameter combine (e.g. /MES.Debug.CreatePlanet.Name.Size)
-			if (array.Length > combineLength) {
-
-				string lastElement = "";
-
-				for (int i = length - 1; i < array.Length; i++) {
-
-					lastElement += array[i];
-
-				}
-
-				array[length - 1] = lastElement;
-
-			}
-
-			return array;
-
-		}
-
-		/// <summary>
-		/// Splits parameter text on spaces, treating double-quoted segments as single parameters.
-		/// Example: <c>Alpha "Beta Gamma" Delta</c> → ["Alpha", "Beta Gamma", "Delta"]
-		/// </summary>
-		private static string[] ParseSpaceSeparatedParameters(string parametersText) {
+        /// <summary>
+        /// Splits parameter text on spaces, treating double-quoted segments as single parameters.
+        /// Example: <c>Alpha "Beta Gamma" Delta</c> → ["Alpha", "Beta Gamma", "Delta"]
+        /// </summary>
+        private static string[] ParseSpaceSeparatedParameters(string parametersText) {
 
 			if (string.IsNullOrWhiteSpace(parametersText))
 				return Array.Empty<string>();

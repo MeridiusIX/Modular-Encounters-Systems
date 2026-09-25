@@ -2409,7 +2409,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                     for (int j = grid.AllTerminalBlocks.Count - 1; j >= 0; j--)
                                     {
 
-                                        var block = grid.AllTerminalBlocks[i];
+                                        var block = grid.AllTerminalBlocks[j];
 
                                         if (block == null || !block.ActiveEntity())
                                             continue;

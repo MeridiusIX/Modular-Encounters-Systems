@@ -430,68 +430,6 @@
 </tr>
 </tbody>
 </table>
-<!--UseLimitedFactions-->
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-<th style="text-align: left;">UseLimitedFactions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Tag Format:</td>
-<td style="text-align: left;"><code>[UseLimitedFactions:Value]</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines if the Zone should only allow encounters from certain factions to spawn within it.</td>
-</tr>
-<tr>
-<td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">Default Value(s):</td>
-<td style="text-align: left;"><code>false</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">Multiple Tag Allowed:</td>
-<td style="text-align: left;">No</td>
-</tr>
-</tbody>
-</table>
-<!--Factions-->
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-<th style="text-align: left;">Factions</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Tag Format:</td>
-<td style="text-align: left;"><code>[Factions:Value]</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines the Factions that are allowed to spawn within the Zone if using the <code>UseLimitedFactions</code> tag.</td>
-</tr>
-<tr>
-<td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;">Any Faction Tag</td>
-</tr>
-<tr>
-<td style="text-align: left;">Default Value(s):</td>
-<td style="text-align: left;"><code>N/A</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">Multiple Tag Allowed:</td>
-<td style="text-align: left;">Yes</td>
-</tr>
-</tbody>
-</table>
 <!--Coordinates-->
 <table>
 <thead>
@@ -520,6 +458,37 @@
 <tr>
 <td style="text-align: left;">Multiple Tag Allowed:</td>
 <td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--CoordinateRadiusPairs-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">CoordinateRadiusPairs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[CoordinateRadiusPairs:Coordinates, Radius]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag allows for defining more zone centers, with their associated radii. This only supports world coordinates - not planet-relative setups.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Vector3D Coordinates<br />eg: <code>{X:0 Y:0 Z:0}</code><br />Double Radius<br />eg: <code>1000</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
 </tr>
 </tbody>
 </table>
@@ -631,7 +600,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines the direction from the center of the planet that the Zone is created at. If a direction is provided, then the Zone center will be at the surface location nearest to the direction provided. If no direction is provided, then the center of the planet is instead used for the Zone center.</td>
+<td style="text-align: left;">This tag determines the direction from the center of the planet that the Zone is created at. If a direction is provided, then the Zone center will be at the surface location nearest to the direction provided. If no direction is provided, then the center of the planet is instead used for the Zone center.<br />Use the <code>/MES.Info.GetLocationMatrix</code> chat command to get the direction vector at your current player position.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -662,7 +631,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines the height offset from the planet surface if a <code>Direction</code> tag is provided.</td>
+<td style="text-align: left;">This tag determines the height offset from the planet surface if a <code>Direction</code> tag is provided.<br />Use the <code>/MES.Info.GetLocationMatrix</code> chat command to get the height offset at your current player position.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -682,6 +651,130 @@
 
 <!--IntendedPlanetSize NOT YET-->
 
+<!--UseAllowedFactions-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseAllowedFactions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseAllowedFactions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag determines if the Zone should only allow encounters from certain factions to spawn within it.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--AllowedFactions-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">AllowedFactions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[AllowedFactions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag determines the Factions that are allowed to spawn within the Zone if using the <code>UseAllowedFactions</code> tag.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Faction Tag</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!--UseRestrictedFactions-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseRestrictedFactions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseRestrictedFactions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag determines if the Zone should not allow encounters from certain factions to spawn within it.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--RestrictedFactions-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">RestrictedFactions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[RestrictedFactions:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag determines the Factions that are not allowed to spawn within the Zone if using the <code>UseRestrictedFactions</code> tag.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Faction Tag</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
 <!--UseAllowedSpawnGroups-->
 <table>
 <thead>

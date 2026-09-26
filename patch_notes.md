@@ -1,6 +1,5 @@
-# Update 2.74.02
+# Update 2.74.04
 
-* Added SpawnCondition [AlignToSurface:bool] for planetary installations, overriding the default of aligning to gravity.
-* Fixed exception when encounter have incorrectly set up PlanetaryInstallationSettings.
+* Fixed [#369](https://github.com/MeridiusIX/Modular-Encounters-Systems/pull/369): Action [BlockNamesShareModeAll:] did not properly apply to blocks. Thanks [@Blaylock1988](https://github.com/Blaylock1988) for the PR!
 
 enenra & CptArthur

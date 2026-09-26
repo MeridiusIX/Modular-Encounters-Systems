@@ -305,6 +305,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ChangeNpcFactionCredits;
 		public long ChangeNpcFactionCreditsAmount;
 		public string ChangeNpcFactionCreditsTag;
+		public string ChangeNpcFactionCreditsAmountCounter;
 
 		public bool BuildProjectedBlocks;
 		public int MaxProjectedBlocksToBuild;
@@ -840,6 +841,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ChangeNpcFactionCredits = false;
 			ChangeNpcFactionCreditsAmount = 0;
 			ChangeNpcFactionCreditsTag = "";
+			ChangeNpcFactionCreditsAmountCounter = "";
 
 			BuildProjectedBlocks = false;
 			MaxProjectedBlocksToBuild = -1;
@@ -1288,6 +1290,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"ChangeNpcFactionCredits", (s, o) => TagParse.TagBoolCheck(s, ref ChangeNpcFactionCredits) },
                 {"ChangeNpcFactionCreditsAmount", (s, o) => TagParse.TagLongCheck(s, ref ChangeNpcFactionCreditsAmount) },
                 {"ChangeNpcFactionCreditsTag", (s, o) => TagParse.TagStringCheck(s, ref ChangeNpcFactionCreditsTag) },
+                {"ChangeNpcFactionCreditsAmountCounter", (s, o) => TagParse.TagStringCheck(s, ref ChangeNpcFactionCreditsAmountCounter) },
                 {"BuildProjectedBlocks", (s, o) => TagParse.TagBoolCheck(s, ref BuildProjectedBlocks) },
                 {"RepairBlocks", (s, o) => TagParse.TagBoolCheck(s, ref RepairBlocks) },
                 {"MaxBlocksToRepair", (s, o) => TagParse.TagIntCheck(s, ref MaxBlocksToRepair) },

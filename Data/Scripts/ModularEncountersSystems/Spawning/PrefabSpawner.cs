@@ -15,6 +15,7 @@ using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using VRage.Game.ModAPI;
 using VRageMath;
@@ -267,6 +268,11 @@ namespace ModularEncountersSystems.Spawning {
 
 				}
 
+                if (spawnCollection.Conditions.EnableItemTriggeredContracts)
+                {
+                    ItemContractsWhitelist.Instance.AddToWhitelist(spawnCollection.SpawnGroup.SpawnGroupName);
+                }
+
 				//Prefab Manipulation
 				SpawnLogger.Write("Starting Prefab Manipulations", SpawnerDebugEnum.Spawning);
 				PrefabManipulation.PrepareManipulations(prefab, spawnCollection, environment, npcData);
@@ -318,7 +324,7 @@ namespace ModularEncountersSystems.Spawning {
 					gridListDummy.Clear();
 					NpcManager.SpawnedNpcData.Add(npcData);
                     var grids = new List<IMyCubeGrid>();
-					MyAPIGateway.PrefabManager.SpawnPrefab(grids, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner, false, () => GridsSpawned(grids, npcData));
+					MyAPIGateway.PrefabManager.SpawnPrefab(grids, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner, false, () => GridsSpawned(grids, npcData, spawnCollection.SpawnGroup, prefab.SpawnGroupPrefab, factionOwner));
 					spawnCollection.SpawnedPrefabs++;
 
 				} catch (Exception exc) {
@@ -333,7 +339,7 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
-        static void GridsSpawned(List<IMyCubeGrid> grids, NpcData data)
+        static void GridsSpawned(List<IMyCubeGrid> grids, NpcData data, ImprovedSpawnGroup spawnGroup, MySpawnGroupDefinition.SpawnGroupPrefab prefab, long factionOwner)
         {
             foreach(MyCubeGrid grid in grids)
             {
@@ -345,10 +351,14 @@ namespace ModularEncountersSystems.Spawning {
 
                 if(!mainGrid.Storage.ContainsKey(StorageTools.NpcDataKey))
                 {
-                    //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>> assigning NPCData: " + grid.DisplayName);
                     mainGrid.Storage[StorageTools.NpcDataKey] = SerializationHelper.ConvertClassToString<NpcData>(data);
                 }
             }
+
+            // This should enable support for grid contracts and item-based contracts
+            var grids2 = grids.Cast<MyCubeGrid>().ToList();
+            MySpawnGroupDefinition.OnSpawnGroupGridsCreated?.Invoke(grids2, spawnGroup.SpawnGroup, prefab, factionOwner);
+
         }
 
 		//Tie in Spawn Costs

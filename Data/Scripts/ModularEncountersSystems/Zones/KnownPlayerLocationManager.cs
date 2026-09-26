@@ -106,9 +106,11 @@ namespace ModularEncountersSystems.Zones {
 
         public static void ChangeZoneSizeAtLocation(Vector3D coords, string faction = "", double size = 0, bool isMultiplicative = false) {
 
+            bool updateZones = false;
+
             foreach (var location in ZoneManager.ActiveZones) {
 
-                if (IsPositionInKnownPlayerLocation(location, coords, true, faction))
+                if (!IsPositionInKnownPlayerLocation(location, coords, true, faction))
                     continue;
 
                 if (!isMultiplicative) {
@@ -121,7 +123,12 @@ namespace ModularEncountersSystems.Zones {
 
                 }
 
+                updateZones = true;
+
             }
+
+            if (updateZones)
+                ZoneManager.FlagUpdateZoneStorage();
 
         }
 

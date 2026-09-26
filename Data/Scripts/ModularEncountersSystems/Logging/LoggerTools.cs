@@ -267,7 +267,7 @@ namespace ModularEncountersSystems.Logging {
 
 			string faction = msgSplit[3];
 			double radius = 10000;
-			int duration = -1;
+			int duration = 30;
 			int maxEncounters = -1;
 			int minThreat = -1;
 

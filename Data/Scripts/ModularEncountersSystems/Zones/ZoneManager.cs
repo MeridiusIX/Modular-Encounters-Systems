@@ -550,7 +550,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords) && !onlyByName)
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
@@ -574,7 +574,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords) && !onlyByName)
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);

@@ -182,6 +182,14 @@ namespace ModularEncountersSystems.Zones {
 
 		public void MergeExistingKnownPlayerLocation(Zone existingZone) {
 
+			if (Vector3D.DistanceSquared(existingZone.Coordinates, this.Coordinates) < 0.01) {
+
+				Radius = Math.Max(Radius, existingZone.Radius);
+				MergeVariablesFromOldLocation(existingZone);
+				return;
+
+			}
+
 			var dirFromCurrentToIntersection = Vector3D.Normalize(existingZone.Coordinates - this.Coordinates);
 			var coordsBetweenCenters = dirFromCurrentToIntersection * (Vector3D.Distance(existingZone.Coordinates, this.Coordinates) / 2) + this.Coordinates;
 			var radiusToUse = existingZone.Radius == this.Radius ? this.Radius : this.Radius > existingZone.Radius ? this.Radius : existingZone.Radius;
@@ -228,15 +236,16 @@ namespace ModularEncountersSystems.Zones {
 				foreach (var boolean in oldZone.CustomBools.Keys) {
 
 					bool boolresult = false;
+					bool oldValue = oldZone.CustomBools[boolean];
 
 					if (CustomBools.TryGetValue(boolean, out boolresult)) {
 
-						if (oldZone.CustomBools[boolean] || boolresult)
+						if (oldValue || boolresult)
 							CustomBools[boolean] = true;
 
 					} else {
 
-						CustomBools.Add(boolean, boolresult);
+						CustomBools.Add(boolean, oldValue);
 
 					}
 
@@ -249,14 +258,15 @@ namespace ModularEncountersSystems.Zones {
 				foreach (var counter in oldZone.CustomCounters.Keys) {
 
 					long counterValue = 0;
+					long oldValue = oldZone.CustomCounters[counter];
 
 					if (CustomCounters.TryGetValue(counter, out counterValue)) {
 
-						CustomCounters[counter] += counterValue;
+						CustomCounters[counter] = counterValue + oldValue;
 
 					} else {
 
-						CustomCounters.Add(counter, counterValue);
+						CustomCounters.Add(counter, oldValue);
 
 					}
 

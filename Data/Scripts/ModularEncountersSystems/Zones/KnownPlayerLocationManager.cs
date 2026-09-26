@@ -13,6 +13,13 @@ namespace ModularEncountersSystems.Zones {
 
         public static void AddKnownPlayerLocation(Vector3D coords, string faction, double radius, int duration = -1, int maxEncounters = -1, int minThreatToAvoidAbandonment = -1) {
 
+            if (duration <= 0) {
+
+                SpawnLogger.Write("KnownPlayerLocation Not Created At " + coords.ToString() + ": Duration Must Be Greater Than 0", SpawnerDebugEnum.Zone);
+                return;
+
+            }
+
             bool foundExistingLocation = false;
             var sphere = new BoundingSphereD(coords, radius);
             List<Zone> intersectingLocations = new List<Zone>();
@@ -106,9 +113,11 @@ namespace ModularEncountersSystems.Zones {
 
         public static void ChangeZoneSizeAtLocation(Vector3D coords, string faction = "", double size = 0, bool isMultiplicative = false) {
 
+            bool updateZones = false;
+
             foreach (var location in ZoneManager.ActiveZones) {
 
-                if (IsPositionInKnownPlayerLocation(location, coords, true, faction))
+                if (!IsPositionInKnownPlayerLocation(location, coords, true, faction))
                     continue;
 
                 if (!isMultiplicative) {
@@ -121,7 +130,12 @@ namespace ModularEncountersSystems.Zones {
 
                 }
 
+                updateZones = true;
+
             }
+
+            if (updateZones)
+                ZoneManager.FlagUpdateZoneStorage();
 
         }
 

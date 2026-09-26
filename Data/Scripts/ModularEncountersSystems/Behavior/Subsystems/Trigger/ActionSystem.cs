@@ -1930,17 +1930,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     lastAction = "ZoneCustomBoolChange";
                     if (actions.ZoneCustomBoolChange)
                         if (actions.ZoneCustomBoolChangeUseKPL)
-                            ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue, actions.ChangeZoneOnlyByName);
-                        else
                             ZoneManager.ChangeKPLBools(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue, actions.ChangeZoneOnlyByName);
+                        else
+                            ZoneManager.ChangeZoneBools(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomBoolChangeName, actions.ZoneCustomBoolChangeValue, actions.ChangeZoneOnlyByName);
 
                     //ZoneCustomCounterChange
                     lastAction = "ZoneCustomCounterChange";
                     if (actions.ZoneCustomCounterChange)
                         if (actions.ZoneCustomCounterChangeUseKPL)
-                            ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType, actions.ChangeZoneOnlyByName);
-                        else
                             ZoneManager.ChangeKPLCounters(RemoteControl.GetPosition(), _behavior.Owner.Faction?.Tag ?? "Nobody", actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType, actions.ChangeZoneOnlyByName);
+                        else
+                            ZoneManager.ChangeZoneCounters(RemoteControl.GetPosition(), IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.ZoneName), actions.ZoneCustomCounterChangeName, actions.ZoneCustomCounterChangeAmount, actions.ZoneCustomCounterChangeType, actions.ChangeZoneOnlyByName);
 
                 }
 

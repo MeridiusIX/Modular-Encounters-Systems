@@ -243,10 +243,10 @@ namespace ModularEncountersSystems.Helpers {
             for (int i = 0; i < counts.Length; i++) {
 
                 if (lowestCount == -1)
-                    lowestCount = i;
+                    lowestCount = counts[i];
 
-                if(i < lowestCount)
-                    lowestCount = i;
+                if(counts[i] < lowestCount)
+                    lowestCount = counts[i];
 
             }
 

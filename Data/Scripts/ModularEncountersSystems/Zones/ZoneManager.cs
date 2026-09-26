@@ -66,6 +66,9 @@ namespace ModularEncountersSystems.Zones {
 
 				var zone = ActiveZones[i];
 
+				if (zone != null && zone.PlayerKnownLocation)
+					continue;
+
 				if (string.IsNullOrWhiteSpace(zone?.ProfileSubtypeId)) {
 
 					SpawnLogger.Write("Removing Zone With No ProfileSubtypeId: " + zone.PublicName ?? "null", SpawnerDebugEnum.Startup);
@@ -473,7 +476,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.PlayerKnownLocation || !zone.AllowedFactions.Contains(faction))
 					continue;
 
-				if (zone.PositionInsideZone(coords) && !onlyByName)
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
@@ -498,7 +501,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.PlayerKnownLocation || !zone.AllowedFactions.Contains(faction))
 					continue;
 
-				if (zone.PositionInsideZone(coords) && !onlyByName)
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
@@ -547,7 +550,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords) && !onlyByName)
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomCounters(zone.CustomCounters, counterNames, counterValues, counterModifiers);
@@ -571,7 +574,7 @@ namespace ModularEncountersSystems.Zones {
 				if (!zone.Persistent || zone.PublicName != name)
 					continue;
 
-				if (zone.PositionInsideZone(coords) && !onlyByName)
+				if (!zone.PositionInsideZone(coords) && !onlyByName)
 					continue;
 
 				CustomValueHelper.ChangeCustomBools(zone.CustomBools, counterNames, counterValues);
@@ -647,6 +650,7 @@ namespace ModularEncountersSystems.Zones {
 
 				if (mins.TotalMinutes >= zone.MinutesToExpiration) {
 
+					SpawnLogger.Write(string.Format("Zone [{0}] At [{1}] Has Been Removed Because its Timer Expired", zone.PlayerKnownLocation ? "Known Player Location" : zone.PublicName, zone.Coordinates), SpawnerDebugEnum.Zone);
 					ActiveZones.RemoveAt(i);
 					zone.Active = false;
 					updateZones = true;

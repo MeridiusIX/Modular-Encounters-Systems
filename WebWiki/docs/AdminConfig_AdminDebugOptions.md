@@ -78,7 +78,7 @@ Here is a list of command categories:
 |Description:|This chat command allows you to create a Known Player Location at your current position.|
 |Allowed Value for `FactionValue`:|Any Faction Tag|
 |Allowed Value for `RadiusValue`:|Any Number Greater Than 0|
-|Allowed Value for `DurationValue`:|Any Integer Greater Than 0|
+|Allowed Value for `DurationValue`:|Any Integer Greater Than 0 (minutes). Defaults to `30` if omitted.|
 |Allowed Value for `MaxEncounterValue`:|Any Integer Greater Than 0, or `-1` for Unused|
 
 |Setting:|Create Planet|

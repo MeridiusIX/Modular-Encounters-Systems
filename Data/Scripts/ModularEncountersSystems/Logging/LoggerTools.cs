@@ -267,7 +267,7 @@ namespace ModularEncountersSystems.Logging {
 
 			string faction = msgSplit[3];
 			double radius = 10000;
-			int duration = -1;
+			int duration = 30;
 			int maxEncounters = -1;
 			int minThreat = -1;
 
@@ -282,6 +282,13 @@ namespace ModularEncountersSystems.Logging {
 
 			if (msgSplit.Length >= 8)
 				int.TryParse(msgSplit[7], out minThreat);
+
+			if (duration <= 0) {
+
+				MyVisualScriptLogicProvider.ShowNotification("KPL Not Created: Duration Must Be Greater Than 0", 5000, "White", msg.PlayerId);
+				return;
+
+			}
 
 			KnownPlayerLocationManager.AddKnownPlayerLocation(msg.PlayerPosition, faction, radius, duration, maxEncounters, minThreat);
 			return;

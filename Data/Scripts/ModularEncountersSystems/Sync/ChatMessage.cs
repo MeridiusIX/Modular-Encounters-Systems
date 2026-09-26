@@ -205,26 +205,76 @@ namespace ModularEncountersSystems.Sync {
 
 		public string[] GetArray(int length, int combineLength) {
 
-			var array = Message.Trim().Split('.');
+            var array = Message.Trim().Split('.');
 
-			if (array.Length < length)
-				return null;
+            if (array.Length < length)
+                return null;
 
-			if (array.Length > combineLength) {
+            if (array.Length > combineLength)
+            {
 
-				string lastElement = "";
+                string lastElement = "";
 
-				for (int i = length - 1; i < array.Length; i++) {
+                for (int i = length - 1; i < array.Length; i++)
+                {
 
-					lastElement += array[i];
+                    lastElement += array[i];
+
+                }
+
+                array[length - 1] = lastElement;
+
+            }
+
+            return array;
+
+        }
+
+        /// <summary>
+        /// Splits parameter text on spaces, treating double-quoted segments as single parameters.
+        /// Example: <c>Alpha "Beta Gamma" Delta</c> → ["Alpha", "Beta Gamma", "Delta"]
+        /// </summary>
+        private static string[] ParseSpaceSeparatedParameters(string parametersText) {
+
+			if (string.IsNullOrWhiteSpace(parametersText))
+				return Array.Empty<string>();
+
+			var results = new List<string>();
+			var current = new StringBuilder();
+			bool inQuotes = false;
+
+			for (int i = 0; i < parametersText.Length; i++) {
+
+				char c = parametersText[i];
+
+				if (c == '"') {
+
+					inQuotes = !inQuotes;
+					continue;
 
 				}
 
-				array[length - 1] = lastElement;
+				if (char.IsWhiteSpace(c) && !inQuotes) {
+
+					if (current.Length > 0) {
+
+						results.Add(current.ToString());
+						current.Clear();
+
+					}
+
+					continue;
+
+				}
+
+				current.Append(c);
 
 			}
 
-			return array;
+			if (current.Length > 0)
+				results.Add(current.ToString());
+
+			return results.ToArray();
 
 		}
 
@@ -1033,8 +1083,54 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-			return false;
+			//MES.Debug.HideAllZones
+			if (array[2] == "HideAllZones") {
 
+				ZoneDebugVisualizer.HideAllZones(this);
+				return true;
+
+			}
+
+			//MES.Debug.HideZone
+			if (array[2] == "HideZone") {
+
+				if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+					ReturnMessage = "Usage: /MES.Debug.HideZone ZoneName | ZoneSubtypeID";
+					return true;
+
+				}
+
+				ZoneDebugVisualizer.HideZone(array[3], this);
+				return true;
+
+			}
+
+			//MES.Debug.ShowAllZones
+			if (array[2] == "ShowAllZones") {
+
+				ZoneDebugVisualizer.ShowAllZones(this);
+				return true;
+
+			}
+
+			//MES.Debug.ShowZone
+			if (array[2] == "ShowZone") {
+
+				if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+					ReturnMessage = "Usage: /MES.Debug.ShowZone ZoneName | ZoneSubtypeID";
+					return true;
+
+				}
+
+				ZoneDebugVisualizer.ShowZone(array[3], this);
+				return true;
+
+			}
+
+			ReturnMessage = "Unrecognized Debug Command.";
+			return true;
 		}
 
 		private bool ProcessInfo() {
@@ -1127,8 +1223,7 @@ namespace ModularEncountersSystems.Sync {
 
 				MyVisualScriptLogicProvider.ShowNotification("Offset Position To Reference Block Saved To Clipboard", 5000, "White", chatData.PlayerId);
 				VRage.Utils.MyClipboardHelper.SetClipboard(offsetString);
-
-
+			
 			}
 			*/
 
@@ -1277,7 +1372,7 @@ namespace ModularEncountersSystems.Sync {
 			}
 
 
-			//GetZones
+			//GetEvents
 			if (array[2] == "GetEvents")
 			{
 

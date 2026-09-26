@@ -298,6 +298,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 					}
 
+					if (tag.Contains("[StartsReady:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref StartsReady);
+
+					}
+
 					//FirstSpawnTimeMs
 					if (tag.Contains("[FirstSpawnTimeMs:") == true) {
 

@@ -351,8 +351,8 @@ namespace ModularEncountersSystems.Helpers {
 					actionObject.ProfileSubtypeId = component.Id.SubtypeName;
 
 					var actionReference = new ActionReferenceProfile();
-					actionReference.InitTags(component.DescriptionText);
 					actionReference.ProfileSubtypeId = component.Id.SubtypeName;
+					actionReference.InitTags(component.DescriptionText);
 
 					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<ActionProfile>(actionObject);
 					//Logger.WriteLog("Action Profile Added: " + component.Id.SubtypeName);
@@ -385,8 +385,8 @@ namespace ModularEncountersSystems.Helpers {
 				if ((component.DescriptionText.Contains("[RivalAI Target]") || component.DescriptionText.Contains("[MES AI Target]")) && TargetObjectTemplates.ContainsKey(component.Id.SubtypeName) == false) {
 
 					var targetObject = new TargetProfile();
-					targetObject.InitTags(component.DescriptionText);
 					targetObject.ProfileSubtypeId = component.Id.SubtypeName;
+					targetObject.InitTags(component.DescriptionText);
 					TargetProfiles.Add(targetObject.ProfileSubtypeId, targetObject);
 					var targetBytes = MyAPIGateway.Utilities.SerializeToBinary<TargetProfile>(targetObject);
 					//Logger.WriteLog("Target Profile Added: " + component.Id.SubtypeName);

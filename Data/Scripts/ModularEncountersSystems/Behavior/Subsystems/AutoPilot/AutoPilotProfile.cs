@@ -1164,6 +1164,24 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
+			if (tag.Contains("[EscortUsesRelativeDampening:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref EscortUsesRelativeDampening);
+
+			}
+
+			if (tag.Contains("[EscortSpeedMatchMinDistance:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref EscortSpeedMatchMinDistance);
+
+			}
+
+			if (tag.Contains("[EscortSpeedMatchMaxDistance:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref EscortSpeedMatchMaxDistance);
+
+			}
+
 		}
 
 	}

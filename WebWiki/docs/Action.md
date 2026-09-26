@@ -978,32 +978,32 @@ This section contains actions that affect the entire grid.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|GridEditable|
 |:----|:----|
 |Tag Format:|`[GridEditable:Value]`|
-|Description:|This tag specifies if the NPC Grid is able to be edited (add/remove/weld/grind blocks).|
-|Allowed Values:|`Yes`<br>`No`|
+|Description:|This tag specifies if the NPC Grid is able to be edited (add/remove/weld/grind blocks). `Ignore` (default) leaves the current state unchanged.|
+|Allowed Values:|`Yes`<br>`No`<br>`Ignore`|
 |Multiple Tag Allowed:|No|
 
 <!--GridSubGridsEditableEditable  -->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|SubGridsEditable|
 |:----|:----|
 |Tag Format:|`[SubGridsEditable:Value]`|
-|Description:|This tag specifies if sub-grids editable state should also be changed if `GridEditable` tag is used.|
-|Allowed Values:|`Yes`<br>`No`|
+|Description:|This tag specifies if sub-grids editable state should also be changed if `GridEditable` tag is used. `Ignore` (default) leaves sub-grids unchanged.|
+|Allowed Values:|`Yes`<br>`No`<br>`Ignore`|
 |Multiple Tag Allowed:|No|
 
 <!--GridDestructible  -->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|GridDestructible|
 |:----|:----|
 |Tag Format:|`[GridDestructible:Value]`|
-|Description:|This tag specifies if the NPC Grid should have destructible blocks (can receive damage).|
-|Allowed Values:|`Yes`<br>`No`|
+|Description:|This tag specifies if the NPC Grid should have destructible blocks (can receive damage). `Ignore` (default) leaves the current state unchanged.|
+|Allowed Values:|`Yes`<br>`No`<br>`Ignore`|
 |Multiple Tag Allowed:|No|
 
 <!--SubGridsDestructible  -->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|SubGridsDestructible|
 |:----|:----|
 |Tag Format:|`[SubGridsDestructible:Value]`|
-|Description:|This tag specifies if sub-grids destructible state should also be changed if `GridDestructible` tag is used.|
-|Allowed Values:|`Yes`<br>`No`|
+|Description:|This tag specifies if sub-grids destructible state should also be changed if `GridDestructible` tag is used. `Ignore` (default) leaves sub-grids unchanged.|
+|Allowed Values:|`Yes`<br>`No`<br>`Ignore`|
 |Multiple Tag Allowed:|No|
 
 # Inventory

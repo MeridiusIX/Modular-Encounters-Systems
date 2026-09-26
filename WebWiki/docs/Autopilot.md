@@ -159,6 +159,35 @@ This section contains tags that control collision detection.
 |Multiple Tag Allowed:|No|
 
 
+# Escort
+
+This section contains tags used by NPCs running the `Escort` behavior while following their parent.
+
+<!--EscortUsesRelativeDampening-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|EscortUsesRelativeDampening|
+|:----|:----|
+|Tag Format:|`[EscortUsesRelativeDampening:Value]`|
+|Description:|This tag specifies if the escort should use its parent grid as its relative dampening target once it is within 250m of the parent. Default is `false`.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--EscortSpeedMatchMaxDistance-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|EscortSpeedMatchMaxDistance|
+|:----|:----|
+|Tag Format:|`[EscortSpeedMatchMaxDistance:Value]`|
+|Description:|This tag specifies the distance (in meters) from its escort waypoint at which the escort limits its speed to the parent's current speed (when the parent is slower than the escort's `IdealMaxSpeed`). Default is `150`.|
+|Allowed Values:|Any Number Greater Than `0`|
+|Multiple Tag Allowed:|No|
+
+<!--EscortSpeedMatchMinDistance-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|EscortSpeedMatchMinDistance|
+|:----|:----|
+|Tag Format:|`[EscortSpeedMatchMinDistance:Value]`|
+|Description:|This tag is parsed but currently has no effect. Within `EscortSpeedMatchMaxDistance`, the escort's speed is always limited to the parent's current speed, regardless of this value. Default is `25`.|
+|Allowed Values:|Any Number Equal or Greater Than `0`|
+|Multiple Tag Allowed:|No|
+
+
 # General  
 
 This section contains tags that don't quite fit in the other categories.  

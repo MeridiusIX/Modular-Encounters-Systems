@@ -588,6 +588,9 @@ namespace ModularEncountersSystems.Helpers {
         {
             Instance = this;
             OverrideDefinitions(ob);
+
+            // The list must contain at least one entry for it to be active as a whitelist
+            ob.SpawnGroups.Add("DummyEntry");
         }
 
         void OverrideDefinitions(MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition ob)

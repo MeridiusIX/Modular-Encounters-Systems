@@ -116,8 +116,8 @@ Here is a list of command categories:
 |Setting:|Hide Zone|
 |:----|:----|
 |XML:|`N/A`|
-|Chat Command 1:|`/MES.Debug.HideZone Value`|
-|Description:|This chat command hides the specified zone. The zone can be specified by either the SubtypeID or the PublicName. If the name contains spaces it must be enclosed with double quotes, i.e. "Some Name"|
+|Chat Command 1:|`/MES.Debug.HideZone.Value`|
+|Description:|This chat command hides the specified zone. The zone can be specified by either the SubtypeID or the PublicName.|
 
 |Setting:|Process Prefabs|
 |:----|:----|
@@ -154,8 +154,8 @@ Here is a list of command categories:
 |Setting:|Show Zone|
 |:----|:----|
 |XML:|`N/A`|
-|Chat Command 1:|`/MES.Debug.ShowZone Value`|
-|Description:|This chat command shows the specified zone. The zone can be specified by either the SubtypeID or the PublicName. If the name contains spaces it must be enclosed with double quotes, i.e. "Some Name". Zone visiblity is colored thus: Allowed Zone = Green, Restricted Zone = Red, Mixed (Allowed and Restricted) = Yellow, Neither = Blue.|
+|Chat Command 1:|`/MES.Debug.ShowZone.Value`|
+|Description:|This chat command shows the specified zone. The zone can be specified by either the SubtypeID or the PublicName. Zone visiblity is colored thus: Allowed Zone = Green, Restricted Zone = Red, Mixed (Allowed and Restricted) = Yellow, Neither = Blue.|
 
 |Setting:|Unlock Admin Blocks|
 |:----|:----|

@@ -1263,8 +1263,8 @@ This section contains actions that allow NPCs to Spawn other NPCs, along with ot
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|KnownPlayerAreaTimer|
 |:----|:----|
 |Tag Format:|`[KnownPlayerAreaTimer:Value]`|
-|Description:|Specifies the max area time-limit (in minutes) for the Known Player Area if `CreateKnownPlayerArea` is `true`. Default is `30`. `-1` means the area never expires and stays until it is removed or reaches `KnownPlayerAreaMaxSpawns`.|
-|Allowed Values:|Any Integer equal/higher than `0`, or `-1`|
+|Description:|Specifies the max area time-limit (in minutes) for the Known Player Area if `CreateKnownPlayerArea` is `true`. Default is `30`. If the value is `0` or lower, no Known Player Area is created.|
+|Allowed Values:|Any Integer higher than `0`|
 |Multiple Tag Allowed:|No|
 
 <!--KnownPlayerAreaMaxSpawns  -->

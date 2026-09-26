@@ -13,6 +13,13 @@ namespace ModularEncountersSystems.Zones {
 
         public static void AddKnownPlayerLocation(Vector3D coords, string faction, double radius, int duration = -1, int maxEncounters = -1, int minThreatToAvoidAbandonment = -1) {
 
+            if (duration <= 0) {
+
+                SpawnLogger.Write("KnownPlayerLocation Not Created At " + coords.ToString() + ": Duration Must Be Greater Than 0", SpawnerDebugEnum.Zone);
+                return;
+
+            }
+
             bool foundExistingLocation = false;
             var sphere = new BoundingSphereD(coords, radius);
             List<Zone> intersectingLocations = new List<Zone>();
@@ -153,7 +160,7 @@ namespace ModularEncountersSystems.Zones {
 
                 }
 
-                if (zone.UseZoneTimer && zone.MinutesToExpiration >= 0 && duration.TotalSeconds / 60 >= zone.MinutesToExpiration) {
+                if (zone.MinutesToExpiration >= 0 && duration.TotalSeconds / 60 >= zone.MinutesToExpiration) {
 
                     SpawnLogger.Write(string.Format("Player Known Location At [{0}] Has Been Removed Because its Timer Expired", zone.Coordinates), SpawnerDebugEnum.Zone);
                     ZoneManager.ActiveZones.RemoveAt(i);

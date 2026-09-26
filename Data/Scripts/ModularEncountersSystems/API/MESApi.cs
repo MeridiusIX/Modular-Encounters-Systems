@@ -67,7 +67,7 @@ namespace ModularEncountersSystems.API {
 		/// <param name="coords"></param>
 		/// <param name="faction"></param>
 		/// <param name="radius"></param>
-		/// <param name="expirationMinutes">Minutes until the location expires. -1 means it never expires.</param>
+		/// <param name="expirationMinutes">Minutes until the location expires. Must be greater than 0, or the location is not created.</param>
 		/// <param name="maxSpawns"></param>
 		/// <param name="minThreatForAvoidingAbandonment"></param>
 		public void AddKnownPlayerLocation(Vector3D coords, string faction, double radius, int expirationMinutes, int maxSpawns, int minThreatForAvoidingAbandonment) => _addKnownPlayerLocation?.Invoke(coords, faction, radius, expirationMinutes, maxSpawns, minThreatForAvoidingAbandonment);

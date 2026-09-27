@@ -1328,6 +1328,15 @@ There is no need for these tags anymore.
 |Default Value(s):|`0`|
 |Multiple Tag Allowed:|No|
 
+<!-- MaxWaterDepth  -->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxWaterDepth|
+|:----|:----|
+|Tag Format:|`[MaxWaterDepth:Value]`|
+|Description:|This tag allows you to specify the maximum water depth at which an encounter can spawn. It is the counterpart to `MinWaterDepth` and uses the same depth measurement: for grids that spawn underwater it limits how deep they can be placed, and for grids that spawn on the water surface it limits the water depth beneath the surface (for example to keep docks or wrecks in shallow water). It also applies to creatures that use `CanSpawnUnderwater`. If this tag is not used, there is no maximum depth. A value of `0` allows no water placements (creatures will only spawn on dry land). This is used with the [Water Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2200451495) by Jakaria|
+|Allowed Values:|Any Number Equal To Or Greater Than `0`<br>Value must be equal to or higher than `MinWaterDepth` if tag is used<br>`-1` (no maximum)|
+|Default Value(s):|`-1`|
+|Multiple Tag Allowed:|No|
+
 <!-- UseDayOrNightOnly  -->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseDayOrNightOnly|
 |:----|:----|

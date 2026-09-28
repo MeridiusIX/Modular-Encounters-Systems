@@ -1030,7 +1030,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (depth >= collection.Conditions.MinWaterDepth && (collection.Conditions.MaxWaterDepth <= -1 || depth <= collection.Conditions.MaxWaterDepth)) {
+            var useMaxDepth = collection.Conditions.MaxWaterDepth > -1;
+			if (depth >= collection.Conditions.MinWaterDepth && (!useMaxDepth || depth <= collection.Conditions.MaxWaterDepth)) {
 
 				//Check For Water Surface Spawn
 				if (spawnType.HasFlag(SpawningType.WaterSurfaceStation) && isUnderwater) {

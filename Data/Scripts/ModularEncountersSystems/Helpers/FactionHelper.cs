@@ -557,7 +557,7 @@ namespace ModularEncountersSystems.Helpers {
 				if (faction == null)
 					continue;
 
-				foreach (var playerId in players) {
+				foreach (var playerId in allPlayerIds) {
 
 					string color = "Red";
 					string modifier = "Decreased";

@@ -833,7 +833,7 @@ namespace ModularEncountersSystems.Spawning {
 
 								}
 
-								if (spawnType.HasFlag(SpawningType.UnderWaterStation) && (checkDepth < collection.Conditions.MinWaterDepth || checkDepth > collection.Conditions.MaxWaterDepth)) {
+								if (spawnType.HasFlag(SpawningType.UnderWaterStation) && (checkDepth < collection.Conditions.MinWaterDepth || (collection.Conditions.MaxWaterDepth > -1 && checkDepth > collection.Conditions.MaxWaterDepth))) {
 
 									badPosition = true;
 									break;
@@ -842,7 +842,7 @@ namespace ModularEncountersSystems.Spawning {
 
 							} else if (spawnType.HasFlag(SpawningType.WaterSurfaceStation)) {
 
-								if (checkDepth < collection.Conditions.MinWaterDepth || checkDepth > collection.Conditions.MaxWaterDepth) {
+								if (checkDepth < collection.Conditions.MinWaterDepth || (collection.Conditions.MaxWaterDepth > -1 && checkDepth > collection.Conditions.MaxWaterDepth)) {
 
 									badPosition = true;
 									break;
@@ -1030,7 +1030,8 @@ namespace ModularEncountersSystems.Spawning {
 
 			}
 
-			if (depth >= collection.Conditions.MinWaterDepth && depth <= collection.Conditions.MaxWaterDepth) {
+            var useMaxDepth = collection.Conditions.MaxWaterDepth > -1;
+			if (depth >= collection.Conditions.MinWaterDepth && (!useMaxDepth || depth <= collection.Conditions.MaxWaterDepth)) {
 
 				//Check For Water Surface Spawn
 				if (spawnType.HasFlag(SpawningType.WaterSurfaceStation) && isUnderwater) {
@@ -1309,7 +1310,7 @@ namespace ModularEncountersSystems.Spawning {
 					//Water
 					if (collection.Conditions.CanSpawnUnderwater) {
 
-						if (environment.NearestPlanet.WaterDepthAtPosition(coords) < collection.Conditions.MinWaterDepth || environment.NearestPlanet.WaterDepthAtPosition(coords) > collection.Conditions.MaxWaterDepth)
+						if (environment.NearestPlanet.WaterDepthAtPosition(coords) < collection.Conditions.MinWaterDepth || (collection.Conditions.MaxWaterDepth > -1 && environment.NearestPlanet.WaterDepthAtPosition(coords) > collection.Conditions.MaxWaterDepth))
 							continue;
 
 					} else {

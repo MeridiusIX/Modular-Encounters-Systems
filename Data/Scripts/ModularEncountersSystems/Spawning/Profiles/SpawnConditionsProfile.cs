@@ -442,7 +442,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			CanSpawnUnderwater = false;
 			MustSpawnUnderwater = false;
 			MinWaterDepth = 0;
-			MaxWaterDepth = 0;
+			MaxWaterDepth = -1;
 
 			MinWaterCoverage = -1;
 			MaxWaterCoverage = -1;

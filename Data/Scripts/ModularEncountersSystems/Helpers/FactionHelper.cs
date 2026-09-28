@@ -31,20 +31,30 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static bool IsIdentityNPC(long id) {
 
-            if (MyAPIGateway.Players.TryGetIdentityId(id) != null)
-            {
-                return MyAPIGateway.Players.TryGetIdentityId(id).IsBot || MyAPIGateway.Players.TryGetSteamId(id) == 0;
-            }
-            return false;
+            if (id == 0)
+                return false;
+
+            var player = MyAPIGateway.Players.TryGetIdentityId(id);
+            var steamId = MyAPIGateway.Players.TryGetSteamId(id);
+
+            if (player != null)
+                return player.IsBot || steamId == 0;
+
+            return steamId == 0;
 
 		}
 
 		public static bool IsIdentityPlayer(long id) {
 
-            if (MyAPIGateway.Players.TryGetIdentityId(id) != null)
-            {
-                return !MyAPIGateway.Players.TryGetIdentityId(id).IsBot && MyAPIGateway.Players.TryGetSteamId(id) > 0;
-            }
+            if (id == 0)
+                return false;
+
+            var player = MyAPIGateway.Players.TryGetIdentityId(id);
+            var steamId = MyAPIGateway.Players.TryGetSteamId(id);
+
+            if (player != null)
+                return !player.IsBot && steamId > 0;
+
             return false;
 
 		}

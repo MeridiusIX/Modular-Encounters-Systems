@@ -959,7 +959,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					result = Data.MinAirDensity <= 0 && Data.MaxAirDensity <= 0;
 
 				if (result)
-					FilterHits.Add(TargetFilterEnum.Underwater);
+					FilterHits.Add(TargetFilterEnum.AirDensity);
 
 				BehaviorLogger.Write(string.Format(" - Evaluated AirDensity: {0}", result), BehaviorDebugEnum.TargetEvaluation);
 
@@ -995,7 +995,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				}
 
 				if (result)
-					FilterHits.Add(TargetFilterEnum.Underwater);
+					FilterHits.Add(TargetFilterEnum.GravityThrust);
 
 				BehaviorLogger.Write(string.Format(" - Evaluated GravityThrust: {0}", result), BehaviorDebugEnum.TargetEvaluation);
 

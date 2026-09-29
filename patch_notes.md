@@ -1,9 +1,8 @@
-# Update 2.74.04
+# Update 2.74.05
 
-* Added [#358](https://github.com/MeridiusIX/Modular-Encounters-Systems/pull/358): Admin commands /MES.Debug.ShowZone, /MES.Debug.HideZone, /MES.Debug.ShowAllZones and /MES.Debug.HideAllZones to enable easier zone debugging. Thanks to [@jayph](https://github.com/jayph) for the PR!
-* Fixed [#374](https://github.com/MeridiusIX/Modular-Encounters-Systems/pull/374): Several issues with Known Player Location Zones. Thanks to [@Blaylock1988](https://github.com/Blaylock1988) for the PR!
-* Fixed [#372](https://github.com/MeridiusIX/Modular-Encounters-Systems/pull/372): Several instances of documented tags not being read. Thanks to [@Blaylock1988](https://github.com/Blaylock1988) for the PR!
-* Fixed [#369](https://github.com/MeridiusIX/Modular-Encounters-Systems/pull/369): Action [BlockNamesShareModeAll:] did not properly apply to blocks. Thanks [@Blaylock1988](https://github.com/Blaylock1988) for the PR!
-* Fixed and issue where the first encounter type that spawned after a load would always contain an item contract.
+* Fixed [#378](https://github.com/MeridiusIX/Modular-Encounters-Systems/pull/378): TargetProfile GravityThrust target filter not being evaluated correctly. Thanks to [@jayph](https://github.com/jayph) for the PR!
+* Fixed [#377](https://github.com/MeridiusIX/Modular-Encounters-Systems/pull/377):  SpawnCondition MaxWaterDepth-related calculations were not correct is none was set. Thanks to [@VillanorSE](https://github.com/VillanorSE) for the PR!
+* Fixed [#376](https://github.com/MeridiusIX/Modular-Encounters-Systems/issues/376): Action ReputationChangesForAllAttackPlayerFactionMembers did not propagate reputation changes to faction members properly.
+* Fixed [#375](https://github.com/MeridiusIX/Modular-Encounters-Systems/issues/375): Issue with check for whether a character is a NPC that has caused various issues with targeting.
 
 enenra & CptArthur

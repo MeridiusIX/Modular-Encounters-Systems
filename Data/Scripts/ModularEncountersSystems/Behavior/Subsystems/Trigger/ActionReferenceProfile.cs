@@ -504,6 +504,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
         public List<string> GPSDescriptions;
         public List<Vector3D> GPSVector3Ds;
         public List<Vector3D> GPSColors;
+        public List<string> GPSColorVariables;
         public bool AddGPSPlayerOverridePositionInPlayerCondition;
 
 
@@ -1038,6 +1039,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
             GPSDescriptions = new List<string>();
             GPSVector3Ds = new List<Vector3D>();
             GPSColors = new List<Vector3D>();
+            GPSColorVariables = new List<string>();
             AddGPSPlayerConditionIds = new List<string>();
             AddGPSPlayerOverridePositionInPlayerCondition = false;
 
@@ -1451,6 +1453,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"GPSVector3Ds", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
 
                 {"GPSColors", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSColors) },
+                {"GPSColorVariables", (s, o) => TagParse.TagStringListCheck(s, ref GPSColorVariables) },
                 {"AddGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddGPSPlayerConditionIds) },
                 {"AddGPSPlayerOverridePositionInPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref AddGPSPlayerOverridePositionInPlayerCondition) },
 

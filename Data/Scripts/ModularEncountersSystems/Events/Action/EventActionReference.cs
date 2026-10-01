@@ -107,6 +107,7 @@ namespace ModularEncountersSystems.Events.Action {
 		public List<string> GPSDescriptions;
 		public List<Vector3D> GPSVector3Ds;
 		public List<Vector3D> GPSColors;
+		public List<string> GPSColorVariables;
 
 		public bool RemoveGPSFromPlayers;
 		public List<string> RemoveGPSPlayerConditionIds;
@@ -260,6 +261,7 @@ namespace ModularEncountersSystems.Events.Action {
 			GPSDescriptions = new List<string>();
 			GPSVector3Ds = new List<Vector3D>();
 			GPSColors = new List<Vector3D>();
+			GPSColorVariables = new List<string>();
 
 			AddGPSPlayerConditionIds = new List<string>();
 			RemoveGPSPlayerConditionIds = new List<string>();
@@ -481,6 +483,7 @@ namespace ModularEncountersSystems.Events.Action {
 				{"GPSVector3Ds", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSVector3Ds) },
 
 				{"GPSColors", (s, o) => TagParse.TagVector3DListCheck(s, ref GPSColors) },
+				{"GPSColorVariables", (s, o) => TagParse.TagStringListCheck(s, ref GPSColorVariables) },
 				{"AddGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref AddGPSPlayerConditionIds) },
 				{"RemoveGPSPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref RemoveGPSPlayerConditionIds) },
 

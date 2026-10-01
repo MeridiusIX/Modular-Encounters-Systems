@@ -347,8 +347,33 @@ namespace ModularEncountersSystems.Events.Action
                             {
                                 // If GPSDescriptions is empty or index is out of range, use the default description
                                 var description = defaultDescription;
+                                if (actions.GPSDescriptions.Count > i && actions.GPSDescriptions[i] != "")
+                                    description = IdsReplacer.ReplaceId(null, actions.GPSDescriptions[i]);
+
+
                                 // If GPSColors is empty or index is out of range, use the default color
                                 var color = defaultColor;
+                                if (actions.GPSColors.Count > i && actions.GPSColors[i] != Vector3D.Zero)
+                                {
+                                    color.R = (byte)actions.GPSColors[i].X;
+                                    color.B = (byte)actions.GPSColors[i].Y;
+                                    color.G = (byte)actions.GPSColors[i].Z;
+                                }
+
+                                else
+                                {
+                                    if (actions.GPSColorVariables.Count > i)
+                                    {
+                                        var tempVector = Vector3D.Zero;
+                                        var tempVar = actions.GPSColorVariables[i].Replace("{", "").Replace("}", "");
+                                        if (MyAPIGateway.Utilities.GetVariable(tempVar, out tempVector))
+                                        {
+                                            color.R = (byte)tempVector.X;
+                                            color.B = (byte)tempVector.Y;
+                                            color.G = (byte)tempVector.Z;
+                                        }
+                                    }
+                                }
 
                                 if (actions.UseGPSObjective)
                                 {

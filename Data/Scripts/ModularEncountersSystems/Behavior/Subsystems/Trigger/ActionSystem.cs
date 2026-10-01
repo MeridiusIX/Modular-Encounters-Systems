@@ -2821,6 +2821,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastAction = "AddGPSToPlayers";
                 if (actions.AddGPSToPlayers && _behavior.RemoteControl != null)
                 {
+                    var npcData = _behavior?.CurrentGrid?.Npc;
 
                     var defaultDescription = "No description available";
                     var defaultColor = new Color(255, 178, 96); //  color as default
@@ -2831,13 +2832,49 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                         {
                             for (int i = 0; i < actions.GPSNames.Count; i++)
                             {
-
                                 // If GPSDescriptions is empty or index is out of range, use the default description
                                 var description = defaultDescription;
+                                if (actions.GPSDescriptions.Count > i && actions.GPSDescriptions[i] != "")
+                                    description = IdsReplacer.ReplaceId(npcData, actions.GPSDescriptions[i]);
 
 
                                 // If GPSColors is empty or index is out of range, use the default color
                                 var color = defaultColor;
+                                if (actions.GPSColors.Count > i && actions.GPSColors[i] != Vector3D.Zero)
+                                {
+                                    color.R = (byte)actions.GPSColors[i].X;
+                                    color.B = (byte)actions.GPSColors[i].Y;
+                                    color.G = (byte)actions.GPSColors[i].Z;
+                                }
+
+                                else
+                                {
+                                    if (actions.GPSColorVariables.Count > i)
+                                    {
+                                        var tempVector = Vector3D.Zero;
+                                        var tempVar = actions.GPSColorVariables[i].Replace("{", "").Replace("}", "");
+                                        if (MyAPIGateway.Utilities.GetVariable(tempVar, out tempVector))
+                                        {
+                                            color.R = (byte)tempVector.X;
+                                            color.B = (byte)tempVector.Y;
+                                            color.G = (byte)tempVector.Z;
+                                        }
+
+                                        else if (npcData != null)
+                                        {
+                                            foreach (var vector in npcData.CustomVector3Ds)
+                                            {
+                                                if (actions.GPSColorVariables[i] == "{" + vector.Key + "}")
+                                                {
+                                                    color.R = (byte)vector.Value.X;
+                                                    color.B = (byte)vector.Value.Y;
+                                                    color.G = (byte)vector.Value.Z;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
 
 
                                 if (actions.UseGPSObjective)

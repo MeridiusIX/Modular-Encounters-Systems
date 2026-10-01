@@ -388,7 +388,7 @@ namespace ModularEncountersSystems.Missions
             {
                 case MissionType.Custom:
                     MyDefinitionId definitionId;
-                    bool parsed = MyDefinitionId.TryParse("MyObjectBuilder_ContractTypeDefinition/MESContract", out definitionId);
+                    bool parsed = MyDefinitionId.TryParse($"MyObjectBuilder_ContractTypeDefinition/{Profile.ContractSubtypeId}", out definitionId);
 
                     if (!parsed) return false;
 

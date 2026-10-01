@@ -14,6 +14,7 @@ namespace ModularEncountersSystems.Missions {
     public class MissionProfile
     {
         public string ProfileSubtypeId;
+        public string ContractSubtypeId;
         public List<string> Tags;
         public string Title;
         public string Description;
@@ -57,6 +58,7 @@ namespace ModularEncountersSystems.Missions {
         public MissionProfile()
         {
             ProfileSubtypeId = "";
+            ContractSubtypeId = "MESContract";
             Tags = new List<string>();
             Title = "";
             Description = "";
@@ -91,6 +93,7 @@ namespace ModularEncountersSystems.Missions {
             CustomApiMapping = new List<string>();
 
             EditorReference = new Dictionary<string, Action<string, object>> {
+                {"ContractSubtypeId", (s, o) => TagParse.TagStringCheck(s, ref ContractSubtypeId) },
                 {"Tags", (s, o) => TagParse.TagStringListCheck(s, ref Tags) },
                 {"Title", (s, o) => TagParse.TagStringCheck(s, ref Title) },
                 {"Description", (s, o) => TagParse.TagStringCheck(s, ref Description) },
@@ -104,7 +107,7 @@ namespace ModularEncountersSystems.Missions {
                 {"ReplaceKeys", (s, o) => TagParse.TagStringListCheck(s,false, ref ReplaceKeys) },
                 {"ReplaceValues", (s, o) => TagParse.TagStringListCheck(s, false,ref ReplaceValues) },
                 {"ReplacePairs", (s, o) => TagParse.TagStringDictCheck(s,ref ReplacePairs) },
-         
+
                 {"PersistantEventConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PersistantEventConditionIds) },
                 {"UseAnyPassingEventCondition", (s, o) => TagParse.TagBoolCheck(s, ref UseAnyPassingEventCondition) },
                 {"EventConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref EventConditionIds) },
@@ -112,7 +115,7 @@ namespace ModularEncountersSystems.Missions {
                 {"OverrideFaction", (s, o) => TagParse.TagStringCheck(s, ref OverrideFaction) },
 
                 {"StoreProfileId", (s, o) => TagParse.TagStringCheck(s, ref StoreProfileId) },
- 
+
                 {"MissionType", (s, o) => TagParse.TagMissionTypeCheck(s, ref MissionType) },
 
                 {"LeadPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref LeadPlayerConditionIds) },
@@ -120,7 +123,7 @@ namespace ModularEncountersSystems.Missions {
                 {"PlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref PlayerConditionIds) },
 
                 {"SoloMission", (s, o) => TagParse.TagBoolCheck(s, ref SoloMission) },
-                
+
                 {"InstanceEventGroupId", (s, o) => TagParse.TagStringCheck(s, ref InstanceEventGroupId) },
                 {"Exclusive", (s, o) => TagParse.TagBoolCheck(s, ref Exclusive) },
                 {"CustomApiMapping", (s, o) => TagParse.TagStringListCheck(s, ref CustomApiMapping) },
@@ -168,4 +171,3 @@ namespace ModularEncountersSystems.Missions {
 
     }
 }
-

@@ -28,11 +28,26 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<string> EconomyStationTypes = new List<string>();
 
 		internal static List<MyFactionMember> _memberList = new List<MyFactionMember>();
+        internal static HashSet<long> _nPCIdentities = new HashSet<long>();
+
+        public static void Setup()
+        {
+            var checkpoint = MyAPIGateway.Session.GetCheckpoint(string.Empty);
+
+            foreach(var id in checkpoint.NonPlayerIdentities)
+            {
+                _nPCIdentities.Add(id);
+            }
+
+        }
 
 		public static bool IsIdentityNPC(long id)
         {
             if (id == 0)
                 return false;
+
+            if (!MyAPIGateway.Multiplayer.IsServer)
+                BehaviorLogger.Write("This code should not be running on client - please report to MES authors.", BehaviorDebugEnum.Error);
 
             var player = MyAPIGateway.Players.TryGetIdentityId(id);
             var steamId = MyAPIGateway.Players.TryGetSteamId(id);
@@ -55,7 +70,7 @@ namespace ModularEncountersSystems.Helpers {
 
             // TODO: Replace this with a better check once we have access. This also matches some cases in which players have no player entity nor steamId - observed in Steam MP for example.
             // NPC Owner (blocks, grids)
-            if (player == null && steamId == 0)
+            if (player == null && steamId == 0 && _nPCIdentities.Contains(id))
                 return true;
 
             return false;
@@ -66,6 +81,9 @@ namespace ModularEncountersSystems.Helpers {
             if (id == 0)
                 return false;
 
+            if (!MyAPIGateway.Multiplayer.IsServer)
+                BehaviorLogger.Write("This code should not be running on client - please report to MES authors.", BehaviorDebugEnum.Error);
+
             var player = MyAPIGateway.Players.TryGetIdentityId(id);
             var steamId = MyAPIGateway.Players.TryGetSteamId(id);
 
@@ -87,7 +105,7 @@ namespace ModularEncountersSystems.Helpers {
 
             // TODO: Replace this with a better check once we have access. This also matches some cases in which players have no player entity nor steamId - observed in Steam MP for example.
             // NPC Owner (blocks, grids)
-            if (player == null && steamId == 0)
+            if (player == null && steamId == 0 && _nPCIdentities.Contains(id))
                 return false;
 
             return false;

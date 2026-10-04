@@ -125,6 +125,8 @@ namespace ModularEncountersSystems.Core {
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
 
+            FactionHelper.Setup();
+
 			ProgressionManager.ButtonPanelStartupValidation();
 			ProgramBlockControls.SpawnProgramBlockForControls();
 			LocalApi.SendApiToMods();

@@ -29,34 +29,68 @@ namespace ModularEncountersSystems.Helpers {
 
 		internal static List<MyFactionMember> _memberList = new List<MyFactionMember>();
 
-		public static bool IsIdentityNPC(long id) {
-
+		public static bool IsIdentityNPC(long id)
+        {
             if (id == 0)
                 return false;
 
             var player = MyAPIGateway.Players.TryGetIdentityId(id);
             var steamId = MyAPIGateway.Players.TryGetSteamId(id);
 
-            if (player != null)
-                return player.IsBot || steamId == 0;
-
-            return steamId == 0;
-
-		}
-
-		public static bool IsIdentityPlayer(long id) {
-
-            if (id == 0)
+            // Online Player Character
+            if (player != null && !player.IsBot && steamId != 0)
                 return false;
 
-            var player = MyAPIGateway.Players.TryGetIdentityId(id);
-            var steamId = MyAPIGateway.Players.TryGetSteamId(id);
+            // Offline Player Character
+            if (player == null && steamId != 0)
+                return false;
 
-            if (player != null)
-                return !player.IsBot && steamId > 0;
+            // Vanilla Bot Character
+            if (player != null && player.IsBot && steamId != 0)
+                return true;
+
+            // AiEnabled Bot Character
+            if (player != null && !player.IsBot && steamId == 0)
+                return true;
+
+            // TODO: Replace this with a better check once we have access. This also matches some cases in which players have no player entity nor steamId - observed in Steam MP for example.
+            // NPC Owner (blocks, grids)
+            if (player == null && steamId == 0)
+                return true;
 
             return false;
+		}
 
+		public static bool IsIdentityPlayer(long id)
+        {
+            if (id == 0)
+                return false;
+
+            var player = MyAPIGateway.Players.TryGetIdentityId(id);
+            var steamId = MyAPIGateway.Players.TryGetSteamId(id);
+
+            // Online Player Character
+            if (player != null && !player.IsBot && steamId != 0)
+                return true;
+
+            // Offline Player Character
+            if (player == null && steamId != 0)
+                return true;
+
+            // Vanilla Bot Character
+            if (player != null && player.IsBot && steamId != 0)
+                return false;
+
+            // AiEnabled Bot Character
+            if (player != null && !player.IsBot && steamId == 0)
+                return false;
+
+            // TODO: Replace this with a better check once we have access. This also matches some cases in which players have no player entity nor steamId - observed in Steam MP for example.
+            // NPC Owner (blocks, grids)
+            if (player == null && steamId == 0)
+                return false;
+
+            return false;
 		}
 
 		public static long GetFactionOwner(IMyFaction faction) {

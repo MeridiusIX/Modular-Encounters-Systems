@@ -17,8 +17,6 @@ using ProtoBuf;
 
 namespace ModularEncountersSystems.Missions
 {
-    //
-
     [ProtoContract]
     public class ActiveContract
     {
@@ -44,18 +42,12 @@ namespace ModularEncountersSystems.Missions
         [ProtoMember(8)]
         public string MissionProfileSubtypeId;
 
-        
 
-        public ActiveContract()
-        {
-
-        }
-
-        public ActiveContract(long ContractId,long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag, string ActivateBooleanNameOnSucces, string profileSubtypeId)
+        public ActiveContract(long ContractId, long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag, string ActivateBooleanNameOnSucces, string profileSubtypeId)
         {
             this.ContractId = ContractId;
             this.BlockId = BlockId;
- 
+
             this.Reward = Reward;
             this.ReputationReward = ReputationReward;
             this.FailReputationPrice = FailReputationPrice;
@@ -65,28 +57,20 @@ namespace ModularEncountersSystems.Missions
         }
     }
 
-
-
-
-
-
-
     public class Contract
     {
-
         public long ContractId;
         public BlockEntity SourceBlock;
         public Mission MissionReference;
 
         public bool TryToActivateCustomContract(long playerIdentityId)
         {
-
             if (!MissionReference.RunPlayerCondition(playerIdentityId))
             {
                 MyVisualScriptLogicProvider.SendChatMessageColored("You do not meet the requirements for this contract.", Color.Olive, "Contracts", playerIdentityId);
                 return false;
             }
-                
+
             Vector3D position = SourceBlock.GetPosition();
 
             var Players = new List<PlayerEntity>();
@@ -119,7 +103,7 @@ namespace ModularEncountersSystems.Missions
 
                         if (!MissionReference.RunPlayerCondition(playerId, false))
                         {
-                            
+
                             MyVisualScriptLogicProvider.SendChatMessageColored($"{player?.Name() ?? "Someone in your faction"} does not meet the requirements for this contract", Color.Olive, "Contracts", playerIdentityId);
                             return false;
                         }
@@ -127,7 +111,6 @@ namespace ModularEncountersSystems.Missions
                         Players.Add(player);
                     }
                 }
-
             }
 
 
@@ -141,7 +124,7 @@ namespace ModularEncountersSystems.Missions
             // Remove all other contracts with this type contract blocks
             if (this.MissionReference.Profile.Exclusive)
             {
-                InGameContractManager.PurgeContractsWithMissionSubtypeId(MissionReference.ProfileSubtypeId,ContractId);
+                InGameContractManager.PurgeContractsWithMissionSubtypeId(MissionReference.ProfileSubtypeId, ContractId);
             }
 
             var FactionTag = MissionReference.Faction.Tag;
@@ -150,19 +133,13 @@ namespace ModularEncountersSystems.Missions
             var _activeContract = new ActiveContract(ContractId,
                 SourceBlock.Entity.EntityId, MissionReference.Reward,
                 MissionReference.ReputationReward, MissionReference.FailReputationPrice,
-                FactionTag,MissionReference.Profile.ActivateBooleanNameOnSucces,
+                FactionTag, MissionReference.Profile.ActivateBooleanNameOnSucces,
                 MissionReference.ProfileSubtypeId);
 
             InGameContractManager.ActiveContracts.Add(_activeContract);
             MissionReference.Start();
 
-
             return true;
         }
-
-
-
     }
 }
-
-             

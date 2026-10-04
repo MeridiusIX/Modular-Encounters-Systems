@@ -15,21 +15,17 @@ using VRage.Game;
 using ModularEncountersSystems.Entities;
 using System.Diagnostics.Contracts;
 
-namespace ModularEncountersSystems.Missions {
-
-
-    public static class InGameContractManager {
-
+namespace ModularEncountersSystems.Missions
+{
+    public static class InGameContractManager
+    {
         public static List<long> ContractsForRemoval = new List<long>();
         private static string _saveContractsForRemovalName = "MES-ContractsForRemoval";
 
         // contract stuff
         public static List<Contract> GeneratedContracts = new List<Contract>();
-
-
         public static List<ActiveContract> ActiveContracts = new List<ActiveContract>();
         private static string _saveActiveContractsName = "MES-ActiveContracts";
-
 
 
         public static void Setup()
@@ -42,8 +38,6 @@ namespace ModularEncountersSystems.Missions {
             MyVisualScriptLogicProvider.ContractFailed += ContractFailed;
             MyVisualScriptLogicProvider.ContractFinished += ContractFinished;
             MyVisualScriptLogicProvider.ContractAccepted += ContractAccepted;
-
-
 
             string ContractsForRemovalNameString = "";
             if (MyAPIGateway.Utilities.GetVariable<string>(_saveContractsForRemovalName, out ContractsForRemovalNameString))
@@ -59,8 +53,6 @@ namespace ModularEncountersSystems.Missions {
                 ActiveContracts = MyAPIGateway.Utilities.SerializeFromBinary<List<ActiveContract>>(ActiveContractsSerialized);
             }
 
-
-
             if (ContractsForRemoval == null)
                 ContractsForRemoval = new List<long>();
 
@@ -70,22 +62,16 @@ namespace ModularEncountersSystems.Missions {
                 ContractsForRemoval.RemoveAt(i);
             }
 
-
             if (ActiveContracts == null)
                 ActiveContracts = new List<ActiveContract>();
 
             SaveData();
         }
 
-
-        
         public static void ContractAccepted(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId)
         {
-
             if (isPlayerMade)
             {
-
-
                 for (int i = GeneratedContracts.Count - 1; i >= 0; i--)
                 {
                     var contract = GeneratedContracts[i];
@@ -101,15 +87,13 @@ namespace ModularEncountersSystems.Missions {
                             PurgeContractsWithMissionSubtypeId(contract.MissionReference.ProfileSubtypeId);
 
                             var player = PlayerManager.GetPlayerWithIdentityId(acceptingPlayerId);
-                            if(player != null)
+                            if (player != null)
                                 player.Player.RequestChangeBalance(contract.MissionReference.Collateral);
-
 
                             GeneratedContracts.RemoveAt(i);
                             ContractsForRemoval.Remove(contract.ContractId);
                             return;
                         }
-
 
                         if (contract.TryToActivateCustomContract(acceptingPlayerId))
                         {
@@ -130,21 +114,14 @@ namespace ModularEncountersSystems.Missions {
                             if (player != null)
                                 player.Player.RequestChangeBalance(contract.MissionReference.Collateral);
 
-
                             GeneratedContracts.RemoveAt(i);
                             ContractsForRemoval.Remove(contract.ContractId);
                             contract.MissionReference.ReAddContractToBlock(contract.ContractId);
-
-
                         }
-
 
                         return;
                     }
-
                 }
-
-
             }
         }
 
@@ -200,10 +177,7 @@ namespace ModularEncountersSystems.Missions {
 
                 RemoveActiveContractInternal(contractId);
             }
-
-
         }
-
 
         public static void ContractFailed(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId, bool IsAbandon)
         {
@@ -245,12 +219,10 @@ namespace ModularEncountersSystems.Missions {
                     {
                         player.ProgressionData.Tags.Remove($"@{contractId}");
                     }
-
                 }
 
                 RemoveActiveContractInternal(contractId);
             }
-
         }
 
         public static void ContractFinished(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId)
@@ -259,7 +231,7 @@ namespace ModularEncountersSystems.Missions {
             {
                 var contract = GetActiveContract(contractId);
 
-                if(contract == null)
+                if (contract == null)
                 {
                     return;
                 }
@@ -281,11 +253,9 @@ namespace ModularEncountersSystems.Missions {
 
                         player.ProgressionData.Tags.Remove($"@{contractId}");
                     }
-
                 }
 
                 FactionHelper.ChangePlayerReputationWithFactions(null, contract.ReputationReward, PlayerList, contract.FactionTag, false, -1501, 1501);
-
 
                 if (!string.IsNullOrEmpty(contract.ActivateBooleanNameOnSucces))
                 {
@@ -294,10 +264,8 @@ namespace ModularEncountersSystems.Missions {
 
                 RemoveActiveContractInternal(contractId);
 
-                
             }
         }
-
 
         public static void ProcessIngameContract()
         {
@@ -329,13 +297,8 @@ namespace ModularEncountersSystems.Missions {
             MyVisualScriptLogicProvider.ContractFailed -= ContractFailed;
             MyVisualScriptLogicProvider.ContractFinished -= ContractFinished;
 
-
-
             MyVisualScriptLogicProvider.ContractAccepted -= ContractAccepted;
-
         }
-
-
 
         public static void PurgeContract(long ContractId)
         {
@@ -382,8 +345,6 @@ namespace ModularEncountersSystems.Missions {
             return false;
         }
 
-
-
         public static ActiveContract GetActiveContract(long contractId)
         {
             for (int i = ActiveContracts.Count - 1; i >= 0; i--)
@@ -397,8 +358,7 @@ namespace ModularEncountersSystems.Missions {
                 }
             }
 
-            return null; 
-
+            return null;
         }
 
         public static void RemoveActiveContractInternal(long contractId)
@@ -407,16 +367,13 @@ namespace ModularEncountersSystems.Missions {
             {
                 var ActiveContract = ActiveContracts[i];
 
-                if(ActiveContract.ContractId == contractId)
+                if (ActiveContract.ContractId == contractId)
                 {
                     ActiveContracts.RemoveAt(i);
                     return;
                 }
             }
         }
-
-
-
 
         public static void ClearBlockContracts(long blockId)
         {
@@ -428,18 +385,10 @@ namespace ModularEncountersSystems.Missions {
                 {
                     PurgeContract(generatedContracts.ContractId);
                     GeneratedContracts.RemoveAt(i);
-                    
+
                 }
             }
-
-
         }
-
-
-        
-
-
-
 
         public static bool HasContractBlockActiveContract(long blockId)
         {
@@ -455,14 +404,5 @@ namespace ModularEncountersSystems.Missions {
 
             return false;
         }
-
-
-
-
-
-
-
-
-
     }
 }

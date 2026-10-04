@@ -18,12 +18,8 @@ using VRage.Game;
 using VRage.Game.ModAPI;
 using VRageMath;
 
-
 namespace ModularEncountersSystems.Missions
 {
-
-
-
     public class Mission
     {
         public string ProfileSubtypeId;
@@ -50,8 +46,10 @@ namespace ModularEncountersSystems.Missions
         public BlockEntity SourceContractBlock;
         public long InstanceId;
 
-        private StoreProfile _StoreProfile;
         public string InstanceEventGroupId;
+
+        private StoreProfile _StoreProfile;
+        private MissionProfile _profile;
 
         StoreProfile StoreProfile
         {
@@ -75,8 +73,6 @@ namespace ModularEncountersSystems.Missions
             }
         }
 
-
-
         public MissionProfile Profile
         {
             get
@@ -95,10 +91,6 @@ namespace ModularEncountersSystems.Missions
             }
         }
 
-
-        private MissionProfile _profile;
-
-
         public Mission(string profileSubtypeId, NpcData npcData)
         {
             ProfileSubtypeId = profileSubtypeId;
@@ -106,10 +98,8 @@ namespace ModularEncountersSystems.Missions
             SpawnGroupName = npcData.SpawnGroupName ?? "";
         }
 
-
         public bool Init(BlockEntity sourceContractBlock)
         {
-
             // Remove mission from all contract blocks
             if (this.Profile.Exclusive && InGameContractManager.IsAContractWithMissionSubtypeIdActive(this.ProfileSubtypeId))
             {
@@ -151,8 +141,8 @@ namespace ModularEncountersSystems.Missions
                     MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", "Override faction tag not found");
                     return false;
                 }
-
             }
+
             else
             {
                 Faction = sourceContractBlock.Faction();
@@ -186,7 +176,6 @@ namespace ModularEncountersSystems.Missions
 
             if (Profile.CustomApiMapping.Count > 0)
             {
-
                 foreach (var methodName in Profile.CustomApiMapping)
                 {
                     Func<string, string, List<string>, Vector3D, Dictionary<string, string>> func;
@@ -196,6 +185,7 @@ namespace ModularEncountersSystems.Missions
                         MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", $"{methodName} - Not Found!");
                         return false;
                     }
+
                     if (func != null)
                     {
                         var dict = func.Invoke(ProfileSubtypeId, SpawnGroupName, Profile.Tags, sourceContractBlock.GetPosition());
@@ -205,7 +195,6 @@ namespace ModularEncountersSystems.Missions
                             MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", $"{methodName} - Api returned null as dict!");
                             return false;
                         }
-
 
                         ReplaceKeys.AddList(new List<string>(dict.Keys));
                         ReplaceValues.AddList(new List<string>(dict.Values));
@@ -267,7 +256,6 @@ namespace ModularEncountersSystems.Missions
             return AddMissionToBlock();
         }
 
-
         public void SetupEventCondition()
         {
             LeadPlayerConditions = new List<PlayerCondition>();
@@ -319,10 +307,8 @@ namespace ModularEncountersSystems.Missions
             }
         }
 
-
         public bool RunEventConditions()
         {
-
             if (!EventCondition.AreConditionsMet(false, this.PersistantConditions))
             {
                 //MyVisualScriptLogicProvider.ShowNotificationToAll("Conditions not Met", 20000, "Red");
@@ -337,7 +323,6 @@ namespace ModularEncountersSystems.Missions
 
             return true;
         }
-
 
         public bool RunPlayerCondition(long PlayerId, bool IsLeadPlayer = true)
         {
@@ -357,7 +342,6 @@ namespace ModularEncountersSystems.Missions
             return true;
         }
 
-
         public void Start()
         {
             if (string.IsNullOrEmpty(InstanceEventGroupId))
@@ -371,13 +355,10 @@ namespace ModularEncountersSystems.Missions
             }
 
             tja.AddEventsAsInsertible(ReplaceKeys, ReplaceValues, InstanceId);
-
         }
-
 
         public bool AddMissionToBlock()
         {
-
             if (SourceContractBlock == null)
                 return false;
 
@@ -492,7 +473,9 @@ namespace ModularEncountersSystems.Missions
 
                 default:
                     break;
+
             }
+
             return false;
         }
 
@@ -510,9 +493,6 @@ namespace ModularEncountersSystems.Missions
             {
                 return false;
             }
-
         }
-
     }
-
 }

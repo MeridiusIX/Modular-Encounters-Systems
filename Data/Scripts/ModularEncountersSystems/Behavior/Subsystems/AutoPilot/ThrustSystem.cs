@@ -207,7 +207,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			var velocityToTargetAngle = VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(GetCurrentWaypoint() - _remoteControl.WorldMatrix.Translation), Vector3D.Normalize(_remoteControl.SlimBlock.CubeGrid.Physics.LinearVelocity));
 			var velocity = _remoteControl.SlimBlock.CubeGrid.Physics.LinearVelocity;
 			var velocityAmount = velocity.Length();
-			var stoppingDist = CalculateStoppingDistance(velocity, _forwardDir, Base6Directions.Direction.Forward);
+			var stoppingDist = CalculateStoppingDistance(velocity, _forwardDir, Base6Directions.Direction.Backward); //Braking uses the reverse (Backward) thrusters, not the forward mains
 
 			if (!IndirectWaypointType.HasFlag(WaypointModificationEnum.PlanetPathingAscend) && !IndirectWaypointType.HasFlag(WaypointModificationEnum.Collision)) {
 

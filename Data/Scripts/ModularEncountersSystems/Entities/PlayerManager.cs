@@ -159,7 +159,7 @@ namespace ModularEncountersSystems.Entities {
 						if (playerEnt.Player == null)
 							continue;
 
-						if (playerEnt.Player.SteamUserId == player.SteamUserId && !player.IsBot) {
+						if (playerEnt.Player.SteamUserId == player.SteamUserId && FactionHelper.IsIdentityPlayer(playerEnt.Player.IdentityId)) {
 
 							foundExisting = true;
 
@@ -175,7 +175,7 @@ namespace ModularEncountersSystems.Entities {
 					if (foundExisting)
 						continue;
 
-					if (!player.IsBot && player.SteamUserId > 0) {
+					if (FactionHelper.IsIdentityPlayer(player.IdentityId)) {
 						var playerEntity = new PlayerEntity(player);
 						var progression = playerEntity.Progression;
 						playerEntity.InitSolarModule();

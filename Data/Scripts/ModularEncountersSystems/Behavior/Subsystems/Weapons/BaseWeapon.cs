@@ -413,8 +413,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 			if (!_pendingAmmoRefill)
 				return;
 
-            var blockOwner = MyAPIGateway.Players.TryGetIdentityId(_block.OwnerId);
-            if (blockOwner != null && (!blockOwner.IsBot || blockOwner.SteamUserId > 0))
+            if (FactionHelper.IsIdentityPlayer(_block.OwnerId))
             {
                 _isNPCOwned = false;
                 _pendingAmmoRefill = false;

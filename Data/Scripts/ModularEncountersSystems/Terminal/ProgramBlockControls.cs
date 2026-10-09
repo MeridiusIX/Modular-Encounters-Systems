@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Sync;
+﻿using ModularEncountersSystems.Helpers;
+using ModularEncountersSystems.Sync;
 using Sandbox.Common.ObjectBuilders;
 using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
@@ -39,9 +40,9 @@ namespace ModularEncountersSystems.Terminal{
 			customControlBool.Enabled = Block => true;
 			customControlBool.Getter = Block => {
 
-				var steamId = MyAPIGateway.Players.TryGetSteamId(Block.OwnerId);
+				if (FactionHelper.IsIdentityPlayer(Block.OwnerId)) {
 
-				if (steamId > 0) {
+				    var steamId = MyAPIGateway.Players.TryGetSteamId(Block.OwnerId);
 
 					if (MyAPIGateway.Session.IsUserAdmin(steamId)) {
 

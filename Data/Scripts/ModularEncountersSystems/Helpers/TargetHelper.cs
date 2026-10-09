@@ -320,7 +320,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				var player = playerEnt.Player;
 
-				if(player?.Controller?.ControlledEntity?.Entity == null || player.IsBot || player.SteamUserId <= 0) {
+				if(player?.Controller?.ControlledEntity?.Entity == null || FactionHelper.IsIdentityNPC(player.IdentityId)) {
 					continue;
 
 				}
@@ -759,7 +759,7 @@ namespace ModularEncountersSystems.Helpers {
 		public static List<IMyPlayer> GetPlayersWithinDistance(Vector3D coords, double radius) {
 
 			var playerList = new List<IMyPlayer>();
-			MyAPIGateway.Players.GetPlayers(playerList, x => !x.IsBot && x.SteamUserId > 0 && Vector3D.Distance(coords, x.GetPosition()) < radius);
+			MyAPIGateway.Players.GetPlayers(playerList, x => FactionHelper.IsIdentityPlayer(x.IdentityId) && Vector3D.Distance(coords, x.GetPosition()) < radius);
 			return playerList;
 
 		}
@@ -769,7 +769,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			var playerList = new List<IMyPlayer>();
 
-			MyAPIGateway.Players.GetPlayers(playerList, x => !x.IsBot && x.SteamUserId > 0 && Vector3D.Distance(coords, x.GetPosition()) < maxDistance && Vector3D.Distance(coords, x.GetPosition()) > minDistance);
+			MyAPIGateway.Players.GetPlayers(playerList, x => FactionHelper.IsIdentityPlayer(x.IdentityId) && Vector3D.Distance(coords, x.GetPosition()) < maxDistance && Vector3D.Distance(coords, x.GetPosition()) > minDistance);
 			return playerList;
 
 		}
@@ -1042,9 +1042,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			}
 
-			var npcSteamId = MyAPIGateway.Players.TryGetSteamId(targetId);
-
-			if(npcSteamId == 0) {
+			if(FactionHelper.IsIdentityNPC(targetId)) {
 
 				return true;
 
@@ -1174,9 +1172,7 @@ namespace ModularEncountersSystems.Helpers {
 
 			}
 
-			var npcSteamId = MyAPIGateway.Players.TryGetSteamId(targetId);
-
-			if(npcSteamId != 0) {
+			if(FactionHelper.IsIdentityPlayer(targetId)) {
 
 				return true;
 

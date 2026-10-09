@@ -1,4 +1,5 @@
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
 using Sandbox.Common.ObjectBuilders;
@@ -114,7 +115,7 @@ namespace ModularEncountersSystems.BlockLogic {
 					if (owner == 0)
 						continue;
 
-					if (!(MyAPIGateway.Players.TryGetSteamId(owner) > 0)) {
+					if (FactionHelper.IsIdentityNPC(owner)) {
 
 						NpcOwned = true;
 						break;

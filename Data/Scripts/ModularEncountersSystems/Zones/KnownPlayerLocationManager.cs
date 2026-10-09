@@ -1,4 +1,5 @@
 ﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.Game;
 using Sandbox.ModAPI;
@@ -85,7 +86,7 @@ namespace ModularEncountersSystems.Zones {
                 if (!playerEnt.ActiveEntity())
                     continue;
 
-                if (playerEnt.Player.IsBot || playerEnt.Player.SteamUserId <= 0) {
+                if (FactionHelper.IsIdentityNPC(playerEnt.Player.IdentityId)) {
 
                     continue;
 
@@ -290,7 +291,7 @@ namespace ModularEncountersSystems.Zones {
                 if (!playerEnt.ActiveEntity())
                     continue;
 
-                if (playerEnt.Player.IsBot || playerEnt.Player.SteamUserId <= 0) {
+                if (FactionHelper.IsIdentityNPC(playerEnt.Player.IdentityId)) {
 
                     continue;
 

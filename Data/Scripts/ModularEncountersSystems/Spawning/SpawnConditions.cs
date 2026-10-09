@@ -1017,7 +1017,7 @@ namespace ModularEncountersSystems.Spawning {
 					if (!player.Online)
 						continue;
 
-					if (player.Player.IsBot || player.Player.SteamUserId <= 0 || player.Player.Character == null) {
+					if (FactionHelper.IsIdentityNPC(player.Player.IdentityId) || player.Player.Character == null) {
 
 						continue;
 
@@ -1230,7 +1230,7 @@ namespace ModularEncountersSystems.Spawning {
 					if (!player.Online)
 						continue;
 
-					if (player.Player.IsBot || player.Player.SteamUserId <= 0 || player.Player.Character == null) {
+					if (FactionHelper.IsIdentityNPC(player.Player.IdentityId) || player.Player.Character == null) {
 
 						continue;
 
@@ -1316,7 +1316,7 @@ namespace ModularEncountersSystems.Spawning {
 					if (!player.Online)
 						continue;
 
-					if (player.Player.IsBot || player.Player.SteamUserId <= 0 || player.Player.Character == null)
+					if (FactionHelper.IsIdentityNPC(player.Player.IdentityId) || player.Player.Character == null)
 						continue;
 
 
@@ -2311,7 +2311,7 @@ namespace ModularEncountersSystems.Spawning {
 							if (!player.Online)
 								continue;
 
-							if (player.Player.IsBot || player.Player.SteamUserId <= 0 || player.Player.Character == null)
+							if (FactionHelper.IsIdentityNPC(player.Player.IdentityId) || player.Player.Character == null)
 							{
 
 								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot or Chara Null ", 4000);
@@ -2435,7 +2435,7 @@ namespace ModularEncountersSystems.Spawning {
 							if (!player.Online)
 								continue;
 
-							if (player.Player.IsBot == true || player.Player.Character == null) {
+							if (FactionHelper.IsIdentityNPC(player.Player.IdentityId) || player.Player.Character == null) {
 
 								//MyVisualScriptLogicProvider.ShowNotificationToAll("Bot or Chara Null ", 4000);
 								continue;

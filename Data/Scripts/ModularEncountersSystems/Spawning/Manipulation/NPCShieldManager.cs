@@ -50,7 +50,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				InitBlockList = true;
 				InitializeArmorBlockList();
-			
+
 			}
 
 			SpawnLogger.Write("DSP: Check for Mod", SpawnerDebugEnum.Manipulation);
@@ -107,7 +107,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 				return false;
 
 			}
-				
+
 
 			SpawnLogger.Write("DSP: Build Shield Blocks and replace armor with them.", SpawnerDebugEnum.Manipulation);
 			SerializableDefinitionId emitterId = new SerializableDefinitionId();
@@ -161,7 +161,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var owner in cubeGrid.BigOwners) {
 
-					if (!IsNPC(owner))
+					if (!FactionHelper.IsIdentityNPC(owner))
 						return;
 
 				}
@@ -177,7 +177,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				if (_emitterTypes.Contains(blockId)) {
 
-					if (!IsNPC(block.OwnerId))
+					if (!FactionHelper.IsIdentityNPC(block.OwnerId))
 						return;
 
 					SpawnLogger.Write("LoS Requirement For NPC Shields Removed", SpawnerDebugEnum.API);
@@ -212,7 +212,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 		private static void ShieldBlockOwnershipChange(IMyTerminalBlock block) {
 
-			if (!IsNPC(block.OwnerId)) {
+			if (!FactionHelper.IsIdentityNPC(block.OwnerId)) {
 
 				block.OwnershipChanged -= ShieldBlockOwnershipChange;
 				block.SlimBlock.CubeGrid.OnBlockOwnershipChanged -= ShieldBlockGridOwnershipChanged;
@@ -248,7 +248,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				foreach (var owner in cubeGrid.BigOwners) {
 
-					if (!IsNPC(owner))
+					if (!FactionHelper.IsIdentityNPC(owner))
 						npcOwned = false;
 
 				}
@@ -303,18 +303,6 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			shield.SlimBlock.CubeGrid.OnGridSplit += ShieldGridSplit;
 			ShieldBlockGridOwnershipChanged(shield.SlimBlock.CubeGrid);
-
-		}
-
-		public static bool IsNPC(long identity) {
-
-			if (MyAPIGateway.Players.TryGetSteamId(identity) > 0 || identity == 0) {
-
-				return false;
-
-			}
-
-			return true;
 
 		}
 

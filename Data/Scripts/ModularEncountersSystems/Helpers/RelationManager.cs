@@ -142,9 +142,7 @@ namespace ModularEncountersSystems.Helpers {
 
 				foreach (var identity in identities) {
 
-					ulong steamId = MyAPIGateway.Players.TryGetSteamId(identity.IdentityId);
-
-					if (steamId > 0)
+					if (FactionHelper.IsIdentityPlayer(identity.IdentityId))
 						SetReputationWithFaction(identity.IdentityId, faction.FactionId, defaultRep);
 
 				}
@@ -206,7 +204,7 @@ namespace ModularEncountersSystems.Helpers {
 
 					var player = PlayerManager.Players[i].Player;
 
-					if (player.IsBot || player.SteamUserId <= 0 || player.Character == null) {
+					if (FactionHelper.IsIdentityNPC(player.IdentityId) || player.Character == null) {
 						continue;
 
 					}

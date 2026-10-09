@@ -1,5 +1,6 @@
 ﻿using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.World;
 using Sandbox.Definitions;
 using Sandbox.Game.EntityComponents;
@@ -8,106 +9,101 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ModularEncountersSystems.BlockLogic {
-	public class InfiniteTank : BaseBlockLogic, IBlockLogic {
+namespace ModularEncountersSystems.BlockLogic
+{
+    public class InfiniteTank : BaseBlockLogic, IBlockLogic
+    {
 
-		private IMyGasTank _gasTank;
-		private MyResourceSourceComponent _source;
-		private MyResourceSinkComponent _sink;
-		private MyGasTankDefinition _definition;
+        private IMyGasTank _gasTank;
+        private MyResourceSourceComponent _source;
+        private MyResourceSinkComponent _sink;
+        private MyGasTankDefinition _definition;
 
-		private bool _firstRun;
-		private bool _isCargoShip;
+        private bool _firstRun;
+        private bool _isActive;
 
-		public InfiniteTank(BlockEntity block) {
+        public InfiniteTank(BlockEntity block)
+        {
+            Setup(block);
+        }
 
-			Setup(block);
+        internal override void Setup(BlockEntity block)
+        {
+            base.Setup(block);
+            _gasTank = block.Block as IMyGasTank;
+            _useTick100 = true;
+        }
 
-		}
+        internal override void RunTick100()
+        {
+            if (!_firstRun)
+            {
+                if (!_physicsActive || !MES_SessionCore.IsServer)
+                    return;
 
-		internal override void Setup(BlockEntity block) {
+                _firstRun = true;
 
-			base.Setup(block);
-			_gasTank = block.Block as IMyGasTank;
-			_useTick100 = true;
+                if (_gasTank == null)
+                {
+                    _isValid = false;
+                    return;
+                }
 
-		}
+                Block.RefreshSubGrids();
 
-		internal override void RunTick100() {
+                for (int i = 0; i < Block.LinkedGrids.Count; i++)
+                {
+                    var grid = Block.LinkedGrids[i];
 
-			if (!_firstRun) {
+                    if (grid.ActiveEntity() && grid.Npc != null)
+                    {
+                        _isActive = true;
+                        break;
+                    }
+                }
 
-				if (!_physicsActive || !MES_SessionCore.IsServer)
-					return;
+                if (!_isActive)
+                {
+                    _isValid = false;
+                    return;
+                }
 
-				_firstRun = true;
+                var disable = true;
+                for (int i = 0; i < Block.LinkedGrids.Count; i++)
+                {
+                    var grid = Block.LinkedGrids[i];
 
-				if (_gasTank == null) {
+                    if (!grid.ActiveEntity() || grid.Npc == null)
+                        continue;
 
-					_isValid = false;
-					return;
-				
-				}
+                    if (grid.Npc.Attributes.ReplenishSystems)
+                    {
+                        disable = false;
+                        break;
+                    }
+                }
 
-				//lol none of this dumb stuff anymore
-/*
-				var _source = _gasTank.Components.Get<MyResourceSourceComponent>();
-				var _sink = _gasTank.Components.Get<MyResourceSinkComponent>();
-				var _definition = _gasTank.SlimBlock.BlockDefinition as MyGasTankDefinition;
+                if (disable)
+                {
+                    _isValid = false;
+                    return;
+                }
 
-				if (_source == null || _sink == null || _definition == null) {
+            }
 
-					_isValid = false;
-					return;
+            if (!FactionHelper.IsIdentityNPC(_gasTank.OwnerId))
+            {
+                _isValid = false;
+                return;
+            }
 
-				}
-*/
+            if (_gasTank.FilledRatio <= .25f)
+            {
+                _gasTank.ChangeFilledRatio(1, true);
+            }
 
-				Block.RefreshSubGrids();
+        }
 
-				for (int i = 0; i < Block.LinkedGrids.Count; i++) {
-
-					var grid = Block.LinkedGrids[i];
-
-					if (!grid.ActiveEntity() || grid.Npc == null) {
-
-						continue;
-					
-					}
-
-					if (grid.Npc.Attributes.IsCargoShip) {
-
-						_isCargoShip = true;
-						break;
-
-					}
-				
-				}
-
-				if (!_isCargoShip) {
-
-					_isValid = false;
-					return;
-
-				}
-
-			}
-
-			if (!_isNpcOwned) {
-
-				_isValid = false;
-				return;
-
-			}
-				
-			if (_gasTank.FilledRatio <= .25f) {
-
-				_gasTank.ChangeFilledRatio(1, true);
-
-			}
-
-		}
-
-	}
+    }
 
 }

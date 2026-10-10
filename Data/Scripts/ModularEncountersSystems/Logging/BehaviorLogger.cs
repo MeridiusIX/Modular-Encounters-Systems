@@ -88,7 +88,7 @@ namespace ModularEncountersSystems.Logging {
 				Write("Active Debug Not Found", BehaviorDebugEnum.Startup, true);
 
 			}
-		
+
 		}
 
 		public static bool SetActiveDebugFlag(BehaviorDebugEnum type, bool mode) {
@@ -116,7 +116,7 @@ namespace ModularEncountersSystems.Logging {
 			}
 
 			return updated;
-		
+
 		}
 
 		public static void Write(string msg, BehaviorDebugEnum type, bool forceGameLog = false) {
@@ -160,13 +160,16 @@ namespace ModularEncountersSystems.Logging {
 
                 if (MES_SessionCore.DeveloperMode)
                 {
-					foreach (var player in PlayerManager.ActivePlayers)
-					{
-						if (player.PromoteLevel == MyPromoteLevel.Admin || player.PromoteLevel == MyPromoteLevel.Owner)
-						{
-							MyVisualScriptLogicProvider.SendChatMessageColored("Exception in Main Behavior Processing, please provide /MES.Info.GetDiagnostics in the MES discord server.", VRageMath.Color.Red, "MES", player.IdentityId);
-						}
-					}
+                    lock (PlayerManager.ActivePlayers)
+                    {
+                        foreach (var player in PlayerManager.ActivePlayers)
+                        {
+                            if (player.PromoteLevel == MyPromoteLevel.Admin || player.PromoteLevel == MyPromoteLevel.Owner)
+                            {
+                                MyVisualScriptLogicProvider.SendChatMessageColored("Exception in Main Behavior Processing, please provide /MES.Info.GetDiagnostics in the MES discord server.", VRageMath.Color.Red, "MES", player.IdentityId);
+                            }
+                        }
+                    }
 				}
 
 			}
@@ -218,7 +221,7 @@ namespace ModularEncountersSystems.Logging {
 				return;
 
 			MyLog.Default.WriteLineAndConsole("MES / " + type.ToString() + ": " + msg);
-		
+
 		}
 
 

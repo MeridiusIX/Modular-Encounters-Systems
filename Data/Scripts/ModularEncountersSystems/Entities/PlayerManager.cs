@@ -7,6 +7,7 @@ using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VRage.Collections;
 using VRage.Game;
 using VRage.Game.ModAPI;
 using VRage.ModAPI;
@@ -17,7 +18,7 @@ namespace ModularEncountersSystems.Entities
     public static class PlayerManager
     {
         public static List<IMyPlayer> ActivePlayers = new List<IMyPlayer>();
-        public static List<PlayerEntity> Players = new List<PlayerEntity>();
+        public static MyConcurrentList<PlayerEntity> Players = new MyConcurrentList<PlayerEntity>();
 
         public static Action<PlayerEntity> NewPlayerDetected;
         public static Action UnloadEntities;

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Modular_Encounters_Systems</RootNamespace>
+    <LangVersion>6</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

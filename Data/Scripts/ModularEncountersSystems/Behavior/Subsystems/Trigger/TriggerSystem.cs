@@ -718,6 +718,30 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (receivedCommand.MatchReceiverEscort) {
+
+				var receiverLeaderId = Command.ActiveEscortLeaderId(_behavior);
+
+				if (receiverLeaderId == 0 || receivedCommand.RemoteControl == null || receiverLeaderId != receivedCommand.RemoteControl.EntityId) {
+
+					BehaviorLogger.Write("Receiver Is Not An Active Escort Of The Sender", BehaviorDebugEnum.Command);
+					return;
+
+				}
+
+			}
+
+			if (receivedCommand.MatchReceiverLeader) {
+
+				if (receivedCommand.SenderEscortLeaderId == 0 || receivedCommand.SenderEscortLeaderId != RemoteControl.EntityId) {
+
+					BehaviorLogger.Write("Receiver Is Not The Sender's Escort Leader", BehaviorDebugEnum.Command);
+					return;
+
+				}
+
+			}
+
 			if (receivedCommand.CheckRelationSenderReceiver)
             {
 				var relation = EntityEvaluator.GetRelationBetweenIdentities(receivedCommand.CommandOwnerId, RemoteControl.OwnerId);

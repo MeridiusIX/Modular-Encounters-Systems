@@ -31,6 +31,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public CommandTransmissionType TransmissionType;
 
 		public bool MatchSenderReceiverOwners;
+		public bool MatchReceiverParent;
+		public bool MatchReceiverChild;
 
 		public bool CheckRelationSenderReceiver;
 		public RelationTypeEnum Relation;
@@ -68,6 +70,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			TransmissionType = CommandTransmissionType.None;
 
 			MatchSenderReceiverOwners = true;
+			MatchReceiverParent = false;
+			MatchReceiverChild = false;
 
 			CheckRelationSenderReceiver = false;
 			Relation = RelationTypeEnum.None;
@@ -209,6 +213,20 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[MatchSenderReceiverOwners:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref MatchSenderReceiverOwners);
+
+					}
+
+					//MatchReceiverParent
+					if (tag.Contains("[MatchReceiverParent:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref MatchReceiverParent);
+
+					}
+
+					//MatchReceiverChild
+					if (tag.Contains("[MatchReceiverChild:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref MatchReceiverChild);
 
 					}
 

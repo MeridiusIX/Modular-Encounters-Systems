@@ -74,12 +74,16 @@ namespace ModularEncountersSystems.Helpers {
         public EncounterWaypoint Waypoint;
 
         public bool MatchSenderReceiverOwners;
+        public bool MatchReceiverParent;
+        public bool MatchReceiverChild;
 
         public bool CheckRelationSenderReceiver;
         public RelationTypeEnum Relation;
 
 
         public long CommandOwnerId;
+
+        public long SenderParentId;
 
         public float GridValueScore;
 
@@ -129,7 +133,10 @@ namespace ModularEncountersSystems.Helpers {
             Recipient = 0;
             Waypoint = null;
             MatchSenderReceiverOwners = false;
+            MatchReceiverParent = false;
+            MatchReceiverChild = false;
             CommandOwnerId = 0;
+            SenderParentId = 0;
             GridValueScore = 0;
             TransmissionType = CommandTransmissionType.None;
             Behavior = null;
@@ -188,6 +195,8 @@ namespace ModularEncountersSystems.Helpers {
             this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
             this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
             this.MatchSenderReceiverOwners = profile.MatchSenderReceiverOwners;
+            this.MatchReceiverParent = profile.MatchReceiverParent;
+            this.MatchReceiverChild = profile.MatchReceiverChild;
             this.CheckRelationSenderReceiver = profile.CheckRelationSenderReceiver;
             this.Relation = profile.Relation;
 
@@ -195,6 +204,7 @@ namespace ModularEncountersSystems.Helpers {
 
             RemoteControl = behavior.RemoteControl;
             CommandOwnerId = behavior.RemoteControl.OwnerId;
+            SenderParentId = behavior.CurrentGrid?.Npc?.ParentId ?? 0;
             this.RequestEscortSlot = profile.RequestEscortSlot;
             double sendRadius = 0;
 

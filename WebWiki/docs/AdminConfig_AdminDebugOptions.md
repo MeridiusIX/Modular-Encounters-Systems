@@ -126,6 +126,14 @@ Here is a list of command categories:
 |Description:|This chat command will spawn all grids from a provided mod, and will collect data while running some tests on its performance. The results of this test are then printed to the user clipboard in a CSV format (can paste into spreadsheet apps such as excel, google sheets, etc). It is important that you only use this command on an empty world you only intend to use for this testing, because all grids are deleted between spawns of prefabs.|
 |Allowed Value:|Partial or Full string of a Mod's Name (eg: `Corruption`)|  
 
+|Setting:|Reset Static Encounters|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command 1:|`/MES.Debug.ResetStaticEncounters`|
+|Chat Command 2:|`/MES.Debug.ResetStaticEncounters.Info`|
+|Description:|This chat command replaces every spawned Static Encounter with a fresh copy from the current SpawnGroup definitions, for example after a mod update changed its prefab, position or behavior. Command 1 removes the old grids of each encounter and spawns the new copy right away. Command 2 changes nothing: it lists which encounters would be reset or skipped (and why) and copies that report to the clipboard. When an old grid is removed using chat command 1, it is removed directly, so the Despawn settings and Despawn/Compromised triggers do not run. An encounter is skipped if any of its grids has player-owned blocks or a player seated in it, if a grid that is not part of the encounter is attached to it, or if another grid, a player or a player character is in its area or within 250m of its spawn point. Encounters that have not spawned yet are left alone. To reset a single encounter so it spawns again when a player comes in range, use `/MES.Debug.ResetThisStaticEncounters.SpawnGroupName`. Results are written to the SpawnRecord log.|
+|Allowed Value:|`N/A`|
+
 |Setting:|Remove All Npcs|
 |:----|:----|
 |XML:|`N/A`|

@@ -74,12 +74,19 @@ namespace ModularEncountersSystems.Helpers {
         public EncounterWaypoint Waypoint;
 
         public bool MatchSenderReceiverOwners;
+        public bool MatchReceiverParent;
+        public bool MatchReceiverChild;
+        public bool MatchReceiverEscort;
+        public bool MatchReceiverLeader;
 
         public bool CheckRelationSenderReceiver;
         public RelationTypeEnum Relation;
 
 
         public long CommandOwnerId;
+
+        public long SenderParentId;
+        public long SenderEscortLeaderId;
 
         public float GridValueScore;
 
@@ -98,6 +105,16 @@ namespace ModularEncountersSystems.Helpers {
         public Command() {
 
             Defaults();
+
+        }
+
+        public static long ActiveEscortLeaderId(IBehavior behavior) {
+
+            var settings = behavior?.BehaviorSettings;
+            if (settings == null || settings.ActiveBehaviorType != BehaviorSubclass.Escort)
+                return 0;
+
+            return settings.ParentEscort?.ParentId ?? 0;
 
         }
 
@@ -129,7 +146,13 @@ namespace ModularEncountersSystems.Helpers {
             Recipient = 0;
             Waypoint = null;
             MatchSenderReceiverOwners = false;
+            MatchReceiverParent = false;
+            MatchReceiverChild = false;
+            MatchReceiverEscort = false;
+            MatchReceiverLeader = false;
             CommandOwnerId = 0;
+            SenderParentId = 0;
+            SenderEscortLeaderId = 0;
             GridValueScore = 0;
             TransmissionType = CommandTransmissionType.None;
             Behavior = null;
@@ -188,6 +211,10 @@ namespace ModularEncountersSystems.Helpers {
             this.IgnoreAntennaRequirement = profile.IgnoreAntennaRequirement;
             this.IgnoreReceiverAntennaRequirement = profile.IgnoreReceiverAntennaRequirement;
             this.MatchSenderReceiverOwners = profile.MatchSenderReceiverOwners;
+            this.MatchReceiverParent = profile.MatchReceiverParent;
+            this.MatchReceiverChild = profile.MatchReceiverChild;
+            this.MatchReceiverEscort = profile.MatchReceiverEscort;
+            this.MatchReceiverLeader = profile.MatchReceiverLeader;
             this.CheckRelationSenderReceiver = profile.CheckRelationSenderReceiver;
             this.Relation = profile.Relation;
 
@@ -195,6 +222,8 @@ namespace ModularEncountersSystems.Helpers {
 
             RemoteControl = behavior.RemoteControl;
             CommandOwnerId = behavior.RemoteControl.OwnerId;
+            SenderParentId = behavior.CurrentGrid?.Npc?.ParentId ?? 0;
+            SenderEscortLeaderId = ActiveEscortLeaderId(behavior);
             this.RequestEscortSlot = profile.RequestEscortSlot;
             double sendRadius = 0;
 

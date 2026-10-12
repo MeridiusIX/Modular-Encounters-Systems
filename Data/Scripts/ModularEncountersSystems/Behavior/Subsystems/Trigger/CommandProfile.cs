@@ -31,6 +31,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public CommandTransmissionType TransmissionType;
 
 		public bool MatchSenderReceiverOwners;
+		public bool MatchReceiverParent;
+		public bool MatchReceiverChild;
+		public bool MatchReceiverEscort;
+		public bool MatchReceiverLeader;
 
 		public bool CheckRelationSenderReceiver;
 		public RelationTypeEnum Relation;
@@ -68,6 +72,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			TransmissionType = CommandTransmissionType.None;
 
 			MatchSenderReceiverOwners = true;
+			MatchReceiverParent = false;
+			MatchReceiverChild = false;
+			MatchReceiverEscort = false;
+			MatchReceiverLeader = false;
 
 			CheckRelationSenderReceiver = false;
 			Relation = RelationTypeEnum.None;
@@ -209,6 +217,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[MatchSenderReceiverOwners:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref MatchSenderReceiverOwners);
+
+					}
+
+					//MatchReceiverParent
+					if (tag.Contains("[MatchReceiverParent:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref MatchReceiverParent);
+
+					}
+
+					//MatchReceiverChild
+					if (tag.Contains("[MatchReceiverChild:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref MatchReceiverChild);
+
+					}
+
+					//MatchReceiverEscort
+					if (tag.Contains("[MatchReceiverEscort:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref MatchReceiverEscort);
+
+					}
+
+					//MatchReceiverLeader
+					if (tag.Contains("[MatchReceiverLeader:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref MatchReceiverLeader);
 
 					}
 

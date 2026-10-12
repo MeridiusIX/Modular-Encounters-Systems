@@ -1743,7 +1743,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     if (command != null)
                     {
 
-                        var parent = Equals(command.CommandOwnerId, _behavior?.CurrentGrid?.Npc.ParentId);
+                        var parentId = _behavior?.CurrentGrid?.Npc?.ParentId ?? 0;
+                        var parent = parentId != 0 && command.RemoteControl != null && command.RemoteControl.EntityId == parentId;
 
                         if (parent == ConditionReference.CommandFromParent)
                             satisfiedConditions++;

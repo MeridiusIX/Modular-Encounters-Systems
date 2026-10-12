@@ -67,6 +67,38 @@ Below are the tags you are able to use in your Command Profiles.
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 
+<!--MatchReceiverParent-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MatchReceiverParent|
+|:----|:----|
+|Tag Format:|`[MatchReceiverParent:Value]`|
+|Description:|This tag specifies if the command should only be processed by the grid that spawned the command sender.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--MatchReceiverChild-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MatchReceiverChild|
+|:----|:----|
+|Tag Format:|`[MatchReceiverChild:Value]`|
+|Description:|This tag specifies if the command should only be processed by grids that were spawned by the command sender.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--MatchReceiverEscort-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MatchReceiverEscort|
+|:----|:----|
+|Tag Format:|`[MatchReceiverEscort:Value]`|
+|Description:|This tag specifies if the command should only be processed by grids that are currently escorting the command sender.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--MatchReceiverLeader-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MatchReceiverLeader|
+|:----|:----|
+|Tag Format:|`[MatchReceiverLeader:Value]`|
+|Description:|This tag specifies if the command should only be processed by the grid that the command sender is currently escorting.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
 <!--IgnoreAntennaRequirement-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|IgnoreAntennaRequirement|
 |:----|:----|

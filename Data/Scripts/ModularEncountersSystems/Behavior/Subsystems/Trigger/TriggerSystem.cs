@@ -694,6 +694,54 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			}
 
+			if (receivedCommand.MatchReceiverParent) {
+
+				if (receivedCommand.SenderParentId == 0 || receivedCommand.SenderParentId != RemoteControl.EntityId) {
+
+					BehaviorLogger.Write("Receiver Is Not The Sender's Parent", BehaviorDebugEnum.Command);
+					return;
+
+				}
+
+			}
+
+			if (receivedCommand.MatchReceiverChild) {
+
+				var receiverParentId = _behavior?.CurrentGrid?.Npc?.ParentId ?? 0;
+
+				if (receiverParentId == 0 || receivedCommand.RemoteControl == null || receiverParentId != receivedCommand.RemoteControl.EntityId) {
+
+					BehaviorLogger.Write("Receiver Is Not A Child Of The Sender", BehaviorDebugEnum.Command);
+					return;
+
+				}
+
+			}
+
+			if (receivedCommand.MatchReceiverEscort) {
+
+				var receiverLeaderId = Command.ActiveEscortLeaderId(_behavior);
+
+				if (receiverLeaderId == 0 || receivedCommand.RemoteControl == null || receiverLeaderId != receivedCommand.RemoteControl.EntityId) {
+
+					BehaviorLogger.Write("Receiver Is Not An Active Escort Of The Sender", BehaviorDebugEnum.Command);
+					return;
+
+				}
+
+			}
+
+			if (receivedCommand.MatchReceiverLeader) {
+
+				if (receivedCommand.SenderEscortLeaderId == 0 || receivedCommand.SenderEscortLeaderId != RemoteControl.EntityId) {
+
+					BehaviorLogger.Write("Receiver Is Not The Sender's Escort Leader", BehaviorDebugEnum.Command);
+					return;
+
+				}
+
+			}
+
 			if (receivedCommand.CheckRelationSenderReceiver)
             {
 				var relation = EntityEvaluator.GetRelationBetweenIdentities(receivedCommand.CommandOwnerId, RemoteControl.OwnerId);

@@ -100,6 +100,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public double MaxRotationMagnitude;
 		public bool UseRotationBoostUp;
 		public float RotationBoostUpAmount;
+		public bool UseAircraftFlightModel;
+		public double MaxAngleFromVelocity;
+		public float RollIntoTurns;
+		public double MaxBankAngle;
+		public float ReturnToLevel;
+		public double ReturnToLevelMinSpeed;
+		public double MaxRotationStep;
 
 		//Dampener Control
 		public bool DisableInertiaDampeners;
@@ -252,6 +259,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			ForcedRotationDampeningAmount = 0.15f;
 			UseRotationBoostUp = false;
 			RotationBoostUpAmount = 3.14f;
+			UseAircraftFlightModel = false;
+			MaxAngleFromVelocity = 180;
+			RollIntoTurns = 0;
+			MaxBankAngle = 45;
+			ReturnToLevel = 0;
+			ReturnToLevelMinSpeed = 10;
+			MaxRotationStep = 0;
 
 			BarrelRollMinDurationMs = 3000;
 			BarrelRollMaxDurationMs = 5000;
@@ -1070,6 +1084,55 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[MaxRotationMagnitude:") == true) {
 
 				TagParse.TagDoubleCheck(tag, ref this.MaxRotationMagnitude);
+
+			}
+
+			//UseAircraftFlightModel
+			if (tag.Contains("[UseAircraftFlightModel:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref this.UseAircraftFlightModel);
+
+			}
+
+			//MaxAngleFromVelocity
+			if (tag.Contains("[MaxAngleFromVelocity:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.MaxAngleFromVelocity);
+
+			}
+
+			//RollIntoTurns
+			if (tag.Contains("[RollIntoTurns:") == true) {
+
+				TagParse.TagFloatCheck(tag, ref this.RollIntoTurns);
+
+			}
+
+			//MaxBankAngle
+			if (tag.Contains("[MaxBankAngle:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.MaxBankAngle);
+
+			}
+
+			//ReturnToLevel
+			if (tag.Contains("[ReturnToLevel:") == true) {
+
+				TagParse.TagFloatCheck(tag, ref this.ReturnToLevel);
+
+			}
+
+			//ReturnToLevelMinSpeed
+			if (tag.Contains("[ReturnToLevelMinSpeed:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.ReturnToLevelMinSpeed);
+
+			}
+
+			//MaxRotationStep
+			if (tag.Contains("[MaxRotationStep:") == true) {
+
+				TagParse.TagDoubleCheck(tag, ref this.MaxRotationStep);
 
 			}
 

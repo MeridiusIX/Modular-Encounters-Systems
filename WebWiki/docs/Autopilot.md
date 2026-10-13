@@ -430,7 +430,7 @@ This section contains tags that control rotation of the NPC grid.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseAircraftFlightModel|
 |:----|:----|
 |Tag Format:|`[UseAircraftFlightModel:Value]`|
-|Description:|This tag turns on an optional flight model for aircraft that steer with gyroscopes. When it is `true`, the tags `MaxAngleFromVelocity`, `RollIntoTurns`, `MaxBankAngle`, `ReturnToLevel`, `ReturnToLevelMinSpeed` and `MaxRotationStep` are used. When it is `false`, those tags are ignored and the autopilot rotates exactly as it does without them. Intended for planes in gravity, not for ships, rovers or space grids. Default value is `false`.|
+|Description:|This tag turns on a set of flight options intended for aircraft that steer with gyroscopes in gravity. When it is `true`, the tags `MaxAngleFromVelocity`, `RollIntoTurns`, `MaxBankAngle`, `ReturnToLevel`, `ReturnToLevelMinSpeed` and `MaxRotationStep` are used. When it is `false`, those tags are ignored completely. Default value is `false`.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 
@@ -438,31 +438,31 @@ This section contains tags that control rotation of the NPC grid.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxAngleFromVelocity|
 |:----|:----|
 |Tag Format:|`[MaxAngleFromVelocity:Value]`|
-|Description:|This tag specifies the maximum angle (in degrees) between the front of the NPC and its velocity, for aircraft that should fly where they point (e.g. gyro-steered planes). From 60% of this angle, the part of the gyro rotation that would turn the nose further from the velocity is faded out (fully removed at the limit). Past the limit, the nose is turned back toward the velocity at 3 times the excess (in radians per second). Roll is not affected. Only applies while the ship moves faster than 1 m/s and MES is commanding a rotation. Not recommended for space, Nautical or rover grids. Only used when `UseAircraftFlightModel` is `true`. Default value is `180` (off).|
+|Description:|This tag limits how far, in degrees, an NPC's nose can point away from its flight path, so it doesn't fly sideways. It is separate from `AngleAllowedForForwardThrust`, which only controls forward thrust. Try `25` for winged aircraft. Only used when `UseAircraftFlightModel` is `true`. Default value is `180` (no limit).|
 |Allowed Values:|`0` to `180`|
-|Multiple Tag Allowed:|No|
-
-<!--RollIntoTurns-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RollIntoTurns|
-|:----|:----|
-|Tag Format:|`[RollIntoTurns:Value]`|
-|Description:|This tag makes the NPC bank into its turns while in gravity. Instead of rolling toward wings-level, the grid rolls toward a bank angle of this value times its heading error (the horizontal angle between its nose and its waypoint or target, in degrees), capped at `MaxBankAngle`. For example, `1.5` banks 30 degrees when the waypoint is 20 degrees off the nose, and the grid levels out as it comes onto heading. Has no effect outside gravity. Negative values bank away from the turn. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
-|Allowed Values:|Any Number (degrees of bank per degree of heading error; negative values reverse)|
 |Multiple Tag Allowed:|No|
 
 <!--MaxBankAngle-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxBankAngle|
 |:----|:----|
 |Tag Format:|`[MaxBankAngle:Value]`|
-|Description:|This tag sets the largest bank angle (in degrees) that `RollIntoTurns` will ask for. Only used when `UseAircraftFlightModel` is `true`. Default value is `45`.|
+|Description:|This tag sets the steepest bank angle, in degrees, that `RollIntoTurns` will ask for. Only used when `UseAircraftFlightModel` is `true`. Default value is `45`.|
 |Allowed Values:|`0` to `89`|
+|Multiple Tag Allowed:|No|
+
+<!--RollIntoTurns-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RollIntoTurns|
+|:----|:----|
+|Tag Format:|`[RollIntoTurns:Value]`|
+|Description:|This tag makes the NPC bank in turns like an airplane. This value is a multiplier that sets the amount of banking based on the degrees remaining in the turn, up to `MaxBankAngle`. The NPC levels out as it completes its turn. A negative value rolls the NPC the opposite direction. Has no effect outside gravity. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
+|Allowed Values:|Any Number|
 |Multiple Tag Allowed:|No|
 
 <!--ReturnToLevel-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReturnToLevel|
 |:----|:----|
 |Tag Format:|`[ReturnToLevel:Value]`|
-|Description:|This tag makes the NPC roll back toward wings-level in gravity while MES is not rotating toward a waypoint or target and commands no yaw and no roll, for example while it has no waypoint or uses a mode that does not rotate toward one (when MES is rotating toward a waypoint in gravity, it already levels the roll on its own, or banks it with `RollIntoTurns`). The roll rate is this value times the maximum rotation rate for the grid size (3.14 rad/s large grid, 6.28 rad/s small grid), scaled by bank angle up to 90 degrees and by how horizontal the wings are, with a 3 degree dead zone, fading out between 90 and 150 degrees of bank (an inverted grid is left alone). It only acts at or above `ReturnToLevelMinSpeed`, so a grid parked on sloping ground is left alone. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
+|Description:|This tag sets whether the NPC rolls back to level with gravity when the autopilot is not steering it toward a waypoint or target. Higher values make the NPC level out faster. An NPC banked 3 degrees or less is left alone and NPCs that are close to upside down are not rolled over. Only works when the NPC is moving at or above `ReturnToLevelMinSpeed`. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
 |Allowed Values:|`0` to `1`|
 |Multiple Tag Allowed:|No|
 
@@ -470,7 +470,7 @@ This section contains tags that control rotation of the NPC grid.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReturnToLevelMinSpeed|
 |:----|:----|
 |Tag Format:|`[ReturnToLevelMinSpeed:Value]`|
-|Description:|This tag sets the minimum speed (in meters per second) at which `ReturnToLevel` acts. Below it, `ReturnToLevel` does nothing. Only used when `UseAircraftFlightModel` is `true`. Default value is `10`.|
+|Description:|This tag turns off `ReturnToLevel` below the set speed (in meters per second) so parked or crashed NPCs don't try to rotate to level. Only used when `UseAircraftFlightModel` is `true`. Default value is `10`.|
 |Allowed Values:|Any Number Greater or Equal to `0`|
 |Multiple Tag Allowed:|No|
 
@@ -478,7 +478,7 @@ This section contains tags that control rotation of the NPC grid.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxRotationStep|
 |:----|:----|
 |Tag Format:|`[MaxRotationStep:Value]`|
-|Description:|This tag limits how far (in radians per second) the gyro override target may be from the grid's current rotation each time MES updates the gyros: the target becomes the current angular velocity plus the requested change, clamped to this length. Space Engineers softens gyro override by the gap between target and current rotation (a gap above about 1.57 rad/s gets a 2 second ramp that restarts on every change and weakens all three axes), so a small step such as `0.3` keeps the gyros at full strength on grids that would otherwise wobble or respond sluggishly. It also limits BarrelRoll, HeavyYaw and the RandomGyroRotation action, which then build up their rotation over several updates. When MES commands no rotation, the gyro override is released as before. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
+|Description:|This tag makes NPCs turn more smoothly by changing their turn speed in small steps. Unlike `MaxRotationMagnitude`, which caps turn speed, this tag limits how fast the turn speed changes. Try `0.3`. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
 |Allowed Values:|Any Number Greater or Equal to `0`|
 |Multiple Tag Allowed:|No|
 

@@ -306,7 +306,7 @@ namespace ModularEncountersSystems.Spawning {
 					return;
 
 				PlanetEntityId = planet.Planet.EntityId;
-				var surfaceCoords = planet.SurfaceCoordsAtPosition(planet.Center() + (profile.StaticEncounterPlanetDirection * 10000));
+				var surfaceCoords = planet.SurfaceCoordsAtPosition(planet.Center() + (profile.StaticEncounterPlanetDirection * 10000), true);
 				ExactLocationCoords = profile.StaticEncounterPlanetDirection * profile.StaticEncounterPlanetAltitude + surfaceCoords;
 				TriggerCoords = ExactLocationCoords;
 

@@ -323,14 +323,14 @@ namespace ModularEncountersSystems.Spawning {
 
 			foreach (var owner in cubeGrid.BigOwners) {
 
-				if (owner != 0 && !FactionHelper.IsIdentityNPC(owner))
+				if (FactionHelper.IsIdentityPlayer(owner))
 					return true;
 
 			}
 
 			foreach (var owner in cubeGrid.SmallOwners) {
 
-				if (owner != 0 && !FactionHelper.IsIdentityNPC(owner))
+				if (FactionHelper.IsIdentityPlayer(owner))
 					return true;
 
 			}
@@ -457,7 +457,7 @@ namespace ModularEncountersSystems.Spawning {
 
 			foreach (var player in _tempPlayers) {
 
-				if (player == null || player.IsBot)
+				if (player == null || !FactionHelper.IsIdentityPlayer(player.IdentityId))
 					continue;
 
 				if (player.Character != null)

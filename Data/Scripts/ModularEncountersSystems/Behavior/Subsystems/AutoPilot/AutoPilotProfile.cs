@@ -102,10 +102,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public float RotationBoostUpAmount;
 		public bool UseAircraftFlightModel;
 		public double MaxAngleFromVelocity;
-		public float RollIntoTurns;
+		public float RollIntoTurnsMultiplier;
 		public double MaxBankAngle;
-		public float ReturnToLevel;
-		public double ReturnToLevelMinSpeed;
+		public float ReturnToLevelMultiplier;
+		public double ReturnToLevelSpeedCutOff;
 		public double MaxRotationStep;
 
 		//Dampener Control
@@ -261,10 +261,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			RotationBoostUpAmount = 3.14f;
 			UseAircraftFlightModel = false;
 			MaxAngleFromVelocity = 180;
-			RollIntoTurns = 0;
+			RollIntoTurnsMultiplier = 0;
 			MaxBankAngle = 45;
-			ReturnToLevel = 0;
-			ReturnToLevelMinSpeed = 10;
+			ReturnToLevelMultiplier = 0;
+			ReturnToLevelSpeedCutOff = 10;
 			MaxRotationStep = 0;
 
 			BarrelRollMinDurationMs = 3000;
@@ -1101,10 +1101,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
-			//RollIntoTurns
-			if (tag.Contains("[RollIntoTurns:") == true) {
+			//RollIntoTurnsMultiplier
+			if (tag.Contains("[RollIntoTurnsMultiplier:") == true) {
 
-				TagParse.TagFloatCheck(tag, ref this.RollIntoTurns);
+				TagParse.TagFloatCheck(tag, ref this.RollIntoTurnsMultiplier);
 
 			}
 
@@ -1115,17 +1115,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
-			//ReturnToLevel
-			if (tag.Contains("[ReturnToLevel:") == true) {
+			//ReturnToLevelMultiplier
+			if (tag.Contains("[ReturnToLevelMultiplier:") == true) {
 
-				TagParse.TagFloatCheck(tag, ref this.ReturnToLevel);
+				TagParse.TagFloatCheck(tag, ref this.ReturnToLevelMultiplier);
 
 			}
 
-			//ReturnToLevelMinSpeed
-			if (tag.Contains("[ReturnToLevelMinSpeed:") == true) {
+			//ReturnToLevelSpeedCutOff
+			if (tag.Contains("[ReturnToLevelSpeedCutOff:") == true) {
 
-				TagParse.TagDoubleCheck(tag, ref this.ReturnToLevelMinSpeed);
+				TagParse.TagDoubleCheck(tag, ref this.ReturnToLevelSpeedCutOff);
 
 			}
 

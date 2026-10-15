@@ -10,10 +10,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			var rotatingToWaypoint = hasWaypoint && (CurrentMode.HasFlag(NewAutoPilotMode.RotateToWaypoint) || CurrentMode.HasFlag(NewAutoPilotMode.RotateToTarget) || CurrentMode.HasFlag(NewAutoPilotMode.Ram));
 
-			if (rotatingToWaypoint && this.Data.RollIntoTurns != 0 && !CurrentMode.HasFlag(NewAutoPilotMode.BarrelRoll))
+			if (rotatingToWaypoint && this.Data.RollIntoTurnsMultiplier != 0 && !CurrentMode.HasFlag(NewAutoPilotMode.BarrelRoll))
 				ApplyRollIntoTurns();
 
-			if (this.Data.ReturnToLevel > 0)
+			if (this.Data.ReturnToLevelMultiplier > 0)
 				ApplyReturnToLevel(rotatingToWaypoint);
 
 		}
@@ -113,7 +113,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			var rightFlat = Vector3D.Cross(forwardFlat, _upDirection);
 			var headingError = MathHelper.ToDegrees(Math.Atan2(Vector3D.Dot(targetFlat, rightFlat) / rightFlat.Length(), Vector3D.Dot(targetFlat, forwardFlat) / forwardFlat.Length()));
 			var maxBank = MathHelper.Clamp(this.Data.MaxBankAngle, 0, 89);
-			var wantedBank = MathHelper.Clamp(this.Data.RollIntoTurns * headingError, -maxBank, maxBank);
+			var wantedBank = MathHelper.Clamp(this.Data.RollIntoTurnsMultiplier * headingError, -maxBank, maxBank);
 
 			var right = -Vector3D.Dot(_upDirection, matrix.Right);
 			var below = Vector3D.Dot(_upDirection, matrix.Up);
@@ -143,7 +143,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (rotatingToWaypoint || _upDirection == Vector3D.Zero || Math.Abs(this.RotationToApply.Y) > 0.0001f || Math.Abs(this.RotationToApply.Z) > 0.0001f)
 				return;
 
-			if (MyVelocity.LengthSquared() < this.Data.ReturnToLevelMinSpeed * this.Data.ReturnToLevelMinSpeed)
+			if (MyVelocity.LengthSquared() < this.Data.ReturnToLevelSpeedCutOff * this.Data.ReturnToLevelSpeedCutOff)
 				return;
 
 			var matrix = this.RefBlockMatrixRotation;
@@ -164,7 +164,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (MaxRotationForGridSize == 0)
 				MaxRotationForGridSize = _remoteControl.CubeGrid.GridSizeEnum == MyCubeSize.Small ? 6.28 : 3.14;
 
-			this.RotationToApply.Z -= (float)(this.Data.ReturnToLevel * MathHelper.Clamp(bank / 90, -1, 1) * horizontalWings * fade * MaxRotationForGridSize);
+			this.RotationToApply.Z -= (float)(this.Data.ReturnToLevelMultiplier * MathHelper.Clamp(bank / 90, -1, 1) * horizontalWings * fade * MaxRotationForGridSize);
 
 		}
 

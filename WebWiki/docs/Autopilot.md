@@ -430,7 +430,7 @@ This section contains tags that control rotation of the NPC grid.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseAircraftFlightModel|
 |:----|:----|
 |Tag Format:|`[UseAircraftFlightModel:Value]`|
-|Description:|This tag turns on a set of flight options intended for aircraft that steer with gyroscopes in gravity. When it is `true`, the tags `MaxAngleFromVelocity`, `RollIntoTurns`, `MaxBankAngle`, `ReturnToLevel`, `ReturnToLevelMinSpeed` and `MaxRotationStep` are used. When it is `false`, those tags are ignored completely. Default value is `false`.|
+|Description:|This tag turns on a set of flight options intended for aircraft that steer with gyroscopes in gravity. When it is `true`, the tags `MaxAngleFromVelocity`, `RollIntoTurnsMultiplier`, `MaxBankAngle`, `ReturnToLevelMultiplier`, `ReturnToLevelSpeedCutOff` and `MaxRotationStep` are used. When it is `false`, those tags are ignored completely. Default value is `false`.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 
@@ -446,31 +446,31 @@ This section contains tags that control rotation of the NPC grid.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxBankAngle|
 |:----|:----|
 |Tag Format:|`[MaxBankAngle:Value]`|
-|Description:|This tag sets the steepest bank angle, in degrees, that `RollIntoTurns` will ask for. Only used when `UseAircraftFlightModel` is `true`. Default value is `45`.|
+|Description:|This tag sets the steepest bank angle, in degrees, that `RollIntoTurnsMultiplier` will ask for. Only used when `UseAircraftFlightModel` is `true`. Default value is `45`.|
 |Allowed Values:|`0` to `89`|
 |Multiple Tag Allowed:|No|
 
-<!--RollIntoTurns-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RollIntoTurns|
+<!--RollIntoTurnsMultiplier-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RollIntoTurnsMultiplier|
 |:----|:----|
-|Tag Format:|`[RollIntoTurns:Value]`|
+|Tag Format:|`[RollIntoTurnsMultiplier:Value]`|
 |Description:|This tag makes the NPC bank in turns like an airplane. This value is a multiplier that sets the amount of banking based on the degrees remaining in the turn, up to `MaxBankAngle`. The NPC levels out as it completes its turn. A negative value rolls the NPC the opposite direction. Has no effect outside gravity. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
 |Allowed Values:|Any Number|
 |Multiple Tag Allowed:|No|
 
-<!--ReturnToLevel-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReturnToLevel|
+<!--ReturnToLevelMultiplier-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReturnToLevelMultiplier|
 |:----|:----|
-|Tag Format:|`[ReturnToLevel:Value]`|
-|Description:|This tag sets whether the NPC rolls back to level with gravity when the autopilot is not steering it toward a waypoint or target. Higher values make the NPC level out faster. An NPC banked 3 degrees or less is left alone and NPCs that are close to upside down are not rolled over. Only works when the NPC is moving at or above `ReturnToLevelMinSpeed`. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
+|Tag Format:|`[ReturnToLevelMultiplier:Value]`|
+|Description:|This tag makes the NPC roll back to level with gravity when the autopilot is not steering it toward a waypoint or target. This value is a multiplier on how fast it rolls back: higher values make the NPC level out faster, and `0` turns it off. An NPC banked 3 degrees or less is left alone and NPCs that are close to upside down are not rolled over. Only works when the NPC is moving at or above `ReturnToLevelSpeedCutOff`. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
 |Allowed Values:|`0` to `1`|
 |Multiple Tag Allowed:|No|
 
-<!--ReturnToLevelMinSpeed-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReturnToLevelMinSpeed|
+<!--ReturnToLevelSpeedCutOff-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReturnToLevelSpeedCutOff|
 |:----|:----|
-|Tag Format:|`[ReturnToLevelMinSpeed:Value]`|
-|Description:|This tag turns off `ReturnToLevel` below the set speed (in meters per second) so parked or crashed NPCs don't try to rotate to level. Only used when `UseAircraftFlightModel` is `true`. Default value is `10`.|
+|Tag Format:|`[ReturnToLevelSpeedCutOff:Value]`|
+|Description:|This tag turns off `ReturnToLevelMultiplier` below the set speed (in meters per second) so parked or crashed NPCs don't try to rotate to level. Only used when `UseAircraftFlightModel` is `true`. Default value is `10`.|
 |Allowed Values:|Any Number Greater or Equal to `0`|
 |Multiple Tag Allowed:|No|
 

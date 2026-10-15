@@ -618,6 +618,14 @@ namespace ModularEncountersSystems.Sync {
 				}
 			}
 
+			//MES.Debug.ResetStaticEncounters
+			if (StaticEncounterReset.IsChatCommand(Message)) {
+
+				StaticEncounterReset.ProcessChatCommand(this);
+				return true;
+
+			}
+
             //MES.Debug.ResetThisStaticEncounters
             if (array[2] == "ResetThisUniqueSpawnGroup")
             {

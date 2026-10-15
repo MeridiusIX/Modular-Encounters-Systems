@@ -95,6 +95,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 		}
 
+		public bool UpdateRotationWorld(Vector3D rawValues, Vector3D worldAngularVelocity, MatrixD matrix) {
+
+			if (!Valid || !Working) {
+
+				return false;
+
+			}
+
+			RawValues = rawValues;
+			RefMatrix = matrix;
+
+			var transformedRotationVec = Vector3D.TransformNormal(-worldAngularVelocity, MatrixD.Transpose(this.Block.WorldMatrix));
+
+			this.PendingRotation = Vector3.Zero;
+			this.PendingRotation.X = (float)transformedRotationVec.X;
+			this.PendingRotation.Y = (float)transformedRotationVec.Y;
+			this.PendingRotation.Z = (float)transformedRotationVec.Z;
+
+			return true;
+
+		}
+
 		public bool ApplyRotation() {
 
 			if (!Valid || !Working) {

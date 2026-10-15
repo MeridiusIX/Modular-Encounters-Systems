@@ -1,10 +1,54 @@
-#SpawnGroup.md
+#SpawnGroup
 
 SpawnGroups are definitions that provide rules about an NPC encounter to the Modular Encounters Systems Spawning Mechanism.
 
 The SpawnGroups that the Modular Encounters Systems uses utilize the `<Description>` tags to define many custom rules and modifications to a spawned entity. This includes conditions for when the encounter is allowed to spawn, and manipulations that are applied to the prefabs (grids) before they are spawned into the world.
 
+Example:
+```
+<?xml version="1.0"?>
+<Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<SpawnGroups>
 
+		<SpawnGroup>
+			<Id>
+				<TypeId>SpawnGroupDefinition</TypeId> <!--Do Not Edit-->
+				<SubtypeId>YourSpawnGroupNameHere</SubtypeId>
+			</Id>
+			<Description>
+			[Modular Encounters SpawnGroup]
+				
+			[SpaceCargoShip:false]
+			[LunarCargoShip:false]
+			[SpaceRandomEncounter:false]
+			[AtmosphericCargoShip:false]
+			[PlanetaryInstallation:false]
+			[RivalAiSpawn:false]
+			
+			[FactionOwner:SPRT]
+			[ReplenishSystems:true]
+				
+			[UseRivalAi:true]
+			[RivalAiReplaceRemoteControl:true]
+			</Description>
+			<IsPirate>true</IsPirate> <!--Do not edit-->
+			<Frequency>5.0</Frequency>
+			<Prefabs>
+				<Prefab SubtypeId="YourPrefabNameHere">
+					<Position>
+						<X>0.0</X>
+						<Y>0.0</Y>
+						<Z>0.0</Z>
+					</Position>
+					<Speed>25</Speed>
+					<Behaviour></Behaviour>
+				</Prefab>
+			</Prefabs>
+		</SpawnGroup>		
+
+	</SpawnGroups>
+</Definitions>
+```
 
 [**Conditions**](#Conditions)  
 [**Economy**](#Economy)   

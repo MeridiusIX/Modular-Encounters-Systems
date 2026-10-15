@@ -343,6 +343,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (ActiveGyro == null || !ActiveGyro.Active)
 				return;
 
+			if (this.Data.UseAircraftFlightModel && ApplyAircraftGyroRotation())
+				return;
+
 			ActiveGyro.UpdateRotation(this.RotationToApply.X, this.RotationToApply.Y, this.RotationToApply.Z, this.Data.RotationMultiplier, this.Data.RotationMultiplierPitch, this.Data.RotationMultiplierYaw, this.Data.RotationMultiplierRoll, this.RefBlockMatrixRotation);
 
 		}
@@ -370,6 +373,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				this.RotationToApply.Y = 10;
 
 			}
+
+			if (this.Data.UseAircraftFlightModel)
+				ApplyAircraftFlightModel(hasWaypoint);
 
 			PrepareGyroForRotation();
 

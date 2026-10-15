@@ -526,7 +526,7 @@ namespace ModularEncountersSystems.World {
 		[ProtoIgnore]
 		public IMyRemoteControl PrimaryRemoteControl;
 
-		[ProtoIgnore]
+		[ProtoMember(49)]
 		public long ParentId;
 
 		public NpcData() {

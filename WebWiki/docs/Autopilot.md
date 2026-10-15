@@ -426,6 +426,62 @@ This section contains tags that control rotation of the NPC grid.
 |Allowed Values:|Any Number Greater Than `0`|
 |Multiple Tag Allowed:|No|
 
+<!--UseAircraftFlightModel-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseAircraftFlightModel|
+|:----|:----|
+|Tag Format:|`[UseAircraftFlightModel:Value]`|
+|Description:|This tag turns on a set of flight options intended for aircraft that steer with gyroscopes in gravity. When it is `true`, the tags `MaxAngleFromVelocity`, `RollIntoTurnsMultiplier`, `MaxBankAngle`, `ReturnToLevelMultiplier`, `ReturnToLevelSpeedCutOff` and `MaxRotationStep` are used. When it is `false`, those tags are ignored completely. Default value is `false`.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--MaxAngleFromVelocity-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxAngleFromVelocity|
+|:----|:----|
+|Tag Format:|`[MaxAngleFromVelocity:Value]`|
+|Description:|This tag limits how far, in degrees, an NPC's nose can point away from its flight path, so it doesn't fly sideways. It is separate from `AngleAllowedForForwardThrust`, which only controls forward thrust. Try `25` for winged aircraft. Only used when `UseAircraftFlightModel` is `true`. Default value is `180` (no limit).|
+|Allowed Values:|`0` to `180`|
+|Multiple Tag Allowed:|No|
+
+<!--MaxBankAngle-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxBankAngle|
+|:----|:----|
+|Tag Format:|`[MaxBankAngle:Value]`|
+|Description:|This tag sets the steepest bank angle, in degrees, that `RollIntoTurnsMultiplier` will ask for. Only used when `UseAircraftFlightModel` is `true`. Default value is `45`.|
+|Allowed Values:|`0` to `89`|
+|Multiple Tag Allowed:|No|
+
+<!--RollIntoTurnsMultiplier-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RollIntoTurnsMultiplier|
+|:----|:----|
+|Tag Format:|`[RollIntoTurnsMultiplier:Value]`|
+|Description:|This tag makes the NPC bank in turns like an airplane. This value is a multiplier that sets the amount of banking based on the degrees remaining in the turn, up to `MaxBankAngle`. The NPC levels out as it completes its turn. A negative value rolls the NPC the opposite direction. Has no effect outside gravity. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
+|Allowed Values:|Any Number|
+|Multiple Tag Allowed:|No|
+
+<!--ReturnToLevelMultiplier-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReturnToLevelMultiplier|
+|:----|:----|
+|Tag Format:|`[ReturnToLevelMultiplier:Value]`|
+|Description:|This tag makes the NPC roll back to level with gravity when the autopilot is not steering it toward a waypoint or target. This value is a multiplier on how fast it rolls back: higher values make the NPC level out faster, and `0` turns it off. An NPC banked 3 degrees or less is left alone and NPCs that are close to upside down are not rolled over. Only works when the NPC is moving at or above `ReturnToLevelSpeedCutOff`. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
+|Allowed Values:|`0` to `1`|
+|Multiple Tag Allowed:|No|
+
+<!--ReturnToLevelSpeedCutOff-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReturnToLevelSpeedCutOff|
+|:----|:----|
+|Tag Format:|`[ReturnToLevelSpeedCutOff:Value]`|
+|Description:|This tag turns off `ReturnToLevelMultiplier` below the set speed (in meters per second) so parked or crashed NPCs don't try to rotate to level. Only used when `UseAircraftFlightModel` is `true`. Default value is `10`.|
+|Allowed Values:|Any Number Greater or Equal to `0`|
+|Multiple Tag Allowed:|No|
+
+<!--MaxRotationStep-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxRotationStep|
+|:----|:----|
+|Tag Format:|`[MaxRotationStep:Value]`|
+|Description:|This tag makes NPCs turn more smoothly by changing their turn speed in small steps. Unlike `MaxRotationMagnitude`, which caps turn speed, this tag limits how fast the turn speed changes. Try `0.3`. Only used when `UseAircraftFlightModel` is `true`. Default value is `0` (off).|
+|Allowed Values:|Any Number Greater or Equal to `0`|
+|Multiple Tag Allowed:|No|
+
 # Special
 
 This section contains tags for special autopilot modes such as Barrel Roll and Ramming.  

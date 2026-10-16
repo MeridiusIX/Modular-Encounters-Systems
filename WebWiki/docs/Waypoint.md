@@ -118,6 +118,6 @@ Below are the tags you are able to use in your Waypoint Profiles.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|IgnoreWater|
 |:----|:----|
 |Tag Format:|`[IgnoreWater:Value]`|
-|Description:|When using a `Random` type waypoint on a planet with water from the Water Mod, `MinAltitude` and `MaxAltitude` are measured from the water surface wherever the water is higher than the terrain. Setting this tag to `true` measures them from the terrain instead (the seabed over water). Has no effect without the Water Mod. Default value is `false`.|
+|Description:|This tag determines whether a random waypoint ignores the height of water when being set. The default value is false, matching the way `MinAltitude` and `MaxAltitude` are measured from the water surface wherever the water is higher than the terrain. This tag has no effect without the Water Mod.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|

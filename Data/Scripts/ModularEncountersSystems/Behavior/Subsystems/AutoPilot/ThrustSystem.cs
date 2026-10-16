@@ -206,12 +206,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			var velocityToTargetAngle = VectorHelper.GetAngleBetweenDirections(Vector3D.Normalize(GetCurrentWaypoint() - _remoteControl.WorldMatrix.Translation), Vector3D.Normalize(_remoteControl.SlimBlock.CubeGrid.Physics.LinearVelocity));
 			var velocity = _remoteControl.SlimBlock.CubeGrid.Physics.LinearVelocity;
-			var velocityAmount = velocity.Length();
+			var forwardVelocityAmt = Vector3D.Dot(velocity, _forwardDir);
 			var stoppingDist = CalculateStoppingDistance(velocity, _forwardDir, Base6Directions.Direction.Backward); //Braking uses the reverse (Backward) thrusters, not the forward mains
 
 			if (!IndirectWaypointType.HasFlag(WaypointModificationEnum.PlanetPathingAscend) && !IndirectWaypointType.HasFlag(WaypointModificationEnum.Collision)) {
 
-				if ((stoppingDist >= this.DistanceToCurrentWaypoint && velocityAmount >= Data.IdealMinSpeed) || this.DistanceToCurrentWaypoint <= this.Data.WaypointTolerance) {
+				if ((stoppingDist >= this.DistanceToCurrentWaypoint && forwardVelocityAmt >= Data.IdealMinSpeed) || this.DistanceToCurrentWaypoint <= this.Data.WaypointTolerance) {
 
 					_debugThrustForwardMode = string.Format("Current Dist / Stop Dist  :  {0} / {1}", Math.Round(this.DistanceToCurrentWaypoint), Math.Round(stoppingDist));
 					_thrustToApply.SetZ(false, false, 0, _orientation);
@@ -237,8 +237,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
-			//BehaviorLogger.Write(string.Format("Forward Thrust Check: {0} / {1}", velocityAmount, IdealMaxSpeed - MaxSpeedTolerance), BehaviorDebugEnum.Thrust);
-			if (velocityAmount < MaxSpeed - Data.MaxSpeedTolerance) {
+			//BehaviorLogger.Write(string.Format("Forward Thrust Check: {0} / {1}", forwardVelocityAmt, IdealMaxSpeed - MaxSpeedTolerance), BehaviorDebugEnum.Thrust);
+			if (forwardVelocityAmt < MaxSpeed - Data.MaxSpeedTolerance) {
 
 				_debugThrustForwardMode = "Thrust To Desired Speed";
 				_thrustToApply.SetZ(true, false, 1, _orientation);
@@ -246,8 +246,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
-			//BehaviorLogger.Write(string.Format("Reverse Thrust Check: {0} / {1}", velocityAmount, IdealMaxSpeed + MaxSpeedTolerance), BehaviorDebugEnum.Thrust);
-			if (velocityAmount > MaxSpeed + Data.MaxSpeedTolerance) {
+			//BehaviorLogger.Write(string.Format("Reverse Thrust Check: {0} / {1}", forwardVelocityAmt, IdealMaxSpeed + MaxSpeedTolerance), BehaviorDebugEnum.Thrust);
+			if (forwardVelocityAmt > MaxSpeed + Data.MaxSpeedTolerance) {
 
 				_debugThrustForwardMode = "Brake To Desired Speed";
 				_thrustToApply.SetZ(true, true, 1, _orientation);

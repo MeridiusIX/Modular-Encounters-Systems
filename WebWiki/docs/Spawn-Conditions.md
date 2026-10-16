@@ -1337,6 +1337,15 @@ There is no need for these tags anymore.
 |Default Value(s):|`-1`|
 |Multiple Tag Allowed:|No|
 
+<!-- MaxWaterCoverage  -->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MaxWaterCoverage|
+|:----|:----|
+|Tag Format:|`[MaxWaterCoverage:Value]`|
+|Description:|This tag allows you to specify the maximum share of water in the area around the player for this encounter to spawn. If more of the surrounding area is water than this value, the encounter will not appear. It applies to any encounter that sets it, including dry land installations, so land encounters can be kept from being picked when the player is at sea. This is used with the [Water Mod](https://steamcommunity.com/sharedfiles/filedetails/?id=2200451495) by Jakaria|
+|Allowed Values:|Floating Point Value Between `0` and `1`<br>`-1` (no maximum)|
+|Default Value(s):|`-1`|
+|Multiple Tag Allowed:|No|
+
 <!-- UseDayOrNightOnly  -->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseDayOrNightOnly|
 |:----|:----|

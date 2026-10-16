@@ -1,4 +1,4 @@
-﻿using Sandbox.ModAPI;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -114,7 +114,14 @@ namespace ModularEncountersSystems.Entities {
 
 		public long GetEntityId() {
 
-			if (Entity == null || !MyAPIGateway.Entities.Exist(Entity))
+			if (Entity == null || Entity.MarkedForClose || Entity.Closed)
+				return 0;
+
+			//Blocks (e.g. the cockpit a seated player is in) are not root entities,
+			//so check that the top-most parent (the grid) exists instead.
+			var root = Entity.GetTopMostParent() ?? Entity;
+
+			if (!MyAPIGateway.Entities.Exist(root))
 				return 0;
 
 			return Entity.EntityId;

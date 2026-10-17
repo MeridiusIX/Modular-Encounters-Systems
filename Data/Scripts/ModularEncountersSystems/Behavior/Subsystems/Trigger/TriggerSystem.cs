@@ -1074,7 +1074,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					else if (trigger.DespawnTypeFromSpawner == "PathEnd" && despawnType.StartsWith("Cargo Ship Reached End"))
 						despawnMatch = true;
 
-					if (trigger.DespawnTypeFromSpawner == "Any" || despawnType == trigger.DespawnTypeFromSpawner) {
+					if (despawnMatch || despawnType == trigger.DespawnTypeFromSpawner) {
 
 						trigger.ActivateTrigger();
 

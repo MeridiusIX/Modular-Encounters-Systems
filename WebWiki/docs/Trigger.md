@@ -50,7 +50,7 @@ All Trigger Profiles require the `Type` tag. This is what determines what sort o
 |`Compromised`|A trigger that is activated when the Remote Control block stops working.|
 |`Damage`|A damage watcher that executes actions when damage to the NPC is detected.|
 |`Despawn`|A trigger that is activated when the NPC is despawned by RivalAI.|
-|`DespawnMES`|A trigger that is activated when the NPC is despawned by the Modular Encounters Spawner.|
+|`DespawnMES`|A trigger that is activated when the NPC is despawned by the Modular Encounters Spawner for one of the types specified in `DespawnTypeFromSpawner`.|
 |`HasTarget`|A trigger that will activate while NPC has a valid target.|
 |`HealthPercentage`|A trigger that will activate if the NPC health is above a certain percentage.|
 |`InsideZone`|A trigger that will activate while NPC is inside a specified zone.|
@@ -311,8 +311,8 @@ Below are the tags you are able to use in your Trigger Profiles. Please note tha
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|DespawnTypeFromSpawner|
 |:----|:----|
 |Tag Format:|`[DespawnTypeFromSpawner:Value]`|
-|Description:|Specifies the type of Despawn Request from the Modular Encounters Spawner required to activate the trigger.|
-|Allowed Values:|`Any`<br />`PathEnd`<br />`CleanUp`|
+|Description:|Specifies the type of Despawn Request from the Modular Encounters Spawner required to activate the trigger. `Any` matches every despawn. `CleanUp` matches any spawner cleanup (block count, distance or timer). `PathEnd` matches a cargo ship reaching the end of its path. The other values each match one specific despawn: `Despawn-Behavior` is a despawn by the NPC's own behavior or a `ForceDespawn` action, and `Despawn-Debug` is the `/MES.Debug.DeleteGrid` chat command.|
+|Allowed Values:|`Any`<br />`PathEnd`<br />`CleanUp`<br />`CleanUp-BlockCount`<br />`CleanUp-Distance`<br />`CleanUp-Timer`<br />`Despawn-Behavior`<br />`Despawn-Debug`|
 |Compatible Types:|`DespawnMES`|
 |Multiple Tag Allowed:|No|
 <!--  -->

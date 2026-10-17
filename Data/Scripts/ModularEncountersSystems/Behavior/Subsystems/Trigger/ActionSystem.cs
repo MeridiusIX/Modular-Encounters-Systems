@@ -887,6 +887,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
+                //ClearParentEscort
+                lastAction = "ClearParentEscort";
+                if (actions.ClearParentEscort)
+                {
+
+                    _behavior.Escort.ClearParentEscort();
+
+                }
+
                 //SwitchToBehavior
                 lastAction = "SwitchToBehavior";
                 if (actions.SwitchToBehavior == true)

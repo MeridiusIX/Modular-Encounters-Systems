@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Zone-Profile.md - Modular Encounters System</title>
+    <title>Zone-Profile - Modular Encounters System</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Zone-Profile.md";
+        var mkdocs_page_name = "Zone-Profile";
         var mkdocs_page_input_path = "Zone-Profile.md";
         var mkdocs_page_url = null;
       </script>
@@ -233,7 +233,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Zone-Profile.md</li>
+      <li class="breadcrumb-item active">Zone-Profile</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -242,7 +242,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="zone-profilemd">Zone-Profile.md</h1>
+                <h1 id="zone-profile">Zone-Profile</h1>
 <p>Zones (formerly Territories) are pre-defined locations in the game world that can be used to control what encounters are allowed to spawn and when. Zone Profiles do not attach to SpawnGroups or any other profile.</p>
 <p>Here is an example of how a Zone is defined:</p>
 <pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
@@ -276,6 +276,7 @@
 </code></pre>
 <p>Below are the types of tags you can include in your Zone Profile:</p>
 <!--Active-->
+
 <table>
 <thead>
 <tr>
@@ -294,7 +295,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -307,6 +308,7 @@
 </tbody>
 </table>
 <!--Persistent-->
+
 <table>
 <thead>
 <tr>
@@ -325,7 +327,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -338,6 +340,7 @@
 </tbody>
 </table>
 <!--Strict-->
+
 <table>
 <thead>
 <tr>
@@ -356,7 +359,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -369,6 +372,7 @@
 </tbody>
 </table>
 <!--NoSpawnZone-->
+
 <table>
 <thead>
 <tr>
@@ -387,7 +391,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -400,6 +404,7 @@
 </tbody>
 </table>
 <!--PublicName-->
+
 <table>
 <thead>
 <tr>
@@ -431,6 +436,7 @@
 </tbody>
 </table>
 <!--Coordinates-->
+
 <table>
 <thead>
 <tr>
@@ -462,6 +468,7 @@
 </tbody>
 </table>
 <!--CoordinateRadiusPairs-->
+
 <table>
 <thead>
 <tr>
@@ -493,6 +500,7 @@
 </tbody>
 </table>
 <!--Radius-->
+
 <table>
 <thead>
 <tr>
@@ -511,7 +519,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;">Any Number Greater Than <code>0</code></td>
+<td style="text-align: left;">Any Number Greater Than<code>0</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -524,6 +532,7 @@
 </tbody>
 </table>
 <!--PlanetaryZone-->
+
 <table>
 <thead>
 <tr>
@@ -542,7 +551,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -555,6 +564,7 @@
 </tbody>
 </table>
 <!--PlanetName-->
+
 <table>
 <thead>
 <tr>
@@ -586,6 +596,7 @@
 </tbody>
 </table>
 <!--Direction-->
+
 <table>
 <thead>
 <tr>
@@ -617,6 +628,7 @@
 </tbody>
 </table>
 <!--HeightOffset-->
+
 <table>
 <thead>
 <tr>
@@ -631,7 +643,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines the height offset from the planet surface if a <code>Direction</code> tag is provided.<br />Use the <code>/MES.Info.GetLocationMatrix</code> chat command to get the height offset at your current player position.</td>
+<td style="text-align: left;">This tag determines the height offset from the planet surface if a<code>Direction</code> tag is provided.<br />Use the <code>/MES.Info.GetLocationMatrix</code> chat command to get the height offset at your current player position.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -652,6 +664,7 @@
 <!--IntendedPlanetSize NOT YET-->
 
 <!--UseAllowedFactions-->
+
 <table>
 <thead>
 <tr>
@@ -670,7 +683,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -683,6 +696,7 @@
 </tbody>
 </table>
 <!--AllowedFactions-->
+
 <table>
 <thead>
 <tr>
@@ -697,7 +711,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines the Factions that are allowed to spawn within the Zone if using the <code>UseAllowedFactions</code> tag.</td>
+<td style="text-align: left;">This tag determines the Factions that are allowed to spawn within the Zone if using the<code>UseAllowedFactions</code> tag.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -714,6 +728,7 @@
 </tbody>
 </table>
 <!--UseRestrictedFactions-->
+
 <table>
 <thead>
 <tr>
@@ -732,7 +747,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -745,6 +760,7 @@
 </tbody>
 </table>
 <!--RestrictedFactions-->
+
 <table>
 <thead>
 <tr>
@@ -759,7 +775,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag determines the Factions that are not allowed to spawn within the Zone if using the <code>UseRestrictedFactions</code> tag.</td>
+<td style="text-align: left;">This tag determines the Factions that are not allowed to spawn within the Zone if using the<code>UseRestrictedFactions</code> tag.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -776,6 +792,7 @@
 </tbody>
 </table>
 <!--UseAllowedSpawnGroups-->
+
 <table>
 <thead>
 <tr>
@@ -794,7 +811,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -807,6 +824,7 @@
 </tbody>
 </table>
 <!--AllowedSpawnGroups-->
+
 <table>
 <thead>
 <tr>
@@ -838,6 +856,7 @@
 </tbody>
 </table>
 <!--UseRestrictedSpawnGroups-->
+
 <table>
 <thead>
 <tr>
@@ -856,7 +875,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -869,6 +888,7 @@
 </tbody>
 </table>
 <!--RestrictedSpawnGroups-->
+
 <table>
 <thead>
 <tr>
@@ -900,6 +920,7 @@
 </tbody>
 </table>
 <!--UseAllowedModIDs-->
+
 <table>
 <thead>
 <tr>
@@ -914,11 +935,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">When <code>true</code>, only SpawnGroups from mods listed in <code>AllowedModIDs</code> may spawn <strong>while the spawn position is inside this zone</strong>. This does not prevent those mods from spawning outside the zone. Note: this feature is only available for Steam workshop mods.</td>
+<td style="text-align: left;">When<code>true</code>, only SpawnGroups from mods listed in <code>AllowedModIDs</code> may spawn <strong>while the spawn position is inside this zone</strong>. This does not prevent those mods from spawning outside the zone. Note: this feature is only available for Steam workshop mods.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -931,6 +952,7 @@
 </tbody>
 </table>
 <!--AllowedModIDs-->
+
 <table>
 <thead>
 <tr>
@@ -945,7 +967,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">Workshop mod published file IDs allowed to spawn inside this zone when <code>UseAllowedModIDs</code> is <code>true</code>. Multiple tags or comma-separated values are supported. Note: this feature is only available for Steam workshop mods.</td>
+<td style="text-align: left;">Workshop mod published file IDs allowed to spawn inside this zone when<code>UseAllowedModIDs</code> is <code>true</code>. Multiple tags or comma-separated values are supported. Note: this feature is only available for Steam workshop mods.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -962,6 +984,7 @@
 </tbody>
 </table>
 <!--UseRestrictedModIDs-->
+
 <table>
 <thead>
 <tr>
@@ -976,11 +999,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">When <code>true</code>, SpawnGroups from mods listed in <code>RestrictedModIDs</code> are blocked <strong>while the spawn position is inside this zone</strong>. This does not block those mods outside the zone. If a mod is both allowed and restricted at the same position, restriction wins. Note: this feature is only available for Steam workshop mods.</td>
+<td style="text-align: left;">When<code>true</code>, SpawnGroups from mods listed in <code>RestrictedModIDs</code> are blocked <strong>while the spawn position is inside this zone</strong>. This does not block those mods outside the zone. If a mod is both allowed and restricted at the same position, restriction wins. Note: this feature is only available for Steam workshop mods.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -993,6 +1016,7 @@
 </tbody>
 </table>
 <!--RestrictedModIDs-->
+
 <table>
 <thead>
 <tr>
@@ -1007,7 +1031,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">Workshop mod published file IDs blocked from spawning inside this zone when <code>UseRestrictedModIDs</code> is <code>true</code>. Multiple tags or comma-separated values are supported. Note: this feature is only available for Steam workshop mods.</td>
+<td style="text-align: left;">Workshop mod published file IDs blocked from spawning inside this zone when<code>UseRestrictedModIDs</code> is <code>true</code>. Multiple tags or comma-separated values are supported. Note: this feature is only available for Steam workshop mods.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -1024,6 +1048,7 @@
 </tbody>
 </table>
 <!--UseZoneAnnounce-->
+
 <table>
 <thead>
 <tr>
@@ -1042,7 +1067,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+<td style="text-align: left;"><code>truefalse</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>
@@ -1055,6 +1080,7 @@
 </tbody>
 </table>
 <!--ZoneEnterAnnounce-->
+
 <table>
 <thead>
 <tr>
@@ -1086,6 +1112,7 @@
 </tbody>
 </table>
 <!--ZoneLeaveAnnounce-->
+
 <table>
 <thead>
 <tr>
@@ -1117,6 +1144,7 @@
 </tbody>
 </table>
 <!-- RequiredSandboxBool -->
+
 <table>
 <thead>
 <tr>
@@ -1131,7 +1159,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify the name of a Sandbox Boolean that must be <code>true</code> in order for this zone to be Active.</td>
+<td style="text-align: left;">This tag allows you to specify the name of a Sandbox Boolean that must be<code>true</code> in order for this zone to be Active.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -1148,6 +1176,7 @@
 </tbody>
 </table>
 <!-- RequiredFalseSandboxBool -->
+
 <table>
 <thead>
 <tr>
@@ -1162,7 +1191,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify the name of a Sandbox Boolean that must be <code>false</code> in order for this zone to be Active.</td>
+<td style="text-align: left;">This tag allows you to specify the name of a Sandbox Boolean that must be<code>false</code> in order for this zone to be Active.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>

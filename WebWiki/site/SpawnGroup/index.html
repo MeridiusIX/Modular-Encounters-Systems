@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>SpawnGroup.md - Modular Encounters System</title>
+    <title>SpawnGroup - Modular Encounters System</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "SpawnGroup.md";
+        var mkdocs_page_name = "SpawnGroup";
         var mkdocs_page_input_path = "SpawnGroup.md";
         var mkdocs_page_url = null;
       </script>
@@ -233,7 +233,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">SpawnGroup.md</li>
+      <li class="breadcrumb-item active">SpawnGroup</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -242,9 +242,53 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="spawngroupmd">SpawnGroup.md</h1>
+                <h1 id="spawngroup">SpawnGroup</h1>
 <p>SpawnGroups are definitions that provide rules about an NPC encounter to the Modular Encounters Systems Spawning Mechanism.</p>
 <p>The SpawnGroups that the Modular Encounters Systems uses utilize the <code>&lt;Description&gt;</code> tags to define many custom rules and modifications to a spawned entity. This includes conditions for when the encounter is allowed to spawn, and manipulations that are applied to the prefabs (grids) before they are spawned into the world.</p>
+<p>Example:</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;Definitions xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
+    &lt;SpawnGroups&gt;
+
+        &lt;SpawnGroup&gt;
+            &lt;Id&gt;
+                &lt;TypeId&gt;SpawnGroupDefinition&lt;/TypeId&gt; &lt;!--Do Not Edit--&gt;
+                &lt;SubtypeId&gt;YourSpawnGroupNameHere&lt;/SubtypeId&gt;
+            &lt;/Id&gt;
+            &lt;Description&gt;
+            [Modular Encounters SpawnGroup]
+
+            [SpaceCargoShip:false]
+            [LunarCargoShip:false]
+            [SpaceRandomEncounter:false]
+            [AtmosphericCargoShip:false]
+            [PlanetaryInstallation:false]
+            [RivalAiSpawn:false]
+
+            [FactionOwner:SPRT]
+            [ReplenishSystems:true]
+
+            [UseRivalAi:true]
+            [RivalAiReplaceRemoteControl:true]
+            &lt;/Description&gt;
+            &lt;IsPirate&gt;true&lt;/IsPirate&gt; &lt;!--Do not edit--&gt;
+            &lt;Frequency&gt;5.0&lt;/Frequency&gt;
+            &lt;Prefabs&gt;
+                &lt;Prefab SubtypeId=&quot;YourPrefabNameHere&quot;&gt;
+                    &lt;Position&gt;
+                        &lt;X&gt;0.0&lt;/X&gt;
+                        &lt;Y&gt;0.0&lt;/Y&gt;
+                        &lt;Z&gt;0.0&lt;/Z&gt;
+                    &lt;/Position&gt;
+                    &lt;Speed&gt;25&lt;/Speed&gt;
+                    &lt;Behaviour&gt;&lt;/Behaviour&gt;
+                &lt;/Prefab&gt;
+            &lt;/Prefabs&gt;
+        &lt;/SpawnGroup&gt;       
+
+    &lt;/SpawnGroups&gt;
+&lt;/Definitions&gt;
+</code></pre>
 <p><a href="#Conditions"><strong>Conditions</strong></a><br />
 <a href="#Economy"><strong>Economy</strong></a> <br />
 <a href="#Manipulations"><strong>Manipulations</strong></a><br />

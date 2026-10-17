@@ -115,6 +115,13 @@ namespace ModularEncountersSystems.Core {
 			ProgressionManager.Setup();
 			ProgressionDataManager.Setup();
 			ControlManager.Setup();
+
+			if (MyAPIGateway.Multiplayer.IsServer) {
+
+				FactionHelper.Setup();
+
+			}
+
 			EntityWatcher.RegisterWatcher(); //Scan World For Entities and Setup AutoDetect For New Entities
 			SetDefaultSettings();
 			APIs.RegisterAPIs(2); //Register Any Applicable APIs
@@ -124,8 +131,6 @@ namespace ModularEncountersSystems.Core {
 
 			if (!MyAPIGateway.Multiplayer.IsServer)
 				return;
-
-            FactionHelper.Setup();
 
 			ProgressionManager.ButtonPanelStartupValidation();
 			ProgramBlockControls.SpawnProgramBlockForControls();

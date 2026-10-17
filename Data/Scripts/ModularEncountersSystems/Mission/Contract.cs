@@ -43,6 +43,12 @@ namespace ModularEncountersSystems.Missions
         public string MissionProfileSubtypeId;
 
 
+        // Seems to be needed for existing contracts.
+        public ActiveContract()
+        {
+
+        }
+
         public ActiveContract(long ContractId, long BlockId, int Reward, int ReputationReward, int FailReputationPrice, string FactionTag, string ActivateBooleanNameOnSucces, string profileSubtypeId)
         {
             this.ContractId = ContractId;

@@ -111,7 +111,7 @@ Below are the tags you are able to use in your Trigger Profiles. Please note tha
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AllowTargetFarWithoutTarget|
 |:----|:----|
 |Tag Format:|`[AllowTargetFarWithoutTarget:Value]`|
-|Description:|Determines if the Trigger type `TargetFar` can activate if the behavior does not currently have a target.|
+|Description:|Determines if a `TargetFar` trigger can also activate when the grid has no target (for example, when a target is lost or destroyed).|
 |Allowed Values:|`true`<br>`false`|
 |Compatible Types:|`TargetFar`|
 |Multiple Tag Allowed:|No|

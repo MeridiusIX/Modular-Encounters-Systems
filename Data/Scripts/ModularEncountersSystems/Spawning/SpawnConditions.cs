@@ -482,18 +482,14 @@ namespace ModularEncountersSystems.Spawning {
 
                 }
 
-                if (environment.WaterInSurroundingAreaRatio > (float)conditions.MaxWaterCoverage && (float)conditions.MaxWaterCoverage > 0)
-                {
-
-                    failReason = "   - Maximum WaterInSurroundingAreaRatio Check Failed";
-                    return false;
-
-                }
-
-
-
-
             }
+
+			if (environment.WaterInSurroundingAreaRatio > (float)conditions.MaxWaterCoverage && (float)conditions.MaxWaterCoverage > 0) {
+
+				failReason = "   - Maximum WaterInSurroundingAreaRatio Check Failed";
+				return false;
+
+			}
 
 			return true;
 

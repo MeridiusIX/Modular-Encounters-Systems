@@ -113,3 +113,11 @@ Below are the tags you are able to use in your Waypoint Profiles.
 |Description:|This tag specifies if the waypoint should inherit the altitude of the reference coordinates when using a `Random` type waypoint.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
+
+<!--IgnoreWater-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|IgnoreWater|
+|:----|:----|
+|Tag Format:|`[IgnoreWater:Value]`|
+|Description:|This tag determines whether a random waypoint ignores the height of water when being set. The default value is false, matching the way `MinAltitude` and `MaxAltitude` are measured from the water surface wherever the water is higher than the terrain. This tag has no effect without the Water Mod.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|

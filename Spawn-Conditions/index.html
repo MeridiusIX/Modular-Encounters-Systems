@@ -4356,6 +4356,68 @@
 </tr>
 </tbody>
 </table>
+<!-- MaxWaterDepth  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">MaxWaterDepth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[MaxWaterDepth:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag allows you to specify the maximum water depth at which an encounter can spawn. It is the counterpart to <code>MinWaterDepth</code> and uses the same depth measurement: for grids that spawn underwater it limits how deep they can be placed, and for grids that spawn on the water surface it limits the water depth beneath the surface (for example to keep docks or wrecks in shallow water). It also applies to creatures that use <code>CanSpawnUnderwater</code>. If this tag is not used, there is no maximum depth. A value of <code>0</code> allows no water placements (creatures will only spawn on dry land). This is used with the <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2200451495">Water Mod</a> by Jakaria</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any Number Equal To Or Greater Than <code>0</code><br>Value must be equal to or higher than <code>MinWaterDepth</code> if tag is used<br><code>-1</code> (no maximum)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>-1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- MaxWaterCoverage  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">MaxWaterCoverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[MaxWaterCoverage:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag allows you to specify the maximum share of water in the area around the player for this encounter to spawn. If more of the surrounding area is water than this value, the encounter will not appear. It applies to any encounter that sets it, including dry land installations, so land encounters can be excluded from the spawn pool when appropriate. This is used with the <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2200451495">Water Mod</a> by Jakaria</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Floating Point Value Between <code>0</code> and <code>1</code><br><code>-1</code> (no maximum)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>-1</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
 <!-- UseDayOrNightOnly  -->
 <table>
 <thead>

@@ -3291,11 +3291,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies if the NPC Grid is able to be edited (add/remove/weld/grind blocks).</td>
+<td style="text-align: left;">This tag specifies if the NPC Grid is able to be edited (add/remove/weld/grind blocks). <code>Ignore</code> (default) leaves the current state unchanged.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>Yes</code><br><code>No</code></td>
+<td style="text-align: left;"><code>Yes</code><br><code>No</code><br><code>Ignore</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Multiple Tag Allowed:</td>
@@ -3318,11 +3318,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies if sub-grids editable state should also be changed if <code>GridEditable</code> tag is used.</td>
+<td style="text-align: left;">This tag specifies if sub-grids editable state should also be changed if <code>GridEditable</code> tag is used. <code>Ignore</code> (default) leaves sub-grids unchanged.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>Yes</code><br><code>No</code></td>
+<td style="text-align: left;"><code>Yes</code><br><code>No</code><br><code>Ignore</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Multiple Tag Allowed:</td>
@@ -3345,11 +3345,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies if the NPC Grid should have destructible blocks (can receive damage).</td>
+<td style="text-align: left;">This tag specifies if the NPC Grid should have destructible blocks (can receive damage). <code>Ignore</code> (default) leaves the current state unchanged.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>Yes</code><br><code>No</code></td>
+<td style="text-align: left;"><code>Yes</code><br><code>No</code><br><code>Ignore</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Multiple Tag Allowed:</td>
@@ -3372,11 +3372,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies if sub-grids destructible state should also be changed if <code>GridDestructible</code> tag is used.</td>
+<td style="text-align: left;">This tag specifies if sub-grids destructible state should also be changed if <code>GridDestructible</code> tag is used. <code>Ignore</code> (default) leaves sub-grids unchanged.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>Yes</code><br><code>No</code></td>
+<td style="text-align: left;"><code>Yes</code><br><code>No</code><br><code>Ignore</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Multiple Tag Allowed:</td>
@@ -4243,11 +4243,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">Specifies the max area time-limit (in minutes) for the Known Player Area if <code>CreateKnownPlayerArea</code> is <code>true</code>.</td>
+<td style="text-align: left;">Specifies the max area time-limit (in minutes) for the Known Player Area if <code>CreateKnownPlayerArea</code> is <code>true</code>. Default is <code>30</code>. If the value is <code>0</code> or lower, no Known Player Area is created.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;">Any Integer equal/higher than <code>0</code></td>
+<td style="text-align: left;">Any Integer higher than <code>0</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Multiple Tag Allowed:</td>

@@ -494,7 +494,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value for <code>DurationValue</code>:</td>
-<td style="text-align: left;">Any Integer Greater Than 0</td>
+<td style="text-align: left;">Any Integer Greater Than 0 (minutes). Defaults to <code>30</code> if omitted.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value for <code>MaxEncounterValue</code>:</td>
@@ -602,6 +602,50 @@
 <thead>
 <tr>
 <th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Hide All Zones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.HideAllZones</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command hides all visible zones.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Hide Zone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.HideZone.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command hides the specified zone. The zone can be specified by either the SubtypeID or the PublicName.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
 <th style="text-align: left;">Process Prefabs</th>
 </tr>
 </thead>
@@ -621,6 +665,36 @@
 <tr>
 <td style="text-align: left;">Allowed Value:</td>
 <td style="text-align: left;">Partial or Full string of a Mod's Name (eg: <code>Corruption</code>)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Reset Static Encounters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.ResetStaticEncounters</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 2:</td>
+<td style="text-align: left;"><code>/MES.Debug.ResetStaticEncounters.Info</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command replaces every spawned Static Encounter with a fresh copy from the current SpawnGroup definitions, for example after a mod update changed its prefab, position or behavior. Command 1 removes the old grids of each encounter and spawns the new copy right away. Command 2 changes nothing: it lists which encounters would be reset or skipped (and why) and copies that report to the clipboard. When an old grid is removed using chat command 1, it is removed directly, so the Despawn settings and Despawn/Compromised triggers do not run. An encounter is skipped if any of its grids has player-owned blocks or a player seated in it, if a grid that is not part of the encounter is attached to it, or if another grid, a player or a player character is in its area or within 250m of its spawn point. Encounters that have not spawned yet are left alone. To reset a single encounter so it spawns again when a player comes in range, use <code>/MES.Debug.ResetThisStaticEncounters.SpawnGroupName</code>. Results are written to the SpawnRecord log.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value:</td>
+<td style="text-align: left;"><code>N/A</code></td>
 </tr>
 </tbody>
 </table>
@@ -691,6 +765,50 @@
 <tr>
 <td style="text-align: left;">Description:</td>
 <td style="text-align: left;">This chat command allows you to reset all zones currently loaded in the game world and reload them using the profiles currently present in the mod loadout.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Show All Zones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ShowAllZones</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command makes all active zones visible. Zone visiblity is colored thus: Allowed Zone = Green, Restricted Zone = Red, Mixed (Allowed and Restricted) = Yellow, Neither = Blue.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Show Zone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command 1:</td>
+<td style="text-align: left;"><code>/MES.Debug.ShowZone.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command shows the specified zone. The zone can be specified by either the SubtypeID or the PublicName. Zone visiblity is colored thus: Allowed Zone = Green, Restricted Zone = Red, Mixed (Allowed and Restricted) = Yellow, Neither = Blue.</td>
 </tr>
 </tbody>
 </table>
@@ -875,6 +993,28 @@
 <thead>
 <tr>
 <th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Events</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetEvents</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will get a list of events and save it to your clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
 <th style="text-align: left;">Get Grid Behavior</th>
 </tr>
 </thead>
@@ -1034,6 +1174,28 @@
 <tr>
 <td style="text-align: left;">Description:</td>
 <td style="text-align: left;">This chat command will get the current Threat Score near your position and save it to your clipboard. By default, a range of <code>5000</code> meters is checked. You can provide a custom distance by replacing the <code>Value</code> text in Chat Command 2</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Zones</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetZones</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command will get a list of the current zones and save it to your clipboard.</td>
 </tr>
 </tbody>
 </table>

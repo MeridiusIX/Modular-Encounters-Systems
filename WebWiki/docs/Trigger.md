@@ -111,7 +111,7 @@ Below are the tags you are able to use in your Trigger Profiles. Please note tha
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AllowTargetFarWithoutTarget|
 |:----|:----|
 |Tag Format:|`[AllowTargetFarWithoutTarget:Value]`|
-|Description:|Determines if the Trigger type `TargetFar` can activate if the behavior does not currently have a target.|
+|Description:|Determines if the Trigger type `TargetFar` will also activate when the behavior currently has no target. By default, `TargetFar` requires an active target farther than `TargetDistance`. Setting this to `true` allows the trigger to also fire when the target is lost or destroyed, so a single trigger can handle disengagement without needing a separate `NoTarget` trigger.|
 |Allowed Values:|`true`<br>`false`|
 |Compatible Types:|`TargetFar`|
 |Multiple Tag Allowed:|No|

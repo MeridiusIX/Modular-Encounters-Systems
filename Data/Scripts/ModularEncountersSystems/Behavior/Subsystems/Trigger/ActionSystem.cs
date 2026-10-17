@@ -887,12 +887,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
-                //ClearParentEscort
-                lastAction = "ClearParentEscort";
-                if (actions.ClearParentEscort)
+                //LeaveEscortSlot
+                lastAction = "LeaveEscortSlot";
+                if (actions.LeaveEscortSlot)
                 {
 
-                    _behavior.Escort.ClearParentEscort();
+                    _behavior.Escort.LeaveEscortSlot();
 
                 }
 

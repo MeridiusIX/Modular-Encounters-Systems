@@ -394,7 +394,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool DisableHighestRangeAntennas;
 
 		public bool AssignEscortFromCommand;
-		public bool ClearParentEscort;
+		public bool LeaveEscortSlot;
 
 		public bool UseCurrentPositionAsPatrolReference;
 		public bool ClearCustomPatrolReference;
@@ -926,7 +926,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			DisableHighestRangeAntennas = false;
 
 			AssignEscortFromCommand = false;
-			ClearParentEscort = false;
+			LeaveEscortSlot = false;
 
 			UseCurrentPositionAsPatrolReference = false;
 			ClearCustomPatrolReference = false;
@@ -1356,7 +1356,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"EnableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref EnableHighestRangeAntennas) },
                 {"DisableHighestRangeAntennas", (s, o) => TagParse.TagBoolCheck(s, ref DisableHighestRangeAntennas) },
                 {"AssignEscortFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AssignEscortFromCommand) },
-                {"ClearParentEscort", (s, o) => TagParse.TagBoolCheck(s, ref ClearParentEscort) },
+                {"LeaveEscortSlot", (s, o) => TagParse.TagBoolCheck(s, ref LeaveEscortSlot) },
                 {"UseCurrentPositionAsPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref UseCurrentPositionAsPatrolReference) },
                 {"ClearCustomPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref ClearCustomPatrolReference) },
                 {"SetGridToStatic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToStatic) },

@@ -323,7 +323,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
-		public void ClearParentEscort() {
+		public void LeaveEscortSlot() {
 
 			if (_behavior.BehaviorSettings.ParentEscort == null)
 				return;

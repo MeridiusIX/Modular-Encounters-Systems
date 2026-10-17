@@ -738,11 +738,11 @@ This section contains actions for NPC to NPC communication.
 |Allowed Value(s):|`true`<br />`false`|
 |Multiple Tags Allowed:|No|
 
-<!-- ClearParentEscort -->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ClearParentEscort|
+<!-- LeaveEscortSlot -->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|LeaveEscortSlot|
 |:----|:----|
-|Tag Format:|`[ClearParentEscort:Value]`|
-|Description:|When true, the current grid clears its parent escort assignment, frees its escort slot on the parent grid, and resets any relative dampening to the parent.|
+|Tag Format:|`[LeaveEscortSlot:Value]`|
+|Description:|Used on an escort. When true, the escort stops escorting its leader and frees its escort slot on the leader, so the leader can fill the slot again and the escort can be assigned to another leader. Also clears the escort's relative dampening.|
 |Allowed Value(s):|`true`<br />`false`|
 |Multiple Tags Allowed:|No|
 

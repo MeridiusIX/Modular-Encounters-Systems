@@ -32,7 +32,11 @@ namespace ModularEncountersSystems.Helpers {
 
         public static void Setup()
         {
-            var checkpoint = MyAPIGateway.Session.GetCheckpoint(string.Empty);
+            _nPCIdentities.Clear();
+            var checkpoint = MyAPIGateway.Session?.GetCheckpoint(string.Empty);
+
+            if (checkpoint?.NonPlayerIdentities == null)
+                return;
 
             foreach(var id in checkpoint.NonPlayerIdentities)
             {

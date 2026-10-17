@@ -738,6 +738,14 @@ This section contains actions for NPC to NPC communication.
 |Allowed Value(s):|`true`<br />`false`|
 |Multiple Tags Allowed:|No|
 
+<!-- ClearParentEscort -->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ClearParentEscort|
+|:----|:----|
+|Tag Format:|`[ClearParentEscort:Value]`|
+|Description:|When true, the current grid clears its parent escort assignment, frees its escort slot on the parent grid, and resets any relative dampening to the parent.|
+|Allowed Value(s):|`true`<br />`false`|
+|Multiple Tags Allowed:|No|
+
 ***
 
 # Damage

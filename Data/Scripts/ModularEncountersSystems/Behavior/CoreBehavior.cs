@@ -11,6 +11,7 @@ using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Watchers;
 using ModularEncountersSystems.World;
+using Sandbox.Game.Entities;
 using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI;
 using SpaceEngineers.Game.ModAPI;
@@ -741,6 +742,15 @@ namespace ModularEncountersSystems.Behavior {
 		public void AssignSubClassBehavior(BehaviorSubclass subclass) {
 
 			BehaviorLogger.Write("Assigning Subclass Behavior.", BehaviorDebugEnum.BehaviorSetup);
+
+			if (BehaviorSettings.ActiveBehaviorType == BehaviorSubclass.Escort && subclass != BehaviorSubclass.Escort) {
+
+				var sc = RemoteControl as MyShipController;
+
+				if (sc != null && sc.RelativeDampeningEntity != null)
+					sc.RelativeDampeningEntity = null;
+
+			}
 
 			if (subclass == BehaviorSubclass.CargoShip) {
 

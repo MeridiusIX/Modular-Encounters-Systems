@@ -80,6 +80,9 @@ namespace ModularEncountersSystems.Behavior {
 
 				if (_behavior.BehaviorSettings.ParentEscort == null || !_behavior.BehaviorSettings.ParentEscort.ValidationCheck()) {
 
+					if (_controller != null && _controller.RelativeDampeningEntity != null)
+						_controller.RelativeDampeningEntity = null;
+
 					_behavior.AutoPilot.ActivateAutoPilot(_behavior.RemoteControl.GetPosition(), NewAutoPilotMode.None, CheckEnum.No, CheckEnum.Yes);
 					_behavior.ChangeCoreBehaviorMode(BehaviorMode.WaitingForTarget);
 					_behavior.BehaviorTriggerB = true;

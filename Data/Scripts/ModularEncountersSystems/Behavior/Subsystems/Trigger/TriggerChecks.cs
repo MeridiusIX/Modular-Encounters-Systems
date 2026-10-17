@@ -125,36 +125,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		//AcquiredTarget
 		public bool CheckAcquiredTarget(TriggerProfile trigger) {
 
-			var result = _autopilot.Targeting.TargetAcquired;
-			_autopilot.Targeting.TargetAcquired = false;
-			return result;
+			return _autopilot.Targeting.TargetAcquired;
 
 		}
 
 		//LostTarget
 		public bool CheckLostTarget(TriggerProfile trigger) {
 
-			var result = _autopilot.Targeting.TargetLost;
-			_autopilot.Targeting.TargetLost = false;
-			return result;
+			return _autopilot.Targeting.TargetLost;
 
 		}
 
 		//SwitchedTarget
 		public bool CheckSwitchedTarget(TriggerProfile trigger) {
 
-			var result = _autopilot.Targeting.TargetSwitched;
-			_autopilot.Targeting.TargetSwitched = false;
-			return result;
+			return _autopilot.Targeting.TargetSwitched;
 
 		}
 
 		//ChangedTarget
 		public bool CheckChangedTarget(TriggerProfile trigger) {
 
-			var result = _autopilot.Targeting.TargetChanged;
-			_autopilot.Targeting.TargetChanged = false;
-			return result;
+			return _autopilot.Targeting.TargetChanged;
 
 		}
 

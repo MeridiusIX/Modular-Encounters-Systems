@@ -887,6 +887,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
+                //LeaveEscortSlot
+                lastAction = "LeaveEscortSlot";
+                if (actions.LeaveEscortSlot)
+                {
+
+                    _behavior.Escort.LeaveEscortSlot();
+
+                }
+
                 //SwitchToBehavior
                 lastAction = "SwitchToBehavior";
                 if (actions.SwitchToBehavior == true)

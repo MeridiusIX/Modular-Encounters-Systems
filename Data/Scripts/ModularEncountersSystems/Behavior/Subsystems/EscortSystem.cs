@@ -1,6 +1,7 @@
 ﻿using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using ProtoBuf;
+using Sandbox.Game.Entities;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
@@ -124,7 +125,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		}
 
-		public void InitializeEscorts() {
+		public void CleanUpEscorts() {
 
 			for (int i = _behavior.BehaviorSettings.ActiveEscorts.Count - 1; i >= 0; i--) {
 
@@ -137,8 +138,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				}
 
+			}
+
+		}
+
+		public void InitializeEscorts() {
+
+			CleanUpEscorts();
+
+			foreach (var escort in _behavior.BehaviorSettings.ActiveEscorts) {
+
 				escort.ChildBehavior.BehaviorSettings.ParentEscort = escort;
-			
+
 			}
 		
 		}
@@ -167,16 +178,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public bool DoesEscortExistLocally(long parentId, long childId) {
 
-			for (int i = _behavior.BehaviorSettings.ActiveEscorts.Count - 1; i >= 0; i--) {
+			CleanUpEscorts();
 
-				var escort = _behavior.BehaviorSettings.ActiveEscorts[i];
-
-				if (escort == null || !escort.ValidationCheck()) {
-
-					_behavior.BehaviorSettings.ActiveEscorts.RemoveAt(i);
-					continue;
-
-				}
+			foreach (var escort in _behavior.BehaviorSettings.ActiveEscorts) {
 
 				if (parentId == escort.ParentId && childId == escort.ChildId)
 					return true;
@@ -188,6 +192,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		}
 
 		public string ProcessEscortRequest(Command command) {
+
+			CleanUpEscorts();
 
 			SpawnLogger.Write("Escort Request From: " + command.RemoteControl.EntityId, SpawnerDebugEnum.Dev);
 			long requestor = command.RemoteControl.EntityId;
@@ -271,6 +277,29 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
+			if (command.Behavior.BehaviorSettings.ParentEscort != null) {
+
+				var oldEscort = command.Behavior.BehaviorSettings.ParentEscort;
+				oldEscort.Valid = false;
+
+				if (oldEscort.ParentBehavior?.BehaviorSettings?.ActiveEscorts != null) {
+
+					for (int i = oldEscort.ParentBehavior.BehaviorSettings.ActiveEscorts.Count - 1; i >= 0; i--) {
+
+						var escort = oldEscort.ParentBehavior.BehaviorSettings.ActiveEscorts[i];
+
+						if (escort == null || escort.ChildId == requestor) {
+
+							oldEscort.ParentBehavior.BehaviorSettings.ActiveEscorts.RemoveAt(i);
+
+						}
+
+					}
+
+				}
+
+			}
+
 			newEscort.ChildBehavior.BehaviorSettings.ParentEscort = newEscort;
 			_behavior.BehaviorSettings.ActiveEscorts.Add(newEscort);
 			SpawnLogger.Write("[" + newEscort.ChildBehavior.GridName + " / " + newEscort.ChildBehavior.CurrentGrid.Npc.BehaviorName + " / " + newEscort.ChildBehavior.RemoteControl.EntityId + "] Has Been Assigned Escort.", SpawnerDebugEnum.Dev);
@@ -291,6 +320,39 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			escort.Offset = offset;
 			return escort;
+
+		}
+
+		public void LeaveEscortSlot() {
+
+			if (_behavior.BehaviorSettings.ParentEscort == null)
+				return;
+
+			var parentEscort = _behavior.BehaviorSettings.ParentEscort;
+			parentEscort.Valid = false;
+
+			if (parentEscort.ParentBehavior?.BehaviorSettings?.ActiveEscorts != null) {
+
+				for (int i = parentEscort.ParentBehavior.BehaviorSettings.ActiveEscorts.Count - 1; i >= 0; i--) {
+
+					var escort = parentEscort.ParentBehavior.BehaviorSettings.ActiveEscorts[i];
+
+					if (escort == null || escort.ChildId == _behavior.RemoteControl.EntityId) {
+
+						parentEscort.ParentBehavior.BehaviorSettings.ActiveEscorts.RemoveAt(i);
+
+					}
+
+				}
+
+			}
+
+			_behavior.BehaviorSettings.ParentEscort = null;
+
+			var controller = _behavior.RemoteControl as MyShipController;
+
+			if (controller != null && controller.RelativeDampeningEntity != null)
+				controller.RelativeDampeningEntity = null;
 
 		}
 

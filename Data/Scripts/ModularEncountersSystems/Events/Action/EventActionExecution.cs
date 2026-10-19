@@ -356,8 +356,8 @@ namespace ModularEncountersSystems.Events.Action
                                 if (actions.GPSColors.Count > i && actions.GPSColors[i] != Vector3D.Zero)
                                 {
                                     color.R = (byte)actions.GPSColors[i].X;
-                                    color.B = (byte)actions.GPSColors[i].Y;
-                                    color.G = (byte)actions.GPSColors[i].Z;
+                                    color.G = (byte)actions.GPSColors[i].Y;
+                                    color.B = (byte)actions.GPSColors[i].Z;
                                 }
 
                                 else
@@ -369,8 +369,8 @@ namespace ModularEncountersSystems.Events.Action
                                         if (MyAPIGateway.Utilities.GetVariable(tempVar, out tempVector))
                                         {
                                             color.R = (byte)tempVector.X;
-                                            color.B = (byte)tempVector.Y;
-                                            color.G = (byte)tempVector.Z;
+                                            color.G = (byte)tempVector.Y;
+                                            color.B = (byte)tempVector.Z;
                                         }
                                     }
                                 }
@@ -683,6 +683,9 @@ namespace ModularEncountersSystems.Events.Action
                     var Tag = instanceId.ToString();
                     foreach (var Event in EventManager.EventsList)
                     {
+                        if (!Event.Valid)
+                            continue;
+
                         if (Event.Profile.Tags.Contains(Tag))
                         {
                             Event.MarkedforRemoval = true;
@@ -699,6 +702,9 @@ namespace ModularEncountersSystems.Events.Action
                     var Tag = instanceId.ToString();
                     foreach (var Event in EventManager.EventsList)
                     {
+                        if (!Event.Valid)
+                            continue;
+
                         if (Event.Profile.Tags.Contains(Tag))
                         {
                             Event.MarkedforRemoval = true;
@@ -715,6 +721,9 @@ namespace ModularEncountersSystems.Events.Action
                     var Tag = instanceId.ToString();
                     foreach (var Event in EventManager.EventsList)
                     {
+                        if (!Event.Valid)
+                            continue;
+
                         if (Event.Profile.Tags.Contains(Tag))
                         {
                             Event.MarkedforRemoval = true;
@@ -835,6 +844,9 @@ namespace ModularEncountersSystems.Events.Action
                 var Name = EventName;
                 foreach (var Event in EventManager.EventsList)
                 {
+                    if (!Event.Valid)
+                        continue;
+
                     if (Name == Event.ProfileSubtypeId)
                     {
                         Event.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
@@ -847,6 +859,9 @@ namespace ModularEncountersSystems.Events.Action
             {
                 foreach (var Event in EventManager.EventsList)
                 {
+                    if (!Event.Valid)
+                        continue;
+
                     if (Event.Profile.Tags.Contains(Tag))
                     {
                         Event.LastTriggerTime = MyAPIGateway.Session.GameDateTime;
@@ -865,6 +880,9 @@ namespace ModularEncountersSystems.Events.Action
 
                 foreach (var Event in EventManager.EventsList)
                 {
+                    if (!Event.Valid)
+                        continue;
+
                     if (Name == Event.ProfileSubtypeId)
                     {
                         Event.RunCount += IncreaseRunCountEventIdAmount[i];
@@ -877,6 +895,9 @@ namespace ModularEncountersSystems.Events.Action
                 var Tag = IncreaseRunCountEventTags[i];
                 foreach (var Event in EventManager.EventsList)
                 {
+                    if (!Event.Valid)
+                        continue;
+
                     if (Event.Profile.Tags.Contains(Tag))
                     {
                         Event.RunCount += IncreaseRunCountEventTagAmount[i];
@@ -894,6 +915,9 @@ namespace ModularEncountersSystems.Events.Action
 
                 foreach (var Event in EventManager.EventsList)
                 {
+                    if (!Event.Valid)
+                        continue;
+
                     if (Name == Event.ProfileSubtypeId)
                     {
                         Event.EventEnabled = ToggleEventIdModes[i];
@@ -906,6 +930,9 @@ namespace ModularEncountersSystems.Events.Action
                 var Tag = ToggleEventTags[i];
                 foreach (var Event in EventManager.EventsList)
                 {
+                    if (!Event.Valid)
+                        continue;
+
                     if (Event.Profile.Tags.Contains(Tag))
                     {
                         Event.EventEnabled = ToggleEventTagModes[i];

@@ -220,7 +220,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				}
 
 
-				if (!chat.SendToAllOnlinePlayers && FactionHelper.IsIdentityNPC(player.IdentityId) || player.Character == null) {
+				if (!chat.SendToAllOnlinePlayers && (FactionHelper.IsIdentityNPC(player.IdentityId) || player.Character == null)) {
 
 					continue;
 

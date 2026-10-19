@@ -1021,13 +1021,14 @@ namespace ModularEncountersSystems.Helpers {
 
 		public static void ReportProfileError(string profileId, string reason) {
 
-			if (ErrorProfiles.Contains(profileId))
+			var profileIdSafe = !string.IsNullOrWhiteSpace(profileId) ? profileId : "(null)";
+			var errorMsg = reason + ": [" + profileIdSafe + "]";
+
+			if (ErrorProfiles.Contains(errorMsg))
 				return;
 
-			var profileIdSafe = !string.IsNullOrWhiteSpace(profileId) ? profileId : "(null)";
-
-			SpawnLogger.Write(reason + ": [" + profileIdSafe + "]", SpawnerDebugEnum.Error, true);
-			ErrorProfiles.Add(reason + ": [" + profileIdSafe + "]");
+			SpawnLogger.Write(errorMsg, SpawnerDebugEnum.Error, true);
+			ErrorProfiles.Add(errorMsg);
 
 		}
 

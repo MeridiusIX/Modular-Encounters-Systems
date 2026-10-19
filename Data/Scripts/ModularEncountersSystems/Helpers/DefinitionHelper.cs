@@ -1,9 +1,11 @@
 ﻿using ModularEncountersSystems.API;
+using ModularEncountersSystems.Behavior;
 using ModularEncountersSystems.Core;
 using ModularEncountersSystems.Entities;
 using ModularEncountersSystems.Logging;
 using ModularEncountersSystems.Spawning.Manipulation;
 using Sandbox.Definitions;
+using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -586,11 +588,21 @@ namespace ModularEncountersSystems.Helpers {
 
         public override void LoadData()
         {
-            Instance = this;
-            OverrideDefinitions(ob);
+            try
+            {
+                Instance = this;
+                OverrideDefinitions(ob);
 
-            // The list must contain at least one entry for it to be active as a whitelist
-            ob.SpawnGroups.Add("DummyEntry");
+                // The list must contain at least one entry for it to be active as a whitelist
+                ob.SpawnGroups.Add("DummyEntry");
+            }
+            catch (Exception e)
+            {
+                MyAPIGateway.Utilities.InvokeOnGameThread(() =>
+                {
+                    throw e;
+                });
+            }
         }
 
         void OverrideDefinitions(MyObjectBuilder_SessionComponentItemTriggeredContractsDefinition ob)
@@ -617,6 +629,15 @@ namespace ModularEncountersSystems.Helpers {
 
         protected override void UnloadData()
         {
+            try
+            {
+                // Any future code
+            }
+            catch (Exception e)
+            {
+                throw(e);
+            }
+
             Instance = null;
         }
 

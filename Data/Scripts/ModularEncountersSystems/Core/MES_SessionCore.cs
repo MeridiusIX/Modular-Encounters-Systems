@@ -56,39 +56,47 @@ namespace ModularEncountersSystems.Core {
 		public static string SaveName;
 
 		public override void LoadData() {
+            try
+            {
+                Instance = this;
 
-			Instance = this;
+                IsServer = MyAPIGateway.Multiplayer.IsServer;
+                IsDedicated = MyAPIGateway.Utilities.IsDedicated;
+                ModEnabled = CheckSyncRules();
 
-			IsServer = MyAPIGateway.Multiplayer.IsServer;
-			IsDedicated = MyAPIGateway.Utilities.IsDedicated;
-			ModEnabled = CheckSyncRules();
+                if (!ModEnabled)
+                    return;
 
-			if (!ModEnabled)
-				return;
+                //Register Version Checker
+                MyAPIGateway.Utilities.RegisterMessageHandler(21521905890, CompareVersions);
 
-			//Register Version Checker
-			MyAPIGateway.Utilities.RegisterMessageHandler(21521905890, CompareVersions);
+                SpawnLogger.Setup();
+                BehaviorLogger.Setup();
+                TaskProcessor.Setup();
+                SyncManager.Setup(); //Register Network and Chat Handlers
+                DefinitionHelper.Setup();
+                EconomyHelper.Setup();
+                Settings.InitSettings("LoadData"); //Get Existing Settings From XML or Create New
+                AddonManager.DetectAddons(); //Check Add-on Mods
+                ProfileManager.Setup();
+                SpawnGroupManager.CreateSpawnLists();
+                BotSpawner.Setup();
+                APIs.RegisterAPIs(0); //Register Any Applicable APIs
 
-			SpawnLogger.Setup();
-			BehaviorLogger.Setup();
-			TaskProcessor.Setup();
-			SyncManager.Setup(); //Register Network and Chat Handlers
-			DefinitionHelper.Setup();
-			EconomyHelper.Setup();
-			Settings.InitSettings("LoadData"); //Get Existing Settings From XML or Create New
-			AddonManager.DetectAddons(); //Check Add-on Mods
-			ProfileManager.Setup();
-			SpawnGroupManager.CreateSpawnLists();
-			BotSpawner.Setup();
-			APIs.RegisterAPIs(0); //Register Any Applicable APIs
+                if (!IsServer)
+                    return;
 
-			if (!IsServer)
-				return;
-
-			BlockManager.Setup(); //Build Lists of Special Blocks
-			PlayerSpawnWatcher.Setup();
-			PrefabSpawner.Setup();
-
+                BlockManager.Setup(); //Build Lists of Special Blocks
+                PlayerSpawnWatcher.Setup();
+                PrefabSpawner.Setup();
+            }
+            catch (Exception e)
+            {
+                MyAPIGateway.Utilities.InvokeOnGameThread(() =>
+                {
+                    throw e;
+                });
+            }
 		}
 
 		public override void Init(MyObjectBuilder_SessionComponent sessionComponent) {
@@ -217,11 +225,17 @@ namespace ModularEncountersSystems.Core {
 		}
 
 		protected override void UnloadData() {
+            try
+            {
+			    UnloadActions?.Invoke();
+                Settings.SaveAll();
+            }
+            catch (Exception e)
+            {
+                throw(e);
+            }
 
-			UnloadActions?.Invoke();
-			Settings.SaveAll();
-
-			Instance = null;
+            Instance = null;
 		}
 
 		private static bool CheckSyncRules() {

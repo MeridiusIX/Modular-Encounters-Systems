@@ -17,7 +17,7 @@ using VRageMath;
 namespace ModularEncountersSystems.Entities {
 	public static class EntityWatcher {
 
-		
+
 		public static bool NewPlayerConnected = false;
 		public static bool EntityWatcherRegistered = false;
 
@@ -53,8 +53,8 @@ namespace ModularEncountersSystems.Entities {
 			MyAPIGateway.Players.ItemConsumed += PlayerManager.ItemConsumedEvent;
 			PlayerManager.RefreshAllPlayers(true);
 
-			UnloadEntities += GridManager.UnloadEntities;
-			UnloadEntities += PlayerManager.UnloadEntities;
+			UnloadEntities += () => GridManager.UnloadEntities?.Invoke();
+            UnloadEntities += () => PlayerManager.UnloadEntities?.Invoke();
 
 			MyAPIGateway.Entities.OnEntityAdd += NewEntityDetected;
 			EntityWatcherRegistered = true;
@@ -67,7 +67,7 @@ namespace ModularEncountersSystems.Entities {
 			if (MyAPIGateway.Multiplayer.IsServer) {
 
 				TaskProcessor.Tasks.Add(new TimedAction(9, SafeZoneManager.MonitorEntitySafezones, true));
-			
+
 			}
 
 		}
@@ -86,9 +86,9 @@ namespace ModularEncountersSystems.Entities {
 					GridAdded?.Invoke(gridEntity);
 
 				}
-				
+
 				return;
-			
+
 			}
 
 			var planet = entity as MyPlanet;
@@ -136,7 +136,6 @@ namespace ModularEncountersSystems.Entities {
 			PlayerManager.Players.Clear();
 			PlanetManager.Planets.Clear();
 			SafeZoneManager.SafeZones.Clear();
-			
 
 		}
 

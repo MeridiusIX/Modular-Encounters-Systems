@@ -84,7 +84,7 @@ namespace ModularEncountersSystems.Entities {
 			}
 
 			return -1000000;
-		
+
 		}
 
 		public static List<GridEntity> GetAttachedGrids(IMyCubeGrid cubeGrid) {
@@ -218,7 +218,7 @@ namespace ModularEncountersSystems.Entities {
 
 			for (int i = gridList.Count - 1; i >= 0; i--) {
 
-				var grid = GridManager.GetSafeGridFromIndex(i);
+				var grid = GridManager.GetSafeGridFromIndex(i, gridList);
 
 				if(grid != null)
 					result |= GetGridOwnerships(grid, overrideCheck);
@@ -248,7 +248,7 @@ namespace ModularEncountersSystems.Entities {
 					result |= GridOwnershipEnum.PlayerMajority;
 				else
 					result |= GridOwnershipEnum.NpcMajority;
-			
+
 			}
 
 			foreach (var owner in grid.CubeGrid.SmallOwners) {
@@ -334,7 +334,7 @@ namespace ModularEncountersSystems.Entities {
 				return RelationTypeEnum.Friends;
 
 			return RelationTypeEnum.Neutral;
-		
+
 		}
 
 		public static double GravityAtPosition(Vector3D coords) {
@@ -364,7 +364,7 @@ namespace ModularEncountersSystems.Entities {
 				return null;
 
 			}
-				
+
 
 			var grid = entity.SlimBlock.CubeGrid;
 
@@ -380,9 +380,9 @@ namespace ModularEncountersSystems.Entities {
 
 					if (entity.EntityId == block.Block.EntityId)
 						return block;
-				
+
 				}
-			
+
 			}
 
 			//Logger.Write(" - IMyCubeBlock Entity Not Found In Existing Grids", BehaviorDebugEnum.TargetAcquisition);
@@ -517,7 +517,7 @@ namespace ModularEncountersSystems.Entities {
 
 					if (faction?.Tag != matchFaction)
 						continue;
-				
+
 				}
 
 				if (matchName != null && matchName != antennaBlock.CustomName)
@@ -597,7 +597,7 @@ namespace ModularEncountersSystems.Entities {
 
 
 			}
-			
+
 			return result;
 
 		}
@@ -634,7 +634,7 @@ namespace ModularEncountersSystems.Entities {
 
 				if (GridShielded(grid))
 					return true;
-			
+
 			}
 
 			return false;
@@ -655,7 +655,7 @@ namespace ModularEncountersSystems.Entities {
 					continue;
 
 				return true;
-			
+
 			}
 
 			return false;
@@ -727,7 +727,7 @@ namespace ModularEncountersSystems.Entities {
 			grid.LastThreatCalculationTime = MyAPIGateway.Session.GameDateTime;
 
 			return grid.ThreatScore;
-		
+
 		}
 
 		public static int GridPcuValue(List<GridEntity> gridList) {
@@ -846,7 +846,7 @@ namespace ModularEncountersSystems.Entities {
 			}
 
 			return result;
-		
+
 		}
 
 		public static int GridWeaponCount(GridEntity grid) {
@@ -859,7 +859,7 @@ namespace ModularEncountersSystems.Entities {
 					continue;
 
 				result++;
-			
+
 			}
 
 			foreach (var turret in grid.Turrets) {
@@ -889,11 +889,11 @@ namespace ModularEncountersSystems.Entities {
 
 				if (shipController.CanControlShip && shipController.IsUnderControl)
 					return true;
-			
+
 			}
 
 			return false;
-			
+
 		}
 
 		public static bool IsPositionNearEntity(Vector3D coords, double distance) {
@@ -902,8 +902,8 @@ namespace ModularEncountersSystems.Entities {
 
 				if (!grid.ActiveEntity())
 					continue;
-				
-				if (grid.Distance(coords) < distance) 
+
+				if (grid.Distance(coords) < distance)
 					return true;
 
 			}
@@ -943,7 +943,7 @@ namespace ModularEncountersSystems.Entities {
 			if (APIs.Shields.ProtectedByShield(entity))
 				return true;
 			//End Defense Shield API Check
-			
+
 			return false;
 
 		}
@@ -975,7 +975,7 @@ namespace ModularEncountersSystems.Entities {
 				return -1;
 
 			return entity.Physics.LinearVelocity.Length();
-			
+
 		}
 
 		public static Vector3D EntityVelocity(IMyEntity entity) {

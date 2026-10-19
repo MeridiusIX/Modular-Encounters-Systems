@@ -356,8 +356,8 @@ namespace ModularEncountersSystems.Events.Action
                                 if (actions.GPSColors.Count > i && actions.GPSColors[i] != Vector3D.Zero)
                                 {
                                     color.R = (byte)actions.GPSColors[i].X;
-                                    color.B = (byte)actions.GPSColors[i].Y;
-                                    color.G = (byte)actions.GPSColors[i].Z;
+                                    color.G = (byte)actions.GPSColors[i].Y;
+                                    color.B = (byte)actions.GPSColors[i].Z;
                                 }
 
                                 else
@@ -369,8 +369,8 @@ namespace ModularEncountersSystems.Events.Action
                                         if (MyAPIGateway.Utilities.GetVariable(tempVar, out tempVector))
                                         {
                                             color.R = (byte)tempVector.X;
-                                            color.B = (byte)tempVector.Y;
-                                            color.G = (byte)tempVector.Z;
+                                            color.G = (byte)tempVector.Y;
+                                            color.B = (byte)tempVector.Z;
                                         }
                                     }
                                 }

@@ -2852,8 +2852,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                 if (actions.GPSColors.Count > i && actions.GPSColors[i] != Vector3D.Zero)
                                 {
                                     color.R = (byte)actions.GPSColors[i].X;
-                                    color.B = (byte)actions.GPSColors[i].Y;
-                                    color.G = (byte)actions.GPSColors[i].Z;
+                                    color.G = (byte)actions.GPSColors[i].Y;
+                                    color.B = (byte)actions.GPSColors[i].Z;
                                 }
 
                                 else
@@ -2865,8 +2865,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                         if (MyAPIGateway.Utilities.GetVariable(tempVar, out tempVector))
                                         {
                                             color.R = (byte)tempVector.X;
-                                            color.B = (byte)tempVector.Y;
-                                            color.G = (byte)tempVector.Z;
+                                            color.G = (byte)tempVector.Y;
+                                            color.B = (byte)tempVector.Z;
                                         }
 
                                         else if (npcData != null)
@@ -2876,8 +2876,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                                 if (actions.GPSColorVariables[i] == "{" + vector.Key + "}")
                                                 {
                                                     color.R = (byte)vector.Value.X;
-                                                    color.B = (byte)vector.Value.Y;
-                                                    color.G = (byte)vector.Value.Z;
+                                                    color.G = (byte)vector.Value.Y;
+                                                    color.B = (byte)vector.Value.Z;
                                                     break;
                                                 }
                                             }

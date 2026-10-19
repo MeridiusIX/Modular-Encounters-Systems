@@ -27,6 +27,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public bool IgnoreCleanupRules;
 
 		public bool ReplenishSystems;
+		public bool ReplenishTanks;
 		public List<ReplenishmentProfile> ReplenishProfiles;
 		public bool IgnoreGlobalReplenishProfiles;
 
@@ -76,6 +77,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			IgnoreCleanupRules = false;
 
 			ReplenishSystems = false;
+			ReplenishTanks = true;
 			ReplenishProfiles = new List<ReplenishmentProfile>();
 			IgnoreGlobalReplenishProfiles = false;
 
@@ -187,6 +189,13 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.StartsWith("[ReplenishSystems:") == true) {
 
 					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.ReplenishSystems);
+
+				}
+
+				//ReplenishTanks
+				if (tag.StartsWith("[ReplenishTanks:") == true) {
+
+					TagParse.TagBoolCheck(tag, ref improveSpawnGroup.ReplenishTanks);
 
 				}
 

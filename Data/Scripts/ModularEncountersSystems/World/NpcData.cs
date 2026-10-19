@@ -47,6 +47,7 @@ namespace ModularEncountersSystems.World {
 		CustomThrustDataUsed = 1 << 16,
 		SetMatrixPostSpawn = 1 << 17,
 		WeaponRandomizationAggression = 1 << 18,
+        ReplenishTanks = 1 << 19,
 
 	}
 
@@ -85,11 +86,13 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(30)] public bool UseEnergyDisable;
 		[ProtoMember(31)] public bool OwnershipValidation;
 		[ProtoMember(32)] public bool NoRC;
+		[ProtoMember(33)] public bool ReplenishTanks;
 
 		public NewNpcAttributes() {
 
 			DigAirTightVoxels = false;
 			ReplenishSystems = false;
+            ReplenishTanks = false;
 			IgnoreCleanup = false;
 			ForceStatic = false;
 			IsCargoShip = false;
@@ -132,6 +135,9 @@ namespace ModularEncountersSystems.World {
 
 			if (ReplenishSystems)
 				sb.Append("ReplenishSystems").Append(", ");
+
+			if (ReplenishTanks)
+				sb.Append("ReplenishTanks").Append(", ");
 
 			if (IgnoreCleanup)
 				sb.Append("IgnoreCleanup").Append(", ");
@@ -228,6 +234,9 @@ namespace ModularEncountersSystems.World {
 
 			if (flags.HasFlag(NpcAttributes.ReplenishSystems))
 				ReplenishSystems = true;
+
+			if (flags.HasFlag(NpcAttributes.ReplenishTanks))
+				ReplenishTanks = true;
 
 			if (flags.HasFlag(NpcAttributes.IgnoreCleanup))
 				IgnoreCleanup = true;
@@ -638,6 +647,9 @@ namespace ModularEncountersSystems.World {
 			if (spawnGroup.ReplenishSystems)
 				Attributes.ReplenishSystems = true;
 
+			if (spawnGroup.ReplenishTanks)
+				Attributes.ReplenishTanks = true;
+
 			if (spawnGroup.IgnoreCleanupRules)
 				Attributes.IgnoreCleanup = true;
 
@@ -761,6 +773,13 @@ namespace ModularEncountersSystems.World {
 
 				InventoryHelper.ReplenishGridSystems(Grid.CubeGrid, SpawnGroup);
 				AppliedAttributes.ReplenishSystems = true;
+
+			}
+
+			//ReplenishTanks
+			if (AttributeCheck(Attributes.ReplenishTanks, AppliedAttributes.ReplenishTanks)) {
+
+				AppliedAttributes.ReplenishTanks = true;
 
 			}
 

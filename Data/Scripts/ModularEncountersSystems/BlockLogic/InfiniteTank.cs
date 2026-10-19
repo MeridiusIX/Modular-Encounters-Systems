@@ -76,7 +76,7 @@ namespace ModularEncountersSystems.BlockLogic
                     if (!grid.ActiveEntity() || grid.Npc == null)
                         continue;
 
-                    if (grid.Npc.Attributes.ReplenishSystems)
+                    if (grid.Npc.Attributes.ReplenishTanks)
                     {
                         disable = false;
                         break;
@@ -95,6 +95,16 @@ namespace ModularEncountersSystems.BlockLogic
             {
                 _isValid = false;
                 return;
+            }
+            for (int i = 0; i < Block.LinkedGrids.Count; i++)
+            {
+                var grid = Block.LinkedGrids[i];
+
+                if (grid.HasPlayerOwnership())
+                {
+                    _isValid = false;
+                    return;
+                }
             }
 
             if (_gasTank.FilledRatio <= .25f)

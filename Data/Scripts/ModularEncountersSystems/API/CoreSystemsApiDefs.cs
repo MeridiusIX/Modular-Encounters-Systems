@@ -964,6 +964,7 @@ namespace ModularEncountersSystems.API {
                         Push,
                         Pull,
                         Tractor,
+                        AntiSmartv2,
                     }
 
                     public enum EwarMode {

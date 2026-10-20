@@ -343,10 +343,10 @@ namespace ModularEncountersSystems.API {
 			if (npcGrid?.Npc == null)
 				return false;
 
-			if (npcGrid.Npc.DespawnActions == null)
-				npcGrid.Npc.DespawnActions = new List<Action<IMyCubeGrid, string>>();
+			if (npcGrid.DespawnActions == null)
+				npcGrid.DespawnActions = new List<Action<IMyCubeGrid, string>>();
 
-			npcGrid.Npc.DespawnActions.Add(action);
+			npcGrid.DespawnActions.Add(action);
 			return true;
 
 		}

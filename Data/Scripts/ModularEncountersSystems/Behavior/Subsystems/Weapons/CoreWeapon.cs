@@ -292,7 +292,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 					_requiresPhysicalAmmo = _currentAmmoMagazine.SubtypeName != "Energy";
 					_beamAmmo = ammoDef.Beams.Enable;
 					_homingAmmo = ammoDef.Trajectory.Guidance == AmmoDef.TrajectoryDef.GuidanceType.Smart || ammoDef.Trajectory.Guidance == AmmoDef.TrajectoryDef.GuidanceType.TravelTo;
-					_flareAmmo = ammoDef.AreaEffect.AreaEffect == AmmoDef.AreaDamageDef.AreaEffectType.AntiSmart;
+					_flareAmmo = ammoDef.Ewar.Enable && (ammoDef.Ewar.Type == AmmoDef.EwarDef.EwarType.AntiSmart || ammoDef.Ewar.Type == AmmoDef.EwarDef.EwarType.AntiSmartv2);
 					_ammoMaxTrajectory = ammoDef.Trajectory.MaxTrajectory;
 					_ammoMaxVelocity = _beamAmmo ? -1 : ammoDef.Trajectory.DesiredSpeed;
 					_ammoInitialVelocity = _beamAmmo ? -1 : ammoDef.Trajectory.DesiredSpeed;

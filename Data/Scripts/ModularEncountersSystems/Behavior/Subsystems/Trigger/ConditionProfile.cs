@@ -1160,6 +1160,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastCondition = "MatchTerrainType";
                 if (ConditionReference.MatchTerrainType)
                 {
+                    usedConditions++;
+
                     if (_behavior.AutoPilot.CurrentPlanet == null)
                     {
                         satisfiedConditions++;

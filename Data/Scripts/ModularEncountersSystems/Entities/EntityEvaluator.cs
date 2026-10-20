@@ -162,7 +162,7 @@ namespace ModularEncountersSystems.Entities {
 				if (grid == null || grid == parent)
 					continue;
 
-				grid.LinkedGrids = parent.LinkedGrids;
+				grid.LinkedGrids = new List<GridEntity>(parent.LinkedGrids);
 				grid.RefreshLinkedGrids = false;
 
 			}

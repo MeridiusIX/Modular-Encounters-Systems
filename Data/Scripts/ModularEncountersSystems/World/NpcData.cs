@@ -345,6 +345,10 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(17)]
 		public bool ThirdAttributesCheck;
 
+		//No longer used, despawn attempts are now tracked per grid in GridEntity
+		//[ProtoMember(18)]
+		//public int DespawnAttempts;
+
 		[ProtoMember(19)]
 		public double PrefabSpeed;
 
@@ -1224,6 +1228,7 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - SpawnTime:           ").Append(SpawnTime != null ? SpawnTime.ToString() : "N/A").AppendLine();
 			sb.Append(" - LastChangeToData:    ").Append(LastChangeToData != null ? LastChangeToData.ToString() : "N/A").AppendLine();
 			sb.Append(" - InitialFaction:      ").Append(!string.IsNullOrWhiteSpace(InitialFaction) ? InitialFaction : "N/A").AppendLine();
+			foreach (var grid in Grid.LinkedGrids) sb.Append(" - DespawnAttempts:     ").Append(grid.CubeGrid?.CustomName + " (").Append(grid.DespawnAttempts + ")").AppendLine();
 			sb.Append(" - PrefabSpeed:         ").Append(PrefabSpeed.ToString()).AppendLine();
 			sb.Append(" - DespawnSource:       ").Append(!string.IsNullOrWhiteSpace(DespawnSource) ? DespawnSource : "N/A").AppendLine();
 			sb.Append(" - SpawnedByMES:        ").Append(SpawnedByMES.ToString()).AppendLine();

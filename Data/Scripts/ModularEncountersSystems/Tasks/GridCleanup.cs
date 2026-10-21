@@ -59,7 +59,7 @@ namespace ModularEncountersSystems.Tasks {
 				var cubeGrid = grid.CubeGrid as MyCubeGrid;
 
 				//Check For DespawnActions
-				if (grid.DespawnActions != null) {
+				if (grid?.DespawnActions != null) {
 
 					foreach (var despawnAction in grid.DespawnActions) {
 

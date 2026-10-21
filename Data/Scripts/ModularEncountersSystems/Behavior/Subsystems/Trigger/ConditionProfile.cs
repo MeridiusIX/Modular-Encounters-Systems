@@ -1162,18 +1162,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 {
                     usedConditions++;
 
-                    if (_behavior.AutoPilot.CurrentPlanet == null)
-                    {
-                        satisfiedConditions++;
-                    }
-
                     //var coords = _behavior.RemoteControl.GetPosition();
                     //var checkSurfaceCoords = _behavior.AutoPilot.CurrentPlanet.SurfaceCoordsAtPosition(coords);
                     //var checkMaterial = _behavior.AutoPilot.CurrentPlanet.Planet.GetMaterialAt(ref checkSurfaceCoords);
 
                     bool fail = false;
 
-                    if (ConditionReference.TerrainTypeWhitelistNames.Count > 0 && !ConditionReference.TerrainTypeWhitelistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+                    if (!string.IsNullOrWhiteSpace(_behavior?.CurrentGrid?.Npc?.TerrainTypeName) && ConditionReference.TerrainTypeWhitelistNames.Count > 0 && !ConditionReference.TerrainTypeWhitelistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
                     {
                         BehaviorLogger.Write("TerrainTypeWhitelist failed", BehaviorDebugEnum.Condition);
                         fail = true;

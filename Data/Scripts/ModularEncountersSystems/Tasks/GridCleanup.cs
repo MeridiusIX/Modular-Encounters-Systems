@@ -42,7 +42,7 @@ namespace ModularEncountersSystems.Tasks {
 
 				if (grid.Npc != null) {
 
-					if (grid.Npc.DespawnAttempts > 10) {
+					if (grid.DespawnAttempts > 10) {
 
 						SpawnLogger.Write(grid.CubeGrid.CustomName + " Attempted Despawn 10 Times. Aborting Process.", SpawnerDebugEnum.CleanUp);
 						Cleaning.FlaggedForRemoval.RemoveAt(i);
@@ -50,7 +50,7 @@ namespace ModularEncountersSystems.Tasks {
 
 					} else {
 
-						grid.Npc.DespawnAttempts++;
+						grid.DespawnAttempts++;
 
 					}
 				
@@ -59,15 +59,15 @@ namespace ModularEncountersSystems.Tasks {
 				var cubeGrid = grid.CubeGrid as MyCubeGrid;
 
 				//Check For DespawnActions
-				if (grid?.Npc?.DespawnActions != null) {
+				if (grid?.DespawnActions != null) {
 
-					foreach (var despawnAction in grid.Npc.DespawnActions) {
+					foreach (var despawnAction in grid.DespawnActions) {
 
 						despawnAction?.Invoke(cubeGrid, grid.DespawnSource);
 
 					}
 
-					grid.Npc.DespawnActions.Clear();
+					grid.DespawnActions.Clear();
 
 				}
 

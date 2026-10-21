@@ -498,10 +498,10 @@ namespace ModularEncountersSystems.World {
 					if (!npc.ActiveEntity() || npc.CubeGrid != cubeGrid)
 						continue;
 
-					if (npc.Npc.DespawnActions == null)
-						npc.Npc.DespawnActions = new List<Action<IMyCubeGrid, string>>();
+					if (npc.DespawnActions == null)
+						npc.DespawnActions = new List<Action<IMyCubeGrid, string>>();
 
-					npc.Npc.DespawnActions.Add(action);
+					npc.DespawnActions.Add(action);
 					return true;
 
 				}

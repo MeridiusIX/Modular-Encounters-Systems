@@ -345,8 +345,9 @@ namespace ModularEncountersSystems.World {
 		[ProtoMember(17)]
 		public bool ThirdAttributesCheck;
 
-		[ProtoMember(18)]
-		public int DespawnAttempts;
+		//No longer used, despawn attempts are now tracked per grid in GridEntity
+		//[ProtoMember(18)]
+		//public int DespawnAttempts;
 
 		[ProtoMember(19)]
 		public double PrefabSpeed;
@@ -521,9 +522,6 @@ namespace ModularEncountersSystems.World {
 		public GridEntity Grid;
 
 		[ProtoIgnore]
-		public List<Action<IMyCubeGrid, string>> DespawnActions;
-
-		[ProtoIgnore]
 		public bool CargoShipDriftCheck;
 
 		[ProtoIgnore]
@@ -603,7 +601,6 @@ namespace ModularEncountersSystems.World {
 			FirstAttributesCheck = false;
 			SecondAttributesCheck = false;
 			ThirdAttributesCheck = false;
-			DespawnAttempts = 0;
 			PrimaryRemoteControlId = 0;
 			Forward = Vector3D.Forward;
 			Up = Vector3D.Up;
@@ -1231,7 +1228,7 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - SpawnTime:           ").Append(SpawnTime != null ? SpawnTime.ToString() : "N/A").AppendLine();
 			sb.Append(" - LastChangeToData:    ").Append(LastChangeToData != null ? LastChangeToData.ToString() : "N/A").AppendLine();
 			sb.Append(" - InitialFaction:      ").Append(!string.IsNullOrWhiteSpace(InitialFaction) ? InitialFaction : "N/A").AppendLine();
-			sb.Append(" - DespawnAttempts:     ").Append(DespawnAttempts.ToString()).AppendLine();
+			foreach (var grid in Grid.LinkedGrids) sb.Append(" - DespawnAttempts:     ").Append(grid.CubeGrid?.CustomName + " (").Append(grid.DespawnAttempts + ")").AppendLine();
 			sb.Append(" - PrefabSpeed:         ").Append(PrefabSpeed.ToString()).AppendLine();
 			sb.Append(" - DespawnSource:       ").Append(!string.IsNullOrWhiteSpace(DespawnSource) ? DespawnSource : "N/A").AppendLine();
 			sb.Append(" - SpawnedByMES:        ").Append(SpawnedByMES.ToString()).AppendLine();

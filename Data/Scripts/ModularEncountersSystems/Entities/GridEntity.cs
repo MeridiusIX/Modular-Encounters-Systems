@@ -113,6 +113,8 @@ namespace ModularEncountersSystems.Entities {
 		public string DespawnSource;
 
 		public bool ForceRemove;
+		public int DespawnAttempts;
+		public List<Action<IMyCubeGrid, string>> DespawnActions;
 
 		public string GridName;
 

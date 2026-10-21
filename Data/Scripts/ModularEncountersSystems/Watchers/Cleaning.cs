@@ -402,6 +402,8 @@ namespace ModularEncountersSystems.Watchers {
 
 			if (!singleGrid) {
 
+				grid.RefreshSubGrids();
+
 				foreach (var linkedGrid in grid.LinkedGrids) {
 
 					if (TryFlagForRemoval(linkedGrid, force)) {

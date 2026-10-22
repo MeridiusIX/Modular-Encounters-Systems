@@ -308,11 +308,35 @@ This section contains actions that relate to changes that can be made to the beh
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 
+<!--UseCommandWaypointAsPatrolReference-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseCommandWaypointAsPatrolReference|
+|:----|:----|
+|Tag Format:|`[UseCommandWaypointAsPatrolReference:Value]`|
+|Description:|This tag sets the waypoint sent with the received Command (`SendWaypoint`) as the Patrol Reference of the NPC. Nothing changes if there is no waypoint or it is no longer valid. Used from the next patrol waypoint.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--UseWaypointAsPatrolReference-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseWaypointAsPatrolReference|
+|:----|:----|
+|Tag Format:|`[UseWaypointAsPatrolReference:Value]`|
+|Description:|This tag sets the waypoint profile in `PatrolReferenceWaypoint` as the Patrol Reference of the NPC. Nothing changes if the waypoint can't be calculated (eg: relative to the Target with no target). Used from the next patrol waypoint.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--PatrolReferenceWaypoint-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|PatrolReferenceWaypoint|
+|:----|:----|
+|Tag Format:|`[PatrolReferenceWaypoint:Value]`|
+|Description:|Specifies the waypoint profile id used by the `UseWaypointAsPatrolReference` tag.|
+|Allowed Values:|Any String Value|
+|Multiple Tag Allowed:|No|
+
 <!--ClearCustomPatrolReference-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ClearCustomPatrolReference|
 |:----|:----|
 |Tag Format:|`[ClearCustomPatrolReference:Value]`|
-|Description:|This tag removes any saved coordinates that may have been set using `UseCurrentPositionAsPatrolReference` so behaviors using patrol will revert to using their initial spawn coordinates to calculate patrol offsets.|
+|Description:|This tag removes any saved coordinates that may have been set using `UseCurrentPositionAsPatrolReference`, `UseCommandWaypointAsPatrolReference` or `UseWaypointAsPatrolReference` so behaviors using patrol will revert to using their initial spawn coordinates to calculate patrol offsets.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 

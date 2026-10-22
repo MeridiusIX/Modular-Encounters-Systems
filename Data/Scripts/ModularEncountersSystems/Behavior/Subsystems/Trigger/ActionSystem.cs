@@ -2611,6 +2611,51 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
+                lastAction = "UseCommandWaypointAsPatrolReference";
+                if (actions.UseCommandWaypointAsPatrolReference && command?.Waypoint != null)
+                {
+
+                    var coords = command.Waypoint.GetCoords();
+
+                    if (command.Waypoint.Valid)
+                    {
+
+                        _behavior.BehaviorSettings.PatrolOverrideLocation = coords;
+                        BehaviorLogger.Write(actions.ProfileSubtypeId + ": Patrol Reference Set From Command Waypoint: " + coords.ToString(), BehaviorDebugEnum.Action);
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write(actions.ProfileSubtypeId + ": Command Waypoint Invalid, Patrol Reference Not Changed", BehaviorDebugEnum.Action);
+
+                    }
+
+                }
+
+                lastAction = "UseWaypointAsPatrolReference";
+                if (actions.UseWaypointAsPatrolReference && _behavior.RemoteControl != null)
+                {
+
+                    var waypoint = EncounterWaypoint.CalculateWaypoint(_behavior, IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.PatrolReferenceWaypoint));
+
+                    if (waypoint != null && waypoint.Valid)
+                    {
+
+                        var coords = waypoint.GetCoords();
+                        _behavior.BehaviorSettings.PatrolOverrideLocation = coords;
+                        BehaviorLogger.Write(actions.ProfileSubtypeId + ": Patrol Reference Set From Waypoint Profile: " + coords.ToString(), BehaviorDebugEnum.Action);
+
+                    }
+                    else
+                    {
+
+                        BehaviorLogger.Write(actions.ProfileSubtypeId + ": Could Not Calculate Patrol Reference Waypoint: " + actions.PatrolReferenceWaypoint, BehaviorDebugEnum.Action);
+
+                    }
+
+                }
+
                 lastAction = "ClearCustomPatrolReference";
                 if (actions.ClearCustomPatrolReference)
                 {

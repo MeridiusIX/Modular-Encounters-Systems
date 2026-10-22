@@ -687,7 +687,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             else
                             {
 
-                                var potentialPlayer = PlayerManager.GetPlayerUsingTool(tempEntity);
+                                var tempCharacter = tempEntity as IMyCharacter;
+                                var potentialPlayer = tempCharacter != null ? PlayerManager.GetPlayerWithCharacter(tempCharacter) : PlayerManager.GetPlayerUsingTool(tempEntity);
 
                                 if (potentialPlayer != null)
                                 {
@@ -760,7 +761,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             else
                             {
 
-                                var potentialPlayer = PlayerManager.GetPlayerUsingTool(tempEntity);
+                                var tempCharacter = tempEntity as IMyCharacter;
+                                var potentialPlayer = tempCharacter != null ? PlayerManager.GetPlayerWithCharacter(tempCharacter) : PlayerManager.GetPlayerUsingTool(tempEntity);
 
                                 if (potentialPlayer != null)
                                 {

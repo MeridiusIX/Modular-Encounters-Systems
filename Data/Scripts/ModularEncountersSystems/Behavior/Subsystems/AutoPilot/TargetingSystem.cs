@@ -136,6 +136,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				}
 
 				if (Data.ProfileSubtypeId != _currentTargetDataName) {
+					_allUniqueFilters.Clear();
+					_currentTargetDataName = Data.ProfileSubtypeId;
 
 					foreach (var filter in Data.MatchAllFilters) {
 
@@ -615,6 +617,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			List<TargetFilterEnum> FilterHits = new List<TargetFilterEnum>();
 
+			//Use the filters of the profile being evaluated (e.g. OverrideData for a forced target), not those of Data
+			var uniqueFilters = new List<TargetFilterEnum>();
+			foreach (var filter in data.MatchAllFilters) if (!uniqueFilters.Contains(filter)) uniqueFilters.Add(filter);
+			foreach (var filter in data.MatchAnyFilters) if (!uniqueFilters.Contains(filter)) uniqueFilters.Add(filter);
+			foreach (var filter in data.MatchNoneFilters) if (!uniqueFilters.Contains(filter)) uniqueFilters.Add(filter);
+
 			//Distance
 			var distance = target.Distance(RemoteControl.GetPosition());
 			var maxDistance = data.MaxDistance;
@@ -633,7 +641,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				if (target.GetParentEntity() != null && ((uint)target.GetParentEntity().Flags & 0x20000000) > 0) {
 
-					if (!AllUniqueFilters.Contains(TargetFilterEnum.IgnoreStealthDrive)) {
+					if (!uniqueFilters.Contains(TargetFilterEnum.IgnoreStealthDrive)) {
 
 						if (distance > data.StealthDriveMinDistance) {
 
@@ -655,7 +663,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Altitude
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Altitude)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Altitude)) {
 
 				var altitude = target.CurrentAltitude();
 
@@ -667,7 +675,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Broadcasting
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Broadcasting)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Broadcasting)) {
 
 				var range = target.BroadcastRange(data.BroadcastOnlyAntenna);
 				
@@ -679,7 +687,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Faction
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Faction)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Faction)) {
 
 				var faction = target.FactionOwner() ?? "";
 
@@ -691,7 +699,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Gravity
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Gravity)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Gravity)) {
 
 				var gravity = target.CurrentGravity();
 
@@ -703,7 +711,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//LineOfSight
-			if (!skipExpensiveChecks && AllUniqueFilters.Contains(TargetFilterEnum.LineOfSight) && _behavior.AutoPilot.Collision.TargetResult.HasTarget()) {
+			if (!skipExpensiveChecks && uniqueFilters.Contains(TargetFilterEnum.LineOfSight) && _behavior.AutoPilot.Collision.TargetResult.HasTarget()) {
 				
 				bool targetMatch = (target.GetParentEntity().EntityId == _behavior.AutoPilot.Collision.TargetResult.GetCollisionEntity().EntityId);
 
@@ -713,7 +721,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//MovementScore
-			if (AllUniqueFilters.Contains(TargetFilterEnum.MovementScore)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.MovementScore)) {
 
 				if (distance < data.MaxMovementDetectableDistance || data.MaxMovementDetectableDistance < 0) {
 
@@ -727,7 +735,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Name
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Name)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Name)) {
 
 				var name = target.Name();
 				string successName = "N/A";
@@ -767,7 +775,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//OutsideOfSafezone
-			if (AllUniqueFilters.Contains(TargetFilterEnum.OutsideOfSafezone)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.OutsideOfSafezone)) {
 
 				bool inZone = target.InSafeZone();
 
@@ -779,7 +787,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Owner
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Owner)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Owner)) {
 
 				var owners = target.OwnerTypes(data.OnlyGetFromEntityOwner, data.GetFromMinorityGridOwners);
 				bool gotRelation = false;
@@ -812,7 +820,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//PlayerControlled
-			if (AllUniqueFilters.Contains(TargetFilterEnum.PlayerControlled)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.PlayerControlled)) {
 
 				var controlled = target.PlayerControlled();
 
@@ -824,7 +832,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//PlayerKnownLocation
-			if (AllUniqueFilters.Contains(TargetFilterEnum.PlayerKnownLocation)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.PlayerKnownLocation)) {
 
 				bool inKnownLocation = false;
 
@@ -840,7 +848,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Powered
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Powered)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Powered)) {
 
 				bool powered = target.IsPowered();
 
@@ -852,7 +860,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Relation
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Relation)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Relation)) {
 
 				var relations = target.RelationTypes(RemoteControl.OwnerId, data.OnlyGetFromEntityOwner, data.GetFromMinorityGridOwners);
 				bool gotRelation = false;
@@ -883,7 +891,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Shielded
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Shielded)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Shielded)) {
 
 				bool shielded = target.ProtectedByShields();
 
@@ -895,7 +903,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Speed
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Speed)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Speed)) {
 
 				var speed = target.CurrentSpeed();
 
@@ -907,7 +915,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Static
-			if (data.IsStatic != CheckEnum.Ignore && AllUniqueFilters.Contains(TargetFilterEnum.Static)) {
+			if (data.IsStatic != CheckEnum.Ignore && uniqueFilters.Contains(TargetFilterEnum.Static)) {
 
 				var staticGrid = target.IsStatic();
 
@@ -919,7 +927,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//TargetValue
-			if (AllUniqueFilters.Contains(TargetFilterEnum.TargetValue)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.TargetValue)) {
 
 				var targetValue = target.TargetValue();
 
@@ -931,12 +939,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//Underwater
-			if (AllUniqueFilters.Contains(TargetFilterEnum.Underwater)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.Underwater)) {
 
 				bool result = false;
 
 				if (_behavior.AutoPilot.CurrentPlanet != null && !_behavior.AutoPilot.CurrentPlanet.Planet.Closed)
-					result = _behavior.AutoPilot.CurrentPlanet.UnderwaterAndDepthCheck(target.GetPosition(), true, Data.MinUnderWaterDepth, Data.MaxUnderWaterDepth);
+					result = _behavior.AutoPilot.CurrentPlanet.UnderwaterAndDepthCheck(target.GetPosition(), true, data.MinUnderWaterDepth, data.MaxUnderWaterDepth);
 
 				if (result)
 					FilterHits.Add(TargetFilterEnum.Underwater);
@@ -946,17 +954,17 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//AirDensity
-			if (AllUniqueFilters.Contains(TargetFilterEnum.AirDensity)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.AirDensity)) {
 
 				bool result = false;
 
 				if (_behavior.AutoPilot.CurrentPlanet != null && !_behavior.AutoPilot.CurrentPlanet.Planet.Closed) {
 
-					if ((Data.MinAirDensity > -1 || _behavior.AutoPilot.AirDensity >= Data.MinAirDensity) && (Data.MaxAirDensity > -1 || _behavior.AutoPilot.AirDensity <= Data.MaxAirDensity))
+					if ((data.MinAirDensity > -1 || _behavior.AutoPilot.AirDensity >= data.MinAirDensity) && (data.MaxAirDensity > -1 || _behavior.AutoPilot.AirDensity <= data.MaxAirDensity))
 						result = true;
 				
 				} else
-					result = Data.MinAirDensity <= 0 && Data.MaxAirDensity <= 0;
+					result = data.MinAirDensity <= 0 && data.MaxAirDensity <= 0;
 
 				if (result)
 					FilterHits.Add(TargetFilterEnum.AirDensity);
@@ -966,7 +974,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			//GravityThrust
-			if (AllUniqueFilters.Contains(TargetFilterEnum.GravityThrust)) {
+			if (uniqueFilters.Contains(TargetFilterEnum.GravityThrust)) {
 
 				bool result = false;
 

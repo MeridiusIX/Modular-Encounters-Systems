@@ -397,6 +397,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool LeaveEscortSlot;
 
 		public bool UseCurrentPositionAsPatrolReference;
+		public bool UseCommandWaypointAsPatrolReference;
+		public bool UseWaypointAsPatrolReference;
+		public string PatrolReferenceWaypoint;
 		public bool ClearCustomPatrolReference;
 
 		public bool SetGridToStatic;
@@ -929,6 +932,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			LeaveEscortSlot = false;
 
 			UseCurrentPositionAsPatrolReference = false;
+			UseCommandWaypointAsPatrolReference = false;
+			UseWaypointAsPatrolReference = false;
+			PatrolReferenceWaypoint = "";
 			ClearCustomPatrolReference = false;
 
 			SetGridToStatic = false;
@@ -1358,6 +1364,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"AssignEscortFromCommand", (s, o) => TagParse.TagBoolCheck(s, ref AssignEscortFromCommand) },
                 {"LeaveEscortSlot", (s, o) => TagParse.TagBoolCheck(s, ref LeaveEscortSlot) },
                 {"UseCurrentPositionAsPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref UseCurrentPositionAsPatrolReference) },
+                {"UseCommandWaypointAsPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref UseCommandWaypointAsPatrolReference) },
+                {"UseWaypointAsPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref UseWaypointAsPatrolReference) },
+                {"PatrolReferenceWaypoint", (s, o) => TagParse.TagStringCheck(s, ref PatrolReferenceWaypoint) },
                 {"ClearCustomPatrolReference", (s, o) => TagParse.TagBoolCheck(s, ref ClearCustomPatrolReference) },
                 {"SetGridToStatic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToStatic) },
                 {"SetGridToDynamic", (s, o) => TagParse.TagBoolCheck(s, ref SetGridToDynamic) },

@@ -1270,7 +1270,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 
 			//BehaviorLogger.Write("Autopilot: Projectile Lead", BehaviorDebugEnum.TempDebug);
-			if (Targeting.Target != null && _initialWaypoint == _pendingWaypoint && Targeting.Target.CurrentSpeed() > 0.1) {
+			if (Targeting.Target != null && _initialWaypoint == _pendingWaypoint && Targeting.Target.CurrentSpeed() > 0.1 && !CurrentMode.HasFlag(NewAutoPilotMode.WaypointFromEscort)) {
 
 				bool gotLead = false;
 

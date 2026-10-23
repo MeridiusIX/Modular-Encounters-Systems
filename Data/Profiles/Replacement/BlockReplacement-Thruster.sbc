@@ -84,6 +84,30 @@
         [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeAtmosphericThrustSciFi]
         [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoSciFi-LargeGrid-Large]
 
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallFlatAtmosphericThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoFlat-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeFlatAtmosphericThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoFlat-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallFlatAtmosphericThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoFlat-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeFlatAtmosphericThrust]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoFlat-LargeGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallFlatAtmosphericThrustDShape]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoFlatDShape-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeFlatAtmosphericThrustDShape]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoFlatDShape-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallFlatAtmosphericThrustDShape]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoFlatDShape-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeFlatAtmosphericThrustDShape]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-AtmoFlatDShape-LargeGrid-Large]
+
       </Description>
 
     </EntityComponent>
@@ -120,6 +144,18 @@
 
         [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeHydrogenThrustIndustrial]
         [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-IndustryHydro-LargeGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockSmallHydrogenThrustReskin]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-HydroSciFi-SmallGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/SmallBlockLargeHydrogenThrustReskin]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-HydroSciFi-SmallGrid-Large]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockSmallHydrogenThrustReskin]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-HydroSciFi-LargeGrid-Small]
+
+        [OldBlock:MyObjectBuilder_Thrust/LargeBlockLargeHydrogenThrustReskin]
+        [NewBlock:MyObjectBuilder_Thrust/MES-NPC-Thrust-HydroSciFi-LargeGrid-Large]
 
       </Description>
 

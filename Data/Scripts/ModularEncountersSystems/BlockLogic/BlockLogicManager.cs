@@ -98,6 +98,21 @@ namespace ModularEncountersSystems.BlockLogic {
             NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-IndustryHydro-SmallGrid-Large"));
             NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-IndustryHydro-SmallGrid-Small"));
 
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-HydroSciFi-LargeGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-HydroSciFi-LargeGrid-Small"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-HydroSciFi-SmallGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-HydroSciFi-SmallGrid-Small"));
+
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoFlat-LargeGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoFlat-LargeGrid-Small"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoFlat-SmallGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoFlat-SmallGrid-Small"));
+
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoFlatDShape-LargeGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoFlatDShape-LargeGrid-Small"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoFlatDShape-SmallGrid-Large"));
+            NpcThrustIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_Thrust), "MES-NPC-Thrust-AtmoFlatDShape-SmallGrid-Small"));
+
             JetpackInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Small"));
             JetpackInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Jetpack-Large"));
             HandDrillInhibitorIds.Add(new MyDefinitionId(typeof(MyObjectBuilder_RadioAntenna), "MES-Suppressor-Drill-Small"));

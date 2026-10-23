@@ -175,7 +175,7 @@ This section contains tags used by NPCs running the `Escort` behavior while foll
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|EscortSpeedMatchMaxDistance|
 |:----|:----|
 |Tag Format:|`[EscortSpeedMatchMaxDistance:Value]`|
-|Description:|This tag specifies the distance (in meters) from its escort waypoint at which the escort limits its speed to the parent's current speed (when the parent is slower than the escort's `IdealMaxSpeed`). Default is `150`.|
+|Description:|This tag specifies the distance (in meters) from its escort waypoint at which the escort starts slowing down toward the parent's current speed (when the parent is slower than the escort's `IdealMaxSpeed`). Default is `150`.|
 |Allowed Values:|Any Number Greater Than `0`|
 |Multiple Tag Allowed:|No|
 
@@ -183,7 +183,7 @@ This section contains tags used by NPCs running the `Escort` behavior while foll
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|EscortSpeedMatchMinDistance|
 |:----|:----|
 |Tag Format:|`[EscortSpeedMatchMinDistance:Value]`|
-|Description:|This tag is parsed but currently has no effect. Within `EscortSpeedMatchMaxDistance`, the escort's speed is always limited to the parent's current speed, regardless of this value. Default is `25`.|
+|Description:|This tag specifies the distance (in meters) from its escort waypoint at which the escort's speed is limited to the parent's current speed. Between this and `EscortSpeedMatchMaxDistance`, the speed limit scales from the parent's speed up to `IdealMaxSpeed`. Default is `25`.|
 |Allowed Values:|Any Number Equal or Greater Than `0`|
 |Multiple Tag Allowed:|No|
 

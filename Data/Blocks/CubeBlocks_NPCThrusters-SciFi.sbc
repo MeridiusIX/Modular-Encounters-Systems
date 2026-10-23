@@ -102,6 +102,9 @@
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
 			<PCU>15</PCU>      
 			<DLC>SparksOfTheFuture</DLC>
+			<TargetingGroups>
+				<string>Propulsion</string>
+			</TargetingGroups>
 		</Definition>
 			
 			<Definition xsi:type="MyObjectBuilder_ThrustDefinition">
@@ -203,6 +206,9 @@
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
 			<PCU>15</PCU>     
 			<DLC>SparksOfTheFuture</DLC>
+			<TargetingGroups>
+				<string>Propulsion</string>
+			</TargetingGroups>
 		</Definition>
 			
 		<Definition xsi:type="MyObjectBuilder_ThrustDefinition">
@@ -303,6 +309,9 @@
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
 			<PCU>15</PCU>      
 			<DLC>SparksOfTheFuture</DLC>
+			<TargetingGroups>
+				<string>Propulsion</string>
+			</TargetingGroups>
 		</Definition>
 			
 		<Definition xsi:type="MyObjectBuilder_ThrustDefinition">
@@ -406,6 +415,9 @@
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
 			<PCU>15</PCU>    
 			<DLC>SparksOfTheFuture</DLC>
+			<TargetingGroups>
+				<string>Propulsion</string>
+			</TargetingGroups>
 		</Definition>
 			
 					<!--Atmospheric Thrusters-->
@@ -512,6 +524,9 @@
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
 			<PCU>15</PCU>      
 			<DLC>SparksOfTheFuture</DLC>
+			<TargetingGroups>
+				<string>Propulsion</string>
+			</TargetingGroups>
 		</Definition>
 			
 		<Definition xsi:type="MyObjectBuilder_ThrustDefinition">
@@ -617,6 +632,9 @@
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
 			<PCU>15</PCU>      
 			<DLC>SparksOfTheFuture</DLC>
+			<TargetingGroups>
+				<string>Propulsion</string>
+			</TargetingGroups>
 		</Definition>
 			
 		<Definition xsi:type="MyObjectBuilder_ThrustDefinition">
@@ -721,6 +739,9 @@
 			<DestroySound>WepSmallWarheadExpl</DestroySound>
 			<PCU>15</PCU> 
 			<DLC>SparksOfTheFuture</DLC>
+			<TargetingGroups>
+				<string>Propulsion</string>
+			</TargetingGroups>
 		</Definition>
 			
 		<Definition xsi:type="MyObjectBuilder_ThrustDefinition">
@@ -826,6 +847,9 @@
 			<PCU>15</PCU>
 			<IsAirTight>false</IsAirTight>      
 			<DLC>SparksOfTheFuture</DLC>
+			<TargetingGroups>
+				<string>Propulsion</string>
+			</TargetingGroups>
 		</Definition>
 		<!-- End Region Thrust-->
 		 

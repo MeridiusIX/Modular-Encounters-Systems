@@ -429,6 +429,30 @@ Here's an example of how a Condition Profile Definition is setup:
 |Allowed Values:|Any number equal or greater than `0`<br />Must be higher than `MinAltitude`|
 |Multiple Tag Allowed:|No|
 
+<!--MatchTerrainType-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|MatchTerrainType|
+|:----|:----|
+|Tag Format:|`[MatchTerrainType:Value]`|
+|Description:|Specifies if the terrain type under the NPC should be checked against `TerrainTypeWhitelistNames` and `TerrainTypeBlacklistNames`.|
+|Allowed Values:|`true`<br />`false`|
+|Multiple Tag Allowed:|No|
+
+<!--TerrainTypeWhitelistNames-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|TerrainTypeWhitelistNames|
+|:----|:----|
+|Tag Format:|`[TerrainTypeWhitelistNames:Value]`|
+|Description:|The terrain type must be one of these if `MatchTerrainType` is `true`. Ignored when there is no terrain (eg: in space).|
+|Allowed Values:|Any voxel material type name (eg: `Snow`, `Grass`)|
+|Multiple Tag Allowed:|Yes|
+
+<!--TerrainTypeBlacklistNames-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|TerrainTypeBlacklistNames|
+|:----|:----|
+|Tag Format:|`[TerrainTypeBlacklistNames:Value]`|
+|Description:|The terrain type must not be one of these if `MatchTerrainType` is `true`.|
+|Allowed Values:|Any voxel material type name (eg: `Snow`, `Grass`)|
+|Multiple Tag Allowed:|Yes|
+
 <!--CheckIfDamagerIsPlayer-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|CheckIfDamagerIsPlayer|
 |:----|:----|

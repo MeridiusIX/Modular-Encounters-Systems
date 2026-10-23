@@ -1162,19 +1162,26 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 {
                     usedConditions++;
 
-                    //var coords = _behavior.RemoteControl.GetPosition();
-                    //var checkSurfaceCoords = _behavior.AutoPilot.CurrentPlanet.SurfaceCoordsAtPosition(coords);
-                    //var checkMaterial = _behavior.AutoPilot.CurrentPlanet.Planet.GetMaterialAt(ref checkSurfaceCoords);
+                    var terrainTypeName = "";
+                    var coords = _behavior.RemoteControl.GetPosition();
+                    var planet = PlanetManager.GetNearestPlanet(coords);
+
+                    if (planet != null && planet.IsPositionInGravity(coords))
+                    {
+                        var checkSurfaceCoords = planet.SurfaceCoordsAtPosition(coords, true);
+                        var checkMaterial = planet.Planet.GetMaterialAt(ref checkSurfaceCoords);
+                        terrainTypeName = checkMaterial?.MaterialTypeName ?? "";
+                    }
 
                     bool fail = false;
 
-                    if (!string.IsNullOrWhiteSpace(_behavior?.CurrentGrid?.Npc?.TerrainTypeName) && ConditionReference.TerrainTypeWhitelistNames.Count > 0 && !ConditionReference.TerrainTypeWhitelistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+                    if (!string.IsNullOrWhiteSpace(terrainTypeName) && ConditionReference.TerrainTypeWhitelistNames.Count > 0 && !ConditionReference.TerrainTypeWhitelistNames.Contains(terrainTypeName))
                     {
                         BehaviorLogger.Write("TerrainTypeWhitelist failed", BehaviorDebugEnum.Condition);
                         fail = true;
                     }
 
-                    if (ConditionReference.TerrainTypeBlacklistNames.Count > 0 && ConditionReference.TerrainTypeBlacklistNames.Contains(_behavior?.CurrentGrid?.Npc?.TerrainTypeName))
+                    if (ConditionReference.TerrainTypeBlacklistNames.Count > 0 && ConditionReference.TerrainTypeBlacklistNames.Contains(terrainTypeName))
                     {
                         BehaviorLogger.Write("TerrainTypeBlacklist failed", BehaviorDebugEnum.Condition);
                         fail = true;

@@ -27,7 +27,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 				} else {
 
-					if (profile.ConvertAllRemoteControlBlocks && (thisRemote.SubtypeName == "RemoteControlLarge" || thisRemote.SubtypeName == "RemoteControlSmall")) {
+					if (profile.ConvertAllRemoteControlBlocks && (thisRemote.SubtypeName == "LargeBlockRemoteControl" || thisRemote.SubtypeName == "SmallBlockRemoteControl")) {
 
 						if (cubeGrid.GridSizeEnum == MyCubeSize.Large) {
 

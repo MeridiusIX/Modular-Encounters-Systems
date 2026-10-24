@@ -1446,11 +1446,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			}
 
+			bool pickConeDirection = false;
+
 			//Check if New Offset Direction Is Required
 			if (_offsetRequiresCalculation) {
 
 				_offsetRequiresCalculation = false;
 				_offsetMatrix = MatrixD.Identity;
+				pickConeDirection = true;
 
 				if (InGravity()) {
 
@@ -1468,6 +1471,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
                             if (orthogonalDir.LengthSquared() > 0.0001f)
                             {
                                 _offsetDirection = Vector3D.Normalize(orthogonalDir);
+                                pickConeDirection = false;
                             }
                             else
                             {
@@ -1531,7 +1535,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				_offsetMatrix = Targeting.Target.GetEntity().PositionComp.WorldMatrixRef;
 
 
-				if (!keepInDirectionOfVelocity && Data.OffsetMaxAngleFromTarget != 180)
+				if (pickConeDirection && Data.OffsetMaxAngleFromTarget != 180)
 				{
                     //180 means that it can fly past the target on its way to the next waypoint
                     //angle like 90 means it will come close
@@ -1561,6 +1565,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
                     //double angle = 180 - Data.OffsetMaxAngleFromTarget;
 
                     _offsetDirection = VectorHelper.RandomDirectionInCone(vectorTargetToNPC, Data.OffsetMaxAngleFromTarget);
+
+                    if (InGravity())
+                        _offsetDirection = Vector3D.Normalize(_offsetDirection - Vector3D.Dot(_offsetDirection, _upDirection) * _upDirection);
 
 
 

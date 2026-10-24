@@ -386,8 +386,8 @@ namespace ModularEncountersSystems.Sync {
 
 				if (pending == null) {
 
-					SpawnLogger.Write("No Pending Static Encounter: " + array[3], SpawnerDebugEnum.Settings);
-					ReturnMessage = "No Pending Static Encounter: " + array[3];
+					SpawnLogger.Write("Static Encounter Not Found Or Already Spawned: " + array[3], SpawnerDebugEnum.Settings);
+					ReturnMessage = "Static Encounter Not Found Or Already Spawned: " + array[3];
 					return false;
 
 				}

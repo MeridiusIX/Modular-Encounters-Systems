@@ -299,7 +299,7 @@ Here is a list of command categories:
 |:----|:----|
 |XML:|`N/A`|
 |Chat Command:|`/MES.Spawn.StaticEncounter.Value`<br />`/MES.SSE.Value`|
-|Description:|This chat command spawns a Static Encounter at its set location without waiting for a player to come within its trigger radius. Otherwise it goes through the same checks as a normal Static Encounter spawn. Replace `Value` with the SubtypeId of the Spawn Group. It only works for a Static Encounter that hasn't spawned yet.|
+|Description:|This chat command spawns a Static Encounter at the location defined in its SpawnGroup, without waiting for a player to come within its trigger radius. Otherwise it goes through the same checks as a normal Static Encounter spawn. Replace `Value` with the SubtypeId of the Spawn Group. It only works for a Static Encounter that hasn't spawned yet.|
 
 |Setting:|Spawn Planetary Cargo Ship|
 |:----|:----|

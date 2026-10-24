@@ -103,6 +103,14 @@
       <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
       <DestroySound>WepSmallWarheadExpl</DestroySound>
       <PCU>15</PCU>      
+      <TieredUpdateTimes>
+        <unsignedInt>100</unsignedInt>
+        <unsignedInt>3600</unsignedInt>
+        <unsignedInt>0</unsignedInt>
+      </TieredUpdateTimes>
+      <TargetingGroups>
+        <string>Propulsion</string>
+      </TargetingGroups>
     </Definition>
     <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
       <Id>
@@ -206,6 +214,14 @@
       <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
       <DestroySound>WepSmallWarheadExpl</DestroySound>
       <PCU>15</PCU>      
+      <TieredUpdateTimes>
+        <unsignedInt>100</unsignedInt>
+        <unsignedInt>3600</unsignedInt>
+        <unsignedInt>0</unsignedInt>
+      </TieredUpdateTimes>
+      <TargetingGroups>
+        <string>Propulsion</string>
+      </TargetingGroups>
     </Definition>
     
     <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
@@ -310,6 +326,14 @@
       <DestroyEffect>BlockDestroyedExplosion_Large</DestroyEffect>
       <DestroySound>WepSmallWarheadExpl</DestroySound>
       <PCU>15</PCU>      
+      <TieredUpdateTimes>
+        <unsignedInt>100</unsignedInt>
+        <unsignedInt>3600</unsignedInt>
+        <unsignedInt>0</unsignedInt>
+      </TieredUpdateTimes>
+      <TargetingGroups>
+        <string>Propulsion</string>
+      </TargetingGroups>
     </Definition>
     <Definition xsi:type="MyObjectBuilder_ThrustDefinition">
       <Id>
@@ -413,6 +437,14 @@
       <DestroyEffect>BlockDestroyedExplosion_Tiny</DestroyEffect>
       <DestroySound>WepSmallWarheadExpl</DestroySound>
       <PCU>15</PCU>
+      <TieredUpdateTimes>
+        <unsignedInt>100</unsignedInt>
+        <unsignedInt>3600</unsignedInt>
+        <unsignedInt>0</unsignedInt>
+      </TieredUpdateTimes>
+      <TargetingGroups>
+        <string>Propulsion</string>
+      </TargetingGroups>
       <IsAirTight>false</IsAirTight>      
     </Definition>
     <!-- End Region Thrust-->

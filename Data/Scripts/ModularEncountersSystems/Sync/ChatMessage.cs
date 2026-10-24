@@ -361,6 +361,46 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
+			if (array[2] == "StaticEncounter") {
+
+				if (array.Length < 4 || string.IsNullOrWhiteSpace(array[3])) {
+
+					SpawnLogger.Write("Missing Static Encounter SpawnGroup Name", SpawnerDebugEnum.Settings);
+					ReturnMessage = "Missing Static Encounter SpawnGroup Name";
+					return false;
+
+				}
+
+				StaticEncounter pending = null;
+
+				foreach (var encounter in NpcManager.StaticEncounters) {
+
+					if (encounter != null && encounter.IsValid && encounter.SpawnType == SpawningType.StaticEncounter && encounter.SpawnGroupName == array[3]) {
+
+						pending = encounter;
+						break;
+
+					}
+
+				}
+
+				if (pending == null) {
+
+					SpawnLogger.Write("No Pending Static Encounter: " + array[3], SpawnerDebugEnum.Settings);
+					ReturnMessage = "No Pending Static Encounter: " + array[3];
+					return false;
+
+				}
+
+				bool update = false;
+				pending.ProcessEncounter(ref update, true, pending.TriggerCoords);
+				NpcManager.UpdateStaticEncounters();
+				SpawnLogger.Write("Chat Command Spawn Request Sent", SpawnerDebugEnum.Settings);
+				ReturnMessage = "Chat Command Spawn Request Sent";
+				return true;
+
+			}
+
 			if (array[2] == "SpaceCargoShip")
 				type = SpawningType.SpaceCargoShip;
 

@@ -295,6 +295,12 @@ Here is a list of command categories:
 |Chat Command 2:|`/MES.Spawn.BossEncounter.Value`<br />`/MES.SBE.Value`|
 |Description:|This chat command allows you to spawn a Boss Encounter near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace `Value` with the SubtypeId of the Spawn Group you want to spawn.|
 
+|Setting:|Spawn Static Encounter|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Spawn.StaticEncounter.Value`<br />`/MES.SSE.Value`|
+|Description:|This chat command spawns a Static Encounter at its set location without waiting for a player to come within its trigger radius. Otherwise it goes through the same checks as a normal Static Encounter spawn. Replace `Value` with the SubtypeId of the Spawn Group. It only works for a Static Encounter that hasn't spawned yet.|
+
 |Setting:|Spawn Planetary Cargo Ship|
 |:----|:----|
 |XML:|`N/A`|

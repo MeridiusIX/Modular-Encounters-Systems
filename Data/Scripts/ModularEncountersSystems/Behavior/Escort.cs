@@ -110,9 +110,9 @@ namespace ModularEncountersSystems.Behavior {
 
 						if (shipSpeed < _behavior.AutoPilot.Data.IdealMaxSpeed) {
 
-							var lerpedDistance = MathTools.LerpToMultiplier(_behavior.AutoPilot.Data.EscortSpeedMatchMinDistance, _behavior.AutoPilot.Data.EscortSpeedMatchMaxDistance, _behavior.AutoPilot.DistanceToInitialWaypoint);
+							var lerpedDistance = MathHelper.Clamp((_behavior.AutoPilot.DistanceToInitialWaypoint - _behavior.AutoPilot.Data.EscortSpeedMatchMinDistance) / (_behavior.AutoPilot.Data.EscortSpeedMatchMaxDistance - _behavior.AutoPilot.Data.EscortSpeedMatchMinDistance), 0, 1);
 							var lerpedSpeed = MathTools.LerpToValue(shipSpeed, _behavior.AutoPilot.Data.IdealMaxSpeed, lerpedDistance);
-							_behavior.AutoPilot.State.MaxSpeedOverride = shipSpeed;
+							_behavior.AutoPilot.State.MaxSpeedOverride = lerpedSpeed;
 
 						} else {
 

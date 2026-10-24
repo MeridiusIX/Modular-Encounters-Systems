@@ -225,7 +225,7 @@ This section contains tags that control if NPC should lead a target with weapons
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseProjectileLeadPrediction|
 |:----|:----|
 |Tag Format:|`[UseProjectileLeadPrediction:Value]`|
-|Description:|This tag specifies if a ship should try to aim ahead of a moving target so projectiles have a better chance to hit.|
+|Description:|This tag specifies if a ship should try to aim ahead of a moving target so projectiles have a better chance to hit. Not used while the ship is escorting, so escorts stay in their slot.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 

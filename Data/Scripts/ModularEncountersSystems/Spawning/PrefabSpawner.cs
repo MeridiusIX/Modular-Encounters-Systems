@@ -303,9 +303,9 @@ namespace ModularEncountersSystems.Spawning {
 
 					spawnMatrix.Translation = npcData.StartCoords;
 
-                    double pitch = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[i].X, spawnCollection.Conditions.RotateInstallationsMax[i].X);
-                    double yaw = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[i].Y, spawnCollection.Conditions.RotateInstallationsMax[i].Y);
-                    double roll = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[i].Z, spawnCollection.Conditions.RotateInstallationsMax[i].Z);
+                    double pitch = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[spawnCollection.PrefabIndexes[i]].X, spawnCollection.Conditions.RotateInstallationsMax[spawnCollection.PrefabIndexes[i]].X);
+                    double yaw = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[spawnCollection.PrefabIndexes[i]].Y, spawnCollection.Conditions.RotateInstallationsMax[spawnCollection.PrefabIndexes[i]].Y);
+                    double roll = MathTools.RandomBetween(spawnCollection.Conditions.RotateInstallationsMin[spawnCollection.PrefabIndexes[i]].Z, spawnCollection.Conditions.RotateInstallationsMax[spawnCollection.PrefabIndexes[i]].Z);
 
                     Vector3D rotation = new Vector3D(pitch, yaw, roll);
 					spawnMatrix = PathPlacements.CalculateDerelictSpawnMatrix(spawnMatrix, rotation);

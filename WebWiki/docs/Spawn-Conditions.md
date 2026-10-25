@@ -280,6 +280,15 @@ Below are several types of condition tags you can include in your Spawn Conditio
 |Default Value(s):|`none`|
 |Multiple Tag Allowed:|No|
 
+<!-- RotateInstallationsDegrees  -->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RotateInstallationsDegrees|
+|:----|:----|
+|Tag Format:|`[RotateInstallationsDegrees:Value1,Value2,Value3,etc]`|
+|Description:|This tag allows you to turn one or more prefabs in the spawn group by a set number of degrees, for example to park a vehicle sideways next to a building. Each Value is replaced by the following: `{X:0 Y:0 Z:0}`. X affects Pitch (positive tilts the front up), Y affects Yaw (positive turns to the right), Z affects Roll (positive tilts to the right). When providing multiple values, the first value will affect the first prefab, second value affects second prefab, etc. A prefab that has a value here ignores the other RotateInstallations tags.|
+|Allowed Values:|Rotation in degrees (see above for example)<br>If providing multiple values, use comma with no spaces as shown in `Tag Format`|
+|Default Value(s):|`none`|
+|Multiple Tag Allowed:|No|
+
 <!-- ReverseForwardDirections  -->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReverseForwardDirections|
 |:----|:----|

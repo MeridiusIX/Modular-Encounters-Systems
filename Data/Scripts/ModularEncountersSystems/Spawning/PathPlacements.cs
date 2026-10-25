@@ -1647,6 +1647,39 @@ namespace ModularEncountersSystems.Spawning {
 
 		}
 
+		public static MatrixD CalculateDerelictSpawnMatrixDegrees(MatrixD existingMatrix, Vector3D rotationDegrees) {
+
+			var resultMatrix = existingMatrix;
+
+			if (rotationDegrees.X != 0) {
+
+				var angle = MathHelper.ToRadians(rotationDegrees.X);
+				var pitchForward = resultMatrix.Forward * Math.Cos(angle) + resultMatrix.Up * Math.Sin(angle);
+				var pitchUp = resultMatrix.Up * Math.Cos(angle) + resultMatrix.Backward * Math.Sin(angle);
+				resultMatrix = MatrixD.CreateWorld(resultMatrix.Translation, pitchForward, pitchUp);
+
+			}
+
+			if (rotationDegrees.Y != 0) {
+
+				var angle = MathHelper.ToRadians(rotationDegrees.Y);
+				var yawForward = resultMatrix.Forward * Math.Cos(angle) + resultMatrix.Right * Math.Sin(angle);
+				resultMatrix = MatrixD.CreateWorld(resultMatrix.Translation, yawForward, resultMatrix.Up);
+
+			}
+
+			if (rotationDegrees.Z != 0) {
+
+				var angle = MathHelper.ToRadians(rotationDegrees.Z);
+				var rollUp = resultMatrix.Up * Math.Cos(angle) + resultMatrix.Right * Math.Sin(angle);
+				resultMatrix = MatrixD.CreateWorld(resultMatrix.Translation, resultMatrix.Forward, rollUp);
+
+			}
+
+			return resultMatrix;
+
+		}
+
         // This code was provided by Digi, it mirrors the base game implementation.
         public static bool TryGetPlacementMatrix(MyPlanet planet, Vector3D surfPoint, out MatrixD worldMatrix)
         {

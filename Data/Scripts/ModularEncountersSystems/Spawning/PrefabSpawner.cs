@@ -292,7 +292,14 @@ namespace ModularEncountersSystems.Spawning {
                     PathPlacements.TryGetPlacementMatrix(environment.NearestPlanet.Planet, npcData.StartCoords, out spawnMatrix);
                 }
 
-				if (spawnCollection.PrefabIndexes[i] < spawnCollection.Conditions.RotateInstallations.Count) {
+				if (spawnCollection.PrefabIndexes[i] < spawnCollection.Conditions.RotateInstallationsDegrees.Count) {
+
+					spawnMatrix.Translation = npcData.StartCoords;
+					spawnMatrix = PathPlacements.CalculateDerelictSpawnMatrixDegrees(spawnMatrix, spawnCollection.Conditions.RotateInstallationsDegrees[spawnCollection.PrefabIndexes[i]]);
+
+				}
+
+				else if (spawnCollection.PrefabIndexes[i] < spawnCollection.Conditions.RotateInstallations.Count) {
 
 					spawnMatrix.Translation = npcData.StartCoords;
 					spawnMatrix = PathPlacements.CalculateDerelictSpawnMatrix(spawnMatrix, spawnCollection.Conditions.RotateInstallations[spawnCollection.PrefabIndexes[i]]);

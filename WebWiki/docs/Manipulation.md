@@ -49,23 +49,23 @@ To link a profile to your SpawnGroup, simply use the `ManipulationProfiles` tag 
 
 Below are several types of tags you can include in your Manipulation Profile:
 
-[Conditions](#Conditions)
+[Conditions](#conditions)
 
-[General](#General)  
-[Armor-Modules](#Armor-Modules)  
-[Block-Replacement](#Block-Replacement)  
-[Block-Settings](#Block-Settings)  
-[Build-States](#Build-States)  
-[Damage](#Damage)  
-[Inventory](#Inventory)  
-[Paint-and-Skins](#Paint-and-Skins)  
-[Profiles](#Profiles)  
-[Renaming](#Renaming)  
-[RivalAI](#RivalAI)
-[Shields](#Shields)  
-[Propulsion](#Propulsion)  
-[Turrets](#Turrets)  
-[Weapon-Randomization](#Weapon-Randomization)  
+[General](#general)  
+[Armor-Modules](#armor-modules)  
+[Block-Replacement](#block-replacement)  
+[Block-Settings](#block-settings)  
+[Build-States](#build-states)  
+[Damage](#damage)  
+[Inventory](#inventory)  
+[Paint-and-Skins](#paint-and-skins)  
+[Profiles](#profiles)  
+[Renaming](#renaming)  
+[RivalAI](#rivalai)
+[Shields](#shields)  
+[Propulsion](#propulsion)  
+[Turrets](#turrets)  
+[Weapon-Randomization](#weapon-randomization)  
 
 
 # Conditions

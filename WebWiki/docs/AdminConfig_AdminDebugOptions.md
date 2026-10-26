@@ -4,11 +4,11 @@ These commands can be used to force spawn random or specific spawn groups, enabl
 
 Here is a list of command categories:
 
-[**BehaviorDebug**](#BehaviorDebug)  
-[**Debug**](#Debug)  
-[**Info**](#Info)  
-[**Spawn**](#Spawn)  
-[**SpawnDebug**](#SpawnDebug)  
+[**BehaviorDebug**](#behaviordebug)  
+[**Debug**](#debug)  
+[**Info**](#info)  
+[**Spawn**](#spawn)  
+[**SpawnDebug**](#spawndebug)  
 
 # BehaviorDebug
 

@@ -35,25 +35,23 @@ Here is an example of how a Behavior Profile definition is setup:
 
 Below are the tags you are able to use in your Behavior Profiles. They are divided into several categories based on what they control.
 
-**[Core](#Core)**  
-**[Damage](#Damage)**  
-**[Despawn](#Despawn)**  
-**[Damage](#Damage)**   
-**[EscortSystem](#EscortSystem)**  
-**[Weapons](#Weapons)**  
+**[Core](#core)**  
+**[Damage](#damage)**  
+**[Despawn](#despawn)**  
+**[EscortSystem](#escortsystem)**  
 
-**[CargoShip](#CargoShip)**  
-**[Escort](#Escort)**  
-**[Fighter](#Fighter)**  
-**[HorseFighter](#HorseFighter)**  
-**[Horsefly](#Horsefly)**  
-**[Hunter](#Hunter)**  
-**[Nautical](#Nautical)**  
-**[Passive](#Passive)**  
-**[Patrol](#Patrol)**  
-**[Scout](#Scout)**  
-**[Sniper](#Sniper)**  
-**[Strike](#Strike)**  
+**[CargoShip](#cargoship)**  
+**[Escort](#escort)**  
+**[Fighter](#fighter)**  
+**[HorseFighter](#horsefighter)**  
+**[Horsefly](#horsefly)**  
+**[Hunter](#hunter)**  
+**[Nautical](#nautical)**  
+**[Passive](#passive)**  
+**[Patrol](#patrol)**  
+**[Scout](#scout)**  
+**[Sniper](#sniper)**  
+**[Strike](#strike)**  
  
  
 # Core

@@ -50,11 +50,11 @@ Example:
 </Definitions>
 ```
 
-[**Conditions**](#Conditions)  
-[**Economy**](#Economy)   
-[**Manipulations**](#Manipulations  )  
-[**Misc**](#Misc)  
-[**Replenishment**](#Replenishment)  
+[**Conditions**](#conditions)  
+[**Economy**](#economy)   
+[**Manipulations**](#manipulations  )  
+[**Misc**](#misc)  
+[**Replenishment**](#replenishment)  
 
 # Conditions
 

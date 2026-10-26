@@ -42,17 +42,17 @@ It's also important to note that all the tags below can also be used in the main
 
 Below are the tags you are able to use in your Autopilot Profiles. They are divided into several categories based on what they control.
 
-**[Behavior](#Behavior)**  
-**[Collision](#Collision)**  
-**[General](#General)**  
-**[Leading](#Leading)**  
-**[Offset](#Offset)**  
-**[Planet](#Planet)**  
-**[Rotation](#Rotation)**  
-**[Special](#Special)**  
-**[Speed](#Speed)**  
-**[Strafe](#Strafe)**  
-**[Thrust](#Thrust)**  
+**[Behavior](#behavior)**  
+**[Collision](#collision)**  
+**[General](#general)**  
+**[Leading](#leading)**  
+**[Offset](#offset)**  
+**[Planet](#planet)**  
+**[Rotation](#rotation)**  
+**[Special](#special)**  
+**[Speed](#speed)**  
+**[Strafe](#strafe)**  
+**[Thrust](#thrust)**  
 
 ***
 

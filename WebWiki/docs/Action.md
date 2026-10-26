@@ -32,22 +32,22 @@ Here is an example of how an Action Profile definition is setup:
 
 Below are the tags you are able to use in your Action Profiles. They are divided into several categories based on what they affect.
 
-**[Abilities](#Abilities)**  
-**[Behavior](#Behavior)**  
-**[Blocks](#Blocks)**  
-**[Communication](#Communication)**  
-**[Damage](#Damage)**   
-**[Effects](#Effects)**  
-**[General](#General)**  
-**[Grid](#Grid)**  
-**[Inventory](#Inventory)**  
-**[PlayerTags](#PlayerTags)**  
-**[Reputation](#Reputation)**  
-**[Spawning](#Spawning)**  
-**[Targeting](#Targeting)**  
-**[Trigger](#Trigger)**  
-**[Variables](#Variables)**  
-**[Zone](#Zone)**  
+**[Abilities](#abilities)**  
+**[Behavior](#behavior)**  
+**[Blocks](#blocks)**  
+**[Communication](#communication)**  
+**[Damage](#damage)**   
+**[Effects](#effects)**  
+**[General](#general)**  
+**[Grid](#grid)**  
+**[Inventory](#inventory)**  
+**[PlayerTags](#playertags)**  
+**[Reputation](#reputation)**  
+**[Spawning](#spawning)**  
+**[Targeting](#targeting)**  
+**[Trigger](#trigger)**  
+**[Variables](#variables)**  
+**[Zone](#zone)**  
 
 ***
 

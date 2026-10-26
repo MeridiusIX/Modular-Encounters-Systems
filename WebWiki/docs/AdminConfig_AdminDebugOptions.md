@@ -89,6 +89,18 @@ Here is a list of command categories:
 |Allowed Value for `PlanetName`:|Any Planet Name|
 |Allowed Value for `PlanetSize`:|Any Number Greater Than 100|
 
+|Setting:|Delete Grid|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.DeleteGrid`|
+|Description:|This chat command removes the grid your camera is pointed at, up to 10km away.|
+
+|Setting:|Developer Mode|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.DeveloperMode`|
+|Description:|This chat command turns Developer Mode on or off (this command toggles). While it is on, admins get a chat message whenever a behavior error is logged, and `/MES.IGLBD.Error` shows the error. It turns off again when the world is reloaded.|
+
 |Setting:|Draw Paths|
 |:----|:----|
 |XML:|`N/A`|
@@ -107,6 +119,18 @@ Here is a list of command categories:
 |Chat Command 1:|`/MES.Debug.ForcePeacePhase`|
 |Description:|This chat command allows you to immediately enable Peace Phase in the current world (stops the current Combat Phase).|
 
+|Setting:|Get Block Data|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.GetBlockData`|
+|Description:|This chat command shows the SubtypeId and grid position of the block your camera is pointed at, up to 10km away.|
+
+|Setting:|Get Block Pairs|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.GetBlockPairs`|
+|Description:|This chat command lists every block that has a small or large grid counterpart and saves the list to your clipboard as `[OldBlock:]` and `[NewBlock:]` pairs, ready to use in a Block Replacement profile.|
+
 |Setting:|Hide All Zones|
 |:----|:----|
 |XML:|`N/A`|
@@ -118,6 +142,12 @@ Here is a list of command categories:
 |XML:|`N/A`|
 |Chat Command 1:|`/MES.Debug.HideZone.Value`|
 |Description:|This chat command hides the specified zone. The zone can be specified by either the SubtypeID or the PublicName.|
+
+|Setting:|Linked Grids|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.LinkedGrids`|
+|Description:|This chat command lists the grids connected to the grid your camera is pointed at, for each type of connection (Electrical, Logical, Mechanical, NoContactDamage, Physical), and saves the list to your clipboard.|
 
 |Setting:|Process Prefabs|
 |:----|:----|
@@ -147,11 +177,32 @@ Here is a list of command categories:
 |Description:|This chat command allows you to reset all players reputation with a specified faction.|
 |Allowed Value:|Any NPC Faction Tag|
 
+|Setting:|Reset This Static Encounters|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.ResetThisStaticEncounters.Value`|
+|Description:|This chat command lets a Static Encounter that has already spawned spawn again the next time a player comes in range. The grids it spawned before are not removed. To replace every spawned Static Encounter with a fresh copy, use `/MES.Debug.ResetStaticEncounters`.|
+|Allowed Value:|SpawnGroup SubtypeId of a Static Encounter|
+
+|Setting:|Reset This Unique Spawn Group|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.ResetThisUniqueSpawnGroup.Value`|
+|Description:|This chat command lets a single Unique Encounter that has already spawned spawn again. To reset all of them, use `/MES.Debug.ClearUniqueEncounters`.|
+|Allowed Value:|SpawnGroup SubtypeId of a Unique Encounter|
+
 |Setting:|Reset Zones|
 |:----|:----|
 |XML:|`N/A`|
 |Chat Command:|`/MES.Debug.ResetZones`|
 |Description:|This chat command allows you to reset all zones currently loaded in the game world and reload them using the profiles currently present in the mod loadout.|
+
+|Setting:|Set Grid Ownership|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Debug.SetGridOwnership.Value`|
+|Description:|This chat command gives the grid your camera is pointed at (up to 2km away), and the grids connected to it, to the specified faction, shared with the faction.|
+|Allowed Value:|Any Faction Tag|
 
 |Setting:|Show All Zones|
 |:----|:----|
@@ -168,7 +219,7 @@ Here is a list of command categories:
 |Setting:|Unlock Admin Blocks|
 |:----|:----|
 |XML:|`N/A`|
-|Chat Command:|`/MES.Debug.UnlockAdminBlocks`|
+|Chat Command:|`/MES.Debug.UnlockAdminBlocks`<br />`/MES.Debug.UnlockNpcBlocks`|
 |Description:|This chat command allows you to unlock all MES Special Blocks (eg: AI Control Module, Inhibitors, etc). This only allows the player that entered the command to use the blocks, and only for the duration of the session.|
 
 # Info
@@ -245,6 +296,18 @@ Here is a list of command categories:
 |Chat Command:|`/MES.Info.GetItemMassData`|
 |Description:|This chat command will gather a list of all Items in the game and how much they weigh.|
 
+|Setting:|Get Item Prices|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Info.GetItemPrices`|
+|Description:|This chat command lists the base value MES uses for each item when pricing store items, with the mod it comes from and whether it can be crafted in an assembler, and saves the list to your clipboard.|
+
+|Setting:|Get Location Matrix|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Info.GetLocationMatrix`|
+|Description:|This chat command saves your current position to your clipboard as Zone profile tags: `[Coordinates:]` for a world position and, near a planet, `[PlanetaryZone:]`, `[PlanetName:]`, `[Direction:]` and `[HeightOffset:]` for a position relative to the planet.|
+
 |Setting:|Get Logging|
 |:----|:----|
 |XML:|`N/A`|
@@ -265,6 +328,12 @@ Here is a list of command categories:
 |Chat Command 1:|`/MES.Info.GetThreatScore`<br />`/MES.GTS`|
 |Chat Command 2:|`/MES.Info.GetThreatScore.Value`<br />`/MES.GTS.Value`|
 |Description:|This chat command will get the current Threat Score near your position and save it to your clipboard. By default, a range of `5000` meters is checked. You can provide a custom distance by replacing the `Value` text in Chat Command 2|
+
+|Setting:|Get Version|
+|:----|:----|
+|XML:|`N/A`|
+|Chat Command:|`/MES.Info.GetVersion`|
+|Description:|This chat command shows the version of MES that is running.|
 
 |Setting:|Get Zones|
 |:----|:----|

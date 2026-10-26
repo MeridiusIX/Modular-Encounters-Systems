@@ -840,13 +840,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					if (i >= newColors.Count && i >= newSkins.Count)
 						break;
 
-					if (Math.Round(oldColors[i].X, 3) != Math.Round(block.ColorMaskHSV.X, 3))
-						continue;
-
-					if (Math.Round(oldColors[i].Y, 3) != Math.Round(block.ColorMaskHSV.Y, 3))
-						continue;
-
-					if (Math.Round(oldColors[i].Z, 3) != Math.Round(block.ColorMaskHSV.Z, 3))
+					if (!block.ColorMaskHSV.Equals((Vector3)oldColors[i], 0.001f))
 						continue;
 
 					if (i < newColors.Count) {

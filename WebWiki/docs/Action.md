@@ -986,7 +986,7 @@ This section contains actions that affect the entire grid.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|OldBlockColors|
 |:----|:----|
 |Tag Format:|`[OldBlockColors:Value]`|
-|Description:|This tag specifies the old colors that are targeted for replacement when using the `RecolorGrid` tag. You should also include `NewBlockColors` and `NewBlockSkins` tags together when using this tag.|
+|Description:|This tag specifies the old colors that are targeted for replacement when using the `RecolorGrid` tag. You should also include `NewBlockColors` and `NewBlockSkins` tags together when using this tag. Values converted from the in-game color menu and rounded to 3 decimals will match: X is Hue / 360, Y is Saturation / 100 - 0.8, and Z is Value / 100 - 0.45, so H 120, S 24.1, V 43.9 is `{X:0.333 Y:-0.559 Z:-0.011}`.|
 |Allowed Values:|A Vector3D Value in the following format:<br />`{X:# Y:# Z:#}`<br />X: Right<br />Y: Up<br />Z: Forward<br />Replace `#` with matching values from ColorMaskHSV|
 |Multiple Tag Allowed:|Yes|
 

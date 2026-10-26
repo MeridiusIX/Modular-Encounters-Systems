@@ -611,7 +611,7 @@ Below are several types of tags you can include in your Manipulation Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RecolorOld|
 |:----|:----|
 |Tag Format:|`[RecolorOld:Value]`|
-|Description:|This tag allows you to specify a block color on a grid that will be replaced with another color if `RecolorGrid` is enabled. If using this tag, you must also provide a `RecolorNew` tag that specifies the color that replaces the color in this tag.|
+|Description:|This tag allows you to specify a block color on a grid that will be replaced with another color if `RecolorGrid` is enabled. If using this tag, you must also provide a `RecolorNew` tag that specifies the color that replaces the color in this tag. Values converted from the in-game color menu and rounded to 3 decimals will match: X is Hue / 360, Y is Saturation / 100 - 0.8, and Z is Value / 100 - 0.45, so H 120, S 24.1, V 43.9 is `{X:0.333 Y:-0.559 Z:-0.011}`.|
 |Allowed Values:|ColorMaskHSV in Below Format:<br>`{X:0 Y:0 Z:0}`|
 |Default Value(s):|`none`|
 |Multiple Tag Allowed:|Yes|
@@ -629,7 +629,7 @@ Below are several types of tags you can include in your Manipulation Profile:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ReskinTarget|
 |:----|:----|
 |Tag Format:|`[ReskinTarget:Value]`|
-|Description:|This tag allows you to specify a block color on a grid that will be re-skinned if `RecolorGrid` is enabled. If using this tag, you must also provide a `ReskinTexture` tag that specifies the skin name that is applied to blocks with the color in this tag.|
+|Description:|This tag allows you to specify a block color on a grid that will be re-skinned if `RecolorGrid` is enabled. If using this tag, you must also provide a `ReskinTexture` tag that specifies the skin name that is applied to blocks with the color in this tag. Values converted from the in-game color menu and rounded to 3 decimals will match (see `RecolorOld`).|
 |Allowed Values:|ColorMaskHSV in Below Format:<br>`{X:0 Y:0 Z:0}`|
 |Default Value(s):|`none`|
 |Multiple Tag Allowed:|Yes|

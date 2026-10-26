@@ -32,19 +32,19 @@ Here is an example of how an Event Action Profile definition is setup:
 ```
 
 
-**[Debug](#Debug)**
+**[Debug](#debug)**
 
-**[SandboxVariables](#SandboxVariables)**
+**[SandboxVariables](#sandboxvariables)**
 
-**[Chat](#Chat)**
+**[Chat](#chat)**
 
-**[Spawning](#Spawning)**
+**[Spawning](#spawning)**
 
-**[Zones](#Zones)**
+**[Zones](#zones)**
 
-**[Players](#Players)**
+**[Players](#players)**
 
-**[Events](#Events)**
+**[Events](#events)**
 
 
 # Debug
@@ -56,6 +56,7 @@ Here is an example of how an Event Action Profile definition is setup:
 |Description:|nan|
 |Allowed Values:|Any name string excluding `:`, `[`, `]`|
 |Multiple Tag Allowed:|no|
+
 # SandboxVariables
 This Section
 <!--ChangeBooleans  -->
@@ -128,6 +129,7 @@ This Section
 |Description:|nan|
 |Allowed Values:|Any interger|
 |Multiple Tag Allowed:|yes|
+
 # Chat
 This Section
 <!--UseChatBroadcast  -->
@@ -144,6 +146,7 @@ This Section
 |Description:|nan|
 |Allowed Values:|Any behaviour Chat Profile SubtypeId|
 |Multiple Tag Allowed:|yes|
+
 # Spawning
 This Section
 <!--SpawnVector3Ds  -->
@@ -167,6 +170,7 @@ This Section
 |Description:|nan|
 |Allowed Values:|Any behaviour Spawner Profile SubtypeId|
 |Multiple Tag Allowed:|no|
+
 # Zones
 This Section
 <!--ChangeZoneAtPosition  -->
@@ -204,6 +208,7 @@ This Section
 |Description:|true will activate it. false will set disable it|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|yes|
+
 # Players
 This Section
 <!--AddTagstoPlayers  -->
@@ -353,6 +358,7 @@ This Section
 |Description:|nan|
 |Allowed Values:|Any interger|
 |Multiple Tag Allowed:|nan|
+
 # Events
 Jaa events!
 <!--ToggleEvents  -->

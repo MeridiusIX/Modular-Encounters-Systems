@@ -30,13 +30,13 @@ Here's an example of how a Event Condition Profile Definition is setup:
 
 
 
-**[Basic](#Basic)**
+**[Basic](#basic)**
 
-**[SandboxVariables](#SandboxVariables)**
+**[SandboxVariables](#sandboxvariables)**
 
-**[Player](#Player)**
+**[Player](#player)**
 
-**[TheatScore](#TheatScore)**
+**[TheatScore](#theatscore)**
 
 # Basic
 
@@ -54,6 +54,7 @@ Here's an example of how a Event Condition Profile Definition is setup:
 |Description:|nan|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|no|
+
 # SandboxVariables
 
 <!--CheckTrueBooleans  -->
@@ -126,6 +127,7 @@ Here's an example of how a Event Condition Profile Definition is setup:
 |Description:|nan|
 |Allowed Values:|`GreaterOrEqual`<br>`Greater`<br>`Equal`<br>`NotEqual`<br>`Less`<br>`LessOrEqual`|
 |Multiple Tag Allowed:|yes|
+
 # Player
 
 <!--CheckPlayerCondition   -->
@@ -170,6 +172,7 @@ Here's an example of how a Event Condition Profile Definition is setup:
 |Description:|nan|
 |Allowed Values:|Any PlayerFilter Profile SubtypeId|
 |Multiple Tag Allowed:|no|
+
 # TheatScore
 
 <!--CheckThreatScore  -->

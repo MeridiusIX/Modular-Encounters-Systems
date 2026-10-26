@@ -81,11 +81,11 @@ Scenario Tools is an extension of MES.
 
 **Overview:**
 
-**[ScT-CreateGPS](#ScT-CreateGPS)**  
-**[ScT-RemoveGPS](#ScT-RemoveGPS)**  
-**[ScT-AddNews](#ScT-AddNews)**  
-**[ScT-SpawnPlanetaryInstallation](#ScT-SpawnPlanetaryInstallation)**  
-**[ScT-SpawnPlanetaryBlockade](#ScT-SpawnPlanetaryBlockade)**    
+**[ScT-CreateGPS](#sct-creategps)**  
+**[ScT-RemoveGPS](#sct-removegps)**  
+**[ScT-AddNews](#sct-addnews)**  
+**[ScT-SpawnPlanetaryInstallation](#sct-spawnplanetaryinstallation-dont-use)**  
+**[ScT-SpawnPlanetaryBlockade](#sct-spawnplanetaryblockade-dont-use)**    
 
 ## ScT-CreateGPS
 

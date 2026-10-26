@@ -196,7 +196,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 				double angleUpToTarget = VectorHelper.GetAngleBetweenDirections(referenceMatrix.Up, directionToTarget);
 				double angleDownToTarget = VectorHelper.GetAngleBetweenDirections(referenceMatrix.Down, directionToTarget);
 				PitchTargetAngleResult = VectorHelper.GetAngleBetweenDirections(referenceMatrix.Forward, directionToTarget) - VectorHelper.GetAngleBetweenDirections(referenceMatrix.Backward, directionToTarget);
-				gyroRotation.X = (float)CalculateGyroAxisRadians(angleDownToTarget, angleUpToTarget, PitchTargetAngleResult, gridSize, ref PitchAngleDifference);
+				gyroRotation.X = (float)CalculateGyroAxisRadians(angleDownToTarget, angleUpToTarget, this.Data.LimitPitchTurning ? Math.Min(PitchTargetAngleResult, 0) : PitchTargetAngleResult, gridSize, ref PitchAngleDifference);
+
+				if (this.Data.LimitPitchTurning && PitchTargetAngleResult > 0 && gyroRotation.X < 0) {
+
+					gyroRotation.X = 0;
+
+				}
 
 			}
 

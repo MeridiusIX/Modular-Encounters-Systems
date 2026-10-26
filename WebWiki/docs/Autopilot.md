@@ -426,6 +426,14 @@ This section contains tags that control rotation of the NPC grid.
 |Allowed Values:|Any Number Greater Than `0`|
 |Multiple Tag Allowed:|No|
 
+<!--LimitPitchTurning-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|LimitPitchTurning|
+|:----|:----|
+|Tag Format:|`[LimitPitchTurning:Value]`|
+|Description:|This tag limits pitch (when the target/waypoint is behind the NPC) to prioritize turning with yaw instead of looping or flipping over. It works in gravity and in space, but has no effect when using the `FlyLevelWithGravity` or `LevelWithGravityWhenIdle` tags. Useful for rovers, hovercraft, aircraft and ships. Default value is `false`.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
 <!--UseAircraftFlightModel-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseAircraftFlightModel|
 |:----|:----|

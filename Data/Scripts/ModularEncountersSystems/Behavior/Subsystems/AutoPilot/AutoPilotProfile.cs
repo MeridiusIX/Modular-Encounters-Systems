@@ -98,6 +98,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 		public float ForcedRotationDampeningAmount;
 		public bool LimitRotationSpeed;
 		public double MaxRotationMagnitude;
+		public bool LimitPitchTurning;
 		public bool UseRotationBoostUp;
 		public float RotationBoostUpAmount;
 		public bool UseAircraftFlightModel;
@@ -321,6 +322,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 			LimitRotationSpeed = false;
 			MaxRotationMagnitude = 6.28;
+			LimitPitchTurning = false;
 
 			MinGravity = -1;
 			MaxGravity = -1;
@@ -1084,6 +1086,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 			if (tag.Contains("[MaxRotationMagnitude:") == true) {
 
 				TagParse.TagDoubleCheck(tag, ref this.MaxRotationMagnitude);
+
+			}
+
+			//LimitPitchTurning
+			if (tag.Contains("[LimitPitchTurning:") == true) {
+
+				TagParse.TagBoolCheck(tag, ref LimitPitchTurning);
 
 			}
 

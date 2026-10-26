@@ -93,22 +93,30 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
             }
 
 			//Replace Colors
-			Vector3 outputColor = Vector3.Zero;
 			string outputSkin = "";
 
-			if (profile.ColorReferencePairs.TryGetValue(blockColor, out outputColor)) {
+			foreach (var pair in profile.ColorReferencePairs) {
 
-				block.ColorMaskHSV = profile.ColorReferencePairs[blockColor];
-				blockColor = profile.ColorReferencePairs[blockColor];
+				if (!blockColor.Equals(pair.Key, 0.001f))
+					continue;
+
+				block.ColorMaskHSV = pair.Value;
+				blockColor = pair.Value;
+				break;
 
 			}
 
 			//Replace Skins
-			if (profile.ColorSkinReferencePairs.TryGetValue(blockColor, out outputSkin)) {
+			foreach (var pair in profile.ColorSkinReferencePairs) {
 
-				block.SkinSubtypeId = profile.ColorSkinReferencePairs[blockColor];
+				if (!blockColor.Equals(pair.Key, 0.001f))
+					continue;
+
+				block.SkinSubtypeId = pair.Value;
+				break;
 
 			}
+
 			if (profile.SkinReferencePairs.TryGetValue(blockSkin, out outputSkin)) {
 
 				block.SkinSubtypeId = profile.SkinReferencePairs[blockSkin];

@@ -827,7 +827,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				if (!CheckBlockValid(block)) {
 
-					AllTerminalBlocks.RemoveAt(j);
+					AllBlocks.RemoveAt(j);
 					continue;
 
 				}

@@ -245,14 +245,14 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				if(repScore >= -500 && repScore <= 500 && result.HasFlag(TargetRelationEnum.Neutral) == false) {
+				if(repScore >= -500 && repScore < 500 && result.HasFlag(TargetRelationEnum.Neutral) == false) {
 
 					result |= TargetRelationEnum.Neutral;
 					continue;
 
 				}
 
-				if(repScore > 500 && result.HasFlag(TargetRelationEnum.Friend) == false) {
+				if(repScore >= 500 && result.HasFlag(TargetRelationEnum.Friend) == false) {
 
 					result |= TargetRelationEnum.Friend;
 					continue;

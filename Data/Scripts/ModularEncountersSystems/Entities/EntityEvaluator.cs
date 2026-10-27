@@ -330,7 +330,7 @@ namespace ModularEncountersSystems.Entities {
 			if (reputation < -500)
 				return RelationTypeEnum.Enemy;
 
-			if (reputation > 500)
+			if (reputation >= 500)
 				return RelationTypeEnum.Friends;
 
 			return RelationTypeEnum.Neutral;

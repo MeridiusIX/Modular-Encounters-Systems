@@ -67,7 +67,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 			InteractionRadius = 250;
 			MinReputation = -500;
 
-			ReputationNeededForDiscount = 501;
+			ReputationNeededForDiscount = 500;
 
 			AllowBlueprintBuilding = false;
 			BlueprintBuildingSmallGridBlockLimit = 2500;

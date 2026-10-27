@@ -301,14 +301,17 @@ namespace ModularEncountersSystems.Entities {
 			if (factionA != null && factionA == factionB)
 				return RelationTypeEnum.Faction;
 
-			if (FactionHelper.IsIdentityNPC(ownerA)) {
+			var isNpcA = FactionHelper.IsIdentityNPC(ownerA);
+			var isNpcB = FactionHelper.IsIdentityNPC(ownerB);
+
+			if (isNpcA && !isNpcB) {
 
 				if (factionA != null)
 					return GetRelationFromReputation(MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(ownerB, factionA.FactionId));
 
 			}
 
-			if (FactionHelper.IsIdentityNPC(ownerB)) {
+			if (isNpcB && !isNpcA) {
 
 				if (factionB != null)
 					return GetRelationFromReputation(MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(ownerA, factionB.FactionId));

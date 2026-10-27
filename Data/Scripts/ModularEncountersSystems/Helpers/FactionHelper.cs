@@ -469,7 +469,7 @@ namespace ModularEncountersSystems.Helpers {
                 var refFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(remoteControl.GetOwnerFactionTag());
                 foreach (var f in NpcFactions)
                 {
-                    if (MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) < 500 && MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) > -500)
+                    if (MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) < 500 && MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) >= -500)
                     {
                         returnList.Add(f);
                     }
@@ -487,7 +487,7 @@ namespace ModularEncountersSystems.Helpers {
                 var refFaction = MyAPIGateway.Session.Factions.TryGetFactionByTag(remoteControl.GetOwnerFactionTag());
                 foreach (var f in NpcFactions)
                 {
-                    if (MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) <= -500)
+                    if (MyAPIGateway.Session.Factions.GetReputationBetweenFactions(refFaction.FactionId, f.FactionId) < -500)
                     {
                         returnList.Add(f);
                     }

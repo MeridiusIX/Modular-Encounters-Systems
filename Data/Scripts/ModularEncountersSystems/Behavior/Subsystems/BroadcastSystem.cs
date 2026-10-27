@@ -294,10 +294,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						if (PlayerFactionRelation <= -501)
 							authorColor = "Red";
 
-						if (PlayerFactionRelation >= -500 && PlayerFactionRelation <= 500)
+						if (PlayerFactionRelation >= -500 && PlayerFactionRelation < 500)
 							authorColor = "White";
 
-						if (PlayerFactionRelation >= 501)
+						if (PlayerFactionRelation >= 500)
 							authorColor = "Green";
 
 					}

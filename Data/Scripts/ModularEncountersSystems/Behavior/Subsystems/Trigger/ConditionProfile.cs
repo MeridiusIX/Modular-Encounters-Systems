@@ -1582,7 +1582,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
 
-                    if (rep >= -500 && rep <= 500)
+                    if (rep >= -500 && rep < 500)
                         satisfiedConditions++;
 
                 }
@@ -1595,7 +1595,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
 
-                    if (rep >= 501)
+                    if (rep >= 500)
                         satisfiedConditions++;
 
                 }

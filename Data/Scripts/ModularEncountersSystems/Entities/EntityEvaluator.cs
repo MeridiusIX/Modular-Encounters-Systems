@@ -295,6 +295,9 @@ namespace ModularEncountersSystems.Entities {
 
 		public static RelationTypeEnum GetRelationBetweenIdentities(long ownerA, long ownerB) {
 
+			if (ownerA == 0 || ownerB == 0)
+				return RelationTypeEnum.None;
+
 			var factionA = MyAPIGateway.Session.Factions.TryGetPlayerFaction(ownerA);
 			var factionB = MyAPIGateway.Session.Factions.TryGetPlayerFaction(ownerB);
 

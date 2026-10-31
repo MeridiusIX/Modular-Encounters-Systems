@@ -236,7 +236,10 @@ namespace ModularEncountersSystems.Helpers {
 
 				}
 
-				var repScore = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(identity, myFaction.FactionId);
+				var theirFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(identity);
+				var repScore = (FactionHelper.IsIdentityNPC(myIdentity) && FactionHelper.IsIdentityNPC(identity) && theirFaction != null)
+					? MyAPIGateway.Session.Factions.GetReputationBetweenFactions(myFaction.FactionId, theirFaction.FactionId)
+					: MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(identity, myFaction.FactionId);
 
 				if(repScore < -500 && result.HasFlag(TargetRelationEnum.Enemy) == false) {
 

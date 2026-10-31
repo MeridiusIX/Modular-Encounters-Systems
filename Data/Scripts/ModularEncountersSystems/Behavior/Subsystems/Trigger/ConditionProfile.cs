@@ -1567,9 +1567,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     usedConditions++;
 
-                    var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
-
-                    if (rep <= -501)
+                    if (EntityEvaluator.GetRelationBetweenIdentities(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), _remoteControl.OwnerId) == RelationTypeEnum.Enemy)
                         satisfiedConditions++;
 
                 }
@@ -1580,9 +1578,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     usedConditions++;
 
-                    var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
-
-                    if (rep >= -500 && rep < 500)
+                    if (EntityEvaluator.GetRelationBetweenIdentities(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), _remoteControl.OwnerId) == RelationTypeEnum.Neutral)
                         satisfiedConditions++;
 
                 }
@@ -1591,11 +1587,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 if (ConditionReference.IsAttackerFriendly)
                 {
 
-                    usedConditions++;//
+                    usedConditions++;
 
-                    var rep = MyAPIGateway.Session.Factions.GetReputationBetweenPlayerAndFaction(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), MyAPIGateway.Session.Factions.TryGetPlayerFaction(_remoteControl.OwnerId)?.FactionId ?? 0);
-
-                    if (rep >= 500)
+                    if (EntityEvaluator.GetRelationBetweenIdentities(DamageHelper.GetAttackOwnerId(_behavior.BehaviorSettings.LastDamagerEntity), _remoteControl.OwnerId) == RelationTypeEnum.Friends)
                         satisfiedConditions++;
 
                 }

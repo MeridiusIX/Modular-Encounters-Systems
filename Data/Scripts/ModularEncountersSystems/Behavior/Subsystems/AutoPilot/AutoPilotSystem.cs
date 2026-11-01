@@ -93,10 +93,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				if (State.DataMode == AutoPilotDataMode.Primary) {
 
-					bool settingBlank = string.IsNullOrWhiteSpace(State.PrimaryAutopilotId);
 					bool profileBlank = string.IsNullOrWhiteSpace(State.PrimaryAutoPilot?.ProfileSubtypeId);
 
-					if (settingBlank && !profileBlank) {
+					if (!profileBlank) {
 
 						State.PrimaryAutopilotId = State.PrimaryAutoPilot.ProfileSubtypeId;
 
@@ -111,7 +110,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				if (State.DataMode == AutoPilotDataMode.Secondary) {
 
-					//TODO: Fix Immediately
+					if (!string.IsNullOrWhiteSpace(State.SecondaryAutoPilot?.ProfileSubtypeId))
+						State.SecondaryAutopilotId = State.SecondaryAutoPilot.ProfileSubtypeId;
+
 					if (State.SecondaryAutopilotId != State.SecondaryAutoPilot?.ProfileSubtypeId)
 						State.SecondaryAutoPilot = ProfileManager.GetAutopilotProfile(State.SecondaryAutopilotId);
 
@@ -121,7 +122,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.AutoPilot {
 
 				if (State.DataMode == AutoPilotDataMode.Tertiary) {
 
-					//TODO: Fix Immediately
+					if (!string.IsNullOrWhiteSpace(State.TertiaryAutoPilot?.ProfileSubtypeId))
+						State.TertiaryAutopilotId = State.TertiaryAutoPilot.ProfileSubtypeId;
+
 					if (State.TertiaryAutopilotId != State.TertiaryAutoPilot?.ProfileSubtypeId)
 						State.TertiaryAutoPilot = ProfileManager.GetAutopilotProfile(State.TertiaryAutopilotId);
 

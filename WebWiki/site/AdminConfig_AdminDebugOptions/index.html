@@ -245,11 +245,11 @@
                 <h1 id="adminconfig_admindebugoptionsmd">AdminConfig_AdminDebugOptions.md</h1>
 <p>These commands can be used to force spawn random or specific spawn groups, enable debug mode, get data on loaded spawngroups / active players / active NPCs / etc, and much more. These are chat commands only, so there are no accompanying XML configs.</p>
 <p>Here is a list of command categories:</p>
-<p><a href="#BehaviorDebug"><strong>BehaviorDebug</strong></a><br />
-<a href="#Debug"><strong>Debug</strong></a><br />
-<a href="#Info"><strong>Info</strong></a><br />
-<a href="#Spawn"><strong>Spawn</strong></a><br />
-<a href="#SpawnDebug"><strong>SpawnDebug</strong></a>  </p>
+<p><a href="#behaviordebug"><strong>BehaviorDebug</strong></a><br />
+<a href="#debug"><strong>Debug</strong></a><br />
+<a href="#info"><strong>Info</strong></a><br />
+<a href="#spawn"><strong>Spawn</strong></a><br />
+<a href="#spawndebug"><strong>SpawnDebug</strong></a>  </p>
 <h1 id="behaviordebug">BehaviorDebug</h1>
 <table>
 <thead>
@@ -536,6 +536,50 @@
 <thead>
 <tr>
 <th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Delete Grid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.DeleteGrid</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command removes the grid your camera is pointed at, up to 10km away.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Developer Mode</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.DeveloperMode</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command turns Developer Mode on or off (this command toggles). While it is on, admins get a chat message whenever a behavior error is logged, and <code>/MES.IGLBD.Error</code> shows the error. It turns off again when the world is reloaded.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
 <th style="text-align: left;">Draw Paths</th>
 </tr>
 </thead>
@@ -602,6 +646,50 @@
 <thead>
 <tr>
 <th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Block Data</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.GetBlockData</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command shows the SubtypeId and grid position of the block your camera is pointed at, up to 10km away.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Block Pairs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.GetBlockPairs</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command lists every block that has a small or large grid counterpart and saves the list to your clipboard as <code>[OldBlock:]</code> and <code>[NewBlock:]</code> pairs, ready to use in a Block Replacement profile.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
 <th style="text-align: left;">Hide All Zones</th>
 </tr>
 </thead>
@@ -639,6 +727,28 @@
 <tr>
 <td style="text-align: left;">Description:</td>
 <td style="text-align: left;">This chat command hides the specified zone. The zone can be specified by either the SubtypeID or the PublicName.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Linked Grids</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.LinkedGrids</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command lists the grids connected to the grid your camera is pointed at, for each type of connection (Electrical, Logical, Mechanical, NoContactDamage, Physical), and saves the list to your clipboard.</td>
 </tr>
 </tbody>
 </table>
@@ -750,6 +860,58 @@
 <thead>
 <tr>
 <th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Reset This Static Encounters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ResetThisStaticEncounters.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command lets a Static Encounter that has already spawned spawn again the next time a player comes in range. The grids it spawned before are not removed. To replace every spawned Static Encounter with a fresh copy, use <code>/MES.Debug.ResetStaticEncounters</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value:</td>
+<td style="text-align: left;">SpawnGroup SubtypeId of a Static Encounter</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Reset This Unique Spawn Group</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.ResetThisUniqueSpawnGroup.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command lets a single Unique Encounter that has already spawned spawn again. To reset all of them, use <code>/MES.Debug.ClearUniqueEncounters</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value:</td>
+<td style="text-align: left;">SpawnGroup SubtypeId of a Unique Encounter</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
 <th style="text-align: left;">Reset Zones</th>
 </tr>
 </thead>
@@ -765,6 +927,32 @@
 <tr>
 <td style="text-align: left;">Description:</td>
 <td style="text-align: left;">This chat command allows you to reset all zones currently loaded in the game world and reload them using the profiles currently present in the mod loadout.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Set Grid Ownership</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Debug.SetGridOwnership.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command gives the grid your camera is pointed at (up to 2km away), and the grids connected to it, to the specified faction, shared with the faction.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value:</td>
+<td style="text-align: left;">Any Faction Tag</td>
 </tr>
 </tbody>
 </table>
@@ -826,7 +1014,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Chat Command:</td>
-<td style="text-align: left;"><code>/MES.Debug.UnlockAdminBlocks</code></td>
+<td style="text-align: left;"><code>/MES.Debug.UnlockAdminBlocks</code><br /><code>/MES.Debug.UnlockNpcBlocks</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
@@ -1103,6 +1291,50 @@
 <thead>
 <tr>
 <th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Item Prices</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetItemPrices</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command lists the base value MES uses for each item when pricing store items, with the mod it comes from and whether it can be crafted in an assembler, and saves the list to your clipboard.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Location Matrix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetLocationMatrix</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command saves your current position to your clipboard as Zone profile tags: <code>[Coordinates:]</code> for a world position and, near a planet, <code>[PlanetaryZone:]</code>, <code>[PlanetName:]</code>, <code>[Direction:]</code> and <code>[HeightOffset:]</code> for a position relative to the planet.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
 <th style="text-align: left;">Get Logging</th>
 </tr>
 </thead>
@@ -1174,6 +1406,28 @@
 <tr>
 <td style="text-align: left;">Description:</td>
 <td style="text-align: left;">This chat command will get the current Threat Score near your position and save it to your clipboard. By default, a range of <code>5000</code> meters is checked. You can provide a custom distance by replacing the <code>Value</code> text in Chat Command 2</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Get Version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Info.GetVersion</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command shows the version of MES that is running.</td>
 </tr>
 </tbody>
 </table>
@@ -1275,6 +1529,28 @@
 <tr>
 <td style="text-align: left;">Description:</td>
 <td style="text-align: left;">This chat command allows you to spawn a Boss Encounter near your player character. This spawn will obey the rules you have set for encounters to appear in that area. Chat Command 1 will spawn a random group from whatever groups are available. Chat Command 2 allows you to specify the Spawn Group you want to spawn, just replace <code>Value</code> with the SubtypeId of the Spawn Group you want to spawn.</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Setting:</th>
+<th style="text-align: left;">Spawn Static Encounter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">XML:</td>
+<td style="text-align: left;"><code>N/A</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Chat Command:</td>
+<td style="text-align: left;"><code>/MES.Spawn.StaticEncounter.Value</code><br /><code>/MES.SSE.Value</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This chat command spawns a Static Encounter at the location defined in its SpawnGroup, without waiting for a player to come within its trigger radius. Otherwise it goes through the same checks as a normal Static Encounter spawn. Replace <code>Value</code> with the SubtypeId of the Spawn Group. It only works for a Static Encounter that hasn't spawned yet.</td>
 </tr>
 </tbody>
 </table>

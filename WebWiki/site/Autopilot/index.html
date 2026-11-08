@@ -277,17 +277,17 @@
 </code></pre>
 <p>It's also important to note that all the tags below can also be used in the main <code>Behavior</code> profile as well. However, you must be careful when doing so. If you add individual tags before defining an entire <code>AutopilotData</code> tag, all those changes will be overwritten by the Autopilot Profile provided. If provided after the <code>AutopilotData</code> tag, that should be safe - and can be an easy way to make minor adjustments without having to provide an entirely new autopilot profile!</p>
 <p>Below are the tags you are able to use in your Autopilot Profiles. They are divided into several categories based on what they control.</p>
-<p><strong><a href="#Behavior">Behavior</a></strong><br />
-<strong><a href="#Collision">Collision</a></strong><br />
-<strong><a href="#General">General</a></strong><br />
-<strong><a href="#Leading">Leading</a></strong><br />
-<strong><a href="#Offset">Offset</a></strong><br />
-<strong><a href="#Planet">Planet</a></strong><br />
-<strong><a href="#Rotation">Rotation</a></strong><br />
-<strong><a href="#Special">Special</a></strong><br />
-<strong><a href="#Speed">Speed</a></strong><br />
-<strong><a href="#Strafe">Strafe</a></strong><br />
-<strong><a href="#Thrust">Thrust</a></strong>  </p>
+<p><strong><a href="#behavior">Behavior</a></strong><br />
+<strong><a href="#collision">Collision</a></strong><br />
+<strong><a href="#general">General</a></strong><br />
+<strong><a href="#leading">Leading</a></strong><br />
+<strong><a href="#offset">Offset</a></strong><br />
+<strong><a href="#planet">Planet</a></strong><br />
+<strong><a href="#rotation">Rotation</a></strong><br />
+<strong><a href="#special">Special</a></strong><br />
+<strong><a href="#speed">Speed</a></strong><br />
+<strong><a href="#strafe">Strafe</a></strong><br />
+<strong><a href="#thrust">Thrust</a></strong>  </p>
 <hr />
 <h1 id="behavior">Behavior</h1>
 <p>This section contains tags that only work with specific behaviors.</p>
@@ -658,7 +658,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies the distance (in meters) from its escort waypoint at which the escort limits its speed to the parent's current speed (when the parent is slower than the escort's <code>IdealMaxSpeed</code>). Default is <code>150</code>.</td>
+<td style="text-align: left;">This tag specifies the distance (in meters) from its escort waypoint at which the escort starts slowing down toward the parent's current speed (when the parent is slower than the escort's <code>IdealMaxSpeed</code>). Default is <code>150</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -685,7 +685,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag is parsed but currently has no effect. Within <code>EscortSpeedMatchMaxDistance</code>, the escort's speed is always limited to the parent's current speed, regardless of this value. Default is <code>25</code>.</td>
+<td style="text-align: left;">This tag specifies the distance (in meters) from its escort waypoint at which the escort's speed is limited to the parent's current speed. Between this and <code>EscortSpeedMatchMaxDistance</code>, the speed limit scales from the parent's speed up to <code>IdealMaxSpeed</code>. Default is <code>25</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -797,7 +797,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies if a ship should try to aim ahead of a moving target so projectiles have a better chance to hit.</td>
+<td style="text-align: left;">This tag specifies if a ship should try to aim ahead of a moving target so projectiles have a better chance to hit. Not used while the ship is escorting, so escorts stay in their slot.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -1433,6 +1433,33 @@
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
 <td style="text-align: left;">Any Number Greater Than <code>0</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--LimitPitchTurning-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">LimitPitchTurning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[LimitPitchTurning:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag limits pitch (when the target/waypoint is behind the NPC) to prioritize turning with yaw instead of looping or flipping over. It works in gravity and in space, but has no effect when using the <code>FlyLevelWithGravity</code> or <code>LevelWithGravityWhenIdle</code> tags. Useful for rovers, hovercraft, aircraft and ships. Default value is <code>false</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Multiple Tag Allowed:</td>

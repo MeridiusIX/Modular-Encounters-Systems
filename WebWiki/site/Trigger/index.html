@@ -342,7 +342,7 @@
 </tr>
 <tr>
 <td style="text-align: left;"><code>DespawnMES</code></td>
-<td style="text-align: left;">A trigger that is activated when the NPC is despawned by the Modular Encounters Spawner.</td>
+<td style="text-align: left;">A trigger that is activated when the NPC is despawned by the Modular Encounters Spawner for one of the types specified in <code>DespawnTypeFromSpawner</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>HasTarget</code></td>
@@ -552,7 +552,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">Determines if the Trigger type <code>TargetFar</code> can activate if the behavior does not currently have a target.</td>
+<td style="text-align: left;">Determines if a <code>TargetFar</code> trigger can also activate when the grid has no target (for example, when a target is lost or destroyed).</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -1234,11 +1234,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">Specifies the type of Despawn Request from the Modular Encounters Spawner required to activate the trigger.</td>
+<td style="text-align: left;">Specifies the type of Despawn Request from the Modular Encounters Spawner required to activate the trigger. <code>Any</code> matches every despawn. <code>CleanUp</code> matches any spawner cleanup (block count, distance or timer). <code>PathEnd</code> matches a cargo ship reaching the end of its path. The other values each match one specific despawn: <code>Despawn-Behavior</code> is a despawn by the NPC's own behavior or a <code>ForceDespawn</code> action, and <code>Despawn-Debug</code> is the <code>/MES.Debug.DeleteGrid</code> chat command.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;"><code>Any</code><br /><code>PathEnd</code><br /><code>CleanUp</code></td>
+<td style="text-align: left;"><code>Any</code><br /><code>PathEnd</code><br /><code>CleanUp</code><br /><code>CleanUp-BlockCount</code><br /><code>CleanUp-Distance</code><br /><code>CleanUp-Timer</code><br /><code>Despawn-Behavior</code><br /><code>Despawn-Debug</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Compatible Types:</td>

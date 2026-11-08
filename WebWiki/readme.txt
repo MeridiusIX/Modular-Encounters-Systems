@@ -2,6 +2,6 @@ pip install mkdocs
 
 
 
-mkdocs serve
+py -m mkdocs serve
 
-mkdocs gh-deploy
+py -m mkdocs gh-deploy

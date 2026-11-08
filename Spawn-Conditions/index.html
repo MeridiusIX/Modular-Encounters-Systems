@@ -276,34 +276,34 @@
 </code></pre>
 <p>To link a profile to your SpawnGroup, simply use the <code>SpawnConditionsProfiles</code> tag and provide the SubtypeId of the Spawn Condition Profile you created. Eg: <code>[SpawnConditionsProfiles:MES-SpawnProfile-CargoShipExample]</code>. </p>
 <p>Below are several types of condition tags you can include in your Spawn Condition Profile:</p>
-<p><a href="#Space-Cargo-Ships"><strong>Space-Cargo-Ships</strong></a><br />
-<a href="#Random-Encounters"><strong>Random-Encounters</strong></a><br />
-<a href="#Planetary-Cargo-Ships"><strong>Planetary-Cargo-Ships</strong></a><br />
-<a href="#Planetary-Installations"><strong>Planetary-Installations</strong></a><br />
-<a href="#Boss-Encounters"><strong>Boss-Encounters</strong></a><br />
-<a href="#Creatures"><strong>Creatures</strong></a><br />
-<a href="#Drone-Encounters"><strong>Drone-Encounters</strong></a><br />
-<a href="#Static-Encounters"><strong>Static-Encounters</strong></a><br />
-<a href="#Other-NPCs"><strong>Other-NPCs</strong></a>  </p>
-<p><a href="#General"><strong>General</strong></a><br />
-<a href="#Combat"><strong>Combat</strong></a><br />
-<a href="#Cost"><strong>Cost</strong></a><br />
-<a href="#Date-Time"><strong>Date-Time</strong></a><br />
-<a href="#Economy"><strong>Economy</strong></a><br />
-<a href="#Faction"><strong>Faction</strong></a><br />
-<a href="#Known-Player-Location"><strong>Known-Player-Location</strong></a><br />
-<a href="#Misc"><strong>Misc</strong></a><br />
-<a href="#Mods"><strong>Mods</strong></a><br />
-<a href="#Planetary"><strong>Planetary</strong></a><br />
-<a href="#Players"><strong>Players</strong></a><br />
-<a href="#Prefabs"><strong>Prefabs</strong></a><br />
-<a href="#Reputation"><strong>Reputation</strong></a><br />
-<a href="#Restrictions"><strong>Restrictions</strong></a><br />
-<a href="#Settings"><strong>Settings</strong></a><br />
-<a href="#Threat"><strong>Threat</strong></a><br />
-<a href="#Variables"><strong>Variables</strong></a><br />
-<a href="#World"><strong>World</strong></a><br />
-<a href="#Zone"><strong>Zone</strong></a>  </p>
+<p><a href="#space-cargo-ships"><strong>Space-Cargo-Ships</strong></a><br />
+<a href="#random-encounters"><strong>Random-Encounters</strong></a><br />
+<a href="#planetary-cargo-ships"><strong>Planetary-Cargo-Ships</strong></a><br />
+<a href="#planetary-installations"><strong>Planetary-Installations</strong></a><br />
+<a href="#boss-encounters"><strong>Boss-Encounters</strong></a><br />
+<a href="#creatures"><strong>Creatures</strong></a><br />
+<a href="#drone-encounters"><strong>Drone-Encounters</strong></a><br />
+<a href="#static-encounters"><strong>Static-Encounters</strong></a><br />
+<a href="#other-npcs"><strong>Other-NPCs</strong></a>  </p>
+<p><a href="#general"><strong>General</strong></a><br />
+<a href="#combat"><strong>Combat</strong></a><br />
+<a href="#cost"><strong>Cost</strong></a><br />
+<a href="#date-time"><strong>Date-Time</strong></a><br />
+<a href="#economy"><strong>Economy</strong></a><br />
+<a href="#faction"><strong>Faction</strong></a><br />
+<a href="#known-player-location"><strong>Known-Player-Location</strong></a><br />
+<a href="#misc"><strong>Misc</strong></a><br />
+<a href="#mods"><strong>Mods</strong></a><br />
+<a href="#planetary"><strong>Planetary</strong></a><br />
+<a href="#players"><strong>Players</strong></a><br />
+<a href="#prefabs"><strong>Prefabs</strong></a><br />
+<a href="#reputation"><strong>Reputation</strong></a><br />
+<a href="#restrictions"><strong>Restrictions</strong></a><br />
+<a href="#settings"><strong>Settings</strong></a><br />
+<a href="#threat"><strong>Threat</strong></a><br />
+<a href="#variables"><strong>Variables</strong></a><br />
+<a href="#world"><strong>World</strong></a><br />
+<a href="#zone"><strong>Zone</strong></a>  </p>
 <h1 id="space-cargo-ships">Space-Cargo-Ships</h1>
 <!-- SpaceCargoShip  -->
 <table>
@@ -979,6 +979,37 @@
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
 <td style="text-align: left;">Rotation (see above for example)<br>If providing multiple values, use comma with no spaces as shown in <code>Tag Format</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>none</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!-- RotateInstallationsDegrees  -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">RotateInstallationsDegrees</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[RotateInstallationsDegrees:Value1,Value2,Value3,etc]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag allows you to turn one or more prefabs in the spawngroup by a set number of degrees, for example to park a vehicle sideways next to a building. Each <code>Value</code> is replaced by the following: <code>{X:0 Y:0 Z:0}</code>. <code>X</code> affects Pitch (positive tilts the front up), <code>Y</code> affects Yaw (positive turns to the right), <code>Z</code> affects Roll (positive tilts to the right). When providing multiple values, the first value will affect the first prefab, second value affects second prefab, etc. A prefab that has a value here ignores the other RotateInstallations tags.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Rotation in degrees (see above for example)<br>If providing multiple values, use comma with no spaces as shown in <code>Tag Format</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">Default Value(s):</td>

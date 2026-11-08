@@ -270,22 +270,22 @@
 &lt;/Definitions&gt;
 </code></pre>
 <p>Below are the tags you are able to use in your Action Profiles. They are divided into several categories based on what they affect.</p>
-<p><strong><a href="#Abilities">Abilities</a></strong><br />
-<strong><a href="#Behavior">Behavior</a></strong><br />
-<strong><a href="#Blocks">Blocks</a></strong><br />
-<strong><a href="#Communication">Communication</a></strong><br />
-<strong><a href="#Damage">Damage</a></strong> <br />
-<strong><a href="#Effects">Effects</a></strong><br />
-<strong><a href="#General">General</a></strong><br />
-<strong><a href="#Grid">Grid</a></strong><br />
-<strong><a href="#Inventory">Inventory</a></strong><br />
-<strong><a href="#PlayerTags">PlayerTags</a></strong><br />
-<strong><a href="#Reputation">Reputation</a></strong><br />
-<strong><a href="#Spawning">Spawning</a></strong><br />
-<strong><a href="#Targeting">Targeting</a></strong><br />
-<strong><a href="#Trigger">Trigger</a></strong><br />
-<strong><a href="#Variables">Variables</a></strong><br />
-<strong><a href="#Zone">Zone</a></strong>  </p>
+<p><strong><a href="#abilities">Abilities</a></strong><br />
+<strong><a href="#behavior">Behavior</a></strong><br />
+<strong><a href="#blocks">Blocks</a></strong><br />
+<strong><a href="#communication">Communication</a></strong><br />
+<strong><a href="#damage">Damage</a></strong> <br />
+<strong><a href="#effects">Effects</a></strong><br />
+<strong><a href="#general">General</a></strong><br />
+<strong><a href="#grid">Grid</a></strong><br />
+<strong><a href="#inventory">Inventory</a></strong><br />
+<strong><a href="#playertags">PlayerTags</a></strong><br />
+<strong><a href="#reputation">Reputation</a></strong><br />
+<strong><a href="#spawning">Spawning</a></strong><br />
+<strong><a href="#targeting">Targeting</a></strong><br />
+<strong><a href="#trigger">Trigger</a></strong><br />
+<strong><a href="#variables">Variables</a></strong><br />
+<strong><a href="#zone">Zone</a></strong>  </p>
 <hr />
 <h1 id="abilities">Abilities</h1>
 <p>This section contains actions that enable/disable special abilities for the behavior.</p>
@@ -1128,6 +1128,87 @@
 </tr>
 </tbody>
 </table>
+<!--UseCommandWaypointAsPatrolReference-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseCommandWaypointAsPatrolReference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseCommandWaypointAsPatrolReference:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag sets the waypoint sent with the received Command (<code>SendWaypoint</code>) as the Patrol Reference of the NPC. Nothing changes if there is no waypoint or it is no longer valid. Used from the next patrol waypoint.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--UseWaypointAsPatrolReference-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseWaypointAsPatrolReference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseWaypointAsPatrolReference:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag sets the waypoint profile in <code>PatrolReferenceWaypoint</code> as the Patrol Reference of the NPC. Nothing changes if the waypoint can't be calculated (eg: relative to the Target with no target). Used from the next patrol waypoint.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--PatrolReferenceWaypoint-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">PatrolReferenceWaypoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[PatrolReferenceWaypoint:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Specifies the waypoint profile id used by the <code>UseWaypointAsPatrolReference</code> tag.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any String Value</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
 <!--ClearCustomPatrolReference-->
 <table>
 <thead>
@@ -1143,7 +1224,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag removes any saved coordinates that may have been set using <code>UseCurrentPositionAsPatrolReference</code> so behaviors using patrol will revert to using their initial spawn coordinates to calculate patrol offsets.</td>
+<td style="text-align: left;">This tag removes any saved coordinates that may have been set using <code>UseCurrentPositionAsPatrolReference</code>, <code>UseCommandWaypointAsPatrolReference</code> or <code>UseWaypointAsPatrolReference</code> so behaviors using patrol will revert to using their initial spawn coordinates to calculate patrol offsets.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -2538,6 +2619,33 @@
 </tr>
 </tbody>
 </table>
+<!-- LeaveEscortSlot -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">LeaveEscortSlot</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[LeaveEscortSlot:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">Used on an escort. When true, the escort stops escorting its leader and frees its escort slot on the leader, so the leader can fill the slot again and the escort can be assigned to another leader. Also clears the escort's relative dampening.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;"><code>true</code><br /><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h1 id="damage">Damage</h1>
 <p>This section contains actions for damaging other entities.</p>
@@ -3210,7 +3318,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies the old colors that are targeted for replacement when using the <code>RecolorGrid</code> tag. You should also include <code>NewBlockColors</code> and <code>NewBlockSkins</code> tags together when using this tag.</td>
+<td style="text-align: left;">This tag specifies the old colors that are targeted for replacement when using the <code>RecolorGrid</code> tag. You should also include <code>NewBlockColors</code> and <code>NewBlockSkins</code> tags together when using this tag. Values converted from the in-game color menu and rounded to 3 decimals will match: X is Hue / 360, Y is Saturation / 100 - 0.8, and Z is Value / 100 - 0.45, so H 120, S 24.1, V 43.9 is <code>{X:0.333 Y:-0.559 Z:-0.011}</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>

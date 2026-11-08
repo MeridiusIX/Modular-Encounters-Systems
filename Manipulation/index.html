@@ -283,22 +283,22 @@
 </code></pre>
 <p>To link a profile to your SpawnGroup, simply use the <code>ManipulationProfiles</code> tag and provide the SubtypeId of the Manipulation Profile you created. Eg: <code>[ManipulationProfiles:MES-Manipulation-CargoShipExample]</code>. </p>
 <p>Below are several types of tags you can include in your Manipulation Profile:</p>
-<p><a href="#Conditions">Conditions</a></p>
-<p><a href="#General">General</a><br />
-<a href="#Armor-Modules">Armor-Modules</a><br />
-<a href="#Block-Replacement">Block-Replacement</a><br />
-<a href="#Block-Settings">Block-Settings</a><br />
-<a href="#Build-States">Build-States</a><br />
-<a href="#Damage">Damage</a><br />
-<a href="#Inventory">Inventory</a><br />
-<a href="#Paint-and-Skins">Paint-and-Skins</a><br />
-<a href="#Profiles">Profiles</a><br />
-<a href="#Renaming">Renaming</a><br />
-<a href="#RivalAI">RivalAI</a>
-<a href="#Shields">Shields</a><br />
-<a href="#Propulsion">Propulsion</a><br />
-<a href="#Turrets">Turrets</a><br />
-<a href="#Weapon-Randomization">Weapon-Randomization</a>  </p>
+<p><a href="#conditions">Conditions</a></p>
+<p><a href="#general">General</a><br />
+<a href="#armor-modules">Armor-Modules</a><br />
+<a href="#block-replacement">Block-Replacement</a><br />
+<a href="#block-settings">Block-Settings</a><br />
+<a href="#build-states">Build-States</a><br />
+<a href="#damage">Damage</a><br />
+<a href="#inventory">Inventory</a><br />
+<a href="#paint-and-skins">Paint-and-Skins</a><br />
+<a href="#profiles">Profiles</a><br />
+<a href="#renaming">Renaming</a><br />
+<a href="#rivalai">RivalAI</a>
+<a href="#shields">Shields</a><br />
+<a href="#propulsion">Propulsion</a><br />
+<a href="#turrets">Turrets</a><br />
+<a href="#weapon-randomization">Weapon-Randomization</a>  </p>
 <h1 id="conditions">Conditions</h1>
 <!-- ManipulationChance-->
 <table>
@@ -2090,7 +2090,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify a block color on a grid that will be replaced with another color if <code>RecolorGrid</code> is enabled. If using this tag, you must also provide a <code>RecolorNew</code> tag that specifies the color that replaces the color in this tag.</td>
+<td style="text-align: left;">This tag allows you to specify a block color on a grid that will be replaced with another color if <code>RecolorGrid</code> is enabled. If using this tag, you must also provide a <code>RecolorNew</code> tag that specifies the color that replaces the color in this tag. Values converted from the in-game color menu and rounded to 3 decimals will match: X is Hue / 360, Y is Saturation / 100 - 0.8, and Z is Value / 100 - 0.45, so H 120, S 24.1, V 43.9 is <code>{X:0.333 Y:-0.559 Z:-0.011}</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -2152,7 +2152,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify a block color on a grid that will be re-skinned if <code>RecolorGrid</code> is enabled. If using this tag, you must also provide a <code>ReskinTexture</code> tag that specifies the skin name that is applied to blocks with the color in this tag.</td>
+<td style="text-align: left;">This tag allows you to specify a block color on a grid that will be re-skinned if <code>RecolorGrid</code> is enabled. If using this tag, you must also provide a <code>ReskinTexture</code> tag that specifies the skin name that is applied to blocks with the color in this tag. Values converted from the in-game color menu and rounded to 3 decimals will match (see <code>RecolorOld</code>).</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>

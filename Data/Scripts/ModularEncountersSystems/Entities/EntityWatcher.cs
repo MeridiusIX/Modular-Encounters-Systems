@@ -52,9 +52,11 @@ namespace ModularEncountersSystems.Entities {
 			MyVisualScriptLogicProvider.PlayerRespawnRequest += PlayerManager.PlayerConnectEvent;
 			MyAPIGateway.Players.ItemConsumed += PlayerManager.ItemConsumedEvent;
 			PlayerManager.RefreshAllPlayers(true);
+			BotManager.RefreshAllBots();
 
 			UnloadEntities += () => GridManager.UnloadEntities?.Invoke();
             UnloadEntities += () => PlayerManager.UnloadEntities?.Invoke();
+            UnloadEntities += () => BotManager.UnloadEntities?.Invoke();
 
 			MyAPIGateway.Entities.OnEntityAdd += NewEntityDetected;
 			EntityWatcherRegistered = true;
@@ -134,6 +136,7 @@ namespace ModularEncountersSystems.Entities {
 			UnloadEntities = null;
 			GridManager.Grids.Clear();
 			PlayerManager.Players.Clear();
+			BotManager.Bots.Clear();
 			PlanetManager.Planets.Clear();
 			SafeZoneManager.SafeZones.Clear();
 

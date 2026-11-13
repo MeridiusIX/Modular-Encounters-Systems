@@ -22,27 +22,27 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		private IMyCubeGrid _nullGrid;
 
-		public ITarget Target { 
-			
-			get { 
+		public ITarget Target {
+
+			get {
 
 				if (OverrideTarget != null && OverrideTarget.ActiveEntity()) {
 
 					return OverrideTarget;
-				
+
 				}
 
 				return NormalTarget;
 			}
 
 			set {
-			
+
 				if (OverrideTarget != null && OverrideTarget.ActiveEntity()) {
 
 					OverrideTarget = value;
 					_behavior.BehaviorSettings.CurrentTargetEntityId = OverrideTarget.GetEntityId();
 					return;
-				
+
 				}
 
 				NormalTarget = value;
@@ -51,18 +51,18 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 		}
 
-		public TargetProfile Data { get { 
+		public TargetProfile Data { get {
 
 				if (OverrideTarget != null && OverrideTarget.ActiveEntity()) {
 
 					//BehaviorLogger.Write("Data - Use Override", BehaviorDebugEnum.Target);
 					return OverrideData;
-				
+
 				}
 
 				//BehaviorLogger.Write("Data - Use Normal", BehaviorDebugEnum.Target);
 				return NormalData;
-			} 
+			}
 
 		}
 
@@ -80,11 +80,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					}
 
 					if (!gotData) {
-						
+
 						_normalData = new TargetProfile();
 						_normalData.UseCustomTargeting = false;
 						//TODO: Default a blank profile and raise an error in logger
-					
+
 					}
 
 				}
@@ -165,7 +165,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				return _allUniqueFilters;
 
 			}
-		
+
 		}
 
 		private string _currentTargetDataName;
@@ -251,7 +251,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 		public void AcquireNewTarget() {
 
-			
+
 			bool skipTimerCheck = false;
 
 			if (UseNewTargetProfile) {
@@ -294,21 +294,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			if (ForceTargetEntityId == 0 && Data != null) {
 
-				if (Data.Target == TargetTypeEnum.Player || Data.Target == TargetTypeEnum.PlayerAndBlock || Data.Target == TargetTypeEnum.PlayerAndGrid) {
+				if (Data.Target == TargetTypeEnum.Player || Data.Target == TargetTypeEnum.PlayerAndBlock || Data.Target == TargetTypeEnum.PlayerAndGrid || Data.Target == TargetTypeEnum.PlayerAndBot || Data.Target == TargetTypeEnum.PlayerAndBotAndBlock || Data.Target == TargetTypeEnum.PlayerAndBotAndGrid) {
 
 					BehaviorLogger.Write(" - Acquiring Player Target", BehaviorDebugEnum.TargetAcquisition);
 					AcquirePlayerTarget(targetList);
 
 				}
 
-				if (Data.Target == TargetTypeEnum.Block || Data.Target == TargetTypeEnum.PlayerAndBlock) {
+				if (Data.Target == TargetTypeEnum.Bot || Data.Target == TargetTypeEnum.PlayerAndBot || Data.Target == TargetTypeEnum.PlayerAndBotAndBlock || Data.Target == TargetTypeEnum.PlayerAndBotAndGrid) {
+
+					BehaviorLogger.Write(" - Acquiring Bot Target", BehaviorDebugEnum.TargetAcquisition);
+					AcquireBotTarget(targetList);
+
+				}
+
+				if (Data.Target == TargetTypeEnum.Block || Data.Target == TargetTypeEnum.PlayerAndBlock || Data.Target == TargetTypeEnum.PlayerAndBotAndBlock) {
 
 					BehaviorLogger.Write(" - Acquiring Block Target", BehaviorDebugEnum.TargetAcquisition);
 					AcquireBlockTarget(targetList);
 
 				}
 
-				if (Data.Target == TargetTypeEnum.Grid || Data.Target == TargetTypeEnum.PlayerAndGrid) {
+				if (Data.Target == TargetTypeEnum.Grid || Data.Target == TargetTypeEnum.PlayerAndGrid || Data.Target == TargetTypeEnum.PlayerAndBotAndGrid) {
 
 					BehaviorLogger.Write(" - Acquiring Grid Target", BehaviorDebugEnum.TargetAcquisition);
 					AcquireGridTarget(targetList);
@@ -360,7 +367,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 				if (!EvaluateTarget(targetList[i], data, true))
 					targetList.RemoveAt(i);
-			
+
 			}
 
 			//Filter Out Factions, if Applicable
@@ -430,7 +437,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 					}
 
-					
+
 					this.LastRefreshTime = MyAPIGateway.Session.GameDateTime;
 					this.LastEvaluationTime = MyAPIGateway.Session.GameDateTime;
 
@@ -439,7 +446,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					BehaviorLogger.Write(string.Format(" - No Valid Target Could be Acquired."), BehaviorDebugEnum.TargetAcquisition);
 
 				}
-				
+
 
 			}
 
@@ -494,7 +501,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public void AcquirePlayerTarget(List<ITarget> result) {
 
 			PlayerManager.RefreshAllPlayers(true);
-			
+
 			foreach (var player in PlayerManager.Players) {
 
 				if (!player.ActiveEntity())
@@ -513,6 +520,25 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			}
 
+		}
+
+		public void AcquireBotTarget(List<ITarget> result)
+        {
+			BotManager.RefreshAllBots();
+
+			foreach (var bot in BotManager.Bots)
+            {
+				if (!bot.ActiveEntity())
+					continue;
+
+				if (bot.IsSameGrid(RemoteControl.SlimBlock.CubeGrid))
+					continue;
+
+				if (bot.Distance(RemoteControl.GetPosition()) > Data.MaxDistance)
+					continue;
+
+				result.Add(bot);
+			}
 		}
 
 		public void CheckForTarget() {
@@ -549,7 +575,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			//BehaviorLogger.Write("CheckForTarget - Check For Evaluation", BehaviorDebugEnum.Target);
 
 			if (!evaluationDone) {
-			
+
 				var evaluationDuration = MyAPIGateway.Session.GameDateTime - this.LastEvaluationTime;
 
 				if (evaluationDuration.TotalSeconds > Data.TimeUntilNextEvaluation) {
@@ -565,7 +591,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 					}
 
 					if (OverrideTarget == null) {
-					
+
 						var evalResult = EvaluateTarget(this.Target, this.Data);
 						this.LastEvaluationTime = MyAPIGateway.Session.GameDateTime;
 
@@ -633,7 +659,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if (distance > maxDistance) {
 
 				return false;
-			
+
 			}
 
 			//Stealth
@@ -678,7 +704,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if (uniqueFilters.Contains(TargetFilterEnum.Broadcasting)) {
 
 				var range = target.BroadcastRange(data.BroadcastOnlyAntenna);
-				
+
 				if (range > distance || distance < data.NonBroadcastVisualRange)
 					FilterHits.Add(TargetFilterEnum.Broadcasting);
 
@@ -712,7 +738,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 			//LineOfSight
 			if (!skipExpensiveChecks && uniqueFilters.Contains(TargetFilterEnum.LineOfSight) && _behavior.AutoPilot.Collision.TargetResult.HasTarget()) {
-				
+
 				bool targetMatch = (target.GetParentEntity().EntityId == _behavior.AutoPilot.Collision.TargetResult.GetCollisionEntity().EntityId);
 
 				if (targetMatch)
@@ -762,9 +788,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 							break;
 
 						}
-					
+
 					}
-				
+
 				}
 
 				if(successName != "N/A")
@@ -793,7 +819,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				bool gotRelation = false;
 
 				var values = Enum.GetValues(typeof(OwnerTypeEnum)).Cast<OwnerTypeEnum>();
-				
+
 				foreach (var ownerType in values) {
 
 					if (ownerType == OwnerTypeEnum.None)
@@ -816,7 +842,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				BehaviorLogger.Write(string.Format(" - Evaluated Owners: Required: {0}", data.Owners.ToString()), BehaviorDebugEnum.TargetEvaluation);
 				BehaviorLogger.Write(string.Format(" - Evaluated Owners: Found: {0}", owners.ToString()), BehaviorDebugEnum.TargetEvaluation);
 				BehaviorLogger.Write(string.Format(" - Evaluated Target Owners: {0} / Passed: {1}", owners.ToString(), gotRelation), BehaviorDebugEnum.TargetEvaluation);
-				
+
 			}
 
 			//PlayerControlled
@@ -962,7 +988,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 					if ((data.MinAirDensity > -1 || _behavior.AutoPilot.AirDensity >= data.MinAirDensity) && (data.MaxAirDensity > -1 || _behavior.AutoPilot.AirDensity <= data.MaxAirDensity))
 						result = true;
-				
+
 				} else
 					result = data.MinAirDensity <= 0 && data.MaxAirDensity <= 0;
 
@@ -999,7 +1025,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				} else {
 
 					result = true;
-				
+
 				}
 
 				if (result)
@@ -1022,7 +1048,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						break;
 
 					}
-				
+
 				}
 
 			} else {
@@ -1037,7 +1063,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				return false;
 
 			}
-				
+
 
 			//All Condition Checks
 			foreach (var filter in data.MatchAllFilters) {
@@ -1066,7 +1092,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			BehaviorLogger.Write(" - Evaluation Passed", BehaviorDebugEnum.TargetEvaluation);
 			TargetLastKnownCoords = target.GetPosition();
 			return true;
-		
+
 		}
 
 		public Vector3D GetTargetCoords() {
@@ -1102,7 +1128,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			if (data.GetTargetBy == TargetSortEnum.Random) {
 
 				return targets[MathTools.RandomBetween(0, targets.Count)];
-			
+
 			}
 
 			//Closest - You can probably smell them from where you are
@@ -1121,7 +1147,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						index = i;
 
 					}
-				
+
 				}
 
 				return targets[index];
@@ -1198,7 +1224,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			}
 
 			return null;
-		
+
 		}
 
 		public void PrepareTargetLockOn() {
@@ -1208,11 +1234,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				if (LockOnActive) {
 
 					ClearLockOn = true;
-				
+
 				}
 
 				return;
-			
+
 			}
 
 			if (Data.ActivateTargetLockAfterPlayerDamage) {
@@ -1226,9 +1252,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 						DamageWatcher = new GridDamageWatcher(_behavior.CurrentGrid);
 
 					return;
-				
+
 				}
-			
+
 			}
 
 			var time = MyAPIGateway.Session.GameDateTime - LastTargetLockOnTime;
@@ -1275,7 +1301,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				LockOnTarget = null;
 				ClearLockOn = true;
 				return;
-			
+
 			}
 
 			ApplyLockOn = true;
@@ -1299,9 +1325,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 
 						closestDist = dist;
 						LockOnTarget = target;
-					
+
 					}
-				
+
 				}
 
 			}
@@ -1392,7 +1418,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 				ApplyLockOn = false;
 
 			}
-		
+
 		}
 
 		public bool TargetEligibleForLockOn(ITarget target, double overrideDistance = -1) {
@@ -1480,7 +1506,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 								_behavior.BehaviorSettings.OverrideTargetProfile = tempValue;
 								BehaviorLogger.Write(profile.ProfileSubtypeId + " Override Target Profile Loaded", BehaviorDebugEnum.BehaviorSetup);
 
-							} 
+							}
 
 						} else {
 
@@ -1510,7 +1536,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			} else {
 
 				_behavior.BehaviorSettings.CurrentTargetProfile = NewTargetProfileName;
-			
+
 			}
 
 		}
@@ -1518,7 +1544,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 		public void SetupReferences(IBehavior behavior) {
 
 			_behavior = behavior;
-		
+
 		}
 
 		public string AllTargetsString() {
@@ -1528,11 +1554,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems {
 			foreach (var filter in Data.MatchAllFilters) {
 
 				sb.Append(filter.ToString()).Append(", ");
-			
+
 			}
 
 			return sb.ToString();
-		
+
 		}
 
 		public string AnyTargetsString() {

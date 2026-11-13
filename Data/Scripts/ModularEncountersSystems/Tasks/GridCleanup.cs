@@ -53,7 +53,7 @@ namespace ModularEncountersSystems.Tasks {
 						grid.DespawnAttempts++;
 
 					}
-				
+
 				}
 
 				var cubeGrid = grid.CubeGrid as MyCubeGrid;
@@ -111,7 +111,7 @@ namespace ModularEncountersSystems.Tasks {
 
 						SpawnLogger.Write(" - " + grid.CubeGrid.CustomName + " Has Non-NPC Ownership. Cleaning Aborted.", SpawnerDebugEnum.CleanUp);
 						Cleaning.FlaggedForRemoval.RemoveAt(i);
-						
+
 						if(!grid.ForceRemove)
 							break;
 
@@ -122,6 +122,10 @@ namespace ModularEncountersSystems.Tasks {
 
 
 				}
+
+
+				if (grid.Npc != null)
+                    grid.Npc.RemoveBots();
 
 				cubeGrid.DismountAllCockpits();
 				grid.DisconnectSubgrids();
@@ -147,7 +151,7 @@ namespace ModularEncountersSystems.Tasks {
 				Cleaning.PendingGridsForRemoval = false;
 
 			}
-				
+
 
 		}
 

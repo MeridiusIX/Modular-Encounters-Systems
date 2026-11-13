@@ -224,6 +224,15 @@ namespace ModularEncountersSystems.Core {
 			return base.GetObjectBuilder();
 		}
 
+        public override void SaveData()
+        {
+            if (IsServer)
+            {
+                foreach (var npc in NpcManager.ActiveNpcs)
+                     npc?.Npc?.Update();
+            }
+        }
+
 		protected override void UnloadData() {
             try
             {

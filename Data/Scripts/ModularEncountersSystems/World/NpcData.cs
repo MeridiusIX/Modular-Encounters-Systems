@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using VRage;
 using VRage.Game.Entity;
 using VRage.Game.ModAPI;
 using VRageMath;
@@ -439,9 +440,16 @@ namespace ModularEncountersSystems.World {
 
 		[ProtoMember(48)]
         private List<KeyValuePair<string, Vector3D>> CustomVector3DsSerializeable;
-		public Dictionary<string, Vector3D> CustomVector3Ds;
+
+		[ProtoMember(49)]
+		public long ParentId;
+
+		[ProtoMember(50)]
+        public List<BotEntity> Bots;
 
         //Non-Serialized Data
+        [ProtoIgnore]
+		public Dictionary<string, Vector3D> CustomVector3Ds;
 
         [ProtoIgnore]
 		public ImprovedSpawnGroup SpawnGroup {
@@ -533,9 +541,6 @@ namespace ModularEncountersSystems.World {
 		[ProtoIgnore]
 		public IMyRemoteControl PrimaryRemoteControl;
 
-		[ProtoMember(49)]
-		public long ParentId;
-
 		public NpcData() {
 
 			SetDefaults();
@@ -617,6 +622,7 @@ namespace ModularEncountersSystems.World {
 			CustomVariablesName = "";
 			CustomStrings = new Dictionary<string, string>();
 			CustomCountersVariables = new Dictionary<string, int>();
+			Bots = new List<BotEntity>();
 			CustomVector3Ds = new Dictionary<string, Vector3D>();
 			CustomVector3DsSerializeable = new List<KeyValuePair<string, Vector3D>>();
 
@@ -1176,6 +1182,7 @@ namespace ModularEncountersSystems.World {
                 CustomVector3DsSerializeable = CustomVector3Ds.ToList();
 
 				LastChangeToData = MyAPIGateway.Session.GameDateTime;
+                //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> NpcData Serialization Bot Count '" +  Grid?.Npc?.Grid?.GridName + "': " + Bots.Count);
 				SerializationHelper.SaveDataToEntity<NpcData>(Grid?.CubeGrid, this, StorageTools.NpcDataKey);
 
 			}
@@ -1189,12 +1196,69 @@ namespace ModularEncountersSystems.World {
             {
                 CustomVector3Ds[entry.Key] = entry.Value;
             }
+
+            //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> NpcData Deserialization Bot Count '" +  Grid?.Npc?.Grid?.GridName + "': " + Bots.Count);
+            foreach (var bot in Bots)
+                MyAPIGateway.Utilities.InvokeOnGameThread(() => bot.RefreshBotEntity());
         }
 
         public string GetGPS(string name, Vector3D vector)
         {
             var gps = "GPS:" + name + ":" + vector.X + ":" + vector.Y + ":" + vector.Z + ":#FF82F175:";
             return gps;
+        }
+
+        public void RemoveBots(List<string> tags = null)
+        {
+            for (int i = Bots.Count - 1; i >= 0; i--)
+            {
+                if (tags != null && tags.Count > 0)
+                {
+                    foreach (var tag in tags)
+                    {
+                        if (Bots[i].Tags.Contains(tag))
+                        {
+                            Bots[i].EjectFromSeat();
+                            Bots[i].Bot.Close();
+                            Bots.RemoveAtFast(i);
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    Bots[i].EjectFromSeat();
+                    Bots[i].Bot.Close();
+                    Bots.RemoveAtFast(i);
+                }
+            }
+
+            BotManager.RefreshAllBots();
+        }
+
+        public void EjectBots(List<string> tags = null)
+        {
+            foreach (var bot in Bots)
+            {
+                if (tags != null && tags.Count > 0)
+                {
+                    foreach (var tag in tags)
+                    {
+                        if (bot.Tags.Contains(tag) && !bot.IsBotStandingCharacter())
+                        {
+                            bot.EjectFromSeat();
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    if (!bot.IsBotStandingCharacter())
+                    {
+                        bot.EjectFromSeat();
+                    }
+                }
+            }
         }
 
 		public override string ToString() {
@@ -1237,14 +1301,18 @@ namespace ModularEncountersSystems.World {
 			sb.Append(" - OriginalName:        ").Append(FriendlyName).AppendLine();
 			sb.Append(" - Score (WIP):         ").Append(Score).AppendLine();
 			sb.Append(" - EventInstanceId:     ").Append(EventInstanceId).AppendLine();
-            sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
 
+            sb.AppendLine();
+            sb.Append(" - Bots:                ").Append(Bots.Count).AppendLine();
+            foreach (var bot in Bots) bot.GetBotInfo(sb);
+
+            sb.AppendLine();
+            sb.Append(" - CustomVariablesName: ").Append(CustomVariablesName).AppendLine();
             foreach (var item in CustomStrings) sb.Append(" - CustomString: " + item.Key + " (").Append(item.Value + ")").AppendLine();
             foreach (var item in CustomCountersVariables) sb.Append(" - CustomCountersVariable: " + item.Key + " (").Append(item.Value + ")").AppendLine();
             foreach (var item in CustomVector3Ds) sb.Append(" - CustomVector3Ds: " + item.Key + " (").Append(item.Value + ")").AppendLine();
 
 			return sb.ToString();
-
 		}
 
 	}

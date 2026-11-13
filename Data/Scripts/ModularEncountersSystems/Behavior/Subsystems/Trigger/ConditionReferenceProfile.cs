@@ -169,6 +169,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool CheckIfTargetIsNpcOwned;
 
 		public bool IsTargetPlayer;
+		public bool IsTargetBot;
 		public bool IsTargetGrid;
 		public bool IsTargetStatic;
 
@@ -266,6 +267,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool HasWeapons;
 		public bool HasNoWeapons;
+
+        public bool CheckBotsRemaining;
+        public int MaxRemainingBots;
+        public int MinRemainingBots;
+		public List<string> CheckBotTags;
 
 
 
@@ -424,6 +430,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			CheckIfTargetIsNpcOwned = false;
 
 			IsTargetPlayer = false;
+			IsTargetBot = false;
 			IsTargetGrid = false;
 			IsTargetStatic = false;
 
@@ -528,6 +535,11 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			HasWeapons =false;
 			HasNoWeapons=false;
+
+            CheckBotsRemaining = false;
+            MaxRemainingBots = -1;
+            MinRemainingBots = -1;
+			CheckBotTags = new List<string>();
 
 			ProfileSubtypeId = "";
 
@@ -650,6 +662,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"CheckIfTargetIsNpcOwned", (s, o) => TagParse.TagBoolCheck(s, ref CheckIfTargetIsNpcOwned) },
 				{"IsTargetGrid", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetGrid) },
 				{"IsTargetPlayer", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetPlayer) },
+				{"IsTargetBot", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetBot) },
 				{"IsTargetStatic", (s, o) => TagParse.TagBoolCheck(s, ref IsTargetStatic) },
 				{"HasTarget", (s, o) => TagParse.TagBoolCheck(s, ref HasTarget) },
 				{"NoTarget", (s, o) => TagParse.TagBoolCheck(s, ref NoTarget) },
@@ -730,6 +743,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				{"HasWeapons", (s, o) => TagParse.TagBoolCheck(s, ref HasWeapons) },//HasWeapons
 				{"HasNoWeapons", (s, o) => TagParse.TagBoolCheck(s, ref HasNoWeapons) },//CheckHealthPercentage
 
+				{"CheckBotsRemaining", (s, o) => TagParse.TagBoolCheck(s, ref CheckBotsRemaining) },
+				{"MaxRemainingBots", (s, o) => TagParse.TagIntCheck(s, ref MaxRemainingBots) },
+				{"MinRemainingBots", (s, o) => TagParse.TagIntCheck(s, ref MinRemainingBots) },
+				{"CheckBotTags", (s, o) => TagParse.TagStringListCheck(s, ref CheckBotTags) },
 
 
 			};

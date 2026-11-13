@@ -1499,13 +1499,28 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 }
 
+                lastCondition = "IsTargetBot";
+                if (ConditionReference.IsTargetBot)
+                {
+                    usedConditions++;
+
+                    if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Bot)
+                    {
+                        satisfiedConditions++;
+                    }
+                }
+
                 lastCondition = "IsTargetGrid";
                 if (ConditionReference.IsTargetGrid)
                 {
 
                     usedConditions++;
 
-                    if (_behavior.AutoPilot.Targeting.HasTarget() && _behavior.AutoPilot.Targeting.Target.GetEntityType() != EntityType.Player)
+                    if (_behavior.AutoPilot.Targeting.HasTarget() &&
+                        (_behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Generic ||
+                        _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Grid ||
+                        _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Block
+                        ))
                     {
 
                         satisfiedConditions++;
@@ -2093,6 +2108,34 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
 
                 }
+
+
+                lastCondition = "CheckBotsRemaining";
+                if (ConditionReference.CheckBotsRemaining)
+                {
+                    usedConditions++;
+
+                    if (_behavior?.CurrentGrid?.Npc != null)
+                    {
+                        var count = 0;
+                        foreach (var b in _behavior.CurrentGrid.Npc.Bots)
+                        {
+                            foreach (var t in ConditionReference.CheckBotTags)
+                            {
+                                if (b.Tags.Contains(t))
+                                {
+                                    count++;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (ConditionReference.MaxRemainingBots > -1 && ConditionReference.MaxRemainingBots <= count ||
+                            ConditionReference.MinRemainingBots > -1 && ConditionReference.MinRemainingBots >= count)
+                            satisfiedConditions++;
+                    }
+                }
+
 
                 lastCondition = "MatchAnyCondition";
                 if (ConditionReference.MatchAnyCondition == false)

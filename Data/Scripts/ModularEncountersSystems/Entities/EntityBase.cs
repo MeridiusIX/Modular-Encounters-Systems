@@ -1,4 +1,5 @@
 using Sandbox.ModAPI;
+using SpaceEngineers.Game.VoiceChat;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,12 +9,13 @@ using VRageMath;
 namespace ModularEncountersSystems.Entities {
 
 	public enum EntityType {
-	
+
 		Generic,
 		Player,
 		Grid,
 		Block,
-	
+        Bot,
+
 	}
 
 	public abstract class EntityBase {
@@ -27,7 +29,6 @@ namespace ModularEncountersSystems.Entities {
 		public EntityBase(IMyEntity entity) {
 
 			if (entity == null) {
-
 				Closed = true;
 				return;
 
@@ -35,10 +36,15 @@ namespace ModularEncountersSystems.Entities {
 
 			Entity = entity;
 			ParentEntity = entity.GetTopMostParent();
-			Closed = entity.Closed;
-			Entity.OnClose += CloseEntity;
+
+            RegisterHooks();
 
 		}
+
+        protected virtual void RegisterHooks()
+        {
+			Entity.OnClose += CloseEntity;
+        }
 
 		public virtual void CloseEntity(IMyEntity entity) {
 
@@ -109,7 +115,7 @@ namespace ModularEncountersSystems.Entities {
 				return null;
 
 			return Entity;
-		
+
 		}
 
 		public long GetEntityId() {
@@ -131,7 +137,7 @@ namespace ModularEncountersSystems.Entities {
 		public virtual EntityType GetEntityType() {
 
 			return Type;
-		
+
 		}
 
 		public IMyEntity GetParentEntity() {
@@ -198,7 +204,7 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		
+
 
 	}
 

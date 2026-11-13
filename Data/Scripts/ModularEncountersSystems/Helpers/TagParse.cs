@@ -1528,6 +1528,26 @@ namespace ModularEncountersSystems.Helpers {
 
 		}
 
+
+		public static void TagSkinSetEnumCheck(string tag, ref List<SkinSetEnum> original) {
+
+			SkinSetEnum result = SkinSetEnum.FactionDefault;
+			var tagSplit = ProcessTag(tag);
+
+			if (tagSplit.Length == 2) {
+
+				if (SkinSetEnum.TryParse(tagSplit[1], out result) == false) {
+
+					return;
+
+				}
+
+			}
+
+			original.Add(result);
+
+		}
+
 		public static void TagTextTemplateCheck(string tag, ref TextTemplate original) {
 
 			TextTemplate result = null;

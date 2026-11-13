@@ -11,14 +11,25 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 	public class BotSpawnProfile {
 
 		public string ProfileSubtypeId;
-		public bool UseAiEnabled;
-		public SpawnData Data;
-		public byte[] SerializedData;
 
+        // Base game
 		public string BotType;
 		public string BotBehavior;
 		public string BotDisplayName;
+        public string BotFactionTag;
+		public List<string> Tags;
+        public string WeaponsContainerId;
+        public string LootContainerId;
+        public string ChatMessageSetId;
+		public List<string> SpawnBlocks;
+        public bool SpawnSeated;
 		public Vector3I Color;
+        public List<SkinSetEnum> AssetOverrideSets;
+
+        // AiEnabled
+		public bool UseAiEnabled;
+		public SpawnData Data;
+		public byte[] SerializedData;
 
 		public bool CanUseAirNodes;
 		public bool CanUseSpaceNodes;
@@ -49,12 +60,20 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		public BotSpawnProfile() {
 
 			ProfileSubtypeId = "";
-			UseAiEnabled = true;
+			UseAiEnabled = false;
 
 			BotType = "";
 			BotBehavior = "Default";
 			BotDisplayName = "";
+			Tags = new List<string>();
+            BotFactionTag = "";
+            WeaponsContainerId = "";
+            LootContainerId = "";
+            ChatMessageSetId = "";
+			SpawnBlocks = new List<string>();
+            SpawnSeated = true;
 			Color = new Vector3I(300, 300, 300);
+			AssetOverrideSets = new List<SkinSetEnum>();
 
 			CanUseAirNodes = false;
 			CanUseSpaceNodes = false;
@@ -85,7 +104,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 		}
 
 		public void InitTags(string data) {
-		
+
 			if (string.IsNullOrWhiteSpace(data))
 				return;
 
@@ -117,6 +136,62 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 				if (tag.Contains("[BotDisplayName:")) {
 
 					TagParse.TagStringCheck(tag, ref BotDisplayName);
+					continue;
+
+				}
+
+				if (tag.Contains("[Tags:")) {
+
+					TagParse.TagStringListCheck(tag, ref Tags);
+					continue;
+
+				}
+
+				if (tag.Contains("[WeaponsContainerId:")) {
+
+					TagParse.TagStringCheck(tag, ref WeaponsContainerId);
+					continue;
+
+				}
+
+				if (tag.Contains("[LootContainerId:")) {
+
+					TagParse.TagStringCheck(tag, ref LootContainerId);
+					continue;
+
+				}
+
+				if (tag.Contains("[ChatMessageSetId:")) {
+
+					TagParse.TagStringCheck(tag, ref ChatMessageSetId);
+					continue;
+
+				}
+
+				if (tag.Contains("[BotFactionTag:")) {
+
+					TagParse.TagStringCheck(tag, ref BotFactionTag);
+					continue;
+
+				}
+
+				if (tag.Contains("[SpawnBlocks:")) {
+
+					TagParse.TagStringListCheck(tag, ref SpawnBlocks);
+					continue;
+
+				}
+
+				if (tag.Contains("[AssetOverrideSets:")) {
+
+					TagParse.TagSkinSetEnumCheck(tag, ref AssetOverrideSets);
+					continue;
+
+				}
+
+				if (tag.Contains("[SpawnSeated:")) {
+
+					TagParse.TagBoolCheck(tag, ref SpawnSeated);
 					continue;
 
 				}
@@ -254,7 +329,7 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-				
+
 				if (tag.Contains("[LootContainerSubtypeId:")) {
 
 					TagParse.TagStringCheck(tag, ref LootContainerSubtypeId);

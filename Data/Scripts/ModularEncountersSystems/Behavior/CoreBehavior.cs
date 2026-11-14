@@ -27,7 +27,7 @@ namespace ModularEncountersSystems.Behavior {
 
 	[Flags]
 	public enum BehaviorProcessState {
-	
+
 		None = 0,
 		Start = 1 << 0,
 		CollisionParallel = 1 << 1,
@@ -41,7 +41,7 @@ namespace ModularEncountersSystems.Behavior {
 		DespawnMain = 1 << 9,
 		BehaviorMain = 1 << 10,
 		Complete = 1 << 11,
-	
+
 	}
 
 	public class CoreBehavior : IBehavior {
@@ -136,24 +136,24 @@ namespace ModularEncountersSystems.Behavior {
 		public StoredSettings BehaviorSettings { get { return _settings; } set { _settings = value; } }
 		public TriggerSystem Trigger { get { return _trigger; } set { _trigger = value; } }
 
-		public BehaviorMode Mode { 
-			
+		public BehaviorMode Mode {
+
 			get {
-				
+
 				if(this.BehaviorSettings != null)
 					return this.BehaviorSettings.Mode;
 
 				return BehaviorMode.Init;
-			
+
 			}
-			
+
 			set {
 
 				if (this.BehaviorSettings != null)
 					this.BehaviorSettings.Mode = value;
 
 			}
-		
+
 		}
 
 		public bool BehaviorTerminated { get { return _behaviorTerminated; } set { _behaviorTerminated = value; } }
@@ -181,8 +181,8 @@ namespace ModularEncountersSystems.Behavior {
 		public JumpDriveInhibitor JumpInhibitorLogic { get { return _jumpInhibitorLogic; } set { _jumpInhibitorLogic = value; } }
 		public PlayerInhibitor PlayerInhibitorLogic { get { return _playerInhibitorLogic; } set { _playerInhibitorLogic = value; } }
 
-		public BlockEntity RemoteControlBlockEntity { 
-			
+		public BlockEntity RemoteControlBlockEntity {
+
 			get {
 
 				if (CurrentGrid == null)
@@ -192,13 +192,13 @@ namespace ModularEncountersSystems.Behavior {
 
 					if (remote.ActiveEntity() || remote.Block.EntityId == RemoteControl.EntityId)
 						return remote;
-				
+
 				}
 
 				return null;
-			
-			} 
-		
+
+			}
+
 		}
 
 		public long GridId { get { return RemoteControl?.SlimBlock?.CubeGrid == null ? 0 : RemoteControl.SlimBlock.CubeGrid.EntityId; } }
@@ -211,14 +211,14 @@ namespace ModularEncountersSystems.Behavior {
 				if (_currentGrid == null)
 					AssignGridEntity();
 
-				return _currentGrid; 
-			
+				return _currentGrid;
+
 			} set {
-				
-				_currentGrid = value; 
-			
-			} 
-		
+
+				_currentGrid = value;
+
+			}
+
 		}
 
 		internal GridEntity _currentGrid;
@@ -236,7 +236,7 @@ namespace ModularEncountersSystems.Behavior {
 		public bool SetupCompleted;
 		public bool SetupFailed;
 		public bool ConfigCheck;
-		
+
 
 		private DateTime _despawnCheckTimer;
 		private DateTime _behaviorRunTimer;
@@ -251,8 +251,9 @@ namespace ModularEncountersSystems.Behavior {
 
 		private bool _readyToSaveSettings;
 		private string _settingsDataPending;
-		
+
 		public bool IsWorking;
+        public bool IsEMPd;
 		public bool HasBeenWorking; //block was alive at one point
 		public bool PhysicsValid;
 		public bool HasHasValidPhysics;
@@ -296,6 +297,7 @@ namespace ModularEncountersSystems.Behavior {
 			_escortOffsets = new List<Vector3D>();
 
 			IsWorking = false;
+            IsEMPd = false;
 			PhysicsValid = false;
 
 			CoreCounter = 0;
@@ -308,9 +310,9 @@ namespace ModularEncountersSystems.Behavior {
 		//------------------------------------------------------------------------
 
 		public virtual void BehaviorInit(IMyRemoteControl remoteControl) {
-		
-			
-		
+
+
+
 		}
 
 		public bool IsAIReady() {
@@ -370,7 +372,7 @@ namespace ModularEncountersSystems.Behavior {
 		public void SetDebugCockpit(IMyCockpit block, bool addMode = false) {
 
 			if(addMode)
-				_debugCockpits.Add(block);	
+				_debugCockpits.Add(block);
 			else
 				_debugCockpits.Remove(block);
 
@@ -402,7 +404,7 @@ namespace ModularEncountersSystems.Behavior {
 			Trigger.ProcessActivatedTriggers();
 
 		}
-		
+
 		public void CheckDespawnConditions() {
 
 			_currentProcessingState |= BehaviorProcessState.DespawnMain;
@@ -471,19 +473,19 @@ namespace ModularEncountersSystems.Behavior {
 			}
 
 			Escort.InitializeEscorts();
-		
+
 		}
 
 		public bool IsClosed() {
 
 			return (IsEntityClosed || BehaviorTerminated);
-		
+
 		}
 
 		public void DebugDrawWaypoints() {
 
 			AutoPilot.DebugDrawingToWaypoints();
-		
+
 		}
 
 		public void ChangeBehavior(string newBehaviorSubtypeID, bool preserveSettings = false, bool preserveTriggers = false, bool preserveTargetData = false) {
@@ -494,7 +496,7 @@ namespace ModularEncountersSystems.Behavior {
 
 				BehaviorLogger.Write("Behavior With Following Name Not Found: " + newBehaviorSubtypeID, BehaviorDebugEnum.General);
 				return;
-			
+
 			}
 
 			this.BehaviorTerminated = true;
@@ -567,7 +569,7 @@ namespace ModularEncountersSystems.Behavior {
 					}
 
 				}
-			
+
 			}
 
 			if (!_despawnTriggersRegistered) {
@@ -580,9 +582,9 @@ namespace ModularEncountersSystems.Behavior {
 
 						NpcManager.RegisterDespawnWatcher(this.RemoteControl?.SlimBlock?.CubeGrid, Trigger.DespawnFromMES);
 						break;
-					
+
 					}
-								
+
 				}
 
 			}
@@ -687,7 +689,7 @@ namespace ModularEncountersSystems.Behavior {
 			RemoteIsWorking(this.RemoteControl);
 
 			this.RemoteControl.OnClosing += RemoteIsClosing;
-			
+
 			this.CubeGrid.OnPhysicsChanged += PhysicsValidCheck;
 			PhysicsValidCheck(this.CubeGrid);
 
@@ -769,7 +771,7 @@ namespace ModularEncountersSystems.Behavior {
 						ActiveBehavior.SetDefaultTags();
 
 					}
-				
+
 				}
 
 				BehaviorSettings.ActiveBehaviorType = subclass;
@@ -983,7 +985,7 @@ namespace ModularEncountersSystems.Behavior {
 
             }
 
-            
+
 
 
             if (subclass == BehaviorSubclass.Passive) {
@@ -1213,7 +1215,7 @@ namespace ModularEncountersSystems.Behavior {
 				AutoPilot.Weapons.InitTags(BehaviorSettings.WeaponsSystemProfile);
 
 		}
-		
+
 		internal void PostTagsSetup() {
 
 
@@ -1223,7 +1225,7 @@ namespace ModularEncountersSystems.Behavior {
 				MyAPIGateway.Utilities.InvokeOnGameThread(() => { RemoteControl.DampenersOverride = !AutoPilot.Data.DisableInertiaDampeners; });
 
 			}
-	
+
 			BehaviorLogger.Write("Post Tag Setup for " + this.RemoteControl.SlimBlock.CubeGrid.CustomName, BehaviorDebugEnum.BehaviorSetup);
 
 			if (BehaviorLogger.ActiveDebug.HasFlag(BehaviorDebugEnum.BehaviorSetup)) {
@@ -1287,7 +1289,7 @@ namespace ModularEncountersSystems.Behavior {
 						}
 
 					}
-	
+
 				} catch (Exception e) {
 
 					BehaviorLogger.Write("Failed to Deserialize Existing Stored Remote Control Data on Grid: " + this.RemoteControl.SlimBlock.CubeGrid.CustomName, BehaviorDebugEnum.BehaviorSetup);
@@ -1330,7 +1332,7 @@ namespace ModularEncountersSystems.Behavior {
 							sb.Append(string.Format(" - [{0}] == [{1}]", name, result)).AppendLine();
 
 						}
-					
+
 					}
 
 				}
@@ -1437,7 +1439,7 @@ namespace ModularEncountersSystems.Behavior {
 					trigger.ResetTime();
 
 			}
-				
+
 
 			foreach (var trigger in Trigger.CommandTriggers) {
 
@@ -1464,9 +1466,9 @@ namespace ModularEncountersSystems.Behavior {
 			RemoteControl.SlimBlock.CubeGrid.OnGridSplit += GridSplit;
 			_currentGrids = MyAPIGateway.GridGroups.GetGroup(RemoteControl.SlimBlock.CubeGrid, GridLinkTypeEnum.Physical);
 
-			BehaviorLogger.Write("Behavior Mode Set To: " + Mode.ToString(), BehaviorDebugEnum.BehaviorSetup); 
+			BehaviorLogger.Write("Behavior Mode Set To: " + Mode.ToString(), BehaviorDebugEnum.BehaviorSetup);
 			BehaviorLogger.Write("Core Settings Setup Complete", BehaviorDebugEnum.BehaviorSetup);
-			 
+
 
 		}
 
@@ -1549,9 +1551,9 @@ namespace ModularEncountersSystems.Behavior {
 
 				if (_currentGrid != null)
 					_currentGrid.Behavior = this;
-			
+
 			}
-		
+
 		}
 
 		private void SetupCallbacks() {
@@ -1619,30 +1621,44 @@ namespace ModularEncountersSystems.Behavior {
 
 		}
 
-		public void RemoteIsWorking(IMyCubeBlock cubeBlock) {
-
-			if (this.RemoteControl == null || this.RemoteControl.MarkedForClose) {
-
+		public void RemoteIsWorking(IMyCubeBlock cubeBlock)
+        {
+			if (this.RemoteControl == null || this.RemoteControl.MarkedForClose)
+            {
 				this.IsWorking = false;
 
 				if(Trigger != null)
 					Trigger.ProcessCompromisedTriggerWatcher(RemoteCompromiseCheck());
-
 			}
 
-			if(this.RemoteControl.IsWorking && this.RemoteControl.IsFunctional) {
-
+			if (this.RemoteControl.IsWorking && this.RemoteControl.IsFunctional)
+            {
 				this.HasBeenWorking = true;
 				this.IsWorking = true;
+                this.IsEMPd = false;
 				return;
-
 			}
+
+            var comp = this.RemoteControl.CubeGrid?.ResourceDistributor as MyResourceDistributorComponent;
+            if (comp != null && comp.IsResourceDisrupted(MyResourceDistributorComponent.ElectricityId))
+            {
+                if (this.RemoteControl.IsFunctional)
+                {
+                    this.HasBeenWorking = true;
+                    this.IsWorking = true;
+                    this.IsEMPd = true;
+                    return;
+                }
+            }
+            else
+            {
+                this.IsEMPd = false;
+            }
 
 			this.IsWorking = false;
 
 			if (Trigger != null)
 				Trigger.ProcessCompromisedTriggerWatcher(RemoteCompromiseCheck());
-
 		}
 
 		public void RemoteIsClosing(IMyEntity entity) {
@@ -1661,7 +1677,7 @@ namespace ModularEncountersSystems.Behavior {
 		public bool RemoteCompromiseCheck() {
 
 			return !IsWorking && HasBeenWorking && !IsParentGridClosed && Owner.WasNpcOwned;
-		
+
 		}
 
 		public void PhysicsValidCheck(IMyEntity entity) {
@@ -1688,6 +1704,7 @@ namespace ModularEncountersSystems.Behavior {
 			sb.Append(" - Grid Name:           ").Append(RemoteControl.SlimBlock.CubeGrid.CustomName).AppendLine();
 			sb.Append(" - Grid Static:         ").Append(RemoteControl.SlimBlock.CubeGrid.IsStatic).AppendLine();
 			sb.Append(" - Block Working:       ").Append(IsWorking).AppendLine();
+			sb.Append(" - Block EMPd:          ").Append(IsEMPd).AppendLine();
 			sb.Append(" - Physics Valid:       ").Append(PhysicsValid).AppendLine();
 			sb.Append(" - NPC Owned:           ").Append(Owner.NpcOwned).AppendLine();
 			sb.Append(" - Behavior Setup Pass: ").Append(SetupCompleted).AppendLine();
@@ -1942,7 +1959,7 @@ namespace ModularEncountersSystems.Behavior {
 			sb.AppendLine();
 
 			//Grid NPC Data
-			if (CurrentGrid.Npc != null) 
+			if (CurrentGrid.Npc != null)
 			{
 
 				sb.Append("::: Grid NPC Data :::").AppendLine();
@@ -1964,7 +1981,7 @@ namespace ModularEncountersSystems.Behavior {
             }
 
             return sb.ToString();
-		
+
 		}
 
 		private void BuildTriggerData(StringBuilder sb, List<TriggerProfile> triggers) {
@@ -2031,5 +2048,5 @@ namespace ModularEncountersSystems.Behavior {
 		}
 
 	}
-	
+
 }

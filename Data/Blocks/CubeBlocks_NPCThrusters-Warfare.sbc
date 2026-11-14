@@ -9,7 +9,7 @@
 				<SubtypeId>MES-NPC-Thrust-WarfareIon-SmallGrid-Small</SubtypeId>
 			</Id>
 			<DisplayName>NPC Ion Thruster</DisplayName>
-			<Icon>Textures\GUI\Icons\Cubes\SmallGridModularIonThrusterSmall.dds</Icon>
+			<Icon>Textures\GUI\Icons\Cubes\LargeGridModularIonThrusterSmall.dds</Icon>
 			<Description>Special thruster only usable by NPC Owned Identities</Description>
 			<CubeSize>Small</CubeSize>
 			<GuiVisible>false</GuiVisible>

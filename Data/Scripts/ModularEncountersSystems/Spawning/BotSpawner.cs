@@ -328,8 +328,7 @@ namespace ModularEncountersSystems.Spawning
                     }
                     else
                     {
-                        character.Close();
-                        throw new Exception("Failed to get AssetModifierComp");
+                        SpawnLogger.Write($"Error when attempting to spawn bot with profile '{profile.ProfileSubtypeId}': AssetModifierComponent was not found - skin changes cannot be applied.", SpawnerDebugEnum.Spawning);
                     }
                 }
 

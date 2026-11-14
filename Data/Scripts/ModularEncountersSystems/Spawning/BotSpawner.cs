@@ -26,7 +26,6 @@ namespace ModularEncountersSystems.Spawning
 {
     public static class BotSpawner
     {
-        public static List<IMyCockpit> OccupiedCockpits = new List<IMyCockpit>();
 
         public static void Setup()
         {
@@ -219,8 +218,7 @@ namespace ModularEncountersSystems.Spawning
                         if (profile.SpawnSeated && b.FatBlock != null && b.FatBlock as IMyCockpit != null && b.FatBlock.IsFunctional)
                         {
                             IMyCockpit cockpit_temp = b.FatBlock as IMyCockpit;
-                            // TODO: Multiple actions spawning bots from the same trigger will clear the OccupiedCockpits list and try to spawn bots in the same seats because .IsOccupied is not updated quickly enough.
-                            if (!cockpit_temp.IsOccupied && !OccupiedCockpits.Contains(cockpit_temp))
+                            if (!cockpit_temp.IsOccupied && !behavior.CurrentGrid.OccupiedSeatIds.Contains(cockpit_temp.EntityId))
                             {
                                 validCockpits.Add(cockpit_temp);
                             }
@@ -239,7 +237,11 @@ namespace ModularEncountersSystems.Spawning
                     if (profile.SpawnSeated)
                     {
                         cockpit = validCockpits[MathTools.RandomBetween(0, validCockpits.Count)];
-                        OccupiedCockpits.Add(cockpit);
+
+                        // The removal of the entityId is scheduled for 5 ticks later to avoid multiple actions spawning in the same tick attempting to spawn a bot into the same seat.
+                        behavior.CurrentGrid.OccupiedSeatIds.Add(cockpit.EntityId);
+                        MyAPIGateway.Utilities.InvokeOnGameThread(() => behavior.CurrentGrid.OccupiedSeatIds.Remove(cockpit.EntityId), StartAt: MyAPIGateway.Session.GameplayFrameCounter + 5);
+
                         var loc = cockpit.PositionComp.WorldVolume.Center;
 
                         coords = MatrixD.CreateWorld(loc, behavior.Grid.RemoteControl.WorldMatrix.Backward, behavior.Grid.RemoteControl.WorldMatrix.Up);
@@ -251,7 +253,7 @@ namespace ModularEncountersSystems.Spawning
                         Vector3D loc = Vector3D.Zero;
                         block.ComputeWorldCenter(out loc);
 
-                        // TODO: Ideally gravity and block direction would be accounted for here.
+                        // TODO: Ideally gravity and block direction would be accounted for here but the bots correct for that pretty quickly themselves once spawned.
                         coords = MatrixD.CreateWorld(loc, behavior.Grid.RemoteControl.WorldMatrix.Backward, behavior.Grid.RemoteControl.WorldMatrix.Up);
                         //MyAPIGateway.Physics.CastRay(loc, behavior.Grid.RemoteControl.Down);
                     }
@@ -335,7 +337,6 @@ namespace ModularEncountersSystems.Spawning
                 {
                     // This must be done 1 tick after the bot is created.
                     MyAPIGateway.Utilities.InvokeOnGameThread(() => cockpit.AttachPilot((IMyCharacter)bot));
-                    //VRage.Utils.MyLog.Default.WriteLine($">>>>>>>>>>>>>>>>>>>>>>>>> Attached bot '{bot}' to cockpit: " + cockpit);
                 }
 
                 // Add to tracking

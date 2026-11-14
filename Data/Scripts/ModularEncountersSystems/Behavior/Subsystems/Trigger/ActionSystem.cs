@@ -2087,7 +2087,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                 var coords = RemoteControl.GetPosition();
                                 var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
 
-                                BotSpawner.OccupiedCockpits.Clear();
                                 for (int i = 0; i < actions.BotCount; i++) // TODO: Add BotCountVariable?
                                 {
                                     IMyCharacter character = null;

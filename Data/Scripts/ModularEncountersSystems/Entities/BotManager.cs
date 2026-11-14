@@ -90,7 +90,7 @@ namespace ModularEncountersSystems.Entities
             }
 
             if (printed.Count < Bots.Count)
-                sb.Append("- " + "Non MES-tracked Bots").AppendLine();
+                sb.Append("- " + "Tracked Non-MES Bots").AppendLine();
 
             foreach (var b in Bots)
             {

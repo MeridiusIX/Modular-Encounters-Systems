@@ -396,36 +396,51 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public static ITarget GetTargetFromEntity(IMyEntity entity) {
-
+		public static ITarget GetTargetFromEntity(IMyEntity entity)
+        {
 			//Try Player
 			var character = entity as IMyCharacter;
 			var block = entity as IMyCubeBlock;
 
-			if (character != null) {
+			if (character != null)
+            {
+                IMyPlayer player = MyAPIGateway.Players.TryGetIdentityId(character.ControllerInfo.ControllingIdentityId);
 
-				return GetTargetFromPlayerEntity(character);
-
-			} else if(block == null) {
-
+                if (FactionHelper.IsIdentityPlayer(player.IdentityId))
+				    return GetTargetFromPlayerEntity(character);
+                else
+                    return GetTargetFromBotEntity(character);
+			}
+            else if(block == null)
+            {
 				var toolBase = entity as IMyEngineerToolBase;
 				var gunBase = entity as IMyGunBaseUser;
 
-				if (gunBase != null) {
+				if (gunBase != null)
+                {
+                    character = gunBase.Owner as IMyCharacter;
+                    IMyPlayer player = MyAPIGateway.Players.TryGetIdentityId(character.ControllerInfo.ControllingIdentityId);
 
-					return GetTargetFromPlayerEntity(gunBase.Owner as IMyCharacter);
-
+                    if (FactionHelper.IsIdentityPlayer(player.IdentityId))
+                        return GetTargetFromPlayerEntity(character);
+                    else
+                        return GetTargetFromBotEntity(character);
 				}
 
-				if (toolBase != null) {
-
+				if (toolBase != null)
+                {
 					IMyEntity charEntity = null;
+                    if (MyAPIGateway.Entities.TryGetEntityById(toolBase.OwnerId, out charEntity))
+                    {
+                        character = charEntity as IMyCharacter;
+                        IMyPlayer player = MyAPIGateway.Players.TryGetIdentityId(character.ControllerInfo.ControllingIdentityId);
 
-					if (MyAPIGateway.Entities.TryGetEntityById(toolBase.OwnerId, out charEntity))
-						return GetTargetFromPlayerEntity(charEntity as IMyCharacter);
-
+                        if (FactionHelper.IsIdentityPlayer(player.IdentityId))
+                            return GetTargetFromPlayerEntity(character);
+                        else
+                            return GetTargetFromBotEntity(character);
+                    }
 				}
-
 			}
 
 			//Try Block/Grid
@@ -475,6 +490,22 @@ namespace ModularEncountersSystems.Entities {
 
 			return null;
 
+		}
+
+		public static ITarget GetTargetFromBotEntity(IMyCharacter entity)
+        {
+			if (entity == null)
+				return null;
+
+			foreach (var botEntity in BotManager.Bots)
+            {
+				if (!botEntity.ActiveEntity() || entity.EntityId != botEntity.ParentEntity.EntityId)
+					continue;
+
+				return botEntity;
+			}
+
+			return null;
 		}
 
 		public static double GravityAtPosition(Vector3D coords, PlanetEntity planet) {
@@ -902,30 +933,36 @@ namespace ModularEncountersSystems.Entities {
 
 		}
 
-		public static bool IsPositionNearEntity(Vector3D coords, double distance) {
-
-			foreach (var grid in GridManager.Grids) {
-
+		public static bool IsPositionNearEntity(Vector3D coords, double distance)
+        {
+			foreach (var grid in GridManager.Grids)
+            {
 				if (!grid.ActiveEntity())
 					continue;
 
 				if (grid.Distance(coords) < distance)
 					return true;
-
 			}
 
-			foreach (var player in PlayerManager.Players) {
-
+			foreach (var player in PlayerManager.Players)
+            {
 				if (!player.ActiveEntity())
 					continue;
 
 				if (player.Distance(coords) < distance)
 					return true;
+			}
 
+			foreach (var bot in BotManager.Bots)
+            {
+				if (!bot.ActiveEntity())
+					continue;
+
+				if (bot.Distance(coords) < distance)
+					return true;
 			}
 
 			return false;
-
 		}
 
 		public static Vector3D EntityAcceleration(IMyEntity entity) {

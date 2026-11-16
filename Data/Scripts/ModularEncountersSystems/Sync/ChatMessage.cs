@@ -1271,7 +1271,7 @@ namespace ModularEncountersSystems.Sync {
 
 				MyVisualScriptLogicProvider.ShowNotification("Offset Position To Reference Block Saved To Clipboard", 5000, "White", chatData.PlayerId);
 				VRage.Utils.MyClipboardHelper.SetClipboard(offsetString);
-			
+
 			}
 			*/
 
@@ -1419,7 +1419,6 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-
 			//GetEvents
 			if (array[2] == "GetEvents")
 			{
@@ -1429,10 +1428,17 @@ namespace ModularEncountersSystems.Sync {
 
 			}
 
-
+			//GetActiveBots
+			if (array[2] == "GetActiveBots")
+            {
+                BotManager.RefreshAllBots();
+				ClipboardPayload = BotManager.GetActiveBots();
+				Mode = ChatMsgMode.ReturnMessage;
+				ReturnMessage = "Active Bot Data Sent To Clipboard.";
+				return true;
+			}
 
 			return false;
-
 		}
 
 		public bool ProcessCommand() {

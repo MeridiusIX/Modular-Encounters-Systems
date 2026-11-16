@@ -39,7 +39,7 @@ namespace ModularEncountersSystems.Helpers {
     }
 
     public enum BehaviorSubclass {
-    
+
         None,
         CoreBehavior,
         Fighter,
@@ -126,7 +126,7 @@ namespace ModularEncountersSystems.Helpers {
     }
 
     public enum Direction {
-        
+
         None,
         Forward,
         Backward,
@@ -134,7 +134,7 @@ namespace ModularEncountersSystems.Helpers {
         Down,
         Left,
         Right
-    
+
     }
 
     public enum FakeExplosionFlags {
@@ -161,30 +161,34 @@ namespace ModularEncountersSystems.Helpers {
         Override,
         PlayerAndGrid,
         PlayerAndBlock,
+        Bot,
+        PlayerAndBot,
+        PlayerAndBotAndGrid,
+        PlayerAndBotAndBlock,
 
     }
 
     public enum BlockSizeEnum {
-    
+
         None,
         Small,
         Large
-    
+
     }
 
     public enum BoolEnum {
-    
+
         None,
         False,
         True,
-    
+
     }
 
     public enum CheckEnum {
 
         Ignore,
         No,
-        Yes,        
+        Yes,
 
     }
 
@@ -200,34 +204,34 @@ namespace ModularEncountersSystems.Helpers {
     }
 
     public enum ModifierEnum {
-    
+
         None,
         Set,
         Add,
         Subtract,
         Multiply,
         Divide
-    
+
     }
 
     public enum RotationEnum {
-    
+
         Pitch,
         Yaw,
         Roll,
-    
+
     }
 
     public enum SwitchEnum {
-    
+
         Off,
         On,
         Toggle,
-    
+
     }
 
     public enum SpawnTypeEnum {
-    
+
         CustomSpawn,
         SpaceCargoShip,
         RandomEncounter,
@@ -235,7 +239,7 @@ namespace ModularEncountersSystems.Helpers {
         PlanetaryInstallation,
         BossEncounter,
         Creature
-    
+
     }
 
     public enum TargetSortEnum {
@@ -275,6 +279,62 @@ namespace ModularEncountersSystems.Helpers {
 
     }
 
+    public enum SkinSetEnum {
+
+        FactionDefault,
+        Assault,
+        Aviator,
+        Badger,
+        Carpet,
+        Chef,
+        Cow,
+        Crocodile,
+        DigitalCamouflage,
+        Disco,
+        EmissiveStripes,
+        Fiber,
+        Frozen,
+        Ghillie,
+        Glamour,
+        Golden,
+        Graffiti,
+        Hazmat,
+        Halloween,
+        Hexagon,
+        KeenPajamas,
+        KidsPajamas,
+        Lava,
+        Leopard,
+        Medieval,
+        Metallic,
+        Miner,
+        Mummy,
+        Newspaper,
+        NextGen,
+        PartyTux,
+        Pharaoh,
+        Policeman,
+        Prisoner,
+        Proper,
+        Racing,
+        Rainbow,
+        Retro,
+        Robot,
+        Scavenger,
+        Shark,
+        Skeleton,
+        Slime,
+        Terracotta,
+        Soldier,
+        Tuxedo,
+        Veteran,
+        VeteranMarkII,
+        Wood,
+        Zebra,
+        Zombie,
+
+    }
+
     [Flags]
     public enum TargetObstructionEnum {
 
@@ -311,12 +371,12 @@ namespace ModularEncountersSystems.Helpers {
     }
 
     public enum Tolerence {
-    
+
         None,
         Lower,
         Within,
         Higher
-    
+
     }
 
     [Flags]
@@ -342,7 +402,7 @@ namespace ModularEncountersSystems.Helpers {
 
         None = 0,
         Damage = 1 << 0,
-        PlayerNear = 1 << 1, 
+        PlayerNear = 1 << 1,
         TurretTarget = 1 << 2,
         NoWeapon = 1 << 3,
         TargetInSafezone = 1 << 4,
@@ -354,7 +414,7 @@ namespace ModularEncountersSystems.Helpers {
 
     [Flags]
     public enum WaypointModificationEnum {
-    
+
         None = 0,
         Collision = 1 << 0,
         Offset = 1 << 1,
@@ -373,12 +433,12 @@ namespace ModularEncountersSystems.Helpers {
     }
 
     public enum WaypointOffsetType {
-    
+
         None,
         DistanceFromTarget,
         RandomOffsetFixed,
         RandomOffsetRelativeEntity
-    
+
     }
 
 }

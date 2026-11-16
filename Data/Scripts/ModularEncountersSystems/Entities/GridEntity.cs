@@ -118,6 +118,9 @@ namespace ModularEncountersSystems.Entities {
 
 		public string GridName;
 
+        // This is used to keep track of occupied seats while spawning bots during a single tick. Because bots are attached to a seat with a 1 tick delay, .IsOccupied is not reliable.
+        public List<long> OccupiedSeatIds;
+
 		internal Dictionary<string, int> _missingComponents;
 		internal List<IMySlimBlock> _projectedBlocks;
 
@@ -167,6 +170,8 @@ namespace ModularEncountersSystems.Entities {
 			Tools = new List<BlockEntity>();
 			Turrets = new List<BlockEntity>();
 			TurretControllers = new List<BlockEntity>();
+
+            OccupiedSeatIds = new List<long>();
 
 			AllBlocks = new List<IMySlimBlock>();
 			_missingComponents = new Dictionary<string, int>();

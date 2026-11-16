@@ -2045,50 +2045,106 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                 // AddBotsToGrid
                 lastAction = "AddBotsToGrid";
-                if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && APIs.AiEnabledApiLoaded && actions.BotSpawnProfileNames.Count > 0)
+                if (actions.AddBotsToGrid && _behavior.CurrentGrid != null && actions.BotSpawnProfileNames.Count > 0)
                 {
-
-                    //MyVisualScriptLogicProvider.ShowNotificationToAll("Attempting To Add Bots", 3000);
-
-                    List<Vector3D> list = new List<Vector3D>();
-                    APIs.AiEnabled.GetAvailableGridNodes(_behavior.CurrentGrid.CubeGrid as MyCubeGrid, actions.BotCount, list, RemoteControl.WorldMatrix.Up, actions.OnlySpawnBotsInPressurizedRooms);
-                    //var list = APIs.AiEnabled.GetAvailableGridNodes(_behavior.CurrentGrid.CubeGrid as MyCubeGrid, actions.BotCount, RemoteControl.WorldMatrix.Up, actions.OnlySpawnBotsInPressurizedRooms);
-
-                    //MyVisualScriptLogicProvider.ShowNotificationToAll("Node Count: " + list.Count, 3000);
-
-                    for (int i = 0; i < actions.BotCount; i++)
+                    var botProfileName = actions.BotSpawnProfileNames[MathTools.RandomBetween(0, actions.BotSpawnProfileNames.Count)];
+                    BotSpawnProfile botProfile = null;
+                    if (!ProfileManager.BotSpawnProfiles.TryGetValue(botProfileName, out botProfile))
                     {
-
-                        if (list.Count == 0)
-                            break;
-
-                        var cell = list[MathTools.RandomBetween(0, list.Count)];
-                        var botProfileName = actions.BotSpawnProfileNames[MathTools.RandomBetween(0, actions.BotSpawnProfileNames.Count)];
-                        BotSpawnProfile botProfile = null;
-
-                        if (ProfileManager.BotSpawnProfiles.TryGetValue(botProfileName, out botProfile))
-                        {
-
-                            var coords = cell;
-                            var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
-                            IMyCharacter character = null;
-
-                            BotSpawner.SpawnBotRequest(botProfile.SerializedData, matrix, out character, _behavior.CurrentGrid.CubeGrid as MyCubeGrid, RemoteControl.OwnerId);
-
-                        }
-                        else
-                        {
-
-                            //MyVisualScriptLogicProvider.ShowNotificationToAll("Bot Spawn Profile Not Found: " + botProfileName, 3000);
-
-                        }
-
-                        list.Remove(cell);
-
+                        BehaviorLogger.Write($"{actions.ProfileSubtypeId}: Could not find faction with tag {botProfile.BotFactionTag} in referenced bot profile '{botProfile.ProfileSubtypeId}'.", BehaviorDebugEnum.Action);
                     }
+                    else
+                    {
+                        if (!botProfile.UseAiEnabled)
+                        {
+                            var error = false;
 
-                    //MyVisualScriptLogicProvider.ShowNotificationToAll("Add Bots Done", 3000);
+                            var tag = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, botProfile.BotFactionTag);
+                            if (MyAPIGateway.Session.Factions.TryGetFactionByTag(tag) == null)
+                            {
+                                BehaviorLogger.Write($"{actions.ProfileSubtypeId}: Could not find faction with tag {tag} in referenced bot profile '{botProfile.ProfileSubtypeId}'.", BehaviorDebugEnum.Action);
+                                error = true;
+                            }
 
+                            List<IMySlimBlock> spawnBlocks = new List<IMySlimBlock>();
+                            foreach (var b in _behavior?.CurrentGrid.AllBlocks)
+                            {
+                                if (actions.BotSpawnBlockOverrides.Count <= 0)
+                                    if (botProfile.SpawnBlocks.Contains(b.BlockDefinition.Id.ToString()))
+                                        spawnBlocks.Add(b);
+                                else
+                                    if (actions.BotSpawnBlockOverrides.Contains(b.BlockDefinition.Id.ToString()))
+                                        spawnBlocks.Add(b);
+                            }
+                            if (spawnBlocks.Count <= 0 && actions.BotSpawnPointOverrides.Count <= 0)
+                            {
+                                BehaviorLogger.Write($"{actions.ProfileSubtypeId}: No valid SpawnPoints defined in action. / No SpawnBlocks found for bot profile '{botProfile.ProfileSubtypeId}' on grid.", BehaviorDebugEnum.Action);
+                                error = true;
+                            }
+
+                            if (!error)
+                            {
+                                var coords = RemoteControl.GetPosition();
+                                var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
+
+                                for (int i = 0; i < actions.BotCount; i++) // TODO: Add BotCountVariable?
+                                {
+                                    IMyCharacter character = null;
+                                    BotSpawner.SpawnBotRequest(
+                                        profile: botProfile,
+                                        coords: matrix,
+                                        character: out character,
+                                        behavior: _behavior,
+                                        owner: RemoteControl.OwnerId,
+                                        useBuiltIn: true,
+                                        spawnBlocks: spawnBlocks,
+                                        spawnPoints: actions.BotSpawnPointOverrides,
+                                        tags: actions.BotTags
+                                        );
+                                }
+                            }
+                        }
+
+                        else if (botProfile.UseAiEnabled && APIs.AiEnabledApiLoaded)
+                        {
+                            List<Vector3D> list = new List<Vector3D>();
+                            APIs.AiEnabled.GetAvailableGridNodes(_behavior.CurrentGrid.CubeGrid as MyCubeGrid, actions.BotCount, list, RemoteControl.WorldMatrix.Up, actions.OnlySpawnBotsInPressurizedRooms);
+
+                            for (int i = 0; i < actions.BotCount; i++)
+                            {
+                                if (list.Count == 0)
+                                    break;
+
+                                var cell = list[MathTools.RandomBetween(0, list.Count)];
+
+                                var coords = cell;
+                                var matrix = MatrixD.CreateWorld(coords, RemoteControl.WorldMatrix.Backward, RemoteControl.WorldMatrix.Up);
+                                IMyCharacter character = null;
+
+                                BotSpawner.SpawnBotRequest(botProfile, matrix, out character, _behavior, RemoteControl.OwnerId, false);
+
+                                list.Remove(cell);
+                            }
+                        }
+                    }
+                }
+
+                // RemoveBotsFromGrid
+                lastAction = "RemoveBotsFromGrid";
+                if (actions.RemoveBotsFromGrid)
+                {
+                    var npcData = _behavior?.CurrentGrid?.Npc ?? null;
+                    if (npcData != null)
+                        npcData.RemoveBots(actions.BotTags);
+                }
+
+                // EjectBotsFromSeats
+                lastAction = "EjectBotsFromSeats";
+                if (actions.EjectBotsFromSeats)
+                {
+                    var npcData = _behavior?.CurrentGrid?.Npc ?? null;
+                    if (npcData != null)
+                        npcData.EjectBots(actions.BotTags);
                 }
 
                 // SetWeaponsToMinRange

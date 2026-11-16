@@ -381,8 +381,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 		public bool AddBotsToGrid;
 		public int BotCount;
+		public List<string> BotTags;
 		public List<string> BotSpawnProfileNames;
+		public List<string> BotSpawnBlockOverrides;
+        public List<Vector3D> BotSpawnPointOverrides;
 		public bool OnlySpawnBotsInPressurizedRooms;
+		public bool RemoveBotsFromGrid;
+		public bool EjectBotsFromSeats;
 
 		public bool SetWeaponsToMinRange;
 		public bool SetWeaponsToMaxRange;
@@ -916,8 +921,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 
 			AddBotsToGrid = false;
 			BotCount = 1;
+			BotTags = new List<string>();
 			BotSpawnProfileNames = new List<string>();
+			BotSpawnBlockOverrides = new List<string>();
+            BotSpawnPointOverrides = new List<Vector3D>();
 			OnlySpawnBotsInPressurizedRooms = false;
+			RemoveBotsFromGrid = false;
+            EjectBotsFromSeats = false;
 
 			ChangeBehaviorSubclass = false;
 			NewBehaviorSubclass = BehaviorSubclass.None;
@@ -1353,7 +1363,12 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"ZoneCustomBoolChangeValue", (s, o) => TagParse.TagBoolListCheck(s, ref ZoneCustomBoolChangeValue) },
                 {"AddBotsToGrid", (s, o) => TagParse.TagBoolCheck(s, ref AddBotsToGrid) },
                 {"BotCount", (s, o) => TagParse.TagIntCheck(s, ref BotCount) },
+                {"BotTags", (s, o) => TagParse.TagStringListCheck(s, ref BotTags) },
                 {"BotSpawnProfileNames", (s, o) => TagParse.TagStringListCheck(s, ref BotSpawnProfileNames) },
+                {"BotSpawnBlockOverrides", (s, o) => TagParse.TagStringListCheck(s, ref BotSpawnBlockOverrides) },
+                {"BotSpawnPointOverrides", (s, o) => TagParse.TagVector3DListCheck(s, ref BotSpawnPointOverrides) },
+                {"RemoveBotsFromGrid", (s, o) => TagParse.TagBoolCheck(s, ref RemoveBotsFromGrid) },
+                {"EjectBotsFromSeats", (s, o) => TagParse.TagBoolCheck(s, ref EjectBotsFromSeats) },
                 {"OnlySpawnBotsInPressurizedRooms", (s, o) => TagParse.TagBoolCheck(s, ref OnlySpawnBotsInPressurizedRooms) },
                 {"ChangeBehaviorSubclass", (s, o) => TagParse.TagBoolCheck(s, ref ChangeBehaviorSubclass) },
                 {"NewBehaviorSubclass", (s, o) => TagParse.TagBehaviorSubclassEnumCheck(s, ref NewBehaviorSubclass) },

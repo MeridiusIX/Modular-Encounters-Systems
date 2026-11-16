@@ -104,6 +104,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Weapons {
 
 							}
 
+							if (threatType == TargetingDef.Threat.Characters && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Bot)
+                            {
+								BehaviorLogger.Write(" - Homing Threat Is Matched To Bot", BehaviorDebugEnum.Weapon);
+								threatMatch = true;
+								break;
+							}
+
 							if (threatType == TargetingDef.Threat.Grids && _behavior.AutoPilot.Targeting.Target.GetEntityType() == EntityType.Grid) {
 
 								BehaviorLogger.Write(" - Homing Threat Is Matched To Grid", BehaviorDebugEnum.Weapon);

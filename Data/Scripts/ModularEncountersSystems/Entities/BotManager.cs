@@ -42,7 +42,7 @@ namespace ModularEncountersSystems.Entities
                             continue;
                         }
 
-                        if (botEnt.Bot.EntityId == bot.Character.EntityId && botEnt.Player != null && FactionHelper.IsIdentityNPC(botEnt.Player.IdentityId))
+                        if (bot.Character != null && botEnt.Bot.EntityId == bot.Character.EntityId && botEnt.Player != null && FactionHelper.IsIdentityNPC(botEnt.Player.IdentityId))
                         {
                             //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> BotManager FoundExisting");
                             foundExisting = true;

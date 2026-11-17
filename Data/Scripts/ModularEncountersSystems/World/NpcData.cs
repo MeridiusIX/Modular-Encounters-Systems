@@ -1221,7 +1221,7 @@ namespace ModularEncountersSystems.World {
                             Bots[i].EjectFromSeat();
                             Bots[i].Bot.Close();
                             Bots.RemoveAtFast(i);
-                            continue;
+                            break;
                         }
                     }
                 }

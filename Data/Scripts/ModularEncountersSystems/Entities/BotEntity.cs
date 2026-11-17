@@ -120,7 +120,7 @@ namespace ModularEncountersSystems.Entities
 
                 if (!entityExists || Bot == null)
                 {
-                    Entity.Close();
+                    Entity?.Close();
                     Unload();
                     return;
                 }

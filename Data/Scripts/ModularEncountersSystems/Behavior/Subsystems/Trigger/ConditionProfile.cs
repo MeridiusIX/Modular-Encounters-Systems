@@ -2114,6 +2114,9 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                         var count = 0;
                         foreach (var b in _behavior.CurrentGrid.Npc.Bots)
                         {
+                            if (b.Closed)
+                                continue;
+
                             foreach (var t in ConditionReference.CheckBotTags)
                             {
                                 if (b.Tags.Contains(t))

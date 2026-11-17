@@ -2051,7 +2051,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                     BotSpawnProfile botProfile = null;
                     if (!ProfileManager.BotSpawnProfiles.TryGetValue(botProfileName, out botProfile))
                     {
-                        BehaviorLogger.Write($"{actions.ProfileSubtypeId}: Could not find faction with tag {botProfile.BotFactionTag} in referenced bot profile '{botProfile.ProfileSubtypeId}'.", BehaviorDebugEnum.Action);
+                        BehaviorLogger.Write($"{actions.ProfileSubtypeId}: Could not find Bot Profile Name '{botProfileName}', referenced in action '{actions.ProfileSubtypeId}'.", BehaviorDebugEnum.Action);
                     }
                     else
                     {
@@ -2070,11 +2070,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             foreach (var b in _behavior?.CurrentGrid.AllBlocks)
                             {
                                 if (actions.BotSpawnBlockOverrides.Count <= 0)
+                                {
                                     if (botProfile.SpawnBlocks.Contains(b.BlockDefinition.Id.ToString()))
                                         spawnBlocks.Add(b);
+                                }
                                 else
+                                {
                                     if (actions.BotSpawnBlockOverrides.Contains(b.BlockDefinition.Id.ToString()))
                                         spawnBlocks.Add(b);
+                                }
                             }
                             if (spawnBlocks.Count <= 0 && actions.BotSpawnPointOverrides.Count <= 0)
                             {

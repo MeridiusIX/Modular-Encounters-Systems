@@ -145,7 +145,7 @@ namespace ModularEncountersSystems.Entities
                     // objects that share the host's SteamUserId. Without this guard they match a
                     // real player's entry by SteamUserId below and replace its Player reference,
                     // which corrupts the entry and leads to duplicate entries on later refreshes.
-                    if (player.IsBot || !FactionHelper.IsIdentityPlayer(player.IdentityId))
+                    if (FactionHelper.IsIdentityNPC(player.IdentityId))
                         continue;
 
                     bool foundExisting = false;

@@ -138,7 +138,14 @@ namespace ModularEncountersSystems.Entities
 
                 foreach (var player in ActivePlayers)
                 {
-                    if (string.IsNullOrWhiteSpace(player.DisplayName))
+                    if (player == null || string.IsNullOrWhiteSpace(player.DisplayName))
+                        continue;
+
+                    // Vanilla bots (wildlife/creature spawners, wolves, spiders) are IMyPlayer
+                    // objects that share the host's SteamUserId. Without this guard they match a
+                    // real player's entry by SteamUserId below and replace its Player reference,
+                    // which corrupts the entry and leads to duplicate entries on later refreshes.
+                    if (FactionHelper.IsIdentityNPC(player.IdentityId))
                         continue;
 
                     bool foundExisting = false;
@@ -157,7 +164,10 @@ namespace ModularEncountersSystems.Entities
                             if (playerEnt.Player.IdentityId != player.IdentityId)
                             {
                                 playerEnt.Player = player;
+                                playerEnt.PlayerEntityChanged = true;
                             }
+
+                            break;
                         }
                     }
 

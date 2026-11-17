@@ -2127,8 +2127,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             }
                         }
 
-                        if (ConditionReference.MaxRemainingBots > -1 && ConditionReference.MaxRemainingBots <= count ||
-                            ConditionReference.MinRemainingBots > -1 && ConditionReference.MinRemainingBots >= count)
+                        if (ConditionReference.MaxRemainingBots > -1 && ConditionReference.MaxRemainingBots >= count ||
+                            ConditionReference.MinRemainingBots > -1 && ConditionReference.MinRemainingBots <= count)
                             satisfiedConditions++;
                     }
                 }

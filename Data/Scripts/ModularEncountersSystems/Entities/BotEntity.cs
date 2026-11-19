@@ -57,7 +57,7 @@ namespace ModularEncountersSystems.Entities
                 BotManager.Bots.Add(this);
         }
 
-        public BotEntity(IMyCharacter character, BotSpawnProfile profile = null, IMyEntity entity = null) : base(entity)
+        public BotEntity(IMyCharacter character, BotSpawnProfile profile = null, NpcData npc = null, IMyEntity entity = null) : base(entity)
         {
             //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> BotEntity Constructor");
 
@@ -90,8 +90,12 @@ namespace ModularEncountersSystems.Entities
             LinkedGrids = new List<GridEntity>();
             Tags = new List<string>();
 
-            if (LinkedNpc != null && !LinkedNpc.Bots.Contains(this))
-                LinkedNpc.Bots.Add(this);
+            if (npc != null)
+            {
+                LinkedNpc = npc;
+                if (!LinkedNpc.Bots.Contains(this))
+                    LinkedNpc.Bots.Add(this);
+            }
 
             if (!BotManager.Bots.Contains(this))
                 BotManager.Bots.Add(this);
@@ -151,9 +155,6 @@ namespace ModularEncountersSystems.Entities
             if (Tags == null)
                 Tags = new List<string>();
 
-            if (npc != null)
-                LinkedNpc = npc;
-
             if (Entity != null && Bot != Entity && !Entity.Closed && !Entity.MarkedForClose)
             {
                 Entity.OnClose -= CloseEntity;
@@ -180,8 +181,12 @@ namespace ModularEncountersSystems.Entities
                 }
             }
 
-            if (LinkedNpc != null && !LinkedNpc.Bots.Contains(this))
-                LinkedNpc.Bots.Add(this);
+            if (npc != null)
+            {
+                LinkedNpc = npc;
+                if (!LinkedNpc.Bots.Contains(this))
+                    LinkedNpc.Bots.Add(this);
+            }
 
             if (!BotManager.Bots.Contains(this))
                 BotManager.Bots.Add(this);

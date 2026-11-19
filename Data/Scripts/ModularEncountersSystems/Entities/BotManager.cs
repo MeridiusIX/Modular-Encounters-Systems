@@ -36,7 +36,7 @@ namespace ModularEncountersSystems.Entities
                         var botEnt = Bots[i];
                         botEnt.RefreshBotEntity();
 
-                        //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> BotManager Checking: " + botEnt.Entity + " Closed: " + botEnt.Closed);
+                        //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> BotManager Checking: " + botEnt.Entity);
                         if (botEnt.Bot == null || botEnt.Closed)
                         {
                             //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> BotManager Removing");

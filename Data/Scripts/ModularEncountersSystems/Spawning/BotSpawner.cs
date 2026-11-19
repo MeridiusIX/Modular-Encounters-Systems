@@ -347,9 +347,8 @@ namespace ModularEncountersSystems.Spawning
                     if (!appliedTags.Contains(t))
                         appliedTags.Add(t);
 
-                BotEntity botEntity = new BotEntity(character, profile, character)
+                BotEntity botEntity = new BotEntity(character, profile, npc, character)
                 {
-                    LinkedNpc = npc,
                     Tags = appliedTags
                 };
             }

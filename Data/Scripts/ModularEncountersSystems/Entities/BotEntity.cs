@@ -43,6 +43,8 @@ namespace ModularEncountersSystems.Entities
 
         [ProtoIgnore] public bool IsParentEntitySeat;
 
+        [ProtoIgnore] public NpcData LinkedNpc;
+
         [ProtoIgnore] public List<GridEntity> LinkedGrids;
 
         [ProtoIgnore] public BotSpawnProfile Profile;
@@ -88,6 +90,9 @@ namespace ModularEncountersSystems.Entities
             LinkedGrids = new List<GridEntity>();
             Tags = new List<string>();
 
+            if (LinkedNpc != null && !LinkedNpc.Bots.Contains(this))
+                LinkedNpc.Bots.Add(this);
+
             if (!BotManager.Bots.Contains(this))
                 BotManager.Bots.Add(this);
 
@@ -107,7 +112,7 @@ namespace ModularEncountersSystems.Entities
             MyVisualScriptLogicProvider.PlayerEnteredCockpit += PlayerCockpitAction;
         }
 
-        public void RefreshBotEntity()
+        public void RefreshBotEntity(NpcData npc = null)
         {
             IsParentEntityGrid = false;
             BotEntityChanged = false;
@@ -146,6 +151,8 @@ namespace ModularEncountersSystems.Entities
             if (Tags == null)
                 Tags = new List<string>();
 
+            if (npc != null)
+                LinkedNpc = npc;
 
             if (Entity != null && Bot != Entity && !Entity.Closed && !Entity.MarkedForClose)
             {
@@ -173,13 +180,17 @@ namespace ModularEncountersSystems.Entities
                 }
             }
 
+            if (LinkedNpc != null && !LinkedNpc.Bots.Contains(this))
+                LinkedNpc.Bots.Add(this);
+
             if (!BotManager.Bots.Contains(this))
                 BotManager.Bots.Add(this);
         }
 
         public override void CloseEntity(IMyEntity entity)
         {
-			Closed = true;
+            if (LinkedNpc != null && LinkedNpc.Bots.Contains(this))
+                LinkedNpc.Bots.Remove(this);
 
             if (BotManager.Bots.Contains(this))
                 BotManager.Bots.Remove(this);
@@ -279,6 +290,7 @@ namespace ModularEncountersSystems.Entities
             sb.Append("  - WeaponsContainerId:   ").Append(Profile?.WeaponsContainerId ?? "null").AppendLine();
             sb.Append("  - LootContainerId:      ").Append(Profile?.LootContainerId ?? "null").AppendLine();
             sb.Append("  - ChatMessageSetId:     ").Append(Profile?.ChatMessageSetId ?? "null").AppendLine();
+            sb.Append("  - Alive:                ").Append((!Bot?.IsDead).ToString() ?? "null").AppendLine();
             sb.Append("  - Closed:               ").Append(IsClosed()).AppendLine();
             sb.Append("  - Position:             ").Append(GetPosition()).AppendLine();
             sb.Append("  - Tags:                 ").Append(string.Join(",", Tags)).AppendLine();

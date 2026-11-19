@@ -36,8 +36,10 @@ namespace ModularEncountersSystems.Entities
                         var botEnt = Bots[i];
                         botEnt.RefreshBotEntity();
 
+                        //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> BotManager Checking: " + botEnt.Entity + " Closed: " + botEnt.Closed);
                         if (botEnt.Bot == null || botEnt.Closed)
                         {
+                            //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> BotManager Removing");
                             Bots.RemoveAtFast(i);
                             continue;
                         }
@@ -77,15 +79,22 @@ namespace ModularEncountersSystems.Entities
             sb.AppendLine();
 
             var printed = new List<long>();
-            foreach (var npc in NpcManager.ActiveNpcs)
+            foreach (var bot in Bots)
             {
-                if (npc.Npc.Bots.Count > 0)
-                    sb.Append("- " + npc.GridName).AppendLine();
+                if (!bot.SpawnedByMES || printed.Contains(bot.Entity.EntityId))
+                    continue;
 
-                foreach (var bot in npc.Npc.Bots)
+                sb.Append("- " + bot.LinkedNpc.Grid.GridName).AppendLine();
+                bot.GetBotInfo(sb);
+                printed.Add(bot.Entity.EntityId);
+
+                foreach (var b in Bots)
                 {
-                    bot.GetBotInfo(sb);
-                    printed.Add(bot.Entity.EntityId);
+                    if (!printed.Contains(b.Entity.EntityId) && bot.LinkedNpc == b.LinkedNpc)
+                    {
+                        b.GetBotInfo(sb);
+                        printed.Add(b.Entity.EntityId);
+                    }
                 }
             }
 
@@ -94,7 +103,7 @@ namespace ModularEncountersSystems.Entities
 
             foreach (var b in Bots)
             {
-                if (!printed.Contains(b.Entity.EntityId))
+                if (!b.SpawnedByMES && !printed.Contains(b.Entity.EntityId))
                 {
                     b.GetBotInfo(sb);
                     printed.Add(b.Entity.EntityId);

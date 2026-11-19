@@ -349,11 +349,9 @@ namespace ModularEncountersSystems.Spawning
 
                 BotEntity botEntity = new BotEntity(character, profile, character)
                 {
+                    LinkedNpc = npc,
                     Tags = appliedTags
                 };
-
-                if (npc != null && !npc.Bots.Contains(botEntity))
-                    npc.Bots.Add(botEntity);
             }
 
             else if (!useBuiltIn && APIs.AiEnabledApiLoaded)

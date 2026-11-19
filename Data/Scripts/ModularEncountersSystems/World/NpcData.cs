@@ -1175,18 +1175,16 @@ namespace ModularEncountersSystems.World {
 
 		}
 
-		public void Update() {
-
-			if (Grid != null && MyAPIGateway.Session != null && Grid.ActiveEntity() && Grid.Npc == this) {
-
+		public void Update()
+        {
+			if (Grid != null && MyAPIGateway.Session != null && Grid.ActiveEntity() && Grid.Npc == this)
+            {
                 CustomVector3DsSerializeable = CustomVector3Ds.ToList();
 
 				LastChangeToData = MyAPIGateway.Session.GameDateTime;
                 //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> NpcData Serialization Bot Count '" +  Grid?.Npc?.Grid?.GridName + "': " + Bots.Count);
 				SerializationHelper.SaveDataToEntity<NpcData>(Grid?.CubeGrid, this, StorageTools.NpcDataKey);
-
 			}
-
 		}
 
         public void Deserialized()
@@ -1199,7 +1197,7 @@ namespace ModularEncountersSystems.World {
 
             //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> NpcData Deserialization Bot Count '" +  Grid?.Npc?.Grid?.GridName + "': " + Bots.Count);
             foreach (var bot in Bots)
-                MyAPIGateway.Utilities.InvokeOnGameThread(() => bot.RefreshBotEntity());
+                MyAPIGateway.Utilities.InvokeOnGameThread(() => bot.RefreshBotEntity(this));
         }
 
         public string GetGPS(string name, Vector3D vector)

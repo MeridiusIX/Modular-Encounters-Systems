@@ -36,6 +36,7 @@ namespace ModularEncountersSystems.Logging {
 		PostSpawn = 1 << 13,
 		Dev = 1 << 14,
 		SpawnRecord = 1 << 15,
+		All = 1 << 16,
 
 	}
 
@@ -88,7 +89,7 @@ namespace ModularEncountersSystems.Logging {
 				ActiveDebug |= SpawnerDebugEnum.SpawnRecord;
 
 			}
-		
+
 		}
 
 		public static void Queue(string msg, SpawnerDebugEnum type, bool force = false, bool addToReason = false) {
@@ -120,37 +121,42 @@ namespace ModularEncountersSystems.Logging {
 				}
 
 				QueuedItems.Clear();
-			
+
 			}
-		
+
 		}
 
-		public static bool SetActiveDebugFlag(SpawnerDebugEnum type, bool mode) {
-
+		public static bool SetActiveDebugFlag(SpawnerDebugEnum type, bool mode)
+        {
 			bool updated = false;
 
-			if (mode && !ActiveDebug.HasFlag(type)) {
-
-				ActiveDebug |= type;
+			if (mode && !ActiveDebug.HasFlag(type))
+            {
+                if (type == SpawnerDebugEnum.All)
+                    foreach (var t in (SpawnerDebugEnum[]) Enum.GetValues(typeof(SpawnerDebugEnum)))
+                        ActiveDebug |= t;
+                else
+				    ActiveDebug |= type;
 				updated = true;
-
-			} else if (!mode && ActiveDebug.HasFlag(type)) {
-
-				ActiveDebug &= ~type;
+			}
+            else if (!mode && ActiveDebug.HasFlag(type))
+            {
+                if (type == SpawnerDebugEnum.All)
+                    foreach (var t in (SpawnerDebugEnum[]) Enum.GetValues(typeof(SpawnerDebugEnum)))
+                        ActiveDebug &= ~t;
+                else
+				    ActiveDebug &= ~type;
 				updated = true;
-
 			}
 
-			if (updated) {
-
+			if (updated)
+            {
 				var intVal = (int)ActiveDebug;
 				Write(type.ToString() + " / " + intVal, SpawnerDebugEnum.Settings, true);
 				MyAPIGateway.Utilities.SetVariable<int>("MES-ActiveSpawnerDebug", intVal);
-
 			}
 
 			return updated;
-		
 		}
 
 		public static void Write(string msg, SpawnerDebugEnum type, bool forceGameLog = false) {
@@ -219,10 +225,10 @@ namespace ModularEncountersSystems.Logging {
 				return;
 
 			MyLog.Default.WriteLineAndConsole("MES Spawner / " + type.ToString() + ": " + msg);
-		
+
 		}
 
-		
+
 
 	}
 

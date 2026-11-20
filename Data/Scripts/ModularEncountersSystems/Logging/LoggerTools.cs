@@ -1326,6 +1326,8 @@ namespace ModularEncountersSystems.Logging {
 			var pcuLevel = SpawnConditions.GetPCULevel(5000, msg.PlayerPosition);
 			SpawnGroupCollection collection = null;
 
+            var player = PlayerSpawnWatcher.GetWatchedPlayer(msg.PlayerId);
+
 			sb.Append("::: Spawn Data Near Player :::").AppendLine();
 			sb.Append(" - Threat Score: ").Append(threatLevel.ToString()).AppendLine();
 			sb.Append(" - PCU Score:    ").Append(pcuLevel.ToString()).AppendLine();
@@ -1383,6 +1385,7 @@ namespace ModularEncountersSystems.Logging {
 			if (collection.SpawnGroups.Count > 0) {
 
 				sb.Append("::: Space / Lunar Cargo Ship Eligible Spawns :::").AppendLine();
+			    sb.Append("Time To Next Spawn Check:           ").Append($"{player.SpaceCargoShipTimer}s").AppendLine();
 
 				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
 
@@ -1401,6 +1404,10 @@ namespace ModularEncountersSystems.Logging {
 			if (collection.SpawnGroups.Count > 0) {
 
 				sb.Append("::: Random Encounter Eligible Spawns :::").AppendLine();
+                if (player.RandomEncounterCoolDownTimer > 0)
+                    sb.Append("Time To Next Spawn Check:           ").Append($"{player.RandomEncounterCoolDownTimer}s").AppendLine();
+                else
+                    sb.Append("Time To Next Spawn Check:           ").Append($"{player.RandomEncounterCheckTimer}s").AppendLine();
 
 				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
 
@@ -1419,6 +1426,7 @@ namespace ModularEncountersSystems.Logging {
 			if (environment.PlanetaryCargoShipsEligible || environment.GravityCargoShipsEligible) {
 
 				sb.Append("::: Planetary / Gravity Cargo Ship Eligible Spawns :::").AppendLine();
+			    sb.Append("Time To Next Spawn Check:           ").Append($"{player.AtmoCargoShipTimer}s").AppendLine();
 
 				if (APIs.DragApiLoaded && APIs.Drag.AdvLift && !Settings.Grids.AerodynamicsModAdvLiftOverride) {
 
@@ -1451,6 +1459,10 @@ namespace ModularEncountersSystems.Logging {
 			if (collection.SpawnGroups.Count > 0) {
 
 				sb.Append("::: Planetary Installation Eligible Spawns :::").AppendLine();
+                if (player.PlanetaryInstallationCooldownTimer > 0)
+                    sb.Append("Time To Next Spawn Check:           ").Append($"{player.PlanetaryInstallationCooldownTimer}s").AppendLine();
+                else
+                    sb.Append("Time To Next Spawn Check:           ").Append($"{player.PlanetaryInstallationCheckTimer}s").AppendLine();
 
 				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
 
@@ -1469,6 +1481,10 @@ namespace ModularEncountersSystems.Logging {
 			if (collection.SpawnGroups.Count > 0) {
 
 				sb.Append("::: Boss Encounter Eligible Spawns :::").AppendLine();
+                if (player.BossEncounterCooldownTimer > 0)
+                    sb.Append("Time To Next Spawn Check:           ").Append($"{player.BossEncounterCooldownTimer}s").AppendLine();
+                else
+                    sb.Append("Time To Next Spawn Check:           ").Append($"{player.BossEncounterCheckTimer}s").AppendLine();
 
 				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
 
@@ -1487,6 +1503,7 @@ namespace ModularEncountersSystems.Logging {
 			if (collection.SpawnGroups.Count > 0) {
 
 				sb.Append("::: Creature / Bot Eligible Spawns :::").AppendLine();
+			    sb.Append("Time To Next Spawn Check:           ").Append($"{player.CreatureCheckTimer}s").AppendLine();
 
 				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
 
@@ -1505,6 +1522,10 @@ namespace ModularEncountersSystems.Logging {
 			if (collection.SpawnGroups.Count > 0) {
 
 				sb.Append("::: Drone Encounter Eligible Spawns :::").AppendLine();
+                if (player.DroneEncounterTimerCooldownTimer > 0)
+                    sb.Append("Time To Next Spawn Check:           ").Append($"{player.DroneEncounterTimerCooldownTimer}s").AppendLine();
+                else
+                    sb.Append("Time To Next Spawn Check:           ").Append($"{player.DroneEncounterTimer}s").AppendLine();
 
 				foreach (var sgroup in collection.SpawnGroups.Distinct()) {
 

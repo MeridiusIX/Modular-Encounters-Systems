@@ -52,7 +52,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			foreach (var component in block.ComponentContainer.Components) {
 
-				if (component.TypeId != "MyModStorageComponentBase") {
+				if (component.TypeId != "MyModStorageComponentBase" && component.TypeId != "MyModStorageComponent") {
 
 					continue;
 
@@ -114,7 +114,7 @@ namespace ModularEncountersSystems.Spawning.Manipulation {
 
 			foreach (var component in entity.ComponentContainer.Components) {
 
-				if (component.TypeId != "MyModStorageComponentBase") {
+				if (component.TypeId != "MyModStorageComponentBase" && component.TypeId != "MyModStorageComponent") {
 
 					continue;
 

@@ -350,6 +350,9 @@ namespace ModularEncountersSystems.Spawning {
         {
             foreach(MyCubeGrid grid in grids)
             {
+                if(grid.GetFatBlocks().Any(block => block is IMyAttachableTopBlock))
+                    continue;
+
                 var mainGrid = grid.GetBiggestGridInGroup();
                 if(mainGrid == null) throw new Exception("Main grid was null when trying to spawn prefab.");
 

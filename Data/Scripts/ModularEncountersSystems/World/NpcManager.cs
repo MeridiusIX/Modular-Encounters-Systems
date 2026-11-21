@@ -435,6 +435,7 @@ namespace ModularEncountersSystems.World {
 		public static int GetAreaNpcCount(SpawningType type, Vector3D coords, double radius) {
 
 			int totalNPCs = 0;
+			var countedSpawns = new HashSet<string>();
 
 			foreach (var npc in ActiveNpcs) {
 
@@ -450,6 +451,9 @@ namespace ModularEncountersSystems.World {
 				if (npc.Distance(coords) > radius)
 					continue;
 
+				if (!string.IsNullOrWhiteSpace(npc.Npc.UniqueSpawnIdentifier) && !countedSpawns.Add(npc.Npc.UniqueSpawnIdentifier))
+					continue;
+
 				totalNPCs++;
 
 			}
@@ -461,6 +465,7 @@ namespace ModularEncountersSystems.World {
 		public static List<GridEntity> GetAreaNpcs(SpawningType type, Vector3D coords, double radius)
         {
 			var localNpcs = new List<GridEntity>();
+			var countedSpawns = new HashSet<string>();
 
 			foreach (var npc in ActiveNpcs)
             {
@@ -474,6 +479,9 @@ namespace ModularEncountersSystems.World {
 					continue;
 
 				if (npc.Distance(coords) > radius)
+					continue;
+
+				if (!string.IsNullOrWhiteSpace(npc.Npc.UniqueSpawnIdentifier) && !countedSpawns.Add(npc.Npc.UniqueSpawnIdentifier))
 					continue;
 
 				localNpcs.Add(npc);

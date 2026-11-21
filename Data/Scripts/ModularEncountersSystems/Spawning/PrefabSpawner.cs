@@ -350,6 +350,7 @@ namespace ModularEncountersSystems.Spawning {
         static void GridsSpawned(List<IMyCubeGrid> grids, NpcData data, ImprovedSpawnGroup spawnGroup, MySpawnGroupDefinition.SpawnGroupPrefab prefab, long factionOwner)
         {
             var pendingTopBlocks = new Dictionary<long, long>();
+            var mechanicalGroups = grids.ToDictionary(grid => grid.EntityId, grid => new List<MyCubeGrid> { (MyCubeGrid)grid });
 
             foreach(MyCubeGrid grid in grids)
             {
@@ -363,11 +364,26 @@ namespace ModularEncountersSystems.Spawning {
 
             foreach(MyCubeGrid grid in grids)
             {
-                long baseGridId;
-                if(grid.GetFatBlocks().Any(block => block is IMyAttachableTopBlock && pendingTopBlocks.TryGetValue(block.EntityId, out baseGridId) && baseGridId != grid.EntityId))
-                    continue;
+                foreach(var block in grid.GetFatBlocks().OfType<IMyAttachableTopBlock>())
+                {
+                    long baseGridId;
+                    if(!pendingTopBlocks.TryGetValue(block.EntityId, out baseGridId))
+                        continue;
 
-                var mainGrid = grid.GetBiggestGridInGroup();
+                    var group = mechanicalGroups[grid.EntityId];
+                    var baseGroup = mechanicalGroups[baseGridId];
+                    if(group == baseGroup)
+                        continue;
+
+                    group.AddRange(baseGroup);
+                    foreach(var member in baseGroup)
+                        mechanicalGroups[member.EntityId] = group;
+                }
+            }
+
+            foreach(MyCubeGrid grid in grids)
+            {
+                var mainGrid = mechanicalGroups[grid.EntityId].OrderByDescending(member => member.PositionComp.WorldAABB.Size.Volume).First();
                 if(mainGrid == null) throw new Exception("Main grid was null when trying to spawn prefab.");
 
                 if(mainGrid.Storage == null)

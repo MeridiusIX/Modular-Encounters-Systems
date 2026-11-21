@@ -8,6 +8,7 @@ using ModularEncountersSystems.Spawning.Manipulation;
 using ModularEncountersSystems.Spawning.Profiles;
 using ModularEncountersSystems.Sync;
 using ModularEncountersSystems.World;
+using Sandbox.Common.ObjectBuilders;
 using Sandbox.Definitions;
 using Sandbox.Game;
 using Sandbox.Game.Entities;
@@ -348,9 +349,22 @@ namespace ModularEncountersSystems.Spawning {
 
         static void GridsSpawned(List<IMyCubeGrid> grids, NpcData data, ImprovedSpawnGroup spawnGroup, MySpawnGroupDefinition.SpawnGroupPrefab prefab, long factionOwner)
         {
+            var pendingTopBlocks = new Dictionary<long, long>();
+
             foreach(MyCubeGrid grid in grids)
             {
-                if(grid.GetFatBlocks().Any(block => block is IMyAttachableTopBlock))
+                foreach(var block in grid.GetFatBlocks().OfType<IMyMechanicalConnectionBlock>())
+                {
+                    var builder = block.GetObjectBuilderCubeBlock() as MyObjectBuilder_MechanicalConnectionBlock;
+                    if(builder?.TopBlockId != null)
+                        pendingTopBlocks[builder.TopBlockId.Value] = grid.EntityId;
+                }
+            }
+
+            foreach(MyCubeGrid grid in grids)
+            {
+                long baseGridId;
+                if(grid.GetFatBlocks().Any(block => block is IMyAttachableTopBlock && pendingTopBlocks.TryGetValue(block.EntityId, out baseGridId) && baseGridId != grid.EntityId))
                     continue;
 
                 var mainGrid = grid.GetBiggestGridInGroup();

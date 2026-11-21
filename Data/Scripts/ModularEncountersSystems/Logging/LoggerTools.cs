@@ -1373,57 +1373,130 @@ namespace ModularEncountersSystems.Logging {
 			//Spawners Active
 			sb.Append("::: Spawner Status :::").AppendLine();
 
-			sb.Append("Space / Lunar Cargo Ships Spawner").AppendLine();
+            SpawningType spawningType;
+            var pos = msg.PlayerPosition;
+            double radius;
+
+
+            //Space / Lunar Cargo Ships
+			sb.Append("Space Cargo Ships Spawner").AppendLine();
+
 			sb.Append(" - Area Eligible (Space):           ").Append(environment.SpaceCargoShipsEligible).AppendLine();
+            spawningType = SpawningType.SpaceCargoShip;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            var spaceCargoShipCount = NpcManager.GetAreaNpcCount(spawningType, msg.PlayerPosition, radius);
+            sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+
 			sb.Append(" - Area Eligible (Lunar):           ").Append(environment.LunarCargoShipsEligible).AppendLine();
-			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.SpaceCargoShip, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.SpaceCargoShip))} / {Settings.GetMaxAreaSpawns(SpawningType.SpaceCargoShip)}").AppendLine();
+            spawningType = SpawningType.LunarCargoShip;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+
+			sb.Append(" - Area Current / Max:              ").Append($"{spaceCargoShipCount} / {Settings.GetMaxAreaSpawns(SpawningType.SpaceCargoShip)}").AppendLine();
             sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.SpaceCargoShipTimer}s").AppendLine();
 			sb.AppendLine();
 
+
+            //Random Encounters Spawner
+            spawningType = SpawningType.RandomEncounter;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+
 			sb.Append("Random Encounters Spawner").AppendLine();
 			sb.Append(" - Area Eligible:                   ").Append(environment.RandomEncountersEligible).AppendLine();
-			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.RandomEncounter, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.RandomEncounter))} / {Settings.GetMaxAreaSpawns(SpawningType.RandomEncounter)}").AppendLine();
+			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(spawningType, msg.PlayerPosition, radius)} / {Settings.GetMaxAreaSpawns(spawningType)}").AppendLine();
+            sb.Append(" - Area Active NPCs:                 ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
             if (player.RandomEncounterCoolDownTimer > 0)
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.RandomEncounterCoolDownTimer}s").AppendLine();
             else
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.RandomEncounterCheckTimer}s").AppendLine();
 			sb.AppendLine();
 
+
+            // Planetary / Gravity Cargo Ships
 			sb.Append("Planetary / Gravity Cargo Ships Spawner").AppendLine();
+
 			sb.Append(" - Area Eligible (Planetary):       ").Append(environment.PlanetaryCargoShipsEligible).AppendLine();
+            spawningType = SpawningType.PlanetaryCargoShip;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            var planetaryCargoShipCount = NpcManager.GetAreaNpcCount(spawningType, msg.PlayerPosition, radius);
+            sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+
 			sb.Append(" - Area Eligible (Gravity):         ").Append(environment.GravityCargoShipsEligible).AppendLine();
-			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.PlanetaryCargoShip, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.PlanetaryCargoShip))} / {Settings.GetMaxAreaSpawns(SpawningType.PlanetaryCargoShip)}").AppendLine();
+            spawningType = SpawningType.GravityCargoShip;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+
+			sb.Append(" - Area Current / Max:              ").Append($"{planetaryCargoShipCount} / {Settings.GetMaxAreaSpawns(SpawningType.PlanetaryCargoShip)}").AppendLine();
             sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.AtmoCargoShipTimer}s").AppendLine();
 			sb.AppendLine();
 
+
+            //Planetary / Water Installations
 			sb.Append("Planetary / Water Installations Spawner").AppendLine();
+
 			sb.Append(" - Area Eligible (Planetary):       ").Append(environment.PlanetaryInstallationEligible).AppendLine();
+            spawningType = SpawningType.PlanetaryInstallation;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            var planetaryInstallationCount = NpcManager.GetAreaNpcCount(spawningType, msg.PlayerPosition, radius);
+            sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+
+			sb.Append(" - Area Eligible (DryLand):         ").Append(environment.PlanetaryInstallationEligible).AppendLine();
+            spawningType = SpawningType.DryLandInstallation;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+
 			sb.Append(" - Area Eligible (Water):           ").Append(environment.WaterInstallationEligible).AppendLine();
-			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.PlanetaryInstallation, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.PlanetaryInstallation))} / {Settings.GetMaxAreaSpawns(SpawningType.PlanetaryInstallation)}").AppendLine();
+            spawningType = SpawningType.WaterSurfaceStation;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+
+			sb.Append(" - Area Eligible (Underwater):      ").Append(environment.WaterInstallationEligible).AppendLine();
+            spawningType = SpawningType.UnderWaterStation;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+
+			sb.Append(" - Area Current / Max:              ").Append($"{planetaryInstallationCount} / {Settings.GetMaxAreaSpawns(SpawningType.PlanetaryInstallation)}").AppendLine();
             if (player.PlanetaryInstallationCooldownTimer > 0)
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.PlanetaryInstallationCooldownTimer}s").AppendLine();
             else
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.PlanetaryInstallationCheckTimer}s").AppendLine();
 			sb.AppendLine();
 
+
+            //Boss Encounters
 			sb.Append("Boss Encounters Spawner").AppendLine();
-			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.BossEncounter, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.BossEncounter))} / {Settings.GetMaxAreaSpawns(SpawningType.BossEncounter)}").AppendLine();
+            spawningType = SpawningType.BossEncounter;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            var bossEncounterCount = NpcManager.GetAreaNpcCount(spawningType, msg.PlayerPosition, radius);
+
+			sb.Append(" - Area Eligible:                   ").Append("True").AppendLine();
+			sb.Append(" - Area Current / Max:              ").Append($"{bossEncounterCount} / {Settings.GetMaxAreaSpawns(spawningType)}").AppendLine();
+            sb.Append(" - Area Active NPCs:                ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
             if (player.BossEncounterCooldownTimer > 0)
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.BossEncounterCooldownTimer}s").AppendLine();
             else
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.BossEncounterCheckTimer}s").AppendLine();
 			sb.AppendLine();
 
+            // Drone Encounters
 			sb.Append("Drone Encounters Spawner Spawner").AppendLine();
-			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.DroneEncounter, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.DroneEncounter))} / {Settings.GetMaxAreaSpawns(SpawningType.DroneEncounter)}").AppendLine();
+            spawningType = SpawningType.DroneEncounter;
+            radius = Settings.GetSpawnAreaRadius(spawningType);
+            var droneEncounterCount = NpcManager.GetAreaNpcCount(spawningType, msg.PlayerPosition, radius);
+
+			sb.Append(" - Area Eligible:                   ").Append("True").AppendLine();
+			sb.Append(" - Area Current / Max:              ").Append($"{droneEncounterCount} / Unlimited").AppendLine();
+            sb.Append(" - Area Active NPCs:                ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
             if (player.DroneEncounterTimerCooldownTimer > 0)
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.DroneEncounterTimerCooldownTimer}s").AppendLine();
             else
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.DroneEncounterTimer}s").AppendLine();
 			sb.AppendLine();
 
+            //Creatures
 			sb.Append("Creatures Spawner").AppendLine();
-			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.Creature, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.Creature))} / {Settings.GetMaxAreaSpawns(SpawningType.Creature)}").AppendLine();
+			sb.Append(" - Area Eligible:                   ").Append("True").AppendLine();
+			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.Creature, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.Creature))} / Unlimited").AppendLine();
             sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.CreatureCheckTimer}s").AppendLine();
 			sb.AppendLine();
 

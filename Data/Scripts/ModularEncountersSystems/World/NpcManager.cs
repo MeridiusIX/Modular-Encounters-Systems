@@ -10,6 +10,7 @@ using Sandbox.Game;
 using Sandbox.ModAPI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using VRage.Game.ModAPI;
 using VRageMath;
@@ -34,13 +35,13 @@ namespace ModularEncountersSystems.World {
 			SetupUniqueEncounters();
 			SetupStaticEncounters();
 			MES_SessionCore.UnloadActions += Unload;
-		
+
 		}
 
 		public static void SetupExistingNpcGrids() {
 
-			
-		
+
+
 		}
 
 		public static void SetupUniqueEncounters() {
@@ -99,7 +100,7 @@ namespace ModularEncountersSystems.World {
 				var gotSpawnGroup = false;
 				var planetMissing = false;
 
-				
+
 
 				foreach (var spawnGroup in SpawnGroupManager.SpawnGroups) {
 
@@ -117,7 +118,7 @@ namespace ModularEncountersSystems.World {
 								planetMissing = true;
 
 							}
-						
+
 						}
 
 						if (condition.StaticEncounter || condition.BossEncounterAny || condition.BossEncounterAtmo || condition.BossEncounterSpace) {
@@ -374,6 +375,7 @@ namespace ModularEncountersSystems.World {
 					continue;
 
 				sb.Append("Name:                   ").Append(grid.CubeGrid.CustomName).AppendLine();
+				sb.Append("LinkedGrids:            ").Append(string.Join(",", grid.LinkedGrids.Select(x => x.GridName))).AppendLine();
 				sb.Append("Type:                   ").Append(grid.Npc.SpawnType).AppendLine();
 				sb.Append("Start Coords:           ").Append(grid.Npc.StartCoords).AppendLine();
 				sb.Append("End Coords:             ").Append(grid.Npc.EndCoords).AppendLine();
@@ -409,7 +411,7 @@ namespace ModularEncountersSystems.World {
 			}
 
 			return sb.ToString();
-		
+
 		}
 
 		public static int GetGlobalNpcCount() {
@@ -423,7 +425,7 @@ namespace ModularEncountersSystems.World {
 
 				if (npc.Ownership == GridOwnershipEnum.NpcMajority)
 					totalNPCs++;
-			
+
 			}
 
 			return totalNPCs;
@@ -456,6 +458,30 @@ namespace ModularEncountersSystems.World {
 
 		}
 
+		public static List<GridEntity> GetAreaNpcs(SpawningType type, Vector3D coords, double radius)
+        {
+			var localNpcs = new List<GridEntity>();
+
+			foreach (var npc in ActiveNpcs)
+            {
+				if (!npc.ActiveEntity())
+					continue;
+
+				if (SpawnRequest.GetPrimarySpawningType(npc.Npc.SpawnType) != type)
+					continue;
+
+				if (npc.Ownership.HasFlag(GridOwnershipEnum.PlayerMajority) || npc.Ownership.HasFlag(GridOwnershipEnum.PlayerMinority))
+					continue;
+
+				if (npc.Distance(coords) > radius)
+					continue;
+
+				localNpcs.Add(npc);
+			}
+
+			return localNpcs;
+		}
+
 		public static GridEntity GetNpcFromGrid(IMyCubeGrid grid) {
 
 			var gridEnt = GridManager.GetGridEntity(grid);
@@ -467,7 +493,7 @@ namespace ModularEncountersSystems.World {
 				return gridEnt;
 
 			return null;
-		
+
 		}
 
 		public static void OwnershipMajorityChange(GridEntity grid) {
@@ -486,7 +512,7 @@ namespace ModularEncountersSystems.World {
 				grid.OwnershipMajorityChange -= OwnershipMajorityChange;
 
 			}
-		
+
 		}
 
 		public static bool RegisterDespawnWatcher(IMyCubeGrid cubeGrid, Action<IMyCubeGrid, string> action) {

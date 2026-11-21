@@ -150,7 +150,7 @@ namespace ModularEncountersSystems.Entities {
 
 			}
 
-			if (parent.LinkedGrids.Count == 0)
+			if (!parent.LinkedGrids.Contains(parent))
 				parent.LinkedGrids.Add(parent);
 
 			//SpawnLogger.Write("Second Loop", SpawnerDebugEnum.Dev, true);

@@ -1389,22 +1389,23 @@ namespace ModularEncountersSystems.Logging {
 
 			sb.Append(" - Area Eligible (Lunar):           ").Append(environment.LunarCargoShipsEligible).AppendLine();
             spawningType = SpawningType.LunarCargoShip;
-            radius = Settings.GetSpawnAreaRadius(spawningType);
             sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
 
 			sb.Append(" - Area Current / Max:              ").Append($"{spaceCargoShipCount} / {Settings.GetMaxAreaSpawns(SpawningType.SpaceCargoShip)}").AppendLine();
+			sb.Append(" - Area Radius from Position:       ").Append($"{radius}m").AppendLine();
             sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.SpaceCargoShipTimer}s").AppendLine();
 			sb.AppendLine();
 
 
             //Random Encounters Spawner
+			sb.Append("Random Encounters Spawner").AppendLine();
             spawningType = SpawningType.RandomEncounter;
             radius = Settings.GetSpawnAreaRadius(spawningType);
 
-			sb.Append("Random Encounters Spawner").AppendLine();
 			sb.Append(" - Area Eligible:                   ").Append(environment.RandomEncountersEligible).AppendLine();
 			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(spawningType, msg.PlayerPosition, radius)} / {Settings.GetMaxAreaSpawns(spawningType)}").AppendLine();
             sb.Append(" - Area Active NPCs:                 ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+			sb.Append(" - Area Radius from Position:       ").Append($"{radius}m").AppendLine();
             if (player.RandomEncounterCoolDownTimer > 0)
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.RandomEncounterCoolDownTimer}s").AppendLine();
             else
@@ -1423,10 +1424,10 @@ namespace ModularEncountersSystems.Logging {
 
 			sb.Append(" - Area Eligible (Gravity):         ").Append(environment.GravityCargoShipsEligible).AppendLine();
             spawningType = SpawningType.GravityCargoShip;
-            radius = Settings.GetSpawnAreaRadius(spawningType);
             sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
 
 			sb.Append(" - Area Current / Max:              ").Append($"{planetaryCargoShipCount} / {Settings.GetMaxAreaSpawns(SpawningType.PlanetaryCargoShip)}").AppendLine();
+			sb.Append(" - Area Radius from Position:       ").Append($"{radius}m").AppendLine();
             sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.AtmoCargoShipTimer}s").AppendLine();
 			sb.AppendLine();
 
@@ -1442,20 +1443,18 @@ namespace ModularEncountersSystems.Logging {
 
 			sb.Append(" - Area Eligible (DryLand):         ").Append(environment.PlanetaryInstallationEligible).AppendLine();
             spawningType = SpawningType.DryLandInstallation;
-            radius = Settings.GetSpawnAreaRadius(spawningType);
             sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
 
 			sb.Append(" - Area Eligible (Water):           ").Append(environment.WaterInstallationEligible).AppendLine();
             spawningType = SpawningType.WaterSurfaceStation;
-            radius = Settings.GetSpawnAreaRadius(spawningType);
             sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
 
 			sb.Append(" - Area Eligible (Underwater):      ").Append(environment.WaterInstallationEligible).AppendLine();
             spawningType = SpawningType.UnderWaterStation;
-            radius = Settings.GetSpawnAreaRadius(spawningType);
             sb.Append("    - Area Active NPCs:             ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
 
 			sb.Append(" - Area Current / Max:              ").Append($"{planetaryInstallationCount} / {Settings.GetMaxAreaSpawns(SpawningType.PlanetaryInstallation)}").AppendLine();
+			sb.Append(" - Area Radius from Position:       ").Append($"{radius}m").AppendLine();
             if (player.PlanetaryInstallationCooldownTimer > 0)
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.PlanetaryInstallationCooldownTimer}s").AppendLine();
             else
@@ -1472,6 +1471,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Area Eligible:                   ").Append("True").AppendLine();
 			sb.Append(" - Area Current / Max:              ").Append($"{bossEncounterCount} / {Settings.GetMaxAreaSpawns(spawningType)}").AppendLine();
             sb.Append(" - Area Active NPCs:                ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+			sb.Append(" - Area Radius from Position:       ").Append($"{radius}m").AppendLine();
             if (player.BossEncounterCooldownTimer > 0)
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.BossEncounterCooldownTimer}s").AppendLine();
             else
@@ -1487,6 +1487,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append(" - Area Eligible:                   ").Append("True").AppendLine();
 			sb.Append(" - Area Current / Max:              ").Append($"{droneEncounterCount} / Unlimited").AppendLine();
             sb.Append(" - Area Active NPCs:                ").Append(string.Join(",", NpcManager.GetAreaNpcs(spawningType, msg.PlayerPosition, radius).Select(x => x.GridName))).AppendLine();
+			sb.Append(" - Area Radius from Position:       ").Append($"Not Used").AppendLine();
             if (player.DroneEncounterTimerCooldownTimer > 0)
                 sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.DroneEncounterTimerCooldownTimer}s").AppendLine();
             else
@@ -1497,6 +1498,7 @@ namespace ModularEncountersSystems.Logging {
 			sb.Append("Creatures Spawner").AppendLine();
 			sb.Append(" - Area Eligible:                   ").Append("True").AppendLine();
 			sb.Append(" - Area Current / Max:              ").Append($"{NpcManager.GetAreaNpcCount(SpawningType.Creature, msg.PlayerPosition, Settings.GetSpawnAreaRadius(SpawningType.Creature))} / Unlimited").AppendLine();
+			sb.Append(" - Area Radius from Position:       ").Append($"Not Used").AppendLine();
             sb.Append(" - Time To Next Spawn Check:        ").Append($"{player.CreatureCheckTimer}s").AppendLine();
 			sb.AppendLine();
 

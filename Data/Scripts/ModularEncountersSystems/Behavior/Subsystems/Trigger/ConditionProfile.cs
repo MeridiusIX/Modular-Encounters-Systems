@@ -2117,12 +2117,19 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             if (b.Closed)
                                 continue;
 
-                            foreach (var t in ConditionReference.CheckBotTags)
+                            if (ConditionReference.CheckBotTags.Count <= 0)
                             {
-                                if (b.Tags.Contains(t))
+                                count++;
+                            }
+                            else
+                            {
+                                foreach (var t in ConditionReference.CheckBotTags)
                                 {
-                                    count++;
-                                    break;
+                                    if (b.Tags.Contains(t))
+                                    {
+                                        count++;
+                                        break;
+                                    }
                                 }
                             }
                         }

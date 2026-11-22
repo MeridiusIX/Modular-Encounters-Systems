@@ -8,22 +8,22 @@ using System.Collections.Generic;
 using System.Text;
 using VRage.Game.ModAPI.Ingame;
 
-namespace ModularEncountersSystems.Tasks {
-    public class NewGrid : TaskItem, ITaskItem {
-
+namespace ModularEncountersSystems.Tasks
+{
+    public class NewGrid : TaskItem, ITaskItem
+    {
         internal GridEntity _grid;
         internal int _runCount;
 
-        public NewGrid(GridEntity grid) {
-
+        public NewGrid(GridEntity grid)
+        {
             _isValid = true;
             _tickTrigger = 60;
             _grid = grid;
-
         }
 
-        public override void Run() {
-
+        public override void Run()
+        {
             _isValid = false;
 
             if (_grid == null || !_grid.ActiveEntity())
@@ -35,12 +35,12 @@ namespace ModularEncountersSystems.Tasks {
             if (!_grid.Ownership.HasFlag(GridOwnershipEnum.NpcMajority) && !_grid.Ownership.HasFlag(GridOwnershipEnum.NpcMinority) && _grid.Ownership != GridOwnershipEnum.None)
                 return;
 
-            if (_grid.Npc == null) {
-
+            if (_grid.Npc == null)
+            {
                 _grid.CheckForNpcData();
 
-                if (_grid.Npc == null) {
-
+                if (_grid.Npc == null)
+                {
                     //Create NPC Data
                     _grid.DebugData.Append(" - Creating Blank NPC Data").AppendLine();
                     _grid.Npc = new NpcData();
@@ -49,14 +49,13 @@ namespace ModularEncountersSystems.Tasks {
 
                     //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> registered NPC: " + _grid.GridName + " MES Spawn: " + _grid.Npc.SpawnedByMES);
                 }
-
             }
 
             _grid.Npc.ProcessTertiaryAttributes();
 
             IMyRemoteControl mainRemote = null;
-            foreach (var block in _grid.Controllers) {
-
+            foreach (var block in _grid.Controllers)
+            {
                 if (!block.ActiveEntity())
                     continue;
 
@@ -67,19 +66,33 @@ namespace ModularEncountersSystems.Tasks {
                 if (mainRemote == null)
                     mainRemote = remote as IMyRemoteControl;
 
-                if (remote.IsMainCockpit || _grid.Behavior?.RemoteControl == remote) {
+                if (remote.IsMainCockpit || _grid.Behavior?.RemoteControl == remote)
+                {
                     mainRemote = remote as IMyRemoteControl;
                     break;
                 }
             }
+
             if (mainRemote == null)
-            {
                 _grid.Npc.Attributes.NoRC = true;
+            else
+                _grid.Npc.Attributes.NoRC = false;
+
+            foreach (var lg in _grid.LinkedGrids)
+            {
+                if (lg == _grid)
+                    continue;
+
+                if (lg.Npc != null && !string.IsNullOrWhiteSpace(lg.Npc.UniqueSpawnIdentifier))
+                {
+                    _grid.Npc.SpawnedByMES = true;
+                    break;
+                }
             }
 
             //Add Grid To Active NPCs
-            if (!NpcManager.ActiveNpcs.Contains(_grid)) {
-
+            if (!NpcManager.ActiveNpcs.Contains(_grid))
+            {
                 NpcManager.ActiveNpcs.Add(_grid);
                 _grid.OwnershipMajorityChange += NpcManager.OwnershipMajorityChange;
 
@@ -87,11 +100,7 @@ namespace ModularEncountersSystems.Tasks {
                 {
                     CargoShipWatcher.CargoShips.Add(_grid);
                 }
-
             }
-
         }
-
     }
-
 }

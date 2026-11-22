@@ -331,7 +331,7 @@ namespace ModularEncountersSystems.Spawning {
 					gridListDummy.Clear();
 					NpcManager.SpawnedNpcData.Add(npcData);
                     var grids = new List<IMyCubeGrid>();
-					MyAPIGateway.PrefabManager.SpawnPrefab(grids, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner, false, () => GridsSpawned(grids, npcData, spawnCollection.SpawnGroup, prefab.SpawnGroupPrefab, factionOwner));
+					MyAPIGateway.PrefabManager.SpawnPrefab(grids, prefab.PrefabSubtypeId, npcData.StartCoords, (Vector3)spawnMatrix.Forward, (Vector3)spawnMatrix.Up, linearVelocity, angularVelocity, !string.IsNullOrWhiteSpace(sgPrefab.BeaconText) ? sgPrefab.BeaconText : null, options, factionOwner, false, () => MyAPIGateway.Utilities.InvokeOnGameThread(() => GridsSpawned(grids, npcData, spawnCollection.SpawnGroup, prefab.SpawnGroupPrefab, factionOwner)));
 					spawnCollection.SpawnedPrefabs++;
 
 				} catch (Exception exc) {
@@ -348,15 +348,33 @@ namespace ModularEncountersSystems.Spawning {
 
         static void GridsSpawned(List<IMyCubeGrid> grids, NpcData data, ImprovedSpawnGroup spawnGroup, MySpawnGroupDefinition.SpawnGroupPrefab prefab, long factionOwner)
         {
-            foreach(MyCubeGrid grid in grids)
+            // The running of this was delayed by 1 tick because otherwise gridgroups are not yet established for the newly spawned grids, and it is much more difficult to find the main grid.
+            //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> PrefabSpawner Grids: " + string.Join(",", grids.Select(x => x.CustomName)));
+            foreach (MyCubeGrid grid in grids)
             {
-                var mainGrid = grid.GetBiggestGridInGroup();
-                if(mainGrid == null) throw new Exception("Main grid was null when trying to spawn prefab.");
+                var mainGrid = grid;
+                var connected = MyAPIGateway.GridGroups.GetGroup(grid, GridLinkTypeEnum.Mechanical);
 
-                if(mainGrid.Storage == null)
+                double num = 0.0;
+                foreach (MyCubeGrid g in connected)
+                {
+                    double volume = g.PositionComp.LocalAABB.Size.Volume;
+                    if (volume > num)
+                    {
+                        num = volume;
+                        mainGrid = g;
+                    }
+                }
+
+                //VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> PrefabSpawner Grid: " + grid.DisplayName + " mainGrid: " + mainGrid.DisplayName + " connected: " + string.Join(",", connected.Select(x => x.DisplayName)));
+
+                if (mainGrid == null)
+                    throw new Exception("Main grid was null when trying to spawn prefab.");
+
+                if (mainGrid.Storage == null)
                     mainGrid.Storage = new MyModStorageComponent();
 
-                if(!mainGrid.Storage.ContainsKey(StorageTools.NpcDataKey))
+                if (!mainGrid.Storage.ContainsKey(StorageTools.NpcDataKey))
                 {
                     mainGrid.Storage[StorageTools.NpcDataKey] = SerializationHelper.ConvertClassToString<NpcData>(data);
                 }
@@ -365,7 +383,6 @@ namespace ModularEncountersSystems.Spawning {
             // This should enable support for grid contracts and item-based contracts
             var grids2 = grids.Cast<MyCubeGrid>().ToList();
             MySpawnGroupDefinition.OnSpawnGroupGridsCreated?.Invoke(grids2, spawnGroup.SpawnGroup, prefab, factionOwner);
-
         }
 
 		//Tie in Spawn Costs

@@ -367,15 +367,28 @@ namespace ModularEncountersSystems.World {
 
 			var sb = new StringBuilder();
 			sb.Append("::: Active NPC Data :::").AppendLine().AppendLine();
-			sb.Append("Total Npc Grids: ").Append(ActiveNpcs.Count).AppendLine().AppendLine();
+
+            var uniqueNpcs = ActiveNpcs.Where(x => !string.IsNullOrWhiteSpace(x.Npc.UniqueSpawnIdentifier));
+			sb.Append("Total Npc Grids: ").Append(uniqueNpcs.Count()).AppendLine().AppendLine();
 
 			foreach (var grid in ActiveNpcs) {
 
 				if (!grid.ActiveEntity())
 					continue;
 
+				if (string.IsNullOrWhiteSpace(grid.Npc.UniqueSpawnIdentifier))
+					continue;
+
 				sb.Append("Name:                   ").Append(grid.CubeGrid.CustomName).AppendLine();
-				sb.Append("LinkedGrids:            ").Append(string.Join(",", grid.LinkedGrids.Select(x => x.GridName))).AppendLine();
+
+                var linkedGrids = new List<string>();
+                foreach (var lg in grid.LinkedGrids)
+                    if (lg != grid)
+                        linkedGrids.Add(lg.GridName);
+                if (linkedGrids.Count == 0)
+                    linkedGrids.Add("None");
+				sb.Append("LinkedGrids:            ").Append(string.Join(", ", linkedGrids)).AppendLine();
+
 				sb.Append("Type:                   ").Append(grid.Npc.SpawnType).AppendLine();
 				sb.Append("Start Coords:           ").Append(grid.Npc.StartCoords).AppendLine();
 				sb.Append("End Coords:             ").Append(grid.Npc.EndCoords).AppendLine();
@@ -417,10 +430,14 @@ namespace ModularEncountersSystems.World {
 		public static int GetGlobalNpcCount() {
 
 			int totalNPCs = 0;
+			var countedSpawns = new HashSet<string>();
 
 			foreach (var npc in ActiveNpcs) {
 
 				if (!npc.ActiveEntity())
+					continue;
+
+				if (!string.IsNullOrWhiteSpace(npc.Npc.UniqueSpawnIdentifier) && !countedSpawns.Add(npc.Npc.UniqueSpawnIdentifier))
 					continue;
 
 				if (npc.Ownership == GridOwnershipEnum.NpcMajority)
@@ -435,6 +452,7 @@ namespace ModularEncountersSystems.World {
 		public static int GetAreaNpcCount(SpawningType type, Vector3D coords, double radius) {
 
 			int totalNPCs = 0;
+			var countedSpawns = new HashSet<string>();
 
 			foreach (var npc in ActiveNpcs) {
 
@@ -450,6 +468,9 @@ namespace ModularEncountersSystems.World {
 				if (npc.Distance(coords) > radius)
 					continue;
 
+				if (!string.IsNullOrWhiteSpace(npc.Npc.UniqueSpawnIdentifier) && !countedSpawns.Add(npc.Npc.UniqueSpawnIdentifier))
+					continue;
+
 				totalNPCs++;
 
 			}
@@ -461,6 +482,7 @@ namespace ModularEncountersSystems.World {
 		public static List<GridEntity> GetAreaNpcs(SpawningType type, Vector3D coords, double radius)
         {
 			var localNpcs = new List<GridEntity>();
+			var countedSpawns = new HashSet<string>();
 
 			foreach (var npc in ActiveNpcs)
             {
@@ -474,6 +496,9 @@ namespace ModularEncountersSystems.World {
 					continue;
 
 				if (npc.Distance(coords) > radius)
+					continue;
+
+				if (!string.IsNullOrWhiteSpace(npc.Npc.UniqueSpawnIdentifier) && !countedSpawns.Add(npc.Npc.UniqueSpawnIdentifier))
 					continue;
 
 				localNpcs.Add(npc);

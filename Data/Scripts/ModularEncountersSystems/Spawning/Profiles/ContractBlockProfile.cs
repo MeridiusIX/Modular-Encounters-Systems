@@ -119,9 +119,9 @@ namespace ModularEncountersSystems.Spawning.Profiles {
 
 				}
 
-
+                MyAddContractResultWrapper result;
 				var mission = new Mission(MissionIds[i], npcData);
-				if (!mission.Init(block))
+				if (!mission.Init(out result, block))
                 {
 					//MyVisualScriptLogicProvider.ShowNotificationToAll($"Failed  {MissionIds[i]}", 5000);
 				}

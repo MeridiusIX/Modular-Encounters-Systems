@@ -206,7 +206,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastAction = "SetSandboxStrings";
                 if (actions.SetSandboxStrings)
                 {
-                    foreach (var sandboxString in actions.SandboxStrings) {
+                    foreach (var sandboxString in actions.SandboxStrings)
+                    {
                         SetSandboxString(sandboxString.Key, sandboxString.Value);
                     }
                 }
@@ -2555,12 +2556,10 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                 lastAction = "ApplyContractProfiles";
                 if (actions.ApplyContractProfiles && (_behavior.CurrentGrid?.ActiveEntity() ?? false))
                 {
-
                     BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying contract Profiles.", BehaviorDebugEnum.Action);
                     //BehaviorLogger.Write(string.Format("Store Blocks / Store Profiles ::: {0} / {1}", actions.ContractBlocks.Count, actions.ContractBlocks.Count), BehaviorDebugEnum.Action);
                     for (int i = 0; i < actions.ContractBlockProfiles.Count && i < actions.ContractBlocks.Count; i++)
                     {
-
                         if (string.IsNullOrWhiteSpace(actions.ContractBlockProfiles[i]) || string.IsNullOrWhiteSpace(actions.ContractBlocks[i]))
                             continue;
 
@@ -2568,29 +2567,125 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                         if (!ProfileManager.ContractBlockProfiles.TryGetValue(actions.ContractBlockProfiles[i], out profile))
                         {
-
                             BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Mission Profile With Name: " + actions.ContractBlockProfiles[i], BehaviorDebugEnum.Action);
                             continue;
-
                         }
 
                         foreach (var contractblock in _behavior.CurrentGrid.Contracts)
                         {
-
                             if (!contractblock.ActiveEntity() || contractblock.Block.CustomName != actions.ContractBlocks[i]) //|| contractblock.Block.OwnerId != _behavior.RemoteControl.OwnerId
                                 continue;
 
                             BehaviorLogger.Write(actions.ProfileSubtypeId + ": Applying Contract Profile With Name: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);
                             profile.ApplyProfileToBlock(contractblock, _behavior?.CurrentGrid?.Npc ?? null, actions.ClearContractContentsFirst);
-
-
-
                         }
-
                     }
-
                 }
 
+                lastAction = "IssueMissions";
+                if (actions.IssueMissions)
+                {
+                    if (actions.IssueMissionIds.Count > 0 && actions.IssueMissionPlayerConditionIds.Count > 0)
+                    {
+                        for (int i = 0; i < actions.IssueMissionIds.Count && i < actions.IssueMissionIds.Count; i++)
+                        {
+                            if (actions.IssueMissionPlayerConditionIds.Count <= i || actions.IssueMissionFactionTags.Count <= i)
+                                continue;
+
+                            var npcData = _behavior?.CurrentGrid?.Npc;
+                            if (npcData == null)
+                            {
+                                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Error issuing mission: " + actions.IssueMissionIds[i] + " (no NPCData)", BehaviorDebugEnum.Action);
+                                continue;
+                            }
+
+                            MissionProfile profile = null;
+                            if (!ProfileManager.MissionProfiles.TryGetValue(actions.IssueMissionIds[i], out profile))
+                            {
+                                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Mission Profile With Name: " + actions.IssueMissionIds[i], BehaviorDebugEnum.Action);
+                                continue;
+                            }
+
+                            // Find the contract block
+                            BlockEntity contractblock = null;
+                            foreach (var cb in _behavior.CurrentGrid.Contracts)
+                            {
+                                if (cb.ActiveEntity() && cb.Block.CustomName == actions.ContractBlocks[i])
+                                {
+                                    contractblock = cb;
+                                    break;
+                                }
+                            }
+                            if (contractblock == null)
+                            {
+                                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Contract Block: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);
+                                continue;
+                            }
+
+                            // First, create the mission/contract
+                            var mission = new Mission(actions.IssueMissionIds[i]);
+                            MyAddContractResultWrapper result;
+                            if (!mission.Init(out result, contractblock) || !result.Success)
+                            {
+                                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Error issuing mission: " + actions.IssueMissionIds[i] + " (on init)", BehaviorDebugEnum.Action);
+                                VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 2: " + result.Success);
+                                continue;
+                            }
+                            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 3");
+
+                            var defId = new MyDefinitionId();
+                            if (!MyDefinitionId.TryParse(profile.ContractSubtypeId, out defId))
+                            {
+                                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Error issuing mission: " + actions.IssueMissionIds[i] + " (contract not found)", BehaviorDebugEnum.Action);
+                                MyAPIGateway.ContractSystem.RemoveContract(result.ContractId);
+                                continue;
+                            }
+                            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 4");
+
+                            // Second, determine the faction offering the mission/contract
+                            IMyFaction faction = null;
+                            if (string.IsNullOrWhiteSpace(IdsReplacer.ReplaceId(npcData, actions.IssueMissionFactionTags[i])))
+                                faction = _behavior?.Owner?.Faction;
+                            else
+                                faction = MyAPIGateway.Session.Factions.TryGetFactionByTag(IdsReplacer.ReplaceId(npcData, actions.IssueMissionFactionTags[i]));
+
+                            if (faction == null)
+                            {
+                                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Error issuing mission: " + actions.IssueMissionIds[i] + " (faction not found)", BehaviorDebugEnum.Action);
+                                MyAPIGateway.ContractSystem.RemoveContract(result.ContractId);
+                                continue;
+                            }
+                            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 5");
+
+                            // Third, find players that match the conditions
+                            foreach (var player in PlayerManager.Players)
+                            {
+                                var IssueMissionPlayerConditionIds = IdsReplacer.ReplaceIds(npcData, actions.IssueMissionPlayerConditionIds);
+
+                                Vector3D positionOverride;
+                                if (actions.IssueMissionLocations.Count > i)
+                                    positionOverride = actions.IssueMissionLocations[i];
+                                else
+                                    positionOverride = _behavior.RemoteControl.GetPosition();
+
+                                if (PlayerCondition.ArePlayerConditionsMet(IssueMissionPlayerConditionIds, player.Player.IdentityId, actions.IssueMissionOverridePositioninPlayerCondition, positionOverride))
+                                {
+                                    // Fourth, issue mission/contract to each player
+                                    InGameContractManager.ContractAccepted(
+                                        contractId: result.ContractId,
+                                        contractDefinitionId: defId,
+                                        acceptingPlayerId: player.Player.IdentityId,
+                                        isPlayerMade: true,
+                                        startingBlockId: 0, // contractblock.Entity.EntityId
+                                        startingFactionId: faction.FactionId,
+                                        startingStationId: 0
+                                        );
+                                }
+                            }
+                            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 6");
+                        }
+                    }
+                }
 
                 lastAction = "UseCurrentPositionAsPatrolReference";
                 if (actions.UseCurrentPositionAsPatrolReference && _behavior.RemoteControl != null)
@@ -3071,7 +3166,8 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                     var message = IdsReplacer.ReplaceId(_behavior?.CurrentGrid?.Npc ?? null, actions.DebugMessage);
 
-                    if (_behavior?.CurrentGrid?.Npc?.CustomCountersVariables != null) {
+                    if (_behavior?.CurrentGrid?.Npc?.CustomCountersVariables != null)
+                    {
                         foreach (var customVar in _behavior?.CurrentGrid?.Npc?.CustomCountersVariables)
                         {
                             if (message.Contains("{" + customVar.Key + "}"))

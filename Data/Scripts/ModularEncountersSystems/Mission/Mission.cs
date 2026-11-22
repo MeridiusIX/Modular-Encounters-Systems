@@ -91,15 +91,23 @@ namespace ModularEncountersSystems.Missions
             }
         }
 
-        public Mission(string profileSubtypeId, NpcData npcData)
+        public Mission(string profileSubtypeId, NpcData npcData = null)
         {
             ProfileSubtypeId = profileSubtypeId;
-            BlockParentNpcData = npcData;
-            SpawnGroupName = npcData.SpawnGroupName ?? "";
+
+            if (npcData != null)
+            {
+                BlockParentNpcData = npcData;
+                SpawnGroupName = npcData.SpawnGroupName ?? "";
+            }
         }
 
-        public bool Init(BlockEntity sourceContractBlock)
+        public bool Init(out MyAddContractResultWrapper result, BlockEntity sourceContractBlock = null)
         {
+
+            result = default(MyAddContractResultWrapper);
+            result.Success = false;
+
             // Remove mission from all contract blocks
             if (this.Profile.Exclusive && InGameContractManager.IsAContractWithMissionSubtypeIdActive(this.ProfileSubtypeId))
             {
@@ -142,25 +150,27 @@ namespace ModularEncountersSystems.Missions
                     return false;
                 }
             }
-
-            else
+            else if (sourceContractBlock != null)
             {
                 Faction = sourceContractBlock.Faction();
             }
 
             if (Faction == null)
             {
-                MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", "Faction not found??");
+                MyAPIGateway.Utilities.ShowMessage("MES Mission Debug", "Faction not found?");
                 return false;
             }
 
-            var coords = sourceContractBlock.GetPosition();
+            if (sourceContractBlock != null)
+            {
+                var coords = sourceContractBlock.GetPosition();
 
-            ReplaceKeys.Add("{ContractBlockLocation}");
-            ReplaceValues.Add($"{{X:{coords.X} Y:{coords.Y} Z:{coords.Z}}}");
+                ReplaceKeys.Add("{ContractBlockLocation}");
+                ReplaceValues.Add($"{{X:{coords.X} Y:{coords.Y} Z:{coords.Z}}}");
 
-            ReplaceKeys.Add("{ContractBlockFaction}");
-            ReplaceValues.Add($"{sourceContractBlock.Faction()?.Tag}");
+                ReplaceKeys.Add("{ContractBlockFaction}");
+                ReplaceValues.Add($"{sourceContractBlock.Faction()?.Tag}");
+            }
 
             ReplaceKeys.Add("{Faction}");
             ReplaceValues.Add($"{Faction.Tag}");
@@ -253,7 +263,7 @@ namespace ModularEncountersSystems.Missions
                 Duration = 0;
             }
 
-            return AddMissionToBlock();
+            return CreateMission(out result);
         }
 
         public void SetupEventCondition()
@@ -357,123 +367,147 @@ namespace ModularEncountersSystems.Missions
             tja.AddEventsAsInsertible(ReplaceKeys, ReplaceValues, InstanceId);
         }
 
-        public bool AddMissionToBlock()
+        public bool CreateMission(out MyAddContractResultWrapper result)
         {
+            result = default(MyAddContractResultWrapper);
+            result.Success = false;
+
             if (SourceContractBlock == null)
                 return false;
-
-            MyAddContractResultWrapper result;
-            IMyPlayerCollection playerCollection;
 
             switch (Profile.MissionType)
             {
                 case MissionType.Custom:
-                    MyDefinitionId definitionId;
-                    bool parsed = MyDefinitionId.TryParse($"MyObjectBuilder_ContractTypeDefinition/{Profile.ContractSubtypeId}", out definitionId);
-
-                    if (!parsed) return false;
-
-                    playerCollection = MyAPIGateway.Players;
-                    playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, Reward);
-
-                    MyContractCustom newContract = new MyContractCustom(contractTypeDefinitionId: definitionId,
-                        startBlockId: SourceContractBlock.Entity.EntityId,
-                        moneyReward: Reward,
-                        collateral: Collateral,
-                        duration: Duration,
-                        name: Title,
-                        description: Description,
-                        reputationReward: ReputationReward,
-                        failReputationPrice: FailReputationPrice,
-                        endBlockId: null);
-
-                    Contract contractObject = new Contract();
-
-                    contractObject.MissionReference = this;
-                    contractObject.SourceBlock = SourceContractBlock;
-
-                    result = MyAPIGateway.ContractSystem.AddContract(newContract);
-
-                    if (result.Success)
-                    {
-                        // set contract values
-                        contractObject.ContractId = result.ContractId;
-                        InGameContractManager.GeneratedContracts.Add(contractObject);
-                        InGameContractManager.ContractsForRemoval.Add(result.ContractId);
-
-                        InstanceId = result.ContractId;
-
-                        ReplaceKeys.Add("{InstanceId}");
-                        ReplaceValues.Add($"{InstanceId}");
-
-                        ReplaceKeys.Add("{ContractId}");
-                        ReplaceValues.Add($"{InstanceId}");
-
-                        //playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, -Reward); Keen already does this?
-                        return true;
-                    }
-
-                    break;
+                    return CreateCustomContract(SourceContractBlock, SourceContractBlock.Block.OwnerId, out result);
 
                 case MissionType.Acquisition:
-
-                    if (StoreProfile == null)
-                        return false;
-
-                    int index = MathTools.RandomBetween(0, StoreProfile.Orders.Count);
-
-                    if (index >= StoreProfile.OrderItems.Count)
-                    {
-                        // Handle case where index is out of range
-                        MyVisualScriptLogicProvider.ShowNotificationToAll($"Acquisition failed {StoreProfile.ProfileSubtypeId}", 5000);
-                        MyVisualScriptLogicProvider.ShowNotificationToAll($"Index: {index}, Count: {StoreProfile.OrderItems.Count}", 5000);
-                        return false;
-                    }
-                    var storeItem = StoreProfile.OrderItems[index];
-
-
-                    int amount = storeItem.GetAmount(false);
-                    int reward = (int)((int)storeItem.GetPrice(105, false) * amount);
-
-                    playerCollection = MyAPIGateway.Players;
-                    playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, reward);
-
-                    MyContractAcquisition newAcquisition = new MyContractAcquisition(startBlockId: SourceContractBlock.Entity.EntityId,
-                        moneyReward: reward, //(int)storeItem.GetPrice(200,false)
-                        collateral: 0,
-                        duration: Duration,
-                        endBlockId: SourceContractBlock.Entity.EntityId,
-                        itemTypeId: storeItem.GetItemId(),
-                        itemAmount: amount
-                        );
-
-                    Contract contractAcquisitionObject = new Contract();
-                    contractAcquisitionObject.MissionReference = this;
-                    contractAcquisitionObject.SourceBlock = SourceContractBlock;
-                    result = MyAPIGateway.ContractSystem.AddContract(newAcquisition);
-
-                    if (result.Success)
-                    {
-                        // set contract values
-                        contractAcquisitionObject.ContractId = result.ContractId;
-                        InGameContractManager.ContractsForRemoval.Add(result.ContractId);
-                        InGameContractManager.GeneratedContracts.Add(contractAcquisitionObject);
-
-                        InstanceId = result.ContractId;
-
-                        //playerCollection.RequestChangeBalance(SourceContractBlock.Block.OwnerId, -reward); Not needed because keen already does this?
-                        return true;
-                    }
-                    else
-                    {
-                        MyVisualScriptLogicProvider.ShowNotificationToAll($"{result.Success}? factions have too little money for contracts", 5000);
-                    }
-
-                    break;
+                    return CreateAcquisitionContract(SourceContractBlock, SourceContractBlock.Block.OwnerId, SourceContractBlock, out result);
 
                 default:
                     break;
+            }
 
+            return false;
+        }
+
+        public bool CreateCustomContract(BlockEntity sourceContractBlock, long ownerId, out MyAddContractResultWrapper result)
+        {
+            IMyPlayerCollection playerCollection;
+            MyDefinitionId definitionId;
+
+            bool parsed = MyDefinitionId.TryParse($"MyObjectBuilder_ContractTypeDefinition/{Profile.ContractSubtypeId}", out definitionId);
+
+            if (!parsed)
+            {
+                result = default(MyAddContractResultWrapper);
+                result.Success = false;
+                return false;
+            }
+
+            playerCollection = MyAPIGateway.Players;
+            playerCollection.RequestChangeBalance(ownerId, Reward);
+
+            MyContractCustom newContract = new MyContractCustom(
+                contractTypeDefinitionId: definitionId,
+                startBlockId: sourceContractBlock.Entity.EntityId,
+                moneyReward: Reward,
+                collateral: Collateral,
+                duration: Duration,
+                name: Title,
+                description: Description,
+                reputationReward: ReputationReward,
+                failReputationPrice: FailReputationPrice,
+                endBlockId: null
+                );
+
+            Contract contractObject = new Contract();
+
+            contractObject.MissionReference = this;
+            contractObject.SourceBlock = sourceContractBlock;
+
+            result = MyAPIGateway.ContractSystem.AddContract(newContract);
+            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> CreateCustomContract AddContract Result: " + result.Success);
+
+            if (result.Success)
+            {
+                contractObject.ContractId = result.ContractId;
+                InGameContractManager.GeneratedContracts.Add(contractObject);
+                InGameContractManager.ContractsForRemoval.Add(result.ContractId);
+
+                InstanceId = result.ContractId;
+
+                ReplaceKeys.Add("{InstanceId}");
+                ReplaceValues.Add($"{InstanceId}");
+
+                ReplaceKeys.Add("{ContractId}");
+                ReplaceValues.Add($"{InstanceId}");
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool CreateAcquisitionContract(BlockEntity sourceContractBlock, long ownerId, BlockEntity targetBlock, out MyAddContractResultWrapper result)
+        {
+            IMyPlayerCollection playerCollection;
+
+            if (StoreProfile == null)
+            {
+                result = default(MyAddContractResultWrapper);
+                result.Success = false;
+                return false;
+            }
+
+            int index = MathTools.RandomBetween(0, StoreProfile.Orders.Count);
+
+            if (index >= StoreProfile.OrderItems.Count)
+            {
+                // Handle case where index is out of range
+                MyVisualScriptLogicProvider.ShowNotificationToAll($"Acquisition failed {StoreProfile.ProfileSubtypeId}", 5000);
+                MyVisualScriptLogicProvider.ShowNotificationToAll($"Index: {index}, Count: {StoreProfile.OrderItems.Count}", 5000);
+                result = default(MyAddContractResultWrapper);
+                result.Success = false;
+                return false;
+            }
+
+            var storeItem = StoreProfile.OrderItems[index];
+
+            int amount = storeItem.GetAmount(false);
+            int reward = (int)((int)storeItem.GetPrice(105, false) * amount);
+
+            playerCollection = MyAPIGateway.Players;
+            playerCollection.RequestChangeBalance(ownerId, reward);
+
+            MyContractAcquisition newAcquisition = new MyContractAcquisition(
+                startBlockId: sourceContractBlock.Entity.EntityId,
+                moneyReward: reward, //(int)storeItem.GetPrice(200,false)
+                collateral: 0,
+                duration: Duration,
+                endBlockId: targetBlock.Entity.EntityId,
+                itemTypeId: storeItem.GetItemId(),
+                itemAmount: amount
+                );
+
+            Contract contractAcquisitionObject = new Contract();
+            contractAcquisitionObject.MissionReference = this;
+            contractAcquisitionObject.SourceBlock = sourceContractBlock;
+
+            result = MyAPIGateway.ContractSystem.AddContract(newAcquisition);
+
+            if (result.Success)
+            {
+                contractAcquisitionObject.ContractId = result.ContractId;
+                InGameContractManager.ContractsForRemoval.Add(result.ContractId);
+                InGameContractManager.GeneratedContracts.Add(contractAcquisitionObject);
+
+                InstanceId = result.ContractId;
+
+                return true;
+            }
+            else
+            {
+                MyVisualScriptLogicProvider.ShowNotificationToAll($"{result.Success}? factions have too little money for contracts", 5000);
             }
 
             return false;
@@ -487,8 +521,10 @@ namespace ModularEncountersSystems.Missions
                 ReplaceValues.Remove($"{InstanceId}");
                 InstanceId = 0;
 
-                return AddMissionToBlock();
+                MyAddContractResultWrapper result;
+                return CreateMission(out result);
             }
+
             else
             {
                 return false;

@@ -1,6 +1,6 @@
 #Bot-Spawn.md
 
-Bot Spawn Profiles in Modular Encounters Systems allow you to specify a set of rules for how a bot is configured before it is spawned by the AiEnabled mod.
+Bot Spawn Profiles in Modular Encounters Systems allow you to specify a set of rules for how a bot is configured before it is spawned by the base game or the AiEnabled mod.
 
 Here's an example of how a Bot Spawn Profile Definition is setup:
 
@@ -15,14 +15,11 @@ Here's an example of how a Bot Spawn Profile Definition is setup:
           <SubtypeId>MES-ExampleBotSpawnProfile</SubtypeId>
       </Id>
       <Description>
-
-      [MES Bot Spawn]
-      
-      [BotType:Police_Bot]
-      [BotDisplayName:Combat Bot]
-      
-      </Description>
-      
+        [MES Bot Spawn]
+        
+        [BotType:Police_Bot]
+        [BotDisplayName:Combat Bot]      
+      </Description>      
     </EntityComponent>
 
   </EntityComponents>
@@ -31,19 +28,26 @@ Here's an example of how a Bot Spawn Profile Definition is setup:
 
 Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 
+**[Shared](#shared)**  
+**[Vanilla](#vanilla)**  
+**[AiEnabled](#aienabled)**  
+
+# Shared
+This section contains tags that are relevant for both Vanilla and AiEnabled bots.
+
 <!--BotType-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotType|
 |:----|:----|
 |Tag Format:|`[BotType:Value]`|
 |Description:|This tag specifies the type of bot that will be spawned.|
-|Allowed Values:|Any Character type (the `Name` field in the SBC, not the SubtypeId)|
+|Allowed Values:|Vanilla: Any valid `Type/Subtype` combination (include `MyObjectBuilder_` for types!)<br>AiEnabled: Any Character type (the `Name` field in the SBC, not the SubtypeId)|
 |Multiple Tag Allowed:|No|
 
 <!--BotBehavior-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotBehavior|
 |:----|:----|
 |Tag Format:|`[BotBehavior:Value]`|
-|Description:|This tag specifies the behavior that the spawned bot will use. If this tag is not defined, then it will use the default behavior that AiEnabled would use when spawning a bot of the selected type.|
+|Description:|This tag specifies the behavior that a spawned AiEnabled bot will use, it is not relevant for vanilla bots. If this tag is not defined, then it will use the default behavior that AiEnabled would use when spawning a bot of the selected type.|
 |Allowed Values:|Any AiEnabled Behavior Role|
 |Multiple Tag Allowed:|No|
 
@@ -63,11 +67,25 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Allowed Values:|Any Vector3 Value using this format<br />`{X:0 Y:0 Z:0}`|
 |Multiple Tag Allowed:|No|
 
+***
+
+# Vanilla
+
+This section contains tags that only affect vanilla bot spawning.
+
+
+
+***
+
+# AiEnabled
+
+This section contains tags that are only relevant for AiEnabled bot spawning.
+
 <!-- CanUseAirNodes -->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|CanUseAirNodes|
 |:----|:----|
 |Tag Format:|`[CanUseAirNodes:Value]`|
-|Description:|This tag allows you to specify if the bot is able to use Air Nodes (ie Jetpack).|
+|Description:|This tag allows you to specify if the AiEnabled bot is able to use Air Nodes (ie Jetpack). Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -76,7 +94,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|CanUseSpaceNodes|
 |:----|:----|
 |Tag Format:|`[CanUseSpaceNodes:Value]`|
-|Description:|This tag allows you to specify if the bot is able to use Space Nodes (ie Jetpack).|
+|Description:|This tag allows you to specify if the AiEnabled bot is able to use Space Nodes (ie Jetpack). Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -85,7 +103,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|UseGroundNodesFirst|
 |:----|:----|
 |Tag Format:|`[UseGroundNodesFirst:Value]`|
-|Description:|This tag allows you to specify if the bot should try to use ground nodes before using air / space nodes.|
+|Description:|This tag allows you to specify if the AiEnabled bot should try to use ground nodes before using air / space nodes. Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -94,7 +112,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|CanUseWaterNodes|
 |:----|:----|
 |Tag Format:|`[CanUseWaterNodes:Value]`|
-|Description:|This tag allows you to specify if the bot is able to use water nodes (ie underwater via Water Mod)|
+|Description:|This tag allows you to specify if the AiEnabled bot is able to use water nodes (ie underwater via Water Mod). Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -103,7 +121,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|WaterNodesOnly|
 |:----|:----|
 |Tag Format:|`[WaterNodesOnly:Value]`|
-|Description:|This tag allows you to specify if the bot should only use water nodes (ie underwater only bot)|
+|Description:|This tag allows you to specify if the AiEnabled bot should only use water nodes (ie underwater only bot). Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -112,7 +130,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|CanUseLadders|
 |:----|:----|
 |Tag Format:|`[CanUseLadders:Value]`|
-|Description:|This tag allows you to specify if the bot is able to climb ladders|
+|Description:|This tag allows you to specify if the AiEnabled bot is able to climb ladders. Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -121,7 +139,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|CanUseSeats|
 |:----|:----|
 |Tag Format:|`[CanUseSeats:Value]`|
-|Description:|This tag allows you to specify if the bot is able to sit on seating blocks|
+|Description:|This tag allows you to specify if the AiEnabeld bot is able to sit on seating blocks. Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -130,7 +148,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|DespawnTicks|
 |:----|:----|
 |Tag Format:|`[DespawnTicks:Value]`|
-|Description:|This tag allows you to specify if the bot should despawn after a set number of game ticks. If value is `0`, then no timer is used.|
+|Description:|This tag allows you to specify if the AiEnabled bot should despawn after a set number of game ticks. If value is `0`, then no timer is used. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Integer Greater/Equal To `0`|
 |Default Value(s):|`0`|
 |Multiple Tags Allowed:|No|
@@ -139,7 +157,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|DeathSound|
 |:----|:----|
 |Tag Format:|`[DeathSound:Value]`|
-|Description:|This tag allows you to specify a custom sound effect that is used when the bot dies.|
+|Description:|This tag allows you to specify a custom sound effect that is used when the AiEnabled bot dies. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Audio SubtypeId|
 |Default Value(s):|`N/A`|
 |Multiple Tags Allowed:|No|
@@ -148,7 +166,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AttackSounds|
 |:----|:----|
 |Tag Format:|`[AttackSounds:Value]`|
-|Description:|This tag allows you to specify one or more custom sound effects that are used when the bot attacks.|
+|Description:|This tag allows you to specify one or more custom sound effects that are used when the AiEnabled bot attacks. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Audio SubtypeId|
 |Default Value(s):|`N/A`|
 |Multiple Tags Allowed:|Yes|
@@ -157,7 +175,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|PainSounds|
 |:----|:----|
 |Tag Format:|`[PainSounds:Value]`|
-|Description:|This tag allows you to specify one or more custom sound effects that are used when the bot takes damage.|
+|Description:|This tag allows you to specify one or more custom sound effects that are used when the AiEnabled bot takes damage. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Audio SubtypeId|
 |Default Value(s):|`N/A`|
 |Multiple Tags Allowed:|Yes|
@@ -166,7 +184,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|IdleSounds|
 |:----|:----|
 |Tag Format:|`[IdleSounds:Value]`|
-|Description:|This tag allows you to specify one or more custom sound effects that are used when the bot is idle.|
+|Description:|This tag allows you to specify one or more custom sound effects that are used when the AiEnabled bot is idle. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Audio SubtypeId|
 |Default Value(s):|`N/A`|
 |Multiple Tags Allowed:|Yes|
@@ -175,7 +193,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|TauntSounds|
 |:----|:----|
 |Tag Format:|`[TauntSounds:Value]`|
-|Description:|This tag allows you to specify one or more custom sound effects that are used when the bot is chasing a target.|
+|Description:|This tag allows you to specify one or more custom sound effects that are used when the AiEnabled bot is chasing a target. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Audio SubtypeId|
 |Default Value(s):|`N/A`|
 |Multiple Tags Allowed:|Yes|
@@ -184,7 +202,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|EmoteActions|
 |:----|:----|
 |Tag Format:|`[EmoteActions:Value]`|
-|Description:|This tag allows you to specify one or more emote that are used by nomad bots randomly.|
+|Description:|This tag allows you to specify one or more emote that are used by nomad AiEnabled bots randomly. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Emote SubtypeId|
 |Default Value(s):|`N/A`|
 |Multiple Tags Allowed:|Yes|
@@ -193,7 +211,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ShotDeviationAngle|
 |:----|:----|
 |Tag Format:|`[ShotDeviationAngle:Value]`|
-|Description:|This tag allows you to specify the angle of deviation that is applied to gunfire from this bot.|
+|Description:|This tag allows you to specify the angle of deviation that is applied to gunfire from this AiEnabled bot. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Number Greater/Equal To `0'|
 |Default Value(s):|`1.5`|
 |Multiple Tags Allowed:|No|
@@ -202,7 +220,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|LeadTargets|
 |:----|:----|
 |Tag Format:|`[LeadTargets:Value]`|
-|Description:|This tag allows you to specify if bots should try to lead their target while shooting at them.|
+|Description:|This tag allows you to specify if AiEnabled bots should try to lead their target while shooting at them. Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -211,7 +229,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ToolSubtypeId|
 |:----|:----|
 |Tag Format:|`[ToolSubtypeId:Value]`|
-|Description:|This tag allows you to specify a custom tool/weapon for the bot to use.|
+|Description:|This tag allows you to specify a custom tool/weapon for the AiEnabled bot to use. Not relevant for vanilla bots.|
 |Allowed Value(s):|Any Vanilla Tool SubtypeId|
 |Default Value(s):|`N/A`|
 |Multiple Tags Allowed:|No|
@@ -220,7 +238,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|CanDamageGrids|
 |:----|:----|
 |Tag Format:|`[CanDamageGrids:Value]`|
-|Description:|This tag allows you to specify if the bot is able to damage grids (ie target blocks).|
+|Description:|This tag allows you to specify if the AiEnabled bot is able to damage grids (ie target blocks). Not relevant for vanilla bots.|
 |Allowed Value(s):|`true`<br />`false`|
 |Default Value(s):|`false`|
 |Multiple Tags Allowed:|No|
@@ -229,7 +247,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|TargetPriorities|
 |:----|:----|
 |Tag Format:|`[TargetPriorities:Value]`|
-|Description:|This tag allows you to specify one or more target priorities that the bot will use when attacking. Add them in priority order. Remove entries to have the bot ignore them completely (requires at least one entry for this to take effect).|
+|Description:|This tag allows you to specify one or more target priorities that the AiEnabled bot will use when attacking. Add them in priority order. Remove entries to have the bot ignore them completely (requires at least one entry for this to take effect). Not relevant for vanilla bots.|
 |Allowed Value(s):|IMyCharacter<br />IMyUserControllableGun<br />IMyShipController<br />IMyPowerProducer<br />IMyThrust<br />IMyGyro<br />IMyProductionBlock<br />IMyDoor<br />IMyProgrammableBlock<br />IMyProjector<br />IMyConveyor<br />IMyCargoContainer<br />IMyFunctionalBlock<br />IMyTerminalBlock<br />IMyCubeBlock<br />IMySlimBlock|
 |Default Value(s):|All allowed values|
 |Multiple Tags Allowed:|Yes|
@@ -238,7 +256,7 @@ Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RepairPriorities|
 |:----|:----|
 |Tag Format:|`[RepairPriorities:Value]`|
-|Description:|This tag allows you to specify one or more repair priorities that the bot will use when repairing. Add them in priority order. Remove entries to have the bot ignore them completely (requires at least one entry for this to take effect).|
+|Description:|This tag allows you to specify one or more repair priorities that the AiEnabled bot will use when repairing. Add them in priority order. Remove entries to have the bot ignore them completely (requires at least one entry for this to take effect). Not relevant for vanilla bots.|
 |Allowed Value(s):|IMyUserControllableGun<br />IMyShipController<br />IMyPowerProducer<br />IMyThrust<br />IMyGyro<br />IMyProductionBlock<br />IMyDoor<br />IMyProgrammableBlock<br />IMyProjector<br />IMyConveyor<br />IMyCargoContainer<br />IMyFunctionalBlock<br />IMyTerminalBlock<br />IMyCubeBlock<br />IMySlimBlock|
 |Default Value(s):|All allowed values|
 |Multiple Tags Allowed:|Yes|

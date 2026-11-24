@@ -50,6 +50,7 @@ nav:
           - Triggers:
              - Trigger: Trigger
              - Condition: Condition
+             - Tags: Tags
              - Actions:
                - Actions: Action
                - Bot Spawn: Bot-Spawn
@@ -64,6 +65,7 @@ nav:
           - Event Condition: Event-Conditions
           - Event Action: Event-Action
           - Custom Event Actions: Custom-Event-Actions-and-ScenarioTools
+      - Tokens: Tokens
       - Player Conditions (New): Player-Condition-Profile
       - Zone: Zone-Profile
   - Template / Example Files:

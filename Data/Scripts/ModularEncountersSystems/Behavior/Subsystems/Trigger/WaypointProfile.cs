@@ -1,4 +1,5 @@
-﻿using ModularEncountersSystems.Helpers;
+﻿using ModularEncountersSystems.Entities;
+using ModularEncountersSystems.Helpers;
 using ModularEncountersSystems.Logging;
 using Sandbox.Game.Entities;
 using System;
@@ -48,6 +49,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public double MinAltitude;
 		public double MaxAltitude;
 		public bool InheritRelativeAltitude;
+		public bool IgnoreWater;
 
 		public WaypointProfile() {
 
@@ -65,6 +67,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			MinAltitude = 100;
 			MaxAltitude = 101;
 			InheritRelativeAltitude = false;
+			IgnoreWater = false;
 
 		}
 
@@ -123,13 +126,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 				if (grav != null && grav.IsPositionInRange(coords)) {
 
 					//Gravity Calcs
-					var surfaceAtCoords = planet.GetClosestSurfacePointGlobal(coords);
+					var planetEntity = PlanetManager.GetNearestPlanet(coords);
+					var surfaceAtCoords = planetEntity?.SurfaceCoordsAtPosition(coords, this.IgnoreWater) ?? planet.GetClosestSurfacePointGlobal(coords);
 					var altitudeAdd = this.InheritRelativeAltitude ? Vector3D.Distance(coords, planet.PositionComp.WorldAABB.Center) - Vector3D.Distance(surfaceAtCoords, planet.PositionComp.WorldAABB.Center) : 0;
 					var up = Vector3D.Normalize(surfaceAtCoords - planet.PositionComp.WorldAABB.Center);
 					var randForward = Vector3D.Normalize(MyUtils.GetRandomPerpendicularVector(ref up));
 					var randForwardDist = MathTools.RandomBetween(this.MinDistance, this.MaxDistance);
 					var upRandDist = MathTools.RandomBetween(this.MinAltitude, this.MaxAltitude) + altitudeAdd;
-					var roughCoords = planet.GetClosestSurfacePointGlobal(randForwardDist * randForward + coords);
+					var roughCoords = planetEntity?.SurfaceCoordsAtPosition(randForwardDist * randForward + coords, this.IgnoreWater) ?? planet.GetClosestSurfacePointGlobal(randForwardDist * randForward + coords);
 					return up * upRandDist + roughCoords;
 
 				}
@@ -211,6 +215,13 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 					if (tag.Contains("[InheritRelativeAltitude:") == true) {
 
 						TagParse.TagBoolCheck(tag, ref InheritRelativeAltitude);
+
+					}
+
+					//IgnoreWater
+					if (tag.Contains("[IgnoreWater:") == true) {
+
+						TagParse.TagBoolCheck(tag, ref IgnoreWater);
 
 					}
 

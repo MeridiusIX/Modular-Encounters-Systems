@@ -1327,7 +1327,23 @@ This section contains actions that allow NPCs to Spawn other NPCs, along with ot
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AddBotsToGrid|
 |:----|:----|
 |Tag Format:|`[AddBotsToGrid:Value]`|
-|Description:|This tag specifies if a number of AiEnabled (External Mod) Bots should be spawned onto the NPC Grid.|
+|Description:|This tag specifies if a number of bots should be spawned onto the NPC Grid.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--RemoveBotsFromGrid-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AddBotsToGrid|
+|:----|:----|
+|Tag Format:|`[RemoveBotsFromGrid:Value]`|
+|Description:|This tag specifies if vanilla bots associated with it should be removed from the NPC Grid. Subsets of bots can be targeted via `BotTags:Value]`.|
+|Allowed Values:|`true`<br>`false`|
+|Multiple Tag Allowed:|No|
+
+<!--EjectBotsFromSeats-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AddBotsToGrid|
+|:----|:----|
+|Tag Format:|`[EjectBotsFromSeats:Value]`|
+|Description:|This tag specifies if seated vanilla bots associated with the NPC Grid should be ejected from their seats. Subsets of bots can be targeted via `BotTags:Value]`.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 
@@ -1335,7 +1351,7 @@ This section contains actions that allow NPCs to Spawn other NPCs, along with ot
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotCount|
 |:----|:----|
 |Tag Format:|`[BotCount:Value]`|
-|Description:|This tag specifies the number of AiEnabled bots that should be spawned onto the grid.|
+|Description:|This tag specifies the number of bots that should be spawned onto the grid.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 
@@ -1347,11 +1363,35 @@ This section contains actions that allow NPCs to Spawn other NPCs, along with ot
 |Allowed Values:|Any `Spawn Bot Profile` SubtypeId|
 |Multiple Tag Allowed:|Yes|
 
+<!--BotTags-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotSpawnProfileNames|
+|:----|:----|
+|Tag Format:|`[BotTags:Value]`|
+|Description:|This tag specifies the tags to associate with the vanilla bots that are spawned with `[AddBotsToGrid:true]`. It also lets you select which vanilla bots are targeted by other actions affecting bots, such as `[RemoveBotsFromGrid:true]` or `[EjectBotsFromSeats:true]`. All tags listed will be applied to each spawned bot.|
+|Allowed Values:|Any `string` excluding `:`, `[`, `]`|
+|Multiple Tag Allowed:|Yes|
+
+<!--BotSpawnBlockOverrides-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotSpawnProfileNames|
+|:----|:----|
+|Tag Format:|`[BotSpawnBlockOverrides:Value]`|
+|Description:|This tag allows for overriding all `[SpawnBlocks:Value]` defined in Bot Spawner Profiles for the vanilla bots spawned in the current action. SpawnBlocks are the blocks in which vanilla blocks are spawned into. As such, an armor block would not be suitable, but a Cockpit or a Passage-type block would work. If bots should spawn seated in a cockpit listed here, be sure to also set `[SpawnSeated:true]` in their Bot Spawner Profiles. Bots will pick a random block from this list to spawn in - provided it is not already occupied.|
+|Allowed Values:|Any valid `Type/Subtype` combination (include `MyObjectBuilder_` for types!)|
+|Multiple Tag Allowed:|Yes|
+
+<!--BotSpawnPointOverrides-->
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotSpawnProfileNames|
+|:----|:----|
+|Tag Format:|`[BotSpawnPointOverrides:Value]`|
+|Description:|This tag allows for overriding all `[SpawnPoints:Value]` defined in Bot Spawner Profiles for the vanilla bots spawned in the current action. SpawnPoints are the coordinate offsets onto which bots are spawned in relation to the encounter's Remote Control block. Bots will pick a random point from this list to spawn in.|
+|Allowed Values:|A Vector3D Value in the following format:<br />`{X:# Y:# Z:#}`<br />X: Right<br />Y: Up<br />Z: Forward<br />Replace `#` with values in meters.|
+|Multiple Tag Allowed:|Yes|
+
 <!--OnlySpawnBotsInPressurizedRooms-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|OnlySpawnBotsInPressurizedRooms|
 |:----|:----|
 |Tag Format:|`[OnlySpawnBotsInPressurizedRooms:Value]`|
-|Description:|This tag specifies if AiEnabled bots should only be spawned in pressurized spaces on the NPC grid. The location cannot be directly controlled from RivalAI, since the AiEnabled mod is what calculates the safe placement nodes. If you need them to appear in a specific room, you may want to arrange it so that room is the only air-tight space on the grid at the time of spawning.|
+|Description:|This tag specifies if AiEnabled bots should only be spawned in pressurized spaces on the NPC grid. The location cannot be directly controlled from RivalAI, since the AiEnabled mod is what calculates the safe placement nodes. If you need them to appear in a specific room, you may want to arrange it so that room is the only air-tight space on the grid at the time of spawning. <br>Requires the Bot Spawner Profile to define `[UseAiEnabled:true]` and does not work with vanilla bots.|
 |Allowed Values:|`true`<br>`false`|
 |Multiple Tag Allowed:|No|
 

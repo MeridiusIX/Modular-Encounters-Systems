@@ -4,7 +4,7 @@ Bot Spawn Profiles in Modular Encounters Systems allow you to specify a set of r
 
 Here's an example of how a Bot Spawn Profile Definition is setup:
 
-```
+```xml
 <?xml version="1.0"?>
 <Definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <EntityComponents>

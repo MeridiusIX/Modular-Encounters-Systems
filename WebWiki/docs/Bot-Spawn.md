@@ -16,10 +16,22 @@ Here's an example of how a Bot Spawn Profile Definition is setup:
       </Id>
       <Description>
         [MES Bot Spawn]
-        
-        [BotType:Police_Bot]
-        [BotDisplayName:Combat Bot]      
-      </Description>      
+
+        [BotType:MyObjectBuilder_HumanoidBot/CombatAstronaut]
+        [BotDisplayName:Pirate]
+        [BotFactionTag:SPRT]
+
+        [WeaponsContainerId:NpcCombatWeaponsLight]
+        [LootContainerId:NpcBodyLoot]
+        [ChatMessageSetId:Builder]
+
+        [SpawnSeated:true]
+        [SpawnBlocks:MyObjectBuilder_Cockpit/LargeBlockCockpitSeat]
+        [SpawnBlocks:MyObjectBuilder_Cockpit/PassengerSeatLarge]
+
+        [Color:{X:234 Y:214 Z:63}]
+        [AssetOverrideSets:Veteran]
+      </Description>
     </EntityComponent>
 
   </EntityComponents>
@@ -28,9 +40,9 @@ Here's an example of how a Bot Spawn Profile Definition is setup:
 
 Below are all of the eligible tags you can use in your Bot Spawn Profiles:
 
-**[Shared](#shared)**  
-**[Vanilla](#vanilla)**  
-**[AiEnabled](#aienabled)**  
+**[Shared](#shared)**<br/>
+**[Vanilla](#vanilla)**<br/>
+**[AiEnabled](#aienabled)**
 
 # Shared
 This section contains tags that are relevant for both Vanilla and AiEnabled bots.
@@ -96,14 +108,16 @@ This section contains tags that only affect vanilla bot spawning.
 |Tag Format:|`[LootContainerId:Value]`|
 |Description:|This tag specifies the SubtypeId of the ContainerType used to assign loot to the bot's backpack.|
 |Allowed Values:|Any ContainerType SubtypeId|
+|Default Value(s):|The `<BotLootContainerType>` defined for the faction is used.|
 |Multiple Tag Allowed:|No|
 
 <!--ChatMessageSetId-->
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|ChatMessageSetId|
 |:----|:----|
 |Tag Format:|`[ChatMessageSetId:Value]`|
-|Description:|This tag specifies the SubtypeId of the NPCChatMessageSet used to assign weapons to the bot. It corresponds to `NPCChatMessageSet` in the vanilla SpawnGroup SBC.|
+|Description:|This tag specifies the SubtypeId of the NPCChatMessageSet used to assign chat messages to the bot. It corresponds to `NPCChatMessageSet` in the vanilla SpawnGroup SBC. Use `Silent` to prevent bots from talking.|
 |Allowed Values:|Any ContainerType SubtypeId|
+|Default Value(s):|`Silent`|
 |Multiple Tag Allowed:|No|
 
 <!--SpawnBlocks-->
@@ -127,7 +141,7 @@ This section contains tags that only affect vanilla bot spawning.
 |Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AssetOverrideSets|
 |:----|:----|
 |Tag Format:|`[AssetOverrideSets:Value]`|
-|Description:|This tag specifies a list of suit skins, which should be picked from randomly and applied to bots when spawned.|
+|Description:|This tag specifies a list of suit skins, which should be picked from randomly and applied to bots when spawned. Note that this can also be left false, and instead the more granular control available in the Faction Definition SBC can be used.|
 |Allowed Values:|`FactionDefault`<br/>`Assault`<br/>`Aviator`<br/>`Badger`<br/>`Carpet`<br/>`Chef`<br/>`Cow`<br/>`Crocodile`<br/>`DigitalCamouflage`<br/>`Disco`<br/>`EmissiveStripes`<br/>`Fiber`<br/>`Frozen`<br/>`Ghillie`<br/>`Glamour`<br/>`Golden`<br/>`Graffiti`<br/>`Hazmat`<br/>`Halloween`<br/>`Hexagon`<br/>`KeenPajamas`<br/>`KidsPajamas`<br/>`Lava`<br/>`Leopard`<br/>`Medieval`<br/>`Metallic`<br/>`Miner`<br/>`Mummy`<br/>`Newspaper`<br/>`NextGen`<br/>`PartyTux`<br/>`Pharaoh`<br/>`Policeman`<br/>`Prisoner`<br/>`Proper`<br/>`Racing`<br/>`Rainbow`<br/>`Retro`<br/>`Robot`<br/>`Scavenger`<br/>`Shark`<br/>`Skeleton`<br/>`Slime`<br/>`Terracotta`<br/>`Soldier`<br/>`Tuxedo`<br/>`Veteran`<br/>`VeteranMarkII`<br/>`Wood`<br/>`Zebra`<br/>`Zombie`|
 |Multiple Tag Allowed:|Yes|
 

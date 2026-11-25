@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Saira:wght@100..900&display=swap');
-
 .wy-body-for-nav {
     background: #343131;
 }
@@ -26,7 +24,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: "Saira", sans-serif;
+    font-family: 'Saira';
 }
 
 .rst-content code,

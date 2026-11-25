@@ -4459,7 +4459,61 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies if a number of AiEnabled (External Mod) Bots should be spawned onto the NPC Grid.</td>
+<td style="text-align: left;">This tag specifies if a number of bots should be spawned onto the NPC Grid.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--RemoveBotsFromGrid-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">RemoveBotsFromGrid</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[RemoveBotsFromGrid:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies if vanilla bots associated with it should be removed from the NPC Grid. Subsets of bots can be targeted via <code>BotTags:Value]</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>true</code><br><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--EjectBotsFromSeats-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">EjectBotsFromSeats</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[EjectBotsFromSeats:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies if seated vanilla bots associated with the NPC Grid should be ejected from their seats. Subsets of bots can be targeted via <code>BotTags:Value]</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -4486,7 +4540,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies the number of AiEnabled bots that should be spawned onto the grid.</td>
+<td style="text-align: left;">This tag specifies the number of bots that should be spawned onto the grid.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
@@ -4525,6 +4579,87 @@
 </tr>
 </tbody>
 </table>
+<!--BotTags-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">BotTags</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[BotTags:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the tags to associate with the vanilla bots that are spawned with <code>[AddBotsToGrid:true]</code>. It also lets you select which vanilla bots are targeted by other actions affecting bots, such as <code>[RemoveBotsFromGrid:true]</code> or <code>[EjectBotsFromSeats:true]</code>. All tags listed will be applied to each spawned bot. Tags defined here are applied in addition to tags defined in the Bot Spawner Profile.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any <code>string</code> excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!--BotSpawnBlockOverrides-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">BotSpawnBlockOverrides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[BotSpawnBlockOverrides:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag allows for overriding all <code>[SpawnBlocks:Value]</code> defined in Bot Spawner Profiles for the vanilla bots spawned in the current action. SpawnBlocks are the blocks in which vanilla blocks are spawned into. As such, an armor block would not be suitable, but a Cockpit or a Passage-type block would work. If bots should spawn seated in a cockpit listed here, be sure to also set <code>[SpawnSeated:true]</code> in their Bot Spawner Profiles. Bots will pick a random block from this list to spawn in - provided it is not already occupied.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any valid <code>Type/Subtype</code> combination (include <code>MyObjectBuilder_</code> for types!)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!--BotSpawnPointOverrides-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">BotSpawnPointOverrides</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[BotSpawnPointOverrides:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">SpawnPoints are the coordinate offsets onto which bots are spawned in relation to the encounter's Remote Control block. Bots will pick a random point from this list to spawn in.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">A Vector3D Value in the following format:<br /><code>{X:# Y:# Z:#}</code><br />X: Right<br />Y: Up<br />Z: Forward<br />Replace <code>#</code> with values in meters.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
 <!--OnlySpawnBotsInPressurizedRooms-->
 <table>
 <thead>
@@ -4540,7 +4675,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies if AiEnabled bots should only be spawned in pressurized spaces on the NPC grid. The location cannot be directly controlled from RivalAI, since the AiEnabled mod is what calculates the safe placement nodes. If you need them to appear in a specific room, you may want to arrange it so that room is the only air-tight space on the grid at the time of spawning.</td>
+<td style="text-align: left;">This tag specifies if AiEnabled bots should only be spawned in pressurized spaces on the NPC grid. The location cannot be directly controlled from RivalAI, since the AiEnabled mod is what calculates the safe placement nodes. If you need them to appear in a specific room, you may want to arrange it so that room is the only air-tight space on the grid at the time of spawning. <br>Requires the Bot Spawner Profile to define <code>[UseAiEnabled:true]</code> and does not work with vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>

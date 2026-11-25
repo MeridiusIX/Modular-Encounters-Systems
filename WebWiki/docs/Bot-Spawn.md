@@ -12,7 +12,7 @@ Here's an example of how a Bot Spawn Profile Definition is setup:
     <EntityComponent xsi:type="MyObjectBuilder_InventoryComponentDefinition">
       <Id>
           <TypeId>Inventory</TypeId>
-          <SubtypeId>MES-ExampleBotSpawnProfile</SubtypeId>
+          <SubtypeId>MES_ExampleBotSpawnProfile</SubtypeId>
       </Id>
       <Description>
         [MES Bot Spawn]

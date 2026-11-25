@@ -243,32 +243,46 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="bot-spawnmd">Bot-Spawn.md</h1>
-<p>Bot Spawn Profiles in Modular Encounters Systems allow you to specify a set of rules for how a bot is configured before it is spawned by the AiEnabled mod.</p>
+<p>Bot Spawn Profiles in Modular Encounters Systems allow you to specify a set of rules for how a bot is configured before it is spawned by the base game or the AiEnabled mod.</p>
 <p>Here's an example of how a Bot Spawn Profile Definition is setup:</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot;?&gt;
 &lt;Definitions xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
   &lt;EntityComponents&gt;
 
     &lt;EntityComponent xsi:type=&quot;MyObjectBuilder_InventoryComponentDefinition&quot;&gt;
       &lt;Id&gt;
           &lt;TypeId&gt;Inventory&lt;/TypeId&gt;
-          &lt;SubtypeId&gt;MES-ExampleBotSpawnProfile&lt;/SubtypeId&gt;
+          &lt;SubtypeId&gt;MES_ExampleBotSpawnProfile&lt;/SubtypeId&gt;
       &lt;/Id&gt;
       &lt;Description&gt;
+        [MES Bot Spawn]
 
-      [MES Bot Spawn]
+        [BotType:MyObjectBuilder_HumanoidBot/CombatAstronaut]
+        [BotDisplayName:Pirate]
+        [BotFactionTag:SPRT]
 
-      [BotType:Police_Bot]
-      [BotDisplayName:Combat Bot]
+        [WeaponsContainerId:NpcCombatWeaponsLight]
+        [LootContainerId:NpcBodyLoot]
+        [ChatMessageSetId:Builder]
 
+        [SpawnSeated:true]
+        [SpawnBlocks:MyObjectBuilder_Cockpit/LargeBlockCockpitSeat]
+        [SpawnBlocks:MyObjectBuilder_Cockpit/PassengerSeatLarge]
+
+        [Color:{X:234 Y:214 Z:63}]
+        [AssetOverrideSets:Veteran]
       &lt;/Description&gt;
-
     &lt;/EntityComponent&gt;
 
   &lt;/EntityComponents&gt;
 &lt;/Definitions&gt;
 </code></pre>
 <p>Below are all of the eligible tags you can use in your Bot Spawn Profiles:</p>
+<p><strong><a href="#shared">Shared</a></strong><br/>
+<strong><a href="#vanilla">Vanilla</a></strong><br/>
+<strong><a href="#aienabled">AiEnabled</a></strong></p>
+<h1 id="shared">Shared</h1>
+<p>This section contains tags that are relevant for both Vanilla and AiEnabled bots.</p>
 <!--BotType-->
 <table>
 <thead>
@@ -288,34 +302,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;">Any Character type (the <code>Name</code> field in the SBC, not the SubtypeId)</td>
-</tr>
-<tr>
-<td style="text-align: left;">Multiple Tag Allowed:</td>
-<td style="text-align: left;">No</td>
-</tr>
-</tbody>
-</table>
-<!--BotBehavior-->
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-<th style="text-align: left;">BotBehavior</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">Tag Format:</td>
-<td style="text-align: left;"><code>[BotBehavior:Value]</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag specifies the behavior that the spawned bot will use. If this tag is not defined, then it will use the default behavior that AiEnabled would use when spawning a bot of the selected type.</td>
-</tr>
-<tr>
-<td style="text-align: left;">Allowed Values:</td>
-<td style="text-align: left;">Any AiEnabled Behavior Role</td>
+<td style="text-align: left;">Vanilla: Any valid <code>Type/Subtype</code> combination (include <code>MyObjectBuilder_</code> for types!)<br>AiEnabled: Any Character type (the <code>Name</code> field in the SBC, not the SubtypeId)</td>
 </tr>
 <tr>
 <td style="text-align: left;">Multiple Tag Allowed:</td>
@@ -350,6 +337,33 @@
 </tr>
 </tbody>
 </table>
+<!--BotFactionTag-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">BotFactionTag</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[BotFactionTag:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies faction of the bot.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any faction tag.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
 <!--Color-->
 <table>
 <thead>
@@ -377,6 +391,275 @@
 </tr>
 </tbody>
 </table>
+<hr />
+<h1 id="vanilla">Vanilla</h1>
+<p>This section contains tags that only affect vanilla bot spawning.</p>
+<!--Tags-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">Tags</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[Tags:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the tags to associate with the vanilla bots that are spawned with this Bot Spawner Profile. They allow you select which vanilla bots are targeted by actions affecting bots, such as <code>[RemoveBotsFromGrid:true]</code> or <code>[EjectBotsFromSeats:true]</code>. Note that actions can specify additional tags for bots to spawn with, using <code>[BotTags:Value]</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any <code>string</code> excluding <code>:</code>, <code>[</code>, <code>]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!--WeaponsContainerId-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">WeaponsContainerId</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[WeaponsContainerId:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the SubtypeId of the ContainerType used to assign weapons to the bot. It corresponds to <code>NPCWeaponsContainerType</code> in the vanilla SpawnGroup SBC.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any ContainerType SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;">The <code>&lt;StartingItem&gt;</code> loadout in the bot definition is used.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--LootContainerId-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">LootContainerId</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[LootContainerId:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the SubtypeId of the ContainerType used to assign loot to the bot's backpack.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any ContainerType SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;">The <code>&lt;BotLootContainerType&gt;</code> defined for the faction is used.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--ChatMessageSetId-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">ChatMessageSetId</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[ChatMessageSetId:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the SubtypeId of the NPCChatMessageSet used to assign chat messages to the bot. It corresponds to <code>NPCChatMessageSet</code> in the vanilla SpawnGroup SBC. Use <code>Silent</code> to prevent bots from talking.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any ContainerType SubtypeId</td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>Silent</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--SpawnBlocks-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">SpawnBlocks</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[SpawnBlocks:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">SpawnBlocks are the blocks in which vanilla blocks are spawned into. As such, an armor block would not be suitable, but a Cockpit or a Passage-type block would work. If bots should spawn seated in a cockpit listed here, be sure to also set <code>[SpawnSeated:true]</code>. Bots will pick a random block from this list to spawn in - provided it is not already occupied. Note that an actions' <code>[BotSpawnBlockOverrides:Value]</code> will replace any SpawnBlocks defined in this profile.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any valid <code>Type/Subtype</code> combination (include <code>MyObjectBuilder_</code> for types!)</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<!-- SpawnSeated -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">SpawnSeated</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[SpawnSeated:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag determines if bots with this profile should be spawned seated on the defined <code>[SpawnBlocks:Value]</code> If no or not enough such SpawnBlocks have been defined in either profile or action (via <code>[BotSpawnBlockOverrides:Value]</code>), or if they are already occupied, no further bots will be spawned.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;"><code>true</code><br /><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--AssetOverrideSets-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">AssetOverrideSets</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[AssetOverrideSets:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies a list of suit skins, which should be picked from randomly and applied to bots when spawned. Note that this can also be left false, and instead the more granular control available in the Faction Definition SBC can be used.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;"><code>FactionDefault</code><br/><code>Assault</code><br/><code>Aviator</code><br/><code>Badger</code><br/><code>Carpet</code><br/><code>Chef</code><br/><code>Cow</code><br/><code>Crocodile</code><br/><code>DigitalCamouflage</code><br/><code>Disco</code><br/><code>EmissiveStripes</code><br/><code>Fiber</code><br/><code>Frozen</code><br/><code>Ghillie</code><br/><code>Glamour</code><br/><code>Golden</code><br/><code>Graffiti</code><br/><code>Hazmat</code><br/><code>Halloween</code><br/><code>Hexagon</code><br/><code>KeenPajamas</code><br/><code>KidsPajamas</code><br/><code>Lava</code><br/><code>Leopard</code><br/><code>Medieval</code><br/><code>Metallic</code><br/><code>Miner</code><br/><code>Mummy</code><br/><code>Newspaper</code><br/><code>NextGen</code><br/><code>PartyTux</code><br/><code>Pharaoh</code><br/><code>Policeman</code><br/><code>Prisoner</code><br/><code>Proper</code><br/><code>Racing</code><br/><code>Rainbow</code><br/><code>Retro</code><br/><code>Robot</code><br/><code>Scavenger</code><br/><code>Shark</code><br/><code>Skeleton</code><br/><code>Slime</code><br/><code>Terracotta</code><br/><code>Soldier</code><br/><code>Tuxedo</code><br/><code>Veteran</code><br/><code>VeteranMarkII</code><br/><code>Wood</code><br/><code>Zebra</code><br/><code>Zombie</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">Yes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h1 id="aienabled">AiEnabled</h1>
+<p>This section contains tags that are only relevant for AiEnabled bot spawning.</p>
+<!-- UseAiEnabled -->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">UseAiEnabled</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[UseAiEnabled:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag determines if bots with this profile should be spawned with AiEnabled or not.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Value(s):</td>
+<td style="text-align: left;"><code>true</code><br /><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Default Value(s):</td>
+<td style="text-align: left;"><code>false</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tags Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
+<!--BotBehavior-->
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
+<th style="text-align: left;">BotBehavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Tag Format:</td>
+<td style="text-align: left;"><code>[BotBehavior:Value]</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">Description:</td>
+<td style="text-align: left;">This tag specifies the behavior that a spawned AiEnabled bot will use, it is not relevant for vanilla bots. If this tag is not defined, then it will use the default behavior that AiEnabled would use when spawning a bot of the selected type.</td>
+</tr>
+<tr>
+<td style="text-align: left;">Allowed Values:</td>
+<td style="text-align: left;">Any AiEnabled Behavior Role</td>
+</tr>
+<tr>
+<td style="text-align: left;">Multiple Tag Allowed:</td>
+<td style="text-align: left;">No</td>
+</tr>
+</tbody>
+</table>
 <!-- CanUseAirNodes -->
 <table>
 <thead>
@@ -392,7 +675,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot is able to use Air Nodes (ie Jetpack).</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabled bot is able to use Air Nodes (ie Jetpack). Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -423,7 +706,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot is able to use Space Nodes (ie Jetpack).</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabled bot is able to use Space Nodes (ie Jetpack). Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -454,7 +737,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot should try to use ground nodes before using air / space nodes.</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabled bot should try to use ground nodes before using air / space nodes. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -485,7 +768,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot is able to use water nodes (ie underwater via Water Mod)</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabled bot is able to use water nodes (ie underwater via Water Mod). Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -516,7 +799,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot should only use water nodes (ie underwater only bot)</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabled bot should only use water nodes (ie underwater only bot). Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -547,7 +830,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot is able to climb ladders</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabled bot is able to climb ladders. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -578,7 +861,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot is able to sit on seating blocks</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabeld bot is able to sit on seating blocks. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -609,7 +892,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot should despawn after a set number of game ticks. If value is <code>0</code>, then no timer is used.</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabled bot should despawn after a set number of game ticks. If value is <code>0</code>, then no timer is used. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -640,7 +923,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify a custom sound effect that is used when the bot dies.</td>
+<td style="text-align: left;">This tag allows you to specify a custom sound effect that is used when the AiEnabled bot dies. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -671,7 +954,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify one or more custom sound effects that are used when the bot attacks.</td>
+<td style="text-align: left;">This tag allows you to specify one or more custom sound effects that are used when the AiEnabled bot attacks. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -702,7 +985,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify one or more custom sound effects that are used when the bot takes damage.</td>
+<td style="text-align: left;">This tag allows you to specify one or more custom sound effects that are used when the AiEnabled bot takes damage. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -733,7 +1016,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify one or more custom sound effects that are used when the bot is idle.</td>
+<td style="text-align: left;">This tag allows you to specify one or more custom sound effects that are used when the AiEnabled bot is idle. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -764,7 +1047,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify one or more custom sound effects that are used when the bot is chasing a target.</td>
+<td style="text-align: left;">This tag allows you to specify one or more custom sound effects that are used when the AiEnabled bot is chasing a target. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -795,7 +1078,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify one or more emote that are used by nomad bots randomly.</td>
+<td style="text-align: left;">This tag allows you to specify one or more emote that are used by nomad AiEnabled bots randomly. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -826,7 +1109,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify the angle of deviation that is applied to gunfire from this bot.</td>
+<td style="text-align: left;">This tag allows you to specify the angle of deviation that is applied to gunfire from this AiEnabled bot. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -857,7 +1140,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if bots should try to lead their target while shooting at them.</td>
+<td style="text-align: left;">This tag allows you to specify if AiEnabled bots should try to lead their target while shooting at them. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -888,7 +1171,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify a custom tool/weapon for the bot to use.</td>
+<td style="text-align: left;">This tag allows you to specify a custom tool/weapon for the AiEnabled bot to use. Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -919,7 +1202,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify if the bot is able to damage grids (ie target blocks).</td>
+<td style="text-align: left;">This tag allows you to specify if the AiEnabled bot is able to damage grids (ie target blocks). Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -950,7 +1233,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify one or more target priorities that the bot will use when attacking. Add them in priority order. Remove entries to have the bot ignore them completely (requires at least one entry for this to take effect).</td>
+<td style="text-align: left;">This tag allows you to specify one or more target priorities that the AiEnabled bot will use when attacking. Add them in priority order. Remove entries to have the bot ignore them completely (requires at least one entry for this to take effect). Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>
@@ -981,7 +1264,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">Description:</td>
-<td style="text-align: left;">This tag allows you to specify one or more repair priorities that the bot will use when repairing. Add them in priority order. Remove entries to have the bot ignore them completely (requires at least one entry for this to take effect).</td>
+<td style="text-align: left;">This tag allows you to specify one or more repair priorities that the AiEnabled bot will use when repairing. Add them in priority order. Remove entries to have the bot ignore them completely (requires at least one entry for this to take effect). Not relevant for vanilla bots.</td>
 </tr>
 <tr>
 <td style="text-align: left;">Allowed Value(s):</td>

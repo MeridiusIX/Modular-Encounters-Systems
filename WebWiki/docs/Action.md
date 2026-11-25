@@ -1332,7 +1332,7 @@ This section contains actions that allow NPCs to Spawn other NPCs, along with ot
 |Multiple Tag Allowed:|No|
 
 <!--RemoveBotsFromGrid-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AddBotsToGrid|
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|RemoveBotsFromGrid|
 |:----|:----|
 |Tag Format:|`[RemoveBotsFromGrid:Value]`|
 |Description:|This tag specifies if vanilla bots associated with it should be removed from the NPC Grid. Subsets of bots can be targeted via `BotTags:Value]`.|
@@ -1340,7 +1340,7 @@ This section contains actions that allow NPCs to Spawn other NPCs, along with ot
 |Multiple Tag Allowed:|No|
 
 <!--EjectBotsFromSeats-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|AddBotsToGrid|
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|EjectBotsFromSeats|
 |:----|:----|
 |Tag Format:|`[EjectBotsFromSeats:Value]`|
 |Description:|This tag specifies if seated vanilla bots associated with the NPC Grid should be ejected from their seats. Subsets of bots can be targeted via `BotTags:Value]`.|
@@ -1364,15 +1364,15 @@ This section contains actions that allow NPCs to Spawn other NPCs, along with ot
 |Multiple Tag Allowed:|Yes|
 
 <!--BotTags-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotSpawnProfileNames|
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotTags|
 |:----|:----|
 |Tag Format:|`[BotTags:Value]`|
-|Description:|This tag specifies the tags to associate with the vanilla bots that are spawned with `[AddBotsToGrid:true]`. It also lets you select which vanilla bots are targeted by other actions affecting bots, such as `[RemoveBotsFromGrid:true]` or `[EjectBotsFromSeats:true]`. All tags listed will be applied to each spawned bot.|
+|Description:|This tag specifies the tags to associate with the vanilla bots that are spawned with `[AddBotsToGrid:true]`. It also lets you select which vanilla bots are targeted by other actions affecting bots, such as `[RemoveBotsFromGrid:true]` or `[EjectBotsFromSeats:true]`. All tags listed will be applied to each spawned bot. Tags defined here are applied in addition to tags defined in the Bot Spawner Profile.|
 |Allowed Values:|Any `string` excluding `:`, `[`, `]`|
 |Multiple Tag Allowed:|Yes|
 
 <!--BotSpawnBlockOverrides-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotSpawnProfileNames|
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotSpawnBlockOverrides|
 |:----|:----|
 |Tag Format:|`[BotSpawnBlockOverrides:Value]`|
 |Description:|This tag allows for overriding all `[SpawnBlocks:Value]` defined in Bot Spawner Profiles for the vanilla bots spawned in the current action. SpawnBlocks are the blocks in which vanilla blocks are spawned into. As such, an armor block would not be suitable, but a Cockpit or a Passage-type block would work. If bots should spawn seated in a cockpit listed here, be sure to also set `[SpawnSeated:true]` in their Bot Spawner Profiles. Bots will pick a random block from this list to spawn in - provided it is not already occupied.|
@@ -1380,10 +1380,10 @@ This section contains actions that allow NPCs to Spawn other NPCs, along with ot
 |Multiple Tag Allowed:|Yes|
 
 <!--BotSpawnPointOverrides-->
-|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotSpawnProfileNames|
+|Tag:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|BotSpawnPointOverrides|
 |:----|:----|
 |Tag Format:|`[BotSpawnPointOverrides:Value]`|
-|Description:|This tag allows for overriding all `[SpawnPoints:Value]` defined in Bot Spawner Profiles for the vanilla bots spawned in the current action. SpawnPoints are the coordinate offsets onto which bots are spawned in relation to the encounter's Remote Control block. Bots will pick a random point from this list to spawn in.|
+|Description:|SpawnPoints are the coordinate offsets onto which bots are spawned in relation to the encounter's Remote Control block. Bots will pick a random point from this list to spawn in.|
 |Allowed Values:|A Vector3D Value in the following format:<br />`{X:# Y:# Z:#}`<br />X: Right<br />Y: Up<br />Z: Forward<br />Replace `#` with values in meters.|
 |Multiple Tag Allowed:|Yes|
 

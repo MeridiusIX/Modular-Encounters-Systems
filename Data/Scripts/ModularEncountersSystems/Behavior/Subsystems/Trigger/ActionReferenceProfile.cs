@@ -460,7 +460,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ClearContractContentsFirst;
 		public List<string> ContractBlocks;
 		public List<string> ContractBlockProfiles;
-		public List<string> ContractBlockHostNpcGridNames:
+		public List<string> ContractBlockHostNpcGridNames;
 
         public bool IssueMissions;
         public List<string> IssueMissionIds;

@@ -102,7 +102,7 @@ namespace ModularEncountersSystems.Missions
             }
         }
 
-        public bool Init(out MyAddContractResultWrapper result, BlockEntity sourceContractBlock = null)
+        public bool Init(out MyAddContractResultWrapper result, BlockEntity sourceContractBlock)
         {
 
             result = default(MyAddContractResultWrapper);

@@ -2608,17 +2608,54 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                             // Find the contract block
                             BlockEntity contractblock = null;
-                            foreach (var cb in _behavior.CurrentGrid.Contracts)
+
+                            if (actions.ContractBlocks.Count > i)
                             {
-                                if (cb.ActiveEntity() && cb.Block.CustomName == actions.ContractBlocks[i])
+                                foreach (var cb in _behavior.CurrentGrid.Contracts)
                                 {
-                                    contractblock = cb;
-                                    break;
+                                    if (cb.ActiveEntity() && cb.Block.CustomName == actions.ContractBlocks[i])
+                                    {
+                                        contractblock = cb;
+                                        break;
+                                    }
+                                }
+                                if (contractblock == null)
+                                {
+                                    BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Contract Block on own grid: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);
+                                    continue;
                                 }
                             }
-                            if (contractblock == null)
+                            else if (actions.ContractBlockHostNpcGridNames.Count > i)
                             {
-                                BehaviorLogger.Write(actions.ProfileSubtypeId + ": Couldn't find Contract Block: " + actions.ContractBlocks[i], BehaviorDebugEnum.Action);
+                                var found = false;
+                                foreach (var grid in GridManager.Grids)
+                                {
+                                    if (found)
+                                        break;
+
+                                    if (grid.Npc != null && grid.GridName == actions.ContractBlockHostNpcGridNames[i])
+                                    {
+                                        foreach (var cb in grid.Contracts)
+                                        {
+                                            if (cb.ActiveEntity() && cb.Block.CustomName == actions.ContractBlocks[i])
+                                            {
+                                                contractblock = cb;
+                                                found = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if (!found)
+                                {
+                                    BehaviorLogger.Write(actions.ProfileSubtypeId + $": Couldn't find Contract Block '{actions.ContractBlocks[i]}' on host grid: {actions.ContractBlockHostNpcGridNames[i]}", BehaviorDebugEnum.Action);
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                BehaviorLogger.Write(actions.ProfileSubtypeId + ": No Contract Block defined.", BehaviorDebugEnum.Action);
                                 continue;
                             }
 

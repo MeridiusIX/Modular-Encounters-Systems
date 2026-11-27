@@ -460,6 +460,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ClearContractContentsFirst;
 		public List<string> ContractBlocks;
 		public List<string> ContractBlockProfiles;
+		public List<string> ContractBlockHostNpcGridNames:
 
         public bool IssueMissions;
         public List<string> IssueMissionIds;
@@ -998,6 +999,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ClearContractContentsFirst = true;
 			ContractBlocks = new List<string>();
 			ContractBlockProfiles = new List<string>();
+			ContractBlockHostNpcGridNames = new List<string>();
 
 
 			IssueMissions = false;
@@ -1426,6 +1428,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"ContractBlocks", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlocks) },
                 {"ContractBlockProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
                 {"ContractProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
+                {"ContractBlockHostNpcGridNames", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockHostNpcGridNames) },
 
                 {"IssueMissions", (s, o) => TagParse.TagBoolCheck(s, ref IssueMissions) },
                 {"IssueMissionIds", (s, o) => TagParse.TagStringListCheck(s, ref IssueMissionIds) },

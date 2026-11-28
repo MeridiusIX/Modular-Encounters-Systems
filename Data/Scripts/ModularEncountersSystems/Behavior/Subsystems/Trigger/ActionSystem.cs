@@ -2608,8 +2608,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
 
                             // Find the contract block
                             BlockEntity contractblock = null;
-
-                            if (actions.ContractBlocks.Count > i)
+                            if (actions.ContractBlocks.Count > i && actions.ContractBlockHostNpcGridNames.Count <= 0)
                             {
                                 foreach (var cb in _behavior.CurrentGrid.Contracts)
                                 {
@@ -2665,19 +2664,16 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                             if (!mission.Init(out result, contractblock) || !result.Success)
                             {
                                 BehaviorLogger.Write(actions.ProfileSubtypeId + ": Error issuing mission: " + actions.IssueMissionIds[i] + " (on init)", BehaviorDebugEnum.Action);
-                                VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 2: " + result.Success);
                                 continue;
                             }
-                            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 3");
 
                             var defId = new MyDefinitionId();
-                            if (!MyDefinitionId.TryParse(profile.ContractSubtypeId, out defId))
+                            if (!MyDefinitionId.TryParse($"MyObjectBuilder_ContractTypeDefinition/{profile.ContractSubtypeId}", out defId))
                             {
                                 BehaviorLogger.Write(actions.ProfileSubtypeId + ": Error issuing mission: " + actions.IssueMissionIds[i] + " (contract not found)", BehaviorDebugEnum.Action);
                                 MyAPIGateway.ContractSystem.RemoveContract(result.ContractId);
                                 continue;
                             }
-                            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 4");
 
                             // Second, determine the faction offering the mission/contract
                             IMyFaction faction = null;
@@ -2692,7 +2688,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                 MyAPIGateway.ContractSystem.RemoveContract(result.ContractId);
                                 continue;
                             }
-                            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 5");
 
                             // Third, find players that match the conditions
                             foreach (var player in PlayerManager.Players)
@@ -2708,6 +2703,7 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                 if (PlayerCondition.ArePlayerConditionsMet(IssueMissionPlayerConditionIds, player.Player.IdentityId, actions.IssueMissionOverridePositioninPlayerCondition, positionOverride))
                                 {
                                     // Fourth, issue mission/contract to each player
+                                    MyAPIGateway.ContractSystem.AcceptContract(player.Player.IdentityId, result.ContractId);
                                     InGameContractManager.ContractAccepted(
                                         contractId: result.ContractId,
                                         contractDefinitionId: defId,
@@ -2719,7 +2715,6 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger
                                         );
                                 }
                             }
-                            VRage.Utils.MyLog.Default.WriteLine(">>>>>>>>>>>>>>>>>>>>>>>>> here 6");
                         }
                     }
                 }

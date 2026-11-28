@@ -86,7 +86,6 @@ namespace ModularEncountersSystems.Missions
 
             if (!MissionReference.Profile.SoloMission && acceptingPlayerFaction != null)
             {
-
                 List<long> localPlayerIdList;
                 PlayerManager.PlayersNearby(position, 400, out localPlayerIdList);
 
@@ -115,7 +114,6 @@ namespace ModularEncountersSystems.Missions
                     }
                 }
             }
-
 
             LeadPlayer.ProgressionData.Tags.Add($"LeadPlayer@{ContractId}");
 

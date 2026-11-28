@@ -469,7 +469,14 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 		public bool ClearContractContentsFirst;
 		public List<string> ContractBlocks;
 		public List<string> ContractBlockProfiles;
+		public List<string> ContractBlockHostNpcGridNames;
 
+        public bool IssueMissions;
+        public List<string> IssueMissionIds;
+        public List<Vector3D> IssueMissionLocations;
+        public List<string> IssueMissionPlayerConditionIds;
+        public List<string> IssueMissionFactionTags;
+		public bool IssueMissionOverridePositioninPlayerCondition;
 
 		public bool ActivateEvent;
 		public List<string> ActivateEventIds;
@@ -1010,7 +1017,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
 			ClearContractContentsFirst = true;
 			ContractBlocks = new List<string>();
 			ContractBlockProfiles = new List<string>();
+			ContractBlockHostNpcGridNames = new List<string>();
 
+
+			IssueMissions = false;
+			IssueMissionIds = new List<string>();
+			IssueMissionLocations = new List<Vector3D>();
+			IssueMissionPlayerConditionIds = new List<string>();
+			IssueMissionFactionTags = new List<string>();
+			IssueMissionOverridePositioninPlayerCondition = false;
 
 
 			ActivateEvent = false;
@@ -1440,6 +1455,15 @@ namespace ModularEncountersSystems.Behavior.Subsystems.Trigger {
                 {"ContractBlocks", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlocks) },
                 {"ContractBlockProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
                 {"ContractProfiles", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockProfiles) },
+                {"ContractBlockHostNpcGridNames", (s, o) => TagParse.TagStringListCheck(s, ref ContractBlockHostNpcGridNames) },
+
+                {"IssueMissions", (s, o) => TagParse.TagBoolCheck(s, ref IssueMissions) },
+                {"IssueMissionIds", (s, o) => TagParse.TagStringListCheck(s, ref IssueMissionIds) },
+                {"IssueMissionLocations", (s, o) => TagParse.TagVector3DListCheck(s, ref IssueMissionLocations) },
+                {"IssueMissionPlayerConditionIds", (s, o) => TagParse.TagStringListCheck(s, ref IssueMissionPlayerConditionIds) },
+                {"IssueMissionFactionTags", (s, o) => TagParse.TagStringListCheck(s, ref IssueMissionFactionTags) },
+                {"IssueMissionOverridePositioninPlayerCondition", (s, o) => TagParse.TagBoolCheck(s, ref IssueMissionOverridePositioninPlayerCondition) },
+
                 {"ActivateEvent", (s, o) => TagParse.TagBoolCheck(s, ref ActivateEvent) },
                 {"ActivateEventIds", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventIds) },
                 {"ActivateEventTags", (s, o) => TagParse.TagStringListCheck(s, ref ActivateEventTags) },

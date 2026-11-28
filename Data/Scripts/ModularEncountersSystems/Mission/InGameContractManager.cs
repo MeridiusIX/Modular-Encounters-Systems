@@ -78,7 +78,6 @@ namespace ModularEncountersSystems.Missions
 
                     if (contract.ContractId == contractId)
                     {
-
                         if (!contract.MissionReference.RunEventConditions())
                         {
                             MyVisualScriptLogicProvider.SendChatMessageColored("Contract no longer available. We apologize for the inconvenience", Color.Olive, "Contracts", acceptingPlayerId);
@@ -97,7 +96,6 @@ namespace ModularEncountersSystems.Missions
 
                         if (contract.TryToActivateCustomContract(acceptingPlayerId))
                         {
-                            //Suc
                             GeneratedContracts.RemoveAt(i);
                             ContractsForRemoval.Remove(contract.ContractId);
                         }
@@ -127,24 +125,19 @@ namespace ModularEncountersSystems.Missions
 
         public static void ContractAbandoned(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId)
         {
-
             if (isPlayerMade)
             {
                 var contract = GetActiveContract(contractId);
 
                 if (contract == null)
-                {
                     return;
-                }
 
                 for (int i = 0; i < Events.EventManager.EventsList.Count; i++)
                 {
                     var thisEvent = Events.EventManager.EventsList[i];
 
                     if (!thisEvent.Valid)
-                    {
                         continue;
-                    }
 
                     var thisEventTag = $"Abandoned@{contractId}";
                     if (thisEvent.Profile.Tags.Contains(thisEventTag))
@@ -166,7 +159,6 @@ namespace ModularEncountersSystems.Missions
                     if (player.ProgressionData.Tags.Contains($"@{contractId}"))
                     {
                         PlayerList.Add(player.Player.IdentityId);
-
                         player.ProgressionData.Tags.Remove($"@{contractId}");
                     }
 
@@ -174,31 +166,25 @@ namespace ModularEncountersSystems.Missions
                 //MyVisualScriptLogicProvider.ShowNotificationToAll("ContractAbandoned", 15000, "Red");
 
                 FactionHelper.ChangePlayerReputationWithFactions(null, -contract.FailReputationPrice, PlayerList, contract.FactionTag, false, -1501, 1501);
-
                 RemoveActiveContractInternal(contractId);
             }
         }
 
         public static void ContractFailed(long contractId, MyDefinitionId contractDefinitionId, long acceptingPlayerId, bool isPlayerMade, long startingBlockId, long startingFactionId, long startingStationId, bool IsAbandon)
         {
-
             if (isPlayerMade)
             {
                 var contract = GetActiveContract(contractId);
 
                 if (contract == null)
-                {
                     return;
-                }
 
                 for (int i = 0; i < Events.EventManager.EventsList.Count; i++)
                 {
                     var thisEvent = Events.EventManager.EventsList[i];
 
                     if (!thisEvent.Valid)
-                    {
                         continue;
-                    }
 
                     var thisEventTag = $"Failed@{contractId}";
                     if (thisEvent.Profile.Tags.Contains(thisEventTag))
@@ -211,14 +197,10 @@ namespace ModularEncountersSystems.Missions
                 foreach (var player in PlayerManager.Players)
                 {
                     if (player.ProgressionData.Tags.Contains($"LeadPlayer@{contractId}"))
-                    {
                         player.ProgressionData.Tags.Remove($"LeadPlayer@{contractId}");
-                    }
 
                     if (player.ProgressionData.Tags.Contains($"@{contractId}"))
-                    {
                         player.ProgressionData.Tags.Remove($"@{contractId}");
-                    }
                 }
 
                 RemoveActiveContractInternal(contractId);
@@ -232,10 +214,7 @@ namespace ModularEncountersSystems.Missions
                 var contract = GetActiveContract(contractId);
 
                 if (contract == null)
-                {
                     return;
-                }
-
 
                 var PlayerList = new List<long>();
 
@@ -250,7 +229,6 @@ namespace ModularEncountersSystems.Missions
                     if (player.ProgressionData.Tags.Contains($"@{contractId}"))
                     {
                         PlayerList.Add(player.Player.IdentityId);
-
                         player.ProgressionData.Tags.Remove($"@{contractId}");
                     }
                 }
@@ -258,12 +236,9 @@ namespace ModularEncountersSystems.Missions
                 FactionHelper.ChangePlayerReputationWithFactions(null, contract.ReputationReward, PlayerList, contract.FactionTag, false, -1501, 1501);
 
                 if (!string.IsNullOrEmpty(contract.ActivateBooleanNameOnSucces))
-                {
                     MyAPIGateway.Utilities.SetVariable<bool>(contract.ActivateBooleanNameOnSucces, true);
-                }
 
                 RemoveActiveContractInternal(contractId);
-
             }
         }
 

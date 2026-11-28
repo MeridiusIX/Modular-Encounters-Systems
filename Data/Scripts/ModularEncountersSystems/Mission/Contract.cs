@@ -77,18 +77,21 @@ namespace ModularEncountersSystems.Missions
                 return false;
             }
 
-            Vector3D position = SourceBlock.GetPosition();
-
             var Players = new List<PlayerEntity>();
 
             var LeadPlayer = PlayerManager.GetPlayerWithIdentityId(playerIdentityId);
             Players.Add(LeadPlayer);
 
+            Vector3D position;
+            if (SourceBlock != null)
+                position = SourceBlock.GetPosition();
+            else
+                position = LeadPlayer.GetCharacterPosition();
+
             var acceptingPlayerFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerIdentityId);
 
             if (!MissionReference.Profile.SoloMission && acceptingPlayerFaction != null)
             {
-
                 List<long> localPlayerIdList;
                 PlayerManager.PlayersNearby(position, 400, out localPlayerIdList);
 
@@ -96,7 +99,6 @@ namespace ModularEncountersSystems.Missions
                 {
                     if (playerId == playerIdentityId)
                         continue;
-
 
                     var localFaction = MyAPIGateway.Session.Factions.TryGetPlayerFaction(playerId);
 
@@ -119,7 +121,6 @@ namespace ModularEncountersSystems.Missions
                 }
             }
 
-
             LeadPlayer.ProgressionData.Tags.Add($"LeadPlayer@{ContractId}");
 
             foreach (var player in Players)
@@ -135,11 +136,14 @@ namespace ModularEncountersSystems.Missions
 
             var FactionTag = MissionReference.Faction.Tag;
 
-
-            var _activeContract = new ActiveContract(ContractId,
-                SourceBlock.Entity.EntityId, MissionReference.Reward,
-                MissionReference.ReputationReward, MissionReference.FailReputationPrice,
-                FactionTag, MissionReference.Profile.ActivateBooleanNameOnSucces,
+            var _activeContract = new ActiveContract(
+                ContractId,
+                SourceBlock?.Entity?.EntityId ?? 0,
+                MissionReference.Reward,
+                MissionReference.ReputationReward,
+                MissionReference.FailReputationPrice,
+                FactionTag,
+                MissionReference.Profile.ActivateBooleanNameOnSucces,
                 MissionReference.ProfileSubtypeId);
 
             InGameContractManager.ActiveContracts.Add(_activeContract);
